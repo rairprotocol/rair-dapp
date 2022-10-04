@@ -1,21 +1,22 @@
 //@ts-nocheck
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
-import defaultPictures from './images/defaultUserPictures.png';
 
 // React Redux types
 import { getTokenComplete } from '../../ducks/auth/actions';
 import { setUserAddress } from '../../ducks/contracts/actions';
 import { setAdminRights } from '../../ducks/users/actions';
+
+import EditMode from './EditMode/EditMode';
+import defaultPictures from './images/defaultUserPictures.png';
 import {
   SvgFactoryIcon,
   SvgItemsIcon,
   SvgMyFavorites,
   SvgUserIcon
 } from './SettingsIcons/SettingsIcons';
-import EditMode from './EditMode/EditMode';
 
 const PopUpSettings = ({
   currentUserAddress,

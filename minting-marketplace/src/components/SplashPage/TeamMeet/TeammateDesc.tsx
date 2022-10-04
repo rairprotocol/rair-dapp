@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { ITeammateDesc } from '../splashPage.types';
 
 const TeammateDesc: React.FC<ITeammateDesc> = ({

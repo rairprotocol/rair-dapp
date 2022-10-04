@@ -1,24 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import imageIcon from '../../../images/imageIcon.svg';
-import { useParams } from 'react-router-dom';
-import { rFetch } from '../../../utils/rFetch';
-import FixedBottomNavigation from '../FixedBottomNavigation';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import csvParser from '../../../utils/csvParser';
+import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import Swal from 'sweetalert2';
-import blockchainData from '../../../utils/blockchainData';
-import BlockchainURIManager from '../common/blockchainURIManager';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
+import { TTokenData } from '../../../axios.responseTypes';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import imageIcon from '../../../images/imageIcon.svg';
+import blockchainData from '../../../utils/blockchainData';
+import csvParser from '../../../utils/csvParser';
+import { rFetch } from '../../../utils/rFetch';
+import BlockchainURIManager from '../common/blockchainURIManager';
 import {
   IBatchMetadataParser,
   TBatchMetadataType,
   TParamsBatchMetadata
 } from '../creatorStudio.types';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { TTokenData } from '../../../axios.responseTypes';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   contractData,

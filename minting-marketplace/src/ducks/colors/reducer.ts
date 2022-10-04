@@ -1,14 +1,13 @@
+import {
+  ColorStoreActionsType,
+  ColorStoreType,
+  SchemaType
+} from './colorStore.types';
 import * as types from './types';
 
 import { headerLogoBlackMobile, headerLogoWhiteMobile } from '../../images';
 import { headerLogoBlack, headerLogoWhite } from '../../images';
-
 import { bgLogoBlack, bgLogoWhite } from '../../images';
-import {
-  ColorStoreType,
-  SchemaType,
-  ColorStoreActionsType
-} from './colorStore.types';
 
 const schemes: SchemaType = {
   rhyno: {

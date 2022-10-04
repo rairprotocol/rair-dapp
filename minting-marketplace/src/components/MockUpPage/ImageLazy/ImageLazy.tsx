@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import { Image } from './ImageLazyItem/ImageLazy.styled';
 import { IImageLazy } from './types/imageLazy.types';
 

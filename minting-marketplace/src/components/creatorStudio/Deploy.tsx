@@ -1,17 +1,19 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import chainData from '../../utils/blockchainData';
-import InputField from '../common/InputField';
-import InputSelect from '../common/InputSelect';
-import Swal from 'sweetalert2';
 import { BigNumber, utils } from 'ethers';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import Swal from 'sweetalert2';
+
 import NavigatorFactory from './NavigatorFactory';
-import setTitle from '../../utils/setTitle';
+
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../ducks/users/users.types';
+import chainData from '../../utils/blockchainData';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import setTitle from '../../utils/setTitle';
+import InputField from '../common/InputField';
+import InputSelect from '../common/InputSelect';
 
 const Factory = () => {
   const [contractName, setContractName] = useState<string>('');

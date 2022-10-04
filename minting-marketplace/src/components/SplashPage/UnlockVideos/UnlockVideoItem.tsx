@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { metaMaskIcon } from '../../../images';
 import { IUnlockVideoItem } from '../splashPage.types';
 

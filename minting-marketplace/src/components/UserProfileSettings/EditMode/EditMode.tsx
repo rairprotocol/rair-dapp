@@ -1,10 +1,11 @@
 //@ts-nocheck
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { SvgUserIcon } from '../SettingsIcons/SettingsIcons';
-import Swal from 'sweetalert2';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
 import { getUserStart } from '../../../ducks/users/actions';
+import { SvgUserIcon } from '../SettingsIcons/SettingsIcons';
 
 const EditMode = ({
   handlePopUp,

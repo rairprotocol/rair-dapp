@@ -1,35 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { metaMaskIcon } from '../../../images';
+import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import MetaTags from '../../SeoTags/MetaTags';
+import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
+import { NFTNYC_TITLE, warning0 } from '../images/NFTNYC/nftnyc';
+import { NYCVideoBackground } from '../images/NFTNYC/nftnyc';
+import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
+import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
+import { useGetProducts } from '../splashPageProductsHook';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+/* importing Components*/
+import TeamMeet from '../TeamMeet/TeamMeetList';
+import WarningModal from '../WarningModal';
+
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './NFTNYC.css';
-
-import { metaMaskIcon } from '../../../images';
-import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
-import { warning0, NFTNYC_TITLE } from '../images/NFTNYC/nftnyc';
-
-import { NYCVideoBackground } from '../images/NFTNYC/nftnyc';
-
-/* importing Components*/
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-
-import MetaTags from '../../SeoTags/MetaTags';
-import WarningModal from '../WarningModal';
-import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { useGetProducts } from '../splashPageProductsHook';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
 
 const reactSwal = withReactContent(Swal);
 

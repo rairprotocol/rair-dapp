@@ -1,17 +1,20 @@
 import React from 'react';
-import { playImages } from '../../images/greyMan/grayMan';
+import { useCallback, useState } from 'react';
 import Modal from 'react-modal';
-import VideoPlayerBySignature from './VideoPlayerBySignature ';
-import './VideoPlayer.css';
-import { useState, useCallback } from 'react';
-import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
+import { Provider, useSelector, useStore } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { Provider, useStore, useSelector } from 'react-redux';
-import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
+
+import VideoPlayerBySignature from './VideoPlayerBySignature ';
+
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
+import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
+import { playImages } from '../../images/greyMan/grayMan';
 import { IShowVideoToLoggedInUsers } from '../../splashPage.types';
+
+import './VideoPlayer.css';
 
 const reactSwal = withReactContent(Swal);
 

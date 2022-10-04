@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import cl from './VideoPlayerView.module.css';
+
 import { playImages } from '../../../../SplashPage/images/greyMan/grayMan';
-import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
 import {
   IVideoPlayerView,
   TVideoPlayerViewSpecialVideoType
 } from '../../nftList.types';
+import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
+
+import cl from './VideoPlayerView.module.css';
 
 const VideoPlayerView: React.FC<IVideoPlayerView> = ({
   productsFromOffer,

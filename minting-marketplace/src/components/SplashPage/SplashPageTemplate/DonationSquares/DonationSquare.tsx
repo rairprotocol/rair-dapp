@@ -1,6 +1,8 @@
-import './DonationSquare.css';
-import AuthorCardButton from '../AuthorCard/AuthorCardButton';
 import { useEffect, useState } from 'react';
+
+import AuthorCardButton from '../AuthorCard/AuthorCardButton';
+
+import './DonationSquare.css';
 
 const DonationSquare = ({ donationSquareData, mobileView }) => {
   const { title, image, buttonData, textBoxArray, imageClass } =

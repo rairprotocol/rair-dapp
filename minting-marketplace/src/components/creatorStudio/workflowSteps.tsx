@@ -1,40 +1,41 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { withSentryReactRouterV6Routing } from '@sentry/react';
-import { rFetch } from '../../utils/rFetch';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  useParams,
-  Routes,
+  NavLink,
   Route,
+  Routes,
   useNavigate,
-  NavLink
+  useParams
 } from 'react-router-dom';
-import WorkflowContext from '../../contexts/CreatorWorkflowContext';
-import { web3Switch } from '../../utils/switchBlockchain';
-import { minterAbi, erc721Abi, diamondFactoryAbi } from '../../contracts';
-import chainData from '../../utils/blockchainData';
+import { withSentryReactRouterV6Routing } from '@sentry/react';
+import { ethers } from 'ethers';
 
-import ListOffers from './creatorSteps/ListOffers';
-import ListLocks from './creatorSteps/ListLocks';
-import CustomizeFees from './creatorSteps/CustomizeFees';
-import BatchMetadata from './creatorSteps/batchMetadata';
-import SingleMetadataEditor from './creatorSteps/singleMetadataEditor';
-import MediaUpload from './creatorSteps/MediaUpload';
-
-import ListOffersDiamond from './diamondCreatorSteps/ListOffersDiamond';
-import DiamondMinterMarketplace from './diamondCreatorSteps/DiamondMinterMarketplace';
-import ResaleMarketplace from './creatorSteps/ResaleMarketplace';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import {
   TContractData,
   TSteps,
   TWorkflowContextType,
   TWorkflowParams
 } from './creatorStudio.types';
+
+import WorkflowContext from '../../contexts/CreatorWorkflowContext';
+import { diamondFactoryAbi, erc721Abi, minterAbi } from '../../contracts';
+import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ethers } from 'ethers';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import chainData from '../../utils/blockchainData';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import { rFetch } from '../../utils/rFetch';
+import { web3Switch } from '../../utils/switchBlockchain';
+
+import BatchMetadata from './creatorSteps/batchMetadata';
+import CustomizeFees from './creatorSteps/CustomizeFees';
+import ListLocks from './creatorSteps/ListLocks';
+import ListOffers from './creatorSteps/ListOffers';
+import MediaUpload from './creatorSteps/MediaUpload';
+import ResaleMarketplace from './creatorSteps/ResaleMarketplace';
+import SingleMetadataEditor from './creatorSteps/singleMetadataEditor';
+import DiamondMinterMarketplace from './diamondCreatorSteps/DiamondMinterMarketplace';
+import ListOffersDiamond from './diamondCreatorSteps/ListOffersDiamond';
 
 const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 

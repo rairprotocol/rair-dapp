@@ -1,16 +1,17 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+
 import { RootState } from '../../../ducks';
 import { setColorScheme } from '../../../ducks/colors/actions';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
+import { BellIcon, SunIcon } from '../../../images';
 import {
   SocialBox,
   SocialBoxSearch,
   UserIconMobile
 } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { BellIcon, SunIcon } from '../../../images';
 import { SvgUserIcon } from '../../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 interface IMobileChoiseNav {

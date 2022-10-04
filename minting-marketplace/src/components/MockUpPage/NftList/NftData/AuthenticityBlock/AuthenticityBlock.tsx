@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+
+import { TableAuthenticity } from './AuthenticityBlockItems';
+
 import { TTokenData } from '../../../../../axios.responseTypes';
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import { IAuthenticityBlock } from '../../nftList.types';
+
 import './AuthenticityBlock.css';
-import { TableAuthenticity } from './AuthenticityBlockItems';
 
 const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
   tokenData,

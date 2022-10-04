@@ -1,25 +1,26 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { rFetch } from '../../utils/rFetch';
-import { useParams, useNavigate, NavLink } from 'react-router-dom';
-import { diamondFactoryAbi } from '../../contracts';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
-import FixedBottomNavigation from './FixedBottomNavigation';
-import NavigatorContract from './NavigatorContract';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import {
   TContractsNetworkContract,
   TContractsNetworkOffersResponse,
-  TListCollectionsNetworkProductsResponse,
   TListCollectionsContractResponse,
+  TListCollectionsNetworkProductsResponse,
   TListCollectionsOffers,
   TParamsContractDetails,
   TProductDataLocal,
   TSetDataUseState
 } from './creatorStudio.types';
+import FixedBottomNavigation from './FixedBottomNavigation';
+import NavigatorContract from './NavigatorContract';
+
 import { TProducts } from '../../axios.responseTypes';
+import { diamondFactoryAbi } from '../../contracts';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { rFetch } from '../../utils/rFetch';
 
 const ListCollections = () => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(

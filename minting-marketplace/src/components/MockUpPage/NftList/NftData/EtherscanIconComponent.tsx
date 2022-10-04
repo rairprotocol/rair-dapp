@@ -1,14 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Tooltip } from '@mui/material';
+
 import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
-import { IEtherscanIconComponent } from '../../mockupPage.types';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import chainData from '../../../../utils/blockchainData';
 import { ReactComponent as EtherscanDark } from '../../assets/EtherscanDark.svg';
 import { ReactComponent as EtherscanLight } from '../../assets/EtherscanLight.svg';
-import chainData from '../../../../utils/blockchainData';
+import { IEtherscanIconComponent } from '../../mockupPage.types';
 import LikeButton from '../LikeButton/LikeButton';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { Tooltip } from '@mui/material';
 
 const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
   classTitle,

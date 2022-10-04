@@ -1,15 +1,16 @@
-import { ethers } from 'ethers';
-import { ContractType } from '../adminViews/adminView.types';
 import { MouseEvent } from 'react';
 import { ReactNode } from 'react';
+import { ethers } from 'ethers';
+
 import {
   TAttributes,
   TContract,
   TNftItemResult,
   TOfferPool,
-  TTokenData,
-  TProducts
+  TProducts,
+  TTokenData
 } from '../../axios.responseTypes';
+import { ContractType } from '../adminViews/adminView.types';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 export interface IMarketplaceOfferConfig {
   array: TMarketplaceOfferConfigArrayItem[];

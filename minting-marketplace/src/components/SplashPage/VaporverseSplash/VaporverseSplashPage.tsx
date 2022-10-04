@@ -1,44 +1,45 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import '../../AboutPage/AboutPageNew/AboutPageNew.css';
-import './VaporverseSplash.css';
 import { v1 } from 'uuid';
 
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
 import {
   vaporverse_background,
+  videoBackground,
+  VV_test_transmission,
+  VV_warning_1,
+  VV_warning_2,
   VV0,
   VV1,
   VV2,
   VV3,
-  VV4,
-  VV_warning_1,
-  VV_warning_2,
-  VV_test_transmission,
-  videoBackground
+  VV4
 } from '../images/vaporverse/vaporverse';
-import favion_Vaporverse from './../images/favicons/vv_Rair_logo.ico';
-
-/* importing Components*/
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
-import MetaTags from '../../SeoTags/MetaTags';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
-import { setRealChain } from '../../../ducks/contracts/actions';
 import {
   IInfoBlock,
   IVaporverseSplashPage,
   TSplashDataType
 } from '../splashPage.types';
-import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
+import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
+/* importing Components*/
+import TeamMeet from '../TeamMeet/TeamMeetList';
+
+import favion_Vaporverse from './../images/favicons/vv_Rair_logo.ico';
+
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './VaporverseSplash.css';
 
 const splashData: TSplashDataType = {
   title: null,

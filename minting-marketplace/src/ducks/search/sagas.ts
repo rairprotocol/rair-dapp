@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
+
 import {
   getDataAllClear,
   getDataAllComplete,

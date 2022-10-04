@@ -1,19 +1,21 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
-import './index.css';
-import App from './App';
 import {
-  useLocation,
-  useNavigationType,
+  BrowserRouter,
   createRoutesFromChildren,
   matchRoutes,
-  BrowserRouter
+  useLocation,
+  useNavigationType
 } from 'react-router-dom';
 import { init, reactRouterV6Instrumentation } from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
-import { HelmetProvider } from 'react-helmet-async';
+
+import App from './App';
 import store from './ducks';
+
+import './index.css';
 
 const sentryIoTraceRate = Number(process.env.REACT_APP_SENTRY_IO_TRACE_RATE);
 

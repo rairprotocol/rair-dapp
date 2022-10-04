@@ -1,6 +1,7 @@
 //@ts-nocheck
 //unused-component
 import React, { memo } from 'react';
+
 import cl from './TimelineGeneric.module.css';
 
 const TimelineGenericComponent = ({ timelinePics }) => {

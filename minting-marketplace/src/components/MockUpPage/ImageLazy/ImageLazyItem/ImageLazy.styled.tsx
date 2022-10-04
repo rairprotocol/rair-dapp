@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { ILazyImageItem } from '../types/imageLazy.types';
 
 export const Image = styled.img<ILazyImageItem>`

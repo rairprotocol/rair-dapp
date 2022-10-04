@@ -1,11 +1,13 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import { utils, BigNumber } from 'ethers';
-import blockchainData from '../../utils/blockchainData';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { BigNumber, utils } from 'ethers';
+
 import {
   IBatchMinting,
   IBatchRow,
   TBatchMintingItem
 } from './consumerMode.types';
+
+import blockchainData from '../../utils/blockchainData';
 
 const BatchRow: React.FC<IBatchRow> = ({ index, deleter, array }) => {
   const [address, setAddress] = useState<string>();

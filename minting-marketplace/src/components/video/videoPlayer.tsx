@@ -1,19 +1,21 @@
 // @ts-nocheck
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import videojs from 'video.js';
-import Swal from 'sweetalert2';
-import setDocumentTitle from '../../utils/setTitle';
-import { VideoPlayerParams } from './video.types';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import videojs from 'video.js';
+
+import { VideoPlayerParams } from './video.types';
+
 import {
   TAuthGetChallengeResponse,
   TOnlySuccessResponse
 } from '../../axios.responseTypes';
-import withReactContent from 'sweetalert2-react-content';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import setDocumentTitle from '../../utils/setTitle';
 
 const reactSwall = withReactContent(Swal);
 const VideoPlayer = () => {

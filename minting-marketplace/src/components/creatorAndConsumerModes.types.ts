@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+
 import { ContractContents } from '../ducks/contracts/contracts.types';
 
 export interface IConsumerMode {

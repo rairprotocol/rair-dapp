@@ -1,14 +1,16 @@
 //@ts-nocheck
 import React from 'react';
+
+import { MainSelectNft } from './MainSelectNft';
+import MobileCarouselNfts from './MobileCarouselNfts';
+
 import {
-  grayManMatrix,
   CoinAgenda1,
   CoinAgenda2,
+  grayManMatrix,
   Monster,
   NutcracherNftPhoto
 } from '../../assets/exclusiveNfts/exclusiveNfts';
-import MobileCarouselNfts from './MobileCarouselNfts';
-import { MainSelectNft } from './MainSelectNft';
 
 const ExclusiveNfts = () => {
   return (

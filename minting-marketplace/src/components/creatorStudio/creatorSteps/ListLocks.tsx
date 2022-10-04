@@ -1,25 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import InputField from '../../common/InputField';
-import FixedBottomNavigation from '../FixedBottomNavigation';
 import { useParams } from 'react-router-dom';
-import { erc721Abi } from '../../../contracts';
+import { ethers, utils } from 'ethers';
 import Swal from 'sweetalert2';
+
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import { erc721Abi } from '../../../contracts';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import chainData from '../../../utils/blockchainData';
+import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
 import colors from '../../../utils/offerLockColors';
 import { web3Switch } from '../../../utils/switchBlockchain';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { ethers, utils } from 'ethers';
-import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
+import InputField from '../../common/InputField';
 import {
   ILockRow,
   TListLocks,
   TListLocksArrayItem,
   TParamsListLocks
 } from '../creatorStudio.types';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const LockRow: React.FC<ILockRow> = ({
   index,

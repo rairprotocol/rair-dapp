@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ISvgKey } from './nftList.types';
 
 export const SvgKey: React.FC<ISvgKey> = ({ color, bgColor, mobile }) => (

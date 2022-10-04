@@ -1,7 +1,9 @@
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { call, put, takeLatest } from 'redux-saga/effects';
+
 import { getUserComplete, getUserError } from './actions';
-import { put, call, takeLatest } from 'redux-saga/effects';
 import * as types from './types';
-import axios, { AxiosResponse, AxiosError } from 'axios';
+
 import { TUserResponse } from '../../axios.responseTypes';
 
 export type Params = { publicAddress: string; type: string };

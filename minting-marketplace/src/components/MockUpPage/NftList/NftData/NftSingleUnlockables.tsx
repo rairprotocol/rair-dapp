@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import NftDifferentRarity from './UnlockablesPage/NftDifferentRarity/NftDifferentRarity';
-import './NftSingleUnlockables.css';
+
 import {
   INftSingleUnlockables,
   TNftSingleUnlockablesSections,
   TRarityType
 } from '../nftList.types';
+
+import NftDifferentRarity from './UnlockablesPage/NftDifferentRarity/NftDifferentRarity';
+
+import './NftSingleUnlockables.css';
 
 const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
   embeddedParams,

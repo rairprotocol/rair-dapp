@@ -1,6 +1,8 @@
 //@ts-nocheck
 import React from 'react';
+
 import UnlockVideoItem from '../../UnlockVideos/UnlockVideoItem';
+
 import '../StaticVideoTiles/StaticTiles.css';
 
 // const videoArr = [

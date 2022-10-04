@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 export interface IAboutPageNew {

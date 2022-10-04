@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import setTitle from '../utils/setTitle';
-
 import * as ethers from 'ethers';
-import { erc721Abi } from '../contracts';
 
-import ERC721Consumer from './ConsumerMode/ERC721Consumer';
+import { IConsumerMode, TOfferDataType } from './creatorAndConsumerModes.types';
+
+import { erc721Abi } from '../contracts';
 import { RootState } from '../ducks';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
-import { IConsumerMode, TOfferDataType } from './creatorAndConsumerModes.types';
+import setTitle from '../utils/setTitle';
+
+import ERC721Consumer from './ConsumerMode/ERC721Consumer';
 
 const ConsumerMode: React.FC<IConsumerMode> = () => {
   const [offerCount, setOfferCount] = useState<string>();

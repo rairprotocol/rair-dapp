@@ -1,7 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { discrodIconNoBorder } from '../../../images';
 import { LogoAuthor } from '../images/commingSoon/commingSoonImages';
-import { useNavigate } from 'react-router-dom';
 
 const ComingSoon = () => {
   const navigate = useNavigate();

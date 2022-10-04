@@ -1,10 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+
+import { INavigatorFactory } from './creatorStudio.types';
+
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { INavigatorFactory } from './creatorStudio.types';
 
 const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
   const { factoryInstance } = useSelector<RootState, ContractsInitialType>(

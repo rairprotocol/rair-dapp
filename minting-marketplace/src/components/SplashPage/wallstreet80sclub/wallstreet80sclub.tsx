@@ -1,34 +1,30 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import '../../AboutPage/AboutPageNew/AboutPageNew.css';
-import './wallstreet80sclub.css';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
 import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
-import { metaMaskIcon, discrodIconNoBorder } from '../../../images';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
+import { rFetch } from '../../../utils/rFetch';
+import PurchaseTokenButton from '../../common/PurchaseToken';
+import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import MetaTags from '../../SeoTags/MetaTags';
 import {
-  WallstreetImg,
-  WallstreetCounter,
   WallstreetA,
   WallstreetB,
   WallstreetC,
+  WallstreetCounter,
   WallstreetD,
   WallstreetE,
-  WallstreetF
+  WallstreetF,
+  WallstreetImg
 } from '../images/wallstreet80sclub/wallstreet80sclub';
-
-/* importing Components*/
-import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
-import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
-import PurchaseTokenButton from '../../common/PurchaseToken';
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-
-import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
 import {
@@ -36,13 +32,20 @@ import {
   TMainContractType,
   TSplashDataType
 } from '../splashPage.types';
-import { rFetch } from '../../../utils/rFetch';
-import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { useGetProducts } from '../splashPageProductsHook';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+import TeamMeet from '../TeamMeet/TeamMeetList';
+/* importing Components*/
+import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
+
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './wallstreet80sclub.css';
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './wallstreet80sclub.css';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);

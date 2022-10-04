@@ -1,12 +1,13 @@
 import React from 'react';
+
 import {
-  RairLogoBlue,
-  OpenSea,
-  Rarible,
-  OneOf,
+  Curios,
   Dapper,
   MinTable,
-  Curios
+  OneOf,
+  OpenSea,
+  RairLogoBlue,
+  Rarible
 } from '../../../../../images';
 import { ICompareMobileSelect } from '../../aboutPage.types';
 

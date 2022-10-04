@@ -1,60 +1,60 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { erc721Abi } from '../../contracts/index';
-import { rFetch } from '../../utils/rFetch';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import Swal from 'sweetalert2';
-import './SplashPage.css';
-
-/* importing images*/
-import { metaMaskIcon, discrodIconNoBorder } from '../../images';
-import { LogoAuthor } from './images/commingSoon/commingSoonImages';
-import {
-  NipseyBg,
-  Nft_1,
-  Nft_2,
-  Nft_3,
-  Nft_4,
-  NftImage,
-  UnlockableVideo,
-  DigitalMobile,
-  NftMobile_1,
-  NftMobile_2,
-  VideoPresent,
-  RairTechMobile,
-  Bandana,
-  Pods,
-  Cepk
-} from './images/splashPageImages/splashPage';
-
-/* importing Components*/
-import TokenLeft from './TokenLeft/TokenLeft';
-import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
-import UnlockVideos from './UnlockVideos/UnlockVideos';
-import TeamMeet from './TeamMeet/TeamMeetList';
-
+import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import RoadMap from './Roadmap/RoadMap';
-import NipseyRelease from './NipseyRelease/NipseyRelease';
-import { Countdown } from './Timer/CountDown';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setRealChain } from '../../ducks/contracts/actions';
 import axios from 'axios';
-import { TProductResponseType } from '../../axios.responseTypes';
+import Swal from 'sweetalert2';
+
 import {
   ISplashPageProps,
   TMetamaskError,
   TSplashPageIsActive
 } from './splashPage.types';
-import { TAddChainData } from '../../utils/utils.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+
+import { TProductResponseType } from '../../axios.responseTypes';
+import { erc721Abi } from '../../contracts/index';
 import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../ducks/seo/actions';
 import { InitialState } from '../../ducks/seo/reducers';
 import { TInfoSeo } from '../../ducks/seo/seo.types';
+/* importing images*/
+import { discrodIconNoBorder, metaMaskIcon } from '../../images';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import { rFetch } from '../../utils/rFetch';
+import { TAddChainData } from '../../utils/utils.types';
 import MetaTags from '../SeoTags/MetaTags';
+
+import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
+import { LogoAuthor } from './images/commingSoon/commingSoonImages';
+import {
+  Bandana,
+  Cepk,
+  DigitalMobile,
+  Nft_1,
+  Nft_2,
+  Nft_3,
+  Nft_4,
+  NftImage,
+  NftMobile_1,
+  NftMobile_2,
+  NipseyBg,
+  Pods,
+  RairTechMobile,
+  UnlockableVideo,
+  VideoPresent
+} from './images/splashPageImages/splashPage';
+import NipseyRelease from './NipseyRelease/NipseyRelease';
+import RoadMap from './Roadmap/RoadMap';
+import TeamMeet from './TeamMeet/TeamMeetList';
+import { Countdown } from './Timer/CountDown';
+/* importing Components*/
+import TokenLeft from './TokenLeft/TokenLeft';
+import UnlockVideos from './UnlockVideos/UnlockVideos';
+
+import './SplashPage.css';
 
 const customStyles = {
   overlay: {

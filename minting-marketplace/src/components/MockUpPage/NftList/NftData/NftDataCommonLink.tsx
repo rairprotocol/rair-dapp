@@ -1,11 +1,13 @@
-import React, { memo, useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
+import { utils } from 'ethers';
+
 import { NftCollectionPage } from './NftCollectionPage';
 import NftDataPageMain from './NftDataPageMain';
 import NftUnlockablesPage from './NftUnlockablesPage';
-import { useDispatch, useSelector } from 'react-redux';
-import { setRealChain } from '../../../../ducks/contracts/actions';
-import axios, { AxiosError } from 'axios';
+
 import {
   IOffersResponseType,
   TFileType,
@@ -16,19 +18,19 @@ import {
   TTokenData,
   TUserResponse
 } from '../../../../axios.responseTypes';
-import { utils } from 'ethers';
 import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../../ducks/contracts/actions';
 import {
   setTokenData,
   setTokenDataStart
 } from '../../../../ducks/nftData/action';
+import { UserType } from '../../../../ducks/users/users.types';
+import { TOfferType } from '../../../marketplace/marketplace.types';
 import {
   INftDataCommonLinkComponent,
   TParamsNftDataCommonLink
 } from '../nftList.types';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { TOfferType } from '../../../marketplace/marketplace.types';
-import { UserType } from '../../../../ducks/users/users.types';
 
 const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   embeddedParams,

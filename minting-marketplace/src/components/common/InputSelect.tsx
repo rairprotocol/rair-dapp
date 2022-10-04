@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+
 import { getRandomValues } from '../../utils/getRandomValues';
+
 import { InputSelectProps } from './commonTypes/InputSelectTypes.types';
 
 /***

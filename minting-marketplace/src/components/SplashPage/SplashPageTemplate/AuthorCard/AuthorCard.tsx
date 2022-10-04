@@ -1,7 +1,9 @@
 import React from 'react';
+
 import DefaultButtonBlock from '../../DefaultButtonBlock';
 import ButtonHelp from '../../PurchaseChecklist/ButtonHelp';
 import { IAuthorCard } from '../../splashPage.types';
+
 import './AuthorCard.css';
 
 const AuthorCard: React.FC<IAuthorCard> = ({

@@ -1,11 +1,13 @@
 import React from 'react';
-import './Carousel.css';
 import Carousel from 'react-multi-carousel';
+
 import {
   ICarouselItem,
   ICarouselListItem,
   ICarouselModule
 } from '../../splashPage.types';
+
+import './Carousel.css';
 
 const CarouselListItem: React.FC<ICarouselListItem> = (props) => {
   const { carouselItemTitle, carouselItemImg, carouselDescription } = props;

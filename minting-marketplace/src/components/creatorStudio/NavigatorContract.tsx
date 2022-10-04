@@ -1,9 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+
+import { INavigatorContract } from './creatorStudio.types';
+
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { INavigatorContract } from './creatorStudio.types';
 
 const NavigatorContract: React.FC<INavigatorContract> = ({
   children,

@@ -1,22 +1,25 @@
-import React, { useState, useCallback, useEffect, memo } from 'react';
-import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { utils } from 'ethers';
+import { useStateIfMounted } from 'use-state-if-mounted';
+
+import { INftItemComponent } from './nftList.types';
 import { SvgKey } from './SvgKey';
+
 import {
   TNftItemResponse,
   TTokenData,
   TUserResponse
 } from '../../../axios.responseTypes';
-import { useStateIfMounted } from 'use-state-if-mounted';
-import { gettingPrice } from './utils/gettingPrice';
-import chainData from '../../../utils/blockchainData';
-import ReactPlayer from 'react-player';
-import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png';
-import axios from 'axios';
-import { utils } from 'ethers';
-import { INftItemComponent } from './nftList.types';
 import { UserType } from '../../../ducks/users/users.types';
+import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import chainData from '../../../utils/blockchainData';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
+
+import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png';
+import { gettingPrice } from './utils/gettingPrice';
 
 const NftItemComponent: React.FC<INftItemComponent> = ({
   blockchain,

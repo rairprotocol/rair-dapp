@@ -1,30 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { NftList } from './NftList/NftList';
-import InputField from '../common/InputField';
-import VideoList from '../video/videoList';
-import FilteringBlock from './FilteringBlock/FilteringBlock';
-import PaginationBox from './PaginationBox/PaginationBox';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+
+import { ISearchPanel } from './mockupPage.types';
+
+import { RootState } from '../../ducks';
+import {
+  getNftDataStart,
+  getNftDataStartWithParams
+} from '../../ducks/nftData/action';
+import { InitialNftDataStateType } from '../../ducks/nftData/nftData.types';
 import {
   getCurrentPage,
   getCurrentPageEnd,
   getCurrentPageNull
 } from '../../ducks/pages/actions';
-import {
-  getNftDataStart,
-  getNftDataStartWithParams
-} from '../../ducks/nftData/action';
-import { TVideosInitialState } from '../../ducks/videos/videosDucks.types';
-import { RootState } from '../../ducks';
-import { InitialNftDataStateType } from '../../ducks/nftData/nftData.types';
-import { ISearchPanel } from './mockupPage.types';
 import { getListVideosStart } from '../../ducks/videos/actions';
+import { TVideosInitialState } from '../../ducks/videos/videosDucks.types';
+import InputField from '../common/InputField';
+import VideoList from '../video/videoList';
+
+import FilteringBlock from './FilteringBlock/FilteringBlock';
 import {
   TBlockchainNames,
   TOnClickCategories,
   TSortChoice
 } from './FilteringBlock/filteringBlock.types';
+import { NftList } from './NftList/NftList';
+import PaginationBox from './PaginationBox/PaginationBox';
 
 const SearchPanel: React.FC<ISearchPanel> = ({
   primaryColor,

@@ -1,12 +1,13 @@
-import { MediaListResponseType } from '../../components/video/video.types';
 import {
   getListVideosError,
-  getVideoListComplete,
   getListVideosStart,
-  refreshAction,
+  getVideoListComplete,
+  getVideoListTotal,
   getVideoListTotalClear,
-  getVideoListTotal
+  refreshAction
 } from './actions';
+
+import { MediaListResponseType } from '../../components/video/video.types';
 
 export type TVideosInitialState = {
   videos: MediaListResponseType | null;

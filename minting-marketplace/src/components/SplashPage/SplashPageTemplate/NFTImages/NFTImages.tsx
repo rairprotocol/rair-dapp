@@ -1,7 +1,9 @@
 import React from 'react';
-import './NFTImages.css';
+
 import MobileCarouselNfts from '../../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import { INFTImages } from '../../splashPage.types';
+
+import './NFTImages.css';
 
 const NFTImages: React.FC<INFTImages> = ({
   Nft_1,

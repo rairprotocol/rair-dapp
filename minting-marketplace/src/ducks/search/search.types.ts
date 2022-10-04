@@ -1,12 +1,14 @@
-import { TTokenData } from './../../axios.responseTypes';
-import { TProducts } from '../../axios.responseTypes';
 import {
   getDataAllClear,
   getDataAllComplete,
   getDataAllEmpty,
   getDataAllStart
 } from './actions';
+
+import { TProducts } from '../../axios.responseTypes';
 import { UserType } from '../users/users.types';
+
+import { TTokenData } from './../../axios.responseTypes';
 
 export type TSearchInitialState = {
   titleSearchDemo: string;

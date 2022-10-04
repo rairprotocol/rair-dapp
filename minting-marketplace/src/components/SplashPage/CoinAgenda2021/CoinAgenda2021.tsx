@@ -1,27 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import MetaTags from '../../SeoTags/MetaTags';
+import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
+import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
+import { useGetProducts } from '../splashPageProductsHook';
+import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+/* importing Components*/
+import TeamMeet from '../TeamMeet/TeamMeetList';
+import WarningModal from '../WarningModal';
+
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './CoinAgenda2021.css';
-
-/* importing Components*/
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
-import MetaTags from '../../SeoTags/MetaTags';
-import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
-import WarningModal from '../WarningModal';
-import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { useGetProducts } from '../splashPageProductsHook';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
 
 const reactSwal = withReactContent(Swal);
 

@@ -1,16 +1,18 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import videojs from 'video.js';
-import Swal from 'sweetalert2';
-import setDocumentTitle from '../../utils/setTitle';
-import { IVideoPlayer } from './video.types';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import videojs from 'video.js';
+
+import { IVideoPlayer } from './video.types';
+
 import {
   TAuthGetChallengeResponse,
   TOnlySuccessResponse
 } from '../../axios.responseTypes';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import setDocumentTitle from '../../utils/setTitle';
 
 const VideoPlayer: React.FC<IVideoPlayer> = ({
   mediaId,

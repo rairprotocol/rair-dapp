@@ -1,16 +1,18 @@
 import { memo, useCallback, useEffect, useState } from 'react';
-import cl from './PersonalProfileIcon.module.css';
+import { useDispatch, useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { useSelector, useDispatch } from 'react-redux';
-import { TUserResponse } from '../../../../axios.responseTypes';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { defaultAvatar } from '../../../../images';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
-import { TUsersInitialState } from '../../../../ducks/users/users.types';
+
+import { TUserResponse } from '../../../../axios.responseTypes';
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { getUserStart } from '../../../../ducks/users/actions';
+import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import { defaultAvatar } from '../../../../images';
+
+import cl from './PersonalProfileIcon.module.css';
 
 const PersonalProfileIconComponent = ({ userData }) => {
   const dispatch = useDispatch();

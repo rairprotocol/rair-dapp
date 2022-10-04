@@ -1,5 +1,6 @@
 //unused-component
 import React, { useEffect } from 'react';
+
 import { IBlockMinMax } from '../../filteringBlock.types';
 import { useInput } from '../../hooks';
 

@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
-import NftDataPageMain from './NftDataPageMain';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
+import { utils } from 'ethers';
+import Swal from 'sweetalert2';
+
+import NftDataPageMain from './NftDataPageMain';
+
 import {
   TContract,
   TFileType,
@@ -13,10 +16,9 @@ import {
   TTokenData,
   TUserResponse
 } from '../../../../axios.responseTypes';
-import { utils } from 'ethers';
 import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { UserType } from '../../../../ducks/users/users.types';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 import { TNftExternalLinkType } from '../nftList.types';

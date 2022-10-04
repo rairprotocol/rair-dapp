@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { NutsMain } from '../images/commingSoon/commingSoonImages';
 
 const ComingSoonNut = () => {

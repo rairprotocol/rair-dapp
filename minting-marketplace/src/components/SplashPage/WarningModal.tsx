@@ -1,7 +1,9 @@
 import React from 'react';
+
+import { IWarningModal } from './splashPage.types';
+
 import warning1 from './images/splashPageImages/warning_1.webp';
 import warning2 from './images/splashPageImages/warning_2.webp';
-import { IWarningModal } from './splashPage.types';
 
 const WarningModal: React.FC<IWarningModal> = ({ className, bad, good }) => {
   return (

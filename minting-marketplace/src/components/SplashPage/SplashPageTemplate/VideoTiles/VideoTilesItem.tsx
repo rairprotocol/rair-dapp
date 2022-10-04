@@ -1,13 +1,15 @@
 //@ts-nocheck
-import { metaMaskIcon } from '../../../../images';
+import React, { useCallback, useState } from 'react';
 import Modal from 'react-modal';
-import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
-import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
-import '../VideoPlayer/VideoPlayer.css';
-import React, { useState, useCallback } from 'react';
-import { useSelector, Provider, useStore } from 'react-redux';
+import { Provider, useSelector, useStore } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+
+import { metaMaskIcon } from '../../../../images';
+import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
+import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
+
+import '../VideoPlayer/VideoPlayer.css';
 
 const customStylesForVideo = {
   overlay: {

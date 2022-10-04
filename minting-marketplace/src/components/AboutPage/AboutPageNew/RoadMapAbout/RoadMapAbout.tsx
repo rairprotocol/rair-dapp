@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IRoadMap } from '../aboutPage.types';
 
 const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {

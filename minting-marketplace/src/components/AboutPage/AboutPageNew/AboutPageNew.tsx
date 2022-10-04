@@ -1,33 +1,31 @@
 import React, { useEffect } from 'react';
-import './AboutPageNew.css';
-
-// import images
-import { RairLogoBlue, metaMaskIcon } from '../../../images';
-
-//import utils
-import setDocumentTitle from './../../../utils/setTitle';
-
-// import component
-import MainBlock from './MainBlock/MainBlock';
-import LeftTokenAbout from './LeftTokenAbout/LeftTokenAbout';
-import PlatformAbout from './PlatformAbout/PlatformAbout';
-import RairOffer from './RairOffer/RairOffer';
-import ExclusiveNfts from './ExclusiveNfts/ExclusiveNfts';
-import StreamsAbout from './StreamsAbout/StreamsAbout';
-import RoadMap from './RoadMapAbout/RoadMapAbout';
-import CompareAbout from './CompareAbout/CompareAbout';
-import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
-import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import PurchaseTokenButton from '../../common/PurchaseToken';
+
 import { IAboutPageNew } from './aboutPage.types';
+
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { InitialState } from '../../../ducks/seo/reducers';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { metaMaskIcon, RairLogoBlue } from '../../../images';
+import PurchaseTokenButton from '../../common/PurchaseToken';
 import MetaTags from '../../SeoTags/MetaTags';
+import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
+
+import setDocumentTitle from './../../../utils/setTitle';
+import CompareAbout from './CompareAbout/CompareAbout';
+import ExclusiveNfts from './ExclusiveNfts/ExclusiveNfts';
+import LeftTokenAbout from './LeftTokenAbout/LeftTokenAbout';
+import MainBlock from './MainBlock/MainBlock';
+import PlatformAbout from './PlatformAbout/PlatformAbout';
+import RairOffer from './RairOffer/RairOffer';
+import RoadMap from './RoadMapAbout/RoadMapAbout';
+import StreamsAbout from './StreamsAbout/StreamsAbout';
+
+import './AboutPageNew.css';
 
 const AboutPageNew: React.FC<IAboutPageNew> = ({
   connectUserData,

@@ -1,25 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react';
-import useWindowDimensions from '../../../hooks/useWindowDimensions';
-import './FilteringBlock.css';
+import React, { useEffect, useRef, useState } from 'react';
+
 import {
   IFilteringBlock,
   TFilterItemCategories,
   TSortChoice
 } from './filteringBlock.types';
+
+import useWindowDimensions from '../../../hooks/useWindowDimensions';
+
 import {
   SelectFiltersItem,
   SelectFiltersPopUp,
   SelectSortItem,
   SelectSortPopUp,
-  StyledFilterIcon,
-  StyledArrowUpIcon,
   StyledArrowDownIcon,
-  StyledShevronIcon,
+  StyledArrowUpIcon,
+  StyledFilterIcon,
+  StyledPopupArrowDownIcon,
   StyledPopupArrowUpIcon,
-  StyledPopupArrowDownIcon
+  StyledShevronIcon
 } from './FilteringBlockItems/FilteringBlockItems';
 import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
+
+import './FilteringBlock.css';
 
 const FilteringBlock: React.FC<IFilteringBlock> = ({
   primaryColor,

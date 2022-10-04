@@ -1,5 +1,6 @@
-import * as types from './types';
 import { TInfoSeo } from './seo.types';
+import * as types from './types';
+
 import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
 
 export const InitialState: TInfoSeo = {

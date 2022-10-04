@@ -1,17 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import chainData from '../../utils/blockchainData';
-import InputField from '../common/InputField';
-import { rFetch } from '../../utils/rFetch';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { useParams, useNavigate } from 'react-router-dom';
-import { erc721Abi, diamondFactoryAbi } from '../../contracts';
-import FixedBottomNavigation from './FixedBottomNavigation';
-import NavigatorContract from './NavigatorContract';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+
 import {
   TContractsNetworkContract,
   TContractsNetworkProductsResponse,
@@ -19,6 +10,17 @@ import {
   TParamsContractDetails,
   TSetData
 } from './creatorStudio.types';
+import FixedBottomNavigation from './FixedBottomNavigation';
+import NavigatorContract from './NavigatorContract';
+
+import { diamondFactoryAbi, erc721Abi } from '../../contracts';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import chainData from '../../utils/blockchainData';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import { rFetch } from '../../utils/rFetch';
+import InputField from '../common/InputField';
 
 const ContractDetails = () => {
   const [collectionName, setCollectionName] = useState<string>('');

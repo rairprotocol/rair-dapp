@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { TAuthenticityStyled } from '../../nftList.types';
 
 export const TableAuthenticity = styled.div<TAuthenticityStyled>`

@@ -1,23 +1,25 @@
 // @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import Modal from 'react-modal';
+import { useStateIfMounted } from 'use-state-if-mounted';
+
 import { IVideoItem, TParticularProduct } from './video.types';
+
+import { TUserResponse } from '../../axios.responseTypes';
+import { UserType } from '../../ducks/users/users.types';
+import chainData from '../../utils/blockchainData';
+import { CheckEthereumChain } from '../../utils/CheckEthereumChain';
 import { metamaskCall } from '../../utils/metamaskUtils';
+import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
-import { UserType } from '../../ducks/users/users.types';
-import { TUserResponse } from '../../axios.responseTypes';
-import { useStateIfMounted } from 'use-state-if-mounted';
-import chainData from '../../utils/blockchainData';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
-import { playImages } from '../SplashPage/images/greyMan/grayMan';
-import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
-import { CheckEthereumChain } from '../../utils/CheckEthereumChain';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';
+import { playImages } from '../SplashPage/images/greyMan/grayMan';
 // import { TChainItemData } from '../../utils/utils.types';
 
 Modal.setAppElement('#root');

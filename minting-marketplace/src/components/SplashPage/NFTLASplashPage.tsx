@@ -1,34 +1,38 @@
 //@ts-nocheck
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import './SplashPageTemplate/AuthorCard/AuthorCard.css';
-import './../AboutPage/AboutPageNew/AboutPageNew.css';
 
-/* importing images*/
-import { NFTLA1_rounded, NFTLA1, NFTLA2, NFTLA3 } from './images/NFTLA/nftLA';
-import NFTLA_Video from './images/NFTLA/NFT-LA-RAIR-2021.mp4';
-import { DocumentIcon } from '../../images';
-import { discrodIconNoBorder } from '../../images';
-import NFTfavicon from './images/favicons/NFT_favicon.ico';
-
-/* importing Components*/
-import TeamMeet from './TeamMeet/TeamMeetList';
-import AuthorCard from './SplashPageTemplate/AuthorCard/AuthorCard';
-import NotCommercialTemplate from './NotCommercial/NotCommercialTemplate';
-import CarouselModule from './SplashPageTemplate/Carousel/Carousel';
-import VideoPlayerModule from './SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-import MetaTags from '../SeoTags/MetaTags';
-import VideoPlayerView from '../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-import { TVideoPlayerViewSpecialVideoType } from '../MockUpPage/NftList/nftList.types';
 import {
   ISplashPageProps,
   TNftLaSelectedVideo,
   TSplashDataType
 } from './splashPage.types';
+
 import { TFileType } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../ducks/seo/actions';
+import { DocumentIcon } from '../../images';
+import { discrodIconNoBorder } from '../../images';
+import VideoPlayerView from '../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import { TVideoPlayerViewSpecialVideoType } from '../MockUpPage/NftList/nftList.types';
+import MetaTags from '../SeoTags/MetaTags';
+
+import NFTfavicon from './images/favicons/NFT_favicon.ico';
+import NFTLA_Video from './images/NFTLA/NFT-LA-RAIR-2021.mp4';
+/* importing images*/
+import { NFTLA1, NFTLA1_rounded, NFTLA2, NFTLA3 } from './images/NFTLA/nftLA';
+import NotCommercialTemplate from './NotCommercial/NotCommercialTemplate';
+import AuthorCard from './SplashPageTemplate/AuthorCard/AuthorCard';
+import CarouselModule from './SplashPageTemplate/Carousel/Carousel';
+import VideoPlayerModule from './SplashPageTemplate/VideoPlayer/VideoPlayerModule';
+/* importing Components*/
+import TeamMeet from './TeamMeet/TeamMeetList';
+
+import './SplashPageTemplate/AuthorCard/AuthorCard.css';
+import './../AboutPage/AboutPageNew/AboutPageNew.css';
+import './SplashPageTemplate/AuthorCard/AuthorCard.css';
+import './../AboutPage/AboutPageNew/AboutPageNew.css';
 
 //TODO:Until we have a contract it will be commented
 // import { TNftFilesResponse } from '../../axios.responseTypes';

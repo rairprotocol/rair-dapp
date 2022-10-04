@@ -1,10 +1,13 @@
 //@ts-nocheck
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import { ILayout } from './layout.types';
+
 import { metaMaskIcon } from '../../images';
 import { headerLogoBlackMobile } from '../../images';
+
 import './Layout.css';
-import { ILayout } from './layout.types';
 
 const Layout: React.FC<ILayout> = (props) => {
   const { userData, account, connectUserData, contractAddresses, chainId } =

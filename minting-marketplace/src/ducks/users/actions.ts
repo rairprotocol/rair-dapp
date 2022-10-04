@@ -23,4 +23,4 @@ const getUserError = (error: string) =>
     error
   } as const);
 
-export { getUserStart, setAdminRights, getUserComplete, getUserError };
+export { getUserComplete, getUserError, getUserStart, setAdminRights };

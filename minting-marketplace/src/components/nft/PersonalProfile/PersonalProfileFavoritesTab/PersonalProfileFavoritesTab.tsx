@@ -1,9 +1,12 @@
+import { useCallback, useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
-import { TDocData } from '../../../../axios.responseTypes';
-import MyfavoriteItem from './MyfavoriteItem/MyfavoriteItem';
+
 import { IPersonalProfileFavoritesTab } from './myFavorites.types';
+
+import { TDocData } from '../../../../axios.responseTypes';
+
+import MyfavoriteItem from './MyfavoriteItem/MyfavoriteItem';
 
 const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
   titleSearch

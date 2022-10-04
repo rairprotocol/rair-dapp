@@ -1,11 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import '../../AboutPage/AboutPageNew/AboutPageNew.css';
-import './UkraineSplash.css';
+import Swal from 'sweetalert2';
 
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+// import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
+import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
+import { rFetch } from '../../../utils/rFetch';
+import PurchaseTokenButton from '../../common/PurchaseToken';
 /* importing images*/
 import {
+  nftCountUkraine,
   UKR_rounded,
   UKR4,
   UKR5,
@@ -13,42 +22,32 @@ import {
   UKR497,
   UKR1294,
   UKR1989,
-  videoBackground,
-  nftCountUkraine
+  videoBackground
 } from '../images/UkraineGlitch/urkaineGlitch';
-import faviconUkraine from './../images/favicons/favicon-ukraine.ico';
-
-// import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
-import { metaMaskIcon, discrodIconNoBorder } from '../../../images';
-
-/* importing Components*/
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
-import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-// import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
-// import UnlockableVideo from "../images/nipsey1.png";
-// import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
-import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
-import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
-
-import PurchaseTokenButton from '../../common/PurchaseToken';
-import Swal from 'sweetalert2';
-import MetaTags from './../../SeoTags/MetaTags';
-import { rFetch } from '../../../utils/rFetch';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import {
   ISplashPageProps,
   TMainContractType,
   TSplashDataType
 } from '../splashPage.types';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+// import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
+// import UnlockableVideo from "../images/nipsey1.png";
+// import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
+import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
+import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
+/* importing Components*/
+import TeamMeet from '../TeamMeet/TeamMeetList';
+import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
+
+import MetaTags from './../../SeoTags/MetaTags';
+import faviconUkraine from './../images/favicons/favicon-ukraine.ico';
+
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './UkraineSplash.css';
 // import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics

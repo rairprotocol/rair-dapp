@@ -1,15 +1,18 @@
 //@ts-nocheck
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import './UserProfileSettings.css';
 
 // React Redux types
 import PopUpSettings from './PopUpSetting';
-import PopUpNotification from './PopUpNotification/PopUpNotification';
+
 import { setColorScheme } from '../../ducks/colors/actions';
+import { getUserStart } from '../../ducks/users/actions';
 import { SunIcon } from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { getUserStart } from '../../ducks/users/actions';
+
+import PopUpNotification from './PopUpNotification/PopUpNotification';
+
+import './UserProfileSettings.css';
 
 const UserProfileSettings = ({
   loginDone,

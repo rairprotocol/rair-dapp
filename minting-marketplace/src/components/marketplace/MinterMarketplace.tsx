@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { BigNumber } from 'ethers';
+
+import { TOfferData } from './marketplace.types';
+import MinterMarketplaceItem from './MinterMarketplaceItem';
+
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
-import { BigNumber } from 'ethers';
-import MinterMarketplaceItem from './MinterMarketplaceItem';
-import { TOfferData } from './marketplace.types';
 
 const MinterMarketplace = () => {
   const [offerData, setOfferData] = useState<TOfferData[]>([]);

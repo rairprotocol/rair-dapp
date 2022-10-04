@@ -1,27 +1,25 @@
 // import Images
-import whiteBg from './ClayBg.webp';
+import binance from './binance-diamond.svg';
 import blackBg from './BlackBg.webp';
-import rairTechLogoBlack from './rairTechLogoBlack.webp';
-import rairTechLogoWhite from './rairTechLogoWhite.webp';
-import logoBlackMobile from './RAIR-Tech-Logo-POWERED-BY-BLACK-2021.webp';
-import logoWhiteMobile from './RAIR-Tech-Logo-POWERED-BY-WHITE-2021.webp';
-
-import rairTechLogoBlue from './rairLogo_blue.webp';
-import metamaskLogo from './metamask_logo.webp';
-import avatar from './defaultAvatarProfile.webp';
-import openSea from './openSea-logo.webp';
-import rarible from './rarible-logo.webp';
-import oneOf from './oneOf-logo.webp';
-import dapper from './dapper-logo.webp';
-import minTable from './mintable-logo.webp';
+import whiteBg from './ClayBg.webp';
 import curios from './curios.webp';
-
+import dapper from './dapper-logo.webp';
+import avatar from './defaultAvatarProfile.webp';
+import discordIconWhiteNoBorder from './discord-white-no-border.webp';
+import documentIcon from './documentIcon.svg';
+import ethereum from './ethereum-logo.svg';
+import metamaskLogo from './metamask_logo.webp';
+import minTable from './mintable-logo.webp';
+import oneOf from './oneOf-logo.webp';
+import openSea from './openSea-logo.webp';
 // import Icons
 import polygonMatic from './polygon-matic.svg';
-import binance from './binance-diamond.svg';
-import ethereum from './ethereum-logo.svg';
-import documentIcon from './documentIcon.svg';
-import discordIconWhiteNoBorder from './discord-white-no-border.webp';
+import logoBlackMobile from './RAIR-Tech-Logo-POWERED-BY-BLACK-2021.webp';
+import logoWhiteMobile from './RAIR-Tech-Logo-POWERED-BY-WHITE-2021.webp';
+import rairTechLogoBlue from './rairLogo_blue.webp';
+import rairTechLogoBlack from './rairTechLogoBlack.webp';
+import rairTechLogoWhite from './rairTechLogoWhite.webp';
+import rarible from './rarible-logo.webp';
 
 // images
 export const bgLogoBlack = blackBg;

@@ -1,18 +1,20 @@
 import React, { memo, MouseEvent, ReactElement } from 'react';
+import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { NavLink } from 'react-router-dom';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { ReactComponent as SingleTokenHome } from '../../assets/singleTokenHome.svg';
-import './Breadcrumbs.css';
+import Typography from '@mui/material/Typography';
+
 import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
+import { ReactComponent as SingleTokenHome } from '../../assets/singleTokenHome.svg';
 import { TParamsBreadcrumbsComponent } from '../../mockupPage.types';
 import { IBreadcrumbsComponent } from '../nftList.types';
+
+import './Breadcrumbs.css';
 
 const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
   embeddedParams

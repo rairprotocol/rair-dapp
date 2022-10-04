@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import { ITokenLeftGreyman } from '../splashPage.types';
 
 const TokenLeftGreyman: React.FC<ITokenLeftGreyman> = ({

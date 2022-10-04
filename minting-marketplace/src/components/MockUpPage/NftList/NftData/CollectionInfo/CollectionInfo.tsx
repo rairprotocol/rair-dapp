@@ -1,12 +1,16 @@
 import React from 'react';
-import './CollectionInfo.css';
-import { utils } from 'ethers';
-import chainData from './../../../../../utils/blockchainData';
 import { useSelector } from 'react-redux';
+import { utils } from 'ethers';
+
 import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
-import { ICollectionInfo } from '../../nftList.types';
+
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import { ICollectionInfo } from '../../nftList.types';
+
+import chainData from './../../../../../utils/blockchainData';
+
+import './CollectionInfo.css';
 
 const CollectionInfo: React.FC<ICollectionInfo> = ({
   blockchain,

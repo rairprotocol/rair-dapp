@@ -1,12 +1,13 @@
 import React from 'react';
+
 import { MaticLogo } from '../../../../images';
 import {
-  EthIcon,
-  SpaceIcon,
-  TrippleIcon,
-  BinanceIcon,
   ArbIcon,
-  KitIcon
+  BinanceIcon,
+  EthIcon,
+  KitIcon,
+  SpaceIcon,
+  TrippleIcon
 } from '../../assets/tokenomics/tokenomics';
 import { ITokenomics } from '../aboutPage.types';
 

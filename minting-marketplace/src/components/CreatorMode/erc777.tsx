@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import * as ethers from 'ethers';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { metamaskCall } from '../../utils/metamaskUtils';
-
+import * as ethers from 'ethers';
 import Swal from 'sweetalert2';
+
 import { IErc777Data, IERC777Manager } from './creatorMode.types';
+
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { metamaskCall } from '../../utils/metamaskUtils';
 
 const ERC777Manager: React.FC<IERC777Manager> = () => {
   const [erc777Data, setERC777Data] = useState<IErc777Data>();

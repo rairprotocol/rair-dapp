@@ -21,4 +21,4 @@ const setRealChain = (realChain: BlockchainType | undefined) =>
     realChain
   } as const);
 
-export { setChainId, setUserAddress, setProgrammaticProvider, setRealChain };
+export { setChainId, setProgrammaticProvider, setRealChain, setUserAddress };

@@ -1,12 +1,31 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import '../../AboutPage/AboutPageNew/AboutPageNew.css';
-import './SimDogs.css';
-import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
+import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
+import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
 // import MetaMaskIcon from '../images/metamask_logo.png';
 import { discrodIconNoBorder } from '../../../images';
+import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import MetaTags from '../../SeoTags/MetaTags';
+// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
+import {
+  Flyinggreyman,
+  GreymanArmy,
+  GreymanMatrix,
+  GreymanMonument,
+  GreymanRose,
+  GreyManTimes,
+  GreymanVariants
+} from '../images/greyMan/grayMan';
 import {
   SimDogs0,
   SimDogs1,
@@ -14,48 +33,29 @@ import {
   SimDogs3,
   SimDogs4
 } from '../images/simDogs/simDogs';
-import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
-// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
-
-import {
-  GreymanRose,
-  Flyinggreyman,
-  GreymanVariants,
-  GreymanMonument,
-  GreymanArmy,
-  GreymanMatrix,
-  GreyManTimes
-} from '../images/greyMan/grayMan';
-// import GenesisMember from '../images/creator-flow.png';
-
-/* importing Components*/
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
-
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-
-import axios from 'axios';
-import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
 import {
   ICustomButtonBlock,
   ISplashPageProps,
   TDonationGridDataItem,
   TSplashDataType
 } from '../splashPage.types';
-import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
-import { setRealChain } from '../../../ducks/contracts/actions';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
+import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
+// import GenesisMember from '../images/creator-flow.png';
+/* importing Components*/
+import TeamMeet from '../TeamMeet/TeamMeetList';
+// import GenesisMember from '../images/creator-flow.png';
+/* importing Components*/
 import WarningModal from '../WarningModal';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
+
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './SimDogs.css';
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 // import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID

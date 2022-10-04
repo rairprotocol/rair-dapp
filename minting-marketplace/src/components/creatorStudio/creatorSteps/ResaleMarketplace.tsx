@@ -1,19 +1,20 @@
 //@ts-nocheck
-import { useState, useEffect, useCallback } from 'react';
-import Swal from 'sweetalert2';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import chainData from '../../../utils/blockchainData';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import FixedBottomNavigation from '../FixedBottomNavigation';
-import CustomFeeRow from '../common/customFeeRow';
 import { BigNumber, utils } from 'ethers';
-import InputField from '../../common/InputField';
-import { metamaskCall } from '../../../utils/metamaskUtils';
-import { TCustomPayments, TResaleMarketplace } from '../creatorStudio.types';
+import Swal from 'sweetalert2';
+
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import chainData from '../../../utils/blockchainData';
+import { metamaskCall } from '../../../utils/metamaskUtils';
 import { web3Switch } from '../../../utils/switchBlockchain';
+import InputField from '../../common/InputField';
+import CustomFeeRow from '../common/customFeeRow';
+import { TCustomPayments, TResaleMarketplace } from '../creatorStudio.types';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const CustomizeFees: React.FC<TResaleMarketplace> = ({
   contractData,

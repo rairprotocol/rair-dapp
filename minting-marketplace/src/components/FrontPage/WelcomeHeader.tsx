@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { RootState } from '../../ducks';
 import { setInfoSEO } from '../../ducks/seo/actions';
 import { InitialState } from '../../ducks/seo/reducers';

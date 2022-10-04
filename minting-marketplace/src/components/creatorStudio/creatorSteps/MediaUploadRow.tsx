@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
+
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { rFetch } from '../../../utils/rFetch';
+import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
-import { useSelector } from 'react-redux';
-import { rFetch } from '../../../utils/rFetch';
-import io from 'socket.io-client';
 import { IMediaUploadRow } from '../creatorStudio.types';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { RootState } from '../../../ducks';
-import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 
 const MediaUploadRow: React.FC<IMediaUploadRow> = ({
   item,

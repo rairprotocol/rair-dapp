@@ -1,9 +1,11 @@
 import axios, { AxiosError } from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
-import { token } from '../../utils/getToken';
+
 import { updateTokenMetadataError } from './actions';
 import { TUpdateTokenMetadata } from './metadata.types';
 import * as types from './types';
+
+import { token } from '../../utils/getToken';
 
 export function* updateTokenMetadata({ url, formData }) {
   try {

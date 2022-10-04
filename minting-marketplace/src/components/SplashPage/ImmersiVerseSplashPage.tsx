@@ -1,29 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
+
+import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
+import { RootState } from '../../ducks';
+import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { setInfoSEO } from '../../ducks/seo/actions';
+import { TInfoSeo } from '../../ducks/seo/seo.types';
+/* importing images*/
+import { DocumentIcon, metaMaskIcon } from '../../images';
+import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
+// Google Analytics
+//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+//ReactGA.initialize(TRACKING_ID);
+import MetaTags from '../SeoTags/MetaTags';
+
+import AuthorBlock from './AuthorBlock/AuthorBlock';
+import { SXSW1, SXSW2, SXSW3 } from './images/SxSw/sxSw';
+//Google Analytics
+import NotCommercialGeneric from './NotCommercial/NotCommercialGeneric';
+/* importing Components*/
+import TeamMeet from './TeamMeet/TeamMeetList';
 
 import './SplashPage.css';
 import './GreymanSplashPageMobile.css';
 import './../AboutPage/AboutPageNew/AboutPageNew.css';
-import Modal from 'react-modal';
-
-/* importing images*/
-import { metaMaskIcon, DocumentIcon } from '../../images';
-import { SXSW1, SXSW2, SXSW3 } from './images/SxSw/sxSw';
-
-/* importing Components*/
-import TeamMeet from './TeamMeet/TeamMeetList';
-import AuthorBlock from './AuthorBlock/AuthorBlock';
-import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
-
-//Google Analytics
-import NotCommercialGeneric from './NotCommercial/NotCommercialGeneric';
-import MetaTags from '../SeoTags/MetaTags';
-import { RootState } from '../../ducks';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
-import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
-import { TInfoSeo } from '../../ducks/seo/seo.types';
-import { setInfoSEO } from '../../ducks/seo/actions';
-import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
 
 const customStyles = {
   overlay: {

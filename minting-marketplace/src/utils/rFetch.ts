@@ -1,7 +1,8 @@
-import Swal from 'sweetalert2';
+import axios from 'axios';
 import * as ethers from 'ethers';
 import jsonwebtoken from 'jsonwebtoken';
-import axios from 'axios';
+import Swal from 'sweetalert2';
+
 import {
   TAuthenticationType,
   TAuthGetChallengeResponse,
@@ -229,4 +230,4 @@ const isTokenValid = (token: string | undefined) => {
   return false;
 };
 
-export { rFetch, signIn, getJWT, isTokenValid /* useRfetch */ };
+export { getJWT, isTokenValid, /* useRfetch */ rFetch, signIn };

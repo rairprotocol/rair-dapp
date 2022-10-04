@@ -1,8 +1,7 @@
 //@ts-nocheck
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+
 import {
   InquireButton,
   InquireContainer,
@@ -11,6 +10,9 @@ import {
   InquireLabel,
   InquireWrapper
 } from './InquiriesItems';
+
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 
 const InquiriesPage = () => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(

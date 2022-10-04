@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { INotCommercialTemplate } from '../splashPage.types';
+
 import './NotCommercial.css';
 
 const NotCommercialTemplate: React.FC<INotCommercialTemplate> = ({

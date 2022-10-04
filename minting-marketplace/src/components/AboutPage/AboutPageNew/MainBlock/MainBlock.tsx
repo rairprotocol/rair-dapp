@@ -1,15 +1,16 @@
 import React, { useState /*useCallback, useEffect*/ } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
-import { web3Switch } from '../../../../utils/switchBlockchain';
 import Swal from 'sweetalert2';
+
+import { diamondFactoryAbi } from '../../../../contracts/index';
+import { RootState } from '../../../../ducks';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 // import { rFetch } from "../../../../utils/rFetch";
 // import { erc721Abi } from "../../../../contracts";
 import { metamaskCall } from '../../../../utils/metamaskUtils';
-import { diamondFactoryAbi } from '../../../../contracts/index';
+import { web3Switch } from '../../../../utils/switchBlockchain';
 import { IMainBlock } from '../aboutPage.types';
-import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 
 const customStyles = {
   overlay: {

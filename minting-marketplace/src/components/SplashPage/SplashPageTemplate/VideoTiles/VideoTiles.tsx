@@ -1,6 +1,8 @@
 //@ts-nocheck
 import React from 'react';
+
 import VideoTilesItem from './VideoTilesItem';
+
 import './VideoTiles.css';
 
 const VideoTiles = ({ title, videoArr, primaryColor, backgroundImage }) => {

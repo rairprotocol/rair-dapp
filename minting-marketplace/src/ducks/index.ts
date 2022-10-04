@@ -1,20 +1,21 @@
 //@ts-nocheck
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { createReduxEnhancer } from '@sentry/react';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-//REDUCERS
 
-import colorStore from './colors/reducer';
-import getPageStore from './pages/reducers';
-import userStore from './users/reducers';
+import rootSaga from './sagas';
+
 import accessStore from './auth/reducers';
-import videosStore from './videos/reducers';
+//REDUCERS
+import colorStore from './colors/reducer';
 import contractStore from './contracts/reducer';
 import metadataStore from './metadata/reducers';
-import { createReduxEnhancer } from '@sentry/react';
-import rootSaga from './sagas';
-import allInformationFromSearch from './search/reducers';
 import nftDataStore from './nftData/reducers';
+import getPageStore from './pages/reducers';
+import allInformationFromSearch from './search/reducers';
 import seoStore from './seo/reducers';
+import userStore from './users/reducers';
+import videosStore from './videos/reducers';
 
 const reducers = combineReducers({
   accessStore,

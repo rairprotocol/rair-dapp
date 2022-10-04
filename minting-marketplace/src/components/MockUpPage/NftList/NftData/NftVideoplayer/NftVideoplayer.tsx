@@ -1,17 +1,18 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import videojs from 'video.js';
-import Swal from 'sweetalert2';
-import setDocumentTitle from '../../../../../utils/setTitle';
 import axios from 'axios';
+import { ethers } from 'ethers';
+import Swal from 'sweetalert2';
+import videojs from 'video.js';
+
 import {
   TAuthGetChallengeResponse,
   TOnlySuccessResponse
 } from '../../../../../axios.responseTypes';
-import { INftVideoplayer } from '../../../mockupPage.types';
 import { RootState } from '../../../../../ducks';
-import { ethers } from 'ethers';
 import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
+import setDocumentTitle from '../../../../../utils/setTitle';
+import { INftVideoplayer } from '../../../mockupPage.types';
 
 const NftVideoplayer: React.FC<INftVideoplayer> = ({
   selectVideo,

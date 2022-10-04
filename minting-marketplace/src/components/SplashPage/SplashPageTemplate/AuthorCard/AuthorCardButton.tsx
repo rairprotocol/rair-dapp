@@ -1,4 +1,5 @@
 import { IAuthorCardButton } from '../../splashPage.types';
+
 import './AuthorCard.css';
 
 const hyperlink = (url: string) => {

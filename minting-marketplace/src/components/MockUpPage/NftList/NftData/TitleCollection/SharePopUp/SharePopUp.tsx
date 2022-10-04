@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { FacebookShareButton, TwitterShareButton } from 'react-share';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -9,10 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
-import {
-  headerLogoBlackMobile,
-  headerLogoWhiteMobile
-} from '../../../../../../images';
+import { RootState } from '../../../../../../ducks';
 import { ISharePopUp } from '../../../../mockupPage.types';
 
 import './SharePopUp.css';
@@ -25,6 +23,10 @@ const SharePopUp: React.FC<ISharePopUp> = ({
 }) => {
   const [copySuccess /*setCopySuccess*/] = useState<string>('Copy link');
   const currentUrl = document.location.href;
+
+  const headerLogo = useSelector<RootState, string>(
+    (store) => store.colorStore.headerLogo
+  );
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -65,11 +67,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
           <ListItemAvatar>
             <img
               style={{ width: 30, height: 'auto', marginLeft: '10px' }}
-              src={
-                primaryColor === 'rhyno'
-                  ? headerLogoBlackMobile
-                  : headerLogoWhiteMobile
-              }
+              src={headerLogo}
               alt="Rair Tech"
             />
           </ListItemAvatar>

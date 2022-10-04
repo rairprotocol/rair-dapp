@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import { IPortal } from '../filteringBlock.types';
 
 /* Portal for filtering Modal*/

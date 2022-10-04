@@ -1,5 +1,6 @@
 //@ts-nocheck
 import React, { memo } from 'react';
+
 import cl from './Profile.module.css';
 
 const ProfileComponent = ({

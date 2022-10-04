@@ -1,20 +1,21 @@
 //@ts-nocheck
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import axios, { AxiosError } from 'axios';
+import Swal from 'sweetalert2';
+
+import { TUserResponse } from '../../../axios.responseTypes';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 import {
   MobileEditFields,
   MobileProfileBtnWrapper,
   MobileProfileField,
   MobileStandartFields
 } from '../NavigationItems/NavigationItems';
-import axios, { AxiosError } from 'axios';
-import Swal from 'sweetalert2';
-import { TUserResponse } from '../../../axios.responseTypes';
-import { RootState } from '../../../ducks';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
-import { useDispatch, useSelector } from 'react-redux';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
 const MobileEditProfile: React.FC = () => {
   const {

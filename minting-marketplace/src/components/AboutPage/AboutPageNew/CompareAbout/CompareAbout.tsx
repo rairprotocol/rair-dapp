@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
+import FormControl from '@mui/material/FormControl';
+// import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 // imports image logos
 import {
-  RairLogoBlue,
-  OpenSea,
-  Rarible,
-  OneOf,
+  Curios,
   Dapper,
   MinTable,
-  Curios
+  OneOf,
+  OpenSea,
+  RairLogoBlue,
+  Rarible
 } from '../../../../images';
 
-// import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import CompareMobileSelect from './CompareMobileSelect/CompareMobileSelect';
 
 const CompareAbout = () => {

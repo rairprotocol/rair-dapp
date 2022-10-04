@@ -1,23 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import FixedBottomNavigation from '../FixedBottomNavigation';
 import { useParams } from 'react-router-dom';
-import { erc721Abi } from '../../../contracts';
+import { BigNumber, ethers } from 'ethers';
 import Swal from 'sweetalert2';
-import chainData from '../../../utils/blockchainData';
-import { web3Switch } from '../../../utils/switchBlockchain';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+
 import OfferRow from './OfferRow';
-import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
+
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import { erc721Abi } from '../../../contracts';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import chainData from '../../../utils/blockchainData';
+import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
+import { web3Switch } from '../../../utils/switchBlockchain';
 import {
   IListOffers,
   TOfferListItem,
   TParamsListOffers
 } from '../creatorStudio.types';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { BigNumber, ethers } from 'ethers';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const ListOffers: React.FC<IListOffers> = ({
   contractData,

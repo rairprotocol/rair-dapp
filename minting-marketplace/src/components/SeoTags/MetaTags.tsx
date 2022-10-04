@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+
 import { IMetaTags } from '../SplashPage/splashPage.types';
 
 const MetaTags: React.FC<IMetaTags> = ({ seoMetaTags }) => {

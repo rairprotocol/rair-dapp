@@ -1,12 +1,13 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Provider, useSelector, useStore } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import InputField from '../common/InputField';
-import { useSelector, Provider, useStore } from 'react-redux';
+
 import { erc721Abi } from '../../contracts';
 import chainData from '../../utils/blockchainData';
 import { metamaskCall } from '../../utils/metamaskUtils';
+import InputField from '../common/InputField';
 
 const rSwal = withReactContent(
   Swal.mixin({

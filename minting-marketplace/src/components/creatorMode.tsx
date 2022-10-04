@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import setTitle from '../utils/setTitle';
-
 import * as ethers from 'ethers';
+
+import { TCreatorMode } from './creatorAndConsumerModes.types';
+
+import { abi } from '../contracts/Minter_Marketplace.json';
+import { RootState } from '../ducks';
+import { ContractsInitialType } from '../ducks/contracts/contracts.types';
+import setTitle from '../utils/setTitle';
 
 import ERC721Manager from './CreatorMode/ERC721Manager';
 import ERC777Manager from './CreatorMode/erc777';
 import FactoryManager from './CreatorMode/factory';
-import { abi } from '../contracts/Minter_Marketplace.json';
-import { RootState } from '../ducks';
-import { ContractsInitialType } from '../ducks/contracts/contracts.types';
-import { TCreatorMode } from './creatorAndConsumerModes.types';
 
 const CreatorMode: React.FC<TCreatorMode> = ({ account, addresses }) => {
   const [minterInstance, setMinterInstance] = useState<

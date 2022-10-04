@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ethers from 'ethers';
 import Swal from 'sweetalert2';
-import InputField from '../common/InputField';
+
 import {
   BlockchainInfo,
   ChainDataType,
   MetamaskError
 } from './adminView.types';
+
 import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import {
   setChainId,
   setProgrammaticProvider
 } from '../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import InputField from '../common/InputField';
 
 const binanceTestnetData: ChainDataType = {
   chainId: '0x61',

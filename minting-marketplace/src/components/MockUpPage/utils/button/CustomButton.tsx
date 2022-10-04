@@ -1,10 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+
+import { ShowMoreContainer, ShowMoreItem } from './ShowMoreItems';
+
 import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import { ICustomButton } from '../../NftList/nftList.types';
+
 import cl from './CustomButton.module.css';
-import { ShowMoreContainer, ShowMoreItem } from './ShowMoreItems';
 
 const CustomButton: React.FC<ICustomButton> = ({
   text,

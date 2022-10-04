@@ -1,21 +1,23 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import FixedBottomNavigation from '../FixedBottomNavigation';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import chainData from '../../../utils/blockchainData';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { metamaskCall } from '../../../utils/metamaskUtils';
+
 import DiamondOfferRow from './diamondOfferRow';
-import {
-  TMarketplaceOfferConfigArrayItem,
-  TListOffers,
-  TParamsDiamondListOffers,
-  TAddDiamondOffer
-} from '../creatorStudio.types';
+
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import chainData from '../../../utils/blockchainData';
+import { metamaskCall } from '../../../utils/metamaskUtils';
+import {
+  TAddDiamondOffer,
+  TListOffers,
+  TMarketplaceOfferConfigArrayItem,
+  TParamsDiamondListOffers
+} from '../creatorStudio.types';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const ListOffers: React.FC<TListOffers> = ({
   contractData,

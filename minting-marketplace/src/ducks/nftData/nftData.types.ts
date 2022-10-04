@@ -1,4 +1,3 @@
-import { TTokenData } from '../../axios.responseTypes';
 import {
   getNftDataError,
   getNftDataStart,
@@ -8,6 +7,8 @@ import {
   setTokenData,
   setTokenDataStart
 } from './action';
+
+import { TTokenData } from '../../axios.responseTypes';
 
 export interface InitialNftDataStateType {
   loading: boolean;

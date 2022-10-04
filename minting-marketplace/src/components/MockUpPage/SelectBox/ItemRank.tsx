@@ -1,7 +1,9 @@
 //@ts-nocheck
 //unused-component
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
 import { ItemRankContainer, SelectBoxItemRank } from './ItemRankItems';
+
 import './styles.css';
 
 const ItemRank = ({

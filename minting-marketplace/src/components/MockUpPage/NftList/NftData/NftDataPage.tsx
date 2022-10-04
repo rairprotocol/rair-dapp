@@ -1,15 +1,16 @@
 //@ts-nocheck
 //unused-component
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionItem,
-  AccordionItemHeading,
   AccordionItemButton,
+  AccordionItemHeading,
   AccordionItemPanel
 } from 'react-accessible-accordion';
 import Carousel from 'react-multi-carousel';
+import { useNavigate, useParams } from 'react-router-dom';
+
 import ItemRank from '../../SelectBox/ItemRank';
 import SelectBox from '../../SelectBox/SelectBox';
 import OfferItem from '../OfferItem';

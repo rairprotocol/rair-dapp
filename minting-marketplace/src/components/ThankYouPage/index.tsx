@@ -1,6 +1,7 @@
 //@ts-nocheck
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { discrodIconNoBorder } from '../../images';
 import { LogoAuthor } from '../SplashPage/images/commingSoon/commingSoonImages';
 

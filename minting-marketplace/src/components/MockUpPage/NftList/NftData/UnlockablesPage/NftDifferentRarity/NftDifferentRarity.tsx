@@ -1,13 +1,15 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import cl from './NftDifferentRarity.module.css';
-import CustomButton from '../../../../utils/button/CustomButton';
+
 import { TTokenData } from '../../../../../../axios.responseTypes';
+import CustomButton from '../../../../utils/button/CustomButton';
 import {
   INftDifferentRarity,
   TParamsNftDataCommonLink
 } from '../../../nftList.types';
+
+import cl from './NftDifferentRarity.module.css';
 
 const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
   title,

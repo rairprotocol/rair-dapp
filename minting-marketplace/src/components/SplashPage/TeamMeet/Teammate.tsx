@@ -1,7 +1,9 @@
 import React from 'react';
-import { ITeammate } from '../splashPage.types';
-import TeammateDesc from './TeammateDesc';
 import { v4 } from 'uuid';
+
+import TeammateDesc from './TeammateDesc';
+
+import { ITeammate } from '../splashPage.types';
 
 const Teammate: React.FC<ITeammate> = ({
   url,

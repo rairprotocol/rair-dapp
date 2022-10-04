@@ -1,8 +1,10 @@
+import { useCallback, useEffect, useReducer } from 'react';
 import { CircularProgress, Tooltip } from '@mui/material';
 import axios from 'axios';
-import { useCallback, useEffect, useReducer } from 'react';
+
 import { TAxiosFavoriteData } from '../../../../axios.responseTypes';
 import { ILikeButton } from '../../mockupPage.types';
+
 import {
   addItemFavoriteEnd,
   addItemFavoriteStart,
@@ -15,6 +17,7 @@ import {
   favoritesReducer,
   initialFavoritesState
 } from './favoritesReducer/favoritesReducers';
+
 import './LikeButton.css';
 
 const LikeButton: React.FC<ILikeButton> = ({

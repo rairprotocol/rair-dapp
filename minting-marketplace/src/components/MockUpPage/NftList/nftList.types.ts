@@ -3,6 +3,7 @@ import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
 import { UserType } from '../../../ducks/users/users.types';
 import { TOfferType } from '../../marketplace/marketplace.types';
 import { TEmbeddedParams } from '../mockupPage.types';
+
 import {
   TContract,
   TFileType,

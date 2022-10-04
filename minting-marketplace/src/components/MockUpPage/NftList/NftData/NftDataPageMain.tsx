@@ -1,24 +1,27 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
-import setDocumentTitle from '../../../../utils/setTitle';
-import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
-import TitleCollection from './TitleCollection/TitleCollection';
-import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import { INftDataPageMain, TOffersIndexesData } from '../../mockupPage.types';
-import CustomShareButton from './CustomShareButton';
-import { TFileType } from '../../../../axios.responseTypes';
-import EtherscanIconComponent from './EtherscanIconComponent';
-import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
-import SerialNumberBuySell from './SerialNumberBuySell';
-import { TitleSingleTokenView } from './TitleSingleTokenView';
-import SingleTokenViewProperties from './SingleTokenViewProperties';
-import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
+import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
+
+import CustomShareButton from './CustomShareButton';
+import EtherscanIconComponent from './EtherscanIconComponent';
+import SerialNumberBuySell from './SerialNumberBuySell';
+import SingleTokenViewProperties from './SingleTokenViewProperties';
+import { TitleSingleTokenView } from './TitleSingleTokenView';
+import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
+
+import { TFileType } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
+import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
+import setDocumentTitle from '../../../../utils/setTitle';
+import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
+import { INftDataPageMain, TOffersIndexesData } from '../../mockupPage.types';
+import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
+
+import TitleCollection from './TitleCollection/TitleCollection';
 
 const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,

@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ISelectNumber } from '../selectBox.types';
+
 import { CurrentTokens } from './CurrentTokens/CurrentTokens';
 import { ListOfTokens } from './ListOfTokens/ListOfTokens';
+
 import './SelectNumber.css';
 
 const SelectNumber: React.FC<ISelectNumber> = ({

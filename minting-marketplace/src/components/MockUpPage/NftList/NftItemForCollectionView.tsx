@@ -1,15 +1,18 @@
-import React, { useState, memo, useCallback, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { gettingPrice } from './utils/gettingPrice';
-import { SvgKey } from './SvgKey';
-import chainData from '../../../utils/blockchainData';
-import defaultImage from './../assets/defultUser.png';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { SvgKey } from './SvgKey';
+
+import chainData from '../../../utils/blockchainData';
+import { ImageLazy } from '../ImageLazy/ImageLazy';
 import {
   INftItemForCollectionView,
   TParamsNftItemForCollectionView
 } from '../mockupPage.types';
-import { ImageLazy } from '../ImageLazy/ImageLazy';
+
+import defaultImage from './../assets/defultUser.png';
+import { gettingPrice } from './utils/gettingPrice';
 
 const NftItemForCollectionViewComponent: React.FC<
   INftItemForCollectionView

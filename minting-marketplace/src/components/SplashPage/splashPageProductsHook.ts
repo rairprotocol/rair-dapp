@@ -1,7 +1,9 @@
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
-import { useState, useEffect, useCallback } from 'react';
-import { TFileType, TNftFilesResponse } from '../../axios.responseTypes';
+
 import { TSplashDataType, TUseGetProductsReturn } from './splashPage.types';
+
+import { TFileType, TNftFilesResponse } from '../../axios.responseTypes';
 
 export const useGetProducts = (
   splashData: TSplashDataType

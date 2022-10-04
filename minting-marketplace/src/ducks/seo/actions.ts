@@ -30,4 +30,4 @@ const resetInfoSeo = () => ({
   twitterDescription: ''
 });
 
-export { setInfoSEO, resetInfoSeo };
+export { resetInfoSeo, setInfoSEO };

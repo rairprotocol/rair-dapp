@@ -1,8 +1,10 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
+
 import { TFileType } from '../../../../axios.responseTypes';
-import { IUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
-import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
 import { ReactComponent as LockWhite } from '../../assets/LockWhite.svg';
+import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
+import { IUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
+
 import NftVideoplayer from './NftVideoplayer/NftVideoplayer';
 
 const UnlockableVideosSingleTokenPage: React.FC<

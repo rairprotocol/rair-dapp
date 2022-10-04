@@ -1,13 +1,15 @@
-import React, { useRef, memo, useCallback, useState, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
-import '../../styles.css';
+import axios from 'axios';
+
 import {
   TNftItemResponse,
   TTokenData
 } from '../../../../../axios.responseTypes';
-import axios from 'axios';
 import { IListOfTokensComponent } from '../../selectBox.types';
+import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
+
+import '../../styles.css';
 
 const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   blockchain,
