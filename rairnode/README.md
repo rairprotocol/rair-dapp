@@ -138,7 +138,9 @@ Provide ability to make some specific actions on the platform
       * [x] /offers - Return all Offers (Query string supported) [see details here](readme/common_get_all.md)
           * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
           * [x] /byAddressAndProduct - GET - get list of offers for specific Product [see details here](readme/get_Offer_by_Address_and_Product.md)
-      * [x] /tokens - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)
+      * [x] /tokens 
+          * [x] / - get - get all tokens [see details here](readme/get_tokens.md)
+          * [x] / - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)
           * [x] /my - GET - get all tokens which belongs to current user, [see details here](readme/get_my_tokens.md)
           * [x] /tokenNumbers - GET - get all tokens' numbers for [see details here](readme/get_tokenNumbers.md)
           * [x] /viaCSV - POST - update existed nft tokens, (**mirrors POST:api/nft/** without creating of new tokens. No handling for *"Token not created"* scenario.) [see details here](readme/bulk_create_NFT_tokens.md)
