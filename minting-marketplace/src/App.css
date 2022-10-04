@@ -1988,7 +1988,7 @@ button.metamask-on-boarding:focus {
   .modal-content-play-image {
     position: absolute;
     top: 20%;
-    left: 33%;
+    left: 35%;
     max-width: 100%;
     transform: scale(0.7);
   }
@@ -2041,8 +2041,8 @@ button.metamask-on-boarding:focus {
   }
   .modal-content-play-image {
     position: absolute;
-    top: 0;
-    left: 23%;
+    top: 15px;
+    left: 28%;
     max-width: 100%;
     transform: scale(0.5);
   }
@@ -2095,8 +2095,8 @@ button.metamask-on-boarding:focus {
   }
   .modal-content-play-image {
     position: absolute;
-    top: 0;
-    left: 23%;
+    top: -20px;
+    left: 13%;
     max-width: 100%;
     transform: scale(0.5);
   }

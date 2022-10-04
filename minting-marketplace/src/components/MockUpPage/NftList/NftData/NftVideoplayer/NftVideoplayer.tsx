@@ -126,9 +126,6 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
         <div className="nft-video-player-video">
           <video
             id={'vjs-' + videoName}
-            style={{
-              height: '100%'
-            }}
             className="video-js"
             controls
             preload="auto"
