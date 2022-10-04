@@ -25,25 +25,22 @@ module.exports = async (context) => {
     await agenda.start();
 
     // cleanup old tasks
-    const removeJobs = await agenda.jobs({ name: 'system remove processed tasks' });
+    const removeJobs = await agenda.jobs({
+      name: 'system remove processed tasks',
+    });
 
     if (removeJobs.length === 0) {
-      await agenda.create('system remove processed tasks')
+      await agenda
+        .create('system remove processed tasks')
         .repeatEvery('1 days')
-        .schedule(moment()
-          .utc()
-          .add(1, 'days')
-          .startOf('day')
-          .toDate())
+        .schedule(moment().utc().add(1, 'days').startOf('day').toDate())
         .save();
     }
 
     // start sync processes
-    await agenda.create('sync')
-      .schedule(moment()
-        .utc()
-        .add(1, 'minutes')
-        .toDate())
+    await agenda
+      .create('sync')
+      .schedule(moment().utc().add(1, 'minutes').toDate())
       .save();
     log.info('Sync tasks will start in a minute!');
   });
@@ -66,52 +63,50 @@ module.exports = async (context) => {
     log.info(`Finished task: ${name}!`, data);
     switch (name) {
       case AgendaTaskEnum.SyncContracts:
-        await agenda.create(AgendaTaskEnum.SyncDiamondContracts, data)
-          .schedule(moment()
-            .utc()
-            .toDate())
+        await agenda
+          .create(AgendaTaskEnum.SyncDiamondContracts, data)
+          .schedule(moment().utc().toDate())
           .save();
         break;
       case AgendaTaskEnum.SyncDiamondContracts:
-        await agenda.create(AgendaTaskEnum.SyncAll721Events, data)
-          .schedule(moment()
-            .utc()
-            .toDate())
+        await agenda
+          .create(AgendaTaskEnum.SyncAll721Events, data)
+          .schedule(moment().utc().toDate())
           .save();
         break;
       case AgendaTaskEnum.SyncAll721Events:
-        await agenda.create(AgendaTaskEnum.SyncAllDiamond721Events, data)
-          .schedule(moment()
-            .utc()
-            .toDate())
+        await agenda
+          .create(AgendaTaskEnum.SyncAllDiamond721Events, data)
+          .schedule(moment().utc().toDate())
           .save();
         break;
       case AgendaTaskEnum.SyncAllDiamond721Events:
-        await agenda.create(AgendaTaskEnum.SyncClassicMarketplaceEvents, data)
-          .schedule(moment()
-            .utc()
-            .toDate())
+        await agenda
+          .create(AgendaTaskEnum.SyncClassicMarketplaceEvents, data)
+          .schedule(moment().utc().toDate())
           .save();
         break;
       case AgendaTaskEnum.SyncClassicMarketplaceEvents:
-        await agenda.create(AgendaTaskEnum.SyncDiamondMarketplaceEvents, data)
-          .schedule(moment()
-            .utc()
-            .toDate())
+        await agenda
+          .create(AgendaTaskEnum.SyncDiamondMarketplaceEvents, data)
+          .schedule(moment().utc().toDate())
           .save();
         break;
       case AgendaTaskEnum.SyncDiamondMarketplaceEvents:
-        await agenda.create(AgendaTaskEnum.SyncResaleMarketplaceEvents, data)
-          .schedule(moment()
-            .utc()
-            .toDate())
+        await agenda
+          .create(AgendaTaskEnum.SyncResaleMarketplaceEvents, data)
+          .schedule(moment().utc().toDate())
           .save();
         break;
       default:
         break;
     }
 
-    log.info(`Agenda [${task.attrs.name}][${task.attrs._id}] > processed with data ${JSON.stringify(data)}. ${additionalInfo}`);
+    log.info(
+      `Agenda [${task.attrs.name}][${
+        task.attrs._id
+      }] > processed with data ${JSON.stringify(data)}. ${additionalInfo}`,
+    );
   });
 
   agenda.on('fail', (err) => {
@@ -129,7 +124,7 @@ module.exports = async (context) => {
   process.on('SIGTERM', graceful);
   process.on('SIGINT', graceful);
   process.on('unhandledRejection', (err) => {
-    log.error(`Unhandled Rejection: ${JSON.stringify(err)}`);
+    log.error(`Unhandled Rejection: ${err}`);
   });
 
   return agenda;

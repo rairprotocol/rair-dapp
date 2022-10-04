@@ -8,19 +8,23 @@ const log = require('../logger')(module);
 
 const fetchJson = async (URL) => {
   try {
-    const metadata = await (
-      await fetch(URL)
-    ).json();
-    if (!metadata.description || metadata.description !== "" || !metadata.name || metadata.name !== "") {
+    const metadata = await (await fetch(URL)).json();
+    if (
+      !metadata.description ||
+      metadata.description !== '' ||
+      !metadata.name ||
+      metadata.name !== ''
+    ) {
       return metadata;
-    } else {
-      log.error(`Metadata from ${URL} is missing required fields! (Description or name)`);
     }
+    log.error(
+      `Metadata from ${URL} is missing required fields! (Description or name)`,
+    );
   } catch (err) {
     log.error(`Couldn't load metadata from ${URL}, skipping!`);
   }
   return false;
-}
+};
 
 module.exports = {
   handleMetadataForToken: async (
@@ -115,6 +119,12 @@ module.exports = {
       );
       return;
     }
+    if (contract.blockSync) {
+      log.info(
+        `Cathced event for contract ${address} - skipping as sync is blocked`,
+      );
+      return undefined;
+    }
     return contract;
   },
   updateMetadataForTokens: async (
@@ -122,10 +132,10 @@ module.exports = {
     appendTokenIndexFlag,
     newURI,
     collectionWideFlag,
-    metadataExtension = ""
+    metadataExtension = '',
   ) => {
     let tokensToUpdate = [];
-    if (newURI !== "") {
+    if (newURI !== '') {
       try {
         await fetch(newURI);
       } catch (err) {
@@ -133,32 +143,36 @@ module.exports = {
         throw err;
       }
     } else {
-      log.info("Updating metadata with a blank string (This means the metadata got unset)");
+      log.info(
+        'Updating metadata with a blank string (This means the metadata got unset)',
+      );
     }
     if (tokens.length > 0) {
       if (appendTokenIndexFlag && newURI) {
+        // eslint-disable-next-line no-restricted-syntax
         for await (const token of tokens) {
           let fetchedMetadata = {};
-          if (newURI !== "") {
-            fetchedMetadata = await fetchJson(collectionWideFlag ?
-              `${newURI}${token.token}${metadataExtension}`
-              :
-              `${newURI}${token.uniqueIndexInContract}${metadataExtension}`
-            )
+          if (newURI !== '') {
+            fetchedMetadata = await fetchJson(
+              collectionWideFlag
+                ? `${newURI}${token.token}${metadataExtension}`
+                : `${newURI}${token.uniqueIndexInContract}${metadataExtension}`,
+            );
           }
           if (fetchedMetadata === false) {
+            // eslint-disable-next-line no-continue
             continue;
           }
           token.metadata = fetchedMetadata;
           token.isMetadataPinned = true;
           token.isURIStoredToBlockchain = true;
           tokensToUpdate.push(
-            await token.save().catch(this.handleDuplicateKey)
+            await token.save().catch(this.handleDuplicateKey),
           );
         }
       } else {
-        let fetchedMetadata = ""
-        if (newURI !== "") {
+        let fetchedMetadata = '';
+        if (newURI !== '') {
           fetchedMetadata = await fetchJson(newURI);
         }
         tokensToUpdate = tokens.reduce((data, token) => {
@@ -183,5 +197,5 @@ module.exports = {
       log.info('updateMetadataForTokens: no token to update');
     }
   },
-  log
+  log,
 };
