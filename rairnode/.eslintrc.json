@@ -13,6 +13,7 @@
   },
   "rules": {
     "linebreak-style":["warn"],
+    "indent":"off",
     "implicit-arrow-linebreak":"off",
     "no-underscore-dangle": 0,
     "object-curly-newline":"off",

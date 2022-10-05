@@ -15,8 +15,8 @@ const Contract = new Schema(
     external: { type: Boolean, required: true, default: false },
     singleMetadata: { type: Boolean, default: false },
     metadataURI: { type: String, default: 'none' },
-    blockSync: { type: Boolean, default: false },
-    blockView: { type: Boolean, default: false },
+    blockSync: { type: Boolean, default: false, select: 0 },
+    blockView: { type: Boolean, default: false, select: 0 },
   },
   { versionKey: false },
 );
@@ -135,5 +135,8 @@ Contract.statics = {
     return this.find({ user }, this.defaultProjection).distinct('_id');
   },
 };
-
+// Contract.pre('find', function hideBlockeViewed(next) {
+//   this.find({ blockView: { $ne: true } });
+//   next();
+// });
 module.exports = Contract;

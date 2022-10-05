@@ -58,24 +58,21 @@ const prepareTokens = (
   if (!contract.diamond) {
     mainFields.offerPool = offerPool.marketplaceCatalogIndex;
   }
-
-  _.forEach(offers, (offer) => {
-    const start = BigInt(offer.range[0]);
-    const end = BigInt(offer.range[1]);
-
-    // eslint-disable-next-line no-plusplus
-    for (let index = start; index <= end; index++) {
-      tokens.push({
-        ...mainFields,
-        token: index.toString(),
-        ownerAddress: `0xooooooooooooooooooooooooooooooooooo${index}`,
-        offer: contract.diamond ? offer.diamondRangeIndex : offer.offerIndex,
-        uniqueIndexInContract: (firstTokenInProduct + index).toString(),
-        isMinted: false,
-        isURIStoredToBlockchain: false,
-        metadata,
-      });
-    }
+  const options = offerPool
+    ? {
+        contract: contract._id,
+        offerPool: offerPool.marketplaceCatalogIndex,
+      }
+    : {
+        contract: contract._id,
+        offer: { $in: offers },
+      };
+  options.isMinted = false;
+  const foundTokens = MintedToken.find(options);
+  foundTokens.map((token) => {
+    token.isURIStoredToBlockchain = false;
+    token.metadata = metadata;
+    tokens.push({ ...token }), {};
   });
 };
 exports.getTokenNumbers = async (req, res, next) => {
