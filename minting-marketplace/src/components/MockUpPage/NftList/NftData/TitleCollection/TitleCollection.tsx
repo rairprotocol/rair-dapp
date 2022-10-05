@@ -16,6 +16,8 @@ import CustomShareButton from '../CustomShareButton';
 import defaultUser from './../../../assets/defultUser.png';
 import SharePopUp from './SharePopUp/SharePopUp';
 
+import './TitleCollection.css';
+
 const TitleCollection: React.FC<ITitleCollection> = ({
   title,
   userName,
