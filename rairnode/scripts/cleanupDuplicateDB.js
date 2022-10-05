@@ -1,3 +1,5 @@
+// run this file only to clean up duplicate DBs
+
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const {
@@ -31,6 +33,20 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   });
   const db = client.db(client.s.options.dbName);
 
+  // clean duplicate
+  const cleanDublicate = async (collectionName, fields) => {
+    await db.collection(collectionName).aggregate([
+      { $group: {
+        _id: fields,
+        ids: { $push: '$_id' },
+      } },
+    ], { allowDiskUse: true }).forEach(async (doc) => {
+      doc.ids.shift(); // remove first match
+      // removes all $in list
+      await db.collection(collectionName).deleteMany({ _id: { $in: doc.ids } });
+    });
+  };
+
   try {
     await db.collection('User').dropIndexes();
   } catch (e) {
@@ -43,6 +59,7 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('Contract');
   }
+  cleanDublicate('Contract', { contractAddress: '$contractAddress', blockchain: '$blockchain' });
   await db.collection('Contract').createIndex({ user: 1 }, { background: true });
   await db.collection('Contract').createIndex({ contractAddress: 1, blockchain: 1 }, { background: true, unique: true });
 
@@ -51,6 +68,7 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('Product');
   }
+  cleanDublicate('Product', { contract: '$contract', collectionIndexInContract: '$collectionIndexInContract' });
   await db.collection('Product').createIndex({ name: 1 }, { background: true });
   await db.collection('Product').createIndex({ contract: 1 }, { background: true });
   await db.collection('Product').createIndex({ contract: 1, collectionIndexInContract: 1 }, { background: true, unique: true });
@@ -61,6 +79,7 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('OfferPool');
   }
+  cleanDublicate('OfferPool', { contract: '$contract', collectionIndexInContract: '$collectionIndexInContract' });
   await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true, unique: true });
   await db.collection('OfferPool').createIndex({ contract: 1, marketplaceCatalogIndex: 1 }, { background: true, unique: true });
 
@@ -69,6 +88,8 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('Offer');
   }
+  cleanDublicate('Offer', { contract: '$contract', offerPool: '$offerPool' });
+  cleanDublicate('Offer', { contract: '$contract', diamondRangeIndex: '$diamondRangeIndex' });
   await db.collection('Offer').createIndex({ offerPool: 1 }, { background: true });
   await db.collection('Offer').createIndex({ contract: 1, product: 1 }, { background: true });
   await db.collection('Offer').createIndex({ contract: 1, diamondRangeIndex: 1 }, { background: true });
@@ -96,6 +117,7 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('MintedToken');
   }
+  cleanDublicate('MintedToken', { contract: '$contract', uniqueIndexInContract: '$uniqueIndexInContract' });
   await db.collection('MintedToken').createIndex({ contract: 1, uniqueIndexInContract: 1 }, { background: true, unique: true, name: 'MintedTokenUniqueIndex' });
   await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1 }, { background: true });
   await db.collection('MintedToken').createIndex({ contract: 1, offer: 1 }, { background: true });
@@ -106,6 +128,7 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('Versioning');
   }
+  cleanDublicate('Versioning', { name: '$name', network: '$network' });
   await db.collection('Versioning').createIndex({ name: 1, network: 1 }, { background: true, unique: true });
 
   try {
@@ -113,12 +136,14 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('SyncRestriction');
   }
+  cleanDublicate('SyncRestriction', { blockchain: '$blockchain', contractAddress: '$contractAddress' });
   await db.collection('SyncRestriction').createIndex({ blockchain: 1, contractAddress: 1 }, { background: true, unique: true });
 
   try {
     await db.collection('Transaction').dropIndexes();
   } catch (e) {
     db.createCollection('Transaction');
+    cleanDublicate('Transaction', { _id: '$_id', blockchainId: '$blockchainId' });
   }
   await db.collection('Transaction').createIndex({ _id: 1, blockchainId: 1 }, { background: true, unique: true });
 
@@ -127,6 +152,7 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('FavoriteTokens');
   }
+  cleanDublicate('FavoriteTokens', { userAddress: '$userAddress', token: '$token' });
   await db.collection('FavoriteTokens').createIndex({ userAddress: 1, token: 1 }, { background: true, unique: true });
 
   console.log('Completed Database Indexes');
