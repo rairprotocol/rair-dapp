@@ -43,10 +43,16 @@ const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
   }, [isUnlocked]);
 
   const getAllTokens = useCallback(async () => {
-    const responseAllTokens = await axios.get(
-      `/api/nft/network/${blockchain}/${contract}/${product}`
+    const responseAllTokenNumbers = await axios.get(
+      `/api/nft/network/${blockchain}/${contract}/${product}/tokenNumbers`
     );
-    setAllTokenData(responseAllTokens.data.result.tokens);
+
+    if (responseAllTokenNumbers.data.tokens) {
+      const responseAllTokens = await axios.get(
+        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=${responseAllTokenNumbers.data.tokens.length}`
+      );
+      setAllTokenData(responseAllTokens.data.result.tokens);
+    }
   }, [product, contract, blockchain]);
 
   const colorRarity =

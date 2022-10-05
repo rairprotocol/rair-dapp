@@ -1,7 +1,11 @@
-//@ts-nocheck
 import styled from 'styled-components';
 
-export const AppContainerFluid = styled.div`
+import {
+  IAppContainerFluidStyled,
+  IMainBlockAppStyled
+} from './AppContainer.types';
+
+export const AppContainerFluid = styled.div<IAppContainerFluidStyled>`
   ${(props) => props.backgroundImageEffect};
   background-size: 100vw 100vh;
   min-height: 100vh;
@@ -21,9 +25,11 @@ export const AppContainerFluid = styled.div`
   }
 `;
 
-export const MainBlockApp = styled.div`
+export const MainBlockApp = styled.div<IMainBlockAppStyled>`
   margin-top: ${(props) =>
-    props.showAlert && props.selectedChain ? '65px' : '0'};
+    props.showAlert && !props.isSplashPage && props.selectedChain
+      ? '65px'
+      : '0'};
 
   @media screen and (max-width: 1024px) {
     margin-top: 8vh;

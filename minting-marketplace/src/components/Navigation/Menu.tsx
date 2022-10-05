@@ -44,6 +44,7 @@ interface IMenuNavigation {
   showAlert: boolean | null | undefined;
   selectedChain: string | null | undefined;
   setTabIndexItems: (arg: number) => void;
+  isSplashPage: boolean;
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
@@ -56,7 +57,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   programmaticProvider,
   showAlert,
   selectedChain,
-  setTabIndexItems
+  setTabIndexItems,
+  isSplashPage
 }) => {
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
@@ -149,7 +151,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     <MenuMobileWrapper
       className="col-1 rounded burder-menu"
       showAlert={showAlert}
-      selectedChain={selectedChain}>
+      selectedChain={selectedChain}
+      isSplashPage={isSplashPage}>
       <Nav primaryColor={primaryColor}>
         <MobileChoiseNav
           click={click}

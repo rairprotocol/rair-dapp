@@ -412,6 +412,7 @@ function App() {
           ) : (
             !isIframePage && (
               <MenuNavigation
+                isSplashPage={isSplashPage}
                 adminRights={adminRights}
                 primaryColor={primaryColor}
                 startedLogin={startedLogin}
@@ -443,7 +444,10 @@ function App() {
           {/*
 							Main body, the header, router and footer are here
 						*/}
-          <MainBlockApp showAlert={showAlert} selectedChain={selectedChain}>
+          <MainBlockApp
+            isSplashPage={isSplashPage}
+            showAlert={showAlert}
+            selectedChain={selectedChain}>
             <div className="col-12 blockchain-switcher" />
             <div className="col-12 mt-3">
               <SentryRoutes>

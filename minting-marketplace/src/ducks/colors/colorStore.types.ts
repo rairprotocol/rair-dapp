@@ -1,7 +1,7 @@
 import { setColorScheme } from './actions';
 
 export type ColorChoice = 'charcoal' | 'rhyno';
-type BackgroundBlendModeType =
+export type BackgroundBlendModeType =
   | 'difference'
   | 'exclusion'
   | 'soft-light'

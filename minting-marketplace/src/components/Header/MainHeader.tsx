@@ -1,4 +1,3 @@
-//@ts-nocheck
 //tools
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,6 +35,8 @@ import {
 } from './HeaderItems/HeaderItems';
 import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 
+//styles
+import './Header.css';
 //styles
 import './Header.css';
 

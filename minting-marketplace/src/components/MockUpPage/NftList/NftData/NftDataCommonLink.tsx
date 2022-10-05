@@ -87,23 +87,29 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const getAllProduct = useCallback(
     async (fromToken: number, toToken: number) => {
       let responseAllProduct;
-      if (Number(tokenId) > 15) {
-        responseAllProduct = await axios.get(
-          `/api/nft/network/${blockchain}/${contract}/${product}`
-        );
-      } else {
+      setIsLoading(true);
+      // if (Number(tokenId) > 15) {
+      //   responseAllProduct = await axios.get(
+      //     `/api/nft/network/${blockchain}/${contract}/${product}`
+      //   );
+      // } else {
+      if (tokenId) {
         responseAllProduct = await axios.get<TNftItemResponse>(
           `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`
         );
       }
+
+      // }
       dispatch(setTokenData(responseAllProduct.data.result.tokens));
       setTotalCount(responseAllProduct.data.result.totalCount);
+      setIsLoading(false);
 
       if (tokenId && responseAllProduct.data.result.tokens.length >= tokenId) {
         if (tokenId) {
           setSelectedData(
             responseAllProduct.data.result?.tokens[tokenId]?.metadata
           );
+          setIsLoading(false);
         }
       }
 

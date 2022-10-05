@@ -130,7 +130,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             ${blockchain && chainData[blockchain]?.symbol}`}
       />
     ) : (
-      <p>no data</p>
+      <p></p>
     );
   }, [offerData, disableBuyBtn, blockchain, realChainProtected, buyContract]);
 
@@ -145,7 +145,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       ) : (
         checkOwner()
       );
-    } else if (selectedToken && !tokenData?.[selectedToken].isMinted) {
+    } else if (selectedToken && !tokenData?.[selectedToken]?.isMinted) {
       return checkOwner();
     } else {
       return (
