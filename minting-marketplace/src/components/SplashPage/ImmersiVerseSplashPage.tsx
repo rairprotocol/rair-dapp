@@ -9,9 +9,13 @@ import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../ducks/seo/actions';
 import { TInfoSeo } from '../../ducks/seo/seo.types';
+// Google Analytics
+//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+//ReactGA.initialize(TRACKING_ID);
 /* importing images*/
 import { DocumentIcon, metaMaskIcon } from '../../images';
 import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
+import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -250,7 +254,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
             <div className="list-of-immersiverse-pic">
               <div className="join-pic-list">
                 <h4 className="carousel-items"> Bubblegum </h4>
-                <img
+                <ImageLazy
                   className="join-pic-img-list"
                   src={SXSW1}
                   alt="ImmersiVerse ATX Bubblegum"
@@ -258,7 +262,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
               </div>
               <div className="join-pic-list">
                 <h4 className="carousel-items"> Gold </h4>
-                <img
+                <ImageLazy
                   className="join-pic-img-list"
                   src={SXSW2}
                   alt="ImmersiVerse ATX Gold"
@@ -266,7 +270,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
               </div>
               <div className="join-pic-list">
                 <h4 className="carousel-items"> Seabreeze</h4>
-                <img
+                <ImageLazy
                   className="join-pic-img-list"
                   src={SXSW3}
                   alt="ImmersiVerse ATX Seabreeze"
@@ -277,7 +281,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
             <MobileCarouselNfts>
               <div className="join-pic-carousel">
                 <h4 className="carousel-items"> Bubblegum </h4>
-                <img
+                <ImageLazy
                   className="join-pic-img"
                   src={SXSW1}
                   alt="ImmersiVerse ATX Bubblegum"
@@ -285,7 +289,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
               </div>
               <div className="join-pic-carousel">
                 <h4 className="carousel-items"> Gold</h4>
-                <img
+                <ImageLazy
                   className="join-pic-img"
                   src={SXSW2}
                   alt="ImmersiVerse ATX Gold"
@@ -293,7 +297,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
               </div>
               <div className="join-pic-carousel">
                 <h4 className="carousel-items"> Seabreeze </h4>
-                <img
+                <ImageLazy
                   className="join-pic-img"
                   src={SXSW3}
                   alt="ImmersiVerse ATX Seabreeze"

@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { discrodIconNoBorder } from '../../images';
+import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 import { LogoAuthor } from '../SplashPage/images/commingSoon/commingSoonImages';
 
 const ThankYouPage = () => {
@@ -37,7 +38,10 @@ const ThankYouPage = () => {
                     href="https://discord.gg/NFeGnPkbfd"
                     target="_blank"
                     rel="noreferrer">
-                    <img src={discrodIconNoBorder} alt="Discord RAIR.TECH" />{' '}
+                    <ImageLazy
+                      src={discrodIconNoBorder}
+                      alt="Discord RAIR.TECH"
+                    />{' '}
                     Join our Discord
                   </a>
                 </div>
@@ -47,7 +51,7 @@ const ThankYouPage = () => {
               </div>
               <div className="logo-author">
                 {/* <img src={logoDigital} alt="southwest digital" /> */}
-                <img src={LogoAuthor} alt="Custom Rair Tech logo" />
+                <ImageLazy src={LogoAuthor} alt="Custom Rair Tech logo" />
               </div>
             </div>
           </div>

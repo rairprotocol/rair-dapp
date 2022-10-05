@@ -10,11 +10,11 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { metaMaskIcon } from '../../../images';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import { NFTNYC_TITLE, warning0 } from '../images/NFTNYC/nftnyc';
-import { NYCVideoBackground } from '../images/NFTNYC/nftnyc';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
 import { useGetProducts } from '../splashPageProductsHook';
@@ -175,7 +175,11 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
             style={{ fontSize: 'calc(.75rem + 1vw)', margin: '24px 0' }}>
             Click sign. We only ask for a single challenge request.
           </div>
-          <img className="warning-img" src={warning0} />
+          <ImageLazy
+            className="warning-img"
+            src={warning0}
+            alt="Matamask Signature Request"
+          />
           <div className="btn-submit-with-form">
             <button
               className="nftnyc-font"

@@ -7,6 +7,7 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
 import {
@@ -270,8 +271,16 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
         <div style={{ height: '5vw' }} />
         <div className={'vaporverse-images-container'}>
-          <img src={VV_warning_2} className={'vaporverse-images'} />
-          <img src={VV_warning_1} className={'vaporverse-images'} />
+          <ImageLazy
+            alt="Metamask Signature Request Rair Inc. Success"
+            src={VV_warning_2}
+            className={'vaporverse-images'}
+          />
+          <ImageLazy
+            alt="Metamask Approvement request Rair Inc. Incorrect"
+            src={VV_warning_1}
+            className={'vaporverse-images'}
+          />
         </div>
 
         <InfoBlock

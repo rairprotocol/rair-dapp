@@ -5,11 +5,7 @@ import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
-import {
-  ISplashPageProps,
-  TSeoInformationType,
-  TSplashPageIsActive
-} from './splashPage.types';
+import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
 
 import { diamondFactoryAbi } from '../../contracts/index';
 import { RootState } from '../../ducks';
@@ -24,6 +20,7 @@ import { metamaskCall } from '../../utils/metamaskUtils';
 import { web3Switch } from '../../utils/switchBlockchain';
 import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import PurchaseTokenButton from '../common/PurchaseToken';
+import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../SeoTags/MetaTags';
 import StandaloneVideoPlayer from '../video/videoPlayerGenerall';
 
@@ -266,7 +263,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
     if (loginDone) {
       return (
         <>
-          <img
+          <ImageLazy
             className="video-grey-man-pic"
             src={GreyMan}
             alt="community-img"
@@ -305,7 +302,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
     } else {
       return (
         <>
-          <img
+          <ImageLazy
             className="video-grey-man-pic"
             src={GreyMan}
             alt="community-img"
@@ -576,7 +573,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                           </strong>{' '}
                           to have any fun with this greyman
                         </span>
-                        <img src={GreyManNotFun} alt="not-fun" />
+                        <ImageLazy src={GreyManNotFun} alt="not-fun" />
                       </div>
                       <div className="modal-btn-wrapper">
                         <button
@@ -781,7 +778,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                         Coming Soon <i className="fas fa-arrow-right"></i>{' '}
                       </span>
                     </div>
-                    <img
+                    <ImageLazy
                       className="join-pic-main-img"
                       src={GreyMan}
                       alt="community-img"
@@ -790,28 +787,28 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                 </div>
                 <div className="list-of-greymans-pic">
                   <div className="join-pic">
-                    <img
+                    <ImageLazy
                       className="join-pic-img"
                       src={GreyMan}
                       alt="community-img"
                     />
                   </div>
                   <div className="join-pic">
-                    <img
+                    <ImageLazy
                       className="join-pic-img"
                       src={GreyMan}
                       alt="community-img"
                     />
                   </div>
                   <div className="join-pic">
-                    <img
+                    <ImageLazy
                       className="join-pic-img"
                       src={GreyMan}
                       alt="community-img"
                     />
                   </div>
                   <div className="join-pic">
-                    <img
+                    <ImageLazy
                       className="join-pic-img"
                       src={GreyMan}
                       alt="community-img"
@@ -825,22 +822,22 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
             <>
               <div className="exclusive-nfts">
                 <MobileCarouselNfts>
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={GreyMan}
                     alt="community-img"
                   />
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={GreyMan}
                     alt="community-img"
                   />
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={GreyMan}
                     alt="community-img"
                   />
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={GreyMan}
                     alt="community-img"

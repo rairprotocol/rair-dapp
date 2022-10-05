@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import {
   INftSingleUnlockables,
   TNftSingleUnlockablesSections,
@@ -81,7 +82,7 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
                             style={{
                               position: 'relative'
                             }}>
-                            <img
+                            <ImageLazy
                               src={`${v?.staticThumbnail}`}
                               alt="Preview unlockable video"
                             />
@@ -97,7 +98,7 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
                                 {v.description}
                               </p>
                             </div>
-                            <img
+                            <ImageLazy
                               src={`${v?.staticThumbnail}`}
                               alt="Preview unlockable video"
                             />

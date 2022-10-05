@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 import { metaMaskIcon } from '../../../../images';
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
 
@@ -103,7 +104,7 @@ const VideoTilesItem = ({
                 className="block-with-video"
                 style={{ position: 'relative' }}>
                 <div className="video-block-metamask-some"></div>
-                <img
+                <ImageLazy
                   className="block-img-bg static"
                   src={backgroundImage}
                   alt="Previw for demo video"
@@ -187,7 +188,7 @@ const VideoTilesItem = ({
                 <div className="video-block-metamask-some">
                   <img src={metaMaskIcon} alt="metamask logo" />
                 </div>
-                <img
+                <ImageLazy
                   className="block-img-bg"
                   src={videoSRC}
                   alt="Unlockable preview video"

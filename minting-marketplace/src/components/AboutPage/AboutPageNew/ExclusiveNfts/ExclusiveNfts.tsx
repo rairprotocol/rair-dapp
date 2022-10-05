@@ -4,6 +4,7 @@ import React from 'react';
 import { MainSelectNft } from './MainSelectNft';
 import MobileCarouselNfts from './MobileCarouselNfts';
 
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import {
   CoinAgenda1,
   CoinAgenda2,
@@ -33,27 +34,30 @@ const ExclusiveNfts = () => {
         </MainSelectNft>
         <div className="block-nfts">
           <div className="box-nft">
-            <img src={CoinAgenda1} alt="Exclusive NFT Coin Agenda Global" />
-            <img src={CoinAgenda2} alt="Exclusive NFT Nutcracher" />
+            <ImageLazy
+              src={CoinAgenda1}
+              alt="Exclusive NFT Coin Agenda Global"
+            />
+            <ImageLazy src={CoinAgenda2} alt="Exclusive NFT Nutcracher" />
           </div>
           <div className="box-nft">
-            <img
+            <ImageLazy
               src={NutcracherNftPhoto}
               alt="Exclusive NFT Coin Agenda Middle East and Africa"
             />
-            <img src={Monster} alt="Exclusive NFT Moster" />
+            <ImageLazy src={Monster} alt="Exclusive NFT Moster" />
           </div>
         </div>
       </div>
       <MobileCarouselNfts>
-        <img src={grayManMatrix} alt="img" />
-        <img src={CoinAgenda1} alt="Exclusive NFT Coin Agenda Global" />
-        <img src={CoinAgenda2} alt="Exclusive NFT Nutcracher" />
-        <img
+        <ImageLazy src={grayManMatrix} alt="img" />
+        <ImageLazy src={CoinAgenda1} alt="Exclusive NFT Coin Agenda Global" />
+        <ImageLazy src={CoinAgenda2} alt="Exclusive NFT Nutcracher" />
+        <ImageLazy
           src={NutcracherNftPhoto}
           alt="Exclusive NFT Coin Agenda Middle East and Africa"
         />
-        <img src={Monster} alt="Exclusive NFT Moster" />
+        <ImageLazy src={Monster} alt="Exclusive NFT Moster" />
       </MobileCarouselNfts>
     </div>
   );

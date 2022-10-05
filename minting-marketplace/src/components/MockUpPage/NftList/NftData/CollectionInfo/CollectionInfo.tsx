@@ -6,6 +6,7 @@ import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
 
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import { ImageLazy } from '../../../ImageLazy/ImageLazy';
 import { ICollectionInfo } from '../../nftList.types';
 
 import chainData from './../../../../../utils/blockchainData';
@@ -55,7 +56,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     className="block-item-collection"
                     key={index + token.price}>
                     <div className="item-name">
-                      <img
+                      <ImageLazy
                         src={
                           someUsersData?.avatar
                             ? someUsersData?.avatar

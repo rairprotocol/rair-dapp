@@ -248,6 +248,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
               boxShadow: '4px -4px #8C63DA'
             }}
             src={GenesisMember}
+            alt="Genesis Member"
           />
         </div>
         <h1

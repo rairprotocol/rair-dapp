@@ -1,6 +1,7 @@
 import React from 'react';
 
 import MobileCarouselNfts from '../../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import { INFTImages } from '../../splashPage.types';
 
 import './NFTImages.css';
@@ -43,7 +44,7 @@ const NFTImages: React.FC<INFTImages> = ({
                       Coming Soon <i className="fas fa-arrow-right"></i>{' '}
                     </span>
                   </div>
-                  <img
+                  <ImageLazy
                     className="join-pic-main-img"
                     src={NftImage}
                     alt="Exclusive NFT powered by RAIR"
@@ -52,28 +53,28 @@ const NFTImages: React.FC<INFTImages> = ({
               </div>
               <div className="list-of-greymans-pic">
                 <div className="join-pic">
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={Nft_1}
                     alt="Exclusive NFT powered by RAIR"
                   />
                 </div>
                 <div className="join-pic">
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={Nft_2}
                     alt="Exclusive NFT powered by RAIR"
                   />
                 </div>
                 <div className="join-pic">
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={Nft_3}
                     alt="Exclusive NFT powered by RAIR"
                   />
                 </div>
                 <div className="join-pic">
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={Nft_4}
                     alt="Exclusive NFT powered by RAIR"
@@ -86,27 +87,27 @@ const NFTImages: React.FC<INFTImages> = ({
           <>
             <div style={{ width: '100%' }}>
               <MobileCarouselNfts screen={900}>
-                <img
+                <ImageLazy
                   className="join-pic-img"
                   src={NftImage}
                   alt="Exclusive NFT powered by RAIR"
                 />
-                <img
+                <ImageLazy
                   className="join-pic-img"
                   src={Nft_4}
                   alt="Exclusive NFT powered by RAIR"
                 />
-                <img
+                <ImageLazy
                   className="join-pic-img"
                   src={Nft_3}
                   alt="Exclusive NFT powered by RAIR"
                 />
-                <img
+                <ImageLazy
                   className="join-pic-img"
                   src={Nft_2}
                   alt="Exclusive NFT powered by RAIR"
                 />
-                <img
+                <ImageLazy
                   className="join-pic-img"
                   src={Nft_1}
                   alt="Exclusive NFT powered by RAIR"
