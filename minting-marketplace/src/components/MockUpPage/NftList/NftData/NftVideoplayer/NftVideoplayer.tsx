@@ -27,67 +27,81 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
   >((state) => state.contractStore);
 
   const [videoName] = useState<number>(Math.round(Math.random() * 10000));
-  const [mediaAddress, setMediaAddress] = useState<string>(
-    String(Math.round(Math.random() * 10000))
-  );
+  const [mediaAddress, setMediaAddress] = useState<string>('');
+  /* String(Math.round(Math.random() * 10000)*/
   const requestChallenge = useCallback(async () => {
     let signature;
     let parsedResponse;
-    if (window.ethereum) {
-      const account = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-      const response = await axios.post<TAuthGetChallengeResponse>(
-        '/api/auth/get_challenge/',
-        {
-          userAddress: currentUserAddress,
-          intent: 'decrypt',
-          mediaId: selectVideo?._id
+    try {
+      if (window.ethereum) {
+        const account = await window.ethereum.request({
+          method: 'eth_requestAccounts'
+        });
+        const response = await axios.post<TAuthGetChallengeResponse>(
+          '/api/auth/get_challenge/',
+          {
+            userAddress: currentUserAddress,
+            intent: 'decrypt',
+            mediaId: selectVideo?._id
+          }
+        );
+        parsedResponse = JSON.parse(response.data.response);
+        signature = await window.ethereum.request({
+          method: 'eth_signTypedData_v4',
+          params: [account?.[0], response.data.response],
+          from: account?.[0]
+        });
+      } else if (programmaticProvider) {
+        const response = await axios.get<TAuthGetChallengeResponse>(
+          '/api/auth/get_challenge/' + programmaticProvider.address
+        );
+        parsedResponse = JSON.parse(response.data.response);
+        // EIP712Domain is added automatically by Ethers.js!
+        const { ...revisedTypes } = parsedResponse.types;
+        signature = await programmaticProvider._signTypedData(
+          parsedResponse.domain,
+          revisedTypes,
+          parsedResponse.message
+        );
+      } else {
+        Swal.fire('Error', 'Unable to decrypt videos', 'error');
+        return;
+      }
+    } catch (err) {
+      console.info(err);
+    }
+    if (signature) {
+      try {
+        const streamAddress = await axios.get<TOnlySuccessResponse>(
+          '/api/auth/get_token/' +
+            parsedResponse.message.challenge +
+            '/' +
+            signature +
+            '/' +
+            selectVideo?._id
+        );
+        if (streamAddress.data.success) {
+          await setMediaAddress(
+            '/stream/' + selectVideo?._id + '/' + mainManifest
+          );
+          setTimeout(() => {
+            videojs('vjs-' + videoName);
+          }, 1000);
         }
-      );
-      parsedResponse = JSON.parse(response.data.response);
-      signature = await window.ethereum.request({
-        method: 'eth_signTypedData_v4',
-        params: [account?.[0], response.data.response],
-        from: account?.[0]
-      });
-    } else if (programmaticProvider) {
-      const response = await axios.get<TAuthGetChallengeResponse>(
-        '/api/auth/get_challenge/' + programmaticProvider.address
-      );
-      parsedResponse = JSON.parse(response.data.response);
-      // EIP712Domain is added automatically by Ethers.js!
-      const { ...revisedTypes } = parsedResponse.types;
-      signature = await programmaticProvider._signTypedData(
-        parsedResponse.domain,
-        revisedTypes,
-        parsedResponse.message
-      );
+      } catch (requestError) {
+        Swal.fire('NFT required to view this content');
+      }
     } else {
-      Swal.fire('Error', 'Unable to decrypt videos', 'error');
+      console.error('Signature was not provided');
       return;
     }
-    try {
-      const streamAddress = await axios.get<TOnlySuccessResponse>(
-        '/api/auth/get_token/' +
-          parsedResponse.message.challenge +
-          '/' +
-          signature +
-          '/' +
-          selectVideo?._id
-      );
-      if (streamAddress.data.success) {
-        await setMediaAddress(
-          '/stream/' + selectVideo?._id + '/' + mainManifest
-        );
-        setTimeout(() => {
-          videojs('vjs-' + videoName);
-        }, 1000);
-      }
-    } catch (requestError) {
-      Swal.fire('NFT required to view this content');
-    }
-  }, [programmaticProvider, selectVideo, mainManifest, videoName]);
+  }, [
+    programmaticProvider,
+    selectVideo,
+    mainManifest,
+    videoName,
+    currentUserAddress
+  ]);
 
   useEffect(() => {
     requestChallenge();
