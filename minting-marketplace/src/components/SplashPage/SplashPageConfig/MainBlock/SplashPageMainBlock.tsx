@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { TSplashPageMainBlock } from '../splashConfig.types';
-import { SplashMainBlockWrapper } from '../styles/SplashMainBlockStyled.styled';
+import { StyledSplashMainBlockWrapper } from '../styles/SplashMainBlockStyled.styled';
 
 const SplashPageMainBlock: React.FC<TSplashPageMainBlock> = ({
   widthDiff,
@@ -9,19 +9,17 @@ const SplashPageMainBlock: React.FC<TSplashPageMainBlock> = ({
   bgColor,
   children,
   borderRadius,
-  backgroundImage,
   paddingLeft
 }) => {
   return (
-    <SplashMainBlockWrapper
+    <StyledSplashMainBlockWrapper
       bgColor={bgColor}
       widthDiff={widthDiff}
       heightDiff={heightDiff}
       borderRadius={borderRadius}
-      backgroundImage={backgroundImage}
       paddingLeft={paddingLeft}>
       {children}
-    </SplashMainBlockWrapper>
+    </StyledSplashMainBlockWrapper>
   );
 };
 

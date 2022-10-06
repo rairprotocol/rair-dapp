@@ -33,9 +33,11 @@ import {
   TMainContractType,
   TSplashDataType
 } from '../splashPage.types';
+import ImageMainBlock from '../SplashPageConfig/MainBlock/ImageMainBlock';
 import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
 import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
 import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
+import { StyledSplashPageWrapperContainer } from '../SplashPageConfig/styles/StyledWrapperContainers.styled';
 import { theme } from '../SplashPageConfig/theme.styled';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
@@ -289,42 +291,44 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
           }}
         />
 
-        {/* <ThemeProvider theme={theme}>
-          <SplashPageMainBlock
-            backgroundImage={splashData.backgroundImage}
-            bgColor="#FFFFFF"
-            widthDiff="90vw"
-            heightDiff="563px"
-            borderRadius="24px">
-            <MainBlockInfoText margin={'112px 44px 62px 88px'}>
-              <MainTitleBlock
-                color="#A7A6A6"
-                fontSize="24px"
-                fontWeight={800}
-                text={splashData.title}
-                fontFamily={"Cooper Std Black', sans-serif"}
-                lineHeight={''}
-                textMargin={'0 0 0 0'}
-                textPadding={'0 0 0 0'}
+        <ThemeProvider theme={theme}>
+          <StyledSplashPageWrapperContainer>
+            <SplashPageMainBlock
+              bgColor="#FFFFFF"
+              heightDiff="694px"
+              borderRadius="24px">
+              <MainBlockInfoText padding={'190px 20px 0px 75px'}>
+                <MainTitleBlock
+                  color="rgb(0, 0, 0)"
+                  fontSize="50px"
+                  fontWeight={700}
+                  text={splashData.title}
+                  fontFamily={"'Cooper Std Black', sans-serif"}
+                  lineHeight={'1.2'}
+                  margin={'0 0 0 0'}
+                  padding={'0 0 0 0'}
+                />
+                <MainTitleBlock
+                  color="rgb(89, 25, 8)"
+                  fontSize="30px"
+                  fontWeight={'normal'}
+                  text={splashData.description}
+                  fontFamily={"'Copperplate', sans-serif"}
+                  lineHeight={'33px'}
+                  margin={'27px 0 0'}
+                  padding={'0 0 0 7px'}
+                  width="476px"
+                />
+              </MainBlockInfoText>
+              <ImageMainBlock
+                image={splashData.backgroundImage}
+                widthDiff="491px"
+                heightDiff="491px"
+                imageMargin={'auto 77px 97px 0 '}
               />
-              <MainTitleBlock
-                color="#A7A6A6"
-                fontSize="24px"
-                fontWeight={'normal'}
-                text={splashData.description}
-                fontFamily={"Cooper Std Black', sans-serif"}
-                lineHeight={''}
-                textMargin={'0 0 0 0'}
-                textPadding={'0 0 0 0'}
-              />
-            </MainBlockInfoText>
-            <ImageBlock
-              src={splashData.backgroundImage}
-              widthDiff="609px"
-              heightDiff="320px"
-            />
-          </SplashPageMainBlock>
-        </ThemeProvider> */}
+            </SplashPageMainBlock>
+          </StyledSplashPageWrapperContainer>
+        </ThemeProvider>
 
         <AuthorCard {...{ splashData, connectUserData }} />
         <TokenLeftTemplate

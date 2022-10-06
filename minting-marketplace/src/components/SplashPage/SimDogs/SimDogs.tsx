@@ -321,7 +321,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
               bgColor="#FFFFFF"
               borderRadius="24px"
               paddingLeft="66px">
-              <MainBlockInfoText margin={'0px'}>
+              <MainBlockInfoText padding={'0px'}>
                 <MainTitleBlock
                   color="rgb(73, 92, 176)"
                   fontSize="48px"
@@ -382,13 +382,13 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
           </StyledSplashPageWrapperContainer>
         </ThemeProvider>
 
-        {/* <AuthorCard
+        <AuthorCard
           {...{
             splashData,
             connectUserData,
             customButtonBlock
           }}
-        /> */}
+        />
         <div className="btn-submit-with-form need-help">
           <button
             className="genesis-font"

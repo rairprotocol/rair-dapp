@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import {
-  TStyledMainBlockDescription,
   TStyledMainBlockTextContainer,
   TStyledMainBlockTitle
 } from '../splashConfig.types';
@@ -11,7 +10,7 @@ export const StyledMainBlockTextContainer = styled.div<TStyledMainBlockTextConta
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  margin: ${({ margin }) => margin};
+  padding: ${({ padding }) => padding};
   /* background-color: red; */
   width: 50%;
   height: 100%;
@@ -23,7 +22,7 @@ export const StyledMainBlockTitle = styled.div<TStyledMainBlockTitle>`
   font-weight: ${({ fontWeight }) => fontWeight};
   font-family: ${({ fontFamily }) => fontFamily};
   line-height: ${({ lineHeight }) => lineHeight};
-  word-break: break-all;
+  word-break: break-word;
   margin: ${({ margin }) => margin || '0px'};
   padding: ${({ padding }) => padding || '0px'};
   text-align: ${({ textAlign }) => textAlign || 'start'};

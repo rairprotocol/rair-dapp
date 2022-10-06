@@ -5,10 +5,10 @@ import { StyledMainBlockTextContainer } from '../styles/MainBlockTextContainer.s
 
 const MainBlockInfoText: React.FC<TMainBlockInfoText> = ({
   children,
-  margin
+  padding
 }) => {
   return (
-    <StyledMainBlockTextContainer margin={margin}>
+    <StyledMainBlockTextContainer padding={padding}>
       {children}
     </StyledMainBlockTextContainer>
   );

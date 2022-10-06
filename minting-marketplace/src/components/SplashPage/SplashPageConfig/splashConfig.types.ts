@@ -40,7 +40,7 @@ export type TStyledMainBlockDescription = {
 };
 
 export type TStyledMainBlockTextContainer = {
-  margin: string;
+  padding: string;
 };
 
 //component's props
@@ -68,8 +68,7 @@ export type TStyledSplashMainBlockWrapper = {
   heightDiff?: string;
   bgColor?: string;
   borderRadius: string;
-  backgroundImage?: string;
-  paddingLeft: string;
+  paddingLeft?: string;
 };
 
 export type TStyledImageBlock = {

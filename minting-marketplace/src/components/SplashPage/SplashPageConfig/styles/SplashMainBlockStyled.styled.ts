@@ -5,7 +5,7 @@ import {
   TStyledSplashMainBlockWrapper
 } from '../splashConfig.types';
 
-export const SplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
+export const StyledSplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,7 +13,6 @@ export const SplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
   background-color: ${({ bgColor }) => bgColor || 'none'};
   width: ${({ widthDiff }) => widthDiff || '100%'};
   height: ${({ heightDiff }) => heightDiff || '694px'};
-  background-image: ${({ backgroundImage }) => backgroundImage};
   padding-left: ${({ paddingLeft }) => paddingLeft};
 `;
 
