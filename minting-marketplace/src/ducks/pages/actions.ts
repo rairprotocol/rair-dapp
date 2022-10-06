@@ -21,7 +21,7 @@ const getCurrentPageComplete = (currentPage: number) =>
 
 export {
   getCurrentPage,
-  getCurrentPageEnd,
   getCurrentPageComplete,
+  getCurrentPageEnd,
   getCurrentPageNull
 };

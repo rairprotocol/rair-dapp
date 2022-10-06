@@ -1,11 +1,14 @@
 import React from 'react';
-import './Carousel.css';
 import Carousel from 'react-multi-carousel';
+
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import {
   ICarouselItem,
   ICarouselListItem,
   ICarouselModule
 } from '../../splashPage.types';
+
+import './Carousel.css';
 
 const CarouselListItem: React.FC<ICarouselListItem> = (props) => {
   const { carouselItemTitle, carouselItemImg, carouselDescription } = props;
@@ -14,7 +17,7 @@ const CarouselListItem: React.FC<ICarouselListItem> = (props) => {
       {carouselItemTitle && (
         <h4 className="carousel-items"> {carouselItemTitle} </h4>
       )}
-      <img
+      <ImageLazy
         className="join-pic-img"
         src={carouselItemImg}
         alt="Join to community"
@@ -33,7 +36,7 @@ const CarouselItem: React.FC<ICarouselItem> = (props) => {
       {carouselItemTitle && (
         <h4 className="carousel-items"> {carouselItemTitle} </h4>
       )}
-      <img
+      <ImageLazy
         className="join-pic-img"
         src={carouselItemImg}
         alt="Join to community"

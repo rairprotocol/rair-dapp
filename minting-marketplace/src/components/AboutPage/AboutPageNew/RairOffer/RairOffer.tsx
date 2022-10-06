@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IRairOffer } from '../aboutPage.types';
 
 const RairOffer: React.FC<IRairOffer> = ({ primaryColor }) => {

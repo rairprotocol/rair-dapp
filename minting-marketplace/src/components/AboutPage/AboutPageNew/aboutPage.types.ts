@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 export interface IAboutPageNew {
@@ -6,7 +7,6 @@ export interface IAboutPageNew {
   headerLogoWhite?: string;
   setIsSplashPage: (arg: boolean) => void;
   connectUserData: () => void;
-  seoInformation: Object;
 }
 
 export interface IMainBlock {

@@ -1,30 +1,34 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import HomeIcon from '@mui/icons-material/Home';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Breadcrumbs, Typography } from '@mui/material';
+import Stack from '@mui/material/Stack';
+
+import { IMyItems, TDiamondTokensType } from './nft.types';
+
+import { RootState } from '../../ducks';
+import { getTokenError } from '../../ducks/auth/actions';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import InputField from '../common/InputField';
 import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
+import { TSortChoice } from '../MockUpPage/FilteringBlock/filteringBlock.types';
 import ModalItem from '../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem';
-import './MyItems.css';
-import { getTokenError } from '../../ducks/auth/actions';
-import { IMyItems, TDiamondTokensType } from './nft.types';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import HomeIcon from '@mui/icons-material/Home';
-import { NavLink } from 'react-router-dom';
-import Stack from '@mui/material/Stack';
+
 import { PersonalProfileBackground } from './PersonalProfile/PersonalProfileBackground/PersonalProfileBackground';
+import PersonalProfileFavoritesTab from './PersonalProfile/PersonalProfileFavoritesTab/PersonalProfileFavoritesTab';
 import { PersonalProfileIcon } from './PersonalProfile/PersonalProfileIcon/PersonalProfileIcon';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { PersonalProfileMyCreated } from './PersonalProfile/PersonalProfileMyCreated/PersonalProfileMyCreated';
 import { PersonalProfileMyNftTab } from './PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab';
 import { PersonalProfileMyVideoTab } from './PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';
-import { PersonalProfileMyCreated } from './PersonalProfile/PersonalProfileMyCreated/PersonalProfileMyCreated';
-import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { TSortChoice } from '../MockUpPage/FilteringBlock/filteringBlock.types';
-import { Breadcrumbs, Typography } from '@mui/material';
-import chainData from '../../utils/blockchainData';
-import PersonalProfileFavoritesTab from './PersonalProfile/PersonalProfileFavoritesTab/PersonalProfileFavoritesTab';
+
+import './MyItems.css';
 
 const MyItems: React.FC<IMyItems> = ({
   userData,

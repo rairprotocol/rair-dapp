@@ -1,6 +1,8 @@
 import React from 'react';
-import { IUnlockVideos, TVideoArrType } from '../splashPage.types';
+
 import UnlockVideoItem from './UnlockVideoItem';
+
+import { IUnlockVideos, TVideoArrType } from '../splashPage.types';
 
 const videoArr: TVideoArrType[] = [
   {

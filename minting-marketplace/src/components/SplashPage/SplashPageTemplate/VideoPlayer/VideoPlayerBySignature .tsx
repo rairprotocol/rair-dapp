@@ -1,14 +1,16 @@
-import axios from 'axios';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { ethers } from 'ethers';
 import Swal from 'sweetalert2';
-import setDocumentTitle from '../../../../utils/setTitle';
-import './VideoPlayer.css';
+
 import { TAuthGetChallengeResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
-import { ethers } from 'ethers';
-import { IVideoPlayerBySignature, IVideoWindow } from '../../splashPage.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import setDocumentTitle from '../../../../utils/setTitle';
+import { IVideoPlayerBySignature, IVideoWindow } from '../../splashPage.types';
+
+import './VideoPlayer.css';
 
 const VideoWindow: React.FC<IVideoWindow> = ({ mediaAddress }) => {
   return (

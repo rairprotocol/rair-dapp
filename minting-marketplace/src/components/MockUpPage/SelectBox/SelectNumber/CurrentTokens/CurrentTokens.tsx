@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
-import { ICurrentTokensComponent } from '../../selectBox.types';
+
 import { ReactComponent as ArrowDown } from '../../../assets/ArrowDown.svg';
 import { ReactComponent as ArrowUp } from '../../../assets/ArrowUp.svg';
+import { ICurrentTokensComponent } from '../../selectBox.types';
 
 const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   primaryColor,

@@ -1,7 +1,8 @@
+// import Swal from "sweetalert2";
+import { useCallback, useEffect, useRef, useState } from 'react';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { Maybe } from '@metamask/providers/dist/utils';
-// import Swal from "sweetalert2";
-import { useState, useEffect, useRef, useCallback } from 'react';
+
 import './OnboardingButton.css';
 
 const ONBOARD_TEXT = 'Click here to install MetaMask!';

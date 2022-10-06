@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { TStyledHigherWrapperSplashPage } from '../splashConfig.types';
 
 export const StyledHigherWrapperSplashPage = styled.div<TStyledHigherWrapperSplashPage>`

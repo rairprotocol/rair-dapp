@@ -1,4 +1,5 @@
 import { memo } from 'react';
+
 import './PersonalProfileMyNftTab.css';
 
 const PersonalProfileMyNftTabComponent = ({

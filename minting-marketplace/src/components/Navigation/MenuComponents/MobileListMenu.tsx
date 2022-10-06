@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, SearchInputMobile } from './../NavigationItems/NavigationItems';
+
+import MobileNavigationList from './MobileNavigationList';
+
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../../images';
+import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import {
   CommunityBlock,
   CommunityBoxFooter
 } from '../../Footer/FooterItems/FooterItems';
-import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../../images';
-import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import MobileNavigationList from './MobileNavigationList';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { RootState } from '../../../ducks';
+
+import { List, SearchInputMobile } from './../NavigationItems/NavigationItems';
 
 interface IMobileListMenu {
   click: boolean;

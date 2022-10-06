@@ -1,19 +1,22 @@
-import React, { memo, useEffect, useCallback, useState, useRef } from 'react';
-import { NftItemForCollectionView } from '../NftItemForCollectionView';
-import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import Skeleton from '@mui/material/Skeleton';
-import CollectionInfo from './CollectionInfo/CollectionInfo';
-import setDocumentTitle from '../../../../utils/setTitle';
 import { useNavigate } from 'react-router-dom';
-import TitleCollection from './TitleCollection/TitleCollection';
 import CircularProgress from '@mui/material/CircularProgress';
-import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
-import './../../GeneralCollectionStyles.css';
-import CustomButton from '../../utils/button/CustomButton';
+import Skeleton from '@mui/material/Skeleton';
+
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { setTokenData } from '../../../../ducks/nftData/action';
+import setDocumentTitle from '../../../../utils/setTitle';
+import CustomButton from '../../utils/button/CustomButton';
+import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
+import { NftItemForCollectionView } from '../NftItemForCollectionView';
 import { INftCollectionPageComponent } from '../nftList.types';
+
+import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
+import CollectionInfo from './CollectionInfo/CollectionInfo';
+import TitleCollection from './TitleCollection/TitleCollection';
+
+import './../../GeneralCollectionStyles.css';
 
 const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   embeddedParams,

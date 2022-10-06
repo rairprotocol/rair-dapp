@@ -1,7 +1,10 @@
 import React from 'react';
+
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import DefaultButtonBlock from '../../DefaultButtonBlock';
 import ButtonHelp from '../../PurchaseChecklist/ButtonHelp';
 import { IAuthorCard } from '../../splashPage.types';
+
 import './AuthorCard.css';
 
 const AuthorCard: React.FC<IAuthorCard> = ({
@@ -46,7 +49,7 @@ const AuthorCard: React.FC<IAuthorCard> = ({
             </h3>
             {subtitle && <h3 className="author-card-subtitle"> {subtitle} </h3>}
             {titleImage && (
-              <img
+              <ImageLazy
                 className="author-card-title-image"
                 src={titleImage}
                 alt="title-image"

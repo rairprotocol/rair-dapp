@@ -25,9 +25,18 @@ router.post(
   isAdmin,
   contractService.importContractsMoralis,
 );
+// Overload is implemented on service level
+router.get(
+  '/fullSA',
+  JWTVerification,
+  isAdmin,
+  isSuperAdmin,
+  verifySuperAdmin,
+  contractService.getFullContracts,
+);
 router.get('/:id', contractService.getContractById);
 
-// Allows update only two fields
+// Allows to update only two fields
 router.patch(
   '/:id',
   JWTVerification,

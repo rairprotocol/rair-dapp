@@ -1,31 +1,34 @@
-import React, { useState, useCallback, useEffect, Suspense } from 'react';
-import './Menu.css';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  MenuMobileWrapper,
-  Nav,
-  RightSideMenu
-} from './NavigationItems/NavigationItems';
 import { useNavigate } from 'react-router-dom';
-import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
-import MobileListMenu from './MenuComponents/MobileListMenu';
-import { getTokenComplete } from '../../ducks/auth/actions';
-import { setUserAddress } from '../../ducks/contracts/actions';
 import axios from 'axios';
+import { ethers, utils } from 'ethers';
+
 import { TUserResponse } from '../../axios.responseTypes';
+import { RootState } from '../../ducks';
+import { getTokenComplete } from '../../ducks/auth/actions';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { setUserAddress } from '../../ducks/contracts/actions';
+import { UserType } from '../../ducks/users/users.types';
 import { BellIcon, CloseIconMobile, MenuIcon } from '../../images';
-import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import {
   SocialBox,
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
-import { ethers, utils } from 'ethers';
+
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { UserType } from '../../ducks/users/users.types';
+import MobileListMenu from './MenuComponents/MobileListMenu';
+import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
+import {
+  MenuMobileWrapper,
+  Nav,
+  RightSideMenu
+} from './NavigationItems/NavigationItems';
+
+import './Menu.css';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -41,6 +44,7 @@ interface IMenuNavigation {
   showAlert: boolean | null | undefined;
   selectedChain: string | null | undefined;
   setTabIndexItems: (arg: number) => void;
+  isSplashPage: boolean;
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
@@ -53,7 +57,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   programmaticProvider,
   showAlert,
   selectedChain,
-  setTabIndexItems
+  setTabIndexItems,
+  isSplashPage
 }) => {
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
@@ -146,7 +151,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     <MenuMobileWrapper
       className="col-1 rounded burder-menu"
       showAlert={showAlert}
-      selectedChain={selectedChain}>
+      selectedChain={selectedChain}
+      isSplashPage={isSplashPage}>
       <Nav primaryColor={primaryColor}>
         <MobileChoiseNav
           click={click}

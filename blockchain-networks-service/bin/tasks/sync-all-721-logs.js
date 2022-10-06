@@ -8,64 +8,80 @@ const { BigNumber } = require('ethers');
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-	// This will receive all logs emitted from a contract in a certain timeframe and process them
-	// Which is cheaper than the current approach of each event for each contract
-	context.agenda.define(AgendaTaskEnum.SyncAll721Events, { lockLifetime }, async (task, done) => {
-		try {
-			// Log the start of the task
-			await wasteTime(10000);
-			logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncAll721Events});
-			
-			// Extract network hash and task name from the task data
-			const { network } = task.attrs.data;
+  // This will receive all logs emitted from a contract in a certain timeframe and process them
+  // Which is cheaper than the current approach of each event for each contract
+  context.agenda.define(
+    AgendaTaskEnum.SyncAll721Events,
+    { lockLifetime },
+    async (task, done) => {
+      try {
+        // Log the start of the task
+        await wasteTime(10000);
+        logAgendaActionStart({
+          agendaDefinition: AgendaTaskEnum.SyncAll721Events,
+        });
 
-			// Find all non-diamond contracts from this blockchain
-			let contractsToQuery = await context.db.Contract.find({
-				blockchain: network,
-				diamond: false,
-				external: {$ne: true}
-			});
+        // Extract network hash and task name from the task data
+        const { network } = task.attrs.data;
 
-			if (contractsToQuery.length === 0) {
-				log.info(`Skipping contract events for ${network}, no contracts to query.`);
-				return done();
-			}
+        // Find all non-diamond contracts from this blockchain
+        let contractsToQuery = await context.db.Contract.find({
+          blockchain: network,
+          diamond: false,
+          external: { $ne: true },
+          blockSync: false, // only actual change to allow new sync restrction
+        });
 
-			// Get network data using the task's blockchain hash
-			// This includes minter address and factory address
-			const networkData = context.config.blockchain.networks[network];
+        if (contractsToQuery.length === 0) {
+          log.info(
+            `Skipping contract events for ${network}, no contracts to query.`,
+          );
+          return done();
+        }
 
-			// Find contracts that shouldn't be synced
-			// TODO Apply restrictions to long term sync
-			//let forbiddenContracts = await context.db.SyncRestriction.find({blockchain: network});
-			//forbiddenContracts = forbiddenContracts.map(contract => contract.contractAddress.toLowerCase());
+        // Get network data using the task's blockchain hash
+        // This includes minter address and factory address
+        const networkData = context.config.blockchain.networks[network];
 
-			// Fetch Moralis auth data
-			const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
+        // Find contracts that shouldn't be synced
+        // TODO Apply restrictions to long term sync
+        //let forbiddenContracts = await context.db.SyncRestriction.find({blockchain: network});
+        //forbiddenContracts = forbiddenContracts.map(contract => contract.contractAddress.toLowerCase());
 
-			// Initialize moralis instances
-			Moralis.start({ serverUrl, appId, masterKey });
+        // Fetch Moralis auth data
+        const { serverUrl, appId, masterKey } =
+          context.config.blockchain.moralis[
+            networkData.testnet ? 'testnet' : 'mainnet'
+          ];
 
-			// Get last block parsed from the Versioning collection
-			let version = await context.db.Versioning.findOne({ name: AgendaTaskEnum.SyncAll721Events, network });
+        // Initialize moralis instances
+        Moralis.start({ serverUrl, appId, masterKey });
 
-			if (version === null) {
-				version = await (new context.db.Versioning({
-					name: AgendaTaskEnum.SyncAll721Events,
-					network,
-					number: 0,
-					running: false
-				})).save();
-			}
+        // Get last block parsed from the Versioning collection
+        let version = await context.db.Versioning.findOne({
+          name: AgendaTaskEnum.SyncAll721Events,
+          network,
+        });
 
-			if (version.running) {
-				return done({reason: `A ${AgendaTaskEnum.SyncAll721Events} process for network ${network} is already running!`});
-			} else {
-				version.running = true;
-				version = await version.save();
-			}
+        if (version === null) {
+          version = await new context.db.Versioning({
+            name: AgendaTaskEnum.SyncAll721Events,
+            network,
+            number: 0,
+            running: false,
+          }).save();
+        }
 
-			/*
+        if (version.running) {
+          return done({
+            reason: `A ${AgendaTaskEnum.SyncAll721Events} process for network ${network} is already running!`,
+          });
+        } else {
+          version.running = true;
+          version = await version.save();
+        }
+
+        /*
 				Collection Name 	Description
 				------------------------------------------------
 				'Contract',			Already synced before this
@@ -82,122 +98,143 @@ module.exports = (context) => {
 				'Transaction'		Syncs on every file
 			*/
 
-			// Keep track of the latest block number processed
-			let transactionArray = [];
+        // Keep track of the latest block number processed
+        let transactionArray = [];
 
-			let insertions = {};
+        let insertions = {};
 
-			for await (let contract of contractsToQuery) {
-				try {
-					// To avoid rate limiting errors on Moralis
-					await wasteTime(7000);
+        for await (let contract of contractsToQuery) {
+          try {
+            // To avoid rate limiting errors on Moralis
+            await wasteTime(7000);
 
-					if (contract.diamond) {
-						// Ignore diamond contracts
-						log.info(`[${network}] Ignoring diamonds for now`);
-						continue;
-					}
+            if (contract.diamond) {
+              // Ignore diamond contracts
+              log.info(`[${network}] Ignoring diamonds for now`);
+              continue;
+            }
 
-					if (!contract.lastSyncedBlock) {
-						contract.lastSyncedBlock = 0;
-					}
-		
-					let lastSuccessfullBlock = contract.lastSyncedBlock;
+            if (!contract.lastSyncedBlock) {
+              contract.lastSyncedBlock = 0;
+            }
 
-					let processedResult = await getTransactionHistory(contract.contractAddress, network, contract.lastSyncedBlock);
+            let lastSuccessfullBlock = contract.lastSyncedBlock;
 
-					for await (let [event] of processedResult) {
-						if (!event) {
-							continue;
-						}
-						let filteredTransaction = await context.db.Transaction.findOne({
-							_id: event.transactionHash,
-							blockchainId: network,
-							processed: true,
-							caught: true
-						});
-						if (filteredTransaction && filteredTransaction.caught && filteredTransaction.toAddress.includes(contract)) {
-							log.info(`Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${contract}`);
-						} else if (event) {
-							if (event.operation) {
-								// If the log is already on DB, update the address list
-								if (filteredTransaction) {
-									filteredTransaction.toAddress.push(contract);
-									await filteredTransaction.save();
-								} else if (!transactionArray.includes(event.transactionHash)) {
-									// Otherwise, push it into the insertion list
-									transactionArray.push(event.transactionHash);
-									// And create a DB entry right away
+            let processedResult = await getTransactionHistory(
+              contract.contractAddress,
+              network,
+              contract.lastSyncedBlock,
+            );
 
-									await context.db.Transaction.updateOne({
-										_id: event.transactionHash,
-										blockchainId: network,
-										processed: true,
-									}, {
-										$push: { toAddress: contract.contractAddress }
-									}, { upsert: true })
-								}
+            for await (let [event] of processedResult) {
+              if (!event) {
+                continue;
+              }
+              let filteredTransaction = await context.db.Transaction.findOne({
+                _id: event.transactionHash,
+                blockchainId: network,
+                processed: true,
+                caught: true,
+              });
+              if (
+                filteredTransaction &&
+                filteredTransaction.caught &&
+                filteredTransaction.toAddress.includes(contract)
+              ) {
+                log.info(
+                  `Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${contract}`,
+                );
+              } else if (event) {
+                if (event.operation) {
+                  // If the log is already on DB, update the address list
+                  if (filteredTransaction) {
+                    filteredTransaction.toAddress.push(contract);
+                    await filteredTransaction.save();
+                  } else if (
+                    !transactionArray.includes(event.transactionHash)
+                  ) {
+                    // Otherwise, push it into the insertion list
+                    transactionArray.push(event.transactionHash);
+                    // And create a DB entry right away
 
-								try {
-									let documentToInsert = await event.operation(
-										context.db,
-										network,
-										// Make up a transaction data, the logs don't include it
-										{
-											transactionHash: event.transactionHash,
-											to: contract.contractAddress,
-											blockNumber: event.blockNumber
-										},
-										event.diamondEvent,
-										...event.arguments
-									);
+                    await context.db.Transaction.updateOne(
+                      {
+                        _id: event.transactionHash,
+                        blockchainId: network,
+                        processed: true,
+                      },
+                      {
+                        $push: { toAddress: contract.contractAddress },
+                      },
+                      { upsert: true },
+                    );
+                  }
 
-									// This used to be for an optimized batch insertion, now it's just for logging
-									if (insertions[event.eventSignature] === undefined) {
-										insertions[event.eventSignature] = [];
-									}
-									insertions[event.eventSignature].push(documentToInsert);
-								} catch (err) {
-									console.error('An error has ocurred!', event);
-									throw err;
-								}
-								
-							}
-						}
-						// Update the latest successfull block
-						if (lastSuccessfullBlock <= event.blockNumber) {
-							lastSuccessfullBlock = event.blockNumber;
-						}
-					}
-					// Add 1 to the last successful block so the next query to Moralis excludes it
-					// Because the last successfull block was already processed here
-					// But validate that the last parsed block is different from the current one,
-					// Otherwise it will keep increasing and could ignore events
-					if (contract.lastSyncedBlock < lastSuccessfullBlock) {
-						contract.lastSyncedBlock = BigNumber.from(lastSuccessfullBlock).add(1);
-						await contract.save();
-					}
-				} catch (err) {
-					log.error(`Found error getting [${network}] - ${contract} events => ${err}`);
-					break;
-				}
-			}
-			// Log the number of insertions for each event
-			for await (let sig of Object.keys(insertions)) {
-				if (insertions[sig]?.length > 0) {
-					log.info(`[${network}] Inserted ${insertions[sig]?.length} documents for ${sig}`);
-				}
-			}
+                  try {
+                    let documentToInsert = await event.operation(
+                      context.db,
+                      network,
+                      // Make up a transaction data, the logs don't include it
+                      {
+                        transactionHash: event.transactionHash,
+                        to: contract.contractAddress,
+                        blockNumber: event.blockNumber,
+                      },
+                      event.diamondEvent,
+                      ...event.arguments,
+                    );
 
-			version.running = false;
-			await version.save();
+                    // This used to be for an optimized batch insertion, now it's just for logging
+                    if (insertions[event.eventSignature] === undefined) {
+                      insertions[event.eventSignature] = [];
+                    }
+                    insertions[event.eventSignature].push(documentToInsert);
+                  } catch (err) {
+                    console.error('An error has ocurred!', event);
+                    throw err;
+                  }
+                }
+              }
+              // Update the latest successfull block
+              if (lastSuccessfullBlock <= event.blockNumber) {
+                lastSuccessfullBlock = event.blockNumber;
+              }
+            }
+            // Add 1 to the last successful block so the next query to Moralis excludes it
+            // Because the last successfull block was already processed here
+            // But validate that the last parsed block is different from the current one,
+            // Otherwise it will keep increasing and could ignore events
+            if (contract.lastSyncedBlock < lastSuccessfullBlock) {
+              contract.lastSyncedBlock =
+                BigNumber.from(lastSuccessfullBlock).add(1);
+              await contract.save();
+            }
+          } catch (err) {
+            log.error(
+              `Found error getting [${network}] - ${contract} events => ${err}`,
+            );
+            break;
+          }
+        }
+        // Log the number of insertions for each event
+        for await (let sig of Object.keys(insertions)) {
+          if (insertions[sig]?.length > 0) {
+            log.info(
+              `[${network}] Inserted ${insertions[sig]?.length} documents for ${sig}`,
+            );
+          }
+        }
 
-			log.info(`Done with ${network}, ${AgendaTaskEnum.SyncAll721Events}`);
+        version.running = false;
+        await version.save();
 
-			return done();
-		} catch (e) {
-			log.error(e);
-			return done(e);
-		}
-	});
+        log.info(`Done with ${network}, ${AgendaTaskEnum.SyncAll721Events}`);
+
+        return done();
+      } catch (e) {
+        log.error(e);
+        return done(e);
+      }
+    },
+  );
 };

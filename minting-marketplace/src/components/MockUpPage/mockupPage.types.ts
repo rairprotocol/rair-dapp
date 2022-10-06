@@ -222,3 +222,8 @@ export type TEmbeddedParams = {
   tokenId: string;
   setTokenId: (tokenId: string) => void;
 };
+
+export type TMetamaskError = {
+  code: number;
+  message: string;
+};

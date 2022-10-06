@@ -1,16 +1,14 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
-
-// React Redux types
-
-import DeployContracts from './DeployContracts';
-import setDocumentTitle from '../../utils/setTitle';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Contract from './Contract';
-import { rFetch } from '../../utils/rFetch';
+// React Redux types
+import DeployContracts from './DeployContracts';
 
-import { useDispatch, useSelector } from 'react-redux';
 import { getTokenError } from '../../ducks/auth/actions';
+import { rFetch } from '../../utils/rFetch';
+import setDocumentTitle from '../../utils/setTitle';
 
 const Factory = () => {
   const dispatch = useDispatch();

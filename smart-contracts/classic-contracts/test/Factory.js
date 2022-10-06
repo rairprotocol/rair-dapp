@@ -1,5 +1,4 @@
 const { expect } = require("chai");
-const { upgrades } = require("hardhat");
 
 describe("Token Factory", function () {
 	let owner, addr1, addr2, addr3, addr4, addr5, addrs;
@@ -93,31 +92,7 @@ describe("Token Factory", function () {
 		});
 	})
 
-	// Waiting until the diamond standard is finalized to start using upgradeable contracts
-	/*describe('Upgradeable Deployments', () => {
-		it ("Factory", async () => {
-			*	Normal deployment:
-			*	variable = await ContractFactory.deploy(...params);
-			*	factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777Instance.address);
-			*
-			*	Upgradeable deployment
-			*	variable = await upgrades.deployProxy(ContractFactory, [...params])
-			factoryInstance = await upgrades.deployProxy(FactoryFactory, [tokenPrice, erc777Instance.address]);
-		});
-
-		it ("Minter Marketplace", async () => {
-			minterInstance = await upgrades.deployProxy(MinterFactory, [erc777Instance.address, 9000, 1000]);
-		})
-	})*/
-
 	describe('Factory', () => {
-		/*describe('Upgrades', () => {
-			it ("Should upgrade", async () => {
-				let FactoryV2 = await ethers.getContractFactory("RAIR_Token_Factory_V2");
-				factoryInstance = await upgrades.upgradeProxy(factoryInstance.address, FactoryV2);
-			});
-		});*/
-
 		describe('Users', () => {
 			it ("Roles should be set up", async () => {
 				await expect(await factoryInstance.hasRole(await factoryInstance.OWNER(), owner.address)).to.equal(true);
@@ -1213,7 +1188,7 @@ describe("Token Factory", function () {
 				await newRair721Instance.createRange(
 					0,								// Collection index
 					collection1Limit,				// Length of the range
-					collection1Limit, 				// Tokens allowed to sell
+					1, 								// Tokens allowed to sell
 					collection1Limit,				// Tokens locked
 					priceToMint,					// Price of the range
 					"First First!"					// Name of the range
@@ -1225,7 +1200,7 @@ describe("Token Factory", function () {
 					0, 								// First token in range
 					collection1Limit - 1, 			// Last token in range
 					priceToMint,					// Price to mint each token
-					collection1Limit,				// Allowed tokens
+					1,								// Allowed tokens
 					collection1Limit, 				// Locked tokens
 					"First First!", 				// Range name
 					0 								// Range index
@@ -1235,7 +1210,7 @@ describe("Token Factory", function () {
 				await newRair721Instance.createRange(
 					1,								// Collection index
 					collection2Limit,				// Length of the range
-					2,				 				// Tokens allowed to sell
+					collection2Limit,				// Tokens allowed to sell
 					3,								// Tokens locked
 					priceToMint * 2,				// Price of the range
 					"Second First!"					// Name of the range
@@ -1247,7 +1222,7 @@ describe("Token Factory", function () {
 					collection1Limit,							// First token in range
 					collection2Limit + collection1Limit - 1, 	// Last token in range
 					priceToMint * 2,							// Price to mint each token
-					2,											// Allowed tokens
+					collection2Limit,							// Allowed tokens
 					3, 											// Locked tokens
 					"Second First!", 							// Range name
 					1 											// Range index
@@ -1376,13 +1351,39 @@ describe("Token Factory", function () {
 		it ("Shouldn't mint tokens from ranges with no allowed tokens", async () => {
 			await newRair721Instance.grantRole(await newRair721Instance.MINTER(), owner.address);
 			await expect(newRair721Instance.mintFromRange(addr1.address, 0, 0))
-					.to.be.revertedWith('RAIR ERC721: Cannot mint more tokens from this range');
+					.to.be.revertedWith('RAIR ERC721: Not allowed to mint that many tokens');
 		});
 
-		it ("Should mint tokens", async () => {
-			await expect(await newRair721Instance.mintFromRange(addr1.address, 1, 0))
+		it ("Shouldn't mint tokens outside of their range", async () => {
+			await expect(newRair721Instance.mintFromRange(addr1.address, 1, 10))
+				.to.be.revertedWith("RAIR ERC721: Tried to mint token outside of range");
+		})
+
+		it ("Should mint all of the tokens in the range", async () => {
+			for await (const token of [0,1,2,3,4,5,6,7,8,9]) {
+				await expect(await newRair721Instance.mintFromRange(addr1.address, 1, token))
+					.to.emit(newRair721Instance, "Transfer")
+					.withArgs(ethers.constants.AddressZero, addr1.address, token + 2);
+				await expect((await newRair721Instance.rangeInfo(1)).data.tokensAllowed)
+					.to.equal(9 - token);
+			}
+		});
+
+		it ("Should mint all allowed of the tokens in the range", async () => {
+			await newRair721Instance.updateRange(
+				0, 							// Range index
+				"Updated NEW First First", 	// Range name 
+				900000, 					// Price
+				1, 							// Allowed tokens
+				1, 							// Locked tokens
+			);
+			await expect(await newRair721Instance.mintFromRange(addr1.address, 0, 0))
 				.to.emit(newRair721Instance, "Transfer")
-				.withArgs(ethers.constants.AddressZero, addr1.address, 2);
+				.withArgs(ethers.constants.AddressZero, addr1.address, 0)
+				.to.emit(newRair721Instance, "TradingUnlocked")
+				.withArgs(0, 0, 1);
+			await expect(newRair721Instance.mintFromRange(addr1.address, 0, 1))
+				.to.be.revertedWith("RAIR ERC721: Not allowed to mint that many tokens");
 		});
 
 		it ("Should validate the request for token checks", async () => {

@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { BigNumber, utils } from 'ethers';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import { BigNumber, utils } from 'ethers';
 import Swal from 'sweetalert2';
+
 import { IFactoryManager } from './creatorMode.types';
+
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { metamaskCall } from '../../utils/metamaskUtils';
 
 const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
   const [erc721Name, setERC721Name] = useState<string>('');

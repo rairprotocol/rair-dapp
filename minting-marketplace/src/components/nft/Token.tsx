@@ -1,16 +1,17 @@
 //@ts-nocheck
 //unused-component
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import VideoList from '../video/videoList';
-import setDocumentTitle from '../../utils/setTitle';
-import * as ethers from 'ethers';
-import { rFetch } from '../../utils/rFetch';
-import MinterMarketplaceItem from '../marketplace/MinterMarketplaceItem';
-import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
 import axios from 'axios';
+import * as ethers from 'ethers';
+import Swal from 'sweetalert2';
+
 import { TMetadataType, TTokenResponseData } from '../../axios.responseTypes';
+import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
+import { rFetch } from '../../utils/rFetch';
+import setDocumentTitle from '../../utils/setTitle';
+import MinterMarketplaceItem from '../marketplace/MinterMarketplaceItem';
+import VideoList from '../video/videoList';
 const erc721Abi = ERC721Token.default.abi;
 
 const Token = () => {

@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2';
+
 import { TSwitchEthereumChainArgs } from '../components/MockUpPage/mockupPage.types';
 
 const switchEthereumChain = async (chainData: TSwitchEthereumChainArgs) => {

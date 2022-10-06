@@ -1,25 +1,27 @@
 //@ts-nocheck
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../images';
+import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import TalkSalesComponent from '../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';
+
 import {
+  CommunityBlock,
+  CommunityBoxFooter,
+  FooterEmailBlock,
   FooterImage,
+  FooterMain,
+  FooterTextRairTech,
   FooterWrapper,
   NavFooter,
-  FooterMain,
-  CommunityBoxFooter,
-  CommunityBlock,
-  NavFooterBox,
-  FooterTextRairTech,
-  FooterEmailBlock
+  NavFooterBox
 } from './FooterItems/FooterItems';
-import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../images';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import Swal from 'sweetalert2';
-import TalkSalesComponent from '../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 
 const Footer = () => {
   const [emailChimp, setEmailChimp] = useState<string>('');

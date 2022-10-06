@@ -1,19 +1,19 @@
-import nipseyBg from './nipsey.webp';
+import bandana from './bandana.webp';
+import cepk from './cepk.webp';
+import digitalMobile from './digital-mobile.webp';
 import nft_1 from './exclusive_1.webp';
 import nft_2 from './exclusive_2.webp';
 import nft_3 from './exclusive_3.webp';
 import nft_4 from './image_3.webp';
 import nftImage from './main-nft-screen.webp';
-import unlockableVideo from './nipsey1.webp';
-import digitalMobile from './digital-mobile.webp';
 import nftMobile_1 from './nft-mobile_1.webp';
 import nftMobile_2 from './nft-mobile_2.webp';
-import videoPresent from './video-present.webp';
-import rairTechMobile from './rair_tech_mobile.webp';
-import bandana from './bandana.webp';
+import nipseyBg from './nipsey.webp';
+import unlockableVideo from './nipsey1.webp';
 import pods from './Pods.webp';
-import cepk from './cepk.webp';
 import poweredRair from './poweredRair.webp';
+import rairTechMobile from './rair_tech_mobile.webp';
+import videoPresent from './video-present.webp';
 
 export const NipseyBg = nipseyBg;
 export const Nft_1 = nft_1;

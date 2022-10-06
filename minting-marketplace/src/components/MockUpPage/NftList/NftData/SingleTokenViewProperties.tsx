@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ISingleTokenViewProperties } from '../../mockupPage.types';
 
 const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({

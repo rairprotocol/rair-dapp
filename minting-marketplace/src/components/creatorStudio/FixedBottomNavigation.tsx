@@ -1,7 +1,9 @@
 import { useSelector } from 'react-redux';
+
+import { IFixedBottomNavigation } from './creatorStudio.types';
+
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { IFixedBottomNavigation } from './creatorStudio.types';
 
 const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
   forwardFunctions,

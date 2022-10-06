@@ -1,7 +1,9 @@
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+
 import { IAlertMetamask } from './alertMetamask.types';
 import { Alert } from './styles';
+
 import { CheckEthereumChain } from '../../utils/CheckEthereumChain';
 
 const AlertMetamask: React.FC<IAlertMetamask> = ({

@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+
 import * as types from './types';
 
 //unused-snippet
@@ -23,11 +24,11 @@ const getPublicAddressComplete = (publicAddress: string | null) =>
   ({ type: types.GET_PUBLIC_ADDRESS_COMPLETE, publicAddress } as const);
 
 export {
-  getProviderStart,
   getProviderComplete,
   getProviderError,
-  getTokenStart,
+  getProviderStart,
+  getPublicAddressComplete,
   getTokenComplete,
   getTokenError,
-  getPublicAddressComplete
+  getTokenStart
 };

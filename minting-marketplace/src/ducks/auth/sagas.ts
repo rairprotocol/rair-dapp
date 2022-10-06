@@ -1,7 +1,8 @@
-import { put, takeLatest } from 'redux-saga/effects';
-import * as types from './types';
 import * as ethers from 'ethers';
+import { put, takeLatest } from 'redux-saga/effects';
+
 import { getProviderComplete, getProviderError } from './actions';
+import * as types from './types';
 
 export function* getProvider() {
   try {

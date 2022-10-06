@@ -1,8 +1,10 @@
 //@ts-nocheck
 import React, { memo, useCallback } from 'react';
+
 import { ImageUpload } from '../ImageUpload/ImageUpload';
 import { Name } from '../Name/Name';
 import { Status } from '../Status/Status';
+
 import cl from './Edit.module.css';
 
 const EditComponent = ({

@@ -25,15 +25,17 @@ const {
 
 const router = express.Router();
 
-router.post(
-  '/',
-  JWTVerification,
-  isAdmin,
-  upload.array('files', 2),
-  dataTransform(['attributes']),
-  validation('createCommonTokenMetadata'),
-  createTokensWithCommonMetadata,
-);
+router
+  .route('/')
+  .get(getSpecificContracts, getAllTokens)
+  .post(
+    JWTVerification,
+    isAdmin,
+    upload.array('files', 2),
+    dataTransform(['attributes']),
+    validation('createCommonTokenMetadata'),
+    createTokensWithCommonMetadata,
+  );
 router.post(
   '/viaCSV',
   JWTVerification,

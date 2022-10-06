@@ -1,5 +1,6 @@
-import { BinanceDiamond, MaticLogo, EthereumLogo } from '../images';
 import { TChainData } from './utils.types';
+
+import { BinanceDiamond, EthereumLogo, MaticLogo } from '../images';
 
 const chainData: TChainData = {
   '0x38': {

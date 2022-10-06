@@ -1,11 +1,14 @@
 //@ts-nocheck
-import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
+
+import { FavoriteItem, UserFavoriteItemInfo } from './MyFavoriteStyledItems';
+
 import { TUserResponse } from '../../../../../axios.responseTypes';
 import BtnMyFavorite from '../BtnMyFavorite/BtnMyFavorite';
 import { IMyfavoriteItem } from '../myFavorites.types';
+
 import defaultAvatar from './../../../../UserProfileSettings/images/defaultUserPictures.png';
-import { FavoriteItem, UserFavoriteItemInfo } from './MyFavoriteStyledItems';
 
 const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
   item,

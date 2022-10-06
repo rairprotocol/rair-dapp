@@ -1,9 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import '../../AboutPage/AboutPageNew/AboutPageNew.css';
-import './SlideLock.css';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { InitialState } from '../../../ducks/seo/reducers';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { metaMaskIcon } from '../../../images';
+import { rFetch } from '../../../utils/rFetch';
+import PurchaseTokenButton from '../../common/PurchaseToken';
+import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
 import {
   SlideLock_IMG,
@@ -12,30 +20,28 @@ import {
   slideNFT2,
   slideNFT3,
   slideNFT4,
-  videoBackground,
-  titleImage
+  titleImage,
+  videoBackground
 } from '../images/slideLock/slideLock';
-import { metaMaskIcon } from '../../../images';
-
-/* importing Components*/
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
-import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
-
-import PurchaseTokenButton from '../../common/PurchaseToken';
-import Swal from 'sweetalert2';
-import { rFetch } from '../../../utils/rFetch';
 import {
   ISplashPageProps,
   TMainContractType,
   TSplashDataType
 } from '../splashPage.types';
-import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
+import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
+/* importing Components*/
+import TeamMeet from '../TeamMeet/TeamMeetList';
+import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
+
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './SlideLock.css';
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './SlideLock.css';
 
 // TODO: UNUSED
 // import MetaTags from '../../SeoTags/MetaTags'
@@ -225,16 +231,23 @@ const SlideLock: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
   const [soldCopies, setSoldCopies] = useState<number>(0);
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const { currentChain, minterInstance } = useSelector<
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
+
+  useEffect(() => {
+    dispatch(setInfoSEO(InitialState));
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () =>
@@ -276,7 +289,7 @@ const SlideLock: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page slidelock">
-      {/* <MetaTags seoMetaTags={splashData.seoInformation} /> */}
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <AuthorCard {...{ splashData, connectUserData }} />
         {/* <NFTCounterTemplate 

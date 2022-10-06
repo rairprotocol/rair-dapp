@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Swal from 'sweetalert2';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-// import { Link } from 'react-router-dom';
-import CustomPayRate from '../whitelabel/customizePayRate';
 import { utils } from 'ethers';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import Swal from 'sweetalert2';
+
 import {
   IExistingLock,
   IProductManager,
   IRangeManager,
   IRangesType
 } from './creatorMode.types';
+
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { metamaskCall } from '../../utils/metamaskUtils';
+// import { Link } from 'react-router-dom';
+import CustomPayRate from '../whitelabel/customizePayRate';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 

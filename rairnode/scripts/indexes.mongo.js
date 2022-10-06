@@ -2,10 +2,10 @@ require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const {
   appSecretManager,
-  vaultAppRoleTokenManager
+  vaultAppRoleTokenManager,
 } = require('../bin/vault');
 const {
-  getMongoConnectionStringURI
+  getMongoConnectionStringURI,
 } = require('../bin/shared_backend_code_generated/mongo/mongoUtils');
 const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoConfig');
 
@@ -23,7 +23,7 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
 
   console.log('Running Database Indexes');
 
-  const mongoConnectionString = await getMongoConnectionStringURI({appSecretManager});
+  const mongoConnectionString = await getMongoConnectionStringURI({ appSecretManager });
 
   const client = await MongoClient.connect(mongoConnectionString, {
     useNewUrlParser: true,

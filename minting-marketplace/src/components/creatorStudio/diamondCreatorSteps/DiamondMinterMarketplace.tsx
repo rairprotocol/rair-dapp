@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Swal from 'sweetalert2';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { metamaskCall } from '../../../utils/metamaskUtils';
-import chainData from '../../../utils/blockchainData';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import FixedBottomNavigation from '../FixedBottomNavigation';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 import MarketplaceOfferConfig from './MarketplaceOfferConfig';
+
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import chainData from '../../../utils/blockchainData';
+import { metamaskCall } from '../../../utils/metamaskUtils';
 import {
   TDiamondMinterMarketplace,
   TMarketplaceOfferConfigArrayItem
 } from '../creatorStudio.types';
-import { useNavigate } from 'react-router-dom';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
   contractData,

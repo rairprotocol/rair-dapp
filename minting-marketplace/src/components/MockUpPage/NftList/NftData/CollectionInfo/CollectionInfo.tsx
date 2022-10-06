@@ -1,12 +1,17 @@
 import React from 'react';
-import './CollectionInfo.css';
-import { utils } from 'ethers';
-import chainData from './../../../../../utils/blockchainData';
 import { useSelector } from 'react-redux';
+import { utils } from 'ethers';
+
 import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
-import { ICollectionInfo } from '../../nftList.types';
+
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import { ImageLazy } from '../../../ImageLazy/ImageLazy';
+import { ICollectionInfo } from '../../nftList.types';
+
+import chainData from './../../../../../utils/blockchainData';
+
+import './CollectionInfo.css';
 
 const CollectionInfo: React.FC<ICollectionInfo> = ({
   blockchain,
@@ -51,7 +56,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     className="block-item-collection"
                     key={index + token.price}>
                     <div className="item-name">
-                      <img
+                      <ImageLazy
                         src={
                           someUsersData?.avatar
                             ? someUsersData?.avatar

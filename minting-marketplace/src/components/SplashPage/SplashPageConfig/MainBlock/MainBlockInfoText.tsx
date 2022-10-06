@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { TMainBlockInfoText } from '../splashConfig.types';
 import { StyledMainBlockTextContainer } from '../styles/MainBlockTextContainer.styled';
 

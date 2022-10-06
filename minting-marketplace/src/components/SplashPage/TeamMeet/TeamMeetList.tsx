@@ -1,21 +1,34 @@
 import React from 'react';
+
+import TeamMeetComponentCommon from './TeamComponentCommon';
+
 import {
+  David,
+  Ed,
+  Garrett,
+  Gunther,
+  Julia,
+  Martin,
+  Matthew,
+  Michael
+} from '../../AboutPage/assets/about';
+import {
+  AndreMiripolsky,
+  BruceFenton2,
+  CoinAgenda_LOGO,
+  Estate_Teammate,
+  GreymanAuthor,
+  MichaelTerpin,
+  NFTLA_ICON,
+  NFTNYC_LOGO,
+  NutTeam,
   Teammate_1,
   Teammate_2,
   Teammate_3,
   Teammate_4,
   Teammate_5,
   Teammate_6,
-  Teammate_8,
-  BruceFenton2,
-  NFTLA_ICON,
-  NFTNYC_LOGO,
-  CoinAgenda_LOGO,
-  Estate_Teammate,
-  GreymanAuthor,
-  NutTeam,
-  MichaelTerpin,
-  AndreMiripolsky
+  Teammate_8
 } from '../images/teamMeetList/teamMeetList';
 import { Teammate_7 } from '../images/UkraineGlitch/urkaineGlitch';
 import { Teammate_VV } from '../images/vaporverse/vaporverse';
@@ -23,18 +36,7 @@ import {
   Wallstreet1,
   Wallstreet2
 } from '../images/wallstreet80sclub/wallstreet80sclub';
-import {
-  Ed,
-  Garrett,
-  Julia,
-  Martin,
-  Michael,
-  Gunther,
-  David,
-  Matthew
-} from '../../AboutPage/assets/about';
 import { ITeamComponentCommon, TTeamArrayItemType } from '../splashPage.types';
-import TeamMeetComponentCommon from './TeamComponentCommon';
 
 const teamArray: TTeamArrayItemType[] = [
   {

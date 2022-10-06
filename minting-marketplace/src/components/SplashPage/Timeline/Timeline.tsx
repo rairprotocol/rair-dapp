@@ -1,14 +1,16 @@
 import React, { memo } from 'react';
-import cl from './Timeline.module.css';
+
 import {
-  GreymanRose,
   Flyinggreyman,
-  GreymanVariants,
-  GreymanMonument,
   GreymanArmy,
   GreymanMatrix,
-  GreyManTimes
+  GreymanMonument,
+  GreymanRose,
+  GreyManTimes,
+  GreymanVariants
 } from '../images/greyMan/grayMan';
+
+import cl from './Timeline.module.css';
 
 const TimelineComponent = () => {
   return (

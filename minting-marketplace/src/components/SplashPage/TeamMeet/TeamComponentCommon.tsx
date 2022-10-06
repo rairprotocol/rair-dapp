@@ -1,9 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+
+import Teammate from './Teammate';
+
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { ITeamMeetComponentCommon } from '../splashPage.types';
-import Teammate from './Teammate';
 
 const TeamMeetComponentCommon: React.FC<ITeamMeetComponentCommon> = ({
   teamArray,

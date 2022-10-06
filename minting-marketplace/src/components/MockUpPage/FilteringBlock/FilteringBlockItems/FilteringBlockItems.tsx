@@ -1,4 +1,7 @@
 import styled from 'styled-components';
+
+import { ArrowDown, ArrowUp, FilterIconNew, SimpleFilterArrow } from './incons';
+
 import {
   TFiltersTitleIconStyled,
   TModalContentPictureStyled,
@@ -9,7 +12,6 @@ import {
   TSortArrowUpIconStyled,
   TStyledShevronIconStyled
 } from '../filteringBlock.types';
-import { FilterIconNew, ArrowDown, ArrowUp, SimpleFilterArrow } from './incons';
 
 export const SelectFiltersItem = styled.div`
   background-color: var(

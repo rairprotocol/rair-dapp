@@ -1,7 +1,8 @@
 //@ts-nocheck
 import React from 'react';
-import './NotFound.css';
 import { useNavigate } from 'react-router-dom';
+
+import './NotFound.css';
 
 const NotFound = () => {
   const navigate = useNavigate();

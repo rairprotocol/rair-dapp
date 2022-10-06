@@ -117,6 +117,7 @@ Provide ability to make some specific actions on the platform
       * [x] /contracts - Return all Contracts (Query string supported) [see details here](readme/common_get_all.md)
           * [x] /my - get contracts for curent user [see details here](readme/get_contracts_my.md).
           * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/get_full_contracts_v2.md)
+          * [x] /fullSA - GET - mirrors full (authorized access shows blocked for view), [see details here](readme/get_full_contracts_v2.md)
           * [x] /:id - GET - return one found by ID [see details here](readme/common_get_by_id.md)
           * [x] /:id - PATCH - return one updated by ID [see details here](readme/update_contract_by_id.md)
           * [x] /byUser/:userId - get list of conract for user based on user address [see details here](readme/get_contracts_by_userId.md)
@@ -138,7 +139,9 @@ Provide ability to make some specific actions on the platform
       * [x] /offers - Return all Offers (Query string supported) [see details here](readme/common_get_all.md)
           * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
           * [x] /byAddressAndProduct - GET - get list of offers for specific Product [see details here](readme/get_Offer_by_Address_and_Product.md)
-      * [x] /tokens - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)
+      * [x] /tokens 
+          * [x] / - get - get all tokens [see details here](readme/get_tokens.md)
+          * [x] / - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)
           * [x] /my - GET - get all tokens which belongs to current user, [see details here](readme/get_my_tokens.md)
           * [x] /tokenNumbers - GET - get all tokens' numbers for [see details here](readme/get_tokenNumbers.md)
           * [x] /viaCSV - POST - update existed nft tokens, (**mirrors POST:api/nft/** without creating of new tokens. No handling for *"Token not created"* scenario.) [see details here](readme/bulk_create_NFT_tokens.md)

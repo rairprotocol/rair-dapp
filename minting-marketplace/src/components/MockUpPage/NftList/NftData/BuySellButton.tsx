@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { ReactComponent as MetamaskFox } from '../../assets/MetamaskFox.svg';
 import { IBuySellButton } from '../../mockupPage.types';
 

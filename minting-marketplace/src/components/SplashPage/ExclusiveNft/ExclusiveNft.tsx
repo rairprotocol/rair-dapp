@@ -1,5 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import { IExclusiveNft } from '../splashPage.types';
 
 const ExclusiveNft: React.FC<IExclusiveNft> = ({
@@ -43,12 +45,12 @@ const ExclusiveNft: React.FC<IExclusiveNft> = ({
         </div>
         <div className="block-nfts">
           <div className="box-nft">
-            <img src={Nft_4} alt="Exclusive NFT powered by Rair Tech" />
-            <img src={Nft_2} alt="Exclusive NFT powered by Rair Tech" />
+            <ImageLazy src={Nft_4} alt="Exclusive NFT powered by Rair Tech" />
+            <ImageLazy src={Nft_2} alt="Exclusive NFT powered by Rair Tech" />
           </div>
           <div className="box-nft">
-            <img src={Nft_3} alt="Exclusive NFT powered by Rair Tech" />
-            <img src={Nft_1} alt="Exclusive NFT powered by Rair Tech" />
+            <ImageLazy src={Nft_3} alt="Exclusive NFT powered by Rair Tech" />
+            <ImageLazy src={Nft_1} alt="Exclusive NFT powered by Rair Tech" />
           </div>
         </div>
       </div>

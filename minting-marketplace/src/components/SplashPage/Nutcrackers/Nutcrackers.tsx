@@ -28,17 +28,27 @@ import { web3Switch } from '../../../utils/switchBlockchain';
 import Swal from 'sweetalert2';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { setRealChain } from '../../../ducks/contracts/actions';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { InitialState } from '../../../ducks/seo/reducers';
+import MetaTags from '../../SeoTags/MetaTags';
 
 const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
   const dispatch = useDispatch();
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [, /*percentTokens*/ setPresentTokens] = useState(0);
-
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const leftTokensNumber = 50;
   const wholeTokens = 50;
   const { currentUserAddress, minterInstance, contractCreator } = useSelector(
     (store) => store.contractStore
   );
+
+  useEffect(() => {
+    dispatch(setInfoSEO(InitialState));
+    //eslint-disable-next-line
+  }, []);
 
   const nutcrackerAddress =
     '0xF4ca90d4a796f57133c6de47c2261BF237cfF780'.toLowerCase();
@@ -116,10 +126,15 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
 
   return (
     <div className="wrapper-splash-page nutcrackers">
+      <MetaTags seoMetaTags={seo} />
       <div className="home-splash--page">
         <div className="information-author nutcrackers">
           <div className="block-splash">
-            <img className="nut-block-img" src={NutsMain} alt="Nutcrackers" />
+            <ImageLazy
+              className="nut-block-img"
+              src={NutsMain}
+              alt="Nutcrackers"
+            />
             <div className="text-splash">
               <div className="title-splash nipsey">
                 <h3>Introducing</h3>
@@ -332,7 +347,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
               </p>
             </div>
             <div className="join-pic">
-              <img src={Cracker} alt="Cracker" />
+              <ImageLazy src={Cracker} alt="Cracker" />
             </div>
           </div>
         </div>

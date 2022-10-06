@@ -1,17 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ISerialNumberBuySell } from '../../mockupPage.types';
-import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+
 import { BuySellButton } from './BuySellButton';
-import { metamaskCall } from '../../../../utils/metamaskUtils';
+import SellInputButton from './SellInputButton';
+
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { useSelector } from 'react-redux';
-import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
 import chainData from '../../../../utils/blockchainData';
-import Swal from 'sweetalert2';
-import SellInputButton from './SellInputButton';
+import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
+import { metamaskCall } from '../../../../utils/metamaskUtils';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
+import { ISerialNumberBuySell } from '../../mockupPage.types';
+import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
 
 const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   tokenData,
@@ -128,7 +130,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             ${blockchain && chainData[blockchain]?.symbol}`}
       />
     ) : (
-      <p>no data</p>
+      <p></p>
     );
   }, [offerData, disableBuyBtn, blockchain, realChainProtected, buyContract]);
 
@@ -143,7 +145,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       ) : (
         checkOwner()
       );
-    } else if (selectedToken && !tokenData?.[selectedToken].isMinted) {
+    } else if (selectedToken && !tokenData?.[selectedToken]?.isMinted) {
       return checkOwner();
     } else {
       return (

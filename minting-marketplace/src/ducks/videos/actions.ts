@@ -1,6 +1,7 @@
-import { MediaListResponseType } from '../../components/video/video.types';
 import * as types from './types';
 import { TUpdataVideoParams } from './videosDucks.types';
+
+import { MediaListResponseType } from '../../components/video/video.types';
 
 const getListVideosStart = (params: TUpdataVideoParams) =>
   ({
@@ -31,8 +32,8 @@ const getListVideosError = (error: string | null) =>
 export {
   getListVideosError,
   getListVideosStart,
-  refreshAction,
   getVideoListComplete,
   getVideoListTotal,
-  getVideoListTotalClear
+  getVideoListTotalClear,
+  refreshAction
 };

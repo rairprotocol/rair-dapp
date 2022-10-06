@@ -2,6 +2,8 @@
 //unused-component
 import React from 'react';
 
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
+
 const JoinCom = ({ JoinCommunity, Metamask, primaryColor }) => {
   return (
     <div className="join-community">
@@ -37,7 +39,7 @@ const JoinCom = ({ JoinCommunity, Metamask, primaryColor }) => {
           </div>
         </div>
         <div className="join-pic">
-          <img src={JoinCommunity} alt="Join to community" />
+          <ImageLazy src={JoinCommunity} alt="Join to community" />
         </div>
       </div>
     </div>

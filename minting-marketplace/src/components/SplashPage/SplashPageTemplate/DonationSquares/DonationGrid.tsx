@@ -1,7 +1,10 @@
-import './DonationSquare.css';
-import DonationSquare from './DonationSquare';
 import { useEffect, useState } from 'react';
+
+import DonationSquare from './DonationSquare';
+
 import { IDonationGrid } from '../../splashPage.types';
+
+import './DonationSquare.css';
 
 const DonationGrid: React.FC<IDonationGrid> = ({ donationGridArray }) => {
   const mobile_match = window.matchMedia('(min-width: 1266px)');

@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+
 import {
   setChainId,
   setProgrammaticProvider,

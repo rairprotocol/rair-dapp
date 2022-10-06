@@ -1,5 +1,5 @@
-import nFTLA1_rounded from './NFT-LA-Dig-V01-modified.webp';
 import nFTLA1 from './NFT-LA-Dig-V01.webp';
+import nFTLA1_rounded from './NFT-LA-Dig-V01-modified.webp';
 import nFTLA2 from './NFT-LA-Dig-V02.webp';
 import nFTLA3 from './NFT-LA-Dig-V03.webp';
 

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 type TFooterMainStyled = {

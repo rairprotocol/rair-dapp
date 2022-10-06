@@ -1,13 +1,15 @@
 import React from 'react';
+
 import {
-  RairLogoBlue,
-  OpenSea,
-  Rarible,
-  OneOf,
+  Curios,
   Dapper,
   MinTable,
-  Curios
+  OneOf,
+  OpenSea,
+  RairLogoBlue,
+  Rarible
 } from '../../../../../images';
+import { ImageLazy } from '../../../../MockUpPage/ImageLazy/ImageLazy';
 import { ICompareMobileSelect } from '../../aboutPage.types';
 
 const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
@@ -20,7 +22,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogoBlue} alt="Rair Tech" />
+                <ImageLazy src={RairLogoBlue} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Metaverse as-a-Service</div>
@@ -28,7 +30,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OpenSea} alt="OpenSea" />
+                <ImageLazy src={OpenSea} alt="OpenSea" />
               </div>
             </div>
             <div className="select-mobile-text">Just another Opensea page</div>
@@ -36,7 +38,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Rarible} alt="Rarible" />
+                <ImageLazy src={Rarible} alt="Rarible" />
               </div>
             </div>
             <div className="select-mobile-text">Just another Rarible page</div>
@@ -44,7 +46,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OneOf} alt="OneOf" />
+                <ImageLazy src={OneOf} alt="OneOf" />
               </div>
             </div>
             <div className="select-mobile-text">Not your brand</div>
@@ -52,7 +54,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Dapper} alt="Dapper" />
+                <ImageLazy src={Dapper} alt="Dapper" />
               </div>
             </div>
             <div className="select-mobile-text">Need flow devs</div>
@@ -60,7 +62,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={MinTable} alt="Mintable App" />
+                <ImageLazy src={MinTable} alt="Mintable App" />
               </div>
             </div>
             <div className="select-mobile-text">Just another Mintable page</div>
@@ -68,7 +70,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Curios} alt="Curios" />
+                <ImageLazy src={Curios} alt="Curios" />
               </div>
             </div>
             <div className="select-mobile-text">Curios backend..</div>
@@ -80,7 +82,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogoBlue} alt="Rair Tech" />
+                <ImageLazy src={RairLogoBlue} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Any EVM</div>
@@ -88,7 +90,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OpenSea} alt="OpenSea" />
+                <ImageLazy src={OpenSea} alt="OpenSea" />
               </div>
             </div>
             <div className="select-mobile-text">Limited EVMs</div>
@@ -96,7 +98,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Rarible} alt="Rarible" />
+                <ImageLazy src={Rarible} alt="Rarible" />
               </div>
             </div>
             <div className="select-mobile-text">ETH only</div>
@@ -104,7 +106,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OneOf} alt="OneOf" />
+                <ImageLazy src={OneOf} alt="OneOf" />
               </div>
             </div>
             <div className="select-mobile-text">Only Tezos</div>
@@ -112,7 +114,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Dapper} alt="Dapper" />
+                <ImageLazy src={Dapper} alt="Dapper" />
               </div>
             </div>
             <div className="select-mobile-text">Only Flow</div>
@@ -120,7 +122,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={MinTable} alt="Mintable App" />
+                <ImageLazy src={MinTable} alt="Mintable App" />
               </div>
             </div>
             <div className="select-mobile-text">ETH</div>
@@ -128,7 +130,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Curios} alt="Curios" />
+                <ImageLazy src={Curios} alt="Curios" />
               </div>
             </div>
             <div className="select-mobile-text">MATIC</div>
@@ -140,7 +142,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogoBlue} alt="Rair Tech" />
+                <ImageLazy src={RairLogoBlue} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Universal Onchain</div>
@@ -148,7 +150,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OpenSea} alt="OpenSea" />
+                <ImageLazy src={OpenSea} alt="OpenSea" />
               </div>
             </div>
             <div className="select-mobile-text">2.5% Offchain</div>
@@ -156,7 +158,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Rarible} alt="Rarible" />
+                <ImageLazy src={Rarible} alt="Rarible" />
               </div>
             </div>
             <div className="select-mobile-text">2.5% Offchain</div>
@@ -164,7 +166,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OneOf} alt="OneOf" />
+                <ImageLazy src={OneOf} alt="OneOf" />
               </div>
             </div>
             <div className="select-mobile-text">Stuck on Tezos</div>
@@ -172,7 +174,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Dapper} alt="Dapper" />
+                <ImageLazy src={Dapper} alt="Dapper" />
               </div>
             </div>
             <div className="select-mobile-text">Stuck on Flow</div>
@@ -180,7 +182,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={MinTable} alt="rair tech" />
+                <ImageLazy src={MinTable} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">5%</div>
@@ -188,7 +190,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Curios} alt="rair tech" />
+                <ImageLazy src={Curios} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">5% Offchain</div>
@@ -200,7 +202,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogoBlue} alt="rair tech" />
+                <ImageLazy src={RairLogoBlue} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">Provenance & Speed</div>
@@ -208,7 +210,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OpenSea} alt="rair tech" />
+                <ImageLazy src={OpenSea} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">Lazyminted</div>
@@ -216,7 +218,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Rarible} alt="rair tech" />
+                <ImageLazy src={Rarible} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">Lazyminted</div>
@@ -224,7 +226,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OneOf} alt="rair tech" />
+                <ImageLazy src={OneOf} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">Stuck on Tezos</div>
@@ -232,7 +234,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Dapper} alt="rair tech" />
+                <ImageLazy src={Dapper} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">Stuck on Tezos</div>
@@ -240,7 +242,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={MinTable} alt="rair tech" />
+                <ImageLazy src={MinTable} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">Lazyminted</div>
@@ -248,7 +250,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Curios} alt="rair tech" />
+                <ImageLazy src={Curios} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">Lazyminted</div>
@@ -260,7 +262,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogoBlue} alt="rair tech" />
+                <ImageLazy src={RairLogoBlue} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">
@@ -272,7 +274,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OpenSea} alt="rair tech" />
+                <ImageLazy src={OpenSea} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">
@@ -284,7 +286,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Rarible} alt="rair tech" />
+                <ImageLazy src={Rarible} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">
@@ -296,7 +298,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OneOf} alt="rair tech" />
+                <ImageLazy src={OneOf} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">
@@ -308,7 +310,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Dapper} alt="rair tech" />
+                <ImageLazy src={Dapper} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">
@@ -320,7 +322,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={MinTable} alt="rair tech" />
+                <ImageLazy src={MinTable} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">
@@ -332,7 +334,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Curios} alt="rair tech" />
+                <ImageLazy src={Curios} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">

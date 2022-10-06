@@ -1,4 +1,3 @@
-import ukr_rounded from './rounded_corners.webp';
 import ukr4 from './4.webp';
 import ukr5 from './5.gif';
 import ukr126 from './126.webp';
@@ -7,6 +6,7 @@ import ukr1294 from './1294.webp';
 import ukr1989 from './1989.webp';
 import video_background from './metamask-vid-final.webp';
 import nft_countUkraine from './nftCountUkraine.webp';
+import ukr_rounded from './rounded_corners.webp';
 import teammate_7 from './soldier.jpeg';
 
 export const UKR_rounded = ukr_rounded;

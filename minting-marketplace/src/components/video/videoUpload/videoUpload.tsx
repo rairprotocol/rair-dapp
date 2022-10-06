@@ -1,18 +1,20 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
-import Swal from 'sweetalert2';
-import { rFetch } from '../../../utils/rFetch';
-import InputField from '../../common/InputField';
-import InputSelect from '../../common/InputSelect';
-import io from 'socket.io-client';
-import './videoUpload.css';
-import { getRandomValues } from '../../../utils/getRandomValues';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
+import io from 'socket.io-client';
+import Swal from 'sweetalert2';
+
 import {
   // TAuthGetChallengeResponse,
   TUploadSocket
 } from '../../../axios.responseTypes';
+import { getRandomValues } from '../../../utils/getRandomValues';
+import { rFetch } from '../../../utils/rFetch';
 import BlockChainSwitcher from '../../adminViews/BlockchainSwitcher';
+import InputField from '../../common/InputField';
+import InputSelect from '../../common/InputSelect';
+
+import './videoUpload.css';
 const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 //TODO: alternative env

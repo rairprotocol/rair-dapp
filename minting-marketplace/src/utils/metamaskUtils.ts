@@ -1,5 +1,6 @@
 import { BigNumber, ethers } from 'ethers';
 import Swal from 'sweetalert2';
+
 import { rFetch } from './rFetch';
 
 // 2 for the transaction catcher, 1 for speed

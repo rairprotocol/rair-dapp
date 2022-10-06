@@ -10,21 +10,17 @@ const {
 
 const sendErrorDev = (err, req, res) => {
   if (req.originalUrl.startsWith('/api')) {
-    res
-      .status(err.statusCode)
-      .json({
-        status: err.status,
-        error: err,
-        message: err.message,
-        stack: err.stack,
-      });
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
+    });
   } else {
-    res
-      .status(err.statusCode)
-      .json({
-        title: 'Spmething went wrong',
-        msg: err.message,
-      });
+    res.status(err.statusCode).json({
+      title: 'Spmething went wrong',
+      msg: err.message,
+    });
   }
 };
 
@@ -32,12 +28,10 @@ const sendErrorProd = (err, res) => {
   if (res.req.originalUrl.startsWith('/api')) {
     // Operational, trusted error: send message to client
     if (err.isOperational) {
-      return res
-        .status(err.statusCode)
-        .json({
-          status: err.status,
-          message: err.message,
-        });
+      return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
     }
     // Programming or other unknown error: don't leak error details
     // 1) Log error
@@ -68,11 +62,13 @@ module.exports = async (err, req, res, next) => {
   // eslint-disable-next-line no-param-reassign
   err.status = err.status || 'error';
 
-  if (process.env.PRODUCTION === 'false') {
+  if (process.env.PRODUCTION !== 'true') {
     let error = Object.assign(err);
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    if (error.name === 'ValidationError') { error = handleValidationErrorDB(error); }
+    if (error.name === 'ValidationError') {
+      error = handleValidationErrorDB(error);
+    }
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
     sendErrorDev(error, req, res);
@@ -82,7 +78,9 @@ module.exports = async (err, req, res, next) => {
     let error = Object.assign(err);
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    if (error.name === 'ValidationError') { error = handleValidationErrorDB(error); }
+    if (error.name === 'ValidationError') {
+      error = handleValidationErrorDB(error);
+    }
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
     sendErrorProd(error, res);

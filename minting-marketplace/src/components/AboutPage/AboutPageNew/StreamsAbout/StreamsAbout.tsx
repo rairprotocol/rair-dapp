@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { IStreamsAbout } from '../aboutPage.types';
+import axios from 'axios';
+
+import { TFileType, TNftFilesResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-import axios from 'axios';
-import { TFileType, TNftFilesResponse } from '../../../../axios.responseTypes';
+import { IStreamsAbout } from '../aboutPage.types';
 
 const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
   const whatSplashPage = 'about-page';

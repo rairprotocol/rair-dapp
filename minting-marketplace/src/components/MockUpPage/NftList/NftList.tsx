@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
-import { NftItem } from './NftItem';
 import { useSelector } from 'react-redux';
 import { CircularProgress } from '@mui/material';
-import { RootState } from '../../../ducks';
+
+import { NftItem } from './NftItem';
 import { INftListComponent } from './nftList.types';
+
+import { RootState } from '../../../ducks';
 import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
 
 const NftListComponent: React.FC<INftListComponent> = ({

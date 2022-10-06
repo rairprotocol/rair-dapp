@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import InputField from '../../common/InputField';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
-import { validateInteger } from '../../../utils/metamaskUtils';
-import { ICustomFeeRow } from '../creatorStudio.types';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+
 import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { validateInteger } from '../../../utils/metamaskUtils';
+import InputField from '../../common/InputField';
+import { ICustomFeeRow } from '../creatorStudio.types';
 
 const CustomFeeRow: React.FC<ICustomFeeRow> = ({
   index,

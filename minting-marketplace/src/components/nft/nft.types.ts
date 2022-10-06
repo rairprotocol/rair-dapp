@@ -1,6 +1,8 @@
-import { TTokenData } from './../../axios.responseTypes';
 import { BigNumber } from 'ethers';
+
 import { TMetadataType } from '../../axios.responseTypes';
+
+import { TTokenData } from './../../axios.responseTypes';
 
 export interface ITokenLayout {
   item: TMyDiamondItemsToken;

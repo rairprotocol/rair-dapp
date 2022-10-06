@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { TSplashPageMainBlock } from '../splashConfig.types';
 import { SplashMainBlockWrapper } from '../styles/SplashMainBlockStyled.styled';
 

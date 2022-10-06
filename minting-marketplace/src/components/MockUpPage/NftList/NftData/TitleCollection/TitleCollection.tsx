@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import './TitleCollection.css';
-import defaultUser from './../../../assets/defultUser.png';
-import { useParams, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useLocation, useParams } from 'react-router-dom';
+
+import { RootState } from '../../../../../ducks';
+import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import chainData from '../../../../../utils/blockchainData';
+import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
+import { ImageLazy } from '../../../ImageLazy/ImageLazy';
 import {
   ITitleCollection,
   TParamsTitleCollection
 } from '../../../mockupPage.types';
 import CustomShareButton from '../CustomShareButton';
+
+import defaultUser from './../../../assets/defultUser.png';
 import SharePopUp from './SharePopUp/SharePopUp';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../../ducks';
-import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
-import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
-import chainData from '../../../../../utils/blockchainData';
+
+import './TitleCollection.css';
 
 const TitleCollection: React.FC<ITitleCollection> = ({
   title,
@@ -81,7 +85,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
           </div>
           <div className="block-user-creator">
             <span>by:</span>
-            <img
+            <ImageLazy
               src={someUsersData?.avatar ? someUsersData.avatar : defaultUser}
               alt="User Avatar"
             />

@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
-import SellButton from './SellButton';
 import CloseIcon from '@mui/icons-material/Close';
+
+import SellButton from './SellButton';
+
 import { ISellInputButton } from '../../mockupPage.types';
 
 const SellInputButton: React.FC<ISellInputButton> = ({

@@ -1,17 +1,18 @@
+import * as ethers from 'ethers';
+
 import {
   ContractAddressesType,
   ContractsActionsType,
   ContractsInitialType
 } from './contracts.types';
 import * as types from './types';
-import * as ethers from 'ethers';
 
 import {
-  minterAbi,
-  factoryAbi,
-  erc777Abi,
   diamondFactoryAbi,
   diamondMarketplaceAbi,
+  erc777Abi,
+  factoryAbi,
+  minterAbi,
   resaleAbi
 } from '../../contracts';
 

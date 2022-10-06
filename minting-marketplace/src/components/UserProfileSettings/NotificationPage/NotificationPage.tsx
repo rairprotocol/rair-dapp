@@ -1,8 +1,10 @@
 //@ts-nocheck
 import React from 'react';
+
+import IconRemove from './images/icon-remove.png';
+
 // import { useSelector } from 'react-redux';
 import './NotificationPage.css';
-import IconRemove from './images/icon-remove.png';
 
 const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
   return (

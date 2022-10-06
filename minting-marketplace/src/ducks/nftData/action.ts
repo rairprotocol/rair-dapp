@@ -1,6 +1,7 @@
-import { TTokenData } from '../../axios.responseTypes';
 import { TNftDataItem } from './nftData.types';
 import * as types from './types';
+
+import { TTokenData } from '../../axios.responseTypes';
 
 const getNftDataStart = () =>
   ({
@@ -45,12 +46,12 @@ const setTokenData = (tokenData: TTokenData[] | null) =>
   ({ type: types.SET_TOKEN_DATA, tokenData } as const);
 
 export {
+  getNftDataError,
   getNftDataStart,
   getNftDataStartWithParams,
-  setNftData,
   getNftListTotal,
   getNftListTotalClear,
-  getNftDataError,
-  setTokenDataStart,
-  setTokenData
+  setNftData,
+  setTokenData,
+  setTokenDataStart
 };

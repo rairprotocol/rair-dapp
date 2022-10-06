@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
+import FormControl from '@mui/material/FormControl';
+// import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 // imports image logos
 import {
-  RairLogoBlue,
-  OpenSea,
-  Rarible,
-  OneOf,
+  Curios,
   Dapper,
   MinTable,
-  Curios
+  OneOf,
+  OpenSea,
+  RairLogoBlue,
+  Rarible
 } from '../../../../images';
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 
-// import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import CompareMobileSelect from './CompareMobileSelect/CompareMobileSelect';
 
 const CompareAbout = () => {
@@ -64,7 +65,7 @@ const CompareAbout = () => {
                 <th>
                   <div className="circle-table-img">
                     <div className="img_wrapper">
-                      <img src={RairLogoBlue} alt="Rair Tech" />
+                      <ImageLazy src={RairLogoBlue} alt="Rair Tech" />
                     </div>
                     <span>Rair.tech</span>
                   </div>
@@ -86,7 +87,7 @@ const CompareAbout = () => {
                 <td>
                   <div className="circle-table-img">
                     <div className="img_wrapper">
-                      <img src={OpenSea} alt="OpenSea" />
+                      <ImageLazy src={OpenSea} alt="OpenSea" />
                     </div>
                     <span>Opensea</span>
                   </div>
@@ -106,7 +107,7 @@ const CompareAbout = () => {
                 <td>
                   <div className="circle-table-img">
                     <div className="img_wrapper">
-                      <img src={Rarible} alt="Rarible" />
+                      <ImageLazy src={Rarible} alt="Rarible" />
                     </div>
                     <span>Rarible</span>
                   </div>
@@ -125,7 +126,7 @@ const CompareAbout = () => {
                 <td>
                   <div className="circle-table-img">
                     <div className="img_wrapper">
-                      <img src={OneOf} alt="Oneof" />
+                      <ImageLazy src={OneOf} alt="Oneof" />
                     </div>
                     <span>Oneof</span>
                   </div>
@@ -144,7 +145,7 @@ const CompareAbout = () => {
                 <td>
                   <div className="circle-table-img">
                     <div className="img_wrapper">
-                      <img src={Dapper} alt="Dapper" />
+                      <ImageLazy src={Dapper} alt="Dapper" />
                     </div>
                     <span>Dapper</span>
                   </div>
@@ -163,7 +164,7 @@ const CompareAbout = () => {
                 <td>
                   <div className="circle-table-img">
                     <div className="img_wrapper">
-                      <img src={MinTable} alt="Mintable App" />
+                      <ImageLazy src={MinTable} alt="Mintable App" />
                     </div>
                     <span>Mintable</span>
                   </div>
@@ -182,7 +183,7 @@ const CompareAbout = () => {
                 <td>
                   <div className="circle-table-img">
                     <div className="img_wrapper">
-                      <img src={Curios} alt="LooksRare" />
+                      <ImageLazy src={Curios} alt="LooksRare" />
                     </div>
                     <span>LooksRare</span>
                   </div>

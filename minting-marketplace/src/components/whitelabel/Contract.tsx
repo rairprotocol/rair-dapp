@@ -1,15 +1,15 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import CreateProduct from './CreateProduct';
 import AddOffer from './AddOffer';
+import CreateProduct from './CreateProduct';
+import CustomPayRate from './customizePayRate';
 import LockRange from './LockRange';
 
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
-import CustomPayRate from './customizePayRate';
 
 const Contract = ({ contractAddress, blockchain /*, title*/ }) => {
   const [data, setData] = useState();

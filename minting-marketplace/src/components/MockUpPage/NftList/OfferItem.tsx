@@ -1,6 +1,7 @@
 //@ts-nocheck
 //unused-component
 import React, { useState } from 'react';
+
 import { IOfferItemComponent } from './nftList.types';
 
 const OfferItem: React.FC<IOfferItemComponent> = ({

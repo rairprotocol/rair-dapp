@@ -1,11 +1,13 @@
 // @ts-nocheck
-import React, { useCallback, useState, useRef, useEffect } from 'react';
-import { Edit } from './Edit/Edit';
-import { Profile } from './Profile/Profile';
-import Swal from 'sweetalert2';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios, { AxiosError } from 'axios';
+import Swal from 'sweetalert2';
+
 import { TUserResponse } from '../../../axios.responseTypes';
+
+import { Edit } from './Edit/Edit';
+import { Profile } from './Profile/Profile';
 
 const UploadProfilePicture = ({
   setOpenModalPic,

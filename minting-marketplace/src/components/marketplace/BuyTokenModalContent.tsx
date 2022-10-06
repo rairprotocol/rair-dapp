@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import InputField from '../common/InputField';
-import Swal from 'sweetalert2';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import BatchRow from './BatchRow';
-import { minterAbi } from '../../contracts';
-import csvParser from '../../utils/csvParser';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import { ethers, utils } from 'ethers';
+import Swal from 'sweetalert2';
+
+import BatchRow from './BatchRow';
 import {
   TBatchMintDataType,
   TBuyTokenModalContentType
 } from './marketplace.types';
+
+import { minterAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import csvParser from '../../utils/csvParser';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import InputField from '../common/InputField';
 
 const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
   // blockchain,

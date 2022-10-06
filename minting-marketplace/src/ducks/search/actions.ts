@@ -22,8 +22,8 @@ const getDataAllClear = () =>
   } as const);
 
 export {
-  getDataAllStart,
+  getDataAllClear,
   getDataAllComplete,
   getDataAllEmpty,
-  getDataAllClear
+  getDataAllStart
 };

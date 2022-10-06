@@ -2,20 +2,22 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as ethers from 'ethers';
 import Swal from 'sweetalert2';
-import InputField from '../../../../common/InputField';
-import { SvgKeyForModalItem } from '../../../NftList/SvgKeyForModalItem';
-import Modal from '../../modal';
-import './ModalItemResponsive.css';
+
+import { erc721Abi } from '../../../../../contracts';
+import { RootState } from '../../../../../ducks';
+import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
+import blockchainData from '../../../../../utils/blockchainData';
 import {
   metamaskCall,
   validateInteger
 } from '../../../../../utils/metamaskUtils';
-import { erc721Abi } from '../../../../../contracts';
 import { web3Switch } from '../../../../../utils/switchBlockchain';
-import blockchainData from '../../../../../utils/blockchainData';
+import InputField from '../../../../common/InputField';
+import { SvgKeyForModalItem } from '../../../NftList/SvgKeyForModalItem';
 import { IModalItem } from '../../filteringBlock.types';
-import { RootState } from '../../../../../ducks';
-import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
+import Modal from '../../modal';
+
+import './ModalItemResponsive.css';
 
 const ModalItem: React.FC<IModalItem> = ({
   isOpenBlockchain,

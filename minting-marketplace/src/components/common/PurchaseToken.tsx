@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import { useSelector, Provider, useStore } from 'react-redux';
-
+import { Provider, useSelector, useStore } from 'react-redux';
+import { ethers } from 'ethers';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+
+import { diamondFactoryAbi, erc721Abi } from '../../contracts';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { metaMaskIcon } from '../../images';
 import blockchainData from '../../utils/blockchainData';
-import { web3Switch } from '../../utils/switchBlockchain';
-import { rFetch } from '../../utils/rFetch';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import { erc721Abi, diamondFactoryAbi } from '../../contracts';
 import { getRandomValues } from '../../utils/getRandomValues';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import { rFetch } from '../../utils/rFetch';
+import { web3Switch } from '../../utils/switchBlockchain';
+
 import {
   IAgreementsPropsType,
   IPurchaseTokenButtonProps,
   IRangeDataType
 } from './commonTypes/PurchaseTokenTypes.types';
-import { ethers } from 'ethers';
 
 const reactSwal = withReactContent(Swal);
 

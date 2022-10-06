@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { INotCommercial } from '../splashPage.types';
+
 import './NotCommercial.css';
 
 const NotCommercial: React.FC<INotCommercial> = ({ primaryColor }) => {

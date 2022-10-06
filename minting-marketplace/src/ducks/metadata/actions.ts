@@ -12,8 +12,8 @@ const updateTokenMetadataError = (errorMessage: string | null) =>
   ({ type: types.UPDATE_TOKEN_METADATA_ERROR, errorMessage } as const);
 
 export {
-  updateTokenMetadataAC,
   setShowSidebarFalse,
   setShowSidebarTrue,
+  updateTokenMetadataAC,
   updateTokenMetadataError
 };

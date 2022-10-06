@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import colors from '../../../utils/offerLockColors';
-import { validateInteger } from '../../../utils/metamaskUtils';
-import InputField from '../../common/InputField';
 import { utils } from 'ethers';
-import { IOfferRow } from '../creatorStudio.types';
+
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { validateInteger } from '../../../utils/metamaskUtils';
+import colors from '../../../utils/offerLockColors';
+import InputField from '../../common/InputField';
+import { IOfferRow } from '../creatorStudio.types';
 
 const OfferRow: React.FC<IOfferRow> = ({
   index,

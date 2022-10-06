@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IAuthorBlock } from '../splashPage.types';
 
 const AuthorBlock: React.FC<IAuthorBlock> = ({ children, mainClass }) => {

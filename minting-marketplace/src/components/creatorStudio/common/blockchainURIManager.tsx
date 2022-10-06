@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import InputField from '../../common/InputField';
+import { BigNumber } from 'ethers';
 //import InputSelect from '../../common/InputSelect';
 import Swal from 'sweetalert2';
-import { web3Switch } from '../../../utils/switchBlockchain';
+
+import { TTokenData } from '../../../axios.responseTypes';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { metamaskCall } from '../../../utils/metamaskUtils';
-import { BigNumber } from 'ethers';
+//import { UsersContractsType } from '../../adminViews/adminView.types';
+import { rFetch } from '../../../utils/rFetch';
+import { web3Switch } from '../../../utils/switchBlockchain';
+import InputField from '../../common/InputField';
 import {
   IIBlockchainURIManager,
   ITokenURIRow,
   TNextToken,
   TUniqueURIArray
 } from '../creatorStudio.types';
-import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-//import { UsersContractsType } from '../../adminViews/adminView.types';
-import { rFetch } from '../../../utils/rFetch';
-import { TTokenData } from '../../../axios.responseTypes';
 
 const TokenURIRow: React.FC<ITokenURIRow> = ({
   tokenId,

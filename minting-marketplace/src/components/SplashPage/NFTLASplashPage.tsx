@@ -1,33 +1,38 @@
 //@ts-nocheck
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import './SplashPageTemplate/AuthorCard/AuthorCard.css';
-import './../AboutPage/AboutPageNew/AboutPageNew.css';
+import { useDispatch, useSelector } from 'react-redux';
 
-/* importing images*/
-import { NFTLA1_rounded, NFTLA1, NFTLA2, NFTLA3 } from './images/NFTLA/nftLA';
-import NFTLA_Video from './images/NFTLA/NFT-LA-RAIR-2021.mp4';
-import { DocumentIcon } from '../../images';
-import { discrodIconNoBorder } from '../../images';
-import NFTfavicon from './images/favicons/NFT_favicon.ico';
-
-/* importing Components*/
-import TeamMeet from './TeamMeet/TeamMeetList';
-import AuthorCard from './SplashPageTemplate/AuthorCard/AuthorCard';
-import NotCommercialTemplate from './NotCommercial/NotCommercialTemplate';
-import CarouselModule from './SplashPageTemplate/Carousel/Carousel';
-import VideoPlayerModule from './SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-import MetaTags from '../SeoTags/MetaTags';
-import VideoPlayerView from '../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-import { TVideoPlayerViewSpecialVideoType } from '../MockUpPage/NftList/nftList.types';
 import {
   ISplashPageProps,
   TNftLaSelectedVideo,
   TSplashDataType
 } from './splashPage.types';
+
 import { TFileType } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { setInfoSEO } from '../../ducks/seo/actions';
+import { DocumentIcon } from '../../images';
+import { discrodIconNoBorder } from '../../images';
+import VideoPlayerView from '../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import { TVideoPlayerViewSpecialVideoType } from '../MockUpPage/NftList/nftList.types';
+import MetaTags from '../SeoTags/MetaTags';
+
+import NFTfavicon from './images/favicons/NFT_favicon.ico';
+import NFTLA_Video from './images/NFTLA/NFT-LA-RAIR-2021.mp4';
+/* importing images*/
+import { NFTLA1, NFTLA1_rounded, NFTLA2, NFTLA3 } from './images/NFTLA/nftLA';
+import NotCommercialTemplate from './NotCommercial/NotCommercialTemplate';
+import AuthorCard from './SplashPageTemplate/AuthorCard/AuthorCard';
+import CarouselModule from './SplashPageTemplate/Carousel/Carousel';
+import VideoPlayerModule from './SplashPageTemplate/VideoPlayer/VideoPlayerModule';
+/* importing Components*/
+import TeamMeet from './TeamMeet/TeamMeetList';
+
+import './SplashPageTemplate/AuthorCard/AuthorCard.css';
+import './../AboutPage/AboutPageNew/AboutPageNew.css';
+import './SplashPageTemplate/AuthorCard/AuthorCard.css';
+import './../AboutPage/AboutPageNew/AboutPageNew.css';
 
 //TODO:Until we have a contract it will be commented
 // import { TNftFilesResponse } from '../../axios.responseTypes';
@@ -42,15 +47,6 @@ const splashData: TSplashDataType = {
   titleColor: '#A4396F',
   description:
     'Connect with Metamask for your free NFT airdrop and access exclusive streaming content from our event!',
-  seoInformation: {
-    title: 'Official NFTLA Streaming NFTs',
-    contentName: 'author',
-    content: '#NFTLA',
-    description:
-      'Claim your NFT to unlock encrypted streams from the NFTLA conference',
-    favicon: NFTfavicon,
-    faviconMobile: NFTfavicon
-  },
   backgroundImage: NFTLA1_rounded,
   button1: {
     buttonColor: '#A4396F',
@@ -129,6 +125,8 @@ const splashData: TSplashDataType = {
 };
 
 const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [selectVideo, setSelectVideo] = useState<TNftLaSelectedVideo | {}>({});
   // TODO: Until we have a contract it will be commented
   const [allVideos /*setAllVideos*/] = useState<TFileType[]>([]);
@@ -165,6 +163,29 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     }
   ];
 
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'Official NFTLA Streaming NFTs',
+        ogTitle: 'Official NFTLA Streaming NFTs',
+        twitterTitle: 'Official NFTLA Streaming NFTs',
+        contentName: 'author',
+        content: '#NFTLA',
+        description:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        ogDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        twitterDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        image:
+          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        favicon: NFTfavicon,
+        faviconMobile: NFTfavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
+
   //temporarily unused-snippet
   // const getAllVideos = useCallback(async () => {
   //   const response = await axios.get<TNftFilesResponse>(
@@ -184,7 +205,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 
   return (
     <div className="wrapper-splash-page">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <AuthorCard splashData={splashData} />
         <CarouselModule

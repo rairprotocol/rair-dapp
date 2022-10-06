@@ -29,7 +29,7 @@ exports.getContractById = async (req, res, next) => {
 exports.getContractsByUserAddress = async (req, res, next) => {
   try {
     const user = req.params.userAddress.toLowerCase();
-    const contracts = await this.findContractsByUser(user);
+    const contracts = await Contract.findContractsByUser(user);
     if (!contracts) {
       next(new AppError(`No contract found for user ${user}`, 404));
     } else {
@@ -43,7 +43,7 @@ exports.getContractsByUserAddress = async (req, res, next) => {
 exports.getMyContracts = async (req, res, next) => {
   try {
     const user = req.user.publicAddress;
-    const contracts = await this.findContractsByUser(user);
+    const contracts = await Contract.findContractsByUser(user);
 
     if (!contracts || contracts.length < 1) {
       next(new AppError('No contract found for user', 404));
@@ -185,6 +185,23 @@ exports.getFullContracts = async (req, res, next) => {
         },
       });
     }
+    const blockOption = [
+      {
+        $match: {
+          blockView: {
+            $ne: true,
+          },
+        },
+      },
+      { $project: { blockView: 0, blockSync: 0 } },
+    ];
+    if (req.user) {
+      if (!req.user.superAdmin) {
+        options.unshift(...blockOption);
+      }
+    } else {
+      options.unshift(...blockOption);
+    }
 
     const totalNumber = _.chain(
       await Contract.aggregate(options).count('contracts'),
@@ -197,9 +214,11 @@ exports.getFullContracts = async (req, res, next) => {
       .sort({ 'products.name': 1 })
       .skip(skip)
       .limit(pageSize);
-
-    res.json({ success: true, totalNumber, contracts });
+    if (totalNumber === 0) {
+      return next(new AppError('No contracts found', 404));
+    }
+    return res.json({ success: true, totalNumber, contracts });
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };

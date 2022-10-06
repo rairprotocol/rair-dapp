@@ -1,34 +1,34 @@
 //@ts-nocheck
 //unused-component  - new NftDataPageMain differs but for future I will keep this old version in project
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { utils } from 'ethers';
-import Swal from 'sweetalert2';
+import React, { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionItem,
-  AccordionItemHeading,
   AccordionItemButton,
+  AccordionItemHeading,
   AccordionItemPanel
 } from 'react-accessible-accordion';
-import { metamaskCall } from '../utils/metamaskUtils';
-import ItemRank from '../components/MockUpPage/SelectBox/ItemRank';
-import SelectNumber from '../components/MockUpPage/SelectBox/SelectNumber/SelectNumber';
 import ReactPlayer from 'react-player';
-import chainData from '../utils/blockchainData';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import setDocumentTitle from '../utils/setTitle';
+import { useNavigate } from 'react-router-dom';
+import { utils } from 'ethers';
+import Swal from 'sweetalert2';
 
 import { BreadcrumbsView } from '../components/MockUpPage/NftList/Breadcrumbs/Breadcrumbs';
 import AuthenticityBlock from '../components/MockUpPage/NftList/NftData/AuthenticityBlock/AuthenticityBlock';
-import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
 import CollectionInfo from '../components/MockUpPage/NftList/NftData/CollectionInfo/CollectionInfo';
-import TitleCollection from '../components/MockUpPage/NftList/NftData/TitleCollection/TitleCollection';
 import NftListUnlockablesVideos from '../components/MockUpPage/NftList/NftData/NftListUnlockablesVideos';
-import { setShowSidebarTrue } from '../ducks/metadata/actions';
+import TitleCollection from '../components/MockUpPage/NftList/NftData/TitleCollection/TitleCollection';
 import { gettingPrice } from '../components/MockUpPage/NftList/utils/gettingPrice';
+import ItemRank from '../components/MockUpPage/SelectBox/ItemRank';
+import SelectNumber from '../components/MockUpPage/SelectBox/SelectNumber/SelectNumber';
+import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
+import { setShowSidebarTrue } from '../ducks/metadata/actions';
+import chainData from '../utils/blockchainData';
 import { CheckEthereumChain } from '../utils/CheckEthereumChain';
+import { metamaskCall } from '../utils/metamaskUtils';
+import setDocumentTitle from '../utils/setTitle';
 
 const NftDataPageMain = ({
   // setTokenData,

@@ -1,12 +1,7 @@
-import axios from 'axios';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { TMetadataType } from '../../axios.responseTypes';
-import { diamondFactoryAbi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import blockchainData from '../../utils/blockchainData';
+import axios from 'axios';
+
 import {
   IItemsForContract,
   IMyDiamondItems,
@@ -14,6 +9,13 @@ import {
   TMyDiamondItemsToken,
   TSingleOfferData
 } from './nft.types';
+
+import { TMetadataType } from '../../axios.responseTypes';
+import { diamondFactoryAbi } from '../../contracts';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import blockchainData from '../../utils/blockchainData';
 
 const TokenLayout: React.FC<ITokenLayout> = ({
   item,

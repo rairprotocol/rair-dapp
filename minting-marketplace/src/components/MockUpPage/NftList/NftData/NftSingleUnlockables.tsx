@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import NftDifferentRarity from './UnlockablesPage/NftDifferentRarity/NftDifferentRarity';
-import './NftSingleUnlockables.css';
+
+import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import {
   INftSingleUnlockables,
   TNftSingleUnlockablesSections,
   TRarityType
 } from '../nftList.types';
+
+import NftDifferentRarity from './UnlockablesPage/NftDifferentRarity/NftDifferentRarity';
+
+import './NftSingleUnlockables.css';
 
 const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
   embeddedParams,
@@ -78,7 +82,7 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
                             style={{
                               position: 'relative'
                             }}>
-                            <img
+                            <ImageLazy
                               src={`${v?.staticThumbnail}`}
                               alt="Preview unlockable video"
                             />
@@ -94,7 +98,7 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
                                 {v.description}
                               </p>
                             </div>
-                            <img
+                            <ImageLazy
                               src={`${v?.staticThumbnail}`}
                               alt="Preview unlockable video"
                             />

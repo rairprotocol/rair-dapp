@@ -1,13 +1,15 @@
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+import { TUserResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import AddIcon from '@mui/icons-material/Add';
-import cl from './PersonalProfileBackground.module.css';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import axios from 'axios';
-import { TUserResponse } from '../../../../axios.responseTypes';
-import Swal from 'sweetalert2';
+
+import cl from './PersonalProfileBackground.module.css';
 
 const PersonalProfileBackgroundComponent = () => {
   const [backgroundUser, setBackgroundUser] = useState<any | null>();

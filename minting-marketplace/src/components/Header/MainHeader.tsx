@@ -1,42 +1,44 @@
-//@ts-nocheck
 //tools
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-//imports components
-import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
-import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
+// import { NavLink } from 'react-router-dom';
+// import Popup from 'reactjs-popup';
+import { IMainHeader, TAxiosCollectionData } from './header.types';
+
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
+import { TUsersInitialState } from '../../ducks/users/users.types';
+import { DiscordIcon, TwitterIcon } from '../../images';
+//images
+import { headerLogoBlack, headerLogoWhite } from '../../images';
+import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
-import { DiscordIcon, TwitterIcon } from '../../images';
+import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
+
+import {
+  TSearchDataProduct,
+  TSearchDataTokens,
+  TSearchDataUser,
+  TSearchInitialState
+} from './../../ducks/search/search.types';
+//imports components
+import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import AdminPanel from './AdminPanel/AdminPanel';
 import {
   HeaderContainer /*, SocialHeaderBox */
 } from './HeaderItems/HeaderItems';
-
-//images
-import { headerLogoBlack, headerLogoWhite } from '../../images';
+import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 
 //styles
 import './Header.css';
-// import { NavLink } from 'react-router-dom';
-// import Popup from 'reactjs-popup';
-import { IMainHeader, TAxiosCollectionData } from './header.types';
-import {
-  TSearchDataUser,
-  TSearchDataProduct,
-  TSearchDataTokens,
-  TSearchInitialState
-} from './../../ducks/search/search.types';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../ducks/users/users.types';
-import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
-import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComponent';
+//styles
+import './Header.css';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,

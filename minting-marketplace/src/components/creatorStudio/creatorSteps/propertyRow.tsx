@@ -1,8 +1,9 @@
 import React from 'react';
-import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
+
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import InputField from '../../common/InputField';
 import { IPropertyRow } from '../creatorStudio.types';
 
 const PropertyRow: React.FC<IPropertyRow> = ({

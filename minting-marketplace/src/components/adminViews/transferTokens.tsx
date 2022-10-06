@@ -1,24 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import InputField from '../common/InputField';
-import InputSelect from '../common/InputSelect';
-import { rFetch } from '../../utils/rFetch';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import blockchainData from '../../utils/blockchainData';
-import { web3Switch } from '../../utils/switchBlockchain';
-import { erc721Abi, diamondFactoryAbi } from '../../contracts';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import { ethers } from 'ethers';
 import Swal from 'sweetalert2';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+
 import {
   BlockchainInfoType,
   ContractDataType,
   ContractsResponseType
 } from './adminView.types';
-import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
-import { ethers } from 'ethers';
-import { TTokenData } from '../../axios.responseTypes';
 import BlockChainSwitcher from './BlockchainSwitcher';
+
+import { TTokenData } from '../../axios.responseTypes';
+import { diamondFactoryAbi, erc721Abi } from '../../contracts';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import blockchainData from '../../utils/blockchainData';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import { rFetch } from '../../utils/rFetch';
+import { web3Switch } from '../../utils/switchBlockchain';
+import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
+import InputField from '../common/InputField';
+import InputSelect from '../common/InputSelect';
 
 const TransferTokens = () => {
   const { currentChain, currentUserAddress, contractCreator } = useSelector<

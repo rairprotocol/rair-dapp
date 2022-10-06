@@ -1,11 +1,16 @@
 //@ts-nocheck
 //test page for video tiles
-import { NYCVideoBackground } from '../../images/NFTNYC/nftnyc';
-import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-import VideoPlayerModule from '../VideoPlayer/VideoPlayerModule';
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+
+import { setInfoSEO } from '../../../../ducks/seo/actions';
+import { InitialState } from '../../../../ducks/seo/reducers';
+import { TInfoSeo } from '../../../../ducks/seo/seo.types';
+import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import MetaTags from '../../../SeoTags/MetaTags';
+import { NYCVideoBackground } from '../../images/NFTNYC/nftnyc';
+import VideoPlayerModule from '../VideoPlayer/VideoPlayerModule';
 
 /* for video player module */
 const videoData = {
@@ -58,6 +63,8 @@ const testContract = {
 // ]
 
 const VideoTilesTest = ({ setIsSplashPage }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   /* UTILITIES FOR VIDEO PLAYERS */
@@ -75,6 +82,11 @@ const VideoTilesTest = ({ setIsSplashPage }) => {
   };
 
   useEffect(() => {
+    dispatch(setInfoSEO(InitialState));
+    //eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     getProductsFromOffer();
   }, []);
 
@@ -86,6 +98,7 @@ const VideoTilesTest = ({ setIsSplashPage }) => {
 
   return (
     <>
+      <MetaTags seoMetaTags={seo} />
       <VideoPlayerModule
         backgroundImage={NYCVideoBackground}
         videoData={videoData}

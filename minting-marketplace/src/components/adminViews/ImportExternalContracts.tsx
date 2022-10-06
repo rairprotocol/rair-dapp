@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { utils } from 'ethers';
+
+import { TExternalContractType } from './adminView.types';
+
+import blockchainData from '../../utils/blockchainData';
+import { validateInteger } from '../../utils/metamaskUtils';
+import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
-import { rFetch } from '../../utils/rFetch';
-import { utils } from 'ethers';
-import blockchainData from '../../utils/blockchainData';
-import { TExternalContractType } from './adminView.types';
-import { validateInteger } from '../../utils/metamaskUtils';
 
 const ImportExternalContract = () => {
   const [selectedContract, setSelectedContract] = useState<string>('');

@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import * as ethers from 'ethers';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import * as ethers from 'ethers';
+
 import ProductManager from './CollectionManager';
-import { abi } from '../../contracts/RAIR_ERC721.json';
 import {
   IERC721Manager,
   ITokenInfo,
   ProductInfoType
 } from './creatorMode.types';
+
+import { abi } from '../../contracts/RAIR_ERC721.json';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 

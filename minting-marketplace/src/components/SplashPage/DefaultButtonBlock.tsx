@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { IDefaultButtonBlock } from './splashPage.types';
+
 import AuthorCardButton from './SplashPageTemplate/AuthorCard/AuthorCardButton';
 
 const DefaultButtonBlock: React.FC<IDefaultButtonBlock> = ({

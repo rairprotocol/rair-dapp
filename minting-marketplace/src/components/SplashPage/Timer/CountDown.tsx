@@ -1,8 +1,10 @@
 //@ts-nocheck
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import './Countdown.css';
 import moment from 'moment-timezone';
+
 import { ICountdown, TCowntdownObject } from '../splashPage.types';
+
+import './Countdown.css';
 
 const CountdownComponent: React.FC<ICountdown> = ({ setTimerLeft, time }) => {
   const dec = moment(new Date(time)); //.tz("America/New_York");

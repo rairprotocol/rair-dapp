@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.16;
+pragma solidity 0.8.17;
 
 import "openzeppelin-v4.7.1/token/ERC721/ERC721.sol";
 import "openzeppelin-v4.7.1/access/AccessControl.sol";
@@ -672,25 +672,15 @@ contract RAIR721_Contract is
 
         require(
             selectedRange.tokensAllowed >= tokenQuantity,
-            "RAIR ERC721: Cannot mint more tokens from this range"
+            "RAIR ERC721: Not allowed to mint that many tokens"
         );
         require(
             selectedRange.rangeStart <=
                 selectedCollection.startingToken + indexInCollection &&
-                selectedCollection.startingToken + indexInCollection + tokenQuantity <=
+                selectedCollection.startingToken + indexInCollection + tokenQuantity - 1 <=
                 selectedRange.rangeEnd,
-            "RAIR ERC721: Invalid token index"
+            "RAIR ERC721: Tried to mint token outside of range"
         );
-
-		for (; tokenQuantity > 0; tokenQuantity--) {
-			_safeMint(
-				buyerAddress,
-				selectedCollection.startingToken + indexInCollection + tokenQuantity - 1
-			);
-			tokenToRange[
-				selectedCollection.startingToken + indexInCollection + tokenQuantity - 1
-			] = rangeIndex;
-		}
 
         selectedRange.tokensAllowed -= tokenQuantity;
 
@@ -708,6 +698,16 @@ contract RAIR721_Contract is
                 );
             }
         }
+
+		for (; tokenQuantity > 0; tokenQuantity--) {
+			_safeMint(
+				buyerAddress,
+				selectedCollection.startingToken + indexInCollection + tokenQuantity - 1
+			);
+			tokenToRange[
+				selectedCollection.startingToken + indexInCollection + tokenQuantity - 1
+			] = rangeIndex;
+		}
     }
 
     /// @notice Returns the fee for the NFT sale

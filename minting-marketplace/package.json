@@ -2,7 +2,7 @@
     "name": "frontend-minting-marketplace",
     "version": "0.1.0",
     "private": true,
-    "proxy": "http://rairnode:5000",
+    "proxy": "http://localhost:5000",
     "dependencies": {
         "@analytics/google-analytics": "^0.5.3",
         "@emotion/react": "^11.5.0",
@@ -99,6 +99,7 @@
         "eslint-plugin-prettier": "^4.0.0",
         "eslint-plugin-react": "^7.30.0",
         "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-simple-import-sort": "^8.0.0",
         "husky": "^8.0.1",
         "lint-staged": "^13.0.3",
         "prettier": "^2.7.1",

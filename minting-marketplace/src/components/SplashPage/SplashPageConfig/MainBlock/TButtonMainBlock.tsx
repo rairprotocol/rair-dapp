@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+
 import { TButtonMainBlock } from '../splashConfig.types';
 import {
   StyledButtonImage,

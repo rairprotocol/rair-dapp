@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { metaMaskIcon } from '../../../images';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import { IUnlockVideoItem } from '../splashPage.types';
 
 const UnlockVideoItem: React.FC<IUnlockVideoItem> = ({
@@ -19,7 +21,7 @@ const UnlockVideoItem: React.FC<IUnlockVideoItem> = ({
           <div className="video-block-metamask-some">
             <img src={metaMaskIcon} alt="metamask-logo" />
           </div>
-          <img
+          <ImageLazy
             className="block-img-bg"
             src={unlockableVideo}
             alt="Preview unlockable video"

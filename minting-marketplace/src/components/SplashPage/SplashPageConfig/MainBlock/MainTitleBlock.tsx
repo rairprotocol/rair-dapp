@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { TMainTitleBlock } from '../splashConfig.types';
 import { StyledMainBlockTitle } from '../styles/MainBlockTextContainer.styled';
 

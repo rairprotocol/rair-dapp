@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import colors from '../../../utils/offerLockColors';
-import InputField from '../../common/InputField';
 import { utils } from 'ethers';
-import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
-import { IDiamondOfferRow } from '../creatorStudio.types';
+
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
+import colors from '../../../utils/offerLockColors';
+import InputField from '../../common/InputField';
+import { IDiamondOfferRow } from '../creatorStudio.types';
 const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   index,
   deleter,

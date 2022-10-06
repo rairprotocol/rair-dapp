@@ -1,15 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { CircularProgress } from '@mui/material';
+
+import NftSingleUnlockables from './NftSingleUnlockables';
+
+import { TFileType } from '../../../../axios.responseTypes';
+import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
+import setDocumentTitle from '../../../../utils/setTitle';
 import CustomButton from '../../utils/button/CustomButton';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
-import NftSingleUnlockables from './NftSingleUnlockables';
-import VideoPlayerView from './UnlockablesPage/VideoPlayerView';
-import { useDispatch } from 'react-redux';
-import setDocumentTitle from '../../../../utils/setTitle';
-import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import TitleCollection from './TitleCollection/TitleCollection';
-import { CircularProgress } from '@mui/material';
 import { INftUnlockablesPage } from '../nftList.types';
-import { TFileType } from '../../../../axios.responseTypes';
+
+import TitleCollection from './TitleCollection/TitleCollection';
+import VideoPlayerView from './UnlockablesPage/VideoPlayerView';
 
 const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   embeddedParams,

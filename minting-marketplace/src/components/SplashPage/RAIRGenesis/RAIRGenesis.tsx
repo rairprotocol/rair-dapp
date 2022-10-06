@@ -1,31 +1,32 @@
 //@ts-nocheck
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { metaMaskIcon } from '../../../images';
+import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
+import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
+import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import MetaTags from '../../SeoTags/MetaTags';
+import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
+import { Genesis_TV, GenesisMember } from '../images/rairGenesis/rairGenesis';
+import NotCommercialTemplate2 from '../NotCommercial-2/NotCommercialTemplate-2';
+import { INumberedCircle, ISplashPageProps } from '../splashPage.types';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+/* importing Components*/
+import TeamMeet from '../TeamMeet/TeamMeetList';
+import WarningModal from '../WarningModal';
+
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './RAIRGenesis.css';
-
-import { metaMaskIcon } from '../../../images';
-import { Genesis_TV, GenesisMember } from '../images/rairGenesis/rairGenesis';
-import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
-/* importing Components*/
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
-
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-
-import axios from 'axios';
-import MetaTags from '../../SeoTags/MetaTags';
-import NotCommercialTemplate2 from '../NotCommercial-2/NotCommercialTemplate-2';
-import { RootState } from '../../../ducks';
-import { INumberedCircle, ISplashPageProps } from '../splashPage.types';
-import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import WarningModal from '../WarningModal';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -45,6 +46,8 @@ const NumberedCircle: React.FC<INumberedCircle> = ({ index, primaryColor }) => {
 const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const currentUserAddress = useSelector<RootState, string | undefined>(
     (store) => store.contractStore.currentUserAddress
   );
@@ -56,15 +59,6 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
     textDescriptionCustomStyles: connectUserData
       ? { paddingTop: '3vw' }
       : undefined,
-    seoInformation: {
-      title: 'RAIR Genesis Pass',
-      contentName: 'author',
-      content: 'RAIR Genesis Pass',
-      description:
-        'Claim your NFT to unlock encrypted streams from the NFTLA conference',
-      favicon: NFTNYC_favicon,
-      image: Genesis_TV
-    },
     videoPlayerParams: {
       contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
       product: '0',
@@ -124,7 +118,28 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const ukraineglitchChainId = '0x1';
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'RAIR Genesis Pass',
+        ogTitle: 'RAIR Genesis Pass',
+        twitterTitle: 'RAIR Genesis Pass',
+        contentName: 'author',
+        content: 'RAIR Genesis Pass',
+        description:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        ogDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        twitterDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        image: Genesis_TV,
+        favicon: NFTNYC_favicon,
+        faviconMobile: NFTNYC_favicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
@@ -156,7 +171,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page genesis">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}
@@ -233,6 +248,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
               boxShadow: '4px -4px #8C63DA'
             }}
             src={GenesisMember}
+            alt="Genesis Member"
           />
         </div>
         <h1

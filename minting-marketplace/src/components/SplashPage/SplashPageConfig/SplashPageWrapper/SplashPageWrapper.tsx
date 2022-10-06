@@ -1,5 +1,6 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../../ducks/contracts/actions';

@@ -1,9 +1,11 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
-import * as types from './types';
-import { TParamsNftDataProps } from './nftData.types';
 import axios, { AxiosResponse } from 'axios';
-import { TContract, TGetFullContracts } from '../../axios.responseTypes';
+import { call, put, takeLatest } from 'redux-saga/effects';
+
 import { getNftListTotal, getNftListTotalClear } from './action';
+import { TParamsNftDataProps } from './nftData.types';
+import * as types from './types';
+
+import { TContract, TGetFullContracts } from '../../axios.responseTypes';
 
 export function* setNftDataContract({ params }: TParamsNftDataProps) {
   getNftListTotalClear();

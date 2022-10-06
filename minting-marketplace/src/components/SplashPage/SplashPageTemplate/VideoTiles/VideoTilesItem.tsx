@@ -1,13 +1,16 @@
 //@ts-nocheck
-import { metaMaskIcon } from '../../../../images';
+import React, { useCallback, useState } from 'react';
 import Modal from 'react-modal';
-import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
-import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
-import '../VideoPlayer/VideoPlayer.css';
-import React, { useState, useCallback } from 'react';
-import { useSelector, Provider, useStore } from 'react-redux';
+import { Provider, useSelector, useStore } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+
+import { metaMaskIcon } from '../../../../images';
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
+import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
+import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
+
+import '../VideoPlayer/VideoPlayer.css';
 
 const customStylesForVideo = {
   overlay: {
@@ -101,7 +104,7 @@ const VideoTilesItem = ({
                 className="block-with-video"
                 style={{ position: 'relative' }}>
                 <div className="video-block-metamask-some"></div>
-                <img
+                <ImageLazy
                   className="block-img-bg static"
                   src={backgroundImage}
                   alt="Previw for demo video"
@@ -185,7 +188,7 @@ const VideoTilesItem = ({
                 <div className="video-block-metamask-some">
                   <img src={metaMaskIcon} alt="metamask logo" />
                 </div>
-                <img
+                <ImageLazy
                   className="block-img-bg"
                   src={videoSRC}
                   alt="Unlockable preview video"

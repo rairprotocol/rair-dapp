@@ -1,6 +1,7 @@
 import React from 'react';
-import { ILeftTokenAbout } from '../aboutPage.types';
+
 import { discrodIconNoBorder } from '../../../../images';
+import { ILeftTokenAbout } from '../aboutPage.types';
 
 const LeftTokenAbout: React.FC<ILeftTokenAbout> = ({ primaryColor }) => {
   return (

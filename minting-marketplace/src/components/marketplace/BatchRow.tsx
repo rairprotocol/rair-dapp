@@ -1,4 +1,5 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+
 import { TBatchRowPropsType } from './marketplace.types';
 
 const BatchRow: React.FC<TBatchRowPropsType> = ({ index, deleter, array }) => {

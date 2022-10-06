@@ -1,5 +1,6 @@
 import { FieldErrors } from 'react-hook-form';
 import styled from 'styled-components';
+
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 interface IMenuMobileWrapper {
@@ -9,6 +10,7 @@ interface IMenuMobileWrapper {
   editMode?: boolean;
   click?: boolean;
   errors?: FieldErrors | undefined;
+  isSplashPage?: boolean;
 }
 
 export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
@@ -16,7 +18,9 @@ export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
   position: fixed;
   padding: 0;
   margin-top: ${(props) =>
-    props.showAlert && props.selectedChain ? '50px' : ''};
+    props.showAlert && !props.isSplashPage && props.selectedChain
+      ? '50px'
+      : ''};
 `;
 
 export const Nav = styled.nav<IMenuMobileWrapper>`

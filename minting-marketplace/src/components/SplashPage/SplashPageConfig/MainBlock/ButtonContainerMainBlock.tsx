@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { TButtonContainerMainBlock } from '../splashConfig.types';
 import { StyledButtonContainerMainBlock } from '../styles/StyledButtonsContainer.styled';
 

@@ -1,7 +1,10 @@
 import React from 'react';
-import { ITeammate } from '../splashPage.types';
-import TeammateDesc from './TeammateDesc';
 import { v4 } from 'uuid';
+
+import TeammateDesc from './TeammateDesc';
+
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
+import { ITeammate } from '../splashPage.types';
 
 const Teammate: React.FC<ITeammate> = ({
   url,
@@ -15,7 +18,7 @@ const Teammate: React.FC<ITeammate> = ({
   return (
     <div className="box-teammate">
       <div className="img-teammate">
-        <img src={url} alt={name} />
+        <ImageLazy src={url} alt={name} />
       </div>
       <div className="position-teammate">
         <div className="temmate-content-up">

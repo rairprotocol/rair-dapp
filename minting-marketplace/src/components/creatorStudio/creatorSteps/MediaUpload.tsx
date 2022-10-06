@@ -1,18 +1,20 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { rFetch } from '../../../utils/rFetch';
-import { useSelector } from 'react-redux';
-import { validateInteger } from '../../../utils/metamaskUtils';
-import { utils } from 'ethers';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import chainData from '../../../utils/blockchainData';
+import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import videoIcon from '../../../images/videoIcon.svg';
+import { useSelector } from 'react-redux';
+import { utils } from 'ethers';
+
 import MediaUploadRow from './MediaUploadRow';
-import { IMediaUpload, TCategories, TMediaType } from '../creatorStudio.types';
+
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { TOfferType } from '../../marketplace/marketplace.types';
+import videoIcon from '../../../images/videoIcon.svg';
+import chainData from '../../../utils/blockchainData';
+import { validateInteger } from '../../../utils/metamaskUtils';
+import { rFetch } from '../../../utils/rFetch';
 import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
+import { TOfferType } from '../../marketplace/marketplace.types';
+import { IMediaUpload, TCategories, TMediaType } from '../creatorStudio.types';
 
 const MediaUpload: React.FC<IMediaUpload> = ({
   setStepNumber,

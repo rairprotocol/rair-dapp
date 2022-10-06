@@ -1,4 +1,5 @@
 import { TDiamondTokensType } from '../../nft/nft.types';
+
 import { ColorChoice } from './../../../ducks/colors/colorStore.types';
 export interface IFilteringBlock {
   primaryColor: ColorChoice;

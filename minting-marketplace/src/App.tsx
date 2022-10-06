@@ -1,135 +1,99 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getJWT, isTokenValid } from './utils/rFetch';
-import { detectBlockchain } from './utils/blockchainData';
-import { setAdminRights } from './ducks/users/actions';
-import { getCurrentPageEnd } from './ducks/pages/actions';
-import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
-import { setChainId, setUserAddress } from './ducks/contracts/actions';
-import { OnboardingButton } from './components/common/OnboardingButton/OnboardingButton';
-import axios from 'axios';
-import { TUserResponse } from './axios.responseTypes';
-
-import './App.css';
-
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import googleAnalytics from '@analytics/google-analytics';
 // React Redux types
-import { withSentryReactRouterV6Routing, ErrorBoundary } from '@sentry/react';
+import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 // import * as ethers from 'ethers';
 // import * as colorTypes from './ducks/colors/types';
-
+import Analytics from 'analytics';
+import axios from 'axios';
+import jsonwebtoken from 'jsonwebtoken';
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-import gtag from './utils/gtag';
-
-import jsonwebtoken from 'jsonwebtoken';
+import { TUserResponse } from './axios.responseTypes';
+// logos for About Page
+import { headerLogoBlack, headerLogoWhite } from './images';
 
 //import CSVParser from './components/metadata/csvParser';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
-
-import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
-import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
-import ConsumerMode from './components/consumerMode';
-import Contracts from './components/creatorStudio/Contracts';
-import ContractDetails from './components/creatorStudio/ContractDetails';
-import CreatorMode from './components/creatorMode';
-
-import Deploy from './components/creatorStudio/Deploy';
-import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
-
-import Footer from './components/Footer/Footer';
-import FileUpload from './components/video/videoUpload/videoUpload';
-
-import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
-
 import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
-import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPage';
-
-import ListCollections from './components/creatorStudio/ListCollections';
-
-import MyContracts from './components/whitelabel/myContracts';
-import MinterMarketplace from './components/marketplace/MinterMarketplace';
-import MockUpPage from './components/MockUpPage/MockUpPage';
-import MyItems from './components/nft/myItems';
-
-import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
-import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
-import NotFound from './components/NotFound/NotFound';
-import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
-
-import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
-
-import RairProduct from './components/nft/rairCollection';
-
-import SplashPage from './components/SplashPage';
-// import setTitle from './utils/setTitle';
-
-import ThankYouPage from './components/ThankYouPage';
-import Token from './components/nft/Token';
 import TransferTokens from './components/adminViews/transferTokens';
-import { TermsUse } from './components/SplashPage/TermsUse';
-
-import WorkflowSteps from './components/creatorStudio/workflowSteps';
-
-// logos for About Page
-import { headerLogoBlack, headerLogoWhite } from './images';
-import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico';
-import Analytics from 'analytics';
-import googleAnalytics from '@analytics/google-analytics';
 import AlertMetamask from './components/AlertMetamask/index';
-import NFTLASplashPage from './components/SplashPage/NFTLASplashPage';
-import MenuNavigation from './components/Navigation/Menu';
-import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
-import NFTNYCSplashPage from './components/SplashPage/NFTNYC/NFTNYC';
-import RAIRGenesisSplashPage from './components/SplashPage/RAIRGenesis/RAIRGenesis';
-import SimDogsSplashPage from './components/SplashPage/SimDogs/SimDogs';
-import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
+import { OnboardingButton } from './components/common/OnboardingButton/OnboardingButton';
+import ConsumerMode from './components/consumerMode';
+import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
+import CreatorMode from './components/creatorMode';
+import ContractDetails from './components/creatorStudio/ContractDetails';
+import Contracts from './components/creatorStudio/Contracts';
+import Deploy from './components/creatorStudio/Deploy';
+import ListCollections from './components/creatorStudio/ListCollections';
+import WorkflowSteps from './components/creatorStudio/workflowSteps';
+import Footer from './components/Footer/Footer';
 import WelcomeHeader from './components/FrontPage/WelcomeHeader';
 import MainHeader from './components/Header/MainHeader';
+import IframePage from './components/iframePage/IframePage';
+import TestIframe from './components/iframePage/testIframe';
+import InquiriesPage from './components/InquiriesPage/InquiriesPage';
+import MinterMarketplace from './components/marketplace/MinterMarketplace';
+import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico';
+import MockUpPage from './components/MockUpPage/MockUpPage';
+import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
+import MenuNavigation from './components/Navigation/Menu';
+import MyItems from './components/nft/myItems';
+import RairProduct from './components/nft/rairCollection';
+import Token from './components/nft/Token';
+import NotFound from './components/NotFound/NotFound';
+import MetaTags from './components/SeoTags/MetaTags';
+import SplashPage from './components/SplashPage';
+import CoinAgenda2021SplashPage from './components/SplashPage/CoinAgenda2021/CoinAgenda2021';
+import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
+import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
+import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
+import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPage';
+import NFTLASplashPage from './components/SplashPage/NFTLASplashPage';
+import NFTNYCSplashPage from './components/SplashPage/NFTNYC/NFTNYC';
+import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
+import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
+import RAIRGenesisSplashPage from './components/SplashPage/RAIRGenesis/RAIRGenesis';
+import SimDogsSplashPage from './components/SplashPage/SimDogs/SimDogs';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
+import { TermsUse } from './components/SplashPage/TermsUse';
+import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
+import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
+import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80sclub/wallstreet80sclub';
+import ThankYouPage from './components/ThankYouPage';
+// import setTitle from './utils/setTitle';
+import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
+import FileUpload from './components/video/videoUpload/videoUpload';
+import MyContracts from './components/whitelabel/myContracts';
+import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
+import { setChainId, setUserAddress } from './ducks/contracts/actions';
+import { getCurrentPageEnd } from './ducks/pages/actions';
+import { setAdminRights } from './ducks/users/actions';
 import {
   AppContainerFluid,
   MainBlockApp
 } from './styled-components/nft/AppContainer';
-import CoinAgenda2021SplashPage from './components/SplashPage/CoinAgenda2021/CoinAgenda2021';
-import InquiriesPage from './components/InquiriesPage/InquiriesPage';
-import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80sclub/wallstreet80sclub';
-import IframePage from './components/iframePage/IframePage';
-import TestIframe from './components/iframePage/testIframe';
+import { detectBlockchain } from './utils/blockchainData';
+import getInformationGoogleAnalytics from './utils/googleAnalytics';
+import gtag from './utils/gtag';
+import { getJWT, isTokenValid } from './utils/rFetch';
+// views
+import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
+
+import './App.css';
 
 const rSwal = withReactContent(Swal);
 
-//Google Analytics
-// import ReactGA from 'react-ga';
-
-const gAppName = process.env.REACT_APP_GA_NAME;
-const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS;
-const analytics = Analytics({
-  app: gAppName,
-  plugins: [
-    googleAnalytics({
-      trackingId: gUaNumber
-    })
-  ]
-});
 /* Track a page view */
+const analytics = getInformationGoogleAnalytics();
 analytics.page();
-
-const ErrorFallback = () => {
-  return (
-    <div className="not-found-page">
-      <h3>
-        <span className="text-404">Sorry!</span>
-      </h3>
-      <p>An error has ocurred</p>
-    </div>
-  );
-};
 
 const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
@@ -149,21 +113,12 @@ function App() {
     currentChain,
     realChain
   );
+  const seo = useSelector((store) => store.seoStore);
   const carousel_match = window.matchMedia('(min-width: 1025px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [tabIndex, setTabIndex] = useState(0);
   const [tabIndexItems, setTabIndexItems] = useState(0);
   const navigate = useNavigate();
-
-  const seoInformation = {
-    title: 'RAIR Technologies',
-    contentName: 'author',
-    content: 'Digital Ownership Encryption',
-    description:
-      'RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
-    favicon: RairFavicon,
-    faviconMobile: RairFavicon
-  };
 
   // Redux
   const {
@@ -334,16 +289,6 @@ function App() {
       );
   }, [carousel_match.matches]);
 
-  // const checkToken = useCallback(() => {
-  //  btnCheck()
-  //  const token = localStorage.getItem('token');
-  //  if (!isTokenValid(token)) {
-  //    connectUserData()
-  //    dispatch({ type: authTypes.GET_TOKEN_START });
-  //    dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-  //  }
-  // }, [ connectUserData, dispatch ])
-
   useEffect(() => {
     let timeout;
     if (token) {
@@ -374,10 +319,6 @@ function App() {
       }
     }
   }, [connectUserData, dispatch, token]);
-
-  // useEffect(() => {
-  //  checkToken();
-  // }, [checkToken, token])
 
   useEffect(() => {
     if (primaryColor === 'charcoal') {
@@ -436,6 +377,7 @@ function App() {
 
   return (
     <ErrorBoundary fallback={ErrorFallback}>
+      <MetaTags seoMetaTags={seo} />
       {selectedChain && showAlert && !isSplashPage ? (
         <AlertMetamask
           selectedChain={selectedChain}
@@ -470,6 +412,7 @@ function App() {
           ) : (
             !isIframePage && (
               <MenuNavigation
+                isSplashPage={isSplashPage}
                 adminRights={adminRights}
                 primaryColor={primaryColor}
                 startedLogin={startedLogin}
@@ -501,7 +444,10 @@ function App() {
           {/*
 							Main body, the header, router and footer are here
 						*/}
-          <MainBlockApp showAlert={showAlert} selectedChain={selectedChain}>
+          <MainBlockApp
+            isSplashPage={isSplashPage}
+            showAlert={showAlert}
+            selectedChain={selectedChain}>
             <div className="col-12 blockchain-switcher" />
             <div className="col-12 mt-3">
               <SentryRoutes>
@@ -599,8 +545,7 @@ function App() {
                       connectUserData: connectUserData,
                       headerLogoWhite: headerLogoWhite,
                       headerLogoBlack: headerLogoBlack,
-                      setIsSplashPage: setIsSplashPage,
-                      seoInformation
+                      setIsSplashPage: setIsSplashPage
                     }
                   }
                 ].map((item, index) => {
@@ -641,7 +586,6 @@ function App() {
                     content: WelcomeHeader,
                     requirement: process.env.REACT_APP_HOME_PAGE === '/',
                     props: {
-                      seoInformation,
                       setIsSplashPage,
                       tabIndex: tabIndex,
                       setTabIndex: setTabIndex
@@ -761,8 +705,7 @@ function App() {
                       connectUserData: connectUserData,
                       headerLogoWhite: headerLogoWhite,
                       headerLogoBlack: headerLogoBlack,
-                      setIsSplashPage: setIsSplashPage,
-                      seoInformation
+                      setIsSplashPage: setIsSplashPage
                     }
                   },
 

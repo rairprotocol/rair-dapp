@@ -1,7 +1,10 @@
 import React from 'react';
-import './VideoPlayer.css';
+
 import ShowVideoToLoggedInUsers from './ShowVideoToLoggedInUsers';
+
 import { IVideoPlayerModule } from '../../splashPage.types';
+
+import './VideoPlayer.css';
 
 const VideoPlayerModule: React.FC<IVideoPlayerModule> = ({
   backgroundImage,

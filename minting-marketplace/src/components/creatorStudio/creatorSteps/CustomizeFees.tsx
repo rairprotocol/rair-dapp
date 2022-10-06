@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Swal from 'sweetalert2';
-import InputField from '../../common/InputField';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import chainData from '../../../utils/blockchainData';
+import Swal from 'sweetalert2';
+
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import FixedBottomNavigation from '../FixedBottomNavigation';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import chainData from '../../../utils/blockchainData';
+import InputField from '../../common/InputField';
 import {
   ICustomizeFees,
   ICustomPayRateRow,
   TCustomizeFeesArrayItem
 } from '../creatorStudio.types';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const CustomPayRateRow: React.FC<ICustomPayRateRow> = ({
   index,

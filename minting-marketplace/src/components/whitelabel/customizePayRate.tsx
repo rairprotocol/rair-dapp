@@ -1,10 +1,11 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import InputField from '../common/InputField';
-import { useSelector } from 'react-redux';
+
 import chainData from '../../utils/blockchainData';
+import InputField from '../common/InputField';
 const rSwal = withReactContent(Swal);
 
 const CustomPayRateRow = ({

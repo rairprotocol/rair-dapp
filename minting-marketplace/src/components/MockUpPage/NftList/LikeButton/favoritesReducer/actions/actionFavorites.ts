@@ -1,4 +1,5 @@
 import { TTokenData } from '../../../../../../axios.responseTypes';
+
 import * as types from './../actionTypes/types';
 
 const addItemFavoriteStart = () =>
@@ -33,10 +34,10 @@ const errorFavorites = () =>
   } as const);
 
 export {
-  addItemFavoriteStart,
   addItemFavoriteEnd,
-  removeItemFavoriteEnd,
-  getCurrentItemSuccess,
+  addItemFavoriteStart,
+  errorFavorites,
   getCurrentItemFalse,
-  errorFavorites
+  getCurrentItemSuccess,
+  removeItemFavoriteEnd
 };

@@ -1,6 +1,9 @@
 //@ts-nocheck
 //unused-component
 import React, { memo } from 'react';
+
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
+
 import cl from './TimelineGeneric.module.css';
 
 const TimelineGenericComponent = ({ timelinePics }) => {
@@ -11,7 +14,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
         <ul>
           <li style={{ paddingBottom: '91px' }}>
             <div className={cl.right_content}>
-              <img
+              <ImageLazy
                 className={cl.pic1}
                 src={pic1}
                 alt="It's the incredible GREYMAN 100% PURE GREY. Offical DADARA No-fun product"
@@ -37,7 +40,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
                 display: 'inline-flex'
               }}
               className={cl.right_content}>
-              <img
+              <ImageLazy
                 className={cl.pic2}
                 src={pic2}
                 alt="We finally discovered some color inside GREYMAN!"
@@ -61,7 +64,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
                 alignItems: 'flex-start'
               }}
               className={cl.right_content}>
-              <img className={cl.pic3} src={pic3} alt="Greyman Statue" />
+              <ImageLazy className={cl.pic3} src={pic3} alt="Greyman Statue" />
               <p
                 style={{ paddingLeft: '5rem', wight: '353px' }}
                 className={cl.p_content}>
@@ -81,7 +84,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
               they could burn them in a private ritual at the end, thus burning
               burning and freeing their Inner Greyman.
             </p>
-            <img
+            <ImageLazy
               className={cl.pic5}
               src={pic5}
               alt="The desert in which there are a lot of Greyman statues"
@@ -141,7 +144,11 @@ const TimelineGenericComponent = ({ timelinePics }) => {
               </span>{' '}
               for 0.7 ETH)
             </p>
-            <img className={cl.pic6} src={pic6} alt="Greyman in the Matrix" />
+            <ImageLazy
+              className={cl.pic6}
+              src={pic6}
+              alt="Greyman in the Matrix"
+            />
           </div>
 
           <li style={{ marginTop: '3rem' }}>
@@ -184,7 +191,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
       <div className={cl.timelineMobile}>
         <div className={cl.mobileTitleBlock}>Physical Era</div>
         <div className={cl.timeLineContentMobile}>
-          <img
+          <ImageLazy
             src={pic1}
             alt="It's the incredible GREYMAN 100% PURE GREY. Offical DADARA No-fun product"
           />
@@ -198,7 +205,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img
+          <ImageLazy
             src={pic2}
             alt="We finally discovered some color inside GREYMAN!"
           />
@@ -213,7 +220,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic3} alt="Greyman Statue" />
+          <ImageLazy src={pic3} alt="Greyman Statue" />
 
           <div className={cl.mobileDesc}>
             <span>1998</span> <br />
@@ -222,7 +229,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img
+          <ImageLazy
             src={pic5}
             alt="The desert in which there are a lot of Greyman statues"
           />
@@ -247,7 +254,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
         </div>
         <div className={cl.mobileTitleBlock}>Web3 Era</div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic4} alt="Greyman on a pink background" />
+          <ImageLazy src={pic4} alt="Greyman on a pink background" />
 
           <div className={cl.mobileDesc}>
             <span>4 November 2021 </span> <br />
@@ -256,7 +263,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic6} alt="Greyman in the Matrix" />
+          <ImageLazy src={pic6} alt="Greyman in the Matrix" />
 
           <div className={cl.mobileDesc}>
             <span>30 November 2021</span> <br />
@@ -266,7 +273,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
         </div>
         <div className={cl.mobileTitleBlock}>Beyond</div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic7} alt="Person of the Year TIME" />
+          <ImageLazy src={pic7} alt="Person of the Year TIME" />
 
           <div className={cl.mobileDesc}>
             <span>2022</span> <br />

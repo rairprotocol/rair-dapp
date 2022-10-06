@@ -1,15 +1,18 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import MobileEditProfile from './MobileEditProfile';
+
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { UserType } from '../../../ducks/users/users.types';
+
+import defaultPictures from './../../UserProfileSettings/images/defaultUserPictures.png';
 import {
   List,
   ListProfileItem,
   ListProfileLoading,
   ProfileButtonBack
 } from './../NavigationItems/NavigationItems';
-import MobileEditProfile from './MobileEditProfile';
-import CircularProgress from '@mui/material/CircularProgress';
-import defaultPictures from './../../UserProfileSettings/images/defaultUserPictures.png';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { UserType } from '../../../ducks/users/users.types';
 
 interface IMobileProfileInfo {
   primaryColor: ColorChoice;

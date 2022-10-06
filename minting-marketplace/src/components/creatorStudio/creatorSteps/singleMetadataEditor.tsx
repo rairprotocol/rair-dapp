@@ -1,32 +1,34 @@
-import { useState, useEffect, useCallback } from 'react';
-import InputField from '../../common/InputField';
-import BinanceDiamond from '../../../images/binance-diamond.svg';
-import PropertyRow from './propertyRow';
-import { useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import FixedBottomNavigation from '../FixedBottomNavigation';
-import { web3Switch } from '../../../utils/switchBlockchain';
-import chainData from '../../../utils/blockchainData';
-import { rFetch } from '../../../utils/rFetch';
-import { metamaskCall } from '../../../utils/metamaskUtils';
-import Swal from 'sweetalert2';
+import { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { BigNumber } from 'ethers';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { BigNumber } from 'ethers';
+import Swal from 'sweetalert2';
+
+import PropertyRow from './propertyRow';
+
 import {
   TAttributes,
   TMetadataType,
   TTokenData
 } from '../../../axios.responseTypes';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import BinanceDiamond from '../../../images/binance-diamond.svg';
+import chainData from '../../../utils/blockchainData';
+import { metamaskCall } from '../../../utils/metamaskUtils';
+import { rFetch } from '../../../utils/rFetch';
+import { web3Switch } from '../../../utils/switchBlockchain';
+import InputField from '../../common/InputField';
 import {
   TNftMapping,
   TParamsBatchMetadata,
   TSingleMetadataType
 } from '../creatorStudio.types';
-import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   contractData,

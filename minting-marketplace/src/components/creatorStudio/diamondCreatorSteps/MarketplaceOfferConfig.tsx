@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import chainData from '../../../utils/blockchainData';
-import { utils } from 'ethers';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import CustomFeeRow from '../common/customFeeRow';
+import { utils } from 'ethers';
 import Swal from 'sweetalert2';
+
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import chainData from '../../../utils/blockchainData';
 import { metamaskCall } from '../../../utils/metamaskUtils';
+import CustomFeeRow from '../common/customFeeRow';
 import {
   IMarketplaceOfferConfig,
   TCustomPayments
 } from '../creatorStudio.types';
-import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 
 const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
   array,

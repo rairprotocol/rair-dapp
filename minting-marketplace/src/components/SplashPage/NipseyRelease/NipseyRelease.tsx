@@ -1,6 +1,8 @@
 import React from 'react';
-import { INipseyRelease } from '../splashPage.types';
+
 import MailchimpComponent from './MailchimpComponent';
+
+import { INipseyRelease } from '../splashPage.types';
 
 const NipseyRelease: React.FC<INipseyRelease> = ({ DiscordIcon }) => {
   return (

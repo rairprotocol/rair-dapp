@@ -1,13 +1,15 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
-import * as types from './types';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { call, put, takeLatest } from 'redux-saga/effects';
+
 import {
   getListVideosError,
   getVideoListComplete,
   getVideoListTotal
 } from './actions';
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { TMediaList } from '../../axios.responseTypes';
+import * as types from './types';
 import { TUpdataVideoParams } from './videosDucks.types';
+
+import { TMediaList } from '../../axios.responseTypes';
 
 export type TParamsVideosSaga = {
   type: string;

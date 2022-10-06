@@ -1,7 +1,9 @@
 import React from 'react';
-import { discrodIconNoBorder } from '../../../images';
-import { LogoAuthor } from '../images/commingSoon/commingSoonImages';
 import { useNavigate } from 'react-router-dom';
+
+import { discrodIconNoBorder } from '../../../images';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
+import { LogoAuthor } from '../images/commingSoon/commingSoonImages';
 
 const ComingSoon = () => {
   const navigate = useNavigate();
@@ -31,7 +33,10 @@ const ComingSoon = () => {
                     href="https://discord.gg/NFeGnPkbfd"
                     target="_blank"
                     rel="noreferrer">
-                    <img src={discrodIconNoBorder} alt="Discord RAIR.TECH" />{' '}
+                    <ImageLazy
+                      src={discrodIconNoBorder}
+                      alt="Discord RAIR.TECH"
+                    />{' '}
                     Join our Discord
                   </a>
                 </div>
@@ -40,7 +45,7 @@ const ComingSoon = () => {
                 <button onClick={goBack}>Back</button>
               </div>
               <div className="logo-author">
-                <img src={LogoAuthor} alt="Custom logo by Rair Tech" />
+                <ImageLazy src={LogoAuthor} alt="Custom logo by Rair Tech" />
               </div>
             </div>
           </div>

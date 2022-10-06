@@ -1,46 +1,44 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+//Google Analytics
+import ReactGA from 'react-ga';
+import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+
+import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
+
+import { diamondFactoryAbi } from '../../contracts/index';
+import { RootState } from '../../ducks';
+import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../ducks/seo/actions';
+import { TInfoSeo } from '../../ducks/seo/seo.types';
+/* importing images*/
+import { metaMaskIcon } from '../../images';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import { web3Switch } from '../../utils/switchBlockchain';
+import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
+import PurchaseTokenButton from '../common/PurchaseToken';
+import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
+import MetaTags from '../SeoTags/MetaTags';
+import StandaloneVideoPlayer from '../video/videoPlayerGenerall';
+
+import AuthorBlock from './AuthorBlock/AuthorBlock';
+import GreymanFavicon from './images/favicons/greyman-favicon.ico';
+import { GreyMan, GreyManNotFun, playImages } from './images/greyMan/grayMan';
+import NotCommercial from './NotCommercial/NotCommercial';
+import ButtonHelp from './PurchaseChecklist/ButtonHelp';
+import PurchaseChecklist from './PurchaseChecklist/PurchaseChecklist';
+/* importing Components*/
+import TeamMeet from './TeamMeet/TeamMeetList';
+import { Timeline } from './Timeline/Timeline';
+import { Countdown } from './Timer/CountDown';
+import TokenLeftGreyman from './TokenLeft/TokenLeftGreyman';
 
 import './SplashPage.css';
 import './GreymanSplashPageMobile.css';
 import './../AboutPage/AboutPageNew/AboutPageNew.css';
-import Modal from 'react-modal';
-
-/* importing images*/
-import { metaMaskIcon } from '../../images';
-import { GreyMan, playImages, GreyManNotFun } from './images/greyMan/grayMan';
-import GreymanFavicon from './images/favicons/greyman-favicon.ico';
-
-/* importing Components*/
-import TeamMeet from './TeamMeet/TeamMeetList';
-import TokenLeftGreyman from './TokenLeft/TokenLeftGreyman';
-import AuthorBlock from './AuthorBlock/AuthorBlock';
-import { Timeline } from './Timeline/Timeline';
-import PurchaseChecklist from './PurchaseChecklist/PurchaseChecklist';
-import ButtonHelp from './PurchaseChecklist/ButtonHelp';
-
-import { diamondFactoryAbi } from '../../contracts/index';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import { web3Switch } from '../../utils/switchBlockchain';
-import Swal from 'sweetalert2';
-import NotCommercial from './NotCommercial/NotCommercial';
-import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
-import StandaloneVideoPlayer from '../video/videoPlayerGenerall';
-import { Countdown } from './Timer/CountDown';
-import PurchaseTokenButton from '../common/PurchaseToken';
-
-//Google Analytics
-import ReactGA from 'react-ga';
-import MetaTags from '../SeoTags/MetaTags';
-import { setRealChain } from '../../ducks/contracts/actions';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
-import {
-  ISplashPageProps,
-  TSeoInformationType,
-  TSplashPageIsActive
-} from './splashPage.types';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
 // Google Analytics
 const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -98,6 +96,8 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [timerLeft, setTimerLeft] = useState<number>();
   const [copies, setCopies] = useState<string>();
   const [soldCopies, setSoldCopies] = useState<string>();
@@ -117,14 +117,25 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState<boolean>(false);
 
-  const seoInformation: TSeoInformationType = {
-    title: '#Cryptogreyman',
-    contentName: 'author',
-    content: '#Cryptogreyman',
-    description: '7.907.414.597 Non-Unique NFTs',
-    favicon: GreymanFavicon,
-    faviconMobile: GreymanFavicon
-  };
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: '#Cryptogreyman',
+        ogTitle: '#Cryptogreyman',
+        twitterTitle: '#Cryptogreyman',
+        contentName: 'author',
+        content: 'Digital Ownership Encryption',
+        description: '7.907.414.597 Non-Unique NFTs',
+        ogDescription: '7.907.414.597 Non-Unique NFTs',
+        twitterDescription: '7.907.414.597 Non-Unique NFTs',
+        image:
+          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        favicon: GreymanFavicon,
+        faviconMobile: GreymanFavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   const {
     diamondMarketplaceInstance,
@@ -134,7 +145,6 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const dispatch = useDispatch();
 
   const toggleCheckList = () => {
     setOpenCheckList((prev) => !prev);
@@ -253,7 +263,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
     if (loginDone) {
       return (
         <>
-          <img
+          <ImageLazy
             className="video-grey-man-pic"
             src={GreyMan}
             alt="community-img"
@@ -292,7 +302,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
     } else {
       return (
         <>
-          <img
+          <ImageLazy
             className="video-grey-man-pic"
             src={GreyMan}
             alt="community-img"
@@ -382,7 +392,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page greyman-page">
-      <MetaTags seoMetaTags={seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="home-splash--page">
         <PurchaseChecklist
           openCheckList={openCheckList}
@@ -563,7 +573,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                           </strong>{' '}
                           to have any fun with this greyman
                         </span>
-                        <img src={GreyManNotFun} alt="not-fun" />
+                        <ImageLazy src={GreyManNotFun} alt="not-fun" />
                       </div>
                       <div className="modal-btn-wrapper">
                         <button
@@ -768,7 +778,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                         Coming Soon <i className="fas fa-arrow-right"></i>{' '}
                       </span>
                     </div>
-                    <img
+                    <ImageLazy
                       className="join-pic-main-img"
                       src={GreyMan}
                       alt="community-img"
@@ -777,28 +787,28 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                 </div>
                 <div className="list-of-greymans-pic">
                   <div className="join-pic">
-                    <img
+                    <ImageLazy
                       className="join-pic-img"
                       src={GreyMan}
                       alt="community-img"
                     />
                   </div>
                   <div className="join-pic">
-                    <img
+                    <ImageLazy
                       className="join-pic-img"
                       src={GreyMan}
                       alt="community-img"
                     />
                   </div>
                   <div className="join-pic">
-                    <img
+                    <ImageLazy
                       className="join-pic-img"
                       src={GreyMan}
                       alt="community-img"
                     />
                   </div>
                   <div className="join-pic">
-                    <img
+                    <ImageLazy
                       className="join-pic-img"
                       src={GreyMan}
                       alt="community-img"
@@ -812,22 +822,22 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
             <>
               <div className="exclusive-nfts">
                 <MobileCarouselNfts>
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={GreyMan}
                     alt="community-img"
                   />
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={GreyMan}
                     alt="community-img"
                   />
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={GreyMan}
                     alt="community-img"
                   />
-                  <img
+                  <ImageLazy
                     className="join-pic-img"
                     src={GreyMan}
                     alt="community-img"

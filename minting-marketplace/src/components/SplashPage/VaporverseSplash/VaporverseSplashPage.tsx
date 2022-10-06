@@ -1,56 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import '../../AboutPage/AboutPageNew/AboutPageNew.css';
-import './VaporverseSplash.css';
 import { v1 } from 'uuid';
 
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
+import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
 import {
   vaporverse_background,
+  videoBackground,
+  VV_test_transmission,
+  VV_warning_1,
+  VV_warning_2,
   VV0,
   VV1,
   VV2,
   VV3,
-  VV4,
-  VV_warning_1,
-  VV_warning_2,
-  VV_test_transmission,
-  videoBackground
+  VV4
 } from '../images/vaporverse/vaporverse';
-import favion_Vaporverse from './../images/favicons/vv_Rair_logo.ico';
-
-/* importing Components*/
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
-import MetaTags from '../../SeoTags/MetaTags';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
-import { setRealChain } from '../../../ducks/contracts/actions';
 import {
   IInfoBlock,
   IVaporverseSplashPage,
   TSplashDataType
 } from '../splashPage.types';
-import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
+import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
+/* importing Components*/
+import TeamMeet from '../TeamMeet/TeamMeetList';
+
+import favion_Vaporverse from './../images/favicons/vv_Rair_logo.ico';
+
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './VaporverseSplash.css';
 
 const splashData: TSplashDataType = {
   title: '',
   titleColor: 'rgb(234,51,127)',
   description: '',
   cardFooter: '/utility drop for OG degens /mintpass to vaporverse',
-  seoInformation: {
-    title: 'Vaporverse',
-    contentName: 'author',
-    content: 'Vaporverse',
-    description: 'Utility drop for OG degens /mintpass to vaporverse',
-    favicon: favion_Vaporverse,
-    image: vaporverse_background
-  },
   buttonLabel: 'Mint for .1991 Eth',
   buttonBackgroundHelp: undefined,
   backgroundImage: vaporverse_background,
@@ -117,6 +113,8 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
@@ -125,11 +123,30 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurchaseList] = useState(true);
   const chainId = '0x1';
-  const dispatch = useDispatch();
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
   };
+
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'Vaporverse',
+        ogTitle: 'Vaporverse',
+        twitterTitle: 'Vaporverse',
+        contentName: 'author',
+        content: 'Vaporverse',
+        description: 'Utility drop for OG degens /mintpass to vaporverse',
+        ogDescription: 'Utility drop for OG degens /mintpass to vaporverse',
+        twitterDescription:
+          'Utility drop for OG degens /mintpass to vaporverse',
+        image: vaporverse_background,
+        favicon: favion_Vaporverse,
+        faviconMobile: favion_Vaporverse
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () =>
@@ -170,7 +187,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
   return (
     <div className="wrapper-splash-page vaporverse">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}
@@ -254,8 +271,16 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
         <div style={{ height: '5vw' }} />
         <div className={'vaporverse-images-container'}>
-          <img src={VV_warning_2} className={'vaporverse-images'} />
-          <img src={VV_warning_1} className={'vaporverse-images'} />
+          <ImageLazy
+            alt="Metamask Signature Request Rair Inc. Success"
+            src={VV_warning_2}
+            className={'vaporverse-images'}
+          />
+          <ImageLazy
+            alt="Metamask Approvement request Rair Inc. Incorrect"
+            src={VV_warning_1}
+            className={'vaporverse-images'}
+          />
         </div>
 
         <InfoBlock

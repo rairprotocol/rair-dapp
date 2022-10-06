@@ -1,4 +1,5 @@
 import { utils } from 'ethers';
+
 import { TGettingPriceReturnType } from '../nftList.types';
 
 let priceArray: TGettingPriceReturnType;

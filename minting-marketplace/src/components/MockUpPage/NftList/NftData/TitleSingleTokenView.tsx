@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ITitleSingleTokenView } from '../../mockupPage.types';
 
 export const TitleSingleTokenView: React.FC<ITitleSingleTokenView> = ({

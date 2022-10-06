@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 import { ITokenLeft } from '../splashPage.types';
 

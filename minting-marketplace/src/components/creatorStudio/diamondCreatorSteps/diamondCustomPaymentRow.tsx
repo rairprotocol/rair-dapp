@@ -1,10 +1,11 @@
 //unused-component
-import React, { useState, useEffect } from 'react';
-import InputField from '../../common/InputField';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { utils, BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
+
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import InputField from '../../common/InputField';
 import { ICustomFeeRow } from '../creatorStudio.types';
 
 const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { TImageMainBlock } from '../splashConfig.types';
 import { StyledImageBlock } from '../styles/SplashMainBlockStyled.styled';
 

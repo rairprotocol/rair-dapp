@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { TCollectionInfoBody } from '../../nftList.types';
 
 export const BlockItemCollection = styled.div`

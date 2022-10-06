@@ -1,34 +1,31 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import '../../AboutPage/AboutPageNew/AboutPageNew.css';
-import './wallstreet80sclub.css';
+import { ThemeProvider } from 'styled-components';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
-import { metaMaskIcon, discrodIconNoBorder } from '../../../images';
+import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
+import { rFetch } from '../../../utils/rFetch';
+import PurchaseTokenButton from '../../common/PurchaseToken';
+import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import MetaTags from '../../SeoTags/MetaTags';
 import {
-  WallstreetImg,
-  WallstreetCounter,
   WallstreetA,
   WallstreetB,
   WallstreetC,
+  WallstreetCounter,
   WallstreetD,
   WallstreetE,
-  WallstreetF
+  WallstreetF,
+  WallstreetImg
 } from '../images/wallstreet80sclub/wallstreet80sclub';
-
-/* importing Components*/
-import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
-import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
-import PurchaseTokenButton from '../../common/PurchaseToken';
-import TeamMeet from '../TeamMeet/TeamMeetList';
-import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import ModalHelp from '../SplashPageTemplate/ModalHelp';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-
-import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
 import {
@@ -36,16 +33,24 @@ import {
   TMainContractType,
   TSplashDataType
 } from '../splashPage.types';
-import { rFetch } from '../../../utils/rFetch';
-import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { useGetProducts } from '../splashPageProductsHook';
-import { ThemeProvider } from 'styled-components';
-import { theme } from '../SplashPageConfig/theme.styled';
-import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
 import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
 import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
+import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
+import { theme } from '../SplashPageConfig/theme.styled';
+import { useGetProducts } from '../splashPageProductsHook';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
+import ModalHelp from '../SplashPageTemplate/ModalHelp';
+import TeamMeet from '../TeamMeet/TeamMeetList';
+/* importing Components*/
+import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
+
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './wallstreet80sclub.css';
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './wallstreet80sclub.css';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -80,14 +85,6 @@ const splashData: TSplashDataType = {
   title: 'wallstreet80sclub',
   titleColor: '#000000',
   description: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW',
-  seoInformation: {
-    title: '#wallstreet80sclub',
-    contentName: 'author',
-    content: '#wallstreet80sclub',
-    description: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW'
-    // favicon: null,
-    // image: null
-  },
   carouselData: [
     {
       img: WallstreetA,
@@ -187,6 +184,8 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, any>((store) => store.seoStore);
   /* UTILITIES FOR VIDEO PLAYER VIEW (placed this functionality into custom hook for reusability)*/
   const [productsFromOffer, selectVideo, setSelectVideo] =
     useGetProducts(splashData);
@@ -207,7 +206,26 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: '#wallstreet80sclub',
+        ogTitle: '#wallstreet80sclub',
+        twitterTitle: '#wallstreet80sclub',
+        contentName: 'author',
+        content: '#wallstreet80sclub',
+        description: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW',
+        ogDescription: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW',
+        twitterDescription: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW',
+        image:
+          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        favicon: RairFavicon,
+        faviconMobile: RairFavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     setIsSplashPage?.(true);
@@ -257,7 +275,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page wallstreet80sclub">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}

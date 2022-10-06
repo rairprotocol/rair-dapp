@@ -1,8 +1,9 @@
-import * as types from './actionTypes/types';
 import {
   IInitialFavoritesState,
   TFavoritesReducerActionType
 } from './favorites.types';
+
+import * as types from './actionTypes/types';
 
 export const initialFavoritesState: IInitialFavoritesState = {
   liked: false,

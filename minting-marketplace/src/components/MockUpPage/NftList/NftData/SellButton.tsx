@@ -1,6 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
-import { ISellButton } from '../../mockupPage.types';
+
 import { BuySellButton } from './BuySellButton';
+
+import { ISellButton } from '../../mockupPage.types';
 
 const SellButton: React.FC<ISellButton> = ({
   currentUser,

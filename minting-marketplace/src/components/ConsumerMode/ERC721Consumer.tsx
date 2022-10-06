@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { utils } from 'ethers';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+
 import BatchMinting from './BatchMinting';
-import { utils } from 'ethers';
-import blockchainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import {
   IERC721ManagerConsumer,
   IRange,
@@ -14,8 +13,11 @@ import {
   TBatchMintingItem,
   TRangeInfo
 } from './consumerMode.types';
+
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import blockchainData from '../../utils/blockchainData';
+import { metamaskCall } from '../../utils/metamaskUtils';
 const MySwal = withReactContent(Swal);
 
 const Range: React.FC<IRange> = ({

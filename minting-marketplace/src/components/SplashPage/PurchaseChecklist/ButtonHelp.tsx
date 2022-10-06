@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IButtonHelp } from '../splashPage.types';
 
 const ButtonHelp: React.FC<IButtonHelp> = ({

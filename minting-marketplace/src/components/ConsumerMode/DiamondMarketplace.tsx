@@ -1,22 +1,24 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSelector, useStore, Provider } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Provider, useSelector, useStore } from 'react-redux';
+import { BigNumber, constants, utils } from 'ethers';
 import Swal from 'sweetalert2';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import { diamondFactoryAbi } from '../../contracts';
-import { utils, constants, BigNumber } from 'ethers';
-import blockchainData from '../../utils/blockchainData';
-import InputField from '../common/InputField';
-import BuyTokenModalContent from '../marketplace/BuyTokenModalContent';
 import withReactContent from 'sweetalert2-react-content';
+
 import {
   IBatchTokenSelector,
   ITokenSelector,
   TAux,
   TOffersArrayItem
 } from './consumerMode.types';
+
+import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import blockchainData from '../../utils/blockchainData';
+import { metamaskCall } from '../../utils/metamaskUtils';
+import InputField from '../common/InputField';
+import BuyTokenModalContent from '../marketplace/BuyTokenModalContent';
 const rSwal = withReactContent(Swal);
 
 const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({

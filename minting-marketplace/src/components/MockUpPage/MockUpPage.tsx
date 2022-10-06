@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setShowSidebarTrue } from '../../ducks/metadata/actions';
 
 import SearchPanel from './SearchPanel';
+
 // import RairFavicon from './assets/rair_favicon.ico';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { setShowSidebarTrue } from '../../ducks/metadata/actions';
+
 import { IMockUpPage } from './SelectBox/selectBox.types';
 
 const MockUpPage: React.FC<IMockUpPage> = ({ tabIndex, setTabIndex }) => {
