@@ -79,7 +79,7 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('OfferPool');
   }
-  cleanDublicate('OfferPool', { contract: '$contract', collectionIndexInContract: '$collectionIndexInContract' });
+  // cleanDublicate('OfferPool', { contract: '$contract', marketplaceCatalogIndex: '$marketplaceCatalogIndex' });
   await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true, unique: true });
   await db.collection('OfferPool').createIndex({ contract: 1, marketplaceCatalogIndex: 1 }, { background: true, unique: true });
 
@@ -88,8 +88,8 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   } catch (e) {
     db.createCollection('Offer');
   }
-  cleanDublicate('Offer', { contract: '$contract', offerPool: '$offerPool' });
-  cleanDublicate('Offer', { contract: '$contract', diamondRangeIndex: '$diamondRangeIndex' });
+  // cleanDublicate('Offer', { contract: '$contract', offerPool: '$offerPool' });
+  // cleanDublicate('Offer', { contract: '$contract', diamondRangeIndex: '$diamondRangeIndex' });
   await db.collection('Offer').createIndex({ offerPool: 1 }, { background: true });
   await db.collection('Offer').createIndex({ contract: 1, product: 1 }, { background: true });
   await db.collection('Offer').createIndex({ contract: 1, diamondRangeIndex: 1 }, { background: true });
