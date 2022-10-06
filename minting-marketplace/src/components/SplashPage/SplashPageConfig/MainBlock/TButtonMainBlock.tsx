@@ -24,8 +24,15 @@ const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
   buttonImageHeight,
   buttonImageMarginRight
 }) => {
-  const { buttonLabel, buttonImg, buttonCustomLogo, buttonLink, buttonAction } =
-    buttonData || {};
+  const {
+    buttonLabel,
+    buttonImg,
+    buttonCustomLogo,
+    buttonLink,
+    buttonAction,
+    buttonTextColor,
+    buttonColor
+  } = buttonData || {};
 
   const handleButtonClick = useCallback(() => {
     if (buttonAction) {
@@ -45,11 +52,11 @@ const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
       fontWeight={fontWeight}
       fontSize={fontSize}
       lineHeight={lineHeight}
-      background={background}
-      color={color}
+      background={buttonColor ? buttonColor : background}
+      color={buttonTextColor ? buttonTextColor : color}
       border={border}
       onClick={handleButtonClick}>
-      {buttonCustomLogo}
+      {buttonCustomLogo && buttonCustomLogo}
       {buttonImg && (
         <StyledButtonImage
           buttonImageWidth={buttonImageWidth}

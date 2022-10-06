@@ -42,6 +42,7 @@ import {
   TSplashDataType
 } from '../splashPage.types';
 import ButtonContainerMainBlock from '../SplashPageConfig/MainBlock/ButtonContainerMainBlock';
+import ButtonMainBlockWrapper from '../SplashPageConfig/MainBlock/ButtonMainBlockWrapper';
 import ImageMainBlock from '../SplashPageConfig/MainBlock/ImageMainBlock';
 import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
 import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
@@ -345,27 +346,42 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                   margin={'81px 0 0 70px'}
                   height="191px"
                   width="244px"
-                  gap="20px">
+                  gap="10px"
+                  flexDirection="row">
+                  {/* <ButtonMainBlockWrapper flexDirection="row"> */}
                   <ButtonMainBlock
-                    width="46%"
+                    width="112.23px"
                     borderRadius="1rem"
                     background="#2351a1"
                     buttonData={splashData.button1}
                     buttonImageHeight="auto"
                     buttonImageWidth="47%"
                     buttonImageMarginRight="0px"
-                    height="5vw"
+                    height="92px"
                     margin="0px"
                   />
                   <ButtonMainBlock
-                    width="46%"
+                    width="112.23px"
                     borderRadius="1rem"
                     background="#2351a1"
                     buttonData={splashData.button2}
                     buttonImageHeight="auto"
                     buttonImageWidth="47%"
                     buttonImageMarginRight="0px"
-                    height="5vw"
+                    height="92px"
+                    margin="0px"
+                  />
+                  {/* </ButtonMainBlockWrapper> */}
+                  <ButtonMainBlock
+                    width="100%"
+                    borderRadius="1rem"
+                    background="rgb(85, 207, 255)"
+                    buttonData={splashData.button3}
+                    fontFamily={"'Acme', sans-serif"}
+                    fontWeight={'400'}
+                    lineHeight={'36px'}
+                    fontSize={'36px'}
+                    height="83px"
                     margin="0px"
                   />
                 </ButtonContainerMainBlock>

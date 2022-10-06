@@ -8,14 +8,16 @@ const ButtonContainerMainBlock: React.FC<TButtonContainerMainBlock> = ({
   margin,
   height,
   width,
-  gap
+  gap,
+  flexDirection
 }) => {
   return (
     <StyledButtonContainerMainBlock
       margin={margin}
       height={height}
       width={width}
-      gap={gap}>
+      gap={gap}
+      flexDirection={flexDirection}>
       {children}
     </StyledButtonContainerMainBlock>
   );

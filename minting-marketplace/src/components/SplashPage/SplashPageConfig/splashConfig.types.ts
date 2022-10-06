@@ -81,11 +81,22 @@ export type TImageMainBlock = TStyledImageBlock & {
   image?: string;
 };
 
+export type TFlexDirection =
+  | 'column'
+  | 'column-reverse'
+  | 'inherit'
+  | 'initial'
+  | 'revert'
+  | 'row'
+  | 'row-reverse'
+  | 'unset';
+
 export type TStyledButtonContainerMainBlock = {
   height: string;
   width: string;
   margin: string;
   gap?: string;
+  flexDirection: TFlexDirection;
 };
 
 export type TButtonContainerMainBlock = TStyledButtonContainerMainBlock & {
@@ -112,7 +123,15 @@ export type TStyledButtonMainBlock = {
 };
 
 export type TStyledButtonImage = {
-  buttonImageWidth: string;
-  buttonImageHeight: string;
-  buttonImageMarginRight: string;
+  buttonImageWidth?: string;
+  buttonImageHeight?: string;
+  buttonImageMarginRight?: string;
+};
+
+export type TStyledButtonMainBlockWrapper = {
+  flexDirection: TFlexDirection;
+};
+
+export type TButtonMainBlockWrapper = TStyledButtonMainBlockWrapper & {
+  children: React.ReactNode;
 };
