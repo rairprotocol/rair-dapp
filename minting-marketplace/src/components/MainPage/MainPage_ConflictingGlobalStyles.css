@@ -1,0 +1,69 @@
+/* this style sheet is for overriding global styles for reused components */
+:root {
+  --Y_offset: 55px;
+}
+
+.rairpage-videoplayer-wrapper {
+  position: absolute;
+  width: 1200px;
+  height: 475px;
+  left: calc(((100% - 1440px) / var(--X_offset)) + 110px);
+  /* left: 110px; */
+  top: 6462px;
+}
+
+.rairpage-videoplayer-wrapper .nft-collection {
+  position: relative;
+  border-radius: 16px;
+  width: 85vw;
+  max-width: 1200px;
+}
+
+@media screen and (max-width: 1440px) {
+  .rairpage-videoplayer-wrapper {
+    position: absolute;
+    width: 83.333vw;
+    height: 33vw;
+    left: 7.639vw;
+    top: 448.75vw;
+  }
+
+  .rairpage-videoplayer-wrapper .nft-collection.nft-collection-video-wrapper {
+    height: 32.986vw;
+  }
+
+  .rairpage-videoplayer-wrapper .unlockables-video-player-container {
+    height: 29.722vw;
+  }
+
+  .rairpage-videoplayer-wrapper .nft-video-player-video {
+    height: 29.653vw;
+  }
+}
+
+@media screen and (max-width: 844px) {
+  .rairpage-videoplayer-wrapper {
+    height: 38vw;
+  }
+
+  .rairpage-videoplayer-wrapper .nft-collection.nft-collection-video-wrapper {
+    height: inherit;
+  }
+
+  .rairpage-videoplayer-wrapper .unlockables-video-player-container {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin-right: 0px;
+  }
+
+  .rairpage-videoplayer-wrapper .nft-video-player-video {
+    height: 20.833vw;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .rairpage-videoplayer-wrapper {
+    top: calc(448.75vw + var(--Y_offset));
+  }
+}

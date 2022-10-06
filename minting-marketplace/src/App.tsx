@@ -38,6 +38,7 @@ import MainHeader from './components/Header/MainHeader';
 import IframePage from './components/iframePage/IframePage';
 import TestIframe from './components/iframePage/testIframe';
 import InquiriesPage from './components/InquiriesPage/InquiriesPage';
+import MainPage from './components/MainPage/MainPage';
 import MinterMarketplace from './components/marketplace/MinterMarketplace';
 import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico';
 import MockUpPage from './components/MockUpPage/MockUpPage';
@@ -545,6 +546,15 @@ function App() {
                       connectUserData: connectUserData,
                       headerLogoWhite: headerLogoWhite,
                       headerLogoBlack: headerLogoBlack,
+                      setIsSplashPage: setIsSplashPage
+                    }
+                  },
+                  {
+                    path: '/main-page',
+                    content: MainPage,
+                    props: {
+                      loginDone: loginDone,
+                      connectUserData: connectUserData,
                       setIsSplashPage: setIsSplashPage
                     }
                   }

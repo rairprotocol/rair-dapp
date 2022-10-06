@@ -1,6 +1,7 @@
 //@ts-nocheck
 //unused-component
 import React from 'react';
+
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 
 const JoinCom = ({ JoinCommunity, Metamask, primaryColor }) => {
