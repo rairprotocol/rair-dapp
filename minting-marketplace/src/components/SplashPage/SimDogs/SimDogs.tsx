@@ -17,6 +17,11 @@ import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { discrodIconNoBorder } from '../../../images';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
+// import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
+// Google Analytics
+//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+//ReactGA.initialize(TRACKING_ID);
+import { ReactComponent as Twitter } from '../assets/twitterIcon.svg';
 // import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import {
   Flyinggreyman,
@@ -66,10 +71,6 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './SimDogs.css';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-// import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
-// Google Analytics
-//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-//ReactGA.initialize(TRACKING_ID);
 
 const reactSwal = withReactContent(Swal);
 
@@ -199,7 +200,8 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
     },
     button2: {
-      buttonCustomLogo: <i className="fab fa-twitter twitter-logo" />,
+      buttonCustomLogo: <Twitter />,
+      /*<i className="fab fa-twitter twitter-logo" />*/
       buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
     },
     button3: {
@@ -341,39 +343,35 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                   lineHeight={'37px'}
                   width="473px"
                 />
-
                 <ButtonContainerMainBlock
                   margin={'81px 0 0 70px'}
                   height="191px"
                   width="244px"
                   gap="10px"
                   flexDirection="row">
-                  {/* <ButtonMainBlockWrapper flexDirection="row"> */}
+                  <ButtonMainBlockWrapper height="92px">
+                    <ButtonMainBlock
+                      width="112.23px"
+                      borderRadius="1rem"
+                      background="#2351a1"
+                      buttonData={splashData.button1}
+                      buttonImageHeight="auto"
+                      buttonImageWidth="47%"
+                      buttonImageMarginRight="0px"
+                      margin="0px"
+                    />
+                    <ButtonMainBlock
+                      width="112.23px"
+                      borderRadius="1rem"
+                      background="#2351a1"
+                      buttonData={splashData.button2}
+                      buttonImageHeight="auto"
+                      buttonImageWidth="47%"
+                      buttonImageMarginRight="0px"
+                      margin="0px"
+                    />
+                  </ButtonMainBlockWrapper>
                   <ButtonMainBlock
-                    width="112.23px"
-                    borderRadius="1rem"
-                    background="#2351a1"
-                    buttonData={splashData.button1}
-                    buttonImageHeight="auto"
-                    buttonImageWidth="47%"
-                    buttonImageMarginRight="0px"
-                    height="92px"
-                    margin="0px"
-                  />
-                  <ButtonMainBlock
-                    width="112.23px"
-                    borderRadius="1rem"
-                    background="#2351a1"
-                    buttonData={splashData.button2}
-                    buttonImageHeight="auto"
-                    buttonImageWidth="47%"
-                    buttonImageMarginRight="0px"
-                    height="92px"
-                    margin="0px"
-                  />
-                  {/* </ButtonMainBlockWrapper> */}
-                  <ButtonMainBlock
-                    width="100%"
                     borderRadius="1rem"
                     background="rgb(85, 207, 255)"
                     buttonData={splashData.button3}
@@ -383,6 +381,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                     fontSize={'36px'}
                     height="83px"
                     margin="0px"
+                    flexGrow={1}
                   />
                 </ButtonContainerMainBlock>
               </MainBlockInfoText>

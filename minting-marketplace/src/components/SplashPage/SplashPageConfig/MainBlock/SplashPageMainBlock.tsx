@@ -9,10 +9,16 @@ const SplashPageMainBlock: React.FC<TSplashPageMainBlock> = ({
   bgColor,
   children,
   borderRadius,
-  paddingLeft
+  paddingLeft,
+  flexDirection,
+  justifyContent,
+  alignItems
 }) => {
   return (
     <StyledSplashMainBlockWrapper
+      flexDirection={flexDirection}
+      justifyContent={justifyContent}
+      alignItems={alignItems}
       bgColor={bgColor}
       widthDiff={widthDiff}
       heightDiff={heightDiff}

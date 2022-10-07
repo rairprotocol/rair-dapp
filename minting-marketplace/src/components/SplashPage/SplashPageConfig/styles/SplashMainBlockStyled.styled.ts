@@ -7,8 +7,9 @@ import {
 
 export const StyledSplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: ${({ flexDirection }) => flexDirection || 'row'};
+  justify-content: ${({ justifyContent }) => justifyContent || 'space-between'};
+  align-items: ${({ alignItems }) => alignItems || 'center'};
   border-radius: ${({ borderRadius }) => borderRadius || '24px'};
   background-color: ${({ bgColor }) => bgColor || 'none'};
   width: ${({ widthDiff }) => widthDiff || '100%'};

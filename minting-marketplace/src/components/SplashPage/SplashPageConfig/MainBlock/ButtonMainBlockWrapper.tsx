@@ -5,10 +5,11 @@ import { StyledButtonMainBlockWrapper } from '../styles/StyledButtonsContainer.s
 
 const ButtonMainBlockWrapper: React.FC<TButtonMainBlockWrapper> = ({
   children,
-  flexDirection
+  flexDirection,
+  height
 }) => {
   return (
-    <StyledButtonMainBlockWrapper flexDirection={flexDirection}>
+    <StyledButtonMainBlockWrapper flexDirection={flexDirection} height={height}>
       {children}
     </StyledButtonMainBlockWrapper>
   );

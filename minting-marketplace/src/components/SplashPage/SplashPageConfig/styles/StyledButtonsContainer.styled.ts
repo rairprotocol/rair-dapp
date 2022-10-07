@@ -11,8 +11,8 @@ export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerM
   display: flex;
   flex-direction: ${({ flexDirection }) => flexDirection};
   flex-wrap: wrap;
-  justify-content: space-between;
-  width: ${({ width }) => width};
+  justify-content: ${({ justifyContent }) => justifyContent || 'space-between'};
+  width: ${({ width }) => width || '100%'};
   max-width: 50%;
   height: ${({ height }) => height};
   margin: ${({ margin }) => margin};
@@ -21,10 +21,11 @@ export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerM
 `;
 
 export const StyledButtonMainBlock = styled.button<TStyledButtonMainBlock>`
+  flex-grow: ${({ flexGrow }) => flexGrow};
   width: ${({ width }) => width};
   max-width: 100%;
   border-radius: ${({ borderRadius }) => borderRadius};
-  height: ${({ height }) => height};
+  height: ${({ height }) => height || '100%'};
   margin: ${({ margin }) => margin};
   font-family: ${({ fontFamily }) => fontFamily};
   font-weight: ${({ fontWeight }) => fontWeight};
@@ -43,7 +44,9 @@ export const StyledButtonImage = styled.img<TStyledButtonImage>`
 
 export const StyledButtonMainBlockWrapper = styled.div<TStyledButtonMainBlockWrapper>`
   display: flex;
-  flex-direction: ${({ flexDirection }) => flexDirection};
+  flex-direction: ${({ flexDirection }) => flexDirection || 'row'};
+  height: ${({ height }) => height};
   width: 100%;
-  background-color: red;
+  justify-content: ${({ justifyContent }) => justifyContent || 'space-between'};
+  /* background-color: red; */
 `;

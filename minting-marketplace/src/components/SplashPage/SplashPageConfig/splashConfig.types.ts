@@ -64,6 +64,9 @@ export type TDefaultThemeType = {
 };
 
 export type TStyledSplashMainBlockWrapper = {
+  flexDirection?: TFlexDirection;
+  justifyContent?: TJustifyContent;
+  alignItems?: TAlignItems;
   widthDiff?: string;
   heightDiff?: string;
   bgColor?: string;
@@ -91,12 +94,28 @@ export type TFlexDirection =
   | 'row-reverse'
   | 'unset';
 
+export type TJustifyContent =
+  | 'center'
+  | 'flex-start'
+  | 'flex-end'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly';
+
+export type TAlignItems =
+  | 'center'
+  | 'flex-start'
+  | 'flex-end'
+  | 'stretch'
+  | 'baseline';
+
 export type TStyledButtonContainerMainBlock = {
-  height: string;
-  width: string;
-  margin: string;
+  height?: string;
+  width?: string;
+  margin?: string;
   gap?: string;
   flexDirection: TFlexDirection;
+  justifyContent?: TJustifyContent;
 };
 
 export type TButtonContainerMainBlock = TStyledButtonContainerMainBlock & {
@@ -109,10 +128,10 @@ export type TButtonMainBlock = TStyledButtonMainBlock &
   };
 
 export type TStyledButtonMainBlock = {
-  width: string;
+  width?: string;
   borderRadius: string;
   margin: string;
-  height: string;
+  height?: string;
   fontFamily?: string;
   fontWeight?: string;
   fontSize?: string;
@@ -120,6 +139,7 @@ export type TStyledButtonMainBlock = {
   background?: string;
   color?: string;
   border?: string;
+  flexGrow?: number;
 };
 
 export type TStyledButtonImage = {
@@ -129,7 +149,9 @@ export type TStyledButtonImage = {
 };
 
 export type TStyledButtonMainBlockWrapper = {
-  flexDirection: TFlexDirection;
+  flexDirection?: TFlexDirection;
+  justifyContent?: TJustifyContent;
+  height: string;
 };
 
 export type TButtonMainBlockWrapper = TStyledButtonMainBlockWrapper & {
