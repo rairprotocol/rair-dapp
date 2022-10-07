@@ -21,6 +21,18 @@
 }
 
 @font-face {
+  font-family: 'Nunito';
+  src: local('Nunito'),
+    url(./fonts/Nunito/Nunito-VariableFont_wght.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'),
+    url(./fonts/Inter/Inter-VariableFontwght.ttf) format('truetype');
+}
+
+@font-face {
   font-family: 'Charriot Deluxe';
   src: local('Charriot Deluxe'),
     url(./fonts/charriot_deluxe/CharriotDeluxe.ttf) format('truetype');

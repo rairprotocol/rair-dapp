@@ -341,6 +341,10 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 };
 
 const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
+  altButtonFormat = false,
+  customButtonClassName,
+  customButtonIconClassName,
+  customButtonTextClassName,
   customStyle,
   customWrapperClassName,
   img,
@@ -389,14 +393,28 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
     });
   };
 
-  return (
-    <div className={customWrapperClassName}>
-      <button style={customStyle} onClick={fireAgreementModal}>
-        {img && <img alt="metamask-logo" className="metamask-logo" src={img} />}{' '}
-        {buttonLabel}
+  if (altButtonFormat) {
+    return (
+      <button className={customButtonClassName} onClick={fireAgreementModal}>
+        <img className={customButtonIconClassName} src={img} />
+        <div style={{ color: textColor }} className={customButtonTextClassName}>
+          {' '}
+          {buttonLabel}{' '}
+        </div>
       </button>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className={customWrapperClassName}>
+        <button style={customStyle} onClick={fireAgreementModal}>
+          {img && (
+            <img alt="metamask-logo" className="metamask-logo" src={img} />
+          )}{' '}
+          {buttonLabel}
+        </button>
+      </div>
+    );
+  }
 };
 
 export default PurchaseTokenButton;

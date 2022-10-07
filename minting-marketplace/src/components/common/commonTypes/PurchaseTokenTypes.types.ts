@@ -13,6 +13,10 @@ export interface IAgreementsPropsType {
 }
 
 export interface IPurchaseTokenButtonProps {
+  altButtonFormat?: boolean;
+  customButtonClassName?: string;
+  customButtonIconClassName?: string;
+  customButtonTextClassName?: string;
   customStyle: CSSProperties;
   customWrapperClassName: string;
   img: string;
