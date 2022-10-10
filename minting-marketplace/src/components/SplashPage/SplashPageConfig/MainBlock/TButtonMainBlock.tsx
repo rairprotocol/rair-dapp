@@ -3,12 +3,14 @@ import React, { useCallback } from 'react';
 import { TButtonMainBlock } from '../splashConfig.types';
 import {
   StyledButtonImage,
+  StyledButtonLogo,
   StyledButtonMainBlock
 } from '../styles/StyledButtonsContainer.styled';
 import { hyperlink } from '../utils/hyperLink';
 
 const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
   buttonData,
+  handleClick,
   width,
   borderRadius,
   margin,
@@ -23,7 +25,8 @@ const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
   buttonImageWidth,
   buttonImageHeight,
   buttonImageMarginRight,
-  flexGrow
+  flexGrow,
+  buttonLogoMarginRight
 }) => {
   const {
     buttonLabel,
@@ -38,10 +41,12 @@ const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
   const handleButtonClick = useCallback(() => {
     if (buttonAction) {
       buttonAction();
+    } else if (buttonLink) {
+      hyperlink(buttonLink);
     } else {
-      buttonLink && hyperlink(buttonLink);
+      handleClick?.();
     }
-  }, [buttonAction, buttonLink]);
+  }, [buttonAction, buttonLink, handleClick]);
 
   return (
     <StyledButtonMainBlock
@@ -58,7 +63,11 @@ const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
       color={buttonTextColor ? buttonTextColor : color}
       border={border}
       onClick={handleButtonClick}>
-      {buttonCustomLogo && buttonCustomLogo}
+      {buttonCustomLogo && (
+        <StyledButtonLogo buttonLogoMarginRight={buttonLogoMarginRight}>
+          {buttonCustomLogo}
+        </StyledButtonLogo>
+      )}
       {buttonImg && (
         <StyledButtonImage
           buttonImageWidth={buttonImageWidth}

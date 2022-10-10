@@ -10,13 +10,12 @@ import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico'
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 // import MetaMaskIcon from '../images/metamask_logo.png';
-import { discrodIconNoBorder } from '../../../images';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
+import { ReactComponent as DiscordLogo } from '../assets/DiscordLogo.svg';
 // import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -80,9 +79,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
 
   const donationGridData: TDonationGridDataItem[] = [
     {
@@ -173,7 +169,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
     }
   ];
   const splashData: TSplashDataType = {
-    // NFTName: 'Genesis Pass artwork',
     title: 'SIM DOGS',
     titleColor: '#495CB0',
     description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
@@ -196,7 +191,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
     buttonBackgroundHelp: 'rgb(3, 91, 188)',
     backgroundImage: SimDogs0,
     button1: {
-      buttonImg: discrodIconNoBorder,
+      buttonCustomLogo: <DiscordLogo />,
       buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
     },
     button2: {
@@ -347,8 +342,8 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                   margin={'81px 0 0 70px'}
                   height="191px"
                   width="244px"
-                  gap="10px"
-                  flexDirection="row">
+                  gap="16px"
+                  flexDirection="column">
                   <ButtonMainBlockWrapper height="92px">
                     <ButtonMainBlock
                       width="112.23px"
@@ -358,7 +353,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                       buttonImageHeight="auto"
                       buttonImageWidth="47%"
                       buttonImageMarginRight="0px"
-                      margin="0px"
                     />
                     <ButtonMainBlock
                       width="112.23px"
@@ -368,7 +362,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                       buttonImageHeight="auto"
                       buttonImageWidth="47%"
                       buttonImageMarginRight="0px"
-                      margin="0px"
                     />
                   </ButtonMainBlockWrapper>
                   <ButtonMainBlock
@@ -380,8 +373,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                     lineHeight={'36px'}
                     fontSize={'36px'}
                     height="83px"
-                    margin="0px"
-                    flexGrow={1}
+                    width="100%"
                   />
                 </ButtonContainerMainBlock>
               </MainBlockInfoText>

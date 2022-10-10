@@ -81,7 +81,7 @@ export type TStyledImageBlock = {
 };
 
 export type TImageMainBlock = TStyledImageBlock & {
-  image?: string;
+  image?: string | React.ReactNode;
 };
 
 export type TFlexDirection =
@@ -109,13 +109,16 @@ export type TAlignItems =
   | 'stretch'
   | 'baseline';
 
+export type TFlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
+
 export type TStyledButtonContainerMainBlock = {
   height?: string;
   width?: string;
   margin?: string;
   gap?: string;
-  flexDirection: TFlexDirection;
+  flexDirection?: TFlexDirection;
   justifyContent?: TJustifyContent;
+  flexWrap?: TFlexWrap;
 };
 
 export type TButtonContainerMainBlock = TStyledButtonContainerMainBlock & {
@@ -123,20 +126,23 @@ export type TButtonContainerMainBlock = TStyledButtonContainerMainBlock & {
 };
 
 export type TButtonMainBlock = TStyledButtonMainBlock &
-  TStyledButtonImage & {
+  TStyledButtonImage &
+  TStyledButtonLogo & {
     buttonData: TSplashPageDataButtonType | undefined;
+    handleClick?: () => void;
   };
 
 export type TStyledButtonMainBlock = {
-  width?: string;
-  borderRadius: string;
-  margin: string;
-  height?: string;
+  width?: string | number;
+  borderRadius?: string;
+  margin?: string | number;
+  padding?: string;
+  height?: string | number;
   fontFamily?: string;
   fontWeight?: string;
-  fontSize?: string;
-  lineHeight?: string;
-  background?: string;
+  fontSize?: string | number;
+  lineHeight?: string | number;
+  background?: string | number;
   color?: string;
   border?: string;
   flexGrow?: number;
@@ -146,6 +152,12 @@ export type TStyledButtonImage = {
   buttonImageWidth?: string;
   buttonImageHeight?: string;
   buttonImageMarginRight?: string;
+};
+
+export type TStyledButtonLogo = {
+  buttonLogoWidth?: string;
+  buttonLogoHeight?: string;
+  buttonLogoMarginRight?: string | number;
 };
 
 export type TStyledButtonMainBlockWrapper = {

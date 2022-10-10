@@ -17,7 +17,7 @@ export const StyledSplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWra
   padding-left: ${({ paddingLeft }) => paddingLeft};
 `;
 
-export const StyledImageBlock = styled.img<TStyledImageBlock>`
+export const StyledImageBlock = styled.div<TStyledImageBlock>`
   width: ${({ widthDiff }) => widthDiff || '1200px'};
   height: ${({ heightDiff }) => heightDiff || '694px'};
   margin: ${({ imageMargin }) => imageMargin};

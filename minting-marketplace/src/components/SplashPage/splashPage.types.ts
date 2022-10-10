@@ -1,5 +1,6 @@
 import { TFileType } from '../../axios.responseTypes';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { TInfoSeo } from '../../ducks/seo/seo.types';
 
 export interface INumberedCircle {
   index: number;
@@ -10,6 +11,7 @@ export interface ISplashPageProps {
   loginDone?: boolean;
   connectUserData?: () => Promise<void>;
   setIsSplashPage?: (isSplashPage: boolean) => void;
+  isSplashPage: boolean;
 }
 
 export type TSplashPageIsActive = {
@@ -142,7 +144,7 @@ export type TSplashDataType = {
   description?: string[] | string;
   textDescriptionCustomStyles?: React.CSSProperties;
   seoInformation?: TSeoInformationType;
-  backgroundImage?: string;
+  backgroundImage?: string | React.ReactNode;
   button1?: TSplashPageDataButtonType;
   button2?: TSplashPageDataButtonType;
   button3?: TSplashPageDataButtonType;

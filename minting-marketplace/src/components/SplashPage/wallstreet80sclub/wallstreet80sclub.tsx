@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
@@ -16,6 +17,11 @@ import { rFetch } from '../../../utils/rFetch';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
+// Google Analytics
+//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+//ReactGA.initialize(TRACKING_ID);
+import { ReactComponent as DiscordLogo } from '../assets/DiscordLogo.svg';
+import { ReactComponent as MetaMaskFox } from '../assets/MetaMaskFox.svg';
 import {
   WallstreetA,
   WallstreetB,
@@ -33,10 +39,12 @@ import {
   TMainContractType,
   TSplashDataType
 } from '../splashPage.types';
+import ButtonContainerMainBlock from '../SplashPageConfig/MainBlock/ButtonContainerMainBlock';
 import ImageMainBlock from '../SplashPageConfig/MainBlock/ImageMainBlock';
 import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
 import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
 import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
+import ButtonMainBlock from '../SplashPageConfig/MainBlock/TButtonMainBlock';
 import { StyledSplashPageWrapperContainer } from '../SplashPageConfig/styles/StyledWrapperContainers.styled';
 import { theme } from '../SplashPageConfig/theme.styled';
 import { useGetProducts } from '../splashPageProductsHook';
@@ -53,10 +61,6 @@ import './wallstreet80sclub.css';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './wallstreet80sclub.css';
-// Google Analytics
-//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-//ReactGA.initialize(TRACKING_ID);
-
 //unused-snippet
 const reactSwal = withReactContent(Swal);
 
@@ -81,6 +85,11 @@ const blockchain =
   process.env.REACT_APP_TEST_CONTRACTS === 'true'
     ? testContract.requiredBlockchain
     : mainContract.requiredBlockchain;
+
+const offerIndex =
+  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ? testContract.offerIndex
+    : mainContract.offerIndex;
 
 const splashData: TSplashDataType = {
   LicenseName: '#wallstreet80sclub',
@@ -122,15 +131,24 @@ const splashData: TSplashDataType = {
   buttonBackgroundHelpText: 'NEED HELP',
   buttonLabel: 'freemint',
   customStyle: {
-    background: 'rgb(89,25,8)'
+    // background: 'rgb(89,25,8)',
+    width: '100%',
+    height: '64px',
+    background: '#611200',
+    fontFamily: "'Cooper Std Black', sans-serif",
+    fontWeight: '900',
+    fontSize: '20px',
+    lineHeight: '28px',
+    margin: '0 0 20px',
+    marginRight: '23px'
   },
   backgroundImage: WallstreetImg,
   purchaseButton: {
     buttonComponent: PurchaseTokenButton,
     img: metaMaskIcon,
-    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
-      ? testContract
-      : mainContract),
+    requiredBlockchain: blockchain,
+    contractAddress: contract,
+    offerIndex: offerIndex,
     presaleMessage: '',
     customWrapperClassName: 'btn-submit-with-form',
     blockchainOnly: true,
@@ -152,11 +170,20 @@ const splashData: TSplashDataType = {
       }
     }
   },
+  // button1: {
+  //   buttonColor: 'rgb(89, 25, 8)',
+  //   buttonTextColor: '#FFFFFF',
+  //   buttonLabel: 'freemint',
+  //   buttonCustomLogo: <MetaMaskFox />,
+  //   buttonImg: metaMaskIcon
+  //   // buttonAction,
+  // },
   button2: {
     buttonTextColor: '#FFFFFF',
     buttonColor: '#000000',
     buttonLabel: 'Join our Discord',
-    buttonImg: discrodIconNoBorder,
+    // buttonImg: discrodIconNoBorder,
+    buttonCustomLogo: <DiscordLogo />,
     buttonLink: 'https://discord.com/invite/y98EMXRsCE'
   },
   counterOverride: true,
@@ -184,10 +211,11 @@ const splashData: TSplashDataType = {
 const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   loginDone,
   connectUserData,
-  setIsSplashPage
+  setIsSplashPage,
+  isSplashPage
 }) => {
   const dispatch = useDispatch();
-  const seo = useSelector<RootState, any>((store) => store.seoStore);
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   /* UTILITIES FOR VIDEO PLAYER VIEW (placed this functionality into custom hook for reusability)*/
   const [productsFromOffer, selectVideo, setSelectVideo] =
     useGetProducts(splashData);
@@ -299,7 +327,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
               borderRadius="24px">
               <MainBlockInfoText padding={'190px 20px 0px 75px'}>
                 <MainTitleBlock
-                  color="rgb(0, 0, 0)"
+                  color={splashData.titleColor}
                   fontSize="50px"
                   fontWeight={700}
                   text={splashData.title}
@@ -319,6 +347,51 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
                   padding={'0 0 0 7px'}
                   width="476px"
                 />
+                <ButtonContainerMainBlock
+                  margin={'82px 0px 0px 0px'}
+                  height="148px"
+                  width="335px"
+                  flexDirection="column">
+                  {/* <PurchaseTokenButton
+                    // requiredBlockchain={}
+                    presaleMessage={splashData.purchaseButton?.presaleMessage}
+                    customSuccessAction={
+                      splashData.purchaseButton?.customSuccessAction
+                    }
+                    offerIndex={contractChosen.offerIndex}
+                    isSplashPage={isSplashPage}
+                    diamond={diamond}
+                    customStyle={splashData.customStyle}
+                    buttonData={splashData.button1}
+                    contractAddress={contractChosen.contractAddress}
+                    // {...{
+                    //   ...splashData.purchaseButton,
+                    //   connectUserData
+                    // }}
+                  /> */}
+                  <ButtonMainBlock
+                    width="100%"
+                    height="64px"
+                    background="#611200"
+                    fontFamily="'Cooper Std Black', sans-serif"
+                    fontWeight={'900'}
+                    fontSize={'20px'}
+                    lineHeight={'28px'}
+                    buttonData={splashData.button1}
+                    margin="0 0 20px"
+                    buttonLogoMarginRight="23px"
+                  />
+                  <ButtonMainBlock
+                    width={'100%'}
+                    height="64px"
+                    buttonData={splashData.button2}
+                    fontFamily={"'Cooper Std Black', sans-serif"}
+                    fontWeight={'400'}
+                    lineHeight={'22px'}
+                    fontSize={'20px'}
+                    buttonLogoMarginRight="23px"
+                  />
+                </ButtonContainerMainBlock>
               </MainBlockInfoText>
               <ImageMainBlock
                 image={splashData.backgroundImage}

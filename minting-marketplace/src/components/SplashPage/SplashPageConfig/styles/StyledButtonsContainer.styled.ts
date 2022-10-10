@@ -3,17 +3,17 @@ import styled from 'styled-components';
 import {
   TStyledButtonContainerMainBlock,
   TStyledButtonImage,
+  TStyledButtonLogo,
   TStyledButtonMainBlock,
   TStyledButtonMainBlockWrapper
 } from '../splashConfig.types';
 
 export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerMainBlock>`
   display: flex;
-  flex-direction: ${({ flexDirection }) => flexDirection};
-  flex-wrap: wrap;
+  flex-direction: ${({ flexDirection }) => flexDirection || 'row'};
+  flex-wrap: ${({ flexWrap }) => flexWrap || 'nowrap'};
   justify-content: ${({ justifyContent }) => justifyContent || 'space-between'};
   width: ${({ width }) => width || '100%'};
-  max-width: 50%;
   height: ${({ height }) => height};
   margin: ${({ margin }) => margin};
   gap: ${({ gap }) => gap};
@@ -21,12 +21,13 @@ export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerM
 `;
 
 export const StyledButtonMainBlock = styled.button<TStyledButtonMainBlock>`
-  flex-grow: ${({ flexGrow }) => flexGrow};
+  flex-grow: ${({ flexGrow }) => flexGrow || 0};
   width: ${({ width }) => width};
   max-width: 100%;
-  border-radius: ${({ borderRadius }) => borderRadius};
+  border-radius: ${({ borderRadius }) => borderRadius || '0'};
   height: ${({ height }) => height || '100%'};
-  margin: ${({ margin }) => margin};
+  margin: ${({ margin }) => margin || '0px'};
+  padding: ${({ padding }) => padding || '0px'};
   font-family: ${({ fontFamily }) => fontFamily};
   font-weight: ${({ fontWeight }) => fontWeight};
   font-size: ${({ fontSize }) => fontSize};
@@ -40,6 +41,12 @@ export const StyledButtonImage = styled.img<TStyledButtonImage>`
   width: ${({ buttonImageWidth }) => buttonImageWidth};
   height: ${({ buttonImageHeight }) => buttonImageHeight};
   margin-right: ${({ buttonImageMarginRight }) => buttonImageMarginRight};
+`;
+
+export const StyledButtonLogo = styled.span<TStyledButtonLogo>`
+  width: ${({ buttonLogoWidth }) => buttonLogoWidth};
+  height: ${({ buttonLogoHeight }) => buttonLogoHeight};
+  margin-right: ${({ buttonLogoMarginRight }) => buttonLogoMarginRight};
 `;
 
 export const StyledButtonMainBlockWrapper = styled.div<TStyledButtonMainBlockWrapper>`

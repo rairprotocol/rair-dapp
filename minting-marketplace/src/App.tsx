@@ -56,6 +56,7 @@ import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPage';
+import MarkKohler from './components/SplashPage/MarkKohler/MarkKohler';
 import NFTLASplashPage from './components/SplashPage/NFTLASplashPage';
 import NFTNYCSplashPage from './components/SplashPage/NFTNYC/NFTNYC';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
@@ -487,6 +488,7 @@ function App() {
                     path: '/simdogs-splash',
                     content: SimDogsSplashPage
                   },
+                  { path: '/markkohler-splash', content: MarkKohler },
                   {
                     path: '/genesis-splash',
                     content: RAIRGenesisSplashPage
@@ -579,7 +581,8 @@ function App() {
                           {...{
                             connectUserData,
                             loginDone,
-                            setIsSplashPage
+                            setIsSplashPage,
+                            isSplashPage
                           }}
                         />
                       }

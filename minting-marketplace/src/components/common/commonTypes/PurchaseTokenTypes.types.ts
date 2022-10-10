@@ -1,8 +1,10 @@
 import { CSSProperties } from 'react';
 
+import { TSplashPageDataButtonType } from '../../SplashPage/splashPage.types';
+
 export interface IAgreementsPropsType {
   presaleMessage: string | React.ReactNode;
-  contractAddress: string;
+  contractAddress?: string;
   requiredBlockchain: BlockchainType;
   offerIndex: number[];
   connectUserData?: () => void;
@@ -18,8 +20,8 @@ export interface IPurchaseTokenButtonProps {
   customButtonIconClassName?: string;
   customButtonTextClassName?: string;
   customStyle: CSSProperties;
-  customWrapperClassName: string;
-  img: string;
+  customWrapperClassName?: string;
+  img?: string;
   contractAddress: string;
   requiredBlockchain: BlockchainType;
   offerIndex: number[];
@@ -30,6 +32,8 @@ export interface IPurchaseTokenButtonProps {
   customSuccessAction: (nextToken: number) => void;
   blockchainOnly?: boolean;
   databaseOnly?: boolean;
+  isSplashPage?: boolean;
+  buttonData?: TSplashPageDataButtonType;
 }
 
 export interface IRangeDataType {

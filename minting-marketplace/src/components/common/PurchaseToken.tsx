@@ -14,6 +14,7 @@ import { getRandomValues } from '../../utils/getRandomValues';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
+import ButtonMainBlock from '../SplashPage/SplashPageConfig/MainBlock/TButtonMainBlock';
 
 import {
   IAgreementsPropsType,
@@ -348,10 +349,13 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   customStyle,
   customWrapperClassName,
   img,
+  buttonLabel = 'Mint!',
+  isSplashPage,
+  buttonData,
+
   contractAddress,
   requiredBlockchain,
   offerIndex,
-  buttonLabel = 'Mint!',
   connectUserData,
   presaleMessage,
   diamond,
@@ -404,6 +408,23 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
       </button>
     );
   } else {
+    if (isSplashPage) {
+      return (
+        <ButtonMainBlock
+          width={customStyle.width}
+          height={customStyle.height}
+          background={customStyle.background}
+          fontFamily={customStyle.fontFamily}
+          fontWeight={customStyle.fontWeight as string}
+          fontSize={customStyle.fontSize}
+          lineHeight={customStyle.lineHeight}
+          buttonData={buttonData}
+          margin={customStyle.margin}
+          buttonLogoMarginRight={customStyle.marginRight}
+          handleClick={fireAgreementModal}
+        />
+      );
+    }
     return (
       <div className={customWrapperClassName}>
         <button style={customStyle} onClick={fireAgreementModal}>
