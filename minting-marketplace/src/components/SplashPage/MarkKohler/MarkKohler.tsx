@@ -10,11 +10,11 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import MetaTags from '../../SeoTags/MetaTags';
-import { ReactComponent as MarkKohlerImage } from '../assets/MarkKohlerImage.svg';
+import { ReactComponent as MarkKohlerPicture } from '../assets/MarkKohlerPicture.svg';
+import { ReactComponent as MetaMaskFox } from '../assets/MetaMaskFox.svg';
 import { ISplashPageProps } from '../splashPage.types';
 import { TSplashDataType } from '../splashPage.types';
 import ButtonContainerMainBlock from '../SplashPageConfig/MainBlock/ButtonContainerMainBlock';
-import ButtonMainBlockWrapper from '../SplashPageConfig/MainBlock/ButtonMainBlockWrapper';
 import ImageMainBlock from '../SplashPageConfig/MainBlock/ImageMainBlock';
 import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
 import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
@@ -27,17 +27,16 @@ import ModalHelp from '../SplashPageTemplate/ModalHelp';
 
 export const splashData: TSplashDataType = {
   title: 'TAX HACKS SUMMIT',
-  titleColor: '#DF76DF',
   description: 'THURSDAY DECEMBER 8TH 10AM-6PM ET AN NFT GATED EVENT',
-  buttonLabel: 'Connect Wallet',
-  backgroundImage: <MarkKohlerImage />,
+  backgroundImage: <MarkKohlerPicture />,
   button2: {
     buttonLabel: 'Email Updates',
-    buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
+    buttonAction: () => console.info('email updates')
   },
   button1: {
+    buttonCustomLogo: <MetaMaskFox />,
     buttonLabel: 'Mint for .27',
-    buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
+    buttonAction: () => console.info('mint this token')
   }
 };
 
@@ -93,7 +92,6 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   useEffect(() => {
     setIsSplashPage?.(true);
   }, [setIsSplashPage]);
-  // const whatSplashPage = 'genesis-font';
 
   useEffect(() => {
     window.addEventListener('resize', () =>
@@ -133,7 +131,9 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             <SplashPageMainBlock
               bgColor="#FFFFFF"
               borderRadius="20px"
-              paddingLeft="85px">
+              paddingLeft="85px"
+              widthDiff="1267px"
+              heightDiff="642px">
               <MainBlockInfoText padding={'0px'}>
                 <MainTitleBlock
                   color="#DF76DF"
@@ -155,50 +155,45 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
                   width="485px"
                 />
                 <ButtonContainerMainBlock
-                  margin={'81px 0 0 70px'}
-                  height="191px"
-                  width="244px"
-                  gap="16px"
+                  margin={'63px 0 0px'}
+                  height="148px"
+                  width="335px"
+                  gap="20px"
                   flexDirection="column">
-                  <ButtonMainBlockWrapper height="92px">
-                    <ButtonMainBlock
-                      width="112.23px"
-                      borderRadius="1rem"
-                      background="#2351a1"
-                      buttonData={splashData.button1}
-                      buttonImageHeight="auto"
-                      buttonImageWidth="47%"
-                      buttonImageMarginRight="0px"
-                    />
-                    <ButtonMainBlock
-                      width="112.23px"
-                      borderRadius="1rem"
-                      background="#2351a1"
-                      buttonData={splashData.button2}
-                      buttonImageHeight="auto"
-                      buttonImageWidth="47%"
-                      buttonImageMarginRight="0px"
-                    />
-                  </ButtonMainBlockWrapper>
                   <ButtonMainBlock
-                    borderRadius="1rem"
-                    background="rgb(85, 207, 255)"
-                    buttonData={splashData.button3}
-                    fontFamily={"'Acme', sans-serif"}
-                    fontWeight={'400'}
-                    lineHeight={'36px'}
-                    fontSize={'36px'}
-                    height="83px"
+                    width="100%"
+                    height={'64px'}
+                    padding="14px 0px"
+                    fontFamily="Plus Jakarta Sans"
+                    borderRadius="16px"
+                    fontSize={'22px'}
+                    fontWeight={'700'}
+                    lineHeight="28px"
+                    color="#FFFFFF"
+                    background={`linear-gradient(96.34deg, #035BBC 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)`}
+                    buttonData={splashData.button1}
+                    buttonLogoMarginRight="32px"
+                  />
+                  <ButtonMainBlock
+                    borderRadius="16px"
+                    background="#000000"
+                    buttonData={splashData.button2}
+                    fontFamily={'Plus Jakarta Sans'}
+                    fontWeight={'700'}
+                    lineHeight={'28px'}
+                    fontSize={'22px'}
+                    color={'#FFFFFF'}
+                    height="64px"
                     width="100%"
                   />
                 </ButtonContainerMainBlock>
               </MainBlockInfoText>
               {splashData.backgroundImage && (
                 <ImageMainBlock
-                  heightDiff="538px"
-                  widthDiff="538px"
+                  heightDiff="513px"
+                  widthDiff="510px"
                   image={splashData.backgroundImage}
-                  imageMargin="0px 35px 0px 20px"
+                  imageMargin="0px 61px 0px 20px"
                 />
               )}
             </SplashPageMainBlock>

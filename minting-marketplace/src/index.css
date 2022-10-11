@@ -17,14 +17,14 @@
 
 @font-face {
   font-family: 'Nebulosa Black Display Stencil';
-  src: local('Nebulosa Black Display Stencil')
-    url(./fonts/NebulosaBlackDisplayStencil.otf) format('.otf');
+  src: url(./fonts/Nebulosa/Graviton\ -\ NebulosaBlackDisplayStencil.otf)
+    format('opentype');
 }
 
 @font-face {
   font-family: 'Nebulosa Black Display Solid';
-  src: local('Nebulosa Black Display Solid')
-    url(./fonts/NebulosaBlackDisplaySolid.otf) format('.otf');
+  src: url(./fonts/Nebulosa/Graviton\ -\ NebulosaBlackDisplaySolid.otf)
+    format('opentype');
 }
 
 @font-face {

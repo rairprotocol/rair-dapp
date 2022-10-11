@@ -113,11 +113,7 @@ const SplashPageWrapper: React.FC<ISplashPageWrapper> = ({
   // useEffect(() => {
   //   getAllProduct();
   // }, [getAllProduct]);
-  return (
-    <StyledSplashPageWrapperContainer>
-      {children}
-    </StyledSplashPageWrapperContainer>
-  );
+  return <div></div>;
 };
 
 export default SplashPageWrapper;

@@ -26,7 +26,8 @@ const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
   buttonImageHeight,
   buttonImageMarginRight,
   flexGrow,
-  buttonLogoMarginRight
+  buttonLogoMarginRight,
+  padding
 }) => {
   const {
     buttonLabel,
@@ -54,6 +55,7 @@ const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
       width={width}
       borderRadius={borderRadius}
       margin={margin}
+      padding={padding}
       height={height}
       fontFamily={fontFamily}
       fontWeight={fontWeight}

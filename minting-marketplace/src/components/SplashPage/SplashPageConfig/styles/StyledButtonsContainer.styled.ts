@@ -17,7 +17,6 @@ export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerM
   height: ${({ height }) => height};
   margin: ${({ margin }) => margin};
   gap: ${({ gap }) => gap};
-  /* background-color: yellow; */
 `;
 
 export const StyledButtonMainBlock = styled.button<TStyledButtonMainBlock>`
@@ -55,5 +54,4 @@ export const StyledButtonMainBlockWrapper = styled.div<TStyledButtonMainBlockWra
   height: ${({ height }) => height};
   width: 100%;
   justify-content: ${({ justifyContent }) => justifyContent || 'space-between'};
-  /* background-color: red; */
 `;
