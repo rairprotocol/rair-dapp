@@ -13,9 +13,10 @@ const ImageMainBlock: React.FC<TImageMainBlock> = ({
     <StyledImageBlock
       widthDiff={widthDiff}
       heightDiff={heightDiff}
-      imageMargin={imageMargin}>
-      {image}
-    </StyledImageBlock>
+      imageMargin={imageMargin}
+      src={image}
+      alt="Splash page image"
+    />
   );
 };
 export default ImageMainBlock;

@@ -81,7 +81,7 @@ export type TStyledImageBlock = {
 };
 
 export type TImageMainBlock = TStyledImageBlock & {
-  image?: string | React.ReactNode;
+  image?: string;
 };
 
 export type TFlexDirection =

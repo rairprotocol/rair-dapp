@@ -12,16 +12,15 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
-// import MetaMaskIcon from '../images/metamask_logo.png';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import { ReactComponent as DiscordLogo } from '../assets/DiscordLogo.svg';
+// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 // import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 import { ReactComponent as Twitter } from '../assets/twitterIcon.svg';
-// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import {
   Flyinggreyman,
   GreymanArmy,
@@ -379,9 +378,9 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
               </MainBlockInfoText>
               {splashData.backgroundImage && (
                 <ImageMainBlock
+                  image={splashData.backgroundImage}
                   heightDiff="538px"
                   widthDiff="538px"
-                  image={splashData.backgroundImage}
                   imageMargin="0px 35px 0px 20px"
                 />
               )}

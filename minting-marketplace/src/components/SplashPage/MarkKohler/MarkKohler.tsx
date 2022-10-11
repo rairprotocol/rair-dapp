@@ -10,7 +10,7 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import MetaTags from '../../SeoTags/MetaTags';
-import { ReactComponent as MarkKohlerPicture } from '../assets/MarkKohlerPicture.svg';
+import MarkKohlerImage from '../assets/MarkKohlerImage.webp';
 import { ReactComponent as MetaMaskFox } from '../assets/MetaMaskFox.svg';
 import { ISplashPageProps } from '../splashPage.types';
 import { TSplashDataType } from '../splashPage.types';
@@ -28,7 +28,7 @@ import ModalHelp from '../SplashPageTemplate/ModalHelp';
 export const splashData: TSplashDataType = {
   title: 'TAX HACKS SUMMIT',
   description: 'THURSDAY DECEMBER 8TH 10AM-6PM ET AN NFT GATED EVENT',
-  backgroundImage: <MarkKohlerPicture />,
+  backgroundImage: MarkKohlerImage,
   button2: {
     buttonLabel: 'Email Updates',
     buttonAction: () => console.info('email updates')
@@ -190,9 +190,9 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               </MainBlockInfoText>
               {splashData.backgroundImage && (
                 <ImageMainBlock
+                  image={splashData.backgroundImage}
                   heightDiff="513px"
                   widthDiff="510px"
-                  image={splashData.backgroundImage}
                   imageMargin="0px 61px 0px 20px"
                 />
               )}
