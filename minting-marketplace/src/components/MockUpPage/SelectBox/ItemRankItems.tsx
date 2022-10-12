@@ -1,6 +1,7 @@
 //unused-component
 
 import styled from 'styled-components';
+
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 interface IItemRankContainerStyled {
