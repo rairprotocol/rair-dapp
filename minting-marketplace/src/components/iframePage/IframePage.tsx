@@ -53,7 +53,9 @@ const IframePage = ({
             }
             className={`btn btn-${'charcoal'} btn-connect-wallet-mobile iframe-btn`}
             onClick={connectUserData}>
-            {startedLogin ? 'Please wait...' : 'Connect to Unlock'}
+            {startedLogin
+              ? 'Please wait...'
+              : 'Connect and Sign (x2) to Unlock'}
           </button>
         )}
       </div>
