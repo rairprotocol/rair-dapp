@@ -255,7 +255,6 @@ const MyItems: React.FC<IMyItems> = ({
                 openModal={openModal}
                 setSelectedData={setSelectedData}
                 defaultImg={defaultImg}
-                primaryColor={primaryColor}
                 chainData={chainData}
                 textColor={textColor}
               />

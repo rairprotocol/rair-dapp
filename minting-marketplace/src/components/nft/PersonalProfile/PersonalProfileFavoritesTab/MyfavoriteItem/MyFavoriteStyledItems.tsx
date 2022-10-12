@@ -5,10 +5,10 @@ interface IFavoriteStyled {
 }
 
 export const FavoriteItem = styled.div<IFavoriteStyled>`
-  background-image: url(${(props) => props.image});
+  /* background-image: url(${(props) => props.image});
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; */
 `;
 
 export const UserFavoriteItemInfo = styled.div`

@@ -1,5 +1,7 @@
 import { memo } from 'react';
 
+import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
+
 import './PersonalProfileMyNftTab.css';
 
 const PersonalProfileMyNftTabComponent = ({
@@ -7,7 +9,6 @@ const PersonalProfileMyNftTabComponent = ({
   openModal,
   setSelectedData,
   defaultImg,
-  primaryColor,
   chainData,
   textColor
 }) => {
@@ -23,11 +24,12 @@ const PersonalProfileMyNftTabComponent = ({
                   setSelectedData(item);
                 }}
                 key={index}
-                className="col-2 my-item-element"
-                style={{
-                  backgroundImage: `url(${item.metadata.image || defaultImg})`,
-                  backgroundColor: `var(--${primaryColor}-transparent)`
-                }}>
+                className="col-2 my-item-element">
+                <ImageLazy
+                  className="my-items-pict zoom-event"
+                  src={`${item.metadata.image || defaultImg}`}
+                  alt={`My favorite NFT ${item.metadata.name}`}
+                />
                 <div className="w-100 bg-my-items">
                   <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
                     <div
