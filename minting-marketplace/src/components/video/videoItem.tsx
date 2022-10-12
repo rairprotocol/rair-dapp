@@ -19,7 +19,7 @@ import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';
-import { playImages } from '../SplashPage/images/greyMan/grayMan';
+import { playImagesColored } from '../SplashPage/images/greyMan/grayMan';
 // import { TChainItemData } from '../../utils/utils.types';
 
 Modal.setAppElement('#root');
@@ -289,7 +289,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                     <img
                       onClick={() => setOpenVideoplayer(true)}
                       className={'modal-content-play-image'}
-                      src={playImages}
+                      src={playImagesColored}
                       alt="Button play video"
                     />
                   </>
