@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
   try {
     const token = req.headers['x-rair-token'];
     const userAdmin = await axios.get(
-      `${config.rairnode.baseUri}/api/v2/verify`,
+      `${config.rairnode.baseUri}/api/v2/verify/jwt`,
       {
         headers: {
           'x-rair-token': token,
