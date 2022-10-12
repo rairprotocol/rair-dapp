@@ -37,8 +37,6 @@ import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComp
 
 //styles
 import './Header.css';
-//styles
-import './Header.css';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -264,7 +262,7 @@ const MainHeader: React.FC<IMainHeader> = ({
                           <img
                             className="data-find-img"
                             src={item.avatar ? item.avatar : ''}
-                            alt={item.nickName ? item.nickName : 'user-photo'}
+                            alt="user-photo"
                           />
                           <p>
                             <Highlight
