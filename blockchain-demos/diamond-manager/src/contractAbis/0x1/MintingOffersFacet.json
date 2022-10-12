@@ -1,0 +1,1328 @@
+{
+  "address": "0xcc8eBb097448bdE155E66d65E6Cb9aaE776395e8",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "erc721Address",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "rangeName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "feeSplitsLength",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "visible",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "offerIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "AddedMintingOffer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "erc721Address",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokenIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "buyer",
+          "type": "address"
+        }
+      ],
+      "name": "MintedToken",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "erc721Address",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "feeSplitsLength",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "visible",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "offerIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "UpdatedMintingOffer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "erc721Address_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeIndex_",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "percentage",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct feeSplits[]",
+          "name": "splits",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "bool",
+          "name": "visible_",
+          "type": "bool"
+        },
+        {
+          "internalType": "address",
+          "name": "nodeAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "addMintingOffer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "erc721Address_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "rangeIndexes",
+          "type": "uint256[]"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "percentage",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct feeSplits[][]",
+          "name": "splits",
+          "type": "tuple[][]"
+        },
+        {
+          "internalType": "bool[]",
+          "name": "visibility",
+          "type": "bool[]"
+        },
+        {
+          "internalType": "address",
+          "name": "nodeAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "addMintingOfferBatch",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "offerIndex_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenIndex_",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyMintingOffer",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "offerIndex_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "tokenIndexes",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "address[]",
+          "name": "recipients",
+          "type": "address[]"
+        }
+      ],
+      "name": "buyMintingOfferBatch",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "offerIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getOfferInfo",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "erc721Address",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "nodeAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangeIndex",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "recipient",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "percentage",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct feeSplits[]",
+              "name": "fees",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "bool",
+              "name": "visible",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct mintingOffer",
+          "name": "mintOffer",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "rangeStart",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangeEnd",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokensAllowed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "mintableTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lockedTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangePrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "rangeName",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct IRAIR721.range",
+          "name": "rangeData",
+          "type": "tuple"
+        },
+        {
+          "internalType": "uint256",
+          "name": "productIndex",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "erc721Address",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getOfferInfoForAddress",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "offerIndex",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "erc721Address",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "nodeAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangeIndex",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "recipient",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "percentage",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct feeSplits[]",
+              "name": "fees",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "bool",
+              "name": "visible",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct mintingOffer",
+          "name": "mintOffer",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "rangeStart",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangeEnd",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokensAllowed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "mintableTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lockedTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangePrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "rangeName",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct IRAIR721.range",
+          "name": "rangeData",
+          "type": "tuple"
+        },
+        {
+          "internalType": "uint256",
+          "name": "productIndex",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "erc721Address",
+          "type": "address"
+        }
+      ],
+      "name": "getOffersCountForAddress",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRoleMember",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleMemberCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTotalOfferCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "mintingOfferId_",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "percentage",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct feeSplits[]",
+          "name": "splits_",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "bool",
+          "name": "visible_",
+          "type": "bool"
+        }
+      ],
+      "name": "updateMintingOffer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xfbad66aebf93ce175d74e1c25d1e090231b5ed5767fdbe3bc784839c70cdc4b8",
+  "receipt": {
+    "to": null,
+    "from": "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+    "contractAddress": "0xcc8eBb097448bdE155E66d65E6Cb9aaE776395e8",
+    "transactionIndex": 148,
+    "gasUsed": "2850213",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x20b833b85fc53617ab2e5937947141e224e7256cd2ee59e04160a325866ca09c",
+    "transactionHash": "0xfbad66aebf93ce175d74e1c25d1e090231b5ed5767fdbe3bc784839c70cdc4b8",
+    "logs": [],
+    "blockNumber": 15698160,
+    "cumulativeGasUsed": "14671880",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "fd36f951ec49d47157e7a556584d2ce2",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"erc721Address\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"rangeName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeSplitsLength\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"visible\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"offerIndex\",\"type\":\"uint256\"}],\"name\":\"AddedMintingOffer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"erc721Address\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"}],\"name\":\"MintedToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"erc721Address\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeSplitsLength\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"visible\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"offerIndex\",\"type\":\"uint256\"}],\"name\":\"UpdatedMintingOffer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"erc721Address_\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rangeIndex_\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"percentage\",\"type\":\"uint256\"}],\"internalType\":\"struct feeSplits[]\",\"name\":\"splits\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"visible_\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"nodeAddress_\",\"type\":\"address\"}],\"name\":\"addMintingOffer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"erc721Address_\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"rangeIndexes\",\"type\":\"uint256[]\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"percentage\",\"type\":\"uint256\"}],\"internalType\":\"struct feeSplits[][]\",\"name\":\"splits\",\"type\":\"tuple[][]\"},{\"internalType\":\"bool[]\",\"name\":\"visibility\",\"type\":\"bool[]\"},{\"internalType\":\"address\",\"name\":\"nodeAddress_\",\"type\":\"address\"}],\"name\":\"addMintingOfferBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"offerIndex_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenIndex_\",\"type\":\"uint256\"}],\"name\":\"buyMintingOffer\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"offerIndex_\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"tokenIndexes\",\"type\":\"uint256[]\"},{\"internalType\":\"address[]\",\"name\":\"recipients\",\"type\":\"address[]\"}],\"name\":\"buyMintingOfferBatch\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"offerIndex\",\"type\":\"uint256\"}],\"name\":\"getOfferInfo\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"erc721Address\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"nodeAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"percentage\",\"type\":\"uint256\"}],\"internalType\":\"struct feeSplits[]\",\"name\":\"fees\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"visible\",\"type\":\"bool\"}],\"internalType\":\"struct mintingOffer\",\"name\":\"mintOffer\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"rangeStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensAllowed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"mintableTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangePrice\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"rangeName\",\"type\":\"string\"}],\"internalType\":\"struct IRAIR721.range\",\"name\":\"rangeData\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"productIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"erc721Address\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"}],\"name\":\"getOfferInfoForAddress\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"offerIndex\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"erc721Address\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"nodeAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"percentage\",\"type\":\"uint256\"}],\"internalType\":\"struct feeSplits[]\",\"name\":\"fees\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"visible\",\"type\":\"bool\"}],\"internalType\":\"struct mintingOffer\",\"name\":\"mintOffer\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"rangeStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensAllowed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"mintableTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangePrice\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"rangeName\",\"type\":\"string\"}],\"internalType\":\"struct IRAIR721.range\",\"name\":\"rangeData\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"productIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"erc721Address\",\"type\":\"address\"}],\"name\":\"getOffersCountForAddress\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalOfferCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"mintingOfferId_\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"percentage\",\"type\":\"uint256\"}],\"internalType\":\"struct feeSplits[]\",\"name\":\"splits_\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"visible_\",\"type\":\"bool\"}],\"name\":\"updateMintingOffer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Juan M. Sanchez M.\",\"details\":\"Notice that this contract is inheriting from AccessControlAppStorageEnumerableMarket\",\"events\":{\"AddedMintingOffer(address,uint256,string,uint256,uint256,bool,uint256)\":{\"params\":{\"erc721Address\":\"Contains the address of the erc721\",\"feeSplitsLength\":\"Contains the visibility of the offer\",\"offerIndex\":\"contains the new status of the offer\",\"price\":\"Contains the price of the offer fot the token\",\"rangeIndex\":\"contains the id of the minted token\",\"rangeName\":\"contains the name of the range where the token is\"}}},\"kind\":\"dev\",\"methods\":{\"addMintingOffer(address,uint256,(address,uint256)[],bool,address)\":{\"params\":{\"erc721Address_\":\"Contains the address of the minter marketplace contract\",\"nodeAddress_\":\"Contains address of the node where the offer was placed\",\"rangeIndex_\":\"Contains the index location of the range where the offer will be placed\",\"splits\":\"Contains the shares and address to pay when the offer is succesfull \",\"visible_\":\"Contains a boolean to set if the offer is public or not \"}},\"addMintingOfferBatch(address,uint256[],(address,uint256)[][],bool[],address)\":{\"params\":{\"erc721Address_\":\"Contains the address of the minter marketplace contract\",\"nodeAddress_\":\"Contains address of the node where the offer was placed\",\"rangeIndexes\":\"Contains the collection of ranges where the offer will be placed\",\"splits\":\"Contains the shares and address to pay when the offer is succesfull \",\"visibility\":\"Contains a collection of booleans that set the offer as public or not \"}},\"buyMintingOffer(uint256,uint256)\":{\"details\":\"This function requires that the mintingOfferExists points to an valid offer  \",\"params\":{\"offerIndex_\":\"Contains index location of the offer\",\"tokenIndex_\":\"Contains the id of the tokens that we want to mint\"}},\"buyMintingOfferBatch(uint256,uint256[],address[])\":{\"details\":\"This function requires that the mintingOfferExists points to an valid offer  \",\"params\":{\"offerIndex_\":\"Contains index location of the offer\",\"recipients\":\"Contains the collection of addresses that will receive\",\"tokenIndexes\":\"Contains the collection of tokens that we want to mint\"}},\"getOfferInfo(uint256)\":{\"params\":{\"offerIndex\":\"Contains the facet addresses and function selectors\"},\"returns\":{\"mintOffer\":\"Show us the information about the minting offer \",\"productIndex\":\"Show us the indexed position for the product inside the range\",\"rangeData\":\"Show us the data about the selected range\"}},\"getOfferInfoForAddress(address,uint256)\":{\"params\":{\"erc721Address\":\"Contains the facet addresses and function selectors\",\"rangeIndex\":\"Contains the facet addresses and function selectors\"},\"returns\":{\"mintOffer\":\"Show us the information about the minting offer \",\"offerIndex\":\"Show us the indexed position of the offer\",\"productIndex\":\"Show us the indexed position for the product inside the range\",\"rangeData\":\"Show us the data about the selected range\"}},\"getOffersCountForAddress(address)\":{\"params\":{\"erc721Address\":\"Address of the ERC721 token\"},\"returns\":{\"_0\":\"uint with the total of offers\"}},\"getRoleAdmin(bytes32)\":{\"params\":{\"role\":\"Contains the role that we want to verify\"},\"returns\":{\"_0\":\"bytes that indicates if an account has or not an admin role\"}},\"getRoleMember(bytes32,uint256)\":{\"params\":{\"index\":\"Contains the indexed position to verify inside the role members list\",\"role\":\"Contains the role that we want to verify\"},\"returns\":{\"_0\":\"address that indicates the address indexed in that position\"}},\"getRoleMemberCount(bytes32)\":{\"params\":{\"role\":\"Contains the role that we want to verify\"},\"returns\":{\"_0\":\"uint256 that indicates the total accounts with that role\"}},\"getTotalOfferCount()\":{\"returns\":{\"_0\":\"uint with the total of offers\"}},\"grantRole(bytes32,address)\":{\"details\":\"This function is only available to an account with an Admin role\",\"params\":{\"account\":\"Contains the account that has the role we want to update\",\"role\":\"Contains the role that we want to grant\"}},\"hasRole(bytes32,address)\":{\"params\":{\"account\":\"Contains the account address thay we want to verify\",\"role\":\"Contains the role that we want to verify\"},\"returns\":{\"_0\":\"bool that indicates if an account has or not a role\"}},\"renounceRole(bytes32,address)\":{\"details\":\"Currently you can only renounce to your own roles\",\"params\":{\"account\":\"Contains the account that has the role we want to update\",\"role\":\"Contains the role to remove from our account\"}},\"revokeRole(bytes32,address)\":{\"details\":\"This function is only available to an account with an Admin role\",\"params\":{\"account\":\"Contains the account that has the role we want to update\",\"role\":\"Contains the role that we want to revoke\"}},\"updateMintingOffer(uint256,(address,uint256)[],bool)\":{\"details\":\"This function requires that the mintingOfferExists points to an valid offer  \",\"params\":{\"mintingOfferId_\":\"Contains index location of the minting offer\",\"splits_\":\"Contains the shares and address to pay when the offer is succesfull \",\"visible_\":\"Contains a boolean to set if the offer is public or not \"}}},\"title\":\"RAIR Diamond - Minting offers facet\",\"version\":1},\"userdoc\":{\"events\":{\"AddedMintingOffer(address,uint256,string,uint256,uint256,bool,uint256)\":{\"notice\":\"This event stores in the blockchain when a Minting Offer is Added\"},\"RoleAdminChanged(bytes32,bytes32,bytes32)\":{\"notice\":\"This event stores in the blockchain when we change an admin role\"},\"RoleGranted(bytes32,address,address)\":{\"notice\":\"This event stores in the blockchain when we grant a role\"},\"RoleRevoked(bytes32,address,address)\":{\"notice\":\"This event stores in the blockchain when we revoke a role\"}},\"kind\":\"user\",\"methods\":{\"addMintingOffer(address,uint256,(address,uint256)[],bool,address)\":{\"notice\":\"This function allow us to add a new minting offer\"},\"addMintingOfferBatch(address,uint256[],(address,uint256)[][],bool[],address)\":{\"notice\":\"This function allow us to create a group of minting offers in a single call\"},\"buyMintingOffer(uint256,uint256)\":{\"notice\":\"This function allow us to buy a minting offers\"},\"buyMintingOfferBatch(uint256,uint256[],address[])\":{\"notice\":\"This function allow us to buy a collection of minting offers\"},\"getOfferInfo(uint256)\":{\"notice\":\"This function show us the information of an selected minting offer\"},\"getOfferInfoForAddress(address,uint256)\":{\"notice\":\"This functions show us the information of an offer asociated to a marketplace\"},\"getOffersCountForAddress(address)\":{\"notice\":\"Returns the number of offers for a specific ERC721 address\"},\"getRoleAdmin(bytes32)\":{\"notice\":\"Allow us to check the admin role that contains a role\"},\"getRoleMember(bytes32,uint256)\":{\"notice\":\"Allow us to check the address of an indexed position for the role list\"},\"getRoleMemberCount(bytes32)\":{\"notice\":\"Allow us to check total members that has an selected role\"},\"getTotalOfferCount()\":{\"notice\":\"Returns the number of all the minting offers \"},\"grantRole(bytes32,address)\":{\"notice\":\"Allow us to grant a role to an account\"},\"hasRole(bytes32,address)\":{\"notice\":\"Allow us to check the if and account has a selected role\"},\"renounceRole(bytes32,address)\":{\"notice\":\"Allow us to renounce to a role\"},\"revokeRole(bytes32,address)\":{\"notice\":\"Allow us to revoke a role to an account\"},\"updateMintingOffer(uint256,(address,uint256)[],bool)\":{\"notice\":\"This function allow us to update the parameters of a minting offers\"}},\"notice\":\"Facet in charge of the minting offers in the RAIR Marketplace\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Marketplace/Facets/MintingOffersFacet.sol\":\"MintingOffersFacet\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/IAccessControl.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (access/IAccessControl.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev External interface of AccessControl declared to support ERC165 detection.\\n */\\ninterface IAccessControl {\\n    /**\\n     * @dev Emitted when `newAdminRole` is set as ``role``'s admin role, replacing `previousAdminRole`\\n     *\\n     * `DEFAULT_ADMIN_ROLE` is the starting admin for all roles, despite\\n     * {RoleAdminChanged} not being emitted signaling this.\\n     *\\n     * _Available since v3.1._\\n     */\\n    event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\n    /**\\n     * @dev Emitted when `account` is granted `role`.\\n     *\\n     * `sender` is the account that originated the contract call, an admin role\\n     * bearer except when using {AccessControl-_setupRole}.\\n     */\\n    event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    /**\\n     * @dev Emitted when `account` is revoked `role`.\\n     *\\n     * `sender` is the account that originated the contract call:\\n     *   - if using `revokeRole`, it is the admin role bearer\\n     *   - if using `renounceRole`, it is the role bearer (i.e. `account`)\\n     */\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    /**\\n     * @dev Returns `true` if `account` has been granted `role`.\\n     */\\n    function hasRole(bytes32 role, address account) external view returns (bool);\\n\\n    /**\\n     * @dev Returns the admin role that controls `role`. See {grantRole} and\\n     * {revokeRole}.\\n     *\\n     * To change a role's admin, use {AccessControl-_setRoleAdmin}.\\n     */\\n    function getRoleAdmin(bytes32 role) external view returns (bytes32);\\n\\n    /**\\n     * @dev Grants `role` to `account`.\\n     *\\n     * If `account` had not been already granted `role`, emits a {RoleGranted}\\n     * event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must have ``role``'s admin role.\\n     */\\n    function grantRole(bytes32 role, address account) external;\\n\\n    /**\\n     * @dev Revokes `role` from `account`.\\n     *\\n     * If `account` had been granted `role`, emits a {RoleRevoked} event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must have ``role``'s admin role.\\n     */\\n    function revokeRole(bytes32 role, address account) external;\\n\\n    /**\\n     * @dev Revokes `role` from the calling account.\\n     *\\n     * Roles are often managed via {grantRole} and {revokeRole}: this function's\\n     * purpose is to provide a mechanism for accounts to lose their privileges\\n     * if they are compromised (such as when a trusted device is misplaced).\\n     *\\n     * If the calling account had been granted `role`, emits a {RoleRevoked}\\n     * event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must be `account`.\\n     */\\n    function renounceRole(bytes32 role, address account) external;\\n}\\n\",\"keccak256\":\"0x59ce320a585d7e1f163cd70390a0ef2ff9cec832e2aa544293a00692465a7a57\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Strings.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.7.0) (utils/Strings.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev String operations.\\n */\\nlibrary Strings {\\n    bytes16 private constant _HEX_SYMBOLS = \\\"0123456789abcdef\\\";\\n    uint8 private constant _ADDRESS_LENGTH = 20;\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` decimal representation.\\n     */\\n    function toString(uint256 value) internal pure returns (string memory) {\\n        // Inspired by OraclizeAPI's implementation - MIT licence\\n        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol\\n\\n        if (value == 0) {\\n            return \\\"0\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 digits;\\n        while (temp != 0) {\\n            digits++;\\n            temp /= 10;\\n        }\\n        bytes memory buffer = new bytes(digits);\\n        while (value != 0) {\\n            digits -= 1;\\n            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));\\n            value /= 10;\\n        }\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return \\\"0x00\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 length = 0;\\n        while (temp != 0) {\\n            length++;\\n            temp >>= 8;\\n        }\\n        return toHexString(value, length);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.\\n     */\\n    function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {\\n        bytes memory buffer = new bytes(2 * length + 2);\\n        buffer[0] = \\\"0\\\";\\n        buffer[1] = \\\"x\\\";\\n        for (uint256 i = 2 * length + 1; i > 1; --i) {\\n            buffer[i] = _HEX_SYMBOLS[value & 0xf];\\n            value >>= 4;\\n        }\\n        require(value == 0, \\\"Strings: hex length insufficient\\\");\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts an `address` with fixed length of 20 bytes to its not checksummed ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(address addr) internal pure returns (string memory) {\\n        return toHexString(uint256(uint160(addr)), _ADDRESS_LENGTH);\\n    }\\n}\\n\",\"keccak256\":\"0xaf159a8b1923ad2a26d516089bceca9bdeaeacd04be50983ea00ba63070f08a3\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.7.0) (utils/structs/EnumerableSet.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Library for managing\\n * https://en.wikipedia.org/wiki/Set_(abstract_data_type)[sets] of primitive\\n * types.\\n *\\n * Sets have the following properties:\\n *\\n * - Elements are added, removed, and checked for existence in constant time\\n * (O(1)).\\n * - Elements are enumerated in O(n). No guarantees are made on the ordering.\\n *\\n * ```\\n * contract Example {\\n *     // Add the library methods\\n *     using EnumerableSet for EnumerableSet.AddressSet;\\n *\\n *     // Declare a set state variable\\n *     EnumerableSet.AddressSet private mySet;\\n * }\\n * ```\\n *\\n * As of v3.3.0, sets of type `bytes32` (`Bytes32Set`), `address` (`AddressSet`)\\n * and `uint256` (`UintSet`) are supported.\\n *\\n * [WARNING]\\n * ====\\n *  Trying to delete such a structure from storage will likely result in data corruption, rendering the structure unusable.\\n *  See https://github.com/ethereum/solidity/pull/11843[ethereum/solidity#11843] for more info.\\n *\\n *  In order to clean an EnumerableSet, you can either remove all elements one by one or create a fresh instance using an array of EnumerableSet.\\n * ====\\n */\\nlibrary EnumerableSet {\\n    // To implement this library for multiple types with as little code\\n    // repetition as possible, we write it in terms of a generic Set type with\\n    // bytes32 values.\\n    // The Set implementation uses private functions, and user-facing\\n    // implementations (such as AddressSet) are just wrappers around the\\n    // underlying Set.\\n    // This means that we can only create new EnumerableSets for types that fit\\n    // in bytes32.\\n\\n    struct Set {\\n        // Storage of set values\\n        bytes32[] _values;\\n        // Position of the value in the `values` array, plus 1 because index 0\\n        // means a value is not in the set.\\n        mapping(bytes32 => uint256) _indexes;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function _add(Set storage set, bytes32 value) private returns (bool) {\\n        if (!_contains(set, value)) {\\n            set._values.push(value);\\n            // The value is stored at length-1, but we add 1 to all indexes\\n            // and use 0 as a sentinel value\\n            set._indexes[value] = set._values.length;\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function _remove(Set storage set, bytes32 value) private returns (bool) {\\n        // We read and store the value's index to prevent multiple reads from the same storage slot\\n        uint256 valueIndex = set._indexes[value];\\n\\n        if (valueIndex != 0) {\\n            // Equivalent to contains(set, value)\\n            // To delete an element from the _values array in O(1), we swap the element to delete with the last one in\\n            // the array, and then remove the last element (sometimes called as 'swap and pop').\\n            // This modifies the order of the array, as noted in {at}.\\n\\n            uint256 toDeleteIndex = valueIndex - 1;\\n            uint256 lastIndex = set._values.length - 1;\\n\\n            if (lastIndex != toDeleteIndex) {\\n                bytes32 lastValue = set._values[lastIndex];\\n\\n                // Move the last value to the index where the value to delete is\\n                set._values[toDeleteIndex] = lastValue;\\n                // Update the index for the moved value\\n                set._indexes[lastValue] = valueIndex; // Replace lastValue's index to valueIndex\\n            }\\n\\n            // Delete the slot where the moved value was stored\\n            set._values.pop();\\n\\n            // Delete the index for the deleted slot\\n            delete set._indexes[value];\\n\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function _contains(Set storage set, bytes32 value) private view returns (bool) {\\n        return set._indexes[value] != 0;\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function _length(Set storage set) private view returns (uint256) {\\n        return set._values.length;\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function _at(Set storage set, uint256 index) private view returns (bytes32) {\\n        return set._values[index];\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function _values(Set storage set) private view returns (bytes32[] memory) {\\n        return set._values;\\n    }\\n\\n    // Bytes32Set\\n\\n    struct Bytes32Set {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _add(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _remove(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(Bytes32Set storage set, bytes32 value) internal view returns (bool) {\\n        return _contains(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(Bytes32Set storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(Bytes32Set storage set, uint256 index) internal view returns (bytes32) {\\n        return _at(set._inner, index);\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(Bytes32Set storage set) internal view returns (bytes32[] memory) {\\n        return _values(set._inner);\\n    }\\n\\n    // AddressSet\\n\\n    struct AddressSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(AddressSet storage set, address value) internal returns (bool) {\\n        return _add(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(AddressSet storage set, address value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(AddressSet storage set, address value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(AddressSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(AddressSet storage set, uint256 index) internal view returns (address) {\\n        return address(uint160(uint256(_at(set._inner, index))));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(AddressSet storage set) internal view returns (address[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        address[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n\\n    // UintSet\\n\\n    struct UintSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _add(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(UintSet storage set, uint256 value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function length(UintSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(UintSet storage set, uint256 index) internal view returns (uint256) {\\n        return uint256(_at(set._inner, index));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(UintSet storage set) internal view returns (uint256[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        uint256[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n}\\n\",\"keccak256\":\"0x5050943b32b6a8f282573d166b2e9d87ab7eb4dbba4ab6acf36ecb54fe6995e4\",\"license\":\"MIT\"},\"contracts/Marketplace/AppStorage.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport \\\"@openzeppelin/contracts/utils/Context.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/Strings.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\n\\nstruct feeSplits {\\n\\taddress recipient;\\n\\tuint percentage;\\n}\\n\\nstruct mintingOffer {\\n\\taddress erc721Address;\\n\\taddress nodeAddress;\\n\\tuint rangeIndex;\\n\\tfeeSplits[] fees;\\n\\tbool visible;\\n}\\n\\nstruct RoleData {\\n\\tmapping(address => bool) members;\\n\\tbytes32 adminRole;\\n}\\n\\nstruct AppStorage {\\n\\t// Access Control Enumerable\\n\\tmapping(bytes32 => RoleData) _roles;\\n\\tmapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;\\n\\t// App\\n\\tuint16 decimals;\\n\\tuint decimalPow;\\n\\tuint nodeFee;\\n\\tuint treasuryFee;\\n\\taddress treasuryAddress;\\n\\tmintingOffer[] mintingOffers;\\n\\tmapping(address => mapping(uint => uint)) addressToRangeOffer;\\n\\tmapping(address => uint[]) addressToOffers;\\n\\t// Always add new fields at the end of the struct, that way the structure can be upgraded\\n}\\n\\nlibrary LibAppStorage {\\n\\tfunction diamondStorage() internal pure\\treturns (AppStorage storage ds) {\\n\\t\\tassembly {\\n\\t\\t\\tds.slot := 0\\n\\t\\t}\\n\\t}\\n}\\n\\n/// @title \\tThis is contract to manage the access control of the app market\\n/// @notice You can use this contract to administrate roles of the app market\\n/// @dev \\tNotice that this contract is inheriting from Context\\ncontract AccessControlAppStorageEnumerableMarket is Context {\\n\\tusing EnumerableSet for EnumerableSet.AddressSet;\\n\\t\\n\\tAppStorage internal s;\\n\\n\\t/// @notice This event stores in the blockchain when we change an admin role\\n    /// @param  role Contains the role we want to update\\n    /// @param  previousAdminRole contains the previous status of the role\\n\\t/// @param  newAdminRole contains the new status of the role\\n\\tevent RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\t/// @notice This event stores in the blockchain when we grant a role\\n    /// @param  role Contains the role we want to update\\n    /// @param  account contains the address that we want to grant the role\\n\\t/// @param  sender contains the address that is changing the role of the account\\n\\tevent RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n\\t/// @notice This event stores in the blockchain when we revoke a role\\n    /// @param  role Contains the role we want to update\\n    /// @param  account contains the address that we want to revoke the role\\n\\t/// @param  sender contains the address that is changing the role of the account\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    modifier onlyRole(bytes32 role) {\\n        _checkRole(role, _msgSender());\\n        _;\\n    }\\n\\n\\t/// @notice Allow us to renounce to a role\\n\\t/// @dev \\tCurrently you can only renounce to your own roles\\n\\t/// @param \\trole Contains the role to remove from our account\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n    function renounceRole(bytes32 role, address account) public {\\n        require(account == _msgSender(), \\\"AccessControl: can only renounce roles for self\\\");\\n        _revokeRole(role, account);\\n    }\\n\\n\\t/// @notice Allow us to grant a role to an account\\n\\t/// @dev \\tThis function is only available to an account with an Admin role\\n\\t/// @param \\trole Contains the role that we want to grant\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n    function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _grantRole(role, account);\\n    }\\n\\n\\t/// @notice Allow us to revoke a role to an account\\n\\t/// @dev \\tThis function is only available to an account with an Admin role\\n\\t/// @param \\trole Contains the role that we want to revoke\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n    function revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _revokeRole(role, account);\\n    }\\n\\n\\t/// @notice Allow us to check the if and account has a selected role\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @param \\taccount Contains the account address thay we want to verify\\n    function _checkRole(bytes32 role, address account) internal view {\\n        if (!hasRole(role, account)) {\\n            revert(\\n                string(\\n                    abi.encodePacked(\\n                        \\\"AccessControl: account \\\",\\n                        Strings.toHexString(uint160(account), 20),\\n                        \\\" is missing role \\\",\\n                        Strings.toHexString(uint256(role), 32)\\n                    )\\n                )\\n            );\\n        }\\n    }\\n\\n\\t/// @notice Allow us to check the if and account has a selected role\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @param \\taccount Contains the account address thay we want to verify\\n\\t/// @return bool that indicates if an account has or not a role\\n\\tfunction hasRole(bytes32 role, address account) public view returns (bool) {\\n\\t\\treturn s._roles[role].members[account];\\n\\t}\\n\\n\\t/// @notice Allow us to check the admin role that contains a role\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @return bytes that indicates if an account has or not an admin role\\n\\tfunction getRoleAdmin(bytes32 role) public view returns (bytes32) {\\n\\t\\treturn s._roles[role].adminRole;\\n\\t}\\n\\n\\t/// @notice Allow us to check the address of an indexed position for the role list\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @param \\tindex Contains the indexed position to verify inside the role members list\\n\\t/// @return address that indicates the address indexed in that position\\n\\tfunction getRoleMember(bytes32 role, uint256 index) public view returns (address) {\\n\\t\\treturn s._roleMembers[role].at(index);\\n\\t}\\n\\t\\n\\t/// @notice Allow us to check total members that has an selected role\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @return uint256 that indicates the total accounts with that role\\n\\tfunction getRoleMemberCount(bytes32 role) public view returns (uint256) {\\n\\t\\treturn s._roleMembers[role].length();\\n\\t}\\n\\n\\t/// @notice Allow us to modify a rol and set it as an admin role\\n\\t/// @param \\trole Contains the role that we want to modify\\n\\t/// @param \\tadminRole Contains the admin role that we want to set\\n\\tfunction _setRoleAdmin(bytes32 role, bytes32 adminRole) internal {\\n\\t\\tbytes32 previousAdminRole = getRoleAdmin(role);\\n\\t\\ts._roles[role].adminRole = adminRole;\\n\\t\\temit RoleAdminChanged(role, previousAdminRole, adminRole);\\n\\t}\\n\\n\\t/// @notice Allow us to grant a role to an account\\n\\t/// @param \\trole Contains the role that we want to grant\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n\\tfunction _grantRole(bytes32 role, address account) internal {\\n\\t\\tif (!hasRole(role, account)) {\\n\\t\\t\\ts._roles[role].members[account] = true;\\n\\t\\t\\temit RoleGranted(role, account, _msgSender());\\n\\t\\t\\ts._roleMembers[role].add(account);\\n\\t\\t}\\n\\t}\\n\\n\\t/// @notice Allow us to revoke a role to an account\\n\\t/// @param \\trole Contains the role that we want to revoke\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n\\tfunction _revokeRole(bytes32 role, address account) internal {\\n\\t\\tif (hasRole(role, account)) {\\n\\t\\t\\ts._roles[role].members[account] = false;\\n\\t\\t\\temit RoleRevoked(role, account, _msgSender());\\n\\t\\t\\ts._roleMembers[role].remove(account);\\n\\t\\t}\\n\\t}\\n}\",\"keccak256\":\"0x05a4602b07ca0d9a35c77bded1c6b173b4bbe6036b6ae9d77f16e4830c426487\",\"license\":\"GPL-3.0\"},\"contracts/Marketplace/Facets/MintingOffersFacet.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport '@openzeppelin/contracts/access/IAccessControl.sol';\\nimport '../AppStorage.sol';\\n\\ninterface IRAIR721 {\\n\\tstruct range {\\n\\t\\tuint rangeStart;\\n\\t\\tuint rangeEnd;\\n\\t\\tuint tokensAllowed;\\n\\t\\tuint mintableTokens;\\n\\t\\tuint lockedTokens;\\n\\t\\tuint rangePrice;\\n\\t\\tstring rangeName;\\n\\t}\\n\\n\\t/// @notice This function returns the information of the selected range\\n\\t/// @param rangeId \\t\\t  Contains the specific range that we want to check\\n\\t/// @return data\\t\\t  Contains the data inside the range\\n\\t/// @return productIndex  Contains the index of the products for the range\\n\\tfunction rangeInfo(uint rangeId) external view returns(range memory data, uint productIndex);\\n\\t/// @notice This function allow us to mint token from a specific range \\n\\t/// @param to Contains the address that will mint the token\\n    /// @param rangeId Contains the range identification where we want to mint\\n\\t/// @param indexInRange Contains the index inside the range that we want to use for minting \\n\\tfunction mintFromRange(address to, uint rangeId, uint indexInRange) external;\\n}\\n\\n\\n/// @title  RAIR Diamond - Minting offers facet\\n/// @notice Facet in charge of the minting offers in the RAIR Marketplace\\n/// @author Juan M. Sanchez M.\\n/// @dev \\tNotice that this contract is inheriting from AccessControlAppStorageEnumerableMarket\\ncontract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {\\n\\n\\t/// @notice This event stores in the blockchain when a Minting Offer is Added\\n    /// @param  erc721Address Contains the address of the erc721\\n    /// @param  rangeIndex contains the id of the minted token\\n\\t/// @param  rangeName contains the name of the range where the token is\\n\\t/// @param  price Contains the price of the offer fot the token\\n    /// @param  feeSplitsLength contains the previous status of the offer\\n    /// @param  feeSplitsLength Contains the visibility of the offer\\n\\t/// @param  offerIndex contains the new status of the offer\\n\\tevent AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, bool visible, uint offerIndex);\\n\\tevent UpdatedMintingOffer(address erc721Address, uint rangeIndex, uint feeSplitsLength, bool visible, uint offerIndex);\\n\\t\\n\\tevent MintedToken(address erc721Address, uint rangeIndex, uint tokenIndex, address buyer);\\n\\n\\tmodifier checkCreatorRole(address erc721Address) {\\n\\t\\trequire(\\n\\t\\t\\tIAccessControl(erc721Address).hasRole(bytes32(0x00), address(msg.sender)) ||\\n\\t\\t\\tIAccessControl(erc721Address).hasRole(bytes32(keccak256(\\\"CREATOR\\\")), address(msg.sender)),\\n\\t\\t\\t\\\"Minter Marketplace: Sender isn't the creator of the contract!\\\");\\n\\t\\t_;\\n\\t}\\n\\n\\tmodifier checkMinterRole(address erc721Address) {\\n\\t\\trequire(hasMinterRole(erc721Address), \\\"Minter Marketplace: This Marketplace isn't a Minter!\\\");\\n\\t\\t_;\\n\\t}\\n\\n\\tmodifier mintingOfferExists(uint offerIndex_) {\\n\\t\\trequire(s.mintingOffers.length > offerIndex_, \\\"Minting Marketplace: Minting Offer doesn't exist\\\");\\n\\t\\t_;\\n\\t}\\n\\n\\tmodifier offerDoesntExist(address erc721Address, uint rangeIndex) {\\n\\t\\trequire(s.addressToRangeOffer[erc721Address][rangeIndex] == 0, \\\"Minter Marketplace: Range already has an offer\\\");\\n\\t\\tif (s.addressToRangeOffer[erc721Address][rangeIndex] == 0 && s.mintingOffers.length > 0) {\\n\\t\\t\\trequire(s.mintingOffers[0].erc721Address != erc721Address ||\\n\\t\\t\\t\\t\\t\\ts.mintingOffers[0].rangeIndex != rangeIndex,\\n\\t\\t\\t\\t\\t\\t\\t\\\"Minter Marketplace: Range already has an offer\\\");\\n\\t\\t}\\n\\t\\t_;\\n\\t}\\n\\n\\t/// @notice Utility function to verify that the recipient of a custom splits ISN'T a contract\\n\\t/// @dev \\tThis isn't a foolproof function, a contract running code in it's constructor has a code size of 0\\n\\t/// @param \\taddr \\tAddress to verify\\n\\t/// @return bool that indicates if the address is a contract or not\\n\\tfunction isContract(address addr) internal view returns (bool) {\\n\\t\\tuint size;\\n\\t\\tassembly { size := extcodesize(addr) }\\n\\t\\treturn size > 0;\\n\\t}\\n\\n\\t/// @notice Utility function to verify if the Marketplace has a MINTER role\\n\\t/// @param  erc721Address \\tAddress of the ERC721 token with AccessControl\\n\\t/// @return bool that indicates if the marketplace has a `MINTER` role or not\\n\\tfunction hasMinterRole(address erc721Address) internal view returns (bool) {\\n\\t\\treturn IAccessControl(erc721Address).hasRole(bytes32(keccak256(\\\"MINTER\\\")), address(this));\\n\\t}\\n\\n\\t/// @notice Returns the number of offers for a specific ERC721 address\\n\\t/// @param  erc721Address \\tAddress of the ERC721 token\\n\\t/// @return uint with the total of offers\\n\\tfunction getOffersCountForAddress(address erc721Address) public view returns (uint) {\\n\\t\\treturn s.addressToOffers[erc721Address].length;\\n\\t}\\n\\n\\t/// @notice Returns the number of all the minting offers \\n\\t/// @return uint with the total of offers\\n\\tfunction getTotalOfferCount() public view returns (uint) {\\n\\t\\treturn s.mintingOffers.length;\\n\\t}\\n\\n\\t/// @notice This functions show us the information of an offer asociated to a marketplace\\n\\t/// @param erc721Address Contains the facet addresses and function selectors\\n    /// @param rangeIndex Contains the facet addresses and function selectors\\n\\t/// @return offerIndex Show us the indexed position of the offer\\n\\t/// @return mintOffer Show us the information about the minting offer \\n\\t/// @return rangeData Show us the data about the selected range\\n\\t/// @return productIndex Show us the indexed position for the product inside the range\\n\\tfunction getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (uint offerIndex, mintingOffer memory mintOffer, IRAIR721.range memory rangeData, uint productIndex) {\\n\\t\\tmintingOffer memory selectedOffer = s.mintingOffers[s.addressToOffers[erc721Address][rangeIndex]];\\n\\t\\t(rangeData, productIndex) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);\\n\\t\\tofferIndex = s.addressToOffers[erc721Address][rangeIndex];\\n\\t\\tmintOffer = selectedOffer;\\n\\t}\\n\\n\\t/// @notice This function show us the information of an selected minting offer\\n\\t/// @param \\t\\tofferIndex Contains the facet addresses and function selectors\\n\\t/// @return \\tmintOffer Show us the information about the minting offer \\n\\t/// @return \\trangeData Show us the data about the selected range\\n\\t/// @return \\tproductIndex Show us the indexed position for the product inside the range\\n\\tfunction getOfferInfo(uint offerIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData, uint productIndex) {\\n\\t\\tmintingOffer memory selectedOffer = s.mintingOffers[offerIndex];\\n\\t\\tmintOffer = selectedOffer;\\n\\t\\t(rangeData, productIndex) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);\\n\\t}\\n\\n\\t/// @notice This function allow us to add a new minting offer\\n\\t/// @param erc721Address_ Contains the address of the minter marketplace contract\\n\\t/// @param rangeIndex_ Contains the index location of the range where the offer will be placed\\n\\t/// @param splits Contains the shares and address to pay when the offer is succesfull \\n\\t/// @param visible_ Contains a boolean to set if the offer is public or not \\n\\t/// @param nodeAddress_ Contains address of the node where the offer was placed\\n\\tfunction addMintingOffer(\\n\\t\\taddress erc721Address_,\\n\\t\\tuint rangeIndex_,\\n\\t\\tfeeSplits[] calldata splits,\\n\\t\\tbool visible_,\\n\\t\\taddress nodeAddress_\\n\\t) external {\\n\\t\\t_addMintingOffer(erc721Address_, rangeIndex_, splits, visible_, nodeAddress_);\\n\\t}\\n\\n\\t/// @notice This function allow us to create a group of minting offers in a single call\\n\\t/// @param erc721Address_ Contains the address of the minter marketplace contract\\n\\t/// @param rangeIndexes Contains the collection of ranges where the offer will be placed\\n\\t/// @param splits Contains the shares and address to pay when the offer is succesfull \\n\\t/// @param visibility Contains a collection of booleans that set the offer as public or not \\n\\t/// @param nodeAddress_ Contains address of the node where the offer was placed\\n\\tfunction addMintingOfferBatch(\\n\\t\\taddress erc721Address_,\\n\\t\\tuint[] calldata rangeIndexes,\\n\\t\\tfeeSplits[][] calldata splits,\\n\\t\\tbool[] calldata visibility,\\n\\t\\taddress nodeAddress_\\n\\t) external {\\n\\t\\trequire(rangeIndexes.length > 0, \\\"Minter Marketplace: No offers sent!\\\");\\n\\t\\trequire(rangeIndexes.length == visibility.length && splits.length == visibility.length, \\\"Minter Marketplace: Arrays should have the same length\\\");\\n\\t\\tfor (uint i = 0; i < rangeIndexes.length; i++) {\\n\\t\\t\\t_addMintingOffer(erc721Address_, rangeIndexes[i], splits[i], visibility[i], nodeAddress_);\\n\\t\\t}\\n\\t}\\n\\n\\t/// @notice This function allow us to add a new minting offer\\n\\t/// @dev \\tThis function requires that account has the role of `CREATOR`\\n\\t/// @dev \\tThis function requires that the marketplace is defined as MINTER\\n\\t/// @dev \\tThis function requires that the range is available to create a new offer\\n\\t/// @param erc721Address_ Contains the address of the minter marketplace contract\\n\\t/// @param rangeIndex_ Contains the index location of the range where the offer will be placed\\n\\t/// @param splits Contains the shares and address to pay when the offer is succesfull \\n\\t/// @param visible_ Contains a boolean to set if the offer is public or not \\n\\t/// @param nodeAddress_ Contains address of the node where the offer was placed\\n\\tfunction _addMintingOffer(\\n\\t\\taddress erc721Address_,\\n\\t\\tuint rangeIndex_,\\n\\t\\tfeeSplits[] memory splits,\\n\\t\\tbool visible_,\\n\\t\\taddress nodeAddress_\\n\\t) internal checkCreatorRole(erc721Address_) checkMinterRole(erc721Address_) offerDoesntExist(erc721Address_, rangeIndex_) {\\n\\t\\tmintingOffer storage newOffer = s.mintingOffers.push();\\n\\t\\t(IRAIR721.range memory rangeData,) = IRAIR721(erc721Address_).rangeInfo(rangeIndex_);\\n\\t\\trequire(rangeData.mintableTokens > 0, \\\"Minter Marketplace: Offer doesn't have tokens available!\\\");\\n\\t\\tnewOffer.erc721Address = erc721Address_;\\n\\t\\tnewOffer.nodeAddress = nodeAddress_;\\n\\t\\tnewOffer.rangeIndex = rangeIndex_;\\n\\t\\tnewOffer.visible = visible_;\\n\\t\\tif (rangeData.rangePrice > 0) {\\n\\t\\t\\tuint totalPercentage = s.nodeFee + s.treasuryFee;\\n\\t\\t\\tuint totalFunds = rangeData.rangePrice * totalPercentage / (100 * s.decimalPow);\\n\\t\\t\\tfor (uint i = 0; i < splits.length; i++) {\\n\\t\\t\\t\\trequire(!isContract(splits[i].recipient), \\\"Minter Marketplace: Contracts can't be recipients of the splits\\\");\\n\\t\\t\\t\\tuint splitForPercentage = rangeData.rangePrice * splits[i].percentage / (100 * s.decimalPow);\\n\\t\\t\\t\\trequire(\\n\\t\\t\\t\\t\\tsplitForPercentage > 0,\\n\\t\\t\\t\\t\\t\\\"Minter Marketplace: A percentage on the array will result in an empty transfer\\\"\\n\\t\\t\\t\\t);\\n\\t\\t\\t\\ttotalFunds += splitForPercentage;\\n\\t\\t\\t\\ttotalPercentage += splits[i].percentage;\\n\\t\\t\\t\\tnewOffer.fees.push(splits[i]);\\n\\t\\t\\t}\\n\\t\\t\\trequire(totalPercentage == (100 * s.decimalPow), \\\"Minter Marketplace: Fees don't add up to 100%\\\");\\n\\t\\t\\trequire(totalFunds == rangeData.rangePrice, \\\"Minter Marketplace: Current fee configuration will result in missing funds\\\");\\n\\t\\t}\\n\\t\\ts.addressToOffers[erc721Address_].push(s.mintingOffers.length - 1);\\n\\t\\ts.addressToRangeOffer[erc721Address_][rangeIndex_] = s.mintingOffers.length - 1;\\n\\t\\temit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, visible_, s.mintingOffers.length - 1);\\n\\t}\\n\\n\\t/// @notice This function allow us to update the parameters of a minting offers\\n\\t/// @dev \\tThis function requires that the mintingOfferExists points to an valid offer  \\n\\t/// @param \\tmintingOfferId_  Contains index location of the minting offer\\n\\t/// @param \\tsplits_ \\t\\t Contains the shares and address to pay when the offer is succesfull \\n\\t/// @param \\tvisible_    \\t Contains a boolean to set if the offer is public or not \\n\\tfunction updateMintingOffer (\\n\\t\\tuint mintingOfferId_,\\n\\t\\tfeeSplits[] memory splits_,\\n\\t\\tbool visible_\\n\\t) external mintingOfferExists(mintingOfferId_) {\\n\\t\\t_updateMintingOffer(mintingOfferId_, splits_, visible_);\\n\\t}\\n\\n\\t/// @notice This function allow us to update the parameters of a minting offers \\n\\t/// @param \\tmintingOfferId_  Contains index location of the minting offer\\n\\t/// @param \\tsplits_ \\t\\t Contains the shares and address to pay when the offer is succesfull \\n\\t/// @param \\tvisible_         Contains a boolean to set if the offer is public or not \\n\\tfunction _updateMintingOffer (\\n\\t\\tuint mintingOfferId_,\\n\\t\\tfeeSplits[] memory splits_,\\n\\t\\tbool visible_\\n\\t) internal {\\n\\t\\tmintingOffer storage selectedOffer = s.mintingOffers[mintingOfferId_];\\n\\t\\trequire(\\n\\t\\t\\tIAccessControl(selectedOffer.erc721Address).hasRole(bytes32(keccak256(\\\"CREATOR\\\")), address(msg.sender)),\\n\\t\\t\\t\\\"Minter Marketplace: Sender isn't the creator of the contract!\\\"\\n\\t\\t);\\n\\t\\trequire(\\n\\t\\t\\thasMinterRole(selectedOffer.erc721Address),\\n\\t\\t\\t\\\"Minter Marketplace: This Marketplace isn't a Minter!\\\"\\n\\t\\t);\\n\\t\\t(IRAIR721.range memory rangeData,) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);\\n\\t\\tuint totalPercentage = s.nodeFee + s.treasuryFee;\\n\\t\\tdelete selectedOffer.fees;\\n\\t\\tfor (uint i = 0; i < splits_.length; i++) {\\n\\t\\t\\trequire(!isContract(splits_[i].recipient), \\\"Minter Marketplace: Contracts can't be recipients of fees\\\");\\n\\t\\t\\trequire(\\n\\t\\t\\t\\trangeData.rangePrice * splits_[i].percentage / (100 * s.decimalPow) > 0,\\n\\t\\t\\t\\t\\\"Minter Marketplace: A percentage on the array will result in an empty transfer\\\"\\n\\t\\t\\t);\\n\\t\\t\\ttotalPercentage += splits_[i].percentage;\\n\\t\\t\\tselectedOffer.fees.push(splits_[i]);\\n\\t\\t}\\n\\t\\trequire(totalPercentage == (100 * s.decimalPow), \\\"Minter Marketplace: Fees don't add up to 100%\\\");\\n\\t\\tselectedOffer.visible = visible_;\\n\\t\\temit UpdatedMintingOffer(\\n\\t\\t\\tselectedOffer.erc721Address,\\n\\t\\t\\tselectedOffer.rangeIndex,\\n\\t\\t\\tselectedOffer.fees.length,\\n\\t\\t\\tselectedOffer.visible,\\n\\t\\t\\tmintingOfferId_\\n\\t\\t);\\n\\t}\\n\\n\\t/// @notice This function allow us to buy a minting offers\\n\\t/// @dev \\tThis function requires that the mintingOfferExists points to an valid offer  \\n\\t/// @param \\tofferIndex_  Contains index location of the offer\\n\\t/// @param \\ttokenIndex_  Contains the id of the tokens that we want to mint\\n\\tfunction buyMintingOffer(uint offerIndex_, uint tokenIndex_) public mintingOfferExists(offerIndex_) payable {\\n\\t\\tmintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];\\n\\t\\trequire(selectedOffer.visible, \\\"Minter Marketplace: This offer is not ready to be sold!\\\");\\n\\t\\trequire(hasMinterRole(selectedOffer.erc721Address), \\\"Minter Marketplace: This Marketplace isn't a Minter!\\\");\\n\\t\\t(IRAIR721.range memory rangeData,) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);\\n\\t\\tif (rangeData.rangePrice > 0) {\\n\\t\\t\\trequire(rangeData.rangePrice <= msg.value, \\\"Minter Marketplace: Insufficient funds!\\\");\\n\\t\\t\\tif (msg.value - rangeData.rangePrice > 0) {\\n\\t\\t\\t\\tpayable(msg.sender).transfer(msg.value - rangeData.rangePrice);\\n\\t\\t\\t}\\n\\t\\t\\tuint totalTransferred = rangeData.rangePrice * (s.nodeFee + s.treasuryFee) / (100 * s.decimalPow);\\n\\t\\t\\tpayable(selectedOffer.nodeAddress).transfer(rangeData.rangePrice * s.nodeFee / (100 * s.decimalPow));\\n\\t\\t\\tpayable(s.treasuryAddress).transfer(rangeData.rangePrice * s.treasuryFee / (100 * s.decimalPow));\\n\\t\\t\\tuint auxMoneyToBeSent;\\n\\t\\t\\tfor (uint i = 0; i < selectedOffer.fees.length; i++) {\\n\\t\\t\\t\\tauxMoneyToBeSent = rangeData.rangePrice * selectedOffer.fees[i].percentage / (100 * s.decimalPow);\\n\\t\\t\\t\\ttotalTransferred += auxMoneyToBeSent;\\n\\t\\t\\t\\tpayable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);\\n\\t\\t\\t}\\n\\t\\t\\trequire(totalTransferred == rangeData.rangePrice, \\\"Minter Marketplace: Error transferring funds!\\\");\\n\\t\\t}\\n\\t\\t_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndex_, msg.sender);\\n\\t}\\n\\n\\t/// @notice This function allow us to buy a collection of minting offers\\n\\t/// @dev \\tThis function requires that the mintingOfferExists points to an valid offer  \\n\\t/// @param \\tofferIndex_  \\tContains index location of the offer\\n\\t/// @param \\ttokenIndexes\\tContains the collection of tokens that we want to mint\\n\\t/// @param \\trecipients \\t\\tContains the collection of addresses that will receive\\n\\tfunction buyMintingOfferBatch(\\n\\t\\tuint offerIndex_,\\n\\t\\tuint[] calldata tokenIndexes,\\n\\t\\taddress[] calldata recipients\\t\\t\\n\\t) external mintingOfferExists(offerIndex_) payable {\\n\\t\\trequire(tokenIndexes.length > 0, \\\"Minter Marketplace: No tokens sent!\\\");\\n\\t\\trequire(tokenIndexes.length == recipients.length, \\\"Minter Marketplace: Tokens and Addresses should have the same length\\\");\\n\\t\\tmintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];\\n\\t\\trequire(selectedOffer.visible, \\\"Minter Marketplace: This offer is not ready to be sold!\\\");\\n\\t\\trequire(hasMinterRole(selectedOffer.erc721Address), \\\"Minter Marketplace: This Marketplace isn't a Minter!\\\");\\n\\t\\t(IRAIR721.range memory rangeData,) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);\\n\\t\\tuint i;\\n\\t\\tif (rangeData.rangePrice > 0) {\\n\\t\\t\\trequire((rangeData.rangePrice * tokenIndexes.length) <= msg.value, \\\"Minter Marketplace: Insufficient funds!\\\");\\n\\t\\t\\tif (msg.value - (rangeData.rangePrice * tokenIndexes.length) > 0) {\\n\\t\\t\\t\\tpayable(msg.sender).transfer(msg.value - (rangeData.rangePrice * tokenIndexes.length));\\n\\t\\t\\t}\\n\\t\\t\\tuint totalTransferred = (rangeData.rangePrice * tokenIndexes.length) * (s.nodeFee + s.treasuryFee) / (100 * s.decimalPow);\\n\\t\\t\\tpayable(selectedOffer.nodeAddress).transfer((rangeData.rangePrice * tokenIndexes.length) * s.nodeFee / (100 * s.decimalPow));\\n\\t\\t\\tpayable(s.treasuryAddress).transfer((rangeData.rangePrice * tokenIndexes.length) * s.treasuryFee / (100 * s.decimalPow));\\n\\t\\t\\tuint auxMoneyToBeSent;\\n\\t\\t\\tfor (i = 0; i < selectedOffer.fees.length; i++) {\\n\\t\\t\\t\\tauxMoneyToBeSent = (rangeData.rangePrice * tokenIndexes.length) * selectedOffer.fees[i].percentage / (100 * s.decimalPow);\\n\\t\\t\\t\\ttotalTransferred += auxMoneyToBeSent;\\n\\t\\t\\t\\tpayable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);\\n\\t\\t\\t}\\n\\t\\t\\trequire(totalTransferred == (rangeData.rangePrice * tokenIndexes.length), \\\"Minter Marketplace: Error transferring funds!\\\");\\n\\t\\t}\\n\\t\\tfor (i = 0; i < tokenIndexes.length; i++) {\\n\\t\\t\\t_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndexes[i], recipients[i]);\\n\\t\\t}\\n\\t}\\n\\n\\t/// @notice This function is in charge of buying a desired minting offer \\n\\t/// @param erc721Address  Contains the address where the offer is located\\n\\t/// @param rangeIndex\\t  Contains the index location of the range where the token is \\n\\t/// @param tokenIndex  \\t  Contains the index location of the token to buy \\n\\t/// @param recipient   \\t  Contains the address of the recipient of the token\\n\\tfunction _buyMintingOffer(address erc721Address, uint rangeIndex, uint tokenIndex, address recipient) internal {\\n\\t\\tIRAIR721(erc721Address).mintFromRange(recipient, rangeIndex, tokenIndex);\\n\\t\\temit MintedToken(erc721Address, rangeIndex, tokenIndex, recipient);\\n\\t}\\n}\",\"keccak256\":\"0x1febdaa9615686dc3cac94b8366c95ec510fac65343ca4dcfcf43275effadc06\",\"license\":\"GPL-3.0\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061329a806100206000396000f3fe6080604052600436106100f35760003560e01c80638bcccedb1161008a578063ca15c87311610059578063ca15c873146102bf578063d0b922ed146102df578063d547741f146102ff578063df275c6a1461031f57600080fd5b80638bcccedb146102225780639010d07c1461023757806391d148541461026f5780639c3ac84b1461029f57600080fd5b806334dbcd4a116100c657806334dbcd4a146101ac57806336568abe146101bf57806382ec0663146101df5780638b0e2e13146101f257600080fd5b8063248a9ca3146100f85780632a1da9821461013b5780632a8512541461016a5780632f2ff15d1461018c575b600080fd5b34801561010457600080fd5b506101286101133660046125aa565b60009081526020819052604090206001015490565b6040519081526020015b60405180910390f35b34801561014757600080fd5b5061015b6101563660046125aa565b610355565b60405161013293929190612704565b34801561017657600080fd5b5061018a6101853660046127a2565b61051e565b005b34801561019857600080fd5b5061018a6101a736600461285d565b6106dc565b61018a6101ba366004612889565b610707565b3480156101cb57600080fd5b5061018a6101da36600461285d565b610c65565b61018a6101ed366004612903565b610ce3565b3480156101fe57600080fd5b5061021261020d366004612925565b6110b0565b604051610132949392919061294f565b34801561022e57600080fd5b50600754610128565b34801561024357600080fd5b50610257610252366004612903565b6112e6565b6040516001600160a01b039091168152602001610132565b34801561027b57600080fd5b5061028f61028a36600461285d565b611307565b6040519015158152602001610132565b3480156102ab57600080fd5b5061018a6102ba3660046129a5565b611330565b3480156102cb57600080fd5b506101286102da3660046125aa565b611397565b3480156102eb57600080fd5b5061018a6102fa366004612b1c565b6113ae565b34801561030b57600080fd5b5061018a61031a36600461285d565b6113e2565b34801561032b57600080fd5b5061012861033a366004612beb565b6001600160a01b031660009081526009602052604090205490565b6040805160a08101825260008082526020820181905291810182905260608082015260808101919091526103bf6040518060e00160405280600081526020016000815260200160008152602001600081526020016000815260200160008152602001606081525090565b600080600060070185815481106103d8576103d8612c06565b600091825260208083206040805160a081018252600590940290910180546001600160a01b039081168552600182015416848401526002810154848301526003810180548351818602810186019094528084529495919460608701949192909184015b82821015610483576000848152602090819020604080518082019091526002850290910180546001600160a01b0316825260019081015482840152908352909201910161043b565b5050509082525060049182015460ff161515602090910152815160408084015190516364cc98df60e11b8152928301529195508592506001600160a01b039091169063c99931be90602401600060405180830381865afa1580156104eb573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526105139190810190612c80565b949690955092505050565b8561057c5760405162461bcd60e51b815260206004820152602360248201527f4d696e746572204d61726b6574706c6163653a204e6f206f66666572732073656044820152626e742160e81b60648201526084015b60405180910390fd5b858214801561058a57508382145b6105f55760405162461bcd60e51b815260206004820152603660248201527f4d696e746572204d61726b6574706c6163653a204172726179732073686f756c6044820152750c840d0c2ecca40e8d0ca40e6c2daca40d8cadccee8d60531b6064820152608401610573565b60005b868110156106d1576106bf8989898481811061061657610616612c06565b9050602002013588888581811061062f5761062f612c06565b90506020028101906106419190612d33565b808060200260200160405190810160405280939291908181526020016000905b8282101561068d5761067e60408302860136819003810190612d7d565b81526020019060010190610661565b50505050508787868181106106a4576106a4612c06565b90506020020160208101906106b99190612d99565b86611408565b806106c981612dcc565b9150506105f8565b505050505050505050565b6000828152602081905260409020600101546106f88133611b64565b6107028383611bc8565b505050565b6007548590811061072a5760405162461bcd60e51b815260040161057390612de5565b836107835760405162461bcd60e51b815260206004820152602360248201527f4d696e746572204d61726b6574706c6163653a204e6f20746f6b656e732073656044820152626e742160e81b6064820152608401610573565b8382146108065760405162461bcd60e51b8152602060048201526044602482018190527f4d696e746572204d61726b6574706c6163653a20546f6b656e7320616e642041908201527f64647265737365732073686f756c642068617665207468652073616d65206c656064820152630dccee8d60e31b608482015260a401610573565b600080600701878154811061081d5761081d612c06565b60009182526020909120600590910201600481015490915060ff166108545760405162461bcd60e51b815260040161057390612e35565b8054610868906001600160a01b0316611c60565b6108845760405162461bcd60e51b815260040161057390612e92565b805460028201546040516364cc98df60e11b815260048101919091526000916001600160a01b03169063c99931be90602401600060405180830381865afa1580156108d3573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526108fb9190810190612c80565b5090506000808260a001511115610bed5760a0820151349061091e908990612ee6565b111561093c5760405162461bcd60e51b815260040161057390612efd565b60a082015160009061094f908990612ee6565b6109599034612f44565b11156109a95760a082015133906108fc90610975908a90612ee6565b61097f9034612f44565b6040518115909202916000818181858888f193505050501580156109a7573d6000803e3d6000fd5b505b6003546000906109ba906064612ee6565b6005546004546109ca9190612f57565b60a08501516109da908b90612ee6565b6109e49190612ee6565b6109ee9190612f6a565b60018501546003549192506001600160a01b0316906108fc90610a12906064612ee6565b60045460a0870151610a25908d90612ee6565b610a2f9190612ee6565b610a399190612f6a565b6040518115909202916000818181858888f19350505050158015610a61573d6000803e3d6000fd5b506006546003546001600160a01b03909116906108fc90610a83906064612ee6565b60055460a0870151610a96908d90612ee6565b610aa09190612ee6565b610aaa9190612f6a565b6040518115909202916000818181858888f19350505050158015610ad2573d6000803e3d6000fd5b5060008092505b6003850154831015610bbc57600354610af3906064612ee6565b856003018481548110610b0857610b08612c06565b9060005260206000209060020201600101548b8b90508660a00151610b2d9190612ee6565b610b379190612ee6565b610b419190612f6a565b9050610b4d8183612f57565b9150846003018381548110610b6457610b64612c06565b600091825260208220600290910201546040516001600160a01b039091169183156108fc02918491818181858888f19350505050158015610ba9573d6000803e3d6000fd5b5082610bb481612dcc565b935050610ad9565b60a0840151610bcc908a90612ee6565b8214610bea5760405162461bcd60e51b815260040161057390612f8c565b50505b5060005b868110156106d15782546002840154610c53916001600160a01b0316908a8a85818110610c2057610c20612c06565b90506020020135898986818110610c3957610c39612c06565b9050602002016020810190610c4e9190612beb565b611cf1565b80610c5d81612dcc565b915050610bf1565b6001600160a01b0381163314610cd55760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152608401610573565b610cdf8282611db2565b5050565b60075482908110610d065760405162461bcd60e51b815260040161057390612de5565b6000806007018481548110610d1d57610d1d612c06565b60009182526020909120600590910201600481015490915060ff16610d545760405162461bcd60e51b815260040161057390612e35565b8054610d68906001600160a01b0316611c60565b610d845760405162461bcd60e51b815260040161057390612e92565b805460028201546040516364cc98df60e11b815260048101919091526000916001600160a01b03169063c99931be90602401600060405180830381865afa158015610dd3573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052610dfb9190810190612c80565b5060a08101519091501561108d57348160a001511115610e2d5760405162461bcd60e51b815260040161057390612efd565b60008160a0015134610e3f9190612f44565b1115610e845760a081015133906108fc90610e5a9034612f44565b6040518115909202916000818181858888f19350505050158015610e82573d6000803e3d6000fd5b505b600354600090610e95906064612ee6565b600554600454610ea59190612f57565b8360a00151610eb49190612ee6565b610ebe9190612f6a565b60018401546003549192506001600160a01b0316906108fc90610ee2906064612ee6565b60045460a0860151610ef49190612ee6565b610efe9190612f6a565b6040518115909202916000818181858888f19350505050158015610f26573d6000803e3d6000fd5b506006546003546001600160a01b03909116906108fc90610f48906064612ee6565b60055460a0860151610f5a9190612ee6565b610f649190612f6a565b6040518115909202916000818181858888f19350505050158015610f8c573d6000803e3d6000fd5b506000805b600385015481101561106657600354610fab906064612ee6565b856003018281548110610fc057610fc0612c06565b9060005260206000209060020201600101548560a00151610fe19190612ee6565b610feb9190612f6a565b9150610ff78284612f57565b925084600301818154811061100e5761100e612c06565b600091825260208220600290910201546040516001600160a01b039091169184156108fc02918591818181858888f19350505050158015611053573d6000803e3d6000fd5b508061105e81612dcc565b915050610f91565b508260a00151821461108a5760405162461bcd60e51b815260040161057390612f8c565b50505b815460028301546110a9916001600160a01b0316908633611cf1565b5050505050565b6040805160a081018252600080825260208201819052918101829052606080820152608081018290526111196040518060e00160405280600081526020016000815260200160008152602001600081526020016000815260200160008152602001606081525090565b6001600160a01b0385166000908152600960205260408120805482916007918890811061114857611148612c06565b90600052602060002001548154811061116357611163612c06565b600091825260208083206040805160a081018252600590940290910180546001600160a01b039081168552600182015416848401526002810154848301526003810180548351818602810186019094528084529495919460608701949192909184015b8282101561120e576000848152602090819020604080518082019091526002850290910180546001600160a01b031682526001908101548284015290835290920191016111c6565b5050509082525060049182015460ff161515602090910152815160408084015190516364cc98df60e11b8152928301529192506001600160a01b039091169063c99931be90602401600060405180830381865afa158015611273573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261129b9190810190612c80565b6001600160a01b0389166000908152600960205260409020805492955090935090879081106112cc576112cc612c06565b906000526020600020015494508093505092959194509250565b60008281526001602052604081206112fe9083611e2b565b90505b92915050565b6000918252602082815260408084206001600160a01b0393909316845291905290205460ff1690565b61138f86868686808060200260200160405190810160405280939291908181526020016000905b828210156113835761137460408302860136819003810190612d7d565b81526020019060010190611357565b50505050508585611408565b505050505050565b600081815260016020526040812061130190611e37565b600754839081106113d15760405162461bcd60e51b815260040161057390612de5565b6113dc848484611e41565b50505050565b6000828152602081905260409020600101546113fe8133611b64565b6107028383611db2565b604051632474521560e21b81526000600482015233602482015285906001600160a01b038216906391d1485490604401602060405180830381865afa158015611455573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906114799190612fd9565b8061150d5750604051632474521560e21b81527f3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db660048201523360248201526001600160a01b038216906391d1485490604401602060405180830381865afa1580156114e9573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061150d9190612fd9565b6115295760405162461bcd60e51b815260040161057390612ff6565b8561153381611c60565b61154f5760405162461bcd60e51b815260040161057390612e92565b6001600160a01b038716600090815260086020908152604080832089845290915290205487908790156115945760405162461bcd60e51b815260040161057390613053565b6001600160a01b03821660009081526008602090815260408083208484529091529020541580156115c6575060075415155b1561165757816001600160a01b031660006007016000815481106115ec576115ec612c06565b60009182526020909120600590910201546001600160a01b031614158061163b575080600060070160008154811061162657611626612c06565b90600052602060002090600502016002015414155b6116575760405162461bcd60e51b815260040161057390613053565b6007805460018101825560009182526040516364cc98df60e11b815260059091027fa66cc928b5edb82af9bd49922954155ab7b0942694bea4ce44661d9a8736c6880191906001600160a01b038c169063c99931be906116bf908d9060040190815260200190565b600060405180830381865afa1580156116dc573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526117049190810190612c80565b50905060008160600151116117815760405162461bcd60e51b815260206004820152603860248201527f4d696e746572204d61726b6574706c6163653a204f6666657220646f65736e2760448201527f74206861766520746f6b656e7320617661696c61626c652100000000000000006064820152608401610573565b81546001600160a01b03808d166001600160a01b0319928316178455600184018054918a1691909216179055600282018a905560048201805489151560ff1990911617905560a081015115611a87576005546004546000916117e291612f57565b6003549091506000906117f6906064612ee6565b828460a001516118069190612ee6565b6118109190612f6a565b905060005b8b518110156119cb576118458c828151811061183357611833612c06565b6020026020010151600001513b151590565b156118b85760405162461bcd60e51b815260206004820152603f60248201527f4d696e746572204d61726b6574706c6163653a20436f6e74726163747320636160448201527f6e277420626520726563697069656e7473206f66207468652073706c697473006064820152608401610573565b6003546000906118c9906064612ee6565b8d83815181106118db576118db612c06565b6020026020010151602001518660a001516118f69190612ee6565b6119009190612f6a565b9050600081116119225760405162461bcd60e51b8152600401610573906130a1565b61192c8184612f57565b92508c828151811061194057611940612c06565b602002602001015160200151846119579190612f57565b9350856003018d838151811061196f5761196f612c06565b602090810291909101810151825460018082018555600094855293839020825160029092020180546001600160a01b0319166001600160a01b0390921691909117815591015191015550806119c381612dcc565b915050611815565b506003546119da906064612ee6565b82146119f85760405162461bcd60e51b815260040161057390613115565b8260a001518114611a845760405162461bcd60e51b815260206004820152604a60248201527f4d696e746572204d61726b6574706c6163653a2043757272656e74206665652060448201527f636f6e66696775726174696f6e2077696c6c20726573756c7420696e206d697360648201526973696e672066756e647360b01b608482015260a401610573565b50505b6001600160a01b038b166000908152600960205260409020600754611aae90600190612f44565b815460018181018455600093845260209093200155600754611ad09190612f44565b6001600160a01b038c1660009081526008602090815260408083208e845290915290205560c081015160a08201518a516007547f2dbafc19fe6977f2e69a6f341c1cbeae0bcb75da97b336801f1bb6b7ecd27a29938f938f9391929091908e90611b3c90600190612f44565b604051611b4f9796959493929190613162565b60405180910390a15050505050505050505050565b611b6e8282611307565b610cdf57611b86816001600160a01b0316601461222a565b611b9183602061222a565b604051602001611ba29291906131af565b60408051601f198184030181529082905262461bcd60e51b825261057391600401613224565b611bd28282611307565b610cdf576000828152602081815260408083206001600160a01b03851684529091529020805460ff19166001179055611c083390565b6001600160a01b0316816001600160a01b0316837f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a4600082815260016020526040902061070290826123c6565b604051632474521560e21b81527ff0887ba65ee2024ea881d91b74c2450ef19e1557f03bed3ea9f16b037cbe2dc960048201523060248201526000906001600160a01b038316906391d1485490604401602060405180830381865afa158015611ccd573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906113019190612fd9565b60405163e766224360e01b81526001600160a01b038281166004830152602482018590526044820184905285169063e766224390606401600060405180830381600087803b158015611d4257600080fd5b505af1158015611d56573d6000803e3d6000fd5b5050604080516001600160a01b038881168252602082018890528183018790528516606082015290517f0dd9e6b4baafd1387e6f21dbe1004e4f6240e1abd6f95d63234578da7d40469b9350908190036080019150a150505050565b611dbc8282611307565b15610cdf576000828152602081815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a4600082815260016020526040902061070290826123db565b60006112fe83836123f0565b6000611301825490565b6000806007018481548110611e5857611e58612c06565b600091825260209091206005909102018054604051632474521560e21b81527f3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db660048201523360248201529192506001600160a01b0316906391d1485490604401602060405180830381865afa158015611ed6573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611efa9190612fd9565b611f165760405162461bcd60e51b815260040161057390612ff6565b8054611f2a906001600160a01b0316611c60565b611f465760405162461bcd60e51b815260040161057390612e92565b805460028201546040516364cc98df60e11b815260048101919091526000916001600160a01b03169063c99931be90602401600060405180830381865afa158015611f95573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052611fbd9190810190612c80565b50600554600454919250600091611fd49190612f57565b9050611fe460038401600061255c565b60005b85518110156121795761200586828151811061183357611833612c06565b156120785760405162461bcd60e51b815260206004820152603960248201527f4d696e746572204d61726b6574706c6163653a20436f6e74726163747320636160448201527f6e277420626520726563697069656e7473206f662066656573000000000000006064820152608401610573565b600354600090612089906064612ee6565b87838151811061209b5761209b612c06565b6020026020010151602001518560a001516120b69190612ee6565b6120c09190612f6a565b116120dd5760405162461bcd60e51b8152600401610573906130a1565b8581815181106120ef576120ef612c06565b602002602001015160200151826121069190612f57565b91508360030186828151811061211e5761211e612c06565b602090810291909101810151825460018082018555600094855293839020825160029092020180546001600160a01b0319166001600160a01b039092169190911781559101519101558061217181612dcc565b915050611fe7565b50600354612188906064612ee6565b81146121a65760405162461bcd60e51b815260040161057390613115565b60048301805460ff1916851515908117909155835460028501546003860154604080516001600160a01b03909416845260208401929092529082015260ff90911615156060820152608081018790527ff9aa099c7d91e9bd33886c159620aeba7e2d9bd460bf94282df788a0af93787f9060a00160405180910390a1505050505050565b60606000612239836002612ee6565b612244906002612f57565b67ffffffffffffffff81111561225c5761225c612a55565b6040519080825280601f01601f191660200182016040528015612286576020820181803683370190505b509050600360fc1b816000815181106122a1576122a1612c06565b60200101906001600160f81b031916908160001a905350600f60fb1b816001815181106122d0576122d0612c06565b60200101906001600160f81b031916908160001a90535060006122f4846002612ee6565b6122ff906001612f57565b90505b6001811115612377576f181899199a1a9b1b9c1cb0b131b232b360811b85600f166010811061233357612333612c06565b1a60f81b82828151811061234957612349612c06565b60200101906001600160f81b031916908160001a90535060049490941c9361237081613237565b9050612302565b5083156112fe5760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610573565b60006112fe836001600160a01b03841661241a565b60006112fe836001600160a01b038416612469565b600082600001828154811061240757612407612c06565b9060005260206000200154905092915050565b600081815260018301602052604081205461246157508154600181810184556000848152602080822090930184905584548482528286019093526040902091909155611301565b506000611301565b6000818152600183016020526040812054801561255257600061248d600183612f44565b85549091506000906124a190600190612f44565b90508181146125065760008660000182815481106124c1576124c1612c06565b90600052602060002001549050808760000184815481106124e4576124e4612c06565b6000918252602080832090910192909255918252600188019052604090208390555b85548690806125175761251761324e565b600190038181906000526020600020016000905590558560010160008681526020019081526020016000206000905560019350505050611301565b6000915050611301565b508054600082556002029060005260206000209081019061257d9190612580565b50565b5b808211156125a65780546001600160a01b031916815560006001820155600201612581565b5090565b6000602082840312156125bc57600080fd5b5035919050565b600060a0830160018060a01b0380845116855260208181860151168187015260408086015181880152606086015160a0606089015284815180875260c08a0191508483019650600092505b808310156126395786518051871683528501518583015295840195600192909201919083019061260e565b506080880151955061264f60808a018715159052565b98975050505050505050565b60005b8381101561267657818101518382015260200161265e565b50506000910152565b6000815180845261269781602086016020860161265b565b601f01601f19169290920160200192915050565b805182526020810151602083015260408101516040830152606081015160608301526080810151608083015260a081015160a0830152600060c082015160e060c08501526126fc60e085018261267f565b949350505050565b60608152600061271760608301866125c3565b828103602084015261272981866126ab565b915050826040830152949350505050565b80356001600160a01b038116811461275157600080fd5b919050565b60008083601f84011261276857600080fd5b50813567ffffffffffffffff81111561278057600080fd5b6020830191508360208260051b850101111561279b57600080fd5b9250929050565b60008060008060008060008060a0898b0312156127be57600080fd5b6127c78961273a565b9750602089013567ffffffffffffffff808211156127e457600080fd5b6127f08c838d01612756565b909950975060408b013591508082111561280957600080fd5b6128158c838d01612756565b909750955060608b013591508082111561282e57600080fd5b5061283b8b828c01612756565b909450925061284e905060808a0161273a565b90509295985092959890939650565b6000806040838503121561287057600080fd5b823591506128806020840161273a565b90509250929050565b6000806000806000606086880312156128a157600080fd5b85359450602086013567ffffffffffffffff808211156128c057600080fd5b6128cc89838a01612756565b909650945060408801359150808211156128e557600080fd5b506128f288828901612756565b969995985093965092949392505050565b6000806040838503121561291657600080fd5b50508035926020909101359150565b6000806040838503121561293857600080fd5b6129418361273a565b946020939093013593505050565b84815260806020820152600061296860808301866125c3565b828103604084015261297a81866126ab565b91505082606083015295945050505050565b801515811461257d57600080fd5b80356127518161298c565b60008060008060008060a087890312156129be57600080fd5b6129c78761273a565b955060208701359450604087013567ffffffffffffffff808211156129eb57600080fd5b818901915089601f8301126129ff57600080fd5b813581811115612a0e57600080fd5b8a60208260061b8501011115612a2357600080fd5b602083019650809550505050612a3b6060880161299a565b9150612a496080880161273a565b90509295509295509295565b634e487b7160e01b600052604160045260246000fd5b60405160e0810167ffffffffffffffff81118282101715612a8e57612a8e612a55565b60405290565b604051601f8201601f1916810167ffffffffffffffff81118282101715612abd57612abd612a55565b604052919050565b600060408284031215612ad757600080fd5b6040516040810181811067ffffffffffffffff82111715612afa57612afa612a55565b604052905080612b098361273a565b8152602083013560208201525092915050565b600080600060608486031215612b3157600080fd5b8335925060208085013567ffffffffffffffff80821115612b5157600080fd5b818701915087601f830112612b6557600080fd5b813581811115612b7757612b77612a55565b612b85848260051b01612a94565b818152848101925060069190911b830184019089821115612ba557600080fd5b928401925b81841015612bce57612bbc8a85612ac5565b83528483019250604084019350612baa565b8096505050505050612be26040850161299a565b90509250925092565b600060208284031215612bfd57600080fd5b6112fe8261273a565b634e487b7160e01b600052603260045260246000fd5b600082601f830112612c2d57600080fd5b815167ffffffffffffffff811115612c4757612c47612a55565b612c5a601f8201601f1916602001612a94565b818152846020838601011115612c6f57600080fd5b6126fc82602083016020870161265b565b60008060408385031215612c9357600080fd5b825167ffffffffffffffff80821115612cab57600080fd5b9084019060e08287031215612cbf57600080fd5b612cc7612a6b565b825181526020830151602082015260408301516040820152606083015160608201526080830151608082015260a083015160a082015260c083015182811115612d0f57600080fd5b612d1b88828601612c1c565b60c08301525060209590950151949694955050505050565b6000808335601e19843603018112612d4a57600080fd5b83018035915067ffffffffffffffff821115612d6557600080fd5b6020019150600681901b360382131561279b57600080fd5b600060408284031215612d8f57600080fd5b6112fe8383612ac5565b600060208284031215612dab57600080fd5b81356112fe8161298c565b634e487b7160e01b600052601160045260246000fd5b600060018201612dde57612dde612db6565b5060010190565b60208082526030908201527f4d696e74696e67204d61726b6574706c6163653a204d696e74696e67204f666660408201526f195c88191bd95cdb89dd08195e1a5cdd60821b606082015260800190565b60208082526037908201527f4d696e746572204d61726b6574706c6163653a2054686973206f66666572206960408201527f73206e6f7420726561647920746f20626520736f6c6421000000000000000000606082015260800190565b60208082526034908201527f4d696e746572204d61726b6574706c6163653a2054686973204d61726b6574706040820152736c6163652069736e27742061204d696e7465722160601b606082015260800190565b808202811582820484141761130157611301612db6565b60208082526027908201527f4d696e746572204d61726b6574706c6163653a20496e73756666696369656e746040820152662066756e64732160c81b606082015260800190565b8181038181111561130157611301612db6565b8082018082111561130157611301612db6565b600082612f8757634e487b7160e01b600052601260045260246000fd5b500490565b6020808252602d908201527f4d696e746572204d61726b6574706c6163653a204572726f72207472616e736660408201526c657272696e672066756e64732160981b606082015260800190565b600060208284031215612feb57600080fd5b81516112fe8161298c565b6020808252603d908201527f4d696e746572204d61726b6574706c6163653a2053656e6465722069736e277460408201527f207468652063726561746f72206f662074686520636f6e747261637421000000606082015260800190565b6020808252602e908201527f4d696e746572204d61726b6574706c6163653a2052616e676520616c7265616460408201526d3c903430b99030b71037b33332b960911b606082015260800190565b6020808252604e908201527f4d696e746572204d61726b6574706c6163653a20412070657263656e7461676560408201527f206f6e207468652061727261792077696c6c20726573756c7420696e20616e2060608201526d32b6b83a3c903a3930b739b332b960911b608082015260a00190565b6020808252602d908201527f4d696e746572204d61726b6574706c6163653a204665657320646f6e2774206160408201526c646420757020746f203130302560981b606082015260800190565b60018060a01b038816815286602082015260e06040820152600061318960e083018861267f565b606083019690965250608081019390935290151560a083015260c0909101529392505050565b7f416363657373436f6e74726f6c3a206163636f756e74200000000000000000008152600083516131e781601785016020880161265b565b7001034b99036b4b9b9b4b733903937b6329607d1b601791840191820152835161321881602884016020880161265b565b01602801949350505050565b6020815260006112fe602083018461267f565b60008161324657613246612db6565b506000190190565b634e487b7160e01b600052603160045260246000fdfea26469706673582212200b983cb1a176e68589eff57e461e46ea7431f5f174a590ab2924a70c135033c064736f6c63430008110033",
+  "deployedBytecode": "0x6080604052600436106100f35760003560e01c80638bcccedb1161008a578063ca15c87311610059578063ca15c873146102bf578063d0b922ed146102df578063d547741f146102ff578063df275c6a1461031f57600080fd5b80638bcccedb146102225780639010d07c1461023757806391d148541461026f5780639c3ac84b1461029f57600080fd5b806334dbcd4a116100c657806334dbcd4a146101ac57806336568abe146101bf57806382ec0663146101df5780638b0e2e13146101f257600080fd5b8063248a9ca3146100f85780632a1da9821461013b5780632a8512541461016a5780632f2ff15d1461018c575b600080fd5b34801561010457600080fd5b506101286101133660046125aa565b60009081526020819052604090206001015490565b6040519081526020015b60405180910390f35b34801561014757600080fd5b5061015b6101563660046125aa565b610355565b60405161013293929190612704565b34801561017657600080fd5b5061018a6101853660046127a2565b61051e565b005b34801561019857600080fd5b5061018a6101a736600461285d565b6106dc565b61018a6101ba366004612889565b610707565b3480156101cb57600080fd5b5061018a6101da36600461285d565b610c65565b61018a6101ed366004612903565b610ce3565b3480156101fe57600080fd5b5061021261020d366004612925565b6110b0565b604051610132949392919061294f565b34801561022e57600080fd5b50600754610128565b34801561024357600080fd5b50610257610252366004612903565b6112e6565b6040516001600160a01b039091168152602001610132565b34801561027b57600080fd5b5061028f61028a36600461285d565b611307565b6040519015158152602001610132565b3480156102ab57600080fd5b5061018a6102ba3660046129a5565b611330565b3480156102cb57600080fd5b506101286102da3660046125aa565b611397565b3480156102eb57600080fd5b5061018a6102fa366004612b1c565b6113ae565b34801561030b57600080fd5b5061018a61031a36600461285d565b6113e2565b34801561032b57600080fd5b5061012861033a366004612beb565b6001600160a01b031660009081526009602052604090205490565b6040805160a08101825260008082526020820181905291810182905260608082015260808101919091526103bf6040518060e00160405280600081526020016000815260200160008152602001600081526020016000815260200160008152602001606081525090565b600080600060070185815481106103d8576103d8612c06565b600091825260208083206040805160a081018252600590940290910180546001600160a01b039081168552600182015416848401526002810154848301526003810180548351818602810186019094528084529495919460608701949192909184015b82821015610483576000848152602090819020604080518082019091526002850290910180546001600160a01b0316825260019081015482840152908352909201910161043b565b5050509082525060049182015460ff161515602090910152815160408084015190516364cc98df60e11b8152928301529195508592506001600160a01b039091169063c99931be90602401600060405180830381865afa1580156104eb573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526105139190810190612c80565b949690955092505050565b8561057c5760405162461bcd60e51b815260206004820152602360248201527f4d696e746572204d61726b6574706c6163653a204e6f206f66666572732073656044820152626e742160e81b60648201526084015b60405180910390fd5b858214801561058a57508382145b6105f55760405162461bcd60e51b815260206004820152603660248201527f4d696e746572204d61726b6574706c6163653a204172726179732073686f756c6044820152750c840d0c2ecca40e8d0ca40e6c2daca40d8cadccee8d60531b6064820152608401610573565b60005b868110156106d1576106bf8989898481811061061657610616612c06565b9050602002013588888581811061062f5761062f612c06565b90506020028101906106419190612d33565b808060200260200160405190810160405280939291908181526020016000905b8282101561068d5761067e60408302860136819003810190612d7d565b81526020019060010190610661565b50505050508787868181106106a4576106a4612c06565b90506020020160208101906106b99190612d99565b86611408565b806106c981612dcc565b9150506105f8565b505050505050505050565b6000828152602081905260409020600101546106f88133611b64565b6107028383611bc8565b505050565b6007548590811061072a5760405162461bcd60e51b815260040161057390612de5565b836107835760405162461bcd60e51b815260206004820152602360248201527f4d696e746572204d61726b6574706c6163653a204e6f20746f6b656e732073656044820152626e742160e81b6064820152608401610573565b8382146108065760405162461bcd60e51b8152602060048201526044602482018190527f4d696e746572204d61726b6574706c6163653a20546f6b656e7320616e642041908201527f64647265737365732073686f756c642068617665207468652073616d65206c656064820152630dccee8d60e31b608482015260a401610573565b600080600701878154811061081d5761081d612c06565b60009182526020909120600590910201600481015490915060ff166108545760405162461bcd60e51b815260040161057390612e35565b8054610868906001600160a01b0316611c60565b6108845760405162461bcd60e51b815260040161057390612e92565b805460028201546040516364cc98df60e11b815260048101919091526000916001600160a01b03169063c99931be90602401600060405180830381865afa1580156108d3573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526108fb9190810190612c80565b5090506000808260a001511115610bed5760a0820151349061091e908990612ee6565b111561093c5760405162461bcd60e51b815260040161057390612efd565b60a082015160009061094f908990612ee6565b6109599034612f44565b11156109a95760a082015133906108fc90610975908a90612ee6565b61097f9034612f44565b6040518115909202916000818181858888f193505050501580156109a7573d6000803e3d6000fd5b505b6003546000906109ba906064612ee6565b6005546004546109ca9190612f57565b60a08501516109da908b90612ee6565b6109e49190612ee6565b6109ee9190612f6a565b60018501546003549192506001600160a01b0316906108fc90610a12906064612ee6565b60045460a0870151610a25908d90612ee6565b610a2f9190612ee6565b610a399190612f6a565b6040518115909202916000818181858888f19350505050158015610a61573d6000803e3d6000fd5b506006546003546001600160a01b03909116906108fc90610a83906064612ee6565b60055460a0870151610a96908d90612ee6565b610aa09190612ee6565b610aaa9190612f6a565b6040518115909202916000818181858888f19350505050158015610ad2573d6000803e3d6000fd5b5060008092505b6003850154831015610bbc57600354610af3906064612ee6565b856003018481548110610b0857610b08612c06565b9060005260206000209060020201600101548b8b90508660a00151610b2d9190612ee6565b610b379190612ee6565b610b419190612f6a565b9050610b4d8183612f57565b9150846003018381548110610b6457610b64612c06565b600091825260208220600290910201546040516001600160a01b039091169183156108fc02918491818181858888f19350505050158015610ba9573d6000803e3d6000fd5b5082610bb481612dcc565b935050610ad9565b60a0840151610bcc908a90612ee6565b8214610bea5760405162461bcd60e51b815260040161057390612f8c565b50505b5060005b868110156106d15782546002840154610c53916001600160a01b0316908a8a85818110610c2057610c20612c06565b90506020020135898986818110610c3957610c39612c06565b9050602002016020810190610c4e9190612beb565b611cf1565b80610c5d81612dcc565b915050610bf1565b6001600160a01b0381163314610cd55760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152608401610573565b610cdf8282611db2565b5050565b60075482908110610d065760405162461bcd60e51b815260040161057390612de5565b6000806007018481548110610d1d57610d1d612c06565b60009182526020909120600590910201600481015490915060ff16610d545760405162461bcd60e51b815260040161057390612e35565b8054610d68906001600160a01b0316611c60565b610d845760405162461bcd60e51b815260040161057390612e92565b805460028201546040516364cc98df60e11b815260048101919091526000916001600160a01b03169063c99931be90602401600060405180830381865afa158015610dd3573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052610dfb9190810190612c80565b5060a08101519091501561108d57348160a001511115610e2d5760405162461bcd60e51b815260040161057390612efd565b60008160a0015134610e3f9190612f44565b1115610e845760a081015133906108fc90610e5a9034612f44565b6040518115909202916000818181858888f19350505050158015610e82573d6000803e3d6000fd5b505b600354600090610e95906064612ee6565b600554600454610ea59190612f57565b8360a00151610eb49190612ee6565b610ebe9190612f6a565b60018401546003549192506001600160a01b0316906108fc90610ee2906064612ee6565b60045460a0860151610ef49190612ee6565b610efe9190612f6a565b6040518115909202916000818181858888f19350505050158015610f26573d6000803e3d6000fd5b506006546003546001600160a01b03909116906108fc90610f48906064612ee6565b60055460a0860151610f5a9190612ee6565b610f649190612f6a565b6040518115909202916000818181858888f19350505050158015610f8c573d6000803e3d6000fd5b506000805b600385015481101561106657600354610fab906064612ee6565b856003018281548110610fc057610fc0612c06565b9060005260206000209060020201600101548560a00151610fe19190612ee6565b610feb9190612f6a565b9150610ff78284612f57565b925084600301818154811061100e5761100e612c06565b600091825260208220600290910201546040516001600160a01b039091169184156108fc02918591818181858888f19350505050158015611053573d6000803e3d6000fd5b508061105e81612dcc565b915050610f91565b508260a00151821461108a5760405162461bcd60e51b815260040161057390612f8c565b50505b815460028301546110a9916001600160a01b0316908633611cf1565b5050505050565b6040805160a081018252600080825260208201819052918101829052606080820152608081018290526111196040518060e00160405280600081526020016000815260200160008152602001600081526020016000815260200160008152602001606081525090565b6001600160a01b0385166000908152600960205260408120805482916007918890811061114857611148612c06565b90600052602060002001548154811061116357611163612c06565b600091825260208083206040805160a081018252600590940290910180546001600160a01b039081168552600182015416848401526002810154848301526003810180548351818602810186019094528084529495919460608701949192909184015b8282101561120e576000848152602090819020604080518082019091526002850290910180546001600160a01b031682526001908101548284015290835290920191016111c6565b5050509082525060049182015460ff161515602090910152815160408084015190516364cc98df60e11b8152928301529192506001600160a01b039091169063c99931be90602401600060405180830381865afa158015611273573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261129b9190810190612c80565b6001600160a01b0389166000908152600960205260409020805492955090935090879081106112cc576112cc612c06565b906000526020600020015494508093505092959194509250565b60008281526001602052604081206112fe9083611e2b565b90505b92915050565b6000918252602082815260408084206001600160a01b0393909316845291905290205460ff1690565b61138f86868686808060200260200160405190810160405280939291908181526020016000905b828210156113835761137460408302860136819003810190612d7d565b81526020019060010190611357565b50505050508585611408565b505050505050565b600081815260016020526040812061130190611e37565b600754839081106113d15760405162461bcd60e51b815260040161057390612de5565b6113dc848484611e41565b50505050565b6000828152602081905260409020600101546113fe8133611b64565b6107028383611db2565b604051632474521560e21b81526000600482015233602482015285906001600160a01b038216906391d1485490604401602060405180830381865afa158015611455573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906114799190612fd9565b8061150d5750604051632474521560e21b81527f3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db660048201523360248201526001600160a01b038216906391d1485490604401602060405180830381865afa1580156114e9573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061150d9190612fd9565b6115295760405162461bcd60e51b815260040161057390612ff6565b8561153381611c60565b61154f5760405162461bcd60e51b815260040161057390612e92565b6001600160a01b038716600090815260086020908152604080832089845290915290205487908790156115945760405162461bcd60e51b815260040161057390613053565b6001600160a01b03821660009081526008602090815260408083208484529091529020541580156115c6575060075415155b1561165757816001600160a01b031660006007016000815481106115ec576115ec612c06565b60009182526020909120600590910201546001600160a01b031614158061163b575080600060070160008154811061162657611626612c06565b90600052602060002090600502016002015414155b6116575760405162461bcd60e51b815260040161057390613053565b6007805460018101825560009182526040516364cc98df60e11b815260059091027fa66cc928b5edb82af9bd49922954155ab7b0942694bea4ce44661d9a8736c6880191906001600160a01b038c169063c99931be906116bf908d9060040190815260200190565b600060405180830381865afa1580156116dc573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526117049190810190612c80565b50905060008160600151116117815760405162461bcd60e51b815260206004820152603860248201527f4d696e746572204d61726b6574706c6163653a204f6666657220646f65736e2760448201527f74206861766520746f6b656e7320617661696c61626c652100000000000000006064820152608401610573565b81546001600160a01b03808d166001600160a01b0319928316178455600184018054918a1691909216179055600282018a905560048201805489151560ff1990911617905560a081015115611a87576005546004546000916117e291612f57565b6003549091506000906117f6906064612ee6565b828460a001516118069190612ee6565b6118109190612f6a565b905060005b8b518110156119cb576118458c828151811061183357611833612c06565b6020026020010151600001513b151590565b156118b85760405162461bcd60e51b815260206004820152603f60248201527f4d696e746572204d61726b6574706c6163653a20436f6e74726163747320636160448201527f6e277420626520726563697069656e7473206f66207468652073706c697473006064820152608401610573565b6003546000906118c9906064612ee6565b8d83815181106118db576118db612c06565b6020026020010151602001518660a001516118f69190612ee6565b6119009190612f6a565b9050600081116119225760405162461bcd60e51b8152600401610573906130a1565b61192c8184612f57565b92508c828151811061194057611940612c06565b602002602001015160200151846119579190612f57565b9350856003018d838151811061196f5761196f612c06565b602090810291909101810151825460018082018555600094855293839020825160029092020180546001600160a01b0319166001600160a01b0390921691909117815591015191015550806119c381612dcc565b915050611815565b506003546119da906064612ee6565b82146119f85760405162461bcd60e51b815260040161057390613115565b8260a001518114611a845760405162461bcd60e51b815260206004820152604a60248201527f4d696e746572204d61726b6574706c6163653a2043757272656e74206665652060448201527f636f6e66696775726174696f6e2077696c6c20726573756c7420696e206d697360648201526973696e672066756e647360b01b608482015260a401610573565b50505b6001600160a01b038b166000908152600960205260409020600754611aae90600190612f44565b815460018181018455600093845260209093200155600754611ad09190612f44565b6001600160a01b038c1660009081526008602090815260408083208e845290915290205560c081015160a08201518a516007547f2dbafc19fe6977f2e69a6f341c1cbeae0bcb75da97b336801f1bb6b7ecd27a29938f938f9391929091908e90611b3c90600190612f44565b604051611b4f9796959493929190613162565b60405180910390a15050505050505050505050565b611b6e8282611307565b610cdf57611b86816001600160a01b0316601461222a565b611b9183602061222a565b604051602001611ba29291906131af565b60408051601f198184030181529082905262461bcd60e51b825261057391600401613224565b611bd28282611307565b610cdf576000828152602081815260408083206001600160a01b03851684529091529020805460ff19166001179055611c083390565b6001600160a01b0316816001600160a01b0316837f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a4600082815260016020526040902061070290826123c6565b604051632474521560e21b81527ff0887ba65ee2024ea881d91b74c2450ef19e1557f03bed3ea9f16b037cbe2dc960048201523060248201526000906001600160a01b038316906391d1485490604401602060405180830381865afa158015611ccd573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906113019190612fd9565b60405163e766224360e01b81526001600160a01b038281166004830152602482018590526044820184905285169063e766224390606401600060405180830381600087803b158015611d4257600080fd5b505af1158015611d56573d6000803e3d6000fd5b5050604080516001600160a01b038881168252602082018890528183018790528516606082015290517f0dd9e6b4baafd1387e6f21dbe1004e4f6240e1abd6f95d63234578da7d40469b9350908190036080019150a150505050565b611dbc8282611307565b15610cdf576000828152602081815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a4600082815260016020526040902061070290826123db565b60006112fe83836123f0565b6000611301825490565b6000806007018481548110611e5857611e58612c06565b600091825260209091206005909102018054604051632474521560e21b81527f3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db660048201523360248201529192506001600160a01b0316906391d1485490604401602060405180830381865afa158015611ed6573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611efa9190612fd9565b611f165760405162461bcd60e51b815260040161057390612ff6565b8054611f2a906001600160a01b0316611c60565b611f465760405162461bcd60e51b815260040161057390612e92565b805460028201546040516364cc98df60e11b815260048101919091526000916001600160a01b03169063c99931be90602401600060405180830381865afa158015611f95573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052611fbd9190810190612c80565b50600554600454919250600091611fd49190612f57565b9050611fe460038401600061255c565b60005b85518110156121795761200586828151811061183357611833612c06565b156120785760405162461bcd60e51b815260206004820152603960248201527f4d696e746572204d61726b6574706c6163653a20436f6e74726163747320636160448201527f6e277420626520726563697069656e7473206f662066656573000000000000006064820152608401610573565b600354600090612089906064612ee6565b87838151811061209b5761209b612c06565b6020026020010151602001518560a001516120b69190612ee6565b6120c09190612f6a565b116120dd5760405162461bcd60e51b8152600401610573906130a1565b8581815181106120ef576120ef612c06565b602002602001015160200151826121069190612f57565b91508360030186828151811061211e5761211e612c06565b602090810291909101810151825460018082018555600094855293839020825160029092020180546001600160a01b0319166001600160a01b039092169190911781559101519101558061217181612dcc565b915050611fe7565b50600354612188906064612ee6565b81146121a65760405162461bcd60e51b815260040161057390613115565b60048301805460ff1916851515908117909155835460028501546003860154604080516001600160a01b03909416845260208401929092529082015260ff90911615156060820152608081018790527ff9aa099c7d91e9bd33886c159620aeba7e2d9bd460bf94282df788a0af93787f9060a00160405180910390a1505050505050565b60606000612239836002612ee6565b612244906002612f57565b67ffffffffffffffff81111561225c5761225c612a55565b6040519080825280601f01601f191660200182016040528015612286576020820181803683370190505b509050600360fc1b816000815181106122a1576122a1612c06565b60200101906001600160f81b031916908160001a905350600f60fb1b816001815181106122d0576122d0612c06565b60200101906001600160f81b031916908160001a90535060006122f4846002612ee6565b6122ff906001612f57565b90505b6001811115612377576f181899199a1a9b1b9c1cb0b131b232b360811b85600f166010811061233357612333612c06565b1a60f81b82828151811061234957612349612c06565b60200101906001600160f81b031916908160001a90535060049490941c9361237081613237565b9050612302565b5083156112fe5760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610573565b60006112fe836001600160a01b03841661241a565b60006112fe836001600160a01b038416612469565b600082600001828154811061240757612407612c06565b9060005260206000200154905092915050565b600081815260018301602052604081205461246157508154600181810184556000848152602080822090930184905584548482528286019093526040902091909155611301565b506000611301565b6000818152600183016020526040812054801561255257600061248d600183612f44565b85549091506000906124a190600190612f44565b90508181146125065760008660000182815481106124c1576124c1612c06565b90600052602060002001549050808760000184815481106124e4576124e4612c06565b6000918252602080832090910192909255918252600188019052604090208390555b85548690806125175761251761324e565b600190038181906000526020600020016000905590558560010160008681526020019081526020016000206000905560019350505050611301565b6000915050611301565b508054600082556002029060005260206000209081019061257d9190612580565b50565b5b808211156125a65780546001600160a01b031916815560006001820155600201612581565b5090565b6000602082840312156125bc57600080fd5b5035919050565b600060a0830160018060a01b0380845116855260208181860151168187015260408086015181880152606086015160a0606089015284815180875260c08a0191508483019650600092505b808310156126395786518051871683528501518583015295840195600192909201919083019061260e565b506080880151955061264f60808a018715159052565b98975050505050505050565b60005b8381101561267657818101518382015260200161265e565b50506000910152565b6000815180845261269781602086016020860161265b565b601f01601f19169290920160200192915050565b805182526020810151602083015260408101516040830152606081015160608301526080810151608083015260a081015160a0830152600060c082015160e060c08501526126fc60e085018261267f565b949350505050565b60608152600061271760608301866125c3565b828103602084015261272981866126ab565b915050826040830152949350505050565b80356001600160a01b038116811461275157600080fd5b919050565b60008083601f84011261276857600080fd5b50813567ffffffffffffffff81111561278057600080fd5b6020830191508360208260051b850101111561279b57600080fd5b9250929050565b60008060008060008060008060a0898b0312156127be57600080fd5b6127c78961273a565b9750602089013567ffffffffffffffff808211156127e457600080fd5b6127f08c838d01612756565b909950975060408b013591508082111561280957600080fd5b6128158c838d01612756565b909750955060608b013591508082111561282e57600080fd5b5061283b8b828c01612756565b909450925061284e905060808a0161273a565b90509295985092959890939650565b6000806040838503121561287057600080fd5b823591506128806020840161273a565b90509250929050565b6000806000806000606086880312156128a157600080fd5b85359450602086013567ffffffffffffffff808211156128c057600080fd5b6128cc89838a01612756565b909650945060408801359150808211156128e557600080fd5b506128f288828901612756565b969995985093965092949392505050565b6000806040838503121561291657600080fd5b50508035926020909101359150565b6000806040838503121561293857600080fd5b6129418361273a565b946020939093013593505050565b84815260806020820152600061296860808301866125c3565b828103604084015261297a81866126ab565b91505082606083015295945050505050565b801515811461257d57600080fd5b80356127518161298c565b60008060008060008060a087890312156129be57600080fd5b6129c78761273a565b955060208701359450604087013567ffffffffffffffff808211156129eb57600080fd5b818901915089601f8301126129ff57600080fd5b813581811115612a0e57600080fd5b8a60208260061b8501011115612a2357600080fd5b602083019650809550505050612a3b6060880161299a565b9150612a496080880161273a565b90509295509295509295565b634e487b7160e01b600052604160045260246000fd5b60405160e0810167ffffffffffffffff81118282101715612a8e57612a8e612a55565b60405290565b604051601f8201601f1916810167ffffffffffffffff81118282101715612abd57612abd612a55565b604052919050565b600060408284031215612ad757600080fd5b6040516040810181811067ffffffffffffffff82111715612afa57612afa612a55565b604052905080612b098361273a565b8152602083013560208201525092915050565b600080600060608486031215612b3157600080fd5b8335925060208085013567ffffffffffffffff80821115612b5157600080fd5b818701915087601f830112612b6557600080fd5b813581811115612b7757612b77612a55565b612b85848260051b01612a94565b818152848101925060069190911b830184019089821115612ba557600080fd5b928401925b81841015612bce57612bbc8a85612ac5565b83528483019250604084019350612baa565b8096505050505050612be26040850161299a565b90509250925092565b600060208284031215612bfd57600080fd5b6112fe8261273a565b634e487b7160e01b600052603260045260246000fd5b600082601f830112612c2d57600080fd5b815167ffffffffffffffff811115612c4757612c47612a55565b612c5a601f8201601f1916602001612a94565b818152846020838601011115612c6f57600080fd5b6126fc82602083016020870161265b565b60008060408385031215612c9357600080fd5b825167ffffffffffffffff80821115612cab57600080fd5b9084019060e08287031215612cbf57600080fd5b612cc7612a6b565b825181526020830151602082015260408301516040820152606083015160608201526080830151608082015260a083015160a082015260c083015182811115612d0f57600080fd5b612d1b88828601612c1c565b60c08301525060209590950151949694955050505050565b6000808335601e19843603018112612d4a57600080fd5b83018035915067ffffffffffffffff821115612d6557600080fd5b6020019150600681901b360382131561279b57600080fd5b600060408284031215612d8f57600080fd5b6112fe8383612ac5565b600060208284031215612dab57600080fd5b81356112fe8161298c565b634e487b7160e01b600052601160045260246000fd5b600060018201612dde57612dde612db6565b5060010190565b60208082526030908201527f4d696e74696e67204d61726b6574706c6163653a204d696e74696e67204f666660408201526f195c88191bd95cdb89dd08195e1a5cdd60821b606082015260800190565b60208082526037908201527f4d696e746572204d61726b6574706c6163653a2054686973206f66666572206960408201527f73206e6f7420726561647920746f20626520736f6c6421000000000000000000606082015260800190565b60208082526034908201527f4d696e746572204d61726b6574706c6163653a2054686973204d61726b6574706040820152736c6163652069736e27742061204d696e7465722160601b606082015260800190565b808202811582820484141761130157611301612db6565b60208082526027908201527f4d696e746572204d61726b6574706c6163653a20496e73756666696369656e746040820152662066756e64732160c81b606082015260800190565b8181038181111561130157611301612db6565b8082018082111561130157611301612db6565b600082612f8757634e487b7160e01b600052601260045260246000fd5b500490565b6020808252602d908201527f4d696e746572204d61726b6574706c6163653a204572726f72207472616e736660408201526c657272696e672066756e64732160981b606082015260800190565b600060208284031215612feb57600080fd5b81516112fe8161298c565b6020808252603d908201527f4d696e746572204d61726b6574706c6163653a2053656e6465722069736e277460408201527f207468652063726561746f72206f662074686520636f6e747261637421000000606082015260800190565b6020808252602e908201527f4d696e746572204d61726b6574706c6163653a2052616e676520616c7265616460408201526d3c903430b99030b71037b33332b960911b606082015260800190565b6020808252604e908201527f4d696e746572204d61726b6574706c6163653a20412070657263656e7461676560408201527f206f6e207468652061727261792077696c6c20726573756c7420696e20616e2060608201526d32b6b83a3c903a3930b739b332b960911b608082015260a00190565b6020808252602d908201527f4d696e746572204d61726b6574706c6163653a204665657320646f6e2774206160408201526c646420757020746f203130302560981b606082015260800190565b60018060a01b038816815286602082015260e06040820152600061318960e083018861267f565b606083019690965250608081019390935290151560a083015260c0909101529392505050565b7f416363657373436f6e74726f6c3a206163636f756e74200000000000000000008152600083516131e781601785016020880161265b565b7001034b99036b4b9b9b4b733903937b6329607d1b601791840191820152835161321881602884016020880161265b565b01602801949350505050565b6020815260006112fe602083018461267f565b60008161324657613246612db6565b506000190190565b634e487b7160e01b600052603160045260246000fdfea26469706673582212200b983cb1a176e68589eff57e461e46ea7431f5f174a590ab2924a70c135033c064736f6c63430008110033",
+  "devdoc": {
+    "author": "Juan M. Sanchez M.",
+    "details": "Notice that this contract is inheriting from AccessControlAppStorageEnumerableMarket",
+    "events": {
+      "AddedMintingOffer(address,uint256,string,uint256,uint256,bool,uint256)": {
+        "params": {
+          "erc721Address": "Contains the address of the erc721",
+          "feeSplitsLength": "Contains the visibility of the offer",
+          "offerIndex": "contains the new status of the offer",
+          "price": "Contains the price of the offer fot the token",
+          "rangeIndex": "contains the id of the minted token",
+          "rangeName": "contains the name of the range where the token is"
+        }
+      }
+    },
+    "kind": "dev",
+    "methods": {
+      "addMintingOffer(address,uint256,(address,uint256)[],bool,address)": {
+        "params": {
+          "erc721Address_": "Contains the address of the minter marketplace contract",
+          "nodeAddress_": "Contains address of the node where the offer was placed",
+          "rangeIndex_": "Contains the index location of the range where the offer will be placed",
+          "splits": "Contains the shares and address to pay when the offer is succesfull ",
+          "visible_": "Contains a boolean to set if the offer is public or not "
+        }
+      },
+      "addMintingOfferBatch(address,uint256[],(address,uint256)[][],bool[],address)": {
+        "params": {
+          "erc721Address_": "Contains the address of the minter marketplace contract",
+          "nodeAddress_": "Contains address of the node where the offer was placed",
+          "rangeIndexes": "Contains the collection of ranges where the offer will be placed",
+          "splits": "Contains the shares and address to pay when the offer is succesfull ",
+          "visibility": "Contains a collection of booleans that set the offer as public or not "
+        }
+      },
+      "buyMintingOffer(uint256,uint256)": {
+        "details": "This function requires that the mintingOfferExists points to an valid offer  ",
+        "params": {
+          "offerIndex_": "Contains index location of the offer",
+          "tokenIndex_": "Contains the id of the tokens that we want to mint"
+        }
+      },
+      "buyMintingOfferBatch(uint256,uint256[],address[])": {
+        "details": "This function requires that the mintingOfferExists points to an valid offer  ",
+        "params": {
+          "offerIndex_": "Contains index location of the offer",
+          "recipients": "Contains the collection of addresses that will receive",
+          "tokenIndexes": "Contains the collection of tokens that we want to mint"
+        }
+      },
+      "getOfferInfo(uint256)": {
+        "params": {
+          "offerIndex": "Contains the facet addresses and function selectors"
+        },
+        "returns": {
+          "mintOffer": "Show us the information about the minting offer ",
+          "productIndex": "Show us the indexed position for the product inside the range",
+          "rangeData": "Show us the data about the selected range"
+        }
+      },
+      "getOfferInfoForAddress(address,uint256)": {
+        "params": {
+          "erc721Address": "Contains the facet addresses and function selectors",
+          "rangeIndex": "Contains the facet addresses and function selectors"
+        },
+        "returns": {
+          "mintOffer": "Show us the information about the minting offer ",
+          "offerIndex": "Show us the indexed position of the offer",
+          "productIndex": "Show us the indexed position for the product inside the range",
+          "rangeData": "Show us the data about the selected range"
+        }
+      },
+      "getOffersCountForAddress(address)": {
+        "params": {
+          "erc721Address": "Address of the ERC721 token"
+        },
+        "returns": {
+          "_0": "uint with the total of offers"
+        }
+      },
+      "getRoleAdmin(bytes32)": {
+        "params": {
+          "role": "Contains the role that we want to verify"
+        },
+        "returns": {
+          "_0": "bytes that indicates if an account has or not an admin role"
+        }
+      },
+      "getRoleMember(bytes32,uint256)": {
+        "params": {
+          "index": "Contains the indexed position to verify inside the role members list",
+          "role": "Contains the role that we want to verify"
+        },
+        "returns": {
+          "_0": "address that indicates the address indexed in that position"
+        }
+      },
+      "getRoleMemberCount(bytes32)": {
+        "params": {
+          "role": "Contains the role that we want to verify"
+        },
+        "returns": {
+          "_0": "uint256 that indicates the total accounts with that role"
+        }
+      },
+      "getTotalOfferCount()": {
+        "returns": {
+          "_0": "uint with the total of offers"
+        }
+      },
+      "grantRole(bytes32,address)": {
+        "details": "This function is only available to an account with an Admin role",
+        "params": {
+          "account": "Contains the account that has the role we want to update",
+          "role": "Contains the role that we want to grant"
+        }
+      },
+      "hasRole(bytes32,address)": {
+        "params": {
+          "account": "Contains the account address thay we want to verify",
+          "role": "Contains the role that we want to verify"
+        },
+        "returns": {
+          "_0": "bool that indicates if an account has or not a role"
+        }
+      },
+      "renounceRole(bytes32,address)": {
+        "details": "Currently you can only renounce to your own roles",
+        "params": {
+          "account": "Contains the account that has the role we want to update",
+          "role": "Contains the role to remove from our account"
+        }
+      },
+      "revokeRole(bytes32,address)": {
+        "details": "This function is only available to an account with an Admin role",
+        "params": {
+          "account": "Contains the account that has the role we want to update",
+          "role": "Contains the role that we want to revoke"
+        }
+      },
+      "updateMintingOffer(uint256,(address,uint256)[],bool)": {
+        "details": "This function requires that the mintingOfferExists points to an valid offer  ",
+        "params": {
+          "mintingOfferId_": "Contains index location of the minting offer",
+          "splits_": "Contains the shares and address to pay when the offer is succesfull ",
+          "visible_": "Contains a boolean to set if the offer is public or not "
+        }
+      }
+    },
+    "title": "RAIR Diamond - Minting offers facet",
+    "version": 1
+  },
+  "userdoc": {
+    "events": {
+      "AddedMintingOffer(address,uint256,string,uint256,uint256,bool,uint256)": {
+        "notice": "This event stores in the blockchain when a Minting Offer is Added"
+      },
+      "RoleAdminChanged(bytes32,bytes32,bytes32)": {
+        "notice": "This event stores in the blockchain when we change an admin role"
+      },
+      "RoleGranted(bytes32,address,address)": {
+        "notice": "This event stores in the blockchain when we grant a role"
+      },
+      "RoleRevoked(bytes32,address,address)": {
+        "notice": "This event stores in the blockchain when we revoke a role"
+      }
+    },
+    "kind": "user",
+    "methods": {
+      "addMintingOffer(address,uint256,(address,uint256)[],bool,address)": {
+        "notice": "This function allow us to add a new minting offer"
+      },
+      "addMintingOfferBatch(address,uint256[],(address,uint256)[][],bool[],address)": {
+        "notice": "This function allow us to create a group of minting offers in a single call"
+      },
+      "buyMintingOffer(uint256,uint256)": {
+        "notice": "This function allow us to buy a minting offers"
+      },
+      "buyMintingOfferBatch(uint256,uint256[],address[])": {
+        "notice": "This function allow us to buy a collection of minting offers"
+      },
+      "getOfferInfo(uint256)": {
+        "notice": "This function show us the information of an selected minting offer"
+      },
+      "getOfferInfoForAddress(address,uint256)": {
+        "notice": "This functions show us the information of an offer asociated to a marketplace"
+      },
+      "getOffersCountForAddress(address)": {
+        "notice": "Returns the number of offers for a specific ERC721 address"
+      },
+      "getRoleAdmin(bytes32)": {
+        "notice": "Allow us to check the admin role that contains a role"
+      },
+      "getRoleMember(bytes32,uint256)": {
+        "notice": "Allow us to check the address of an indexed position for the role list"
+      },
+      "getRoleMemberCount(bytes32)": {
+        "notice": "Allow us to check total members that has an selected role"
+      },
+      "getTotalOfferCount()": {
+        "notice": "Returns the number of all the minting offers "
+      },
+      "grantRole(bytes32,address)": {
+        "notice": "Allow us to grant a role to an account"
+      },
+      "hasRole(bytes32,address)": {
+        "notice": "Allow us to check the if and account has a selected role"
+      },
+      "renounceRole(bytes32,address)": {
+        "notice": "Allow us to renounce to a role"
+      },
+      "revokeRole(bytes32,address)": {
+        "notice": "Allow us to revoke a role to an account"
+      },
+      "updateMintingOffer(uint256,(address,uint256)[],bool)": {
+        "notice": "This function allow us to update the parameters of a minting offers"
+      }
+    },
+    "notice": "Facet in charge of the minting offers in the RAIR Marketplace",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3758,
+        "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+        "label": "s",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_struct(AppStorage)3739_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_bytes32)dyn_storage": {
+        "base": "t_bytes32",
+        "encoding": "dynamic_array",
+        "label": "bytes32[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_struct(feeSplits)3683_storage)dyn_storage": {
+        "base": "t_struct(feeSplits)3683_storage",
+        "encoding": "dynamic_array",
+        "label": "struct feeSplits[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_struct(mintingOffer)3696_storage)dyn_storage": {
+        "base": "t_struct(mintingOffer)3696_storage",
+        "encoding": "dynamic_array",
+        "label": "struct mintingOffer[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_uint256)dyn_storage": {
+        "base": "t_uint256",
+        "encoding": "dynamic_array",
+        "label": "uint256[]",
+        "numberOfBytes": "32"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256[])",
+        "numberOfBytes": "32",
+        "value": "t_array(t_uint256)dyn_storage"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(uint256 => uint256))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_uint256,t_uint256)"
+      },
+      "t_mapping(t_bytes32,t_struct(AddressSet)2617_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct EnumerableSet.AddressSet)",
+        "numberOfBytes": "32",
+        "value": "t_struct(AddressSet)2617_storage"
+      },
+      "t_mapping(t_bytes32,t_struct(RoleData)3703_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct RoleData)",
+        "numberOfBytes": "32",
+        "value": "t_struct(RoleData)3703_storage"
+      },
+      "t_mapping(t_bytes32,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_uint256,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_struct(AddressSet)2617_storage": {
+        "encoding": "inplace",
+        "label": "struct EnumerableSet.AddressSet",
+        "members": [
+          {
+            "astId": 2616,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "_inner",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_struct(Set)2316_storage"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(AppStorage)3739_storage": {
+        "encoding": "inplace",
+        "label": "struct AppStorage",
+        "members": [
+          {
+            "astId": 3708,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "_roles",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)3703_storage)"
+          },
+          {
+            "astId": 3713,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "_roleMembers",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes32,t_struct(AddressSet)2617_storage)"
+          },
+          {
+            "astId": 3715,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "decimals",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint16"
+          },
+          {
+            "astId": 3717,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "decimalPow",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 3719,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "nodeFee",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 3721,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "treasuryFee",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 3723,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "treasuryAddress",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_address"
+          },
+          {
+            "astId": 3727,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "mintingOffers",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_array(t_struct(mintingOffer)3696_storage)dyn_storage"
+          },
+          {
+            "astId": 3733,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "addressToRangeOffer",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))"
+          },
+          {
+            "astId": 3738,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "addressToOffers",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)"
+          }
+        ],
+        "numberOfBytes": "320"
+      },
+      "t_struct(RoleData)3703_storage": {
+        "encoding": "inplace",
+        "label": "struct RoleData",
+        "members": [
+          {
+            "astId": 3700,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "members",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_bool)"
+          },
+          {
+            "astId": 3702,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "adminRole",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(Set)2316_storage": {
+        "encoding": "inplace",
+        "label": "struct EnumerableSet.Set",
+        "members": [
+          {
+            "astId": 2311,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "_values",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_array(t_bytes32)dyn_storage"
+          },
+          {
+            "astId": 2315,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "_indexes",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes32,t_uint256)"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(feeSplits)3683_storage": {
+        "encoding": "inplace",
+        "label": "struct feeSplits",
+        "members": [
+          {
+            "astId": 3680,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "recipient",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 3682,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "percentage",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(mintingOffer)3696_storage": {
+        "encoding": "inplace",
+        "label": "struct mintingOffer",
+        "members": [
+          {
+            "astId": 3685,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "erc721Address",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 3687,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "nodeAddress",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address"
+          },
+          {
+            "astId": 3689,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "rangeIndex",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 3693,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "fees",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_struct(feeSplits)3683_storage)dyn_storage"
+          },
+          {
+            "astId": 3695,
+            "contract": "contracts/Marketplace/Facets/MintingOffersFacet.sol:MintingOffersFacet",
+            "label": "visible",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_bool"
+          }
+        ],
+        "numberOfBytes": "160"
+      },
+      "t_uint16": {
+        "encoding": "inplace",
+        "label": "uint16",
+        "numberOfBytes": "2"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

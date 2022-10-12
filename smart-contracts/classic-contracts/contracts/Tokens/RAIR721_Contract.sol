@@ -96,7 +96,7 @@ contract RAIR721_Contract is
         _setupRole(DEFAULT_ADMIN_ROLE, _creatorAddress);
         _setupRole(MINTER, _creatorAddress);
         _setupRole(TRADER, _creatorAddress);
-        _requireTrader = true;
+        _requireTrader = false;
         creatorAddress = _creatorAddress;
     }
 
@@ -482,8 +482,7 @@ contract RAIR721_Contract is
         uint lockedTokens_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) rangeExists(rangeId) nonReentrant {
         range storage selectedRange = _ranges[rangeId];
-
-        require(price_ >= 100, "RAIR ERC721: Minimum price for a range is 100");
+        require(price_ == 0 || price_ >= 100, "RAIR ERC721: Range price must be greater or equal than 100");
         require(
             tokensAllowed_ <= selectedRange.mintableTokens,
             "RAIR ERC721: Tokens allowed should be less than the number of mintable tokens"
@@ -501,8 +500,8 @@ contract RAIR721_Contract is
                 selectedRange.rangeEnd,
                 lockedTokens_
             );
-            selectedRange.lockedTokens = lockedTokens_;
         }
+        selectedRange.lockedTokens = lockedTokens_;
         selectedRange.rangePrice = price_;
         selectedRange.rangeName = name;
 
