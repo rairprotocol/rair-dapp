@@ -448,14 +448,13 @@ video::-webkit-media-controls-panel {
   background-position: center;
   border-radius: 16px;
   filter: blur(4px);
+  transition: all 0.1s ease;
   -webkit-filter: blur(4px);
 }
 
 .unlockables-video-player-circle {
+  margin-top: 0rem;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 2;
   cursor: pointer;
   transition: all 0.1s ease;
@@ -463,6 +462,7 @@ video::-webkit-media-controls-panel {
 
 .unlockables-video-player-circle:hover {
   fill: var(--bubblegum);
+  transform: scale(1.5);
 }
 
 .unlockables-video-player-container {

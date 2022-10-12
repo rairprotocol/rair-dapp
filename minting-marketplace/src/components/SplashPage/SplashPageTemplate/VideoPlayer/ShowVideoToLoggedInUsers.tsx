@@ -11,7 +11,7 @@ import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
-import { playImages } from '../../images/greyMan/grayMan';
+import { playImagesColored } from '../../images/greyMan/grayMan';
 import { IShowVideoToLoggedInUsers } from '../../splashPage.types';
 
 import './VideoPlayer.css';
@@ -98,7 +98,7 @@ const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
                 style={{ border: 'none', background: 'none' }}
                 className="video-module-play-button"
                 onClick={() => openVideo()}>
-                <img src={playImages} alt="Button Play Video" />
+                <img src={playImagesColored} alt="Button Play Video" />
               </button>
             </div>
           </div>
@@ -163,7 +163,7 @@ const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
                 style={{ border: 'none', background: 'none' }}
                 className="video-module-play-button"
                 onClick={() => openVideo()}>
-                <img src={playImages} alt="Button Play video" />
+                <img src={playImagesColored} alt="Button Play video" />
               </button>
             </div>
           </div>
