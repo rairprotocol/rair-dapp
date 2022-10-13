@@ -5,6 +5,7 @@ import axios from 'axios';
 import { FavoriteItem, UserFavoriteItemInfo } from './MyFavoriteStyledItems';
 
 import { TUserResponse } from '../../../../../axios.responseTypes';
+import { ImageLazy } from '../../../../MockUpPage/ImageLazy/ImageLazy';
 import BtnMyFavorite from '../BtnMyFavorite/BtnMyFavorite';
 import { IMyfavoriteItem } from '../myFavorites.types';
 
@@ -37,6 +38,11 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
     <FavoriteItem
       className="col-2 my-item-element"
       image={item.token.metadata.image}>
+      <ImageLazy
+        className="my-items-pict zoom-event"
+        src={item.token.metadata.image}
+        alt={`My favorite NFT ${item.token.metadata.name}`}
+      />
       <div className="w-100 bg-my-items">
         <BtnMyFavorite removeFavotite={() => removeFavotite(item._id)} />
         <div className="col my-items-description-wrapper my-items-pic-description-wrapper">

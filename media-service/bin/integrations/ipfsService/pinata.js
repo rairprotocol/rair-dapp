@@ -1,6 +1,7 @@
 const pinataSDK = require('@pinata/sdk');
 const axios = require('axios');
 const _ = require('lodash');
+const AppError = require('../../utils/errors/AppError');
 const log = require('../../utils/logger')(module);
 const config = require('../../config');
 
@@ -44,16 +45,23 @@ const removePin = async (CID) => {
   }
 };
 
-const addFolder = async (pathTo, folderName /*, socketInstance*/) => {
-  const response = await pinata.pinFromFS(pathTo, {
-    pinataMetadata: {
-      name: folderName,
-    },
-  });
+const addFolder = async (pathTo, folderName, socketInstance) => {
+  try {
+    const response = await pinata.pinFromFS(pathTo, {
+      pinataMetadata: {
+        name: folderName,
+      },
+    });
 
-  // socketInstance.emit('uploadProgress', { message: `added files to Pinata`, last: false, part: false });
+    if (!_.isUndefined(socketInstance)) {
+      socketInstance.emit('uploadProgress', { message: 'added files to Pinata', last: false, part: false });
+    }
 
-  return _.get(response, 'IpfsHash');
+    return _.get(response, 'IpfsHash');
+  } catch (e) {
+    log.error(e.message);
+    return new AppError('Can\'t store folder in Pinata.', 500);
+  }
 };
 
 const addMetadata = async (data, name) => {

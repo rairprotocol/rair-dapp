@@ -1,10 +1,10 @@
 # Create a batch of tokens with common metadata for contract or product
 
-Create a batch of tokens with common metadata for contract or product
+Update a batch of tokens with common metadata for contract or product
 
 **URL** : `/api/v2/tokens`
 
-**Method** : `POST`
+**Method** : `PATCH`
 
 **Content-Type** : `multipart/form-data`
 

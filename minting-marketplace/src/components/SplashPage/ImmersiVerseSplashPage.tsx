@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
 
-import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../ducks/seo/actions';
+// Google Analytics
+//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+//ReactGA.initialize(TRACKING_ID);
 import { TInfoSeo } from '../../ducks/seo/seo.types';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -22,6 +24,7 @@ import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../SeoTags/MetaTags';
 
 import AuthorBlock from './AuthorBlock/AuthorBlock';
+import favion_Immersil from './images/favicons/ImmersiverseATX.ico';
 import { SXSW1, SXSW2, SXSW3 } from './images/SxSw/sxSw';
 //Google Analytics
 import NotCommercialGeneric from './NotCommercial/NotCommercialGeneric';
@@ -72,7 +75,6 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
   const currentUserAddress = useSelector<RootState, string | undefined>(
     (store) => store.contractStore.currentUserAddress
   );
-
   useEffect(() => {
     dispatch(
       setInfoSEO({
@@ -89,8 +91,8 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
           'Claim your NFT to unlock encrypted streams from the ImmersiverseATX event',
         image:
           'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
-        favicon: RairFavicon,
-        faviconMobile: RairFavicon
+        favicon: favion_Immersil,
+        faviconMobile: favion_Immersil
       })
     );
     //eslint-disable-next-line

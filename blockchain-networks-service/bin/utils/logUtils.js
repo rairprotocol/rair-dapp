@@ -72,6 +72,8 @@ const getTransactionHistory = async (address, chain, from_block = 0) => {
 	let completeListOfTransactions = result;
 
 	while (completeListOfTransactions.length < logData.total) {
+		// Wait 7 seconds between pages to avoid Rate limit
+		wasteTime(7000);
 		// Need to get more pages
 		//console.log("More pages required");
 		if (logData?.next) {

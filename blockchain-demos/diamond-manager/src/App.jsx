@@ -45,32 +45,44 @@ const App = () => {
 
 	useEffect(() => {
 		const queryFacetABIData = async (chainId) => {
-			let data = [];
-			for await (let facetName of factoryFacetNames) {
-				console.log('importing', facetName)
-				let facetData = await import(`./contractAbis/${chainId}/${facetName}.json`);
-				facetData.facetName = facetName;
-				data.push(facetData);
+			try {
+				let data = [];
+				for await (let facetName of factoryFacetNames) {
+					console.log('importing', facetName)
+					let facetData = await import(`./contractAbis/${chainId}/${facetName}.json`);
+					facetData.facetName = facetName;
+					data.push(facetData);
+				}
+				setFactoryFacetsArray(data);
+			} catch (err) {
+				console.error("Error importing facets for Diamond Factory");
 			}
-			setFactoryFacetsArray(data);
 
-			data = [];
-			for await (let facetName of marketplaceFacetNames) {
-				console.log('importing', facetName)
-				let facetData = await import(`./contractAbis/${chainId}/${facetName}.json`);
-				facetData.facetName = facetName;
-				data.push(facetData);
+			try {
+				let data = [];
+				for await (let facetName of marketplaceFacetNames) {
+					console.log('importing', facetName)
+					let facetData = await import(`./contractAbis/${chainId}/${facetName}.json`);
+					facetData.facetName = facetName;
+					data.push(facetData);
+				}
+				setMarketplaceFacetsArray(data);
+			} catch (err) {
+				console.error("Error importing facets for Diamond Marketplace");
 			}
-			setMarketplaceFacetsArray(data);
-			
-			data = [];
-			for await (let facetName of standardFacetNames) {
-				console.log('importing', facetName)
-				let facetData = await import(`./contractAbis/${chainId}/${facetName}.json`);
-				facetData.facetName = facetName;
-				data.push(facetData);
+
+			try {
+				let data = [];
+				for await (let facetName of standardFacetNames) {
+					console.log('importing', facetName)
+					let facetData = await import(`./contractAbis/${chainId}/${facetName}.json`);
+					facetData.facetName = facetName;
+					data.push(facetData);
+				}
+				setStandardFacetsArray(data);
+			} catch (err) {
+				console.error("Error importing basic facets for Diamonds");
 			}
-			setStandardFacetsArray(data);
 		}
 
 		window.ethereum.on('chainChanged', (chainId) => {

@@ -108,19 +108,23 @@ module.exports = (config) => {
       };
 
       const getFiles = async (directory) => {
-        const items = await fs.readdir(directory);
-        dirCtr -= 1;
-        itemCtr += items.length;
-        for (const item of items) {
-          const fullPath = path.join(directory, item);
-          const stat = await fs.stat(fullPath);
-          itemCtr -= 1;
-          if (stat.isFile()) {
-            fileList.push(fullPath);
-          } else if (stat.isDirectory()) {
-            dirCtr += 1;
-            await getFiles(fullPath);
+        try {
+          const items = await fs.readdir(directory);
+          dirCtr -= 1;
+          itemCtr += items.length;
+          for (const item of items) {
+            const fullPath = path.join(directory, item);
+            const stat = await fs.stat(fullPath);
+            itemCtr -= 1;
+            if (stat.isFile()) {
+              fileList.push(fullPath);
+            } else if (stat.isDirectory()) {
+              dirCtr += 1;
+              await getFiles(fullPath);
+            }
           }
+        } catch (e) {
+          log.error(e);
         }
       };
       await getFiles(directoryPath);

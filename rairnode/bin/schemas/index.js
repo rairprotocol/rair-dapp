@@ -22,7 +22,7 @@ const getTokensByContractProduct = require('./getTokensByContractProduct');
 const search = require('./search');
 const updateTokenMetadata = require('./updateTokenMetadata');
 const pinningMultiple = require('./pinningMultiple');
-const createCommonTokenMetadata = require('./createCommonTokenMetadata');
+const updateCommonTokenMetadata = require('./updateCommonTokenMetadata');
 const createFavoriteToken = require('./createFavoriteToken');
 const withProductV2 = require('./withProductV2');
 const manageContract = require('./manageContract');
@@ -51,7 +51,7 @@ module.exports = {
   search,
   updateTokenMetadata,
   pinningMultiple,
-  createCommonTokenMetadata,
+  updateCommonTokenMetadata,
   createFavoriteToken,
   manageContract,
   getChallengeV2,

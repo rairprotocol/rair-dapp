@@ -6,6 +6,9 @@ const {
   findContractFromAddress,
   log,
 } = require('./eventsCommonUtils');
+const {
+  BigNumber
+} = require("ethers");
 
 module.exports = async (
   dbModels,
@@ -59,26 +62,29 @@ module.exports = async (
     contract: contract._id,
     collectionIndexInContract: foundLock.product,
   });
+  if (!product) {
+    log.error(`404: Couldn't find product for ${contract._id}`);
+    return [undefined];
+  }
 
-  // Find offer
-  const foundOffer = await dbModels.Offer.findOne({
+  const offerList = await dbModels.Offer.find({
     contract: contract._id,
+    product: product.collectionIndexInContract
   });
+  const [foundOffer] = offerList.filter(offer => {
+    return BigNumber.from(offer.range[0]).lt(tokenIndex) &&
+            BigNumber.from(offer.range[1]).gt(tokenIndex) 
+  });
+  if (!foundOffer) {
+    log.error(`404: Couldn't find offer for ${contract._id}`);
+    return [undefined];
+  }
 
   // Find token
   let foundToken = await dbModels.MintedToken.findOne({
     contract: contract._id,
     token: tokenIndex,
   });
-
-  if (!product) {
-    log.error(`404: Couldn't find product for ${contract._id}`);
-    return [undefined];
-  }
-  if (!foundOffer) {
-    log.error(`404: Couldn't find offer for ${contract._id}`);
-    return [undefined];
-  }
 
   // If token doesn't exist, create a new entry
   if (foundToken === null) {

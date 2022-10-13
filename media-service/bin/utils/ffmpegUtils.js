@@ -6,6 +6,7 @@ const {
   copyFileSync, rm, promises, createReadStream, createWriteStream, renameSync,
 } = require('fs');
 const _ = require('lodash');
+const AppError = require('./errors/AppError');
 const log = require('./logger')(module);
 const {
   genericConversionParams,
@@ -23,49 +24,54 @@ function intToByteArray(num) {
 }
 
 const encryptFolderContents = async (mediaData, encryptExtensions, socketInstance) => {
-  const key = generateKeySync('aes', { length: 256 });
-  const promiseList = [];
+  try {
+    const key = generateKeySync('aes', { length: 256 });
+    const promiseList = [];
 
-  const directoryData = await promises.readdir(mediaData.destination);
+    const directoryData = await promises.readdir(mediaData.destination);
 
-  for await (const entry of directoryData) {
-    const extension = entry.split('.')[1];
-    if (!encryptExtensions.includes(extension)) {
-      log.info(`Ignoring file ${entry}`);
-      continue;
-    }
-    const promise = new Promise((resolve, reject) => {
-      const fullPath = path.join(mediaData.destination, entry);
-      log.info(`Encrypting ${entry}`);
-      const encryptedPath = `${fullPath}.encrypted`;
-      try {
-        const iv = intToByteArray(parseInt(entry.match(/([0-9]+).ts/)[1]));
-        const encrypt = createCipheriv('aes-256-gcm', key, iv);
-        const source = createReadStream(fullPath);
-        const dest = createWriteStream(encryptedPath);
-
-        source.pipe(encrypt).pipe(dest).on('finish', () => {
-          // overwrite the unencrypted file so we don't have to modify the manifests
-          renameSync(encryptedPath, fullPath);
-          log.info(`finished encrypting: ${fullPath}`);
-          return resolve({ [_.chain(entry).split('.').head().value()]: encrypt.getAuthTag().toString('hex') });
-        });
-      } catch (e) {
-        console.error('Could not encrypt', fullPath, e);
-        reject(e);
+    for await (const entry of directoryData) {
+      const extension = entry.split('.')[1];
+      if (!encryptExtensions.includes(extension)) {
+        log.info(`Ignoring file ${entry}`);
+        continue;
       }
+      const promise = new Promise((resolve, reject) => {
+        const fullPath = path.join(mediaData.destination, entry);
+        log.info(`Encrypting ${entry}`);
+        const encryptedPath = `${fullPath}.encrypted`;
+        try {
+          const iv = intToByteArray(parseInt(entry.match(/([0-9]+).ts/)[1]));
+          const encrypt = createCipheriv('aes-256-gcm', key, iv);
+          const source = createReadStream(fullPath);
+          const dest = createWriteStream(encryptedPath);
+
+          source.pipe(encrypt).pipe(dest).on('finish', () => {
+            // overwrite the unencrypted file so we don't have to modify the manifests
+            renameSync(encryptedPath, fullPath);
+            log.info(`finished encrypting: ${fullPath}`);
+            return resolve({ [_.chain(entry).split('.').head().value()]: encrypt.getAuthTag().toString('hex') });
+          });
+        } catch (e) {
+          log.error(`Could not encrypt, ${fullPath}, ${e}`);
+          reject(e);
+        }
+      });
+      promiseList.push(promise);
+    }
+    socketInstance.emit('uploadProgress', {
+      message: 'Done scheduling encryptions',
+      last: false,
+      done: 15,
+      parts: promiseList.length,
     });
-    promiseList.push(promise);
+    const authOfChunks = await Promise.all(promiseList);
+    const authTag = authOfChunks.reduce((pv, value) => ({ ...pv, ...value }), {});
+    return { key: key.export(), authTag };
+  } catch (e) {
+    log.error(e);
+    return new AppError('Encrypting process faild', 500);
   }
-  socketInstance.emit('uploadProgress', {
-    message: 'Done scheduling encryptions',
-    last: false,
-    done: 15,
-    parts: promiseList.length,
-  });
-  const authOfChunks = await Promise.all(promiseList);
-  const authTag = authOfChunks.reduce((pv, value) => ({ ...pv, ...value }), {});
-  return { key: key.export(), authTag };
 };
 
 const convertToHLS = async (
@@ -73,8 +79,9 @@ const convertToHLS = async (
   speed,
   socketInstance,
 ) => {
-  log.info('Converting');
-  const totalRuntime = mediaData.duration.replace('.', '').replace(':', '').replace(':', '');
+  try {
+    log.info('Converting');
+    const totalRuntime = mediaData.duration.replace('.', '').replace(':', '').replace(':', '');
 
   const promise = new Promise((resolve, reject) => {
     try {
@@ -138,16 +145,20 @@ const convertToHLS = async (
     }
   });
 
-  await promise;
-  await rm(mediaData.path, log.info);
-  socketInstance.emit('uploadProgress', {
-    message: `${mediaData.originalname} raw deleted`,
-    last: false,
-  });
-  copyFileSync(
-    path.join(mediaData.destination, '..', '..', 'templates', 'stream.m3u8.template'),
-    path.join(mediaData.destination, 'stream.m3u8'),
-  );
+    await promise;
+    rm(mediaData.path, log.info);
+    socketInstance.emit('uploadProgress', {
+      message: `${mediaData.originalname} raw deleted`,
+      last: false,
+    });
+    copyFileSync(
+      path.join(mediaData.destination, '..', '..', 'templates', 'stream.m3u8.template'),
+      path.join(mediaData.destination, 'stream.m3u8'),
+    );
+  } catch (e) {
+    log.error(e);
+    return new AppError('Converting process faild', 500);
+  }
 };
 
 const getMediaData = async (mediaData) => {
@@ -203,7 +214,7 @@ const generateThumbnails = async (
       mediaData.staticThumbnail = 'thumbnail.webp';
       mediaData.animatedThumbnail = 'thumbnail.gif';
     } catch (e) {
-      console.error(e);
+      log.error(e);
     }
   } else if (mediaData.type === 'audio') {
     mediaData.staticThumbnail = process.env.DEFAULT_PRODUCT_COVER;
