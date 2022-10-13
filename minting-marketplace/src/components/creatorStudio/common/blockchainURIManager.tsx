@@ -344,7 +344,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                 operation(
                   collectionIndex,
                   collectionWideMetadata,
-                  appendTokenForContract
+                  appendTokenForCollection
                 )
               );
               if (!result && !contractData.diamond) {
