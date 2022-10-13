@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
@@ -19,6 +18,8 @@ import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import WarningModal from '../WarningModal';
+
+import favicon_CoinAgenda21 from './../images/favicons/coinagenda.ico';
 
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
@@ -63,13 +64,13 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
         twitterTitle: 'CoinAGENDA 2021',
         contentName: 'author',
         content: '',
-        description: '',
-        ogDescription: '',
-        twitterDescription: '',
+        description: 'BEST OF COINAGENDA 2021',
+        ogDescription: 'BEST OF COINAGENDA 2021',
+        twitterDescription: 'BEST OF COINAGENDA 2021',
         image:
           'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
-        favicon: RairFavicon,
-        faviconMobile: RairFavicon
+        favicon: favicon_CoinAgenda21,
+        faviconMobile: favicon_CoinAgenda21
       })
     );
     //eslint-disable-next-line

@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
-import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
@@ -52,6 +51,8 @@ import TeamMeet from '../TeamMeet/TeamMeetList';
 /* importing Components*/
 import WarningModal from '../WarningModal';
 
+import favion_SimDogs from './../images/favicons/favicon-simdogs.ico';
+
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './SimDogs.css';
@@ -69,9 +70,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
 
   const donationGridData: TDonationGridDataItem[] = [
     {
@@ -226,8 +224,8 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
         ogDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
         twitterDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
         image: SimDogs0,
-        favicon: RairFavicon,
-        faviconMobile: RairFavicon
+        favicon: favion_SimDogs,
+        faviconMobile: favion_SimDogs
       })
     );
     //eslint-disable-next-line

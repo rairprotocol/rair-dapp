@@ -7,6 +7,11 @@ pragma solidity ^0.8.0;
 /******************************************************************************/
 import { IDiamondCut } from "../interfaces/IDiamondCut.sol";
 
+// Remember to add the loupe functions from DiamondLoupeFacet to the diamond.
+// The loupe functions are required by the EIP2535 Diamonds standard
+
+error InitializationFunctionReverted(address _initializationContractAddress, bytes _calldata);
+
 library LibDiamond {
     bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.storage");
 
@@ -119,6 +124,7 @@ library LibDiamond {
                 // add facet for selector
                 ds.facets[selector] = bytes20(_newFacetAddress) | bytes32(_selectorCount);
                 // "_selectorCount & 7" is a gas efficient modulo by eight "_selectorCount % 8" 
+                // " << 5 is the same as multiplying by 32 ( * 32)
                 uint256 selectorInSlotPosition = (_selectorCount & 7) << 5;
                 // clear selector position in slot and add selector
                 _selectorSlot = (_selectorSlot & ~(CLEAR_SELECTOR_MASK >> selectorInSlotPosition)) | (bytes32(selector) >> selectorInSlotPosition);
@@ -170,6 +176,7 @@ library LibDiamond {
                     require(address(bytes20(oldFacet)) != address(this), "LibDiamondCut: Can't remove immutable function");
                     // replace selector with last selector in ds.facets
                     // gets the last selector
+                    // " << 5 is the same as multiplying by 32 ( * 32)
                     lastSelector = bytes4(_selectorSlot << (selectorInSlotIndex << 5));
                     if (lastSelector != selector) {
                         // update last selector slot position info
@@ -180,6 +187,7 @@ library LibDiamond {
                     // "oldSelectorCount >> 3" is a gas efficient division by 8 "oldSelectorCount / 8"
                     oldSelectorsSlotCount = oldSelectorCount >> 3;
                     // "oldSelectorCount & 7" is a gas efficient modulo by eight "oldSelectorCount % 8" 
+                    // " << 5 is the same as multiplying by 32 ( * 32)
                     oldSelectorInSlotPosition = (oldSelectorCount & 7) << 5;
                 }
                 if (oldSelectorsSlotCount != selectorSlotCount) {
@@ -210,20 +218,20 @@ library LibDiamond {
 
     function initializeDiamondCut(address _init, bytes memory _calldata) internal {
         if (_init == address(0)) {
-            require(_calldata.length == 0, "LibDiamondCut: _init is address(0) but_calldata is not empty");
-        } else {
-            require(_calldata.length > 0, "LibDiamondCut: _calldata is empty but _init is not address(0)");
-            if (_init != address(this)) {
-                enforceHasContractCode(_init, "LibDiamondCut: _init address has no code");
-            }
-            (bool success, bytes memory error) = _init.delegatecall(_calldata);
-            if (!success) {
-                if (error.length > 0) {
-                    // bubble up the error
-                    revert(string(error));
-                } else {
-                    revert("LibDiamondCut: _init function reverted");
+            return;
+        }
+        enforceHasContractCode(_init, "LibDiamondCut: _init address has no code");        
+        (bool success, bytes memory error) = _init.delegatecall(_calldata);
+        if (!success) {
+            if (error.length > 0) {
+                // bubble up error
+                /// @solidity memory-safe-assembly
+                assembly {
+                    let returndata_size := mload(error)
+                    revert(add(32, error), returndata_size)
                 }
+            } else {
+                revert InitializationFunctionReverted(_init, _calldata);
             }
         }
     }

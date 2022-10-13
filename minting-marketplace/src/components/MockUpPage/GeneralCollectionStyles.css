@@ -18,6 +18,13 @@
   transition: all 0.3s ease;
   border-radius: 16px;
 }
+.zoom-event:hover {
+  transform: scale(1.4);
+  transition: all 0.3s ease;
+}
+.zoom-event {
+  transition: all 0.3s ease;
+}
 
 .nft-item-collection:hover {
   box-shadow: 0px 0px 12px 1px rgba(0, 0, 0, 0.75);

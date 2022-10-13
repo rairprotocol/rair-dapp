@@ -23,7 +23,8 @@
     "deploy-mumbai": "npx hardhat --network 0x13881 deploy",
     "deploy-binance": "npx hardhat --network 0x61 deploy",
     "PAYABLE-deploy-matic": "npx hardhat --network 0x89 deploy",
-    "PAYABLE-deploy-binance": "npx hardhat --network 0x38 deploy"
+    "PAYABLE-deploy-binance": "npx hardhat --network 0x38 deploy",
+    "PAYABLE-deploy-ethereum": "npx hardhat --network 0x1 deploy"
   },
   "author": "Juan Miguel Sanchez Mola",
   "license": "ISC"

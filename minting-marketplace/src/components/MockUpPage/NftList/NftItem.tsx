@@ -180,7 +180,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
           {metaDataProducts?.metadata?.animation_url ? (
             isFileUrl === 'gif' ? (
               <ImageLazy
-                className="col-12 h-100 w-100"
+                className="col-12 h-100 w-100 zoom-event"
                 width={'282px'}
                 height={'282px'}
                 alt={collectionName}
@@ -220,7 +220,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             )
           ) : (
             <ImageLazy
-              className="col-12 h-100 w-100"
+              className="col-12 h-100 w-100 zoom-event"
               width={'282px'}
               height={'282px'}
               src={
@@ -230,21 +230,6 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               }
               alt={collectionName}
             />
-            // <img
-            //   alt={collectionName}
-            //   src={
-            //     metaDataProducts?.metadata?.image
-            //       ? metaDataProducts?.metadata?.image
-            //       : pict
-            //   }
-            //   style={{
-            //     position: 'absolute',
-            //     bottom: 0,
-            //     borderRadius: '16px',
-            //     objectFit: 'contain'
-            //   }}
-            //   className="col-12 h-100 w-100"
-            // />
           )}
           {
             <SvgKey

@@ -1285,7 +1285,7 @@ describe("Token Factory", function () {
 				0,
 				0,
 			))
-				.to.be.revertedWith("RAIR ERC721: Minimum price for a range is 100");
+				.to.be.revertedWith("RAIR ERC721: Range price must be greater or equal than 100");
 			await expect(newRair721Instance.updateRange(
 				0,
 				"BAD First First", 
@@ -1373,7 +1373,7 @@ describe("Token Factory", function () {
 			await newRair721Instance.updateRange(
 				0, 							// Range index
 				"Updated NEW First First", 	// Range name 
-				900000, 					// Price
+				0, 					// Price
 				1, 							// Allowed tokens
 				1, 							// Locked tokens
 			);

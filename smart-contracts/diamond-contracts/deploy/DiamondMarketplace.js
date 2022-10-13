@@ -1,10 +1,11 @@
 const {deployments, ethers} = require('hardhat');
 
 module.exports = async ({accounts, getUnnamedAccounts}) => {
-	const {deploy} = deployments;
+	const {deploy, get} = deployments;
 	const [deployerAddress] = await getUnnamedAccounts();
 
-	let diamondCutFacetDeployment = await deploy('DiamondCutFacet', { from: deployerAddress });
+	let diamondCutFacetDeployment = await get("DiamondCutFacet");
+	//let diamondCutFacetDeployment = await deploy('DiamondCutFacet', { from: deployerAddress });
 	console.log('DiamondCut Facet deployed at', diamondCutFacetDeployment.receipt.contractAddress);
 
 	let diamondMarketplaceDeployment = await deploy('MarketplaceDiamond', {

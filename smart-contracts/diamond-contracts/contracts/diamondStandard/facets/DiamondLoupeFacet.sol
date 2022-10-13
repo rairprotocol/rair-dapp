@@ -9,6 +9,9 @@ import { LibDiamond } from  "../libraries/LibDiamond.sol";
 import { IDiamondLoupe } from "../interfaces/IDiamondLoupe.sol";
 import { IERC165 } from "../interfaces/IERC165.sol";
 
+// The functions in DiamondLoupeFacet MUST be added to a diamond.
+// The EIP-2535 Diamond standard requires these functions
+
 contract DiamondLoupeFacet is IDiamondLoupe, IERC165 {
     // Diamond Loupe Functions
     ////////////////////////////////////////////////////////////////////
@@ -23,7 +26,7 @@ contract DiamondLoupeFacet is IDiamondLoupe, IERC165 {
     function facets() external override view returns (Facet[] memory facets_) {
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
         facets_ = new Facet[](ds.selectorCount);
-        uint8[] memory numFacetSelectors = new uint8[](ds.selectorCount);
+        uint16[] memory numFacetSelectors = new uint16[](ds.selectorCount);
         uint256 numFacets;
         uint256 selectorIndex;
         // loop through function selectors
@@ -34,9 +37,10 @@ contract DiamondLoupeFacet is IDiamondLoupe, IERC165 {
                 if (selectorIndex > ds.selectorCount) {
                     break;
                 }
+                // " << 5 is the same as multiplying by 32 ( * 32)
                 bytes4 selector = bytes4(slot << (selectorSlotIndex << 5));
                 address facetAddress_ = address(bytes20(ds.facets[selector]));
-                bool continueLoop = false;
+                bool continueLoop;
                 for (uint256 facetIndex; facetIndex < numFacets; facetIndex++) {
                     if (facets_[facetIndex].facetAddress == facetAddress_) {
                         facets_[facetIndex].functionSelectors[numFacetSelectors[facetIndex]] = selector;
@@ -48,7 +52,6 @@ contract DiamondLoupeFacet is IDiamondLoupe, IERC165 {
                     }
                 }
                 if (continueLoop) {
-                    continueLoop = false;
                     continue;
                 }
                 facets_[numFacets].facetAddress = facetAddress_;
@@ -88,6 +91,7 @@ contract DiamondLoupeFacet is IDiamondLoupe, IERC165 {
                 if (selectorIndex > ds.selectorCount) {
                     break;
                 }
+                // " << 5 is the same as multiplying by 32 ( * 32)
                 bytes4 selector = bytes4(slot << (selectorSlotIndex << 5));
                 address facet = address(bytes20(ds.facets[selector]));
                 if (_facet == facet) {
@@ -117,17 +121,17 @@ contract DiamondLoupeFacet is IDiamondLoupe, IERC165 {
                 if (selectorIndex > ds.selectorCount) {
                     break;
                 }
+                // " << 5 is the same as multiplying by 32 ( * 32)
                 bytes4 selector = bytes4(slot << (selectorSlotIndex << 5));
                 address facetAddress_ = address(bytes20(ds.facets[selector]));
-                bool continueLoop = false;
+                bool continueLoop;
                 for (uint256 facetIndex; facetIndex < numFacets; facetIndex++) {
                     if (facetAddress_ == facetAddresses_[facetIndex]) {
                         continueLoop = true;
                         break;
                     }
                 }
-                if (continueLoop) {
-                    continueLoop = false;
+                if (continueLoop) {                    
                     continue;
                 }
                 facetAddresses_[numFacets] = facetAddress_;

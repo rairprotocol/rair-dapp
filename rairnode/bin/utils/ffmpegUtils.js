@@ -6,6 +6,7 @@ const {
   copyFileSync, rm, promises, createReadStream, createWriteStream, renameSync,
 } = require('fs');
 const _ = require('lodash');
+const AppError = require('./errors/AppError');
 const log = require('./logger')(module);
 
 const standardResolutions = [
@@ -55,98 +56,105 @@ function intToByteArray(num) {
 }
 
 const encryptFolderContents = async (mediaData, encryptExtensions, socketInstance) => {
-  const key = generateKeySync('aes', { length: 256 });
-  const promiseList = [];
+  try {
+    const key = generateKeySync('aes', { length: 256 });
+    const promiseList = [];
 
-  const directoryData = await promises.readdir(mediaData.destination);
+    const directoryData = await promises.readdir(mediaData.destination);
 
-  for await (const entry of directoryData) {
-    const extension = entry.split('.')[1];
-    if (!encryptExtensions.includes(extension)) {
-      log.info(`Ignoring file ${entry}`);
-      continue;
-    }
-    const promise = new Promise((resolve, reject) => {
-      const fullPath = path.join(mediaData.destination, entry);
-      console.log(`Encrypting ${entry}`);
-      const encryptedPath = `${fullPath}.encrypted`;
-      try {
+    for await (const entry of directoryData) {
+      const extension = entry.split('.')[1];
+
+      if (!encryptExtensions.includes(extension)) {
+        log.info(`Ignoring file ${entry}`);
+        continue;
+      }
+
+      const promise = new Promise((resolve, reject) => {
+        const fullPath = path.join(mediaData.destination, entry);
+        console.log(`Encrypting ${entry}`);
+        const encryptedPath = `${fullPath}.encrypted`;
         const iv = intToByteArray(parseInt(entry.match(/([0-9]+).ts/)[1]));
         const encrypt = createCipheriv('aes-256-gcm', key, iv);
         const source = createReadStream(fullPath);
         const dest = createWriteStream(encryptedPath);
-
         source.pipe(encrypt).pipe(dest).on('finish', () => {
-          // overwrite the unencrypted file so we don't have to modify the manifests
+        // overwrite the unencrypted file so we don't have to modify the manifests
           renameSync(encryptedPath, fullPath);
           console.log(`finished encrypting: ${fullPath}`);
           return resolve({ [_.chain(entry).split('.').head().value()]: encrypt.getAuthTag().toString('hex') });
         });
-      } catch (e) {
-        console.error('Could not encrypt', fullPath, e);
-        reject(e);
-      }
+      }).catch((e) => log.error(`Could not encrypt',${fullPath}, ${e}`));
+
+      promiseList.push(promise);
+    }
+    socketInstance.emit('uploadProgress', {
+      message: 'Done scheduling encryptions',
+      last: false,
+      done: 15,
+      parts: promiseList.length,
     });
-    promiseList.push(promise);
+    const authOfChunks = await Promise.all(promiseList);
+    const authTag = authOfChunks.reduce((pv, value) => ({ ...pv, ...value }), {});
+    return { key: key.export(), authTag };
+  } catch (e) {
+    log.error(e);
+    return new AppError('Encrypting process faild', 500);
   }
-  socketInstance.emit('uploadProgress', {
-    message: 'Done scheduling encryptions',
-    last: false,
-    done: 15,
-    parts: promiseList.length,
-  });
-  const authOfChunks = await Promise.all(promiseList);
-  const authTag = authOfChunks.reduce((pv, value) => ({ ...pv, ...value }), {});
-  return { key: key.export(), authTag };
 };
 
 const convertToHLS = async (mediaData, socketInstance) => {
-  console.log('Converting');
-  const totalRuntime = mediaData.duration.replace('.', '').replace(':', '').replace(':', '');
-  const promise = new Promise(async (resolve, reject) => {
-    try {
-      const resolutionConfigs = standardResolutions.map(({
-        height, videoBitrate, maximumBitrate, bufferSize, audioBitrate,
-      }) => [
-        ...(mediaData.type === 'video' ? ['-vf', `scale=-2:${height}`] : []),
-        '-hls_time', mediaData.type === 'audio' ? '15' : '7',
-        ...genericConversionParams,
-        '-b:v', `${videoBitrate}k`,
-        '-maxrate', `${maximumBitrate}k`,
-        '-bufsize', `${bufferSize}k`,
-        '-b:a', `${audioBitrate}k`,
-        `${mediaData.destination}/${height}p.m3u8`,
-      ]);
-      const videoConversion = await spawn(ffmpeg.path, ['-i', `${mediaData.path}`].concat(...resolutionConfigs));
-      videoConversion.stderr.on('data', (data) => {
-        let conversionProgress = data.toString()?.split('time=')[1]?.split(' bitrate')[0];
-        if (conversionProgress) {
-          conversionProgress = conversionProgress.replace('.', '').replace(':', '').replace(':', '');
-          socketInstance.emit('uploadProgress', {
-            message: `Converting: ${mediaData.originalname} - ${((conversionProgress / totalRuntime) * 100).toFixed(2)}%`,
-            last: false,
-            done: 10,
-          });
-        }
-      });
-      videoConversion.on('close', (data) => {
-        resolve();
-      });
-    } catch (e) {
-      console.error(e);
-      reject(e);
-    }
-  });
-  await promise;
-  await rm(mediaData.path, console.log);
-  socketInstance.emit('uploadProgress', {
-    message: `${mediaData.originalname} raw deleted`,
-    last: false,
-  });
-  copyFileSync(
-    path.join(mediaData.destination, '..', '..', 'templates', 'stream.m3u8.template'),
-    path.join(mediaData.destination, 'stream.m3u8'),
-  );
+  try {
+    log.info('Converting');
+    const totalRuntime = mediaData.duration.replace('.', '').replace(':', '').replace(':', '');
+    const promise = new Promise(async (resolve, reject) => {
+      try {
+        const resolutionConfigs = standardResolutions.map(({
+          height, videoBitrate, maximumBitrate, bufferSize, audioBitrate,
+        }) => [
+          ...(mediaData.type === 'video' ? ['-vf', `scale=-2:${height}`] : []),
+          '-hls_time', mediaData.type === 'audio' ? '15' : '7',
+          ...genericConversionParams,
+          '-b:v', `${videoBitrate}k`,
+          '-maxrate', `${maximumBitrate}k`,
+          '-bufsize', `${bufferSize}k`,
+          '-b:a', `${audioBitrate}k`,
+          `${mediaData.destination}/${height}p.m3u8`,
+        ]);
+        const videoConversion = await spawn(ffmpeg.path, ['-i', `${mediaData.path}`].concat(...resolutionConfigs));
+        videoConversion.stderr.on('data', (data) => {
+          let conversionProgress = data.toString()?.split('time=')[1]?.split(' bitrate')[0];
+          if (conversionProgress) {
+            conversionProgress = conversionProgress.replace('.', '').replace(':', '').replace(':', '');
+            socketInstance.emit('uploadProgress', {
+              message: `Converting: ${mediaData.originalname} - ${((conversionProgress / totalRuntime) * 100).toFixed(2)}%`,
+              last: false,
+              done: 10,
+            });
+          }
+        });
+        videoConversion.on('close', (data) => {
+          resolve();
+        });
+      } catch (e) {
+        log.error(e);
+        reject(e);
+      }
+    });
+    await promise;
+    await rm(mediaData.path, log.info);
+    socketInstance.emit('uploadProgress', {
+      message: `${mediaData.originalname} raw deleted`,
+      last: false,
+    });
+    copyFileSync(
+      path.join(mediaData.destination, '..', '..', 'templates', 'stream.m3u8.template'),
+      path.join(mediaData.destination, 'stream.m3u8'),
+    );
+  } catch (e) {
+    log.error(e);
+    return new AppError('Converting process faild', 500);
+  }
 };
 
 const getMediaData = async (mediaData) => {
@@ -171,11 +179,11 @@ const getMediaData = async (mediaData) => {
           mediaData.height = height;
         }
       } catch (e) {
-        log.error('Error fetching video dimensions!', e);
+        log.error(`Error fetching video dimensions!, ${e}`);
       }
     }
   } catch (e) {
-    console.error(e);
+    log.error(e);
   }
 };
 
@@ -201,7 +209,7 @@ const generateThumbnails = async (mediaData, socketInstance) => {
       mediaData.staticThumbnail = 'thumbnail.webp';
       mediaData.animatedThumbnail = 'thumbnail.gif';
     } catch (e) {
-      console.error(e);
+      log.error(e);
     }
   } else if (mediaData.type === 'audio') {
     mediaData.staticThumbnail = process.env.DEFAULT_PRODUCT_COVER;

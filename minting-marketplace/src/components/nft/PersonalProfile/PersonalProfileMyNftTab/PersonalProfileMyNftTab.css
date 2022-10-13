@@ -1,0 +1,6 @@
+.my-items-pict {
+  width: inherit;
+  height: inherit;
+  margin-left: -11px;
+  object-fit: cover !important;
+}

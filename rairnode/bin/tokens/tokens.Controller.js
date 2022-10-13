@@ -1,12 +1,12 @@
 const express = require('express');
 const {
-  createTokensWithCommonMetadata,
   getSingleToken,
   updateSingleTokenMetadata,
   pinMetadataToPinata,
   createTokensViaCSV,
   getAllTokens,
   getTokenNumbers,
+  updateTokenCommonMetadata,
 } = require('./tokens.Service');
 const { getSpecificContracts } = require('../contracts/contracts.Service');
 const {
@@ -28,13 +28,13 @@ const router = express.Router();
 router
   .route('/')
   .get(getSpecificContracts, getAllTokens)
-  .post(
+  .patch(
     JWTVerification,
     isAdmin,
     upload.array('files', 2),
     dataTransform(['attributes']),
-    validation('createCommonTokenMetadata'),
-    createTokensWithCommonMetadata,
+    validation('updateCommonTokenMetadata'),
+    updateTokenCommonMetadata,
   );
 router.post(
   '/viaCSV',
