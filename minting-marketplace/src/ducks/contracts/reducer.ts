@@ -74,11 +74,11 @@ const contractAddresses: ContractAddressesType = {
   },
   '0x1': {
     // Ethereum Mainnet
-    factory: '0xba01BC9Ea4f2806ADdcd94C6cd8c43DD4f2488eC',
+    factory: '0xA2A7e7636AB4374847074c147BE770624F43342E',
     erc777: '0xf0ebe73fdae61b305132fd1873c98fb5c4735b40',
     minterMarketplace: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
     diamondFactory: undefined,
-    diamondMarketplace: undefined,
+    diamondMarketplace: '0x5c31677c7E73F97020213690F736A8a2Ff922EBC',
     resaleMarketplace: undefined
   }
 };

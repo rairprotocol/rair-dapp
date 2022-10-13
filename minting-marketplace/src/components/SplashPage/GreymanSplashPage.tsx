@@ -26,7 +26,11 @@ import StandaloneVideoPlayer from '../video/videoPlayerGenerall';
 
 import AuthorBlock from './AuthorBlock/AuthorBlock';
 import GreymanFavicon from './images/favicons/greyman-favicon.ico';
-import { GreyMan, GreyManNotFun, playImages } from './images/greyMan/grayMan';
+import {
+  GreyMan,
+  GreyManNotFun,
+  playImagesColored
+} from './images/greyMan/grayMan';
 import NotCommercial from './NotCommercial/NotCommercial';
 import ButtonHelp from './PurchaseChecklist/ButtonHelp';
 import PurchaseChecklist from './PurchaseChecklist/PurchaseChecklist';
@@ -277,7 +281,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
               }}
               className="video-grey-man-metamask-logo metamask-logo"
               onClick={() => openVideo()}>
-              <img src={playImages} alt="Play" />
+              <img src={playImagesColored} alt="Play" />
             </button>
           </div>
           <Modal
@@ -316,7 +320,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
               }}
               className="video-grey-man-metamask-logo metamask-logo"
               onClick={() => openVideo()}>
-              <img src={playImages} alt="Play" />
+              <img src={playImagesColored} alt="Play" />
             </button>
           </div>
           <Modal

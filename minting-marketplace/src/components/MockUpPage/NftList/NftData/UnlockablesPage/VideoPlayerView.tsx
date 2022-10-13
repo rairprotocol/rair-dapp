@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { playImages } from '../../../../SplashPage/images/greyMan/grayMan';
+import { playImagesColored } from '../../../../SplashPage/images/greyMan/grayMan';
 import {
   IVideoPlayerView,
   TVideoPlayerViewSpecialVideoType
@@ -62,8 +62,8 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                       style={{ border: 'none', background: 'none' }}
                       className="">
                       <img
-                        className={cl.playImagesOnListVideos}
-                        src={playImages}
+                        className={cl.playImagesColoredOnListVideos}
+                        src={playImagesColored}
                         alt="Play"
                       />
                     </button>
@@ -102,7 +102,7 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                     className="">
                     <img
                       className={cl.playImagesOnListVideos}
-                      src={playImages}
+                      src={playImagesColored}
                       alt="Button Play video"
                     />
                   </button>
@@ -132,7 +132,7 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
               }>
               <img
                 className={cl.playImagesOnSingleVideo}
-                src={playImages}
+                src={playImagesColored}
                 alt="Button Play video"
               />
             </div>
@@ -158,8 +158,8 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                       : cl.SingleVideo
                   }>
                   <img
-                    className={cl.playImagesOnSingleVideo}
-                    src={playImages}
+                    className={cl.playImagesColoredOnSingleVideo}
+                    src={playImagesColored}
                     alt="Button Play video"
                   />
                 </div>

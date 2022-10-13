@@ -1,0 +1,978 @@
+{
+  "address": "0xD22179AbCFFC1b62a51a35Fbc726f0C79440547C",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "decimals",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "precalculatedMultiplier",
+          "type": "uint256"
+        }
+      ],
+      "name": "UpdatedDecimals",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "decimals",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newPercentage",
+          "type": "uint256"
+        }
+      ],
+      "name": "UpdatedNodeFee",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newAddress",
+          "type": "address"
+        }
+      ],
+      "name": "UpdatedTreasuryAddress",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "decimals",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newPercentage",
+          "type": "uint256"
+        }
+      ],
+      "name": "UpdatedTreasuryFee",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "MAINTAINER",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getDecimals",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getNodeFee",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "decimals",
+          "type": "uint16"
+        },
+        {
+          "internalType": "uint256",
+          "name": "nodeFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRoleMember",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleMemberCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTreasuryAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTreasuryFee",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "decimals",
+          "type": "uint16"
+        },
+        {
+          "internalType": "uint256",
+          "name": "treasuryFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "newDecimals_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateDecimals",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newFee_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateNodeFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "updateTreasuryAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newFee_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateTreasuryFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x6deb63649ba2df09fa29e30bfdeeaaef666968f5b81af0ab41ef2de56fde3db3",
+  "receipt": {
+    "to": null,
+    "from": "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+    "contractAddress": "0xD22179AbCFFC1b62a51a35Fbc726f0C79440547C",
+    "transactionIndex": 52,
+    "gasUsed": "848865",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xdc62f5e0a40712bc09d23f050670804d9d97624c5d102477c8a33b6c53fef74f",
+    "transactionHash": "0x6deb63649ba2df09fa29e30bfdeeaaef666968f5b81af0ab41ef2de56fde3db3",
+    "logs": [],
+    "blockNumber": 15698169,
+    "cumulativeGasUsed": "4735803",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "fd36f951ec49d47157e7a556584d2ce2",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"decimals\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"precalculatedMultiplier\",\"type\":\"uint256\"}],\"name\":\"UpdatedDecimals\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"decimals\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPercentage\",\"type\":\"uint256\"}],\"name\":\"UpdatedNodeFee\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAddress\",\"type\":\"address\"}],\"name\":\"UpdatedTreasuryAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"decimals\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPercentage\",\"type\":\"uint256\"}],\"name\":\"UpdatedTreasuryFee\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"MAINTAINER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDecimals\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNodeFee\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"decimals\",\"type\":\"uint16\"},{\"internalType\":\"uint256\",\"name\":\"nodeFee\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTreasuryAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTreasuryFee\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"decimals\",\"type\":\"uint16\"},{\"internalType\":\"uint256\",\"name\":\"treasuryFee\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"newDecimals_\",\"type\":\"uint16\"}],\"name\":\"updateDecimals\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newFee_\",\"type\":\"uint256\"}],\"name\":\"updateNodeFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newAddress_\",\"type\":\"address\"}],\"name\":\"updateTreasuryAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newFee_\",\"type\":\"uint256\"}],\"name\":\"updateTreasuryFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Notice that this contract is inheriting from AccessControlAppStorageEnumerableMarket\",\"events\":{\"UpdatedDecimals(uint256,uint256)\":{\"params\":{\"decimals\":\"Contains the decimals established for the fee\",\"precalculatedMultiplier\":\"Contains the value of the multiplayer for the fee\"}},\"UpdatedNodeFee(uint256,uint256)\":{\"params\":{\"decimals\":\"Contains the decimals established for the fee\",\"newPercentage\":\"Contains the value of the percentage to calculate the fee\"}},\"UpdatedTreasuryAddress(address)\":{\"params\":{\"newAddress\":\"Contains the new address that we set ad treasury\"}},\"UpdatedTreasuryFee(uint256,uint256)\":{\"params\":{\"decimals\":\"Contains the decimals established for the fee\",\"newPercentage\":\"Contains the value of the percentage to calculate the treasury fee\"}}},\"kind\":\"dev\",\"methods\":{\"getDecimals()\":{\"returns\":{\"_0\":\"uint16 with the current decimals \"}},\"getNodeFee()\":{\"returns\":{\"decimals\":\"\\tNumber of decimal spaces in the resulting node fee\",\"nodeFee\":\"\\tPercentage of any minting offer that belongs to the node address\"}},\"getRoleAdmin(bytes32)\":{\"params\":{\"role\":\"Contains the role that we want to verify\"},\"returns\":{\"_0\":\"bytes that indicates if an account has or not an admin role\"}},\"getRoleMember(bytes32,uint256)\":{\"params\":{\"index\":\"Contains the indexed position to verify inside the role members list\",\"role\":\"Contains the role that we want to verify\"},\"returns\":{\"_0\":\"address that indicates the address indexed in that position\"}},\"getRoleMemberCount(bytes32)\":{\"params\":{\"role\":\"Contains the role that we want to verify\"},\"returns\":{\"_0\":\"uint256 that indicates the total accounts with that role\"}},\"getTreasuryAddress()\":{\"returns\":{\"_0\":\"address which contains the treasury contract address\"}},\"getTreasuryFee()\":{\"returns\":{\"decimals\":\"containt the current decimals that use the fee\",\"treasuryFee\":\"constain the current fee of the treasury\"}},\"grantRole(bytes32,address)\":{\"details\":\"This function is only available to an account with an Admin role\",\"params\":{\"account\":\"Contains the account that has the role we want to update\",\"role\":\"Contains the role that we want to grant\"}},\"hasRole(bytes32,address)\":{\"params\":{\"account\":\"Contains the account address thay we want to verify\",\"role\":\"Contains the role that we want to verify\"},\"returns\":{\"_0\":\"bool that indicates if an account has or not a role\"}},\"renounceRole(bytes32,address)\":{\"details\":\"Currently you can only renounce to your own roles\",\"params\":{\"account\":\"Contains the account that has the role we want to update\",\"role\":\"Contains the role to remove from our account\"}},\"revokeRole(bytes32,address)\":{\"details\":\"This function is only available to an account with an Admin role\",\"params\":{\"account\":\"Contains the account that has the role we want to update\",\"role\":\"Contains the role that we want to revoke\"}},\"updateDecimals(uint16)\":{\"details\":\"Only a MAINTAINER of the contract is allowed to make this change\",\"params\":{\"newDecimals_\":\"Contains the value of the new decimals that we want to implement\"}},\"updateNodeFee(uint256)\":{\"details\":\"Only a MAINTAINER of the contract is allowed to make this change\",\"params\":{\"newFee_\":\"establish the new value that we want to set as fee\"}},\"updateTreasuryAddress(address)\":{\"details\":\"Only a MAINTAINER he new fee that we want to implement for the treasury\",\"params\":{\"newAddress_\":\"contains the new address that we want to establish as treasury\"}},\"updateTreasuryFee(uint256)\":{\"details\":\"Only a MAINTAINER he new fee that we want to implement for the treasury\",\"params\":{\"newFee_\":\"establish the new value that we want to set as treasury fee\"}}},\"title\":\"This is contract to manage the facet fees\",\"version\":1},\"userdoc\":{\"events\":{\"RoleAdminChanged(bytes32,bytes32,bytes32)\":{\"notice\":\"This event stores in the blockchain when we change an admin role\"},\"RoleGranted(bytes32,address,address)\":{\"notice\":\"This event stores in the blockchain when we grant a role\"},\"RoleRevoked(bytes32,address,address)\":{\"notice\":\"This event stores in the blockchain when we revoke a role\"},\"UpdatedDecimals(uint256,uint256)\":{\"notice\":\"This event stores in the blockchain when we update the decimals of a fee\"},\"UpdatedNodeFee(uint256,uint256)\":{\"notice\":\"This event stores in the blockchain when we update the node fee\"},\"UpdatedTreasuryAddress(address)\":{\"notice\":\"This event stores in the blockchain when we update the decimals of a fee\"},\"UpdatedTreasuryFee(uint256,uint256)\":{\"notice\":\"This event stores in the blockchain when we update the fee of our treasury\"}},\"kind\":\"user\",\"methods\":{\"getDecimals()\":{\"notice\":\"Check the current decimals of the fee\"},\"getNodeFee()\":{\"notice\":\"Allow us to check the value of the fee for the current node\"},\"getRoleAdmin(bytes32)\":{\"notice\":\"Allow us to check the admin role that contains a role\"},\"getRoleMember(bytes32,uint256)\":{\"notice\":\"Allow us to check the address of an indexed position for the role list\"},\"getRoleMemberCount(bytes32)\":{\"notice\":\"Allow us to check total members that has an selected role\"},\"getTreasuryAddress()\":{\"notice\":\"Allow us to check the current Treasury fee\"},\"getTreasuryFee()\":{\"notice\":\"Allow us to check the current Treasury fee\"},\"grantRole(bytes32,address)\":{\"notice\":\"Allow us to grant a role to an account\"},\"hasRole(bytes32,address)\":{\"notice\":\"Allow us to check the if and account has a selected role\"},\"renounceRole(bytes32,address)\":{\"notice\":\"Allow us to renounce to a role\"},\"revokeRole(bytes32,address)\":{\"notice\":\"Allow us to revoke a role to an account\"},\"updateDecimals(uint16)\":{\"notice\":\"Allow us to update the decimals that we use\"},\"updateNodeFee(uint256)\":{\"notice\":\"Allow us to update the current fee of the node\"},\"updateTreasuryAddress(address)\":{\"notice\":\"Allow us to modify the address that we use as treasury\"},\"updateTreasuryFee(uint256)\":{\"notice\":\"Allow us to modify the current treasury fee\"}},\"notice\":\"You can use this contract to update the facet and treasury\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Marketplace/Facets/FeesFacet.sol\":\"FeesFacet\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/IAccessControl.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (access/IAccessControl.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev External interface of AccessControl declared to support ERC165 detection.\\n */\\ninterface IAccessControl {\\n    /**\\n     * @dev Emitted when `newAdminRole` is set as ``role``'s admin role, replacing `previousAdminRole`\\n     *\\n     * `DEFAULT_ADMIN_ROLE` is the starting admin for all roles, despite\\n     * {RoleAdminChanged} not being emitted signaling this.\\n     *\\n     * _Available since v3.1._\\n     */\\n    event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\n    /**\\n     * @dev Emitted when `account` is granted `role`.\\n     *\\n     * `sender` is the account that originated the contract call, an admin role\\n     * bearer except when using {AccessControl-_setupRole}.\\n     */\\n    event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    /**\\n     * @dev Emitted when `account` is revoked `role`.\\n     *\\n     * `sender` is the account that originated the contract call:\\n     *   - if using `revokeRole`, it is the admin role bearer\\n     *   - if using `renounceRole`, it is the role bearer (i.e. `account`)\\n     */\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    /**\\n     * @dev Returns `true` if `account` has been granted `role`.\\n     */\\n    function hasRole(bytes32 role, address account) external view returns (bool);\\n\\n    /**\\n     * @dev Returns the admin role that controls `role`. See {grantRole} and\\n     * {revokeRole}.\\n     *\\n     * To change a role's admin, use {AccessControl-_setRoleAdmin}.\\n     */\\n    function getRoleAdmin(bytes32 role) external view returns (bytes32);\\n\\n    /**\\n     * @dev Grants `role` to `account`.\\n     *\\n     * If `account` had not been already granted `role`, emits a {RoleGranted}\\n     * event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must have ``role``'s admin role.\\n     */\\n    function grantRole(bytes32 role, address account) external;\\n\\n    /**\\n     * @dev Revokes `role` from `account`.\\n     *\\n     * If `account` had been granted `role`, emits a {RoleRevoked} event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must have ``role``'s admin role.\\n     */\\n    function revokeRole(bytes32 role, address account) external;\\n\\n    /**\\n     * @dev Revokes `role` from the calling account.\\n     *\\n     * Roles are often managed via {grantRole} and {revokeRole}: this function's\\n     * purpose is to provide a mechanism for accounts to lose their privileges\\n     * if they are compromised (such as when a trusted device is misplaced).\\n     *\\n     * If the calling account had been granted `role`, emits a {RoleRevoked}\\n     * event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must be `account`.\\n     */\\n    function renounceRole(bytes32 role, address account) external;\\n}\\n\",\"keccak256\":\"0x59ce320a585d7e1f163cd70390a0ef2ff9cec832e2aa544293a00692465a7a57\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Strings.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.7.0) (utils/Strings.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev String operations.\\n */\\nlibrary Strings {\\n    bytes16 private constant _HEX_SYMBOLS = \\\"0123456789abcdef\\\";\\n    uint8 private constant _ADDRESS_LENGTH = 20;\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` decimal representation.\\n     */\\n    function toString(uint256 value) internal pure returns (string memory) {\\n        // Inspired by OraclizeAPI's implementation - MIT licence\\n        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol\\n\\n        if (value == 0) {\\n            return \\\"0\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 digits;\\n        while (temp != 0) {\\n            digits++;\\n            temp /= 10;\\n        }\\n        bytes memory buffer = new bytes(digits);\\n        while (value != 0) {\\n            digits -= 1;\\n            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));\\n            value /= 10;\\n        }\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return \\\"0x00\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 length = 0;\\n        while (temp != 0) {\\n            length++;\\n            temp >>= 8;\\n        }\\n        return toHexString(value, length);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.\\n     */\\n    function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {\\n        bytes memory buffer = new bytes(2 * length + 2);\\n        buffer[0] = \\\"0\\\";\\n        buffer[1] = \\\"x\\\";\\n        for (uint256 i = 2 * length + 1; i > 1; --i) {\\n            buffer[i] = _HEX_SYMBOLS[value & 0xf];\\n            value >>= 4;\\n        }\\n        require(value == 0, \\\"Strings: hex length insufficient\\\");\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts an `address` with fixed length of 20 bytes to its not checksummed ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(address addr) internal pure returns (string memory) {\\n        return toHexString(uint256(uint160(addr)), _ADDRESS_LENGTH);\\n    }\\n}\\n\",\"keccak256\":\"0xaf159a8b1923ad2a26d516089bceca9bdeaeacd04be50983ea00ba63070f08a3\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.7.0) (utils/structs/EnumerableSet.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Library for managing\\n * https://en.wikipedia.org/wiki/Set_(abstract_data_type)[sets] of primitive\\n * types.\\n *\\n * Sets have the following properties:\\n *\\n * - Elements are added, removed, and checked for existence in constant time\\n * (O(1)).\\n * - Elements are enumerated in O(n). No guarantees are made on the ordering.\\n *\\n * ```\\n * contract Example {\\n *     // Add the library methods\\n *     using EnumerableSet for EnumerableSet.AddressSet;\\n *\\n *     // Declare a set state variable\\n *     EnumerableSet.AddressSet private mySet;\\n * }\\n * ```\\n *\\n * As of v3.3.0, sets of type `bytes32` (`Bytes32Set`), `address` (`AddressSet`)\\n * and `uint256` (`UintSet`) are supported.\\n *\\n * [WARNING]\\n * ====\\n *  Trying to delete such a structure from storage will likely result in data corruption, rendering the structure unusable.\\n *  See https://github.com/ethereum/solidity/pull/11843[ethereum/solidity#11843] for more info.\\n *\\n *  In order to clean an EnumerableSet, you can either remove all elements one by one or create a fresh instance using an array of EnumerableSet.\\n * ====\\n */\\nlibrary EnumerableSet {\\n    // To implement this library for multiple types with as little code\\n    // repetition as possible, we write it in terms of a generic Set type with\\n    // bytes32 values.\\n    // The Set implementation uses private functions, and user-facing\\n    // implementations (such as AddressSet) are just wrappers around the\\n    // underlying Set.\\n    // This means that we can only create new EnumerableSets for types that fit\\n    // in bytes32.\\n\\n    struct Set {\\n        // Storage of set values\\n        bytes32[] _values;\\n        // Position of the value in the `values` array, plus 1 because index 0\\n        // means a value is not in the set.\\n        mapping(bytes32 => uint256) _indexes;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function _add(Set storage set, bytes32 value) private returns (bool) {\\n        if (!_contains(set, value)) {\\n            set._values.push(value);\\n            // The value is stored at length-1, but we add 1 to all indexes\\n            // and use 0 as a sentinel value\\n            set._indexes[value] = set._values.length;\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function _remove(Set storage set, bytes32 value) private returns (bool) {\\n        // We read and store the value's index to prevent multiple reads from the same storage slot\\n        uint256 valueIndex = set._indexes[value];\\n\\n        if (valueIndex != 0) {\\n            // Equivalent to contains(set, value)\\n            // To delete an element from the _values array in O(1), we swap the element to delete with the last one in\\n            // the array, and then remove the last element (sometimes called as 'swap and pop').\\n            // This modifies the order of the array, as noted in {at}.\\n\\n            uint256 toDeleteIndex = valueIndex - 1;\\n            uint256 lastIndex = set._values.length - 1;\\n\\n            if (lastIndex != toDeleteIndex) {\\n                bytes32 lastValue = set._values[lastIndex];\\n\\n                // Move the last value to the index where the value to delete is\\n                set._values[toDeleteIndex] = lastValue;\\n                // Update the index for the moved value\\n                set._indexes[lastValue] = valueIndex; // Replace lastValue's index to valueIndex\\n            }\\n\\n            // Delete the slot where the moved value was stored\\n            set._values.pop();\\n\\n            // Delete the index for the deleted slot\\n            delete set._indexes[value];\\n\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function _contains(Set storage set, bytes32 value) private view returns (bool) {\\n        return set._indexes[value] != 0;\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function _length(Set storage set) private view returns (uint256) {\\n        return set._values.length;\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function _at(Set storage set, uint256 index) private view returns (bytes32) {\\n        return set._values[index];\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function _values(Set storage set) private view returns (bytes32[] memory) {\\n        return set._values;\\n    }\\n\\n    // Bytes32Set\\n\\n    struct Bytes32Set {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _add(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _remove(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(Bytes32Set storage set, bytes32 value) internal view returns (bool) {\\n        return _contains(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(Bytes32Set storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(Bytes32Set storage set, uint256 index) internal view returns (bytes32) {\\n        return _at(set._inner, index);\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(Bytes32Set storage set) internal view returns (bytes32[] memory) {\\n        return _values(set._inner);\\n    }\\n\\n    // AddressSet\\n\\n    struct AddressSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(AddressSet storage set, address value) internal returns (bool) {\\n        return _add(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(AddressSet storage set, address value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(AddressSet storage set, address value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(AddressSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(AddressSet storage set, uint256 index) internal view returns (address) {\\n        return address(uint160(uint256(_at(set._inner, index))));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(AddressSet storage set) internal view returns (address[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        address[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n\\n    // UintSet\\n\\n    struct UintSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _add(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(UintSet storage set, uint256 value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function length(UintSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(UintSet storage set, uint256 index) internal view returns (uint256) {\\n        return uint256(_at(set._inner, index));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(UintSet storage set) internal view returns (uint256[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        uint256[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n}\\n\",\"keccak256\":\"0x5050943b32b6a8f282573d166b2e9d87ab7eb4dbba4ab6acf36ecb54fe6995e4\",\"license\":\"MIT\"},\"contracts/Marketplace/AppStorage.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport \\\"@openzeppelin/contracts/utils/Context.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/Strings.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\n\\nstruct feeSplits {\\n\\taddress recipient;\\n\\tuint percentage;\\n}\\n\\nstruct mintingOffer {\\n\\taddress erc721Address;\\n\\taddress nodeAddress;\\n\\tuint rangeIndex;\\n\\tfeeSplits[] fees;\\n\\tbool visible;\\n}\\n\\nstruct RoleData {\\n\\tmapping(address => bool) members;\\n\\tbytes32 adminRole;\\n}\\n\\nstruct AppStorage {\\n\\t// Access Control Enumerable\\n\\tmapping(bytes32 => RoleData) _roles;\\n\\tmapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;\\n\\t// App\\n\\tuint16 decimals;\\n\\tuint decimalPow;\\n\\tuint nodeFee;\\n\\tuint treasuryFee;\\n\\taddress treasuryAddress;\\n\\tmintingOffer[] mintingOffers;\\n\\tmapping(address => mapping(uint => uint)) addressToRangeOffer;\\n\\tmapping(address => uint[]) addressToOffers;\\n\\t// Always add new fields at the end of the struct, that way the structure can be upgraded\\n}\\n\\nlibrary LibAppStorage {\\n\\tfunction diamondStorage() internal pure\\treturns (AppStorage storage ds) {\\n\\t\\tassembly {\\n\\t\\t\\tds.slot := 0\\n\\t\\t}\\n\\t}\\n}\\n\\n/// @title \\tThis is contract to manage the access control of the app market\\n/// @notice You can use this contract to administrate roles of the app market\\n/// @dev \\tNotice that this contract is inheriting from Context\\ncontract AccessControlAppStorageEnumerableMarket is Context {\\n\\tusing EnumerableSet for EnumerableSet.AddressSet;\\n\\t\\n\\tAppStorage internal s;\\n\\n\\t/// @notice This event stores in the blockchain when we change an admin role\\n    /// @param  role Contains the role we want to update\\n    /// @param  previousAdminRole contains the previous status of the role\\n\\t/// @param  newAdminRole contains the new status of the role\\n\\tevent RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\t/// @notice This event stores in the blockchain when we grant a role\\n    /// @param  role Contains the role we want to update\\n    /// @param  account contains the address that we want to grant the role\\n\\t/// @param  sender contains the address that is changing the role of the account\\n\\tevent RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n\\t/// @notice This event stores in the blockchain when we revoke a role\\n    /// @param  role Contains the role we want to update\\n    /// @param  account contains the address that we want to revoke the role\\n\\t/// @param  sender contains the address that is changing the role of the account\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    modifier onlyRole(bytes32 role) {\\n        _checkRole(role, _msgSender());\\n        _;\\n    }\\n\\n\\t/// @notice Allow us to renounce to a role\\n\\t/// @dev \\tCurrently you can only renounce to your own roles\\n\\t/// @param \\trole Contains the role to remove from our account\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n    function renounceRole(bytes32 role, address account) public {\\n        require(account == _msgSender(), \\\"AccessControl: can only renounce roles for self\\\");\\n        _revokeRole(role, account);\\n    }\\n\\n\\t/// @notice Allow us to grant a role to an account\\n\\t/// @dev \\tThis function is only available to an account with an Admin role\\n\\t/// @param \\trole Contains the role that we want to grant\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n    function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _grantRole(role, account);\\n    }\\n\\n\\t/// @notice Allow us to revoke a role to an account\\n\\t/// @dev \\tThis function is only available to an account with an Admin role\\n\\t/// @param \\trole Contains the role that we want to revoke\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n    function revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _revokeRole(role, account);\\n    }\\n\\n\\t/// @notice Allow us to check the if and account has a selected role\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @param \\taccount Contains the account address thay we want to verify\\n    function _checkRole(bytes32 role, address account) internal view {\\n        if (!hasRole(role, account)) {\\n            revert(\\n                string(\\n                    abi.encodePacked(\\n                        \\\"AccessControl: account \\\",\\n                        Strings.toHexString(uint160(account), 20),\\n                        \\\" is missing role \\\",\\n                        Strings.toHexString(uint256(role), 32)\\n                    )\\n                )\\n            );\\n        }\\n    }\\n\\n\\t/// @notice Allow us to check the if and account has a selected role\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @param \\taccount Contains the account address thay we want to verify\\n\\t/// @return bool that indicates if an account has or not a role\\n\\tfunction hasRole(bytes32 role, address account) public view returns (bool) {\\n\\t\\treturn s._roles[role].members[account];\\n\\t}\\n\\n\\t/// @notice Allow us to check the admin role that contains a role\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @return bytes that indicates if an account has or not an admin role\\n\\tfunction getRoleAdmin(bytes32 role) public view returns (bytes32) {\\n\\t\\treturn s._roles[role].adminRole;\\n\\t}\\n\\n\\t/// @notice Allow us to check the address of an indexed position for the role list\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @param \\tindex Contains the indexed position to verify inside the role members list\\n\\t/// @return address that indicates the address indexed in that position\\n\\tfunction getRoleMember(bytes32 role, uint256 index) public view returns (address) {\\n\\t\\treturn s._roleMembers[role].at(index);\\n\\t}\\n\\t\\n\\t/// @notice Allow us to check total members that has an selected role\\n\\t/// @param \\trole Contains the role that we want to verify\\n\\t/// @return uint256 that indicates the total accounts with that role\\n\\tfunction getRoleMemberCount(bytes32 role) public view returns (uint256) {\\n\\t\\treturn s._roleMembers[role].length();\\n\\t}\\n\\n\\t/// @notice Allow us to modify a rol and set it as an admin role\\n\\t/// @param \\trole Contains the role that we want to modify\\n\\t/// @param \\tadminRole Contains the admin role that we want to set\\n\\tfunction _setRoleAdmin(bytes32 role, bytes32 adminRole) internal {\\n\\t\\tbytes32 previousAdminRole = getRoleAdmin(role);\\n\\t\\ts._roles[role].adminRole = adminRole;\\n\\t\\temit RoleAdminChanged(role, previousAdminRole, adminRole);\\n\\t}\\n\\n\\t/// @notice Allow us to grant a role to an account\\n\\t/// @param \\trole Contains the role that we want to grant\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n\\tfunction _grantRole(bytes32 role, address account) internal {\\n\\t\\tif (!hasRole(role, account)) {\\n\\t\\t\\ts._roles[role].members[account] = true;\\n\\t\\t\\temit RoleGranted(role, account, _msgSender());\\n\\t\\t\\ts._roleMembers[role].add(account);\\n\\t\\t}\\n\\t}\\n\\n\\t/// @notice Allow us to revoke a role to an account\\n\\t/// @param \\trole Contains the role that we want to revoke\\n\\t/// @param \\taccount Contains the account that has the role we want to update\\n\\tfunction _revokeRole(bytes32 role, address account) internal {\\n\\t\\tif (hasRole(role, account)) {\\n\\t\\t\\ts._roles[role].members[account] = false;\\n\\t\\t\\temit RoleRevoked(role, account, _msgSender());\\n\\t\\t\\ts._roleMembers[role].remove(account);\\n\\t\\t}\\n\\t}\\n}\",\"keccak256\":\"0x05a4602b07ca0d9a35c77bded1c6b173b4bbe6036b6ae9d77f16e4830c426487\",\"license\":\"GPL-3.0\"},\"contracts/Marketplace/Facets/FeesFacet.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport '@openzeppelin/contracts/access/IAccessControl.sol';\\nimport '../AppStorage.sol';\\n\\n/// @title This is contract to manage the facet fees\\n/// @notice You can use this contract to update the facet and treasury\\n/// @dev \\tNotice that this contract is inheriting from AccessControlAppStorageEnumerableMarket\\ncontract FeesFacet is AccessControlAppStorageEnumerableMarket {\\n\\tbytes32 public constant MAINTAINER = keccak256(\\\"MAINTAINER\\\");\\n\\t\\n\\t/// @notice This event stores in the blockchain when we update the decimals of a fee\\n    /// @param  decimals Contains the decimals established for the fee\\n    /// @param  precalculatedMultiplier Contains the value of the multiplayer for the fee\\n\\tevent UpdatedDecimals(uint decimals, uint precalculatedMultiplier);\\n\\t/// @notice This event stores in the blockchain when we update the node fee\\n    /// @param  decimals Contains the decimals established for the fee\\n    /// @param  newPercentage Contains the value of the percentage to calculate the fee\\n\\tevent UpdatedNodeFee(uint decimals, uint newPercentage);\\n\\t/// @notice This event stores in the blockchain when we update the fee of our treasury\\n    /// @param  decimals Contains the decimals established for the fee\\n    /// @param  newPercentage Contains the value of the percentage to calculate the treasury fee\\n\\tevent UpdatedTreasuryFee(uint decimals, uint newPercentage);\\n\\t/// @notice This event stores in the blockchain when we update the decimals of a fee\\n    /// @param  newAddress Contains the new address that we set ad treasury\\n\\tevent UpdatedTreasuryAddress(address newAddress);\\n\\n\\t/// @notice Check the current decimals of the fee\\n    /// @return uint16 with the current decimals \\n\\tfunction getDecimals() public view returns (uint16) {\\n\\t\\treturn s.decimals;\\n\\t}\\n\\n\\t/// @notice Allow us to update the decimals that we use\\n\\t///\\t@dev\\tOnly a MAINTAINER of the contract is allowed to make this change\\n\\t/// @param \\tnewDecimals_ Contains the value of the new decimals that we want to implement\\n\\tfunction updateDecimals(uint16 newDecimals_) public onlyRole(MAINTAINER) {\\n\\t\\ts.decimals = newDecimals_;\\n\\t\\ts.decimalPow = 10**newDecimals_;\\n\\t\\temit UpdatedDecimals(s.decimals, s.decimalPow);\\n\\t}\\n\\n\\t/// @notice Allow us to check the value of the fee for the current node\\n\\t/// @return decimals \\tNumber of decimal spaces in the resulting node fee\\n\\t/// @return nodeFee \\tPercentage of any minting offer that belongs to the node address\\n\\tfunction getNodeFee() public view returns (uint16 decimals, uint nodeFee) {\\n\\t\\treturn (s.decimals, s.nodeFee);\\n\\t}\\n\\n\\t/// @notice Allow us to update the current fee of the node\\n\\t///\\t@dev\\tOnly a MAINTAINER of the contract is allowed to make this change\\n\\t/// @param \\tnewFee_ establish the new value that we want to set as fee\\n\\tfunction updateNodeFee(uint newFee_) public onlyRole(MAINTAINER) {\\n\\t\\trequire(newFee_ <= 100 * s.decimalPow, \\\"Marketplace: Invalid Fee!\\\");\\n\\t\\ts.nodeFee = newFee_;\\n\\t\\temit UpdatedNodeFee(s.decimals, newFee_);\\n\\t}\\n\\n\\t/// @notice Allow us to check the current Treasury fee\\n\\t/// @return decimals containt the current decimals that use the fee\\n\\t/// @return treasuryFee constain the current fee of the treasury\\n\\tfunction getTreasuryFee() public view returns (uint16 decimals, uint treasuryFee) {\\n\\t\\treturn (s.decimals, s.treasuryFee);\\n\\t}\\n\\n\\t/// @notice Allow us to modify the current treasury fee\\n\\t///\\t@dev\\tOnly a MAINTAINER he new fee that we want to implement for the treasury\\n\\t/// @param \\tnewFee_ establish the new value that we want to set as treasury fee\\n\\tfunction updateTreasuryFee(uint newFee_) public onlyRole(MAINTAINER) {\\n\\t\\trequire(newFee_ <= 100 * s.decimalPow, \\\"Marketplace: Invalid Fee!\\\");\\n\\t\\ts.treasuryFee = newFee_;\\n\\t\\temit UpdatedTreasuryFee(s.decimals, newFee_);\\n\\t}\\n\\n\\t/// @notice Allow us to check the current Treasury fee\\n\\t/// @return address which contains the treasury contract address\\n\\tfunction getTreasuryAddress() public view returns (address) {\\n\\t\\treturn s.treasuryAddress;\\n\\t}\\n\\n\\t/// @notice Allow us to modify the address that we use as treasury\\n\\t///\\t@dev\\tOnly a MAINTAINER he new fee that we want to implement for the treasury\\n\\t/// @param \\tnewAddress_ contains the new address that we want to establish as treasury\\n\\tfunction updateTreasuryAddress(address newAddress_) public onlyRole(MAINTAINER) {\\n\\t\\ts.treasuryAddress = newAddress_;\\n\\t\\temit UpdatedTreasuryAddress(newAddress_);\\n\\t}\\n}\",\"keccak256\":\"0x7658b860e03701edc759844de1562cc9e3bf2f7330cc321fcef3e0a46c421e49\",\"license\":\"GPL-3.0\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610e65806100206000396000f3fe608060405234801561001057600080fd5b50600436106101005760003560e01c80639010d07c11610097578063d547741f11610066578063d547741f14610251578063e002460414610264578063e715013414610275578063f0141d841461028757600080fd5b80639010d07c146101dd57806391d1485414610208578063972328301461022b578063ca15c8731461023e57600080fd5b8063315cf0c6116100d3578063315cf0c61461019157806336568abe146101a4578063841e4561146101b757806389523320146101ca57600080fd5b8063248a9ca31461010557806329070c6d1461013b5780632aabb726146101675780632f2ff15d1461017c575b600080fd5b610128610113366004610ae1565b60009081526020819052604090206001015490565b6040519081526020015b60405180910390f35b61014d60025460055461ffff90911691565b6040805161ffff9093168352602083019190915201610132565b610128600080516020610e1083398151915281565b61018f61018a366004610b16565b61029d565b005b61018f61019f366004610ae1565b6102c8565b61018f6101b2366004610b16565b61038a565b61018f6101c5366004610b42565b610408565b61018f6101d8366004610b5d565b61046f565b6101f06101eb366004610b81565b6104e8565b6040516001600160a01b039091168152602001610132565b61021b610216366004610b16565b610509565b6040519015158152602001610132565b61018f610239366004610ae1565b610532565b61012861024c366004610ae1565b6105e7565b61018f61025f366004610b16565b6105fe565b6006546001600160a01b03166101f0565b61014d60025460045461ffff90911691565b60025460405161ffff9091168152602001610132565b6000828152602081905260409020600101546102b98133610624565b6102c38383610688565b505050565b600080516020610e108339815191526102e18133610624565b6003546102ef906064610bb9565b82111561033f5760405162461bcd60e51b81526020600482015260196024820152784d61726b6574706c6163653a20496e76616c6964204665652160381b60448201526064015b60405180910390fd5b60048290556002546040805161ffff9092168252602082018490527fb8582d3fffc716c83f52a665bd0dbec85808be8edfa626bed1ba1327d188da2791015b60405180910390a15050565b6001600160a01b03811633146103fa5760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152608401610336565b6104048282610720565b5050565b600080516020610e108339815191526104218133610624565b600680546001600160a01b0319166001600160a01b0384169081179091556040519081527f2e1e696cfb265fa16e1170d24ef04cb2262772bde00ecf34d80bae6722487b7f9060200161037e565b600080516020610e108339815191526104888133610624565b6002805461ffff191661ffff84161790556104a482600a610cb4565b60038190556002546040805161ffff909216825260208201929092527fb350d9c40db627ffac113e845312f87ed74873a5bb80d835f93b6b5b4d1e4e99910161037e565b60008281526001602052604081206105009083610799565b90505b92915050565b6000918252602082815260408084206001600160a01b0393909316845291905290205460ff1690565b600080516020610e1083398151915261054b8133610624565b600354610559906064610bb9565b8211156105a45760405162461bcd60e51b81526020600482015260196024820152784d61726b6574706c6163653a20496e76616c6964204665652160381b6044820152606401610336565b60058290556002546040805161ffff9092168252602082018490527f8e08950ff0d98c076d5f8c9e4d2289e73b9722eae4210998a1aeb6f8666fb3e6910161037e565b6000818152600160205260408120610503906107a5565b60008281526020819052604090206001015461061a8133610624565b6102c38383610720565b61062e8282610509565b61040457610646816001600160a01b031660146107af565b6106518360206107af565b604051602001610662929190610ce8565b60408051601f198184030181529082905262461bcd60e51b825261033691600401610d5d565b6106928282610509565b610404576000828152602081815260408083206001600160a01b03851684529091529020805460ff191660011790556106c83390565b6001600160a01b0316816001600160a01b0316837f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a460008281526001602052604090206102c3908261094b565b61072a8282610509565b15610404576000828152602081815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a460008281526001602052604090206102c39082610960565b60006105008383610975565b6000610503825490565b606060006107be836002610bb9565b6107c9906002610d90565b67ffffffffffffffff8111156107e1576107e1610da3565b6040519080825280601f01601f19166020018201604052801561080b576020820181803683370190505b509050600360fc1b8160008151811061082657610826610db9565b60200101906001600160f81b031916908160001a905350600f60fb1b8160018151811061085557610855610db9565b60200101906001600160f81b031916908160001a9053506000610879846002610bb9565b610884906001610d90565b90505b60018111156108fc576f181899199a1a9b1b9c1cb0b131b232b360811b85600f16601081106108b8576108b8610db9565b1a60f81b8282815181106108ce576108ce610db9565b60200101906001600160f81b031916908160001a90535060049490941c936108f581610dcf565b9050610887565b5083156105005760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610336565b6000610500836001600160a01b03841661099f565b6000610500836001600160a01b0384166109ee565b600082600001828154811061098c5761098c610db9565b9060005260206000200154905092915050565b60008181526001830160205260408120546109e657508154600181810184556000848152602080822090930184905584548482528286019093526040902091909155610503565b506000610503565b60008181526001830160205260408120548015610ad7576000610a12600183610de6565b8554909150600090610a2690600190610de6565b9050818114610a8b576000866000018281548110610a4657610a46610db9565b9060005260206000200154905080876000018481548110610a6957610a69610db9565b6000918252602080832090910192909255918252600188019052604090208390555b8554869080610a9c57610a9c610df9565b600190038181906000526020600020016000905590558560010160008681526020019081526020016000206000905560019350505050610503565b6000915050610503565b600060208284031215610af357600080fd5b5035919050565b80356001600160a01b0381168114610b1157600080fd5b919050565b60008060408385031215610b2957600080fd5b82359150610b3960208401610afa565b90509250929050565b600060208284031215610b5457600080fd5b61050082610afa565b600060208284031215610b6f57600080fd5b813561ffff8116811461050057600080fd5b60008060408385031215610b9457600080fd5b50508035926020909101359150565b634e487b7160e01b600052601160045260246000fd5b808202811582820484141761050357610503610ba3565b600181815b80851115610c0b578160001904821115610bf157610bf1610ba3565b80851615610bfe57918102915b93841c9390800290610bd5565b509250929050565b600082610c2257506001610503565b81610c2f57506000610503565b8160018114610c455760028114610c4f57610c6b565b6001915050610503565b60ff841115610c6057610c60610ba3565b50506001821b610503565b5060208310610133831016604e8410600b8410161715610c8e575081810a610503565b610c988383610bd0565b8060001904821115610cac57610cac610ba3565b029392505050565b600061050061ffff841683610c13565b60005b83811015610cdf578181015183820152602001610cc7565b50506000910152565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351610d20816017850160208801610cc4565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351610d51816028840160208801610cc4565b01602801949350505050565b6020815260008251806020840152610d7c816040850160208701610cc4565b601f01601f19169190910160400192915050565b8082018082111561050357610503610ba3565b634e487b7160e01b600052604160045260246000fd5b634e487b7160e01b600052603260045260246000fd5b600081610dde57610dde610ba3565b506000190190565b8181038181111561050357610503610ba3565b634e487b7160e01b600052603160045260246000fdfed88b35d7427a01a8e16d8a129535b4cf3150edf8d92c0a44dc1eba73bdaf18cba26469706673582212201cf9cb4cebb0c8fe224b9a30805cb6d0d91863a329afdf624bb628e7b77bfad964736f6c63430008110033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101005760003560e01c80639010d07c11610097578063d547741f11610066578063d547741f14610251578063e002460414610264578063e715013414610275578063f0141d841461028757600080fd5b80639010d07c146101dd57806391d1485414610208578063972328301461022b578063ca15c8731461023e57600080fd5b8063315cf0c6116100d3578063315cf0c61461019157806336568abe146101a4578063841e4561146101b757806389523320146101ca57600080fd5b8063248a9ca31461010557806329070c6d1461013b5780632aabb726146101675780632f2ff15d1461017c575b600080fd5b610128610113366004610ae1565b60009081526020819052604090206001015490565b6040519081526020015b60405180910390f35b61014d60025460055461ffff90911691565b6040805161ffff9093168352602083019190915201610132565b610128600080516020610e1083398151915281565b61018f61018a366004610b16565b61029d565b005b61018f61019f366004610ae1565b6102c8565b61018f6101b2366004610b16565b61038a565b61018f6101c5366004610b42565b610408565b61018f6101d8366004610b5d565b61046f565b6101f06101eb366004610b81565b6104e8565b6040516001600160a01b039091168152602001610132565b61021b610216366004610b16565b610509565b6040519015158152602001610132565b61018f610239366004610ae1565b610532565b61012861024c366004610ae1565b6105e7565b61018f61025f366004610b16565b6105fe565b6006546001600160a01b03166101f0565b61014d60025460045461ffff90911691565b60025460405161ffff9091168152602001610132565b6000828152602081905260409020600101546102b98133610624565b6102c38383610688565b505050565b600080516020610e108339815191526102e18133610624565b6003546102ef906064610bb9565b82111561033f5760405162461bcd60e51b81526020600482015260196024820152784d61726b6574706c6163653a20496e76616c6964204665652160381b60448201526064015b60405180910390fd5b60048290556002546040805161ffff9092168252602082018490527fb8582d3fffc716c83f52a665bd0dbec85808be8edfa626bed1ba1327d188da2791015b60405180910390a15050565b6001600160a01b03811633146103fa5760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152608401610336565b6104048282610720565b5050565b600080516020610e108339815191526104218133610624565b600680546001600160a01b0319166001600160a01b0384169081179091556040519081527f2e1e696cfb265fa16e1170d24ef04cb2262772bde00ecf34d80bae6722487b7f9060200161037e565b600080516020610e108339815191526104888133610624565b6002805461ffff191661ffff84161790556104a482600a610cb4565b60038190556002546040805161ffff909216825260208201929092527fb350d9c40db627ffac113e845312f87ed74873a5bb80d835f93b6b5b4d1e4e99910161037e565b60008281526001602052604081206105009083610799565b90505b92915050565b6000918252602082815260408084206001600160a01b0393909316845291905290205460ff1690565b600080516020610e1083398151915261054b8133610624565b600354610559906064610bb9565b8211156105a45760405162461bcd60e51b81526020600482015260196024820152784d61726b6574706c6163653a20496e76616c6964204665652160381b6044820152606401610336565b60058290556002546040805161ffff9092168252602082018490527f8e08950ff0d98c076d5f8c9e4d2289e73b9722eae4210998a1aeb6f8666fb3e6910161037e565b6000818152600160205260408120610503906107a5565b60008281526020819052604090206001015461061a8133610624565b6102c38383610720565b61062e8282610509565b61040457610646816001600160a01b031660146107af565b6106518360206107af565b604051602001610662929190610ce8565b60408051601f198184030181529082905262461bcd60e51b825261033691600401610d5d565b6106928282610509565b610404576000828152602081815260408083206001600160a01b03851684529091529020805460ff191660011790556106c83390565b6001600160a01b0316816001600160a01b0316837f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a460008281526001602052604090206102c3908261094b565b61072a8282610509565b15610404576000828152602081815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a460008281526001602052604090206102c39082610960565b60006105008383610975565b6000610503825490565b606060006107be836002610bb9565b6107c9906002610d90565b67ffffffffffffffff8111156107e1576107e1610da3565b6040519080825280601f01601f19166020018201604052801561080b576020820181803683370190505b509050600360fc1b8160008151811061082657610826610db9565b60200101906001600160f81b031916908160001a905350600f60fb1b8160018151811061085557610855610db9565b60200101906001600160f81b031916908160001a9053506000610879846002610bb9565b610884906001610d90565b90505b60018111156108fc576f181899199a1a9b1b9c1cb0b131b232b360811b85600f16601081106108b8576108b8610db9565b1a60f81b8282815181106108ce576108ce610db9565b60200101906001600160f81b031916908160001a90535060049490941c936108f581610dcf565b9050610887565b5083156105005760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610336565b6000610500836001600160a01b03841661099f565b6000610500836001600160a01b0384166109ee565b600082600001828154811061098c5761098c610db9565b9060005260206000200154905092915050565b60008181526001830160205260408120546109e657508154600181810184556000848152602080822090930184905584548482528286019093526040902091909155610503565b506000610503565b60008181526001830160205260408120548015610ad7576000610a12600183610de6565b8554909150600090610a2690600190610de6565b9050818114610a8b576000866000018281548110610a4657610a46610db9565b9060005260206000200154905080876000018481548110610a6957610a69610db9565b6000918252602080832090910192909255918252600188019052604090208390555b8554869080610a9c57610a9c610df9565b600190038181906000526020600020016000905590558560010160008681526020019081526020016000206000905560019350505050610503565b6000915050610503565b600060208284031215610af357600080fd5b5035919050565b80356001600160a01b0381168114610b1157600080fd5b919050565b60008060408385031215610b2957600080fd5b82359150610b3960208401610afa565b90509250929050565b600060208284031215610b5457600080fd5b61050082610afa565b600060208284031215610b6f57600080fd5b813561ffff8116811461050057600080fd5b60008060408385031215610b9457600080fd5b50508035926020909101359150565b634e487b7160e01b600052601160045260246000fd5b808202811582820484141761050357610503610ba3565b600181815b80851115610c0b578160001904821115610bf157610bf1610ba3565b80851615610bfe57918102915b93841c9390800290610bd5565b509250929050565b600082610c2257506001610503565b81610c2f57506000610503565b8160018114610c455760028114610c4f57610c6b565b6001915050610503565b60ff841115610c6057610c60610ba3565b50506001821b610503565b5060208310610133831016604e8410600b8410161715610c8e575081810a610503565b610c988383610bd0565b8060001904821115610cac57610cac610ba3565b029392505050565b600061050061ffff841683610c13565b60005b83811015610cdf578181015183820152602001610cc7565b50506000910152565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351610d20816017850160208801610cc4565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351610d51816028840160208801610cc4565b01602801949350505050565b6020815260008251806020840152610d7c816040850160208701610cc4565b601f01601f19169190910160400192915050565b8082018082111561050357610503610ba3565b634e487b7160e01b600052604160045260246000fd5b634e487b7160e01b600052603260045260246000fd5b600081610dde57610dde610ba3565b506000190190565b8181038181111561050357610503610ba3565b634e487b7160e01b600052603160045260246000fdfed88b35d7427a01a8e16d8a129535b4cf3150edf8d92c0a44dc1eba73bdaf18cba26469706673582212201cf9cb4cebb0c8fe224b9a30805cb6d0d91863a329afdf624bb628e7b77bfad964736f6c63430008110033",
+  "devdoc": {
+    "details": "Notice that this contract is inheriting from AccessControlAppStorageEnumerableMarket",
+    "events": {
+      "UpdatedDecimals(uint256,uint256)": {
+        "params": {
+          "decimals": "Contains the decimals established for the fee",
+          "precalculatedMultiplier": "Contains the value of the multiplayer for the fee"
+        }
+      },
+      "UpdatedNodeFee(uint256,uint256)": {
+        "params": {
+          "decimals": "Contains the decimals established for the fee",
+          "newPercentage": "Contains the value of the percentage to calculate the fee"
+        }
+      },
+      "UpdatedTreasuryAddress(address)": {
+        "params": {
+          "newAddress": "Contains the new address that we set ad treasury"
+        }
+      },
+      "UpdatedTreasuryFee(uint256,uint256)": {
+        "params": {
+          "decimals": "Contains the decimals established for the fee",
+          "newPercentage": "Contains the value of the percentage to calculate the treasury fee"
+        }
+      }
+    },
+    "kind": "dev",
+    "methods": {
+      "getDecimals()": {
+        "returns": {
+          "_0": "uint16 with the current decimals "
+        }
+      },
+      "getNodeFee()": {
+        "returns": {
+          "decimals": "\tNumber of decimal spaces in the resulting node fee",
+          "nodeFee": "\tPercentage of any minting offer that belongs to the node address"
+        }
+      },
+      "getRoleAdmin(bytes32)": {
+        "params": {
+          "role": "Contains the role that we want to verify"
+        },
+        "returns": {
+          "_0": "bytes that indicates if an account has or not an admin role"
+        }
+      },
+      "getRoleMember(bytes32,uint256)": {
+        "params": {
+          "index": "Contains the indexed position to verify inside the role members list",
+          "role": "Contains the role that we want to verify"
+        },
+        "returns": {
+          "_0": "address that indicates the address indexed in that position"
+        }
+      },
+      "getRoleMemberCount(bytes32)": {
+        "params": {
+          "role": "Contains the role that we want to verify"
+        },
+        "returns": {
+          "_0": "uint256 that indicates the total accounts with that role"
+        }
+      },
+      "getTreasuryAddress()": {
+        "returns": {
+          "_0": "address which contains the treasury contract address"
+        }
+      },
+      "getTreasuryFee()": {
+        "returns": {
+          "decimals": "containt the current decimals that use the fee",
+          "treasuryFee": "constain the current fee of the treasury"
+        }
+      },
+      "grantRole(bytes32,address)": {
+        "details": "This function is only available to an account with an Admin role",
+        "params": {
+          "account": "Contains the account that has the role we want to update",
+          "role": "Contains the role that we want to grant"
+        }
+      },
+      "hasRole(bytes32,address)": {
+        "params": {
+          "account": "Contains the account address thay we want to verify",
+          "role": "Contains the role that we want to verify"
+        },
+        "returns": {
+          "_0": "bool that indicates if an account has or not a role"
+        }
+      },
+      "renounceRole(bytes32,address)": {
+        "details": "Currently you can only renounce to your own roles",
+        "params": {
+          "account": "Contains the account that has the role we want to update",
+          "role": "Contains the role to remove from our account"
+        }
+      },
+      "revokeRole(bytes32,address)": {
+        "details": "This function is only available to an account with an Admin role",
+        "params": {
+          "account": "Contains the account that has the role we want to update",
+          "role": "Contains the role that we want to revoke"
+        }
+      },
+      "updateDecimals(uint16)": {
+        "details": "Only a MAINTAINER of the contract is allowed to make this change",
+        "params": {
+          "newDecimals_": "Contains the value of the new decimals that we want to implement"
+        }
+      },
+      "updateNodeFee(uint256)": {
+        "details": "Only a MAINTAINER of the contract is allowed to make this change",
+        "params": {
+          "newFee_": "establish the new value that we want to set as fee"
+        }
+      },
+      "updateTreasuryAddress(address)": {
+        "details": "Only a MAINTAINER he new fee that we want to implement for the treasury",
+        "params": {
+          "newAddress_": "contains the new address that we want to establish as treasury"
+        }
+      },
+      "updateTreasuryFee(uint256)": {
+        "details": "Only a MAINTAINER he new fee that we want to implement for the treasury",
+        "params": {
+          "newFee_": "establish the new value that we want to set as treasury fee"
+        }
+      }
+    },
+    "title": "This is contract to manage the facet fees",
+    "version": 1
+  },
+  "userdoc": {
+    "events": {
+      "RoleAdminChanged(bytes32,bytes32,bytes32)": {
+        "notice": "This event stores in the blockchain when we change an admin role"
+      },
+      "RoleGranted(bytes32,address,address)": {
+        "notice": "This event stores in the blockchain when we grant a role"
+      },
+      "RoleRevoked(bytes32,address,address)": {
+        "notice": "This event stores in the blockchain when we revoke a role"
+      },
+      "UpdatedDecimals(uint256,uint256)": {
+        "notice": "This event stores in the blockchain when we update the decimals of a fee"
+      },
+      "UpdatedNodeFee(uint256,uint256)": {
+        "notice": "This event stores in the blockchain when we update the node fee"
+      },
+      "UpdatedTreasuryAddress(address)": {
+        "notice": "This event stores in the blockchain when we update the decimals of a fee"
+      },
+      "UpdatedTreasuryFee(uint256,uint256)": {
+        "notice": "This event stores in the blockchain when we update the fee of our treasury"
+      }
+    },
+    "kind": "user",
+    "methods": {
+      "getDecimals()": {
+        "notice": "Check the current decimals of the fee"
+      },
+      "getNodeFee()": {
+        "notice": "Allow us to check the value of the fee for the current node"
+      },
+      "getRoleAdmin(bytes32)": {
+        "notice": "Allow us to check the admin role that contains a role"
+      },
+      "getRoleMember(bytes32,uint256)": {
+        "notice": "Allow us to check the address of an indexed position for the role list"
+      },
+      "getRoleMemberCount(bytes32)": {
+        "notice": "Allow us to check total members that has an selected role"
+      },
+      "getTreasuryAddress()": {
+        "notice": "Allow us to check the current Treasury fee"
+      },
+      "getTreasuryFee()": {
+        "notice": "Allow us to check the current Treasury fee"
+      },
+      "grantRole(bytes32,address)": {
+        "notice": "Allow us to grant a role to an account"
+      },
+      "hasRole(bytes32,address)": {
+        "notice": "Allow us to check the if and account has a selected role"
+      },
+      "renounceRole(bytes32,address)": {
+        "notice": "Allow us to renounce to a role"
+      },
+      "revokeRole(bytes32,address)": {
+        "notice": "Allow us to revoke a role to an account"
+      },
+      "updateDecimals(uint16)": {
+        "notice": "Allow us to update the decimals that we use"
+      },
+      "updateNodeFee(uint256)": {
+        "notice": "Allow us to update the current fee of the node"
+      },
+      "updateTreasuryAddress(address)": {
+        "notice": "Allow us to modify the address that we use as treasury"
+      },
+      "updateTreasuryFee(uint256)": {
+        "notice": "Allow us to modify the current treasury fee"
+      }
+    },
+    "notice": "You can use this contract to update the facet and treasury",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3758,
+        "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+        "label": "s",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_struct(AppStorage)3739_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_bytes32)dyn_storage": {
+        "base": "t_bytes32",
+        "encoding": "dynamic_array",
+        "label": "bytes32[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_struct(feeSplits)3683_storage)dyn_storage": {
+        "base": "t_struct(feeSplits)3683_storage",
+        "encoding": "dynamic_array",
+        "label": "struct feeSplits[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_struct(mintingOffer)3696_storage)dyn_storage": {
+        "base": "t_struct(mintingOffer)3696_storage",
+        "encoding": "dynamic_array",
+        "label": "struct mintingOffer[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_uint256)dyn_storage": {
+        "base": "t_uint256",
+        "encoding": "dynamic_array",
+        "label": "uint256[]",
+        "numberOfBytes": "32"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256[])",
+        "numberOfBytes": "32",
+        "value": "t_array(t_uint256)dyn_storage"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(uint256 => uint256))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_uint256,t_uint256)"
+      },
+      "t_mapping(t_bytes32,t_struct(AddressSet)2617_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct EnumerableSet.AddressSet)",
+        "numberOfBytes": "32",
+        "value": "t_struct(AddressSet)2617_storage"
+      },
+      "t_mapping(t_bytes32,t_struct(RoleData)3703_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct RoleData)",
+        "numberOfBytes": "32",
+        "value": "t_struct(RoleData)3703_storage"
+      },
+      "t_mapping(t_bytes32,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_uint256,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_struct(AddressSet)2617_storage": {
+        "encoding": "inplace",
+        "label": "struct EnumerableSet.AddressSet",
+        "members": [
+          {
+            "astId": 2616,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "_inner",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_struct(Set)2316_storage"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(AppStorage)3739_storage": {
+        "encoding": "inplace",
+        "label": "struct AppStorage",
+        "members": [
+          {
+            "astId": 3708,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "_roles",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)3703_storage)"
+          },
+          {
+            "astId": 3713,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "_roleMembers",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes32,t_struct(AddressSet)2617_storage)"
+          },
+          {
+            "astId": 3715,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "decimals",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint16"
+          },
+          {
+            "astId": 3717,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "decimalPow",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 3719,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "nodeFee",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 3721,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "treasuryFee",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 3723,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "treasuryAddress",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_address"
+          },
+          {
+            "astId": 3727,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "mintingOffers",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_array(t_struct(mintingOffer)3696_storage)dyn_storage"
+          },
+          {
+            "astId": 3733,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "addressToRangeOffer",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))"
+          },
+          {
+            "astId": 3738,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "addressToOffers",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)"
+          }
+        ],
+        "numberOfBytes": "320"
+      },
+      "t_struct(RoleData)3703_storage": {
+        "encoding": "inplace",
+        "label": "struct RoleData",
+        "members": [
+          {
+            "astId": 3700,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "members",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_bool)"
+          },
+          {
+            "astId": 3702,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "adminRole",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(Set)2316_storage": {
+        "encoding": "inplace",
+        "label": "struct EnumerableSet.Set",
+        "members": [
+          {
+            "astId": 2311,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "_values",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_array(t_bytes32)dyn_storage"
+          },
+          {
+            "astId": 2315,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "_indexes",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes32,t_uint256)"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(feeSplits)3683_storage": {
+        "encoding": "inplace",
+        "label": "struct feeSplits",
+        "members": [
+          {
+            "astId": 3680,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "recipient",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 3682,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "percentage",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(mintingOffer)3696_storage": {
+        "encoding": "inplace",
+        "label": "struct mintingOffer",
+        "members": [
+          {
+            "astId": 3685,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "erc721Address",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 3687,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "nodeAddress",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address"
+          },
+          {
+            "astId": 3689,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "rangeIndex",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 3693,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "fees",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_struct(feeSplits)3683_storage)dyn_storage"
+          },
+          {
+            "astId": 3695,
+            "contract": "contracts/Marketplace/Facets/FeesFacet.sol:FeesFacet",
+            "label": "visible",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_bool"
+          }
+        ],
+        "numberOfBytes": "160"
+      },
+      "t_uint16": {
+        "encoding": "inplace",
+        "label": "uint16",
+        "numberOfBytes": "2"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@ const config = require('../config/index');
 const gcp = require('../integrations/gcp')(config);
 const { addPin, addFolder } = require('../integrations/ipfsService')();
 const log = require('../utils/logger')(module);
-const { textPurify, cleanStorage } = require('../utils/helpers');
+const { textPurify } = require('../utils/helpers');
 const {
   generateThumbnails,
   getMediaData,
@@ -274,10 +274,9 @@ module.exports = {
           await addPin(cid, title, socketInstance);
         }
       } catch (e) {
-        await cleanStorage(req.file);
-
         log.error('An error has occurred encoding the file');
         log.error(e);
+        next(e);
       }
     } else {
       return next(new AppError('File not provided.', 400));

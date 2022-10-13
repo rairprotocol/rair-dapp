@@ -133,24 +133,13 @@ const NftItemForCollectionViewComponent: React.FC<
         {metadata?.animation_url ? (
           isFileUrl === 'gif' ? (
             <ImageLazy
-              className="col-12 h-100 w-100"
+              className="col-12 h-100 w-100 zoom-event"
               width={'282px'}
               height={'282px'}
               alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
               src={metadata?.animation_url ? metadata?.animation_url : pict}
             />
           ) : (
-            // <img
-            //   alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
-            //   src={metadata?.animation_url ? metadata?.animation_url : pict}
-            //   style={{
-            //     position: 'absolute',
-            //     bottom: 0,
-            //     borderRadius: '16px',
-            //     objectFit: 'contain'
-            //   }}
-            //   className="col-12 h-100 w-100"
-            // />
             <div
               style={{
                 borderRadius: '16px',
@@ -176,28 +165,12 @@ const NftItemForCollectionViewComponent: React.FC<
           )
         ) : (
           <ImageLazy
-            className="col-12 h-100 w-100"
+            className="col-12 h-100 w-100 zoom-event"
             width={'282px'}
             height={'282px'}
             alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
             src={metadata?.image ? metadata?.image : pict}
           />
-          // <img
-          //   alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
-          //   src={
-          //     metadata?.image
-          //       ? // ? metaDataProducts?.metadata?.image
-          //         metadata?.image
-          //       : pict
-          //   }
-          //   style={{
-          //     position: 'absolute',
-          //     bottom: 0,
-          //     borderRadius: '16px',
-          //     objectFit: 'contain'
-          //   }}
-          //   className="col-12 h-100 w-100"
-          // />
         )}
         {offer === '0' ? (
           <SvgKey color={'#E4476D'} bgColor={'rgba(34, 32, 33, 0.5)'} />

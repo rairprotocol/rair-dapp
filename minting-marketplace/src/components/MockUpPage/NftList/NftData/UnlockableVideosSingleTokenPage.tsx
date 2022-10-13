@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 
 import { TFileType } from '../../../../axios.responseTypes';
+import { playImagesColored } from '../../../SplashPage/images/greyMan/grayMan';
 import { ReactComponent as LockWhite } from '../../assets/LockWhite.svg';
 import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
 import { IUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
@@ -41,7 +42,8 @@ const UnlockableVideosSingleTokenPage: React.FC<
         </div>
       ) : (
         <div className="unlockables-video-player-container">
-          <PlayCircle
+          <img
+            src={playImagesColored}
             className="unlockables-video-player-circle"
             onClick={handlePlayerClick}
           />
@@ -82,10 +84,12 @@ const UnlockableVideosSingleTokenPage: React.FC<
                       {data.isUnlocked ? (
                         <>
                           <div className="video-lock-round">
-                            <PlayCircle
-                              className="video-single-token-unlock-play-circle"
+                            <img
                               width={'35px'}
                               height={'35px'}
+                              src={playImagesColored}
+                              className="video-single-token-unlock-play-circle"
+                              onClick={handlePlayerClick}
                             />
                           </div>
                         </>

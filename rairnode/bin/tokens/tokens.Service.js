@@ -20,7 +20,6 @@ const { pinata } = config;
 
 const getOffersAndOfferPools = async (contract, product) => {
   let offerPool = [];
-
   const offers = await Offer.find({
     contract: contract._id,
     product,
@@ -37,44 +36,44 @@ const getOffersAndOfferPools = async (contract, product) => {
     });
 
     if (_.isEmpty(offerPool)) {
-      throw new AppError('Offerpool not found.', 404);
+      log.error('Offerpool not found.', 404);
     }
   }
 
   return [offers, offerPool];
 };
 
-const prepareTokens = (
+const prepareTokens = async (
   tokens,
   metadata,
   contract,
   offers,
-  product,
   offerPool,
 ) => {
-  const firstTokenInProduct = BigInt(product.firstTokenIndex);
   const mainFields = { contract: contract._id };
 
   if (!contract.diamond) {
     mainFields.offerPool = offerPool.marketplaceCatalogIndex;
   }
-  const options = offerPool
-    ? {
-        contract: contract._id,
-        offerPool: offerPool.marketplaceCatalogIndex,
-      }
-    : {
-        contract: contract._id,
-        offer: { $in: offers },
-      };
+
+  const options = _.assign(
+    {
+      contract: contract._id,
+    },
+    contract.diamond
+      ? { offer: { $in: _.map(offers, (i) => i.diamondRangeIndex) } }
+      : { offerPool: offerPool.marketplaceCatalogIndex },
+  );
   options.isMinted = false;
-  const foundTokens = MintedToken.find(options);
+
+  const foundTokens = await MintedToken.find(options);
   foundTokens.map((token) => {
     token.isURIStoredToBlockchain = false;
     token.metadata = metadata;
-    tokens.push({ ...token }), {};
+    tokens.push({ ...token });
   });
 };
+
 exports.getTokenNumbers = async (req, res, next) => {
   try {
     // reminder of controller level logic - can be removed
@@ -110,13 +109,11 @@ exports.getTokenNumbers = async (req, res, next) => {
 
 exports.getAllTokens = eFactory.getAll(MintedToken);
 
-exports.getAllTokens = eFactory.getAll(MintedToken);
-
-exports.createTokensWithCommonMetadata = async (req, res, next) => {
+exports.updateTokenCommonMetadata = async (req, res, next) => {
   try {
     const { user } = req;
     const newTokens = [];
-    const sanitizedMetadataFields = {};
+    let sanitizedMetadataFields = {};
     let metadataFields = _.pick(req.body, [
       'name',
       'description',
@@ -205,23 +202,6 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
     };
 
     if (commonMetadataFor === 'contract') {
-      // check if does specific Contract already contains created tokens
-      if (foundContract.singleMetadata) {
-        const tokensCount = await MintedToken.count({
-          contract: foundContract._id,
-        });
-
-        if (tokensCount > 0) {
-          await cleanStorage(req.files);
-          return next(
-            new AppError(
-              `Current Contract already have ${tokensCount} created tokens.`,
-              400,
-            ),
-          );
-        }
-      }
-
       await uploadFilesToIpfs();
 
       // set singleMetadata to true for found contract
@@ -252,12 +232,10 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
               sanitizedMetadataFields,
               foundContract,
               offers,
-              foundProduct,
               offerPool,
             );
           } catch (err) {
-            await cleanStorage(req.files);
-            return next(new AppError(`${err.message}`, 404));
+            log.error(`for product ${foundProduct.collectionIndexInContract} ${err.message}`);
           }
         }),
       );
@@ -283,58 +261,57 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
           product,
         );
 
-        // check if does specific Product already contains created tokens
-        if (foundProduct.singleMetadata) {
-          const options = _.assign(
-            {
-              contract: foundContract._id,
-            },
-            contract.diamond
-              ? { offer: { $in: _.map(offers, (i) => i.diamondRangeIndex) } }
-              : { offerPool: offerPool.marketplaceCatalogIndex },
-          );
-          const tokensCount = await MintedToken.count(options);
-
-          if (tokensCount > 0) {
-            await cleanStorage(req.files);
-            return next(
-              new AppError(
-                `Current Product already have ${tokensCount} created tokens.`,
-                400,
-              ),
-            );
-          }
-        }
-
         await uploadFilesToIpfs();
 
         // set singleMetadata to true for found product
         await foundProduct.updateOne({ singleMetadata: true });
 
-        prepareTokens(
+        await prepareTokens(
           newTokens,
           sanitizedMetadataFields,
           foundContract,
           offers,
-          foundProduct,
           offerPool,
         );
       } catch (err) {
-        await cleanStorage(req.files);
         return next(new AppError(`${err.message}`, 404));
       }
     }
 
+    const [offers, offerPool] = await getOffersAndOfferPools(
+      foundContract,
+      product,
+    );
+
+    const filterOptions = _.assign(
+      {
+        contract: foundContract._id,
+      },
+      contract.diamond
+        ? { offer: { $in: _.map(offers, (i) => i.diamondRangeIndex) } }
+        : { offerPool: offerPool.marketplaceCatalogIndex },
+    );
+
     if (!_.isEmpty(newTokens)) {
       try {
-        await MintedToken.insertMany(newTokens, { ordered: false });
-        log.info('All tokens is stored.');
+        sanitizedMetadataFields = _.mapKeys(
+          sanitizedMetadataFields,
+          (v, k) => `metadata.${k}`,
+        );
+
+        await MintedToken.updateMany(filterOptions, {
+          ...sanitizedMetadataFields,
+          isMetadataPinned: false,
+          isURIStoredToBlockchain: false,
+        }, { new: true });
+
+        log.info('All tokens is updated.');
       } catch (err) {
         log.error(err);
       }
     } else {
       await cleanStorage(req.files);
-      return next(new AppError("Don't have tokens for creation.", 400));
+      return next(new AppError("Don't have tokens for updating.", 400));
     }
 
     await cleanStorage(req.files);
@@ -796,7 +773,6 @@ exports.createTokensViaCSV = async (req, res, next) => {
 
     return res.json({ success: true, result });
   } catch (err) {
-    await cleanStorage(req.file);
     return next(err);
   }
 };
