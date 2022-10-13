@@ -37,7 +37,6 @@ import {
   MainPageLogoE,
   MainPageLogoF
 } from '../../images/rair-website-webp/website-logos/index';
-import { rFetch } from '../../utils/rFetch';
 import PurchaseTokenButton from '../common/PurchaseToken';
 import UnlockableVideosSingleTokenPage from '../MockUpPage/NftList/NftData/UnlockableVideosSingleTokenPage';
 import TeamMeet from '../SplashPage/TeamMeet/TeamMeetList';
@@ -67,10 +66,15 @@ const MainPage: React.FC<IMainPage> = ({
     (store) => store.colorStore
   );
 
+  /* SHOW MORE BUTTONS */
+  const [showMore0, setShowMore0] = useState(true);
+  const [showMore1, setShowMore1] = useState(true);
+
   /* SCROLL TO VIEW */
   const hookMint = useRef(null);
   const hookStream = useRef(null);
   const hookDistribute = useRef(null);
+  const hookApi = useRef(null);
 
   const executeScroll = (ref) => ref.current.scrollIntoView();
 
@@ -87,10 +91,57 @@ const MainPage: React.FC<IMainPage> = ({
     setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
+  /* ABOUT ME OFFSET */
+  const breakpoint_0 = window.matchMedia('(max-width: 900px)');
+  const breakpoint_1 = window.matchMedia('(max-width: 700px)');
+  const breakpoint_2 = window.matchMedia('(max-width: 450px)');
+  const [breakpoint_0_match, setBreakpoint_0_match] = useState(false);
+  const [breakpoint_1_match, setBreakpoint_1_match] = useState(false);
+  const [breakpoint_2_match, setBreakpoint_2_match] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      setBreakpoint_0_match(breakpoint_0.matches);
+      setBreakpoint_1_match(breakpoint_1.matches);
+      setBreakpoint_2_match(breakpoint_2.matches);
+    });
+    return () =>
+      window.removeEventListener('resize', () => {
+        setBreakpoint_0_match(breakpoint_0.matches);
+        setBreakpoint_1_match(breakpoint_1.matches);
+        setBreakpoint_2_match(breakpoint_2.matches);
+      });
+  }, [breakpoint_0.matches, breakpoint_1.matches, breakpoint_2.matches]);
+  const [offset, setOffset] = useState(0);
+  useEffect(() => {
+    if (breakpoint_2_match) {
+      setOffset(2100);
+    } else if (breakpoint_1_match) {
+      setOffset(3000);
+    } else if (breakpoint_0_match) {
+      setOffset(700);
+    } else {
+      setOffset(2400);
+    }
+  }, [breakpoint_0_match, breakpoint_1_match, breakpoint_2_match]);
+  const [readMoreCount, setReadMoreCount] = useState(0);
+  useEffect(() => {
+    const r = document.querySelector(':root') as HTMLElement;
+    if (readMoreCount) {
+      const offsetNum = (offset / 12) * readMoreCount;
+      const offsetStr = `${offsetNum}px`;
+      r.style.setProperty('--readmore_offset', offsetStr);
+    } else {
+      r.style.setProperty('--readmore_offset', '0px');
+    }
+  }, [readMoreCount, offset]);
+
   return (
     <div className={styles.mainpage_wrapper}>
       <div className={styles.title}>
-        <span className={styles.typography_0}>A Platform for next</span>
+        <span className={styles.typography_0}>
+          A Platform <br className={styles.title_break} /> for next
+        </span>
         <span className={styles.typography_1}> generation</span>
         <span className={styles.typography_2}> nFTs</span>
       </div>
@@ -131,11 +182,13 @@ const MainPage: React.FC<IMainPage> = ({
         />
       </div>
       <div className={styles.navigate_title}>
-        We help you navigate NFT infrastructure
+        We help you navigate <br className={styles.navigate_title_break} /> NFT
+        infrastructure
       </div>
       <div className={styles.navigate_description}>
-        NFT Creation. Encrypted Streaming. Data Collection. Distribution. <br />{' '}
-        All in one platform.
+        NFT Creation | Encrypted Streaming | Data Collection | Distribution{' '}
+        <br />
+        All-in-one platform
       </div>
       <div className={styles.navigate_wrapper}>
         <img
@@ -154,7 +207,9 @@ const MainPage: React.FC<IMainPage> = ({
           onClick={() => executeScroll(hookDistribute)}
         />
       </div>
-      <div className={styles.navigate_tag}>
+      <div
+        className={styles.navigate_tag}
+        onClick={() => executeScroll(hookApi)}>
         {' '}
         RAIR API AVAILABLE FOR ALL SERVICES{' '}
       </div>
@@ -174,7 +229,7 @@ const MainPage: React.FC<IMainPage> = ({
           &#8226; Mint on an EVM compatible blockchain. ETH, MATIC, BSC &#38;
           EVM integrations
         </p>
-        <p>&#8226; Gas Optimized. Free mints, Shareable JSONs</p>
+        <p>&#8226; Gas Optimized. Free mints. Shareable JSONs</p>
         <p>
           &#8226; Prevent Sudoswap attacks. RAIRpay royalty engine protects
           resales
@@ -195,6 +250,22 @@ const MainPage: React.FC<IMainPage> = ({
         <p>&#8226; Capture wallet analytics </p>
         <p>&#8226; Wallet authenticated access</p>
       </div>
+      <button
+        className={styles.showmore_button_0}
+        onClick={() => {
+          const r = document.querySelector(':root') as HTMLElement;
+          if (showMore0) {
+            r.style.setProperty('--demo_offset', '335vw');
+            r.style.setProperty('--demo_display', 'block');
+            setShowMore0(false);
+          } else {
+            r.style.setProperty('--demo_offset', '0vw');
+            r.style.setProperty('--demo_display', 'none');
+            setShowMore0(true);
+          }
+        }}>
+        SHOW {showMore0 ? 'MORE' : 'LESS'}
+      </button>
       <img className={styles.demonstration_img_2} src={MainPageImage6} />
       <div className={styles.demonstration_title_2}>
         RAIR
@@ -225,6 +296,7 @@ const MainPage: React.FC<IMainPage> = ({
         <p>&#8226; Minting sales pages</p>
         <p>&#8226; Attach unlockable content</p>
       </div>
+      <div className={styles.hook_api} ref={hookApi}></div>
       <img className={styles.demonstration_img_4} src={MainPageImage8} />
       <div className={styles.demonstration_title_4}>
         RAIR
@@ -244,7 +316,9 @@ const MainPage: React.FC<IMainPage> = ({
         <span className={styles.use_cases_title_alt}> Cases</span>
         <br />
         <br />
-        <span>RAIR provides Web3 streaming infrastructure for: </span>
+        <span className={styles.use_cases_subtitle}>
+          RAIR provides Web3 streaming infrastructure for:{' '}
+        </span>
       </div>
       <img className={styles.use_cases_item_image_0} src={MainPageImageA} />
       <div className={styles.use_cases_item_name_0}>Brand Engagement</div>
@@ -252,6 +326,22 @@ const MainPage: React.FC<IMainPage> = ({
       <div className={styles.use_cases_item_name_1}>Music & Podcasts</div>
       <img className={styles.use_cases_item_image_2} src={MainPageImageC} />
       <div className={styles.use_cases_item_name_2}>Media & Entertainment</div>
+      <button
+        className={styles.showmore_button_1}
+        onClick={() => {
+          const r = document.querySelector(':root') as HTMLElement;
+          if (showMore1) {
+            r.style.setProperty('--usecase_offset', '85vw');
+            r.style.setProperty('--usecase_display', 'block');
+            setShowMore1(false);
+          } else {
+            r.style.setProperty('--usecase_offset', '0vw');
+            r.style.setProperty('--usecase_display', 'none');
+            setShowMore1(true);
+          }
+        }}>
+        SHOW {showMore1 ? 'MORE' : 'LESS'}
+      </button>
       <img className={styles.use_cases_item_image_3} src={MainPageImageD} />
       <div className={styles.use_cases_item_name_3}>Live Events</div>
       <img className={styles.use_cases_item_image_4} src={MainPageImageE} />
@@ -299,11 +389,15 @@ const MainPage: React.FC<IMainPage> = ({
         </div>
       </div>
       <div className={styles.meet_team_wrapper}>
-        <div className="about-page--team">
-          <TeamMeet arraySplash={'rair'} />
+        <div className="rairpage about-page--team">
+          <TeamMeet arraySplash={'main-page'} />
         </div>
-        <div className="about-page--team">
-          <TeamMeet arraySplash={'rair-advisors'} />
+        <div className="rairpage about-page--team">
+          <TeamMeet
+            readMoreCount={readMoreCount}
+            setReadMoreCount={setReadMoreCount}
+            arraySplash={'rair-advisors'}
+          />
         </div>
       </div>
     </div>

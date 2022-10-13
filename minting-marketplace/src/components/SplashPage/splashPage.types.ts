@@ -278,6 +278,8 @@ export interface ITokenLeftGreyman {
 
 export interface ITeamComponentCommon {
   arraySplash?: TArraySplashType;
+  readMoreCount?: number;
+  setReadMoreCount?: (value: number) => void;
 }
 
 export type TSocialsItem = {
@@ -287,6 +289,7 @@ export type TSocialsItem = {
 };
 
 export type TTeamArrayItemType = {
+  readMoreCountFlag?: number;
   chain?: string | null;
   nameTeammate: string;
   imageUrl: string;
@@ -311,6 +314,7 @@ export type TArraySplashType =
   | 'nuts'
   | 'coinagenda'
   | 'sim-dogs'
+  | 'main-page'
   | 'wallstreet80sclub';
 
 export interface ITeammate {
@@ -321,12 +325,18 @@ export interface ITeammate {
   socials?: TSocialsItem[];
   chain?: string | null;
   arraySplash?: TArraySplashType;
+  readMoreCount?: number;
+  setReadMoreCount?: (value: number) => void;
+  readMoreCountFlag?: number;
 }
 
 export interface ITeammateDesc {
   desc: string[];
   primaryColor?: ColorChoice;
   arraySplash?: TArraySplashType;
+  readMoreCount?: number;
+  setReadMoreCount?: (value: number) => void;
+  readMoreCountFlag?: number;
 }
 
 export interface INotCommercialGeneric {
@@ -384,6 +394,9 @@ export interface ITeamMeetComponentCommon {
   teamArray: TTeamArrayItemType[];
   arraySplash?: TArraySplashType;
   className: boolean;
+  readMoreCount?: number;
+  setReadMoreCount?: (value: number) => void;
+  readMoreCountFlag?: number;
 }
 
 export interface IPrivacyPolicyComponent {

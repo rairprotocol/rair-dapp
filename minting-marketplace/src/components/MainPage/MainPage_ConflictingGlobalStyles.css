@@ -1,8 +1,4 @@
 /* this style sheet is for overriding global styles for reused components */
-:root {
-  --Y_offset: 55px;
-}
-
 .rairpage-videoplayer-wrapper {
   position: absolute;
   width: 1200px;
@@ -17,6 +13,37 @@
   border-radius: 16px;
   width: 85vw;
   max-width: 1200px;
+}
+
+.rairpage.about-page--team .img-teammate {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rairpage.about-page--team .img-teammate img {
+  border-radius: 16px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.rairpage.about-page--team .title-team h3 {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.rairpage.about-page--team .title-team h3 .text-gradient {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.rairpage.about-page--team .position-teammate h4 {
+  font-size: 32px;
+}
+
+.rairpage.about-page--team .teammate-description div {
+  font-size: 22px;
 }
 
 @media screen and (max-width: 1440px) {
@@ -38,6 +65,28 @@
 
   .rairpage-videoplayer-wrapper .nft-video-player-video {
     height: 29.653vw;
+  }
+
+  .rairpage.about-page--team .img-teammate img {
+    width: 13.889vw;
+    height: 13.889vw;
+  }
+
+  .rairpage.about-page--team .title-team h3 {
+    font-size: 2.5vw;
+  }
+
+  .rairpage.about-page--team .title-team h3 .text-gradient {
+    font-size: 2.5vw;
+  }
+
+  .rairpage.about-page--team .position-teammate h4 {
+    font-size: 2.222vw;
+  }
+
+  .rairpage.about-page--team .teammate-description div {
+    font-size: 1.528vw;
+    line-height: 1.944vw;
   }
 }
 
@@ -63,7 +112,38 @@
 }
 
 @media screen and (max-width: 700px) {
+  .rairpage-videoplayer-wrapper .nft-collection {
+    width: 100%;
+  }
+
   .rairpage-videoplayer-wrapper {
-    top: calc(448.75vw + var(--Y_offset));
+    left: 0;
+    top: calc(
+      656.286vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
+    );
+    width: 100%;
+    height: 52.143vw;
+  }
+
+  .rairpage.about-page--team .img-teammate img {
+    width: 28.571vw;
+    height: 28.571vw;
+  }
+
+  .rairpage.about-page--team .title-team h3 {
+    font-size: 5.143vw;
+  }
+
+  .rairpage.about-page--team .title-team h3 .text-gradient {
+    font-size: 5.143vw;
+  }
+
+  .rairpage.about-page--team .position-teammate h4 {
+    font-size: 4.571vw;
+  }
+
+  .rairpage.about-page--team .teammate-description div {
+    font-size: 3.143vw;
+    line-height: 4vw;
   }
 }

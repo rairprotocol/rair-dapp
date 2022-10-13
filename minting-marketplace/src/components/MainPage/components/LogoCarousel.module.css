@@ -30,8 +30,8 @@
 @media screen and (max-width: 700px) {
   .outer_wrapper {
     width: 100%;
-    height: 15.139vw;
-    padding: 0;
+    height: 31.143vw;
+    padding: 8.429vw 0;
   }
 
   .logo_img {
