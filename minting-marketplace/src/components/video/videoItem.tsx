@@ -12,8 +12,8 @@ import { IVideoItem, TParticularProduct } from './video.types';
 import { TUserResponse } from '../../axios.responseTypes';
 import { UserType } from '../../ducks/users/users.types';
 import chainData from '../../utils/blockchainData';
-import { CheckEthereumChain } from '../../utils/CheckEthereumChain';
 import { metamaskCall } from '../../utils/metamaskUtils';
+import { rFetch } from '../../utils/rFetch';
 import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
@@ -26,7 +26,9 @@ Modal.setAppElement('#root');
 
 const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
   const navigate = useNavigate();
-  const { minterInstance } = useSelector((state) => state.contractStore);
+  const { minterInstance, diamondMarketplaceInstance } = useSelector(
+    (state) => state.contractStore
+  );
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   const customStyles = {
@@ -59,47 +61,51 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
   // const [modalBuy, setModalBuy] = useState(false);
   const [modalHelp, setModalHelp] = useState(false);
   const [hovering, setHovering] = useState(false);
-  const [owned, setOwned] = useState(false);
+  const [owned /*setOwned*/] = useState(false);
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
-  const [data, setData] = useStateIfMounted<TParticularProduct | null>(null);
+  const [contractData, setContractData] =
+    useStateIfMounted<TParticularProduct | null>(null);
   const [dataUser, setDataUser] = useStateIfMounted<UserType | null>(null);
 
   // primaryColor === 'rhyno' ? '#F2F2F2' : '#383637'
-
-  const buy = async (
-    offerPool: String,
-    offer: String,
-    token: String,
-    price: String,
-    blockchain: String
-  ) => {
-    if (blockchain !== window?.ethereum?.chainId) {
-      CheckEthereumChain(blockchain);
+  const buy = async ({
+    offerPool = undefined,
+    offerIndex,
+    selectedToken,
+    price
+  }) => {
+    if (!contractData && !diamondMarketplaceInstance && !minterInstance) {
+      return;
+    }
+    Swal.fire({
+      title: 'Buying token',
+      html: 'Awaiting transaction completion',
+      icon: 'info',
+      showConfirmButton: false
+    });
+    let marketplaceCall, marketplaceArguments;
+    if (contractData.diamond) {
+      marketplaceCall = diamondMarketplaceInstance?.buyMintingOffer;
+      marketplaceArguments = [
+        offerIndex, // Offer Index
+        selectedToken // Token Index
+      ];
     } else {
-      Swal.fire({
-        title: 'Buying token',
-        html: 'Awaiting transaction completion',
-        icon: 'info',
-        showConfirmButton: false
-      });
-      if (
-        await metamaskCall(
-          minterInstance.buyToken(offerPool, offer, token, {
-            value: price
-          }),
-          `Not enough funds to buy, you need ${price} ${
-            chainData[data?.contract.blockchain]?.symbol
-          } `
-        )
-      ) {
-        Swal.fire(
-          'Success',
-          `Now, you are the owner of ${token} token`,
-          'success'
-        );
-        setOwned(true);
-        setModalHelp(false);
-      }
+      marketplaceCall = minterInstance?.buyToken;
+      marketplaceArguments = [
+        offerPool, // Catalog Index
+        offerIndex, // Range Index
+        selectedToken // Internal Token Index
+      ];
+    }
+    marketplaceArguments.push({ value: price });
+    if (
+      await metamaskCall(
+        marketplaceCall(...marketplaceArguments),
+        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+      )
+    ) {
+      Swal.fire('Success', 'Now, you are the owner of this token', 'success');
     }
   };
 
@@ -118,38 +124,50 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
 
   const goToCollectionView = () => {
     navigate(
-      `/collection/${data?.contract.blockchain}/${data?.contract.contractAddress}/${mediaList[item]?.product}/0`
+      `/collection/${contractData?.blockchain}/${contractData?.contractAddress}/${mediaList[item]?.product}/0`
     );
   };
 
   const goToUnlockView = () => {
     navigate(
-      `/unlockables/${data?.contract.blockchain}/${data?.contract.contractAddress}/${mediaList[item]?.product}/0`
+      `/unlockables/${contractData?.blockchain}/${contractData?.contractAddress}/${mediaList[item]?.product}/0`
     );
   };
 
   const getInfo = useCallback(async () => {
     if (mediaList && item) {
-      const response = await axios.get(
-        `/api/${mediaList[item].contract}/${mediaList[item].product}`
+      const { contract } = await rFetch(
+        `/api/v2/contracts/${mediaList[item].contract}`
       );
-      setData(response.data.result);
+      try {
+        const tokensrResp = await axios.get(
+          `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}`
+          // `/api/${mediaList[item].contract}/${mediaList[item]?.product}`
+        );
+
+        contract.tokens = tokensrResp.data.result.tokens;
+        // contract.products = productsResp.data.product;
+      } catch (err) {
+        console.error(err);
+      }
+
+      setContractData(contract);
     }
-  }, [mediaList, item, setData]);
+  }, [mediaList, item, setContractData]);
 
   const getInfoUser = useCallback(async () => {
-    if (mediaList && item && data) {
+    if (mediaList && item && contractData) {
       const response = await axios.get<TUserResponse>(
         `/api/users/${mediaList[item].authorPublicAddress}`
         // `/api/users/${data.data.result.contract.user}`
       );
       setDataUser(response.data.user);
     }
-  }, [mediaList, item, data, setDataUser]);
+  }, [mediaList, item, contractData, setDataUser]);
 
   const arrAllTokens = () => {
-    if (data) {
-      availableToken = data?.tokens
+    if (contractData) {
+      availableToken = contractData?.tokens
         .filter((availableToken) => availableToken.isMinted === false)
         .slice(0, 7);
       return availableToken;
@@ -160,7 +178,6 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
     }
   };
   arrAllTokens();
-
   //TODO: use in a future
   // const sortRevers = () => {
   //   console.info(data?.tokens.reverse(), 'sort');
@@ -321,7 +338,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                   {mediaList[item]?.isUnlocked === false && (
                     <div className="modal-content-block-buy">
                       <img
-                        src={data?.tokens[0].metadata.image}
+                        src={contractData?.tokens[0]?.metadata?.image}
                         alt="NFT token powered by Rair tech"
                       />
                       <CustomButton
@@ -366,31 +383,31 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                 {/* <button onClick={() => sortRevers()}>Reverse displaying</button> */}
                 <div className="more-info">
                   {availableToken.length > 0 ? (
-                    availableToken.map((e) => {
+                    availableToken.map((token) => {
                       return (
-                        <div key={e._id} className="more-info-unlock-wrapper">
+                        <div
+                          key={token._id}
+                          className="more-info-unlock-wrapper">
                           <img
-                            src={e.metadata.image}
+                            src={token.metadata.image}
                             alt="NFT token powered by Rair Tech"
                           />
                           <CustomButton
                             text={
-                              data?.contract.products.offers[e.offer].price +
+                              token.offer.price +
                               ' ' +
-                              chainData[data?.contract.blockchain]?.symbol
+                              chainData[contractData?.blockchain]?.symbol
                             }
                             width={'auto'}
                             height={'45px'}
                             textColor={'white'}
-                            onClick={() =>
-                              buy(
-                                e.offerPool,
-                                e.offer,
-                                e.token,
-                                data?.contract.products.offers[e.offer].price,
-                                data?.contract.blockchain
-                              )
-                            }
+                            onClick={() => {
+                              buy({
+                                offerIndex: token.offer.offerIndex,
+                                selectedToken: token.token,
+                                price: token.offer.price
+                              });
+                            }}
                             margin={'0'}
                             custom={true}
                           />
