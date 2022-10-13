@@ -1,33 +1,13 @@
+import { TInfoSeo } from './seo.types';
 import * as types from './types';
 
-const setInfoSEO = (info) => ({
-  type: types.SET_INFO_HELMET,
-  title: info.title,
-  ogTitle: info.ogTitle,
-  ogDescription: info.ogDescription,
-  contentName: info.contentName,
-  content: info.content,
-  description: info.description,
-  favicon: info.favicon,
-  faviconMobile: info.faviconMobile,
-  image: info.image,
-  twitterTitle: info.twitterTitle,
-  twitterDescription: info.twitterDescription
-});
+export const setInfoSEO = (info: TInfoSeo) =>
+  ({
+    type: types.SET_INFO_HELMET,
+    info
+  } as const);
 
-const resetInfoSeo = () => ({
-  type: types.SET_INFO_HELMET,
-  title: '',
-  ogTitle: '',
-  ogDescription: '',
-  contentName: '',
-  content: '',
-  description: '',
-  favicon: '',
-  faviconMobile: '',
-  image: '',
-  twitterTitle: '',
-  twitterDescription: ''
-});
-
-export { resetInfoSeo, setInfoSEO };
+export const resetInfoSeo = () =>
+  ({
+    type: types.RESET_INFO_HELMET
+  } as const);
