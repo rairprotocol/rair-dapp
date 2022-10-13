@@ -17,6 +17,7 @@ import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import { NFTNYC_TITLE, warning0 } from '../images/NFTNYC/nftnyc';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
+import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
@@ -47,9 +48,8 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
     NFTName: 'NFT',
     title: 'NFTNYC X RAIR',
     titleColor: '#F15621',
-    description: [
-      'Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams'
-    ],
+    description:
+      'Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams',
     videoPlayerParams: {
       blockchain: '0x89',
       contract: '0xb41660b91c8ebc19ffe345726764d4469a4ab9f8',
@@ -75,7 +75,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
       buttonColor: '#000000',
       buttonLabel: 'View on Opensea',
       buttonImg: null,
-      buttonLink: 'https://opensea.io/collection/swagnftnyc'
+      buttonAction: () => hyperlink('https://opensea.io/collection/swagnftnyc')
     },
     exclusiveNft: {
       title: 'NFTs',

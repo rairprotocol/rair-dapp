@@ -13,6 +13,7 @@ import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/Vi
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
+import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
@@ -43,15 +44,17 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
       buttonColor: '#f69220',
       buttonLabel: 'REGISTER FOR GLOBAL',
       buttonImg: null,
-      buttonLink:
-        'https://www.eventbrite.com/e/coinagenda-global-2022-feat-bitangels-tickets-297407703447'
+      buttonAction: () =>
+        hyperlink(
+          'https://www.eventbrite.com/e/coinagenda-global-2022-feat-bitangels-tickets-297407703447'
+        )
     },
     button1: {
       buttonTextColor: '#FFFFFF',
       buttonColor: '#f69220',
       buttonLabel: 'VIEW ON OPENSEA',
       buttonImg: null,
-      buttonLink: 'https://opensea.io/collection/coinagenda'
+      buttonAction: () => hyperlink('https://opensea.io/collection/coinagenda')
     }
   };
 

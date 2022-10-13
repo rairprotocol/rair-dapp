@@ -10,7 +10,7 @@ const MainTitleBlock: React.FC<TMainTitleBlock> = ({
   text,
   fontFamily,
   lineHeight,
-  margin,
+  marginBottom,
   padding,
   textAlign,
   width
@@ -22,7 +22,7 @@ const MainTitleBlock: React.FC<TMainTitleBlock> = ({
       fontWeight={fontWeight}
       fontFamily={fontFamily}
       lineHeight={lineHeight}
-      margin={margin}
+      marginBottom={marginBottom}
       padding={padding}
       textAlign={textAlign}
       width={width}>

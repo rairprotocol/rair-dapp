@@ -15,7 +15,7 @@ export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerM
   justify-content: ${({ justifyContent }) => justifyContent || 'space-between'};
   width: ${({ width }) => width || '100%'};
   height: ${({ height }) => height};
-  margin: ${({ margin }) => margin};
+  margin-top: ${({ marginTop }) => marginTop || '0px'};
   gap: ${({ gap }) => gap};
 `;
 

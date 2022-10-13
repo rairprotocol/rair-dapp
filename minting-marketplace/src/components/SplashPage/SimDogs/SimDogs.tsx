@@ -53,6 +53,7 @@ import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlo
 import ButtonMainBlock from '../SplashPageConfig/MainBlock/TButtonMainBlock';
 import { StyledSplashPageWrapperContainer } from '../SplashPageConfig/styles/StyledWrapperContainers.styled';
 import { theme } from '../SplashPageConfig/theme.styled';
+import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
 import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
@@ -203,7 +204,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       buttonColor: '#55CFFF',
       buttonLabel: 'PREMINT',
       buttonImg: null,
-      buttonLink: 'https://www.premint.xyz/simdogsxyz/'
+      buttonAction: () => hyperlink('https://www.premint.xyz/simdogsxyz/')
     },
     exclusiveNft: {
       title: 'NFTs',
@@ -326,7 +327,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                   text={splashData.title}
                   fontFamily={'Acme, sans-serif'}
                   lineHeight={'1.2'}
-                  margin={'108.227px 0px 13px'}
+                  marginBottom={'13px'}
                 />
                 <MainTitleBlock
                   color="#100003"
@@ -338,7 +339,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                   width="473px"
                 />
                 <ButtonContainerMainBlock
-                  margin={'81px 0 0 70px'}
+                  marginTop={'81px'}
                   height="191px"
                   width="244px"
                   gap="16px"

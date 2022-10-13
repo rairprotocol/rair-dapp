@@ -59,7 +59,7 @@ export type TSplashPageDataButtonType = {
   buttonTextColor?: string;
   buttonMarginTop?: string;
   buttonMarginBottom?: string;
-  buttonAction?: () => void;
+  buttonAction?: (() => void) | (() => Promise<void>);
 };
 
 export type TCarouselDataType = {
@@ -101,6 +101,7 @@ export type TParamsMarketplaceDemo = {
 
 export type TPurchaseButtonType = {
   contractAddress: string;
+  buttonLabel?: string;
   requiredBlockchain: BlockchainType | undefined;
   buttonComponent?: React.ElementType;
   customStyle?: React.CSSProperties;
@@ -140,7 +141,7 @@ export type TSplashDataType = {
   title?: string;
   titleColor?: string;
   titleImage?: string;
-  description?: string[] | string;
+  description?: string;
   textDescriptionCustomStyles?: React.CSSProperties;
   seoInformation?: TSeoInformationType;
   backgroundImage?: string;

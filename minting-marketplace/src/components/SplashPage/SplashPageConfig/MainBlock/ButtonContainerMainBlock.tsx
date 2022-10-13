@@ -5,7 +5,7 @@ import { StyledButtonContainerMainBlock } from '../styles/StyledButtonsContainer
 
 const ButtonContainerMainBlock: React.FC<TButtonContainerMainBlock> = ({
   children,
-  margin,
+  marginTop,
   height,
   width,
   gap,
@@ -13,7 +13,7 @@ const ButtonContainerMainBlock: React.FC<TButtonContainerMainBlock> = ({
 }) => {
   return (
     <StyledButtonContainerMainBlock
-      margin={margin}
+      marginTop={marginTop}
       height={height}
       width={width}
       gap={gap}

@@ -9,10 +9,8 @@ export const StyledMainBlockTextContainer = styled.div<TStyledMainBlockTextConta
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
-  padding: ${({ padding }) => padding};
-  /* background-color: red; */
-  width: 50%;
+  justify-content: space-between;
+  padding: ${({ padding }) => padding || '0px'};
   height: 100%;
 `;
 
@@ -23,7 +21,7 @@ export const StyledMainBlockTitle = styled.div<TStyledMainBlockTitle>`
   font-family: ${({ fontFamily }) => fontFamily};
   line-height: ${({ lineHeight }) => lineHeight};
   word-break: break-word;
-  margin: ${({ margin }) => margin || '0px'};
+  margin-bottom: ${({ marginBottom }) => marginBottom || '0px'};
   padding: ${({ padding }) => padding || '0px'};
   text-align: ${({ textAlign }) => textAlign || 'start'};
   width: ${({ width }) => width || '100%'};

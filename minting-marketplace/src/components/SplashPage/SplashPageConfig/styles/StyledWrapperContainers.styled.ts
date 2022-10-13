@@ -9,5 +9,5 @@ export const StyledHigherWrapperSplashPage = styled.div<TStyledHigherWrapperSpla
 `;
 
 export const StyledSplashPageWrapperContainer = styled.div`
-  width: 100%;
+  width: 85vw;
 `;

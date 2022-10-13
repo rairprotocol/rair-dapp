@@ -21,7 +21,6 @@ import MetaTags from '../../SeoTags/MetaTags';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 import { ReactComponent as DiscordLogo } from '../assets/DiscordLogo.svg';
-import { ReactComponent as MetaMaskFox } from '../assets/MetaMaskFox.svg';
 import {
   WallstreetA,
   WallstreetB,
@@ -129,27 +128,27 @@ const splashData: TSplashDataType = {
   },
   buttonBackgroundHelp: 'rgb(90,27,3)',
   buttonBackgroundHelpText: 'NEED HELP',
-  buttonLabel: 'freemint',
-  customStyle: {
-    // background: 'rgb(89,25,8)',
-    width: '100%',
-    height: '64px',
-    background: '#611200',
-    fontFamily: "'Cooper Std Black', sans-serif",
-    fontWeight: '900',
-    fontSize: '20px',
-    lineHeight: '28px',
-    margin: '0 0 20px',
-    marginRight: '23px'
-  },
   backgroundImage: WallstreetImg,
   purchaseButton: {
+    buttonLabel: 'freemint',
     buttonComponent: PurchaseTokenButton,
     img: metaMaskIcon,
     requiredBlockchain: blockchain,
     contractAddress: contract,
     offerIndex: offerIndex,
     presaleMessage: '',
+    customStyle: {
+      width: '100%',
+      height: '64px',
+      background: '#611200',
+      fontFamily: "'Cooper Std Black', sans-serif",
+      fontWeight: '900',
+      fontSize: '20px',
+      lineHeight: '28px',
+      margin: '0 0 20px',
+      marginRight: '23px',
+      color: '#FFFFFF'
+    },
     customWrapperClassName: 'btn-submit-with-form',
     blockchainOnly: true,
     customSuccessAction: async (nextToken) => {
@@ -172,17 +171,14 @@ const splashData: TSplashDataType = {
   },
   // button1: {
   //   buttonColor: 'rgb(89, 25, 8)',
-  //   buttonTextColor: '#FFFFFF',
-  //   buttonLabel: 'freemint',
-  //   buttonCustomLogo: <MetaMaskFox />,
-  //   buttonImg: metaMaskIcon
-  //   // buttonAction,
+  //   buttonTextColor: '#FFFFFF'
+  //   // buttonLabel: 'freemint',
+  //   // buttonCustomLogo: <MetaMaskFox />
   // },
   button2: {
     buttonTextColor: '#FFFFFF',
     buttonColor: '#000000',
     buttonLabel: 'Join our Discord',
-    // buttonImg: discrodIconNoBorder,
     buttonCustomLogo: <DiscordLogo />,
     buttonLink: 'https://discord.com/invite/y98EMXRsCE'
   },
@@ -260,7 +256,6 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   useEffect(() => {
     setIsSplashPage?.(true);
   }, [setIsSplashPage]);
-  // const whatSplashPage = 'genesis-font';
 
   useEffect(() => {
     window.addEventListener('resize', () =>
@@ -319,90 +314,6 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
           }}
         />
 
-        <ThemeProvider theme={theme}>
-          <StyledSplashPageWrapperContainer>
-            <SplashPageMainBlock
-              bgColor="#FFFFFF"
-              heightDiff="694px"
-              borderRadius="24px">
-              <MainBlockInfoText padding={'190px 20px 0px 75px'}>
-                <MainTitleBlock
-                  color={splashData.titleColor}
-                  fontSize="50px"
-                  fontWeight={700}
-                  text={splashData.title}
-                  fontFamily={"'Cooper Std Black', sans-serif"}
-                  lineHeight={'1.2'}
-                  margin={'0 0 0 0'}
-                  padding={'0 0 0 0'}
-                />
-                <MainTitleBlock
-                  color="rgb(89, 25, 8)"
-                  fontSize="30px"
-                  fontWeight={'normal'}
-                  text={splashData.description}
-                  fontFamily={"'Copperplate', sans-serif"}
-                  lineHeight={'33px'}
-                  margin={'27px 0 0'}
-                  padding={'0 0 0 7px'}
-                  width="476px"
-                />
-                <ButtonContainerMainBlock
-                  margin={'82px 0px 0px 0px'}
-                  height="148px"
-                  width="335px"
-                  flexDirection="column">
-                  {/* <PurchaseTokenButton
-                    // requiredBlockchain={}
-                    presaleMessage={splashData.purchaseButton?.presaleMessage}
-                    customSuccessAction={
-                      splashData.purchaseButton?.customSuccessAction
-                    }
-                    offerIndex={contractChosen.offerIndex}
-                    isSplashPage={isSplashPage}
-                    diamond={diamond}
-                    customStyle={splashData.customStyle}
-                    buttonData={splashData.button1}
-                    contractAddress={contractChosen.contractAddress}
-                    // {...{
-                    //   ...splashData.purchaseButton,
-                    //   connectUserData
-                    // }}
-                  /> */}
-                  <ButtonMainBlock
-                    width="100%"
-                    height="64px"
-                    background="#611200"
-                    fontFamily="'Cooper Std Black', sans-serif"
-                    fontWeight={'900'}
-                    fontSize={'20px'}
-                    lineHeight={'28px'}
-                    buttonData={splashData.button1}
-                    margin="0 0 20px"
-                    buttonLogoMarginRight="23px"
-                  />
-                  <ButtonMainBlock
-                    width={'100%'}
-                    height="64px"
-                    buttonData={splashData.button2}
-                    fontFamily={"'Cooper Std Black', sans-serif"}
-                    fontWeight={'400'}
-                    lineHeight={'22px'}
-                    fontSize={'20px'}
-                    buttonLogoMarginRight="23px"
-                  />
-                </ButtonContainerMainBlock>
-              </MainBlockInfoText>
-              <ImageMainBlock
-                image={splashData.backgroundImage}
-                widthDiff="491px"
-                heightDiff="491px"
-                imageMargin={'auto 77px 97px 0 '}
-              />
-            </SplashPageMainBlock>
-          </StyledSplashPageWrapperContainer>
-        </ThemeProvider>
-
         <AuthorCard {...{ splashData, connectUserData }} />
         <TokenLeftTemplate
           counterData={splashData.counterData}
@@ -451,3 +362,65 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
 };
 
 export default Wallstreet80sClubSplashPage;
+
+//will be used later
+{
+  /* <ThemeProvider theme={theme}>
+  <StyledSplashPageWrapperContainer>
+    <SplashPageMainBlock
+      bgColor="#FFFFFF"
+      heightDiff="694px"
+      borderRadius="24px">
+      <MainBlockInfoText padding={'190px 20px 0px 75px'}>
+        <MainTitleBlock
+          color="#000000"
+          fontSize="50px"
+          fontWeight={700}
+          text={splashData.title}
+          fontFamily={"'Cooper Std Black', sans-serif"}
+          lineHeight={'1.2'}
+        />
+        <MainTitleBlock
+          color="rgb(89, 25, 8)"
+          fontSize="30px"
+          fontWeight={'normal'}
+          text={splashData.description}
+          fontFamily={"'Copperplate', sans-serif"}
+          lineHeight={'33px'}
+          margin={'27px 0 0'}
+          padding={'0 0 0 7px'}
+          width="476px"
+        />
+        <ButtonContainerMainBlock
+          margin={'82px 0px 0px 0px'}
+          height="148px"
+          width="335px"
+          flexDirection="column">
+          <PurchaseTokenButton
+            {...splashData.purchaseButton}
+            isSplashPage={isSplashPage}
+            buttonData={splashData.button1}
+            diamond={false}
+          />
+          <ButtonMainBlock
+            width={'100%'}
+            height="64px"
+            buttonData={splashData.button2}
+            fontFamily={"'Cooper Std Black', sans-serif"}
+            fontWeight={'400'}
+            lineHeight={'22px'}
+            fontSize={'20px'}
+            buttonLogoMarginRight="23px"
+          />
+        </ButtonContainerMainBlock>
+      </MainBlockInfoText>
+      <ImageMainBlock
+        image={splashData.backgroundImage}
+        widthDiff="491px"
+        heightDiff="491px"
+        imageMargin={'0px 77px 97px 0px'}
+      />
+    </SplashPageMainBlock>
+  </StyledSplashPageWrapperContainer>
+</ThemeProvider>; */
+}

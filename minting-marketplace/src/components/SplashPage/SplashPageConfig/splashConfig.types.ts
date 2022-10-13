@@ -28,7 +28,7 @@ export type TStyledMainBlockTitle = {
   fontWeight: number | string;
   fontFamily: string;
   lineHeight: string;
-  margin?: string;
+  marginBottom?: string;
   padding?: string;
   textAlign?: string;
   width?: string;
@@ -40,7 +40,7 @@ export type TStyledMainBlockDescription = {
 };
 
 export type TStyledMainBlockTextContainer = {
-  padding: string;
+  padding?: string;
 };
 
 //component's props
@@ -59,6 +59,7 @@ export type TStyledHigherWrapperSplashPage = {
 export type TDefaultThemeType = {
   colors: {
     mainBlock: string;
+    dark: string;
   };
   mobile: string;
 };
@@ -75,9 +76,9 @@ export type TStyledSplashMainBlockWrapper = {
 };
 
 export type TStyledImageBlock = {
-  widthDiff: string;
-  heightDiff: string;
-  imageMargin: string;
+  widthDiff?: string;
+  heightDiff?: string;
+  imageMargin?: string;
 };
 
 export type TImageMainBlock = TStyledImageBlock & {
@@ -114,7 +115,7 @@ export type TFlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 export type TStyledButtonContainerMainBlock = {
   height?: string;
   width?: string;
-  margin?: string;
+  marginTop?: string;
   gap?: string;
   flexDirection?: TFlexDirection;
   justifyContent?: TJustifyContent;
