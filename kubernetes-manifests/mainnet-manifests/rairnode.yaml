@@ -1,0 +1,151 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode
+  name: rairnode
+spec:
+  ports:
+    - name: "3000"
+      port: 3000
+      targetPort: 3000
+    - name: "5000"
+      port: 5000
+      targetPort: 5000
+  selector:
+    io.kompose.service: rairnode
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode
+  name: rairnode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rairnode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: rairnode
+    spec:
+      containers:
+        - image: rairtechinc/rairservernode:cce07ef91345a94f2f843a0f3bf38dea2d45d80a
+          name: rairnode
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credential
+                  key: MONGO_URI
+            - name: GCP_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: rair-manager-key
+                  key: key.json
+            - name: PINATA_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pinata-secret
+                  key: PINATA_SECRET
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET
+            - name: MORALIS_MASTER_KEY_MAIN
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-main
+                  key: MORALIS_MASTER_KEY_MAIN
+            - name: MORALIS_MASTER_KEY_TEST
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-test
+                  key: MORALIS_MASTER_KEY_TEST
+            - name: VAULT_RAIRNODE_APP_ROLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vault-rairnode-app-role-id
+                  key: VAULT_RAIRNODE_APP_ROLE_ID
+            - name: VAULT_RAIRNODE_APP_ROLE_SECRET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vault-rairnode-app-role-secret-id
+                  key: VAULT_RAIRNODE_APP_ROLE_SECRET_ID
+          envFrom:
+          - configMapRef:
+              name: rairnode-env
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/src/rairnode/db
+              name: rairnode-claim0
+            - mountPath: /usr/src/rairnode/bin/Videos
+              name: rairnode-claim1
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+      volumes:
+        - name: rairnode-claim0
+          persistentVolumeClaim:
+            claimName: rairnode-claim0
+            readOnly: false
+        - name: rairnode-claim1
+          persistentVolumeClaim:
+            claimName: rairnode-claim1
+            readOnly: false
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode-claim0
+  name: rairnode-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode-claim1
+  name: rairnode-claim1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+status: {}
+

@@ -5,6 +5,13 @@ resource "cloudflare_record" "rair_market__coinagenda" {
   type    = local.record_type.A
 }
 
+resource "cloudflare_record" "rair_market__api" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "Mainnet"
+  value   = "34.102.185.148"
+  type    = local.record_type.A
+}
+
 resource "cloudflare_record" "rair_market__demo" {
   zone_id = cloudflare_zone.rair_market.id
   name    = "Demo"
@@ -78,10 +85,29 @@ resource "cloudflare_record" "prod_rair_market" {
   value   = "130.211.6.12"
   type    = local.record_type.A
 }
+resource "cloudflare_record" "api_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = module.shared_config.env_config.prod.api_subdomain
+  value   = "34.149.194.255"
+  type    = local.record_type.A
+}
+
 
 # End: Rairnode API endpoint
 #######################################################
 
+#######################################################
+# Start: Media Service endpoint
+
+resource "cloudflare_record" "ms_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = module.shared_config.env_config.prod.ms_subdomain
+  value   = "34.160.51.158"
+  type    = local.record_type.A
+}
+
+# End: Media Service API endpoint
+#######################################################
 
 #######################################################
 # Start: Minting marketplace frontend public ingress to GKE
