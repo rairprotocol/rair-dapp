@@ -7,12 +7,15 @@ import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import { ITeammate } from '../splashPage.types';
 
 const Teammate: React.FC<ITeammate> = ({
+  readMoreCount,
+  setReadMoreCount,
   url,
   name,
   desc,
   primaryColor,
   socials,
   chain,
+  readMoreCountFlag,
   arraySplash
 }) => {
   return (
@@ -35,8 +38,11 @@ const Teammate: React.FC<ITeammate> = ({
             </div>
           </div>
           <TeammateDesc
+            readMoreCount={readMoreCount}
+            setReadMoreCount={setReadMoreCount}
             arraySplash={arraySplash}
             desc={desc}
+            readMoreCountFlag={readMoreCountFlag}
             primaryColor={primaryColor}
           />
         </div>
