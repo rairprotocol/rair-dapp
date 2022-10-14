@@ -335,14 +335,19 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                 showConfirmButton: false
               });
               setBlockchainOperationInProgress(true);
-              let result = await metamaskCall(
-                contractData.instance.setProductURI(
+              let result: any;
+              const operation =
+                contractData.instance[
+                  contractData.diamond ? 'setCollectionURI' : 'setProductURI'
+                ];
+              result = await metamaskCall(
+                operation(
                   collectionIndex,
                   collectionWideMetadata,
-                  appendTokenForContract
+                  appendTokenForCollection
                 )
               );
-              if (!result) {
+              if (!result && !contractData.diamond) {
                 Swal.fire({
                   title: '(Legacy) Updating Product Wide URI',
                   html: 'The token index will not be appended at the end of the URI',

@@ -3,6 +3,7 @@ import React from 'react';
 import TeamMeetComponentCommon from './TeamComponentCommon';
 
 import {
+  Carston,
   David,
   Ed,
   Garrett,
@@ -176,6 +177,79 @@ const teamArray: TTeamArrayItemType[] = [
   }
 ];
 
+const teamMainPage: TTeamArrayItemType[] = [
+  {
+    nameTeammate: 'Ed Prado | Chief Executive Officer',
+    imageUrl: Ed,
+    aboutTeammate: [
+      `Deep financial technology experience, having created the world’s
+            first online bond trading platform, and owned two investment banks
+            (broker dealers) which were active in the trading and underwriting 
+            of securities with volumes in the billions. Deep familiarity with consumer
+            and investor protection laws, KYC/AML guidelines, and the fintech 
+            transaction landscape. Serial entrepreneur with strong operational
+            acumen.`
+    ],
+    socials: [
+      {
+        classIcon: 'fab fa-linkedin-in',
+        link: 'https://www.linkedin.com/in/ed-prado-a8526a4/',
+        classLink: ''
+      }
+    ]
+  },
+  {
+    nameTeammate: 'Garrett Minks | Chief Technical Officer',
+    imageUrl: Garrett,
+    aboutTeammate: [
+      `Deep expertise in distributed ledger technologies and their unique token 
+            economic incentive frameworks. An early adopter of blockchain innovations,
+            digital collectibles, and DLT based media platforms. After writing his 
+            first book on distributed technologies, he realized no viable publishing
+            platform using next wave distributed technologies existed where content
+            could be sold and resold via immutable ledger tokens. Instead of using 
+            Kindle Direct Publishing and giving the majority of proceeds to a predatory
+            intermediary, RAIR was born.
+            `
+    ],
+    socials: [
+      {
+        classIcon: 'fab fa-linkedin-in',
+        link: 'https://www.linkedin.com/in/garrettminks/',
+        classLink: ''
+      }
+    ]
+  },
+  {
+    nameTeammate: 'Carston Harbor | SVP Business Development',
+    imageUrl: Carston,
+    aboutTeammate: [
+      `Creating the future of web3 by leveraging extensive knowledge in all sectors of business framework. Experienced background with an emphasis on consumer psychology and product design. Founded multiple successful ventures that have focused heavily on blockchain infrastructure integration into traditional businesses.`
+    ]
+  },
+  {
+    nameTeammate: 'Martin Casado | Chief Design Officer',
+    imageUrl: Martin,
+    aboutTeammate: [
+      `Extensive expertise in conceptual design in functionality and aesthetics. 
+            Bridging the gap between what the users want and how markets visualize what
+            is economically attractive. Experienced in logistics protocols, specifically
+            in building and planning technologies to facilitate the transport and 
+            supply chain functions of both physical and digital goods. Built one of
+            the first tracking and logistics integration applications for an 
+            international shipping company.
+            `
+    ],
+    socials: [
+      {
+        classIcon: 'fab fa-linkedin-in',
+        link: 'https://www.linkedin.com/in/martin-casado-484b353/',
+        classLink: ''
+      }
+    ]
+  }
+];
+
 const teamAboutRair: TTeamArrayItemType[] = [
   {
     nameTeammate: 'Ed Prado | Chief Executive Officer',
@@ -293,7 +367,8 @@ const rairAdvisorsTeam: TTeamArrayItemType[] = [
         link: 'https://www.linkedin.com/in/michaelterpin/',
         classLink: ''
       }
-    ]
+    ],
+    readMoreCountFlag: 2
   },
   {
     nameTeammate: 'Julia Yan  | Strategic Advisor',
@@ -316,7 +391,8 @@ const rairAdvisorsTeam: TTeamArrayItemType[] = [
         link: 'https://www.linkedin.com/in/juliayan',
         classLink: ''
       }
-    ]
+    ],
+    readMoreCountFlag: 1
   },
   {
     nameTeammate: 'David Jensen  |  Strategic Advisor + Investor',
@@ -356,7 +432,8 @@ const rairAdvisorsTeam: TTeamArrayItemType[] = [
         link: 'https://www.linkedin.com/in/davidnjensen/',
         classLink: ''
       }
-    ]
+    ],
+    readMoreCountFlag: 4
   },
   // {
   //     nameTeammate: "Gunther Sonnenfeld CSO",
@@ -439,7 +516,8 @@ const rairAdvisorsTeam: TTeamArrayItemType[] = [
         link: 'https://www.linkedin.com/in/mattneco/',
         classLink: ''
       }
-    ]
+    ],
+    readMoreCountFlag: 5
   }
 ];
 
@@ -1008,7 +1086,11 @@ const teamSlideLockArray: TTeamArrayItemType[] = [
   }
 ];
 
-const TeamMeet: React.FC<ITeamComponentCommon> = ({ arraySplash }) => {
+const TeamMeet: React.FC<ITeamComponentCommon> = ({
+  readMoreCount,
+  setReadMoreCount,
+  arraySplash
+}) => {
   return (
     <div className="splash-team">
       <div className="title-team">
@@ -1047,6 +1129,11 @@ const TeamMeet: React.FC<ITeamComponentCommon> = ({ arraySplash }) => {
         {arraySplash === 'immersiverse' && <h3>About</h3>}
         {arraySplash === 'NFTLA' && <h3>About</h3>}
         {arraySplash === 'rair' && (
+          <h3>
+            Meet the <span className="text-gradient">Team</span>
+          </h3>
+        )}
+        {arraySplash === 'main-page' && (
           <h3>
             Meet the <span className="text-gradient">Team</span>
           </h3>
@@ -1156,8 +1243,13 @@ const TeamMeet: React.FC<ITeamComponentCommon> = ({ arraySplash }) => {
             className={false}
           />
         )}
+        {arraySplash === 'main-page' && (
+          <TeamMeetComponentCommon teamArray={teamMainPage} className={false} />
+        )}
         {arraySplash === 'rair-advisors' && (
           <TeamMeetComponentCommon
+            readMoreCount={readMoreCount}
+            setReadMoreCount={setReadMoreCount}
             teamArray={rairAdvisorsTeam}
             className={false}
           />

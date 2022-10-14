@@ -1,4 +1,5 @@
 import aboutPagebg1 from './aboutPage_bg-1.webp';
+import carstonImage from './carston-hs.webp';
 import davidImage from './David.webp';
 import edImage from './Ed.webp';
 import garrettImage from './GARRETT.webp';
@@ -21,3 +22,4 @@ export const Matthew = matthewImage;
 export const Michael = michaelImage;
 export const Seth = sethImage;
 export const RairProd = rairProd;
+export const Carston = carstonImage;
