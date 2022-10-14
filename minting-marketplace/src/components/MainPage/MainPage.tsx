@@ -139,11 +139,10 @@ const MainPage: React.FC<IMainPage> = ({
   return (
     <div className={styles.mainpage_wrapper}>
       <div className={styles.title}>
-        <span className={styles.typography_0}>
-          A Platform <br className={styles.title_break} /> for next
+        <span className={styles.typography_2}>
+          Powering next <br className={styles.title_break} /> generation
         </span>
-        <span className={styles.typography_1}> generation</span>
-        <span className={styles.typography_2}> nFTs</span>
+        <span className={styles.typography_1}> NFTs</span>
       </div>
       <img className={styles.graphic} src={MainPageImage0} />
       <PurchaseTokenButton
@@ -229,7 +228,7 @@ const MainPage: React.FC<IMainPage> = ({
           &#8226; Mint on an EVM compatible blockchain. ETH, MATIC, BSC &#38;
           EVM integrations
         </p>
-        <p>&#8226; Gas Optimized. Free mints. Shareable JSONs</p>
+        <p>&#8226; Gas Optimized. Free mints. Upgradable JSONs</p>
         <p>
           &#8226; Prevent Sudoswap attacks. RAIRpay royalty engine protects
           resales
@@ -376,7 +375,7 @@ const MainPage: React.FC<IMainPage> = ({
         <span className={styles.embeddeddemo_title_alt}> code</span>
       </div>
       <div className={styles.embeddeddemo_description}>
-        Incorporate our Web 3 Streaming player into your existing Web2 site{' '}
+        Incorporate our Web3 Streaming player:{' '}
       </div>
       <div className={styles.embeddeddemo}>
         <div
