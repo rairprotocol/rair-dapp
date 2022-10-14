@@ -13,12 +13,12 @@ import { ReactComponent as MetaMaskFox } from '../assets/MetaMaskFox.svg';
 import { MarkKohlerImage } from '../images/markKohler/markHohler';
 import { ISplashPageProps } from '../splashPage.types';
 import { TSplashDataType } from '../splashPage.types';
-import ButtonContainerMainBlock from '../SplashPageConfig/MainBlock/ButtonContainerMainBlock';
-import ImageMainBlock from '../SplashPageConfig/MainBlock/ImageMainBlock';
-import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
-import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
-import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
-import ButtonMainBlock from '../SplashPageConfig/MainBlock/TButtonMainBlock';
+import SplashCardImage from '../SplashPageConfig/CardBlock/ImageMainBlock';
+import SplashCardButtonsWrapper from '../SplashPageConfig/CardBlock/SplashCardButtonsWrapper';
+import SplashCardInfoBlock from '../SplashPageConfig/CardBlock/SplashCardInfoBlock';
+import SplashCardText from '../SplashPageConfig/CardBlock/SplashCardText';
+import SplashPageCardWrapper from '../SplashPageConfig/CardBlock/SplashPageCardWrapper';
+import SplashCardButton from '../SplashPageConfig/CardBlock/TButtonMainBlock';
 import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import { useGetProducts } from '../splashPageProductsHook';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
@@ -126,9 +126,9 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-        <SplashPageMainBlock borderRadius="20px" paddingLeft="85px">
-          <MainBlockInfoText padding="6.43vw 0vw 1.38vw 5.9vw">
-            <MainTitleBlock
+        <SplashPageCardWrapper>
+          <SplashCardInfoBlock padding="7.43vw 0vw 5.56vw 5.9vw">
+            <SplashCardText
               color="#DF76DF"
               fontSize="3.47vw"
               fontWeight={400}
@@ -137,8 +137,9 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               lineHeight={'113.7%'}
               width={'37.3vw'}
               marginBottom="1vw"
+              mediafontSize="4.5vw"
             />
-            <MainTitleBlock
+            <SplashCardText
               color="#000000"
               fontSize="1.9vw"
               fontWeight={400}
@@ -146,14 +147,15 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               fontFamily={'Nebulosa Black Display Stencil'}
               lineHeight={'129%'}
               width="33.68vw"
+              mediafontSize="3vw"
             />
-            <ButtonContainerMainBlock
+            <SplashCardButtonsWrapper
               marginTop={'53px'}
               height="148px"
               width="335px"
               gap="20px"
               flexDirection="column">
-              <ButtonMainBlock
+              <SplashCardButton
                 width="100%"
                 height={'64px'}
                 padding="14px 0px"
@@ -167,7 +169,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
                 buttonData={splashData.button1}
                 buttonLogoMarginRight="32px"
               />
-              <ButtonMainBlock
+              <SplashCardButton
                 borderRadius="16px"
                 background="#000000"
                 buttonData={splashData.button2}
@@ -179,50 +181,18 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
                 height="64px"
                 width="100%"
               />
-            </ButtonContainerMainBlock>
-          </MainBlockInfoText>
+            </SplashCardButtonsWrapper>
+          </SplashCardInfoBlock>
           {splashData.backgroundImage && (
-            <ImageMainBlock
+            <SplashCardImage
               image={splashData.backgroundImage}
               imageMargin="4.79vw 4.23vw 4.16vw 1.38vw"
             />
           )}
-        </SplashPageMainBlock>
+        </SplashPageCardWrapper>
       </div>
     </div>
   );
 };
 
 export default MarkKohler;
-
-//will be used later or deleted before creation of pull request
-{
-  /* <SplashPageCardWrapper className="mark-kohler-card-wrapper">
-          <CardTextBlock className="mark-kohler-text-block">
-            <CardText
-              className="mark-kohler-card-text"
-              text={splashData.title}
-            />
-            <CardText
-              className="mark-kohler-card-description"
-              text={splashData.description}
-            />
-            <CardButtonsWrapper className="mark-kohler-card-buttons-wrapper">
-              <CardButton
-                className="mark-kohler-card-button-mint"
-                title={splashData.button1?.buttonLabel}
-                buttonAction={splashData.button1?.buttonAction}
-              />
-              <CardButton
-                className="mark-kohler-card-button-mint mark-kohler-card-button-email-updates"
-                title={splashData.button2?.buttonLabel}
-                buttonAction={splashData.button1?.buttonAction}
-              />
-            </CardButtonsWrapper>
-          </CardTextBlock>
-          <CardImageBlock
-            className="mark-kohler-card-image"
-            image={splashData.backgroundImage}
-          />
-        </SplashPageCardWrapper> */
-}

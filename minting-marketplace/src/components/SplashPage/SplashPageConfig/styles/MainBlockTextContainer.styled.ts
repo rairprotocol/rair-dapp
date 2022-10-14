@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
 import {
-  TStyledMainBlockTextContainer,
-  TStyledMainBlockTitle
+  TStyledSplashCardInfoBlock,
+  TStyledSplashCardText,
+  TStyledWrapperSplashPage
 } from '../splashConfig.types';
 
-export const StyledMainBlockTextContainer = styled.div<TStyledMainBlockTextContainer>`
+export const StyledSplashCardInfoBlock = styled.div<TStyledSplashCardInfoBlock>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -14,7 +15,7 @@ export const StyledMainBlockTextContainer = styled.div<TStyledMainBlockTextConta
   height: 100%;
 `;
 
-export const StyledMainBlockTitle = styled.div<TStyledMainBlockTitle>`
+export const StyledSplashCardText = styled.div<TStyledSplashCardText>`
   color: ${({ color }) => color};
   font-size: ${({ fontSize }) => fontSize};
   font-weight: ${({ fontWeight }) => fontWeight};
@@ -25,15 +26,17 @@ export const StyledMainBlockTitle = styled.div<TStyledMainBlockTitle>`
   padding: ${({ padding }) => padding || '0px'};
   text-align: ${({ textAlign }) => textAlign || 'start'};
   width: ${({ width }) => width || '100%'};
-`;
 
-export type TStyledWrapperSplashPage = {
-  bgSize: string;
-  bgPosition: string;
-  wrapperHeight: string;
-  bgColor: string;
-  borderRadius: string;
-};
+  @media (max-width: 930px) {
+    font-size: ${({ mediafontSize }) => mediafontSize};
+    width: 100%;
+    text-align: center;
+  }
+
+  @media (max-width: 539px) {
+    font-size: 20px;
+  }
+`;
 
 export const StyledWrapperSplashPage = styled.div<TStyledWrapperSplashPage>`
   background-size: ${({ bgSize }) => bgSize};
