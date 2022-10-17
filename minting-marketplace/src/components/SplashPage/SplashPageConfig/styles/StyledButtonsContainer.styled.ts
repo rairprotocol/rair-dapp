@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 
 import {
-  TStyledButtonContainerMainBlock,
   TStyledButtonImage,
   TStyledButtonLogo,
-  TStyledButtonMainBlock,
-  TStyledButtonMainBlockWrapper
+  TStyledButtonMainBlockWrapper,
+  TStyledSplashCardButton,
+  TStyledSplashCardButtonsWrapper
 } from '../splashConfig.types';
 
-export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerMainBlock>`
+export const StyledSplashCardButtonsWrapper = styled.div<TStyledSplashCardButtonsWrapper>`
   display: flex;
   flex-direction: ${({ flexDirection }) => flexDirection || 'row'};
   flex-wrap: ${({ flexWrap }) => flexWrap || 'nowrap'};
@@ -19,7 +19,7 @@ export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerM
   gap: ${({ gap }) => gap};
 `;
 
-export const StyledButtonMainBlock = styled.button<TStyledButtonMainBlock>`
+export const StyledSplashCardButton = styled.button<TStyledSplashCardButton>`
   flex-grow: ${({ flexGrow }) => flexGrow || 0};
   width: ${({ width }) => width};
   max-width: 100%;

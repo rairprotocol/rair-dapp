@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 import {
   TStyledSplashCardInfoBlock,
-  TStyledSplashCardText,
-  TStyledWrapperSplashPage
+  TStyledSplashCardText
 } from '../splashConfig.types';
 
 export const StyledSplashCardInfoBlock = styled.div<TStyledSplashCardInfoBlock>`
@@ -36,13 +35,4 @@ export const StyledSplashCardText = styled.div<TStyledSplashCardText>`
   @media (max-width: 539px) {
     font-size: 20px;
   }
-`;
-
-export const StyledWrapperSplashPage = styled.div<TStyledWrapperSplashPage>`
-  background-size: ${({ bgSize }) => bgSize};
-  background-position: ${({ bgPosition }) => bgPosition};
-  width: 100%;
-  height: ${({ wrapperHeight }) => wrapperHeight};
-  background-color: ${({ bgColor }) => bgColor || '#FFFFFF'};
-  border-radius: ${({ borderRadius }) => borderRadius};
 `;

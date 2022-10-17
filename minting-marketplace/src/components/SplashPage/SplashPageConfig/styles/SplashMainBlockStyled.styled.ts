@@ -1,26 +1,25 @@
 import styled from 'styled-components';
 
 import {
-  TStyledImageBlock,
-  TStyledSplashMainBlockWrapper
+  TStyledSplashCardImage,
+  TStyledSplashPageCardWrapper
 } from '../splashConfig.types';
 
-export const StyledSplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
+export const StyledSplashPageCardWrapper = styled.div<TStyledSplashPageCardWrapper>`
   display: flex;
   justify-content: 'space-between';
   align-items: 'center';
-  border-radius: ${({ borderRadius }) => borderRadius || '24px'};
+  border-radius: '20px';
   background-color: ${({ bgColor }) => bgColor || '#FFFFFF'};
   width: '100%';
   height: '42vw';
-  /* background-color: red; */
   @media (max-width: 930px) {
     flex-direction: column-reverse;
     border-radius: 16px;
   } ;
 `;
 
-export const StyledImageBlock = styled.img<TStyledImageBlock>`
+export const StyledSplashCardImage = styled.img<TStyledSplashCardImage>`
   width: 100%;
   min-width: 400px;
   height: auto;

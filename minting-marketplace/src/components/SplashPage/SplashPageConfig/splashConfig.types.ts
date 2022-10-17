@@ -3,7 +3,7 @@ import {
   TSplashPageDataButtonType
 } from '../splashPage.types';
 
-export type TSplashPageMainBlock = TStyledSplashMainBlockWrapper & {
+export type TSplashPageCardWrapper = TStyledSplashPageCardWrapper & {
   children: React.ReactNode;
 };
 
@@ -22,7 +22,7 @@ export interface IMainBlockDescription {
 }
 
 //styled components types
-export type TStyledMainBlockTitle = {
+export type TStyledSplashCardText = {
   color: string;
   fontSize: string;
   fontWeight: number | string;
@@ -32,6 +32,7 @@ export type TStyledMainBlockTitle = {
   padding?: string;
   textAlign?: string;
   width?: string;
+  mediafontSize?: string;
 };
 
 export type TStyledMainBlockDescription = {
@@ -39,17 +40,17 @@ export type TStyledMainBlockDescription = {
   marginBottom: string;
 };
 
-export type TStyledMainBlockTextContainer = {
+export type TStyledSplashCardInfoBlock = {
   padding?: string;
 };
 
 //component's props
-export type TMainBlockInfoText = TStyledMainBlockTextContainer & {
+export type TSplashCardInfoBlock = TStyledSplashCardInfoBlock & {
   children?: React.ReactNode;
 };
 
-export type TMainTitleBlock = TStyledMainBlockTitle & {
-  text?: string | string[];
+export type TSplashCardText = TStyledSplashCardText & {
+  text?: string;
 };
 
 export type TStyledHigherWrapperSplashPage = {
@@ -64,24 +65,17 @@ export type TDefaultThemeType = {
   mobile: string;
 };
 
-export type TStyledSplashMainBlockWrapper = {
-  flexDirection?: TFlexDirection;
-  justifyContent?: TJustifyContent;
-  alignItems?: TAlignItems;
-  widthDiff?: string;
-  heightDiff?: string;
+export type TStyledSplashPageCardWrapper = {
   bgColor?: string;
-  borderRadius: string;
-  paddingLeft?: string;
 };
 
-export type TStyledImageBlock = {
+export type TStyledSplashCardImage = {
   widthDiff?: string;
   heightDiff?: string;
   imageMargin?: string;
 };
 
-export type TImageMainBlock = TStyledImageBlock & {
+export type TSplashCardImage = TStyledSplashCardImage & {
   image?: string;
 };
 
@@ -112,7 +106,7 @@ export type TAlignItems =
 
 export type TFlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
-export type TStyledButtonContainerMainBlock = {
+export type TStyledSplashCardButtonsWrapper = {
   height?: string;
   width?: string;
   marginTop?: string;
@@ -122,18 +116,18 @@ export type TStyledButtonContainerMainBlock = {
   flexWrap?: TFlexWrap;
 };
 
-export type TButtonContainerMainBlock = TStyledButtonContainerMainBlock & {
+export type TSplashCardButtonsWrapper = TStyledSplashCardButtonsWrapper & {
   children: React.ReactNode;
 };
 
-export type TButtonMainBlock = TStyledButtonMainBlock &
+export type TSplashCardButton = TStyledSplashCardButton &
   TStyledButtonImage &
   TStyledButtonLogo & {
     buttonData: TSplashPageDataButtonType | undefined;
     handleClick?: () => void;
   };
 
-export type TStyledButtonMainBlock = {
+export type TStyledSplashCardButton = {
   width?: string | number;
   borderRadius?: string;
   margin?: string | number;
