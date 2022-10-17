@@ -30,17 +30,17 @@
   left: calc(((100% - 1440px) / var(--X_offset)) + 120px);
   /* left: 120px; */
   top: 264px;
-  letter-spacing: 0em;
+  letter-spacing: 0.025em;
   line-height: 78px;
   text-align: left;
   font-size: 55px;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   padding: inherit;
 }
 
 .typography_0 {
   font-weight: 400;
-  color: #b070d8;
+  color: #f7f7f7;
 }
 
 .typography_1 {
@@ -825,10 +825,10 @@
   }
 
   .title {
-    width: 35.417vw;
-    height: 16.25vw;
+    width: 40.417vw;
+    height: 12vw;
     left: 8.333vw;
-    top: 18.333vw;
+    top: 20.333vw;
     line-height: 5.417vw;
     font-size: 3.819vw;
   }
@@ -844,7 +844,7 @@
     width: 27.292vw;
     height: 4.236vw;
     left: 8.333vw;
-    top: 40.417vw;
+    top: 36.417vw;
   }
 
   .button_icon {
@@ -1308,6 +1308,7 @@
 
   .title_break {
     display: none;
+    color: #f7f7f7;
   }
 
   .navigate_title_break {

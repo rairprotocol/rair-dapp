@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: blockchain-event-listener
+  name: blockchain-event-listener
+spec:
+  ports:
+    - name: "5001"
+      port: 5001
+      targetPort: 5001
+  selector:
+    io.kompose.service: blockchain-event-listener
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+    dockerfile: version
+  creationTimestamp: null
+  labels:
+    io.kompose.service: blockchain-event-listener
+  name: blockchain-event-listener
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: blockchain-event-listener
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: blockchain-event-listener
+    spec:
+      containers:
+        - image: rairtechinc/blockchain-event-listener:cce07ef91345a94f2f843a0f3bf38dea2d45d80a
+          name: blockchain-event-listener
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5001
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credential
+                  key: MONGO_URI
+            - name: MONGO_URI_LOCAL
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credential
+                  key: MONGO_URI
+            - name: PINATA_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pinata-secret
+                  key: PINATA_SECRET
+            - name: MORALIS_MASTER_KEY_MAIN
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-main
+                  key: MORALIS_MASTER_KEY_MAIN
+            - name: MORALIS_MASTER_KEY_TEST
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-test
+                  key: MORALIS_MASTER_KEY_TEST
+          envFrom:
+          - configMapRef:
+              name: blockchain-event-listener-env
+          resources: {}
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+status: {}
