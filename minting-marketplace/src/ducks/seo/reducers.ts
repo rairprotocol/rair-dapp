@@ -1,4 +1,4 @@
-import { TInfoSeo } from './seo.types';
+import { TInfoSeo, TSeoActionTypes } from './seo.types';
 import * as types from './types';
 
 import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
@@ -21,23 +21,38 @@ export const InitialState: TInfoSeo = {
 
 export default function seoStore(
   state: TInfoSeo = InitialState,
-  action
+  action: TSeoActionTypes
 ): TInfoSeo {
   switch (action.type) {
     case types.SET_INFO_HELMET:
       return {
         ...state,
-        title: action.title,
-        ogTitle: action.ogTitle,
-        ogDescription: action.ogDescription,
-        contentName: action.contentName,
-        content: action.content,
-        description: action.description,
-        favicon: action.favicon,
-        faviconMobile: action.faviconMobile,
-        image: action.image,
-        twitterTitle: action.twitterTitle,
-        twitterDescription: action.twitterDescription
+        title: action.info.title,
+        ogTitle: action.info.ogTitle,
+        ogDescription: action.info.ogDescription,
+        contentName: action.info.contentName,
+        content: action.info.content,
+        description: action.info.description,
+        favicon: action.info.favicon,
+        faviconMobile: action.info.faviconMobile,
+        image: action.info.image,
+        twitterTitle: action.info.twitterTitle,
+        twitterDescription: action.info.twitterDescription
+      };
+    case types.RESET_INFO_HELMET:
+      return {
+        ...state,
+        title: '',
+        ogTitle: '',
+        ogDescription: '',
+        contentName: '',
+        content: '',
+        description: '',
+        favicon: '',
+        faviconMobile: '',
+        image: '',
+        twitterTitle: '',
+        twitterDescription: ''
       };
 
     default:

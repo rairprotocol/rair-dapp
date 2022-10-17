@@ -1,3 +1,5 @@
+import { resetInfoSeo, setInfoSEO } from './actions';
+
 export type TInfoSeo = {
   title?: string;
   ogTitle?: string;
@@ -11,3 +13,8 @@ export type TInfoSeo = {
   twitterTitle?: string;
   twitterDescription?: string;
 };
+
+export type TSetInfoSeo = ReturnType<typeof setInfoSEO>;
+export type TResetInfoSeo = ReturnType<typeof resetInfoSeo>;
+
+export type TSeoActionTypes = TSetInfoSeo | TResetInfoSeo;

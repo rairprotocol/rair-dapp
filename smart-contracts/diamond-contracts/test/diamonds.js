@@ -1100,7 +1100,7 @@ describe("Diamonds", function () {
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
 			await expect(metadataFacet.setBaseURI("devs.rairs.techs/", true))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
-			await expect(metadataFacet.setProductURI(1, 'first.rair.tech', true))
+			await expect(metadataFacet.setCollectionURI(1, 'first.rair.tech', true))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
 			await expect(metadataFacet.setUniqueURI(100, 'hundreth.rair.tech/ASDF'))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
@@ -1135,7 +1135,7 @@ describe("Diamonds", function () {
 
 		it ("Should set the token's product URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
-			await expect(await metadataFacet.setProductURI(1, 'first.rair.tech/', true))
+			await expect(await metadataFacet.setCollectionURI(1, 'first.rair.tech/', true))
 				.to.emit(metadataFacet, 'UpdatedProductURI')
 				.withArgs(1, 'first.rair.tech/', true, ".webp");
 			await expect(await metadataFacet.tokenURI(100))
@@ -1192,7 +1192,7 @@ describe("Diamonds", function () {
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("first.rair.tech/0.webp");
-			await expect(await metadataFacet.setProductURI(1, '', true))
+			await expect(await metadataFacet.setCollectionURI(1, '', true))
 				.to.emit(metadataFacet, 'UpdatedProductURI')
 				.withArgs(1, '', true, ".webp");
 
@@ -1218,7 +1218,7 @@ describe("Diamonds", function () {
 
 		it ("Should set the productURI without the token index", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
-			await expect(await metadataFacet.setProductURI(1, "rair.cryptograyman.com/product", false))
+			await expect(await metadataFacet.setCollectionURI(1, "rair.cryptograyman.com/product", false))
 				.to.emit(metadataFacet, 'UpdatedProductURI')
 				.withArgs(1, "rair.cryptograyman.com/product", false, ".webp");
 				

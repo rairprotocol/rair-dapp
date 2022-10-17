@@ -79,7 +79,7 @@ module.exports = (context) => {
       if (req?.body?.mediaId) {
         const fileData = await context.db.File.findById(req.body.mediaId);
         const authorData = await context.db.User.findOne({
-          publicAddress: fileData.authorPublicAddress,
+          publicAddress: fileData?.authorPublicAddress,
         });
         messages.decrypt = `Complete this signature request to unlock media: ${fileData?.title} by ${authorData?.nickName ? authorData?.nickName : fileData?.authorPublicAddress}`;
       }

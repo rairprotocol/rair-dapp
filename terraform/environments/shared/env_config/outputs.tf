@@ -25,7 +25,9 @@ output "env_config" {
       region: "us-west1",
       obfuscated_project_id: "9550688921",
       rairnode_subdomain: "new-prod-rairnode",
-      minting_marketplace_frontend_subdomain: "new-prod"
+      minting_marketplace_frontend_subdomain: "new-prod",
+      api_subdomain: "api",
+      ms_subdomain: "ms"
     }
   }
 }

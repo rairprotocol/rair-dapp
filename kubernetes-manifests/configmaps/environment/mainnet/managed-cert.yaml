@@ -1,0 +1,7 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: dev-managed-cert
+spec:
+  domains:
+    -  mainnet.rair.market
