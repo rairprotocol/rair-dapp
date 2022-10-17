@@ -1,7 +1,4 @@
-import {
-  TSplashDataType,
-  TSplashPageDataButtonType
-} from '../splashPage.types';
+import { TSplashDataType } from '../splashPage.types';
 
 export type TSplashPageCardWrapper = TStyledSplashPageCardWrapper & {
   children: React.ReactNode;
@@ -21,7 +18,6 @@ export interface IMainBlockDescription {
   marginBottom: string;
 }
 
-//styled components types
 export type TStyledSplashCardText = {
   color: string;
   fontSize: string;
@@ -120,39 +116,26 @@ export type TSplashCardButtonsWrapper = TStyledSplashCardButtonsWrapper & {
   children: React.ReactNode;
 };
 
-export type TSplashCardButton = TStyledSplashCardButton &
-  TStyledButtonImage &
-  TStyledButtonLogo & {
-    buttonData: TSplashPageDataButtonType | undefined;
-    handleClick?: () => void;
-  };
+export type TSplashCardButton = TStyledSplashCardButton & {
+  buttonLabel?: string;
+  buttonImg?: string;
+  buttonAction?: () => void;
+};
 
 export type TStyledSplashCardButton = {
   width?: string | number;
-  borderRadius?: string;
+  borderRadius?: string | number;
   margin?: string | number;
-  padding?: string;
+  padding?: string | number;
   height?: string | number;
   fontFamily?: string;
-  fontWeight?: string;
+  fontWeight?: string | number;
   fontSize?: string | number;
   lineHeight?: string | number;
   background?: string | number;
   color?: string;
   border?: string;
   flexGrow?: number;
-};
-
-export type TStyledButtonImage = {
-  buttonImageWidth?: string;
-  buttonImageHeight?: string;
-  buttonImageMarginRight?: string;
-};
-
-export type TStyledButtonLogo = {
-  buttonLogoWidth?: string;
-  buttonLogoHeight?: string;
-  buttonLogoMarginRight?: string | number;
 };
 
 export type TStyledButtonMainBlockWrapper = {

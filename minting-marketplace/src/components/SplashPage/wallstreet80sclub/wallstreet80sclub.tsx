@@ -1,7 +1,6 @@
 //@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -38,14 +37,6 @@ import {
   TMainContractType,
   TSplashDataType
 } from '../splashPage.types';
-import ButtonContainerMainBlock from '../SplashPageConfig/MainBlock/ButtonContainerMainBlock';
-import ImageMainBlock from '../SplashPageConfig/MainBlock/ImageMainBlock';
-import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
-import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
-import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
-import ButtonMainBlock from '../SplashPageConfig/MainBlock/TButtonMainBlock';
-import { StyledSplashPageWrapperContainer } from '../SplashPageConfig/styles/StyledWrapperContainers.styled';
-import { theme } from '../SplashPageConfig/theme.styled';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';

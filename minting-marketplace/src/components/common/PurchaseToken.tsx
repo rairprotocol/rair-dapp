@@ -26,18 +26,18 @@ const reactSwal = withReactContent(Swal);
 
 const queryRangeDataFromBlockchain = async (
   marketplaceInstance: ethers.Contract | undefined,
-  offerIndex: number[],
+  offerIndex: string[] | undefined,
   diamond: boolean
 ): Promise<undefined | IRangeDataType> => {
   let minterOfferPool;
   if (!diamond) {
     minterOfferPool = await metamaskCall(
-      marketplaceInstance?.getOfferInfo(offerIndex[0])
+      marketplaceInstance?.getOfferInfo(offerIndex?.[0])
     );
   }
   const minterOffer = await metamaskCall(
     marketplaceInstance?.[diamond ? 'getOfferInfo' : 'getOfferRangeInfo'](
-      ...offerIndex
+      ...(offerIndex || [])
     )
   );
 
@@ -61,8 +61,8 @@ const queryRangeDataFromBlockchain = async (
 
 const queryRangeDataFromDatabase = async (
   contractInstance: ethers.Contract | undefined,
-  network: string,
-  offerIndex: number[],
+  network: BlockchainType | undefined,
+  offerIndex: string[] | undefined,
   diamond = false
 ): Promise<undefined | IRangeDataType> => {
   const { success, products } = await rFetch(
@@ -75,7 +75,7 @@ const queryRangeDataFromDatabase = async (
     if (diamond) {
       for (const product of products) {
         for (const offer of product.offers) {
-          if (offerIndex.includes(offer.diamondRangeIndex)) {
+          if (offerIndex?.includes(offer.diamondRangeIndex)) {
             return {
               start: offer.range[0],
               end: offer.range[1],
@@ -87,11 +87,11 @@ const queryRangeDataFromDatabase = async (
       }
     } else {
       const [selectedOfferPool] = products.filter(
-        (item) => item.offerPool.marketplaceCatalogIndex === offerIndex[0]
+        (item) => item.offerPool.marketplaceCatalogIndex === offerIndex?.[0]
       );
       if (selectedOfferPool) {
         const [selectedOffer] = selectedOfferPool.offers.filter(
-          (item) => item.offerIndex === offerIndex[1]
+          (item) => item.offerIndex === offerIndex?.[1]
         );
         if (selectedOffer) {
           return {
@@ -118,7 +118,7 @@ const findNextToken = async (
 const purchaseFunction = async (
   minterInstance: ethers.Contract | undefined,
   contractAddress: ethers.Contract | undefined,
-  offerIndex: number[],
+  offerIndex: string[] | undefined,
   nextToken: number,
   price: string,
   diamond = false
@@ -131,9 +131,9 @@ const purchaseFunction = async (
     });
     return;
   }
-  const args: any[] = [offerIndex[0]];
+  const args: any[] = [offerIndex?.[0]];
   if (!diamond) {
-    args.push(offerIndex[1]);
+    args.push(offerIndex?.[1]);
   }
   args.push(nextToken);
   args.push({ value: price });
@@ -332,7 +332,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
           <wbr />{' '}
           {currentUserAddress
             ? currentChain !== requiredBlockchain
-              ? `Switch to ${blockchainData[requiredBlockchain]?.name}`
+              ? `Switch to ${
+                  requiredBlockchain && blockchainData[requiredBlockchain]?.name
+                }`
               : buttonMessage || 'Purchase'
             : 'Connect your wallet!'}
         </button>
@@ -351,7 +353,6 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   img,
   buttonLabel = 'Mint!',
   isSplashPage,
-  buttonData,
 
   contractAddress,
   requiredBlockchain,
@@ -411,17 +412,20 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
     if (isSplashPage) {
       return (
         <SplashCardButton
-          width={customStyle.width}
-          height={customStyle.height}
-          background={customStyle.background}
-          fontFamily={customStyle.fontFamily}
-          fontWeight={customStyle.fontWeight as string}
-          fontSize={customStyle.fontSize}
-          lineHeight={customStyle.lineHeight}
-          buttonData={buttonData}
-          margin={customStyle.margin}
-          buttonLogoMarginRight={customStyle.marginRight}
-          handleClick={fireAgreementModal}
+          width={customStyle?.width}
+          height={customStyle?.height}
+          background={customStyle?.background}
+          fontFamily={customStyle?.fontFamily}
+          fontWeight={customStyle?.fontWeight}
+          fontSize={customStyle?.fontSize}
+          lineHeight={customStyle?.lineHeight}
+          margin={customStyle?.margin}
+          buttonAction={fireAgreementModal}
+          borderRadius={customStyle?.borderRadius}
+          padding={customStyle?.padding}
+          color={customStyle?.color}
+          buttonLabel={buttonLabel}
+          buttonImg={img}
         />
       );
     }

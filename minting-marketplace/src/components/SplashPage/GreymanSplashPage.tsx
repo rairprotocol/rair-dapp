@@ -114,7 +114,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   });
   const GraymanSplashPageTESTNET = '0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6';
   const GreymanChainId = '0x89';
-  const offerIndexInMarketplace = 2;
+  const offerIndexInMarketplace = '2';
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );

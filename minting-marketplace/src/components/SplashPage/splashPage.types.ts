@@ -95,12 +95,12 @@ export type TExclusiveNFtType = {
 
 export type TParamsMarketplaceDemo = {
   blockchain: BlockchainType | undefined;
-  contract: string;
+  contract?: string;
   product: string;
 };
 
 export type TPurchaseButtonType = {
-  contractAddress: string;
+  contractAddress?: string;
   buttonLabel?: string;
   requiredBlockchain: BlockchainType | undefined;
   buttonComponent?: React.ElementType;
@@ -444,7 +444,7 @@ export interface ITokenLeftTemplate {
 }
 
 export type TMainContractType = {
-  contractAddress: string;
+  contractAddress?: string;
   requiredBlockchain: BlockchainType | undefined;
   offerIndex: string[];
 };

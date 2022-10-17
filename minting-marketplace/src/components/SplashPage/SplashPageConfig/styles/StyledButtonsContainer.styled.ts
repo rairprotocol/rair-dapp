@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 import {
-  TStyledButtonImage,
-  TStyledButtonLogo,
   TStyledButtonMainBlockWrapper,
   TStyledSplashCardButton,
   TStyledSplashCardButtonsWrapper
@@ -42,16 +40,10 @@ export const StyledSplashCardButton = styled.button<TStyledSplashCardButton>`
   border: ${({ border }) => border || 'none'};
 `;
 
-export const StyledButtonImage = styled.img<TStyledButtonImage>`
-  width: ${({ buttonImageWidth }) => buttonImageWidth};
-  height: ${({ buttonImageHeight }) => buttonImageHeight};
-  margin-right: ${({ buttonImageMarginRight }) => buttonImageMarginRight};
-`;
-
-export const StyledButtonLogo = styled.span<TStyledButtonLogo>`
-  width: ${({ buttonLogoWidth }) => buttonLogoWidth};
-  height: ${({ buttonLogoHeight }) => buttonLogoHeight};
-  margin-right: ${({ buttonLogoMarginRight }) => buttonLogoMarginRight};
+export const StyledButtonImage = styled.img`
+  width: 41px;
+  height: 41px;
+  margin-right: 33px;
 `;
 
 export const StyledButtonMainBlockWrapper = styled.div<TStyledButtonMainBlockWrapper>`

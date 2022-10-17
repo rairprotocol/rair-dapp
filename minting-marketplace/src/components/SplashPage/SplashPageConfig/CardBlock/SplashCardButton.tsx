@@ -7,7 +7,6 @@ import {
 } from '../styles/StyledButtonsContainer.styled';
 
 const SplashCardButton: React.FC<TSplashCardButton> = ({
-  buttonData,
   width,
   borderRadius,
   margin,
@@ -19,14 +18,12 @@ const SplashCardButton: React.FC<TSplashCardButton> = ({
   background,
   border,
   color,
-  buttonImageWidth,
-  buttonImageHeight,
-  buttonImageMarginRight,
   flexGrow,
-  padding
+  padding,
+  buttonLabel,
+  buttonAction,
+  buttonImg
 }) => {
-  const { buttonLabel, buttonImg, buttonAction } = buttonData || {};
-
   const handleButtonClick = useCallback(() => buttonAction?.(), [buttonAction]);
 
   return (
@@ -45,15 +42,7 @@ const SplashCardButton: React.FC<TSplashCardButton> = ({
       color={color}
       border={border}
       onClick={handleButtonClick}>
-      {buttonImg && (
-        <StyledButtonImage
-          buttonImageWidth={buttonImageWidth}
-          buttonImageHeight={buttonImageHeight}
-          buttonImageMarginRight={buttonImageMarginRight}
-          src={buttonImg}
-          alt="metamask-logo"
-        />
-      )}
+      {buttonImg && <StyledButtonImage src={buttonImg} alt="metamask-logo" />}
       {buttonLabel}
     </StyledSplashCardButton>
   );

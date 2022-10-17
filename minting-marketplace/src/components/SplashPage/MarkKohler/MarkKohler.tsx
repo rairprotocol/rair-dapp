@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../../ducks';
@@ -8,10 +9,13 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { metaMaskIcon } from '../../../images';
+import { rFetch } from '../../../utils/rFetch';
+import PurchaseTokenButton from '../../common/PurchaseToken';
 import MetaTags from '../../SeoTags/MetaTags';
 import { ReactComponent as MetaMaskFox } from '../assets/MetaMaskFox.svg';
 import { MarkKohlerImage } from '../images/markKohler/markHohler';
-import { ISplashPageProps } from '../splashPage.types';
+import { ISplashPageProps, TMainContractType } from '../splashPage.types';
 import { TSplashDataType } from '../splashPage.types';
 import SplashCardButton from '../SplashPageConfig/CardBlock/SplashCardButton';
 import SplashCardButtonsWrapper from '../SplashPageConfig/CardBlock/SplashCardButtonsWrapper';
@@ -25,6 +29,32 @@ import ModalHelp from '../SplashPageTemplate/ModalHelp';
 
 import './markKohler.css';
 
+const mainContract: TMainContractType = {
+  contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
+  requiredBlockchain: '0x1',
+  offerIndex: ['0', '1']
+};
+// test contract
+const testContract: TMainContractType = {
+  contractAddress: '0xe887cfc45b6a7b2ff5f72996fffb54f5a719177c',
+  requiredBlockchain: '0x5',
+  offerIndex: ['10', '0']
+};
+
+const contract =
+  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ? testContract.contractAddress
+    : mainContract.contractAddress;
+const blockchain =
+  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ? testContract.requiredBlockchain
+    : mainContract.requiredBlockchain;
+
+const offerIndex =
+  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ? testContract.offerIndex
+    : mainContract.offerIndex;
+
 export const splashData: TSplashDataType = {
   title: 'TAX HACKS SUMMIT',
   description: 'THURSDAY DECEMBER 8TH 10AM-6PM ET AN NFT GATED EVENT',
@@ -32,11 +62,70 @@ export const splashData: TSplashDataType = {
   button1: {
     buttonCustomLogo: <MetaMaskFox />,
     buttonLabel: 'Mint for .27',
-    buttonAction: () => console.info('mint this token')
+    buttonAction: () => async (nextToken) => {
+      const tokenMetadata = await rFetch(
+        `/api/nft/network/${blockchain}/${contract}/0/token/${nextToken}`
+      );
+      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
+        Swal.fire({
+          imageUrl: tokenMetadata.result.metadata.image,
+          imageHeight: 'auto',
+          imageWidth: '65%',
+          imageAlt: "Your NFT's image",
+          title: `You own #${nextToken}!`,
+          icon: 'success'
+        });
+      } else {
+        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+      }
+    }
   },
   button2: {
     buttonLabel: 'Email Updates',
     buttonAction: () => hyperlink('https://www.google.com')
+  },
+  purchaseButton: {
+    buttonLabel: 'Mint for .27',
+    img: metaMaskIcon,
+    requiredBlockchain: blockchain,
+    contractAddress: contract,
+    offerIndex: offerIndex,
+    presaleMessage: '',
+    customStyle: {
+      width: '100%',
+      height: '64px',
+      background: `linear-gradient(96.34deg, #035BBC 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)`,
+      fontFamily: 'Plus Jakarta Sans',
+      fontWeight: '700',
+      fontSize: '22px',
+      lineHeight: '28px',
+      padding: '14px 0px',
+      color: '#FFFFFF',
+      borderRadius: '16px'
+    },
+    blockchainOnly: true,
+    customSuccessAction: async (nextToken) => {
+      const tokenMetadata = await rFetch(
+        `/api/nft/network/${blockchain}/${contract}/0/token/${nextToken}`
+      );
+      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
+        Swal.fire({
+          imageUrl: tokenMetadata.result.metadata.image,
+          imageHeight: 'auto',
+          imageWidth: '65%',
+          imageAlt: "Your NFT's image",
+          title: `You own #${nextToken}!`,
+          icon: 'success'
+        });
+      } else {
+        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+      }
+    }
+  },
+  videoPlayerParams: {
+    blockchain: blockchain,
+    contract: contract,
+    product: '0'
   }
 };
 
@@ -155,7 +244,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               width="335px"
               gap="20px"
               flexDirection="column">
-              <SplashCardButton
+              {/* <SplashCardButton
                 width="100%"
                 height={'64px'}
                 padding="14px 0px"
@@ -168,11 +257,18 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
                 background={`linear-gradient(96.34deg, #035BBC 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)`}
                 buttonData={splashData.button1}
                 buttonLogoMarginRight="32px"
+              /> */}
+              <PurchaseTokenButton
+                {...splashData.purchaseButton}
+                isSplashPage={isSplashPage}
+                diamond={true}
+                buttonLabel={splashData.purchaseButton?.buttonLabel}
               />
               <SplashCardButton
                 borderRadius="16px"
                 background="#000000"
-                buttonData={splashData.button2}
+                buttonLabel={splashData.button2?.buttonLabel}
+                buttonAction={splashData.button2?.buttonAction}
                 fontFamily={'Plus Jakarta Sans'}
                 fontWeight={'700'}
                 lineHeight={'28px'}

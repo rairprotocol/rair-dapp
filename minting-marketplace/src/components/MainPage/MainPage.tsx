@@ -52,7 +52,7 @@ import styles from './MainPage.module.css';
 const blockchain: BlockchainType = '0x38';
 const contract = '0xb6163454da87e9f3fd63683c5d476f7d067f75a2';
 const product = '1';
-const offerIndexInMarketplace = [1];
+const offerIndexInMarketplace = ['1'];
 const iframeLink =
   'https://iframetester.com/?url=https://staging.rair.market/watch/0x48e89cb354a30d4ce0dafac77205792040ef485f/FaR4Z7kLDOZ87Rx1UU6CaLce_bip0X7vnrPjBu2t3APd9s/stream.m3u8';
 
