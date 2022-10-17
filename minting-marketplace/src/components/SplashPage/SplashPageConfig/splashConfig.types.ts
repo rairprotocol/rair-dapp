@@ -41,7 +41,7 @@ export type TStyledMainBlockDescription = {
 };
 
 export type TStyledSplashCardInfoBlock = {
-  padding?: string;
+  paddingLeft?: string;
 };
 
 //component's props

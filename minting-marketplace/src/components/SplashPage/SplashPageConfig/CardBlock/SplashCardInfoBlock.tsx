@@ -5,10 +5,10 @@ import { StyledSplashCardInfoBlock } from '../styles/MainBlockTextContainer.styl
 
 const SplashCardInfoBlock: React.FC<TSplashCardInfoBlock> = ({
   children,
-  padding
+  paddingLeft
 }) => {
   return (
-    <StyledSplashCardInfoBlock padding={padding}>
+    <StyledSplashCardInfoBlock paddingLeft={paddingLeft}>
       {children}
     </StyledSplashCardInfoBlock>
   );

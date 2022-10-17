@@ -17,6 +17,12 @@ export const StyledSplashCardButtonsWrapper = styled.div<TStyledSplashCardButton
   height: ${({ height }) => height};
   margin-top: ${({ marginTop }) => marginTop || '0px'};
   gap: ${({ gap }) => gap};
+
+  @media (max-width: 930px) {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+  }
 `;
 
 export const StyledSplashCardButton = styled.button<TStyledSplashCardButton>`

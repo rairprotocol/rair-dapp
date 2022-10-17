@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { ThemeProvider } from 'styled-components';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -43,15 +42,6 @@ import {
   TDonationGridDataItem,
   TSplashDataType
 } from '../splashPage.types';
-import ButtonContainerMainBlock from '../SplashPageConfig/MainBlock/ButtonContainerMainBlock';
-import ButtonMainBlockWrapper from '../SplashPageConfig/MainBlock/ButtonMainBlockWrapper';
-import ImageMainBlock from '../SplashPageConfig/MainBlock/ImageMainBlock';
-import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
-import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
-import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
-import ButtonMainBlock from '../SplashPageConfig/MainBlock/TButtonMainBlock';
-import { StyledSplashPageWrapperContainer } from '../SplashPageConfig/styles/StyledWrapperContainers.styled';
-import { theme } from '../SplashPageConfig/theme.styled';
 import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
@@ -314,82 +304,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
           }}
         />
 
-        <ThemeProvider theme={theme}>
-          <StyledSplashPageWrapperContainer>
-            <SplashPageMainBlock
-              bgColor="#FFFFFF"
-              borderRadius="24px"
-              paddingLeft="66px">
-              <MainBlockInfoText padding={'0px'}>
-                <MainTitleBlock
-                  color="rgb(73, 92, 176)"
-                  fontSize="48px"
-                  fontWeight={400}
-                  text={splashData.title}
-                  fontFamily={'Acme, sans-serif'}
-                  lineHeight={'1.2'}
-                  marginBottom={'13px'}
-                />
-                <MainTitleBlock
-                  color="#100003"
-                  fontSize="32px"
-                  fontWeight={700}
-                  text={splashData.description}
-                  fontFamily={'Plus Jakarta Sans Bold, sans-serif'}
-                  lineHeight={'37px'}
-                  width="473px"
-                />
-                <ButtonContainerMainBlock
-                  marginTop={'81px'}
-                  height="191px"
-                  width="244px"
-                  gap="16px"
-                  flexDirection="column">
-                  <ButtonMainBlockWrapper height="92px">
-                    <ButtonMainBlock
-                      width="112.23px"
-                      borderRadius="1rem"
-                      background="#2351a1"
-                      buttonData={splashData.button1}
-                      buttonImageHeight="auto"
-                      buttonImageWidth="47%"
-                      buttonImageMarginRight="0px"
-                    />
-                    <ButtonMainBlock
-                      width="112.23px"
-                      borderRadius="1rem"
-                      background="#2351a1"
-                      buttonData={splashData.button2}
-                      buttonImageHeight="auto"
-                      buttonImageWidth="47%"
-                      buttonImageMarginRight="0px"
-                    />
-                  </ButtonMainBlockWrapper>
-                  <ButtonMainBlock
-                    borderRadius="1rem"
-                    background="rgb(85, 207, 255)"
-                    buttonData={splashData.button3}
-                    fontFamily={"'Acme', sans-serif"}
-                    fontWeight={'400'}
-                    lineHeight={'36px'}
-                    fontSize={'36px'}
-                    height="83px"
-                    width="100%"
-                  />
-                </ButtonContainerMainBlock>
-              </MainBlockInfoText>
-              {splashData.backgroundImage && (
-                <ImageMainBlock
-                  image={splashData.backgroundImage}
-                  heightDiff="538px"
-                  widthDiff="538px"
-                  imageMargin="0px 35px 0px 20px"
-                />
-              )}
-            </SplashPageMainBlock>
-          </StyledSplashPageWrapperContainer>
-        </ThemeProvider>
-
         <AuthorCard
           {...{
             splashData,
@@ -506,3 +420,81 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 };
 
 export default SimDogsSplashPage;
+
+{
+  /* <ThemeProvider theme={theme}>
+  <StyledSplashPageWrapperContainer>
+    <SplashPageMainBlock
+      bgColor="#FFFFFF"
+      borderRadius="24px"
+      paddingLeft="66px">
+      <MainBlockInfoText padding={'0px'}>
+        <MainTitleBlock
+          color="rgb(73, 92, 176)"
+          fontSize="48px"
+          fontWeight={400}
+          text={splashData.title}
+          fontFamily={'Acme, sans-serif'}
+          lineHeight={'1.2'}
+          marginBottom={'13px'}
+        />
+        <MainTitleBlock
+          color="#100003"
+          fontSize="32px"
+          fontWeight={700}
+          text={splashData.description}
+          fontFamily={'Plus Jakarta Sans Bold, sans-serif'}
+          lineHeight={'37px'}
+          width="473px"
+        />
+        <ButtonContainerMainBlock
+          marginTop={'81px'}
+          height="191px"
+          width="244px"
+          gap="16px"
+          flexDirection="column">
+          <ButtonMainBlockWrapper height="92px">
+            <ButtonMainBlock
+              width="112.23px"
+              borderRadius="1rem"
+              background="#2351a1"
+              buttonData={splashData.button1}
+              buttonImageHeight="auto"
+              buttonImageWidth="47%"
+              buttonImageMarginRight="0px"
+            />
+            <ButtonMainBlock
+              width="112.23px"
+              borderRadius="1rem"
+              background="#2351a1"
+              buttonData={splashData.button2}
+              buttonImageHeight="auto"
+              buttonImageWidth="47%"
+              buttonImageMarginRight="0px"
+            />
+          </ButtonMainBlockWrapper>
+          <ButtonMainBlock
+            borderRadius="1rem"
+            background="rgb(85, 207, 255)"
+            buttonData={splashData.button3}
+            fontFamily={"'Acme', sans-serif"}
+            fontWeight={'400'}
+            lineHeight={'36px'}
+            fontSize={'36px'}
+            height="83px"
+            width="100%"
+          />
+        </ButtonContainerMainBlock>
+      </MainBlockInfoText>
+      {splashData.backgroundImage && (
+        <ImageMainBlock
+          image={splashData.backgroundImage}
+          heightDiff="538px"
+          widthDiff="538px"
+          imageMargin="0px 35px 0px 20px"
+        />
+      )}
+    </SplashPageMainBlock>
+  </StyledSplashPageWrapperContainer>
+</ThemeProvider>; */
+}

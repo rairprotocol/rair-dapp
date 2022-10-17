@@ -14,7 +14,7 @@ import { getRandomValues } from '../../utils/getRandomValues';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
-import ButtonMainBlock from '../SplashPage/SplashPageConfig/MainBlock/TButtonMainBlock';
+import SplashCardButton from '../SplashPage/SplashPageConfig/CardBlock/SplashCardButton';
 
 import {
   IAgreementsPropsType,
@@ -410,7 +410,7 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   } else {
     if (isSplashPage) {
       return (
-        <ButtonMainBlock
+        <SplashCardButton
           width={customStyle.width}
           height={customStyle.height}
           background={customStyle.background}

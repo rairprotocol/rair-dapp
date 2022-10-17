@@ -10,8 +10,14 @@ export const StyledSplashCardInfoBlock = styled.div<TStyledSplashCardInfoBlock>`
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  padding: ${({ padding }) => padding || '0px'};
+  padding-left: ${({ paddingLeft }) => paddingLeft || '0px'};
   height: 100%;
+
+  @media (max-width: 930px) {
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+  }
 `;
 
 export const StyledSplashCardText = styled.div<TStyledSplashCardText>`
@@ -30,6 +36,7 @@ export const StyledSplashCardText = styled.div<TStyledSplashCardText>`
     font-size: ${({ mediafontSize }) => mediafontSize};
     width: 100%;
     text-align: center;
+    margin-bottom: 2vw;
   }
 
   @media (max-width: 539px) {

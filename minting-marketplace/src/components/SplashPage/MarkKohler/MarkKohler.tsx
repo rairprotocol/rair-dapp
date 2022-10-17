@@ -127,7 +127,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
           }}
         />
         <SplashPageCardWrapper>
-          <SplashCardInfoBlock padding="7.43vw 0vw 5.56vw 5.9vw">
+          <SplashCardInfoBlock paddingLeft="5.9vw">
             <SplashCardText
               color="#DF76DF"
               fontSize="3.47vw"
