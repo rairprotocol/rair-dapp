@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: media-service
+  name: media-service
+spec:
+  ports:
+    - name: "5002"
+      port: 5002
+      targetPort: 5002
+  selector:
+    io.kompose.service: media-service
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: media-service
+  name: media-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: media-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: media-service
+    spec:
+      containers:
+        - image: rairtechinc/media-service:cce07ef91345a94f2f843a0f3bf38dea2d45d80a
+          name: media-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5002
+          env:
+            - name: APP_ROLE_SECRET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: app-role-secret-id
+                  key: APP_ROLE_SECRET_ID
+          envFrom:
+          - configMapRef:
+              name: media-service-env
+          resources: {}
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+status: {}

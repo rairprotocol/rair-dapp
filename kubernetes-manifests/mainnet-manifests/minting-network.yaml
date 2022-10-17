@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+    networking.gke.io/load-balancer-type: "Internal"
+    #beta.cloud.google.com/backend-config: '{"default": "config-default"}'
+  creationTimestamp: null
+  labels:
+    io.kompose.service: minting-network
+  name: minting-network
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    io.kompose.service: minting-network
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: minting-network
+  name: minting-network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: minting-network
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: minting-network
+        app: minting-network
+    spec:
+      containers:
+        - image: rairtechinc/minting-network:cce07ef91345a94f2f843a0f3bf38dea2d45d80a
+          name: minting-network
+          imagePullPolicy: Always
+          ports:
+          - name: http-server 
+            containerPort: 80
+          envFrom:
+          - configMapRef:
+              name: minting-network-env
+          resources: {}
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+status: {}

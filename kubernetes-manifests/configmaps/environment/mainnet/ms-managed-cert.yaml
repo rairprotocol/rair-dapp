@@ -1,0 +1,7 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: ms-managed-cert
+spec:
+  domains:
+    -  ms.rair.market
