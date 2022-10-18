@@ -71,9 +71,10 @@ module.exports = async (
     contract: contract._id,
     product: product.collectionIndexInContract
   });
+
   const [foundOffer] = offerList.filter(offer => {
-    return BigNumber.from(offer.range[0]).lt(tokenIndex) &&
-            BigNumber.from(offer.range[1]).gt(tokenIndex) 
+    return BigNumber.from(offer.range[0]).lte(tokenIndex) &&
+            BigNumber.from(offer.range[1]).gte(tokenIndex)
   });
   if (!foundOffer) {
     log.error(`404: Couldn't find offer for ${contract._id}`);
