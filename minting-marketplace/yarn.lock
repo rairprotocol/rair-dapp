@@ -2669,7 +2669,7 @@
     "expect" "^29.0.0"
     "pretty-format" "^29.0.0"
 
-"@types/jquery@*":
+"@types/jquery@*", "@types/jquery@^3.5.14":
   "integrity" "sha512-X1gtMRMbziVQkErhTQmSe2jFwwENA/Zr+PprCkF63vFq+Yt5PZ4AlKqgmeNlwgn7dhsXEK888eIW2520EpC+xg=="
   "resolved" "https://registry.npmjs.org/@types/jquery/-/jquery-3.5.14.tgz"
   "version" "3.5.14"
@@ -2809,7 +2809,7 @@
   "resolved" "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.2.tgz"
   "version" "0.16.2"
 
-"@types/sizzle@*":
+"@types/sizzle@*", "@types/sizzle@^2.3.3":
   "integrity" "sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ=="
   "resolved" "https://registry.npmjs.org/@types/sizzle/-/sizzle-2.3.3.tgz"
   "version" "2.3.3"
