@@ -27,7 +27,7 @@ const reactSwal = withReactContent(Swal);
 const queryRangeDataFromBlockchain = async (
   marketplaceInstance: ethers.Contract | undefined,
   offerIndex: string[] | undefined,
-  diamond: boolean
+  diamond: boolean | undefined
 ): Promise<undefined | IRangeDataType> => {
   let minterOfferPool;
   if (!diamond) {

@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
@@ -16,10 +15,6 @@ import { rFetch } from '../../../utils/rFetch';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
-// Google Analytics
-//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-//ReactGA.initialize(TRACKING_ID);
-import { ReactComponent as DiscordLogo } from '../assets/DiscordLogo.svg';
 import {
   WallstreetA,
   WallstreetB,
@@ -51,6 +46,10 @@ import './wallstreet80sclub.css';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './wallstreet80sclub.css';
+// Google Analytics
+//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+//ReactGA.initialize(TRACKING_ID);
+
 //unused-snippet
 const reactSwal = withReactContent(Swal);
 
@@ -75,11 +74,6 @@ const blockchain =
   process.env.REACT_APP_TEST_CONTRACTS === 'true'
     ? testContract.requiredBlockchain
     : mainContract.requiredBlockchain;
-
-const offerIndex =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.offerIndex
-    : mainContract.offerIndex;
 
 const splashData: TSplashDataType = {
   LicenseName: '#wallstreet80sclub',
@@ -119,27 +113,18 @@ const splashData: TSplashDataType = {
   },
   buttonBackgroundHelp: 'rgb(90,27,3)',
   buttonBackgroundHelpText: 'NEED HELP',
+  buttonLabel: 'freemint',
+  customStyle: {
+    background: 'rgb(89,25,8)'
+  },
   backgroundImage: WallstreetImg,
   purchaseButton: {
-    buttonLabel: 'freemint',
     buttonComponent: PurchaseTokenButton,
     img: metaMaskIcon,
-    requiredBlockchain: blockchain,
-    contractAddress: contract,
-    offerIndex: offerIndex,
+    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
+      ? testContract
+      : mainContract),
     presaleMessage: '',
-    customStyle: {
-      width: '100%',
-      height: '64px',
-      background: '#611200',
-      fontFamily: "'Cooper Std Black', sans-serif",
-      fontWeight: '900',
-      fontSize: '20px',
-      lineHeight: '28px',
-      margin: '0 0 20px',
-      marginRight: '23px',
-      color: '#FFFFFF'
-    },
     customWrapperClassName: 'btn-submit-with-form',
     blockchainOnly: true,
     customSuccessAction: async (nextToken) => {
@@ -160,17 +145,11 @@ const splashData: TSplashDataType = {
       }
     }
   },
-  // button1: {
-  //   buttonColor: 'rgb(89, 25, 8)',
-  //   buttonTextColor: '#FFFFFF'
-  //   // buttonLabel: 'freemint',
-  //   // buttonCustomLogo: <MetaMaskFox />
-  // },
   button2: {
     buttonTextColor: '#FFFFFF',
     buttonColor: '#000000',
     buttonLabel: 'Join our Discord',
-    buttonCustomLogo: <DiscordLogo />,
+    buttonImg: discrodIconNoBorder,
     buttonLink: 'https://discord.com/invite/y98EMXRsCE'
   },
   counterOverride: true,
@@ -198,8 +177,7 @@ const splashData: TSplashDataType = {
 const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   loginDone,
   connectUserData,
-  setIsSplashPage,
-  isSplashPage
+  setIsSplashPage
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
@@ -247,6 +225,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   useEffect(() => {
     setIsSplashPage?.(true);
   }, [setIsSplashPage]);
+  // const whatSplashPage = 'genesis-font';
 
   useEffect(() => {
     window.addEventListener('resize', () =>
@@ -304,7 +283,6 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-
         <AuthorCard {...{ splashData, connectUserData }} />
         <TokenLeftTemplate
           counterData={splashData.counterData}
