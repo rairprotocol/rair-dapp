@@ -47,14 +47,6 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 	
 	event MintedToken(address erc721Address, uint rangeIndex, uint tokenIndex, address buyer);
 
-	modifier checkCreatorRole(address erc721Address) {
-		require(
-			IAccessControl(erc721Address).hasRole(bytes32(0x00), address(msg.sender)) ||
-			IAccessControl(erc721Address).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)),
-			"Minter Marketplace: Sender isn't the creator of the contract!");
-		_;
-	}
-
 	modifier checkMinterRole(address erc721Address) {
 		require(hasMinterRole(erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");
 		_;
@@ -73,6 +65,14 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 							"Minter Marketplace: Range already has an offer");
 		}
 		_;
+	}
+
+	function _checkCreatorRole(address erc721Address) internal view returns (bool) {
+		require(
+			IAccessControl(erc721Address).hasRole(bytes32(0x00), address(msg.sender)) ||
+			IAccessControl(erc721Address).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)),
+			"Minter Marketplace: Sender isn't the creator of the contract!");
+		return true;
 	}
 
 	/// @notice Utility function to verify that the recipient of a custom splits ISN'T a contract
@@ -181,7 +181,8 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		feeSplits[] memory splits,
 		bool visible_,
 		address nodeAddress_
-	) internal checkCreatorRole(erc721Address_) checkMinterRole(erc721Address_) offerDoesntExist(erc721Address_, rangeIndex_) {
+	) internal checkMinterRole(erc721Address_) offerDoesntExist(erc721Address_, rangeIndex_) {
+		_checkCreatorRole(erc721Address_);
 		mintingOffer storage newOffer = s.mintingOffers.push();
 		(IRAIR721.range memory rangeData,) = IRAIR721(erc721Address_).rangeInfo(rangeIndex_);
 		require(rangeData.mintableTokens > 0, "Minter Marketplace: Offer doesn't have tokens available!");
@@ -234,10 +235,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		bool visible_
 	) internal {
 		mintingOffer storage selectedOffer = s.mintingOffers[mintingOfferId_];
-		require(
-			IAccessControl(selectedOffer.erc721Address).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)),
-			"Minter Marketplace: Sender isn't the creator of the contract!"
-		);
+		_checkCreatorRole(selectedOffer.erc721Address);
 		require(
 			hasMinterRole(selectedOffer.erc721Address),
 			"Minter Marketplace: This Marketplace isn't a Minter!"

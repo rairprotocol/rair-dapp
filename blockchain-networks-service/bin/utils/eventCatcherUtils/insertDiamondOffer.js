@@ -31,11 +31,11 @@ module.exports = async (
       contract: contract._id,
       offerName: rangeName,
       price,
-      offerIndex: { $exists: false },
+      diamondRangeIndex: rangeIndex,
     },
     // If offer index doesn't exist then it's an old version of the event
     // And 'visible' would hold the data for 'offerIndex'
-    { offerIndex: offerIndex ? offerIndex : visible },
+    { offerIndex: offerIndex || visible },
   );
 
   return foundOffer;
