@@ -485,7 +485,10 @@ function App() {
                 {[
                   {
                     path: '/simdogs-splash',
-                    content: SimDogsSplashPage
+                    content: SimDogsSplashPage,
+                    props: {
+                      connectUserData: connectUserData
+                    }
                   },
                   {
                     path: '/genesis-splash',
