@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { v1 } from 'uuid';
 
 import DonationSquare from './DonationSquare';
 
@@ -6,7 +7,10 @@ import { IDonationGrid } from '../../splashPage.types';
 
 import './DonationSquare.css';
 
-const DonationGrid: React.FC<IDonationGrid> = ({ donationGridArray }) => {
+const DonationGrid: React.FC<IDonationGrid> = ({
+  connectUserData,
+  donationGridArray
+}) => {
   const mobile_match = window.matchMedia('(min-width: 1266px)');
   const [mobileView, setMobile] = useState<boolean>(mobile_match.matches);
   useEffect(() => {
@@ -19,11 +23,11 @@ const DonationGrid: React.FC<IDonationGrid> = ({ donationGridArray }) => {
   return (
     <div className="donation-grid">
       {donationGridArray.map((row, index) => (
-        // eslint-disable-next-line react/jsx-key
         <DonationSquare
-          key={index}
+          key={index + v1()}
           donationSquareData={row}
           mobileView={mobileView}
+          connectUserData={connectUserData}
         />
       ))}
     </div>

@@ -1,14 +1,31 @@
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
+import { v1 } from 'uuid';
 
+import PurchaseTokenButton from '../../../common/PurchaseToken';
 import AuthorCardButton from '../AuthorCard/AuthorCardButton';
 
 import './DonationSquare.css';
 
-const DonationSquare = ({ donationSquareData, mobileView }) => {
-  const { title, image, buttonData, textBoxArray, imageClass } =
-    donationSquareData;
+const DonationSquare = ({
+  donationSquareData,
+  mobileView,
+  connectUserData
+}) => {
+  const {
+    title,
+    image,
+    buttonData,
+    textBoxArray,
+    imageClass,
+    buyFunctionality,
+    offerIndexInMarketplace,
+    contractAddress,
+    switchToNetwork
+  } = donationSquareData;
 
   const [open, setOpen] = useState(mobileView);
+
   const clickHandler = () => {
     if (!mobileView) {
       setOpen(!open);
@@ -19,6 +36,8 @@ const DonationSquare = ({ donationSquareData, mobileView }) => {
     setOpen(mobileView);
   }, [mobileView]);
 
+  const connectUserDataMain = connectUserData && connectUserData;
+
   return (
     <div className="donation-square" onClick={() => clickHandler()}>
       <div className="donation-square-title">{title}</div>
@@ -28,18 +47,49 @@ const DonationSquare = ({ donationSquareData, mobileView }) => {
             className={['donation-square-image', imageClass].join(' ')}
             style={{ backgroundImage: 'url(' + image + ')' }}
           />
-          <AuthorCardButton
-            buttonData={buttonData}
-            whatSplashPage={'donation-square-button'}
-          />
+          {buyFunctionality ? (
+            <PurchaseTokenButton
+              {...{
+                customStyle: {
+                  color: buttonData.buttonTextColor,
+                  border: buttonData.buttonBorder,
+                  background: buttonData.buttonColor,
+                  marginTop: buttonData.buttonMarginTop,
+                  marginBottom: buttonData.buttonMarginBottom,
+                  width: '560px',
+                  height: '126px',
+                  font: 'normal 700 40px/28px Plus Jakarta Sans'
+                },
+                customWrapperClassName: 'btn-submit-with-form',
+                contractAddress: contractAddress,
+                requiredBlockchain: switchToNetwork,
+                offerIndex: [offerIndexInMarketplace],
+                connectUserData: connectUserDataMain,
+                buttonLabel: buttonData.buttonLabel,
+                diamond: true,
+                customSuccessAction: (nextToken) =>
+                  Swal.fire(
+                    'Success',
+                    `You own token #${nextToken}!`,
+                    'success'
+                  )
+              }}
+            />
+          ) : (
+            <AuthorCardButton
+              buttonData={buttonData}
+              whatSplashPage={'donation-square-button'}
+            />
+          )}
           <div className={['donation-square-textbox', imageClass].join(' ')}>
             <div
               className={['donation-square-inner-textbox', imageClass].join(
                 ' '
               )}>
               {textBoxArray.map((row) => (
-                // eslint-disable-next-line react/jsx-key
-                <div className="donation-square-textbox-row">{row}</div>
+                <div key={v1()} className="donation-square-textbox-row">
+                  {row}
+                </div>
               ))}
             </div>
           </div>

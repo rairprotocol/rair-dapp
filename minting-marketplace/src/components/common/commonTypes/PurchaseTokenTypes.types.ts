@@ -19,13 +19,13 @@ export interface IPurchaseTokenButtonProps {
   customButtonTextClassName?: string;
   customStyle: CSSProperties;
   customWrapperClassName: string;
-  img: string;
+  img?: string;
   contractAddress: string;
   requiredBlockchain: BlockchainType;
   offerIndex: number[];
   buttonLabel: string;
   connectUserData: () => void;
-  presaleMessage: string | React.ReactNode;
+  presaleMessage?: string | React.ReactNode;
   diamond: boolean;
   customSuccessAction: (nextToken: number) => void;
   blockchainOnly?: boolean;
