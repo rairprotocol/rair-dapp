@@ -1,4 +1,3 @@
-////@ts-nocheck
 import { createReduxEnhancer } from '@sentry/react';
 import {
   applyMiddleware,
