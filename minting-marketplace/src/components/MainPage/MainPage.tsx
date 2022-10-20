@@ -92,44 +92,60 @@ const MainPage: React.FC<IMainPage> = ({
   }, [setIsSplashPage]);
 
   /* ABOUT ME OFFSET */
-  const breakpoint_0 = window.matchMedia('(max-width: 900px)');
-  const breakpoint_1 = window.matchMedia('(max-width: 700px)');
-  const breakpoint_2 = window.matchMedia('(max-width: 450px)');
+  const breakpoint_0 = window.matchMedia('(max-width: 1100px)');
+  const breakpoint_1 = window.matchMedia('(max-width: 900px)');
+  const breakpoint_2 = window.matchMedia('(max-width: 700px)');
+  const breakpoint_3 = window.matchMedia('(max-width: 450px)');
   const [breakpoint_0_match, setBreakpoint_0_match] = useState(false);
   const [breakpoint_1_match, setBreakpoint_1_match] = useState(false);
   const [breakpoint_2_match, setBreakpoint_2_match] = useState(false);
+  const [breakpoint_3_match, setBreakpoint_3_match] = useState(false);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
       setBreakpoint_0_match(breakpoint_0.matches);
       setBreakpoint_1_match(breakpoint_1.matches);
       setBreakpoint_2_match(breakpoint_2.matches);
+      setBreakpoint_3_match(breakpoint_3.matches);
     });
     return () =>
       window.removeEventListener('resize', () => {
         setBreakpoint_0_match(breakpoint_0.matches);
         setBreakpoint_1_match(breakpoint_1.matches);
         setBreakpoint_2_match(breakpoint_2.matches);
+        setBreakpoint_3_match(breakpoint_3.matches);
       });
-  }, [breakpoint_0.matches, breakpoint_1.matches, breakpoint_2.matches]);
+  }, [
+    breakpoint_0.matches,
+    breakpoint_1.matches,
+    breakpoint_2.matches,
+    breakpoint_3.matches
+  ]);
   const [offset, setOffset] = useState(0);
   useEffect(() => {
-    if (breakpoint_2_match) {
-      setOffset(2100);
+    if (breakpoint_3_match) {
+      setOffset(533);
+    } else if (breakpoint_2_match) {
+      setOffset(480);
     } else if (breakpoint_1_match) {
-      setOffset(3000);
+      setOffset(100);
     } else if (breakpoint_0_match) {
-      setOffset(700);
+      setOffset(210);
     } else {
-      setOffset(2400);
+      setOffset(140);
     }
-  }, [breakpoint_0_match, breakpoint_1_match, breakpoint_2_match]);
+  }, [
+    breakpoint_0_match,
+    breakpoint_1_match,
+    breakpoint_2_match,
+    breakpoint_3_match
+  ]);
   const [readMoreCount, setReadMoreCount] = useState(0);
   useEffect(() => {
     const r = document.querySelector(':root') as HTMLElement;
     if (readMoreCount) {
       const offsetNum = (offset / 12) * readMoreCount;
-      const offsetStr = `${offsetNum}px`;
+      const offsetStr = `${offsetNum}vw`;
       r.style.setProperty('--readmore_offset', offsetStr);
     } else {
       r.style.setProperty('--readmore_offset', '0px');

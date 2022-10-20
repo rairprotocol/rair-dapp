@@ -391,7 +391,7 @@
   height: 61px;
   left: calc(((100% - 1440px) / var(--X_offset)) + 105px);
   /* left: 105px; */
-  top: 6322px;
+  top: 6346px;
 
   font-family: 'Plus Jakarta Sans';
   font-style: normal;
@@ -788,7 +788,7 @@
 }
 .meet_team_wrapper {
   position: absolute;
-  top: 7568px;
+  top: 7458px;
   left: calc(((100% - 1440px) / var(--X_offset)) + 115px);
   /* left: 115px; */
 }
@@ -1035,7 +1035,7 @@
     width: 46.806vw;
     height: 4.236vw;
     left: 7.292vw;
-    top: 439.028vw;
+    top: 440.694vw;
     font-size: 2.5vw;
     line-height: 3.333vw;
   }
@@ -1231,7 +1231,7 @@
   }
 
   .meet_team_wrapper {
-    top: 525.556vw;
+    top: 517.917vw;
     left: 7.986vw;
   }
 
@@ -1719,7 +1719,7 @@
 
   .meet_team_wrapper {
     top: calc(
-      814.286vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
+      806vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
     );
   }
 
