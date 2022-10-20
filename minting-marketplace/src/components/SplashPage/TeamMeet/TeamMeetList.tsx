@@ -433,7 +433,7 @@ const rairAdvisorsTeam: TTeamArrayItemType[] = [
         classLink: ''
       }
     ],
-    readMoreCountFlag: 4
+    readMoreCountFlag: 3
   },
   // {
   //     nameTeammate: "Gunther Sonnenfeld CSO",
@@ -517,7 +517,7 @@ const rairAdvisorsTeam: TTeamArrayItemType[] = [
         classLink: ''
       }
     ],
-    readMoreCountFlag: 5
+    readMoreCountFlag: 6
   }
 ];
 
