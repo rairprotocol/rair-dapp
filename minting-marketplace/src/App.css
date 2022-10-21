@@ -1320,13 +1320,24 @@ i.fas-custom {
   /* position: fixed; */
   position: absolute;
   background: #383637;
-  /* top: 4rem; */
+  /* top: 5rem;
+  left: 35rem; */
+  top: 3rem;
   /* left: 18rem; */
   width: 35vw;
   margin-left: auto;
   margin-right: auto;
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;
+}
+.popup-content .search-holder-wrapper-content {
+  margin: 5% auto auto 26% !important;
+}
+.popup-overlay .search-holder-wrapper-overlay div {
+  margin: 5% auto auto 26% !important;
+}
+#popup-136 {
+  margin: 0 !important;
 }
 .search-holder-wrapper.rhyno {
   background: #fafafa;

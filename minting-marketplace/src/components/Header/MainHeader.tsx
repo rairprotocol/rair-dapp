@@ -1,7 +1,8 @@
 //tools
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Popup } from 'reactjs-popup';
 import axios from 'axios';
 
 // import { NavLink } from 'react-router-dom';
@@ -13,6 +14,7 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
 import { TUsersInitialState } from '../../ducks/users/users.types';
+import useComponentVisible from '../../hooks/useComponentVisible';
 import { DiscordIcon, TwitterIcon } from '../../images';
 //images
 import { headerLogoBlack, headerLogoWhite } from '../../images';
@@ -54,7 +56,8 @@ const MainHeader: React.FC<IMainHeader> = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { ref, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(true);
   const { primaryColor, headerLogo } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -161,7 +164,8 @@ const MainHeader: React.FC<IMainHeader> = ({
       primaryColor={primaryColor}
       showAlert={showAlert}
       isSplashPage={isSplashPage}
-      selectedChain={selectedChain}>
+      selectedChain={selectedChain}
+      ref={ref}>
       <div>
         <MainLogo
           goHome={goHome}
@@ -178,114 +182,123 @@ const MainHeader: React.FC<IMainHeader> = ({
           placeholder="Search the rairverse..."
           onChange={handleChangeText}
           value={textSearch}
+          onClick={() => setIsComponentVisible(true)}
         />
-        <div
-          className={`search-holder-wrapper ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
-          }`}>
-          <div className="search-holder">
-            {textSearch && (
-              <>
-                {dataAll && dataAll?.products.length > 0 ? (
-                  <div className="data-find-wrapper">
-                    <h5>Products</h5>
-                    {dataAll?.products.map(
-                      (item: TSearchDataProduct, index: number) => (
-                        <div
-                          key={Number(index) + Math.random()}
-                          className="data-find">
-                          <img
-                            className="data-find-img"
-                            src={item.cover}
-                            alt={item.name}
-                          />
-                          <p
-                            onClick={() =>
-                              goToExactlyContract(
-                                item.contract,
-                                item.collectionIndexInContract
-                              )
-                            }>
-                            <Highlight filter={textSearch} str={item.name} />
-                          </p>
-                        </div>
-                      )
-                    )}
-                  </div>
-                ) : (
-                  <></>
-                )}
-                {dataAll && dataAll?.tokens.length > 0 ? (
-                  <div className="data-find-wrapper">
-                    <h5>Tokens</h5>
-                    {dataAll?.tokens.map(
-                      (item: TSearchDataTokens, index: number) => (
-                        <div
-                          key={Number(index) + Math.random()}
-                          className="data-find">
-                          <ImageCustomForSearch item={item} />
-                          <p
-                            onClick={() =>
-                              goToExactlyToken(
-                                item.contract,
-                                item.uniqueIndexInContract
-                              )
-                            }>
-                            <Highlight
-                              filter={textSearch}
-                              str={item.metadata.name}
-                            />
-                          </p>
-                          <div className="desc-wrapper">
-                            <p>
-                              <Highlight
-                                filter={textSearch}
-                                str={item.metadata.description}
+        {isComponentVisible && (
+          <div
+            className={`search-holder-wrapper ${
+              primaryColor === 'rhyno' ? 'rhyno' : ''
+            }`}>
+            <div>
+              <div className="search-holder">
+                {textSearch && (
+                  <>
+                    {dataAll && dataAll?.products.length > 0 ? (
+                      <div className="data-find-wrapper">
+                        <h5>Products</h5>
+                        {dataAll?.products.map(
+                          (item: TSearchDataProduct, index: number) => (
+                            <div
+                              key={Number(index) + Math.random()}
+                              className="data-find">
+                              <img
+                                className="data-find-img"
+                                src={item.cover}
+                                alt={item.name}
                               />
-                            </p>
-                          </div>
-                        </div>
-                      )
+                              <p
+                                onClick={() =>
+                                  goToExactlyContract(
+                                    item.contract,
+                                    item.collectionIndexInContract
+                                  )
+                                }>
+                                <Highlight
+                                  filter={textSearch}
+                                  str={item.name}
+                                />
+                              </p>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      <></>
                     )}
-                  </div>
+                    {dataAll && dataAll?.tokens.length > 0 ? (
+                      <div className="data-find-wrapper">
+                        <h5>Tokens</h5>
+                        {dataAll?.tokens.map(
+                          (item: TSearchDataTokens, index: number) => (
+                            <div
+                              key={Number(index) + Math.random()}
+                              className="data-find">
+                              <ImageCustomForSearch item={item} />
+                              <p
+                                onClick={() =>
+                                  goToExactlyToken(
+                                    item.contract,
+                                    item.uniqueIndexInContract
+                                  )
+                                }>
+                                <Highlight
+                                  filter={textSearch}
+                                  str={item.metadata.name}
+                                />
+                              </p>
+                              <div className="desc-wrapper">
+                                <p>
+                                  <Highlight
+                                    filter={textSearch}
+                                    str={item.metadata.description}
+                                  />
+                                </p>
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    {dataAll && dataAll?.users.length > 0 ? (
+                      <div className="data-find-wrapper">
+                        <h5>Users</h5>
+                        {dataAll?.users.map(
+                          (item: TSearchDataUser, index: number) => (
+                            <div
+                              key={Number(index) + Math.random()}
+                              className="data-find">
+                              <img
+                                className="data-find-img"
+                                src={item.avatar ? item.avatar : ''}
+                                alt="user-photo"
+                              />
+                              <p>
+                                <Highlight
+                                  filter={textSearch}
+                                  str={item.nickName}
+                                />
+                              </p>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                )}
+                {textSearch !== '' && message === 'Nothing can found' ? (
+                  <span className="data-nothing-find">No items found</span>
                 ) : (
                   <></>
                 )}
-                {dataAll && dataAll?.users.length > 0 ? (
-                  <div className="data-find-wrapper">
-                    <h5>Users</h5>
-                    {dataAll?.users.map(
-                      (item: TSearchDataUser, index: number) => (
-                        <div
-                          key={Number(index) + Math.random()}
-                          className="data-find">
-                          <img
-                            className="data-find-img"
-                            src={item.avatar ? item.avatar : ''}
-                            alt="user-photo"
-                          />
-                          <p>
-                            <Highlight
-                              filter={textSearch}
-                              str={item.nickName}
-                            />
-                          </p>
-                        </div>
-                      )
-                    )}
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </>
-            )}{' '}
-            {textSearch !== '' && message === 'Nothing' ? (
-              <span className="data-nothing-find">No items found</span>
-            ) : (
-              <></>
-            )}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
+        {!isComponentVisible && null}
         {textSearch && textSearch.length > 0 && (
           <i
             onClick={handleClearText}
@@ -364,4 +377,4 @@ const MainHeader: React.FC<IMainHeader> = ({
   );
 };
 
-export default MainHeader;
+export default memo(MainHeader);
