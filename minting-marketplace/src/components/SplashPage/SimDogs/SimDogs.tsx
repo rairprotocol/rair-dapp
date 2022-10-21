@@ -112,9 +112,9 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       button3: {
         buttonTextColor: '#FFFFFF',
         buttonColor: '#55CFFF',
-        buttonLabel: 'PREMINT',
+        buttonLabel: 'Opensea',
         buttonImg: null,
-        buttonLink: 'https://www.premint.xyz/simdogsxyz/'
+        buttonLink: 'https://opensea.io/collection/sim-dogs'
       },
       exclusiveNft: {
         title: 'NFTs',
