@@ -5,13 +5,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { SvgKey } from './SvgKey';
 
 import chainData from '../../../utils/blockchainData';
+import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 import {
   INftItemForCollectionView,
   TParamsNftItemForCollectionView
 } from '../mockupPage.types';
 
-import defaultImage from './../assets/defultUser.png';
 import { gettingPrice } from './utils/gettingPrice';
 
 const NftItemForCollectionViewComponent: React.FC<

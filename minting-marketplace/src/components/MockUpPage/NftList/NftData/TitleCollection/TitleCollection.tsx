@@ -5,6 +5,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import chainData from '../../../../../utils/blockchainData';
+import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
 import {
@@ -13,7 +14,6 @@ import {
 } from '../../../mockupPage.types';
 import CustomShareButton from '../CustomShareButton';
 
-import defaultUser from './../../../assets/defultUser.png';
 import SharePopUp from './SharePopUp/SharePopUp';
 
 import './TitleCollection.css';
@@ -86,7 +86,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
           <div className="block-user-creator">
             <span>by:</span>
             <ImageLazy
-              src={someUsersData?.avatar ? someUsersData.avatar : defaultUser}
+              src={someUsersData?.avatar ? someUsersData.avatar : defaultImage}
               alt="User Avatar"
             />
             <h5>
