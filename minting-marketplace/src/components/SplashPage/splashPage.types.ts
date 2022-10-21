@@ -463,7 +463,7 @@ export interface ICustomButtonBlock {
 }
 
 export type TButtonDataDonationGrid = {
-  buttonAction: () => void;
+  buttonAction?: () => void;
   buttonTextColor: string;
   buttonColor: string;
   buttonLabel: string;
@@ -475,10 +475,15 @@ export type TDonationGridDataItem = {
   imageClass: string;
   buttonData: TButtonDataDonationGrid;
   textBoxArray: string[];
+  buyFunctionality?: boolean;
+  offerIndexInMarketplace?: string;
+  switchToNetwork?: string;
+  contractAddress?: string;
 };
 
 export interface IDonationGrid {
   donationGridArray: TDonationGridDataItem[];
+  connectUserData: () => Promise<void>;
 }
 
 export type TUseGetProductsReturn = [

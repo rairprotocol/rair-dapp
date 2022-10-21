@@ -423,7 +423,14 @@ video::-webkit-media-controls-panel {
 }
 
 .video-js * {
-  border-radius: 50px;
+  border-radius: 16px;
+}
+
+.vjs-loading-spinner {
+  border-radius: 50%;
+  margin: -35px;
+  height: 70px;
+  width: 70px;
 }
 
 .unlockable-videos-wrapper {

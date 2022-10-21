@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -10,15 +10,9 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { discrodIconNoBorder } from '../../../images';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
-import { ReactComponent as DiscordLogo } from '../assets/DiscordLogo.svg';
-// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
-// import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
-// Google Analytics
-//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-//ReactGA.initialize(TRACKING_ID);
-import { ReactComponent as Twitter } from '../assets/twitterIcon.svg';
 import {
   Flyinggreyman,
   GreymanArmy,
@@ -42,16 +36,12 @@ import {
   TDonationGridDataItem,
   TSplashDataType
 } from '../splashPage.types';
-import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
 import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
-// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
-// import GenesisMember from '../images/creator-flow.png';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
-// import GenesisMember from '../images/creator-flow.png';
 /* importing Components*/
 import WarningModal from '../WarningModal';
 
@@ -61,6 +51,9 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './SimDogs.css';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+// Google Analytics
+//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+//ReactGA.initialize(TRACKING_ID);
 
 const reactSwal = withReactContent(Swal);
 
@@ -70,19 +63,89 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
+  /* UTILITIES FOR NFT PURCHASE */
+  const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
+  const [purchaseList, setPurchaseList] = useState<boolean>(true);
+  /* UTILITIES FOR VIDEO PLAYER VIEW */
+  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
+  const [selectVideo, setSelectVideo] = useState<TFileType>();
+
+  const togglePurchaseList = () => {
+    setPurchaseList((prev) => !prev);
+  };
+  const mainChain = '0x5';
+  const splashData: TSplashDataType = useMemo(
+    () => ({
+      // NFTName: 'Genesis Pass artwork',
+      title: 'SIM DOGS',
+      titleColor: '#495CB0',
+      description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+      textBottom: false,
+      videoPlayerParams: {
+        contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
+        product: '0',
+        blockchain: '0x5'
+      },
+      marketplaceDemoParams: {
+        contract: '0xf18b176db95cf176f25f88edcabb165d388b287f',
+        product: '0',
+        blockchain: '0x5'
+      },
+      purchaseButton: {
+        requiredBlockchain: '0x38',
+        contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f'
+      },
+      buttonLabel: 'Connect Wallet',
+      buttonBackgroundHelp: 'rgb(3, 91, 188)',
+      backgroundImage: SimDogs0,
+      button1: {
+        buttonImg: discrodIconNoBorder,
+        buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
+      },
+      button2: {
+        buttonCustomLogo: <i className="fab fa-twitter twitter-logo" />,
+        buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
+      },
+      button3: {
+        buttonTextColor: '#FFFFFF',
+        buttonColor: '#55CFFF',
+        buttonLabel: 'PREMINT',
+        buttonImg: null,
+        buttonLink: 'https://www.premint.xyz/simdogsxyz/'
+      },
+      exclusiveNft: {
+        title: 'NFTs',
+        titleColor: 'rgb(3, 91, 188)'
+      },
+      timelinePics: [
+        Flyinggreyman,
+        GreymanVariants,
+        GreymanMonument,
+        GreymanRose,
+        GreymanArmy,
+        GreymanMatrix,
+        GreyManTimes
+      ]
+    }),
+    []
+  );
 
   const donationGridData: TDonationGridDataItem[] = [
     {
       title: 'PROSECUTOR',
       image: SimDogs1,
       imageClass: 'zero',
+      buyFunctionality: true,
+      offerIndexInMarketplace: '108',
+      switchToNetwork: mainChain,
+      contractAddress: '0xf18b176db95cf176f25f88edcabb165d388b287f',
       buttonData: {
-        buttonAction: () => {
-          Swal.fire('Coming soon!');
-        },
         buttonTextColor: '#FFFFFF',
         buttonColor: '#384190',
-        buttonLabel: 'Mint on 10/22'
+        buttonLabel: 'Mint for 10.7 ETH'
       },
       textBoxArray: [
         '107 unique drawings with various rarity traits',
@@ -98,13 +161,14 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       title: 'SUPREME COURT',
       image: SimDogs2,
       imageClass: 'zero',
+      buyFunctionality: true,
+      offerIndexInMarketplace: '109',
+      switchToNetwork: mainChain,
+      contractAddress: '0xf18b176db95cf176f25f88edcabb165d388b287f',
       buttonData: {
-        buttonAction: () => {
-          Swal.fire('Coming soon!');
-        },
         buttonTextColor: '#FFFFFF',
         buttonColor: '#006EE9',
-        buttonLabel: 'Coming soon'
+        buttonLabel: 'Mint for 1.07 ETH'
       },
       textBoxArray: [
         'Nine unique “1-of-1” original drawings by Andre Miripolsky',
@@ -159,80 +223,16 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       ]
     }
   ];
-  const splashData: TSplashDataType = {
-    title: 'SIM DOGS',
-    titleColor: '#495CB0',
-    description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-    textBottom: false,
-    videoPlayerParams: {
-      contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
-      product: '0',
-      blockchain: '0x5'
-    },
-    marketplaceDemoParams: {
-      contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
-      product: '0',
-      blockchain: '0x5'
-    },
-    purchaseButton: {
-      requiredBlockchain: '0x38',
-      contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f'
-    },
-    buttonLabel: 'Connect Wallet',
-    buttonBackgroundHelp: 'rgb(3, 91, 188)',
-    backgroundImage: SimDogs0,
-    button1: {
-      buttonCustomLogo: <DiscordLogo />,
-      buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
-    },
-    button2: {
-      buttonCustomLogo: <Twitter />,
-      /*<i className="fab fa-twitter twitter-logo" />*/
-      buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
-    },
-    button3: {
-      buttonTextColor: '#FFFFFF',
-      buttonColor: '#55CFFF',
-      buttonLabel: 'PREMINT',
-      buttonImg: null,
-      buttonAction: () => hyperlink('https://www.premint.xyz/simdogsxyz/')
-    },
-    exclusiveNft: {
-      title: 'NFTs',
-      titleColor: 'rgb(3, 91, 188)'
-    },
-    timelinePics: [
-      Flyinggreyman,
-      GreymanVariants,
-      GreymanMonument,
-      GreymanRose,
-      GreymanArmy,
-      GreymanMatrix,
-      GreyManTimes
-    ]
-  };
 
-  useEffect(() => {
-    dispatch(
-      setInfoSEO({
-        title: 'Sim Dogs',
-        ogTitle: 'Sim Dogs',
-        twitterTitle: 'Sim Dogs',
-        contentName: 'author',
-        content: '',
-        description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-        ogDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-        twitterDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-        image: SimDogs0,
-        favicon: favion_SimDogs,
-        faviconMobile: favion_SimDogs
-      })
+  const getProductsFromOffer = useCallback(async () => {
+    const response = await axios.get<TNftFilesResponse>(
+      `/api/nft/network/${splashData.marketplaceDemoParams?.blockchain}/${splashData.marketplaceDemoParams?.contract}/${splashData.marketplaceDemoParams?.product}/files`
     );
-    //eslint-disable-next-line
-  }, []);
+    setProductsFromOffer(response.data.files);
+    setSelectVideo(response.data.files[0]);
+  }, [splashData]);
 
   //an option for custom button arrangment
-
   const CustomButtonBlock: React.FC<ICustomButtonBlock> = ({ splashData }) => {
     const { button1, button2, button3 } = splashData;
     return (
@@ -250,35 +250,23 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 
   const customButtonBlock = <CustomButtonBlock splashData={splashData} />;
 
-  const primaryColor = useSelector<RootState, ColorChoice>(
-    (store) => store.colorStore.primaryColor
-  );
-
-  /* UTILITIES FOR NFT PURCHASE */
-  const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
-  const [purchaseList, setPurchaseList] = useState<boolean>(true);
-  const ukraineglitchChainId = '0x1';
-
-  const togglePurchaseList = () => {
-    setPurchaseList((prev) => !prev);
-  };
-
   useEffect(() => {
-    dispatch(setRealChain(ukraineglitchChainId));
-    //eslint-disable-next-line
-  }, []);
-
-  /* UTILITIES FOR VIDEO PLAYER VIEW */
-  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
-
-  const getProductsFromOffer = useCallback(async () => {
-    const response = await axios.get<TNftFilesResponse>(
-      `/api/nft/network/${splashData.marketplaceDemoParams?.blockchain}/${splashData.marketplaceDemoParams?.contract}/${splashData.marketplaceDemoParams?.product}/files`
+    dispatch(
+      setInfoSEO({
+        title: 'Sim Dogs',
+        ogTitle: 'Sim Dogs',
+        twitterTitle: 'Sim Dogs',
+        contentName: 'author',
+        content: '',
+        description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        ogDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        twitterDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        image: SimDogs0,
+        favicon: favion_SimDogs,
+        faviconMobile: favion_SimDogs
+      })
     );
-    setProductsFromOffer(response.data.files);
-    setSelectVideo(response.data.files[0]);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     getProductsFromOffer();
@@ -288,7 +276,10 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
     setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
-  /**** */
+  useEffect(() => {
+    dispatch(setRealChain(mainChain));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="wrapper-splash-page simdogs">
@@ -303,7 +294,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-
         <AuthorCard
           {...{
             splashData,
@@ -335,7 +325,10 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
             Need Help
           </button>
         </div>
-        <DonationGrid donationGridArray={donationGridData} />
+        <DonationGrid
+          donationGridArray={donationGridData}
+          connectUserData={connectUserData}
+        />
         {productsFromOffer && productsFromOffer.length > 0 && (
           <>
             <h1
@@ -420,81 +413,3 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 };
 
 export default SimDogsSplashPage;
-
-{
-  /* <ThemeProvider theme={theme}>
-  <StyledSplashPageWrapperContainer>
-    <SplashPageMainBlock
-      bgColor="#FFFFFF"
-      borderRadius="24px"
-      paddingLeft="66px">
-      <MainBlockInfoText padding={'0px'}>
-        <MainTitleBlock
-          color="rgb(73, 92, 176)"
-          fontSize="48px"
-          fontWeight={400}
-          text={splashData.title}
-          fontFamily={'Acme, sans-serif'}
-          lineHeight={'1.2'}
-          marginBottom={'13px'}
-        />
-        <MainTitleBlock
-          color="#100003"
-          fontSize="32px"
-          fontWeight={700}
-          text={splashData.description}
-          fontFamily={'Plus Jakarta Sans Bold, sans-serif'}
-          lineHeight={'37px'}
-          width="473px"
-        />
-        <ButtonContainerMainBlock
-          marginTop={'81px'}
-          height="191px"
-          width="244px"
-          gap="16px"
-          flexDirection="column">
-          <ButtonMainBlockWrapper height="92px">
-            <ButtonMainBlock
-              width="112.23px"
-              borderRadius="1rem"
-              background="#2351a1"
-              buttonData={splashData.button1}
-              buttonImageHeight="auto"
-              buttonImageWidth="47%"
-              buttonImageMarginRight="0px"
-            />
-            <ButtonMainBlock
-              width="112.23px"
-              borderRadius="1rem"
-              background="#2351a1"
-              buttonData={splashData.button2}
-              buttonImageHeight="auto"
-              buttonImageWidth="47%"
-              buttonImageMarginRight="0px"
-            />
-          </ButtonMainBlockWrapper>
-          <ButtonMainBlock
-            borderRadius="1rem"
-            background="rgb(85, 207, 255)"
-            buttonData={splashData.button3}
-            fontFamily={"'Acme', sans-serif"}
-            fontWeight={'400'}
-            lineHeight={'36px'}
-            fontSize={'36px'}
-            height="83px"
-            width="100%"
-          />
-        </ButtonContainerMainBlock>
-      </MainBlockInfoText>
-      {splashData.backgroundImage && (
-        <ImageMainBlock
-          image={splashData.backgroundImage}
-          heightDiff="538px"
-          widthDiff="538px"
-          imageMargin="0px 35px 0px 20px"
-        />
-      )}
-    </SplashPageMainBlock>
-  </StyledSplashPageWrapperContainer>
-</ThemeProvider>; */
-}
