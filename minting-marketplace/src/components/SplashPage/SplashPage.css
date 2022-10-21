@@ -443,6 +443,10 @@
   margin-right: 10px;
 }
 
+.more-padding {
+  padding-top: 30px;
+}
+
 .btn-submit-with-form {
   margin-top: 20px;
 }
