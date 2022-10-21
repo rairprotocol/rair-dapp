@@ -483,7 +483,7 @@ export type TDonationGridDataItem = {
 
 export interface IDonationGrid {
   donationGridArray: TDonationGridDataItem[];
-  connectUserData: () => Promise<void>;
+  connectUserData: (() => Promise<void>) | undefined;
 }
 
 export type TUseGetProductsReturn = [
