@@ -8,8 +8,9 @@ export interface INumberedCircle {
 
 export interface ISplashPageProps {
   loginDone?: boolean;
-  connectUserData: () => Promise<void>;
+  connectUserData?: () => Promise<void>;
   setIsSplashPage?: (isSplashPage: boolean) => void;
+  isSplashPage: boolean;
 }
 
 export type TSplashPageIsActive = {
@@ -58,7 +59,7 @@ export type TSplashPageDataButtonType = {
   buttonTextColor?: string;
   buttonMarginTop?: string;
   buttonMarginBottom?: string;
-  buttonAction?: () => void;
+  buttonAction?: (() => void) | (() => Promise<void>);
 };
 
 export type TCarouselDataType = {
@@ -94,12 +95,13 @@ export type TExclusiveNFtType = {
 
 export type TParamsMarketplaceDemo = {
   blockchain: BlockchainType | undefined;
-  contract: string;
+  contract?: string;
   product: string;
 };
 
 export type TPurchaseButtonType = {
-  contractAddress: string;
+  contractAddress?: string;
+  buttonLabel?: string;
   requiredBlockchain: BlockchainType | undefined;
   buttonComponent?: React.ElementType;
   customStyle?: React.CSSProperties;
@@ -136,10 +138,10 @@ export type TCounterData = {
 
 export type TSplashDataType = {
   LicenseName?: string;
-  title?: string | null;
+  title?: string;
   titleColor?: string;
   titleImage?: string;
-  description?: string[] | string | null;
+  description?: string;
   textDescriptionCustomStyles?: React.CSSProperties;
   seoInformation?: TSeoInformationType;
   backgroundImage?: string;
@@ -442,7 +444,7 @@ export interface ITokenLeftTemplate {
 }
 
 export type TMainContractType = {
-  contractAddress: string;
+  contractAddress?: string;
   requiredBlockchain: BlockchainType | undefined;
   offerIndex: string[];
 };
@@ -481,7 +483,7 @@ export type TDonationGridDataItem = {
 
 export interface IDonationGrid {
   donationGridArray: TDonationGridDataItem[];
-  connectUserData: () => Promise<void>;
+  connectUserData: (() => Promise<void>) | undefined;
 }
 
 export type TUseGetProductsReturn = [

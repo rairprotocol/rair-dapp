@@ -70,7 +70,7 @@ const splashData: TSplashDataType = {
   title: '',
   titleImage: titleImage,
   titleColor: '#57B69C',
-  description: ['The most secure way to stream encrypted documents'],
+  description: 'The most secure way to stream encrypted documents',
   // seoInformation: {
   //   title: "Слава Україні!",
   //   contentName: "author",
