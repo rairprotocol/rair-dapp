@@ -91,7 +91,7 @@ const Footer = () => {
           <NavFooterBox primaryColor={primaryColor}>
             <h4>Company</h4>
             <li>
-              <NavLink to="/about-page">About</NavLink>
+              <NavLink to="/main-page">About</NavLink>
             </li>
             <li>
               <a
