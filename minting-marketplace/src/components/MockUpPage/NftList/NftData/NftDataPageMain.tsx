@@ -41,7 +41,8 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   someUsersData,
   ownerInfo,
   loginDone,
-  embeddedParams
+  embeddedParams,
+  handleTokenBoughtButton
 }) => {
   const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
     (state) => state.nftDataStore
@@ -259,6 +260,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               textColor={textColor}
               currentUser={currentUser}
               loginDone={loginDone}
+              handleTokenBoughtButton={handleTokenBoughtButton}
             />
           )}
 

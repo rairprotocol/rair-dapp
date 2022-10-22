@@ -22,7 +22,7 @@ const SellInputButton: React.FC<ISellInputButton> = ({
     } else {
       setIsInputPriceExist(false);
     }
-  }, [inputSellValue, isInputPriceExist]);
+  }, [inputSellValue]);
 
   const handleSetValue = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

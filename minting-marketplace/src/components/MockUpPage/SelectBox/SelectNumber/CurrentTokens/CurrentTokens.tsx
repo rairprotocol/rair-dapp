@@ -66,9 +66,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                 <div
                   className={`select-number-box ${
                     selectedToken === el.token ? 'selected-box' : ''
-                  } ${
-                    el.sold ? 'sold-token' : el.isMinted ? 'sold-token' : ''
-                  }`}
+                  } ${el.sold ? 'sold-token' : ''}`}
                   data-title={` #${el.token}`}
                   style={{
                     background: `${
@@ -76,9 +74,9 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                     }`,
                     color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`
                   }}
-                  key={el._id ? el._id : el.id}
+                  key={el.id}
                   onClick={() => onClickItem(el.token)}>
-                  {el.sold ? 'Sold' : el.isMinted ? 'Sold' : el.token}
+                  {el.sold ? 'Sold' : el.token}
                 </div>
               );
             })}

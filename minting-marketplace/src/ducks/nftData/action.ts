@@ -42,7 +42,7 @@ const setTokenDataStart = () =>
     type: types.SET_TOKEN_DATA_START
   } as const);
 
-const setTokenData = (tokenData: TTokenData[] | null) =>
+const setTokenData = (tokenData: TTokenData[]) =>
   ({ type: types.SET_TOKEN_DATA, tokenData } as const);
 
 export {

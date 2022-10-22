@@ -1,11 +1,15 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import {
   TNftItemResponse,
   TTokenData
 } from '../../../../../axios.responseTypes';
+import { RootState } from '../../../../../ducks';
+import { setTokenData } from '../../../../../ducks/nftData/action';
+import { currentTokenData } from '../../../NftList/utils/currentTokenData';
 import { IListOfTokensComponent } from '../../selectBox.types';
 import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
 
@@ -25,7 +29,6 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   setIsOpen,
   totalCount
 }) => {
-  const [tokenData, setTokenData] = useState<TTokenData[]>([]);
   const [productTokenNumbers, setProductTokenNumbers] = useState<string[]>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
@@ -34,6 +37,11 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const [isOpens, setIsOpens] = useState<boolean>(false);
   const [isBack /*setIsBack*/] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(true);
+
+  const tokenData = useSelector<RootState, TTokenData[]>(
+    (state) => state.nftDataStore.tokenData
+  );
+  const dispatch = useDispatch();
 
   const getNumberFromStr = (str: string) => {
     const newStr = str.replace(' -', '');
@@ -53,7 +61,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
         `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${indexes[0]}&toToken=${indexes[1]}&limit=${limit}`
       );
       const { result } = responseAllProduct.data;
-      setTokenData(result.tokens);
+      dispatch(setTokenData(result.tokens));
       setSelectedToken(selectedToken);
       onClickItem(selectedToken);
       handleIsOpen();
@@ -65,7 +73,8 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
       onClickItem,
       product,
       setSelectedToken,
-      selectedToken
+      selectedToken,
+      dispatch
     ]
   );
 
@@ -174,7 +183,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
     ) : (
       <CurrentTokens
         primaryColor={primaryColor}
-        items={tokenData}
+        items={currentTokenData(tokenData)}
         isOpen={isOpen}
         isBack={isBack}
         selectedToken={selectedToken}
