@@ -6,14 +6,16 @@ import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico'
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { metaMaskIcon } from '../../../images';
 import { rFetch } from '../../../utils/rFetch';
 import PurchaseTokenButton from '../../common/PurchaseToken';
+import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import { MarkKohlerImage } from '../images/markKohler/markHohler';
+import { RairLogo_Koholertext } from '../images/teamMeetList/teamMeetList';
+import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps, TMainContractType } from '../splashPage.types';
 import { TSplashDataType } from '../splashPage.types';
 import SplashCardButton from '../SplashPageConfig/CardBlock/SplashCardButton';
@@ -25,37 +27,46 @@ import SplashPageCardWrapper from '../SplashPageConfig/CardBlock/SplashPageCardW
 import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import { useGetProducts } from '../splashPageProductsHook';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
+import TeamMeet from '../TeamMeet/TeamMeetList';
 
 import './markKohler.css';
 
 const mainContract: TMainContractType = {
-  contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
+  contractAddress: '0x711fe7fccdf84875c9bdf663c89b5f5f726a11d7',
   requiredBlockchain: '0x1',
-  offerIndex: ['0', '1']
+  offerIndex: ['1']
 };
-const testContract: TMainContractType = {
-  contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
-  requiredBlockchain: '0x5',
-  offerIndex: ['126']
-};
+// const testContract: TMainContractType = {
+//   contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
+//   requiredBlockchain: '0x5',
+//   offerIndex: ['126']
+// };
 
-const contract =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.contractAddress
-    : mainContract.contractAddress;
-const blockchain =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.requiredBlockchain
-    : mainContract.requiredBlockchain;
+const contract = mainContract.contractAddress;
+const blockchain = mainContract.requiredBlockchain;
+const offerIndex = mainContract.offerIndex;
 
-const offerIndex =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.offerIndex
-    : mainContract.offerIndex;
+// const contract =
+//   process.env.REACT_APP_TEST_CONTRACTS === 'true'
+//     ? testContract.contractAddress
+//     : mainContract.contractAddress;
+// const blockchain =
+//   process.env.REACT_APP_TEST_CONTRACTS === 'true'
+//     ? testContract.requiredBlockchain
+//     : mainContract.requiredBlockchain;
+
+// const offerIndex =
+//   process.env.REACT_APP_TEST_CONTRACTS === 'true'
+//     ? testContract.offerIndex
+//     : mainContract.offerIndex;
 
 export const splashData: TSplashDataType = {
   title: 'TAX HACKS SUMMIT',
-  description: 'THURSDAY DECEMBER 8TH 10AM-6PM ET AN NFT GATED EVENT',
+  description: (
+    <>
+      Thursday December 8th 11AM—7PM <br /> ET An NFT Gated Event
+    </>
+  ),
   backgroundImage: MarkKohlerImage,
   button2: {
     buttonLabel: 'Email Updates',
@@ -108,8 +119,7 @@ export const splashData: TSplashDataType = {
 const MarkKohler: React.FC<ISplashPageProps> = ({
   loginDone,
   connectUserData,
-  setIsSplashPage,
-  isSplashPage
+  setIsSplashPage
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
@@ -121,11 +131,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
 
   /* UTILITIES FOR NFT PURCHASE */
-  const [soldCopies, setSoldCopies] = useState<number>(0);
-  const { currentChain, minterInstance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
 
@@ -173,22 +179,27 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
     //eslint-disable-next-line
   }, []);
 
+  const toggleCheckList = () => {
+    setOpenCheckList((prev) => !prev);
+  };
+
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
   };
 
   return (
-    <div className="wrapper-splash-page">
+    <div className="wrapper-splash-page mark-kohler">
       <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}
           purchaseList={purchaseList}
           togglePurchaseList={togglePurchaseList}
+          toggleCheckList={toggleCheckList}
           templateOverride={true}
           backgroundColor={{
-            darkTheme: 'rgb(3, 91, 188)',
-            lightTheme: 'rgb(3, 91, 188)'
+            darkTheme: 'var(--stimorol)',
+            lightTheme: 'var(--stimorol)'
           }}
         />
         <SplashPageCardWrapper>
@@ -223,7 +234,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               <PurchaseTokenButton
                 connectUserData={connectUserData}
                 {...splashData.purchaseButton}
-                isSplashPage={isSplashPage}
+                // isSplashPage={isSplashPage}
                 diamond={true}
               />
               <SplashCardButton
@@ -248,6 +259,176 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             />
           )}
         </SplashPageCardWrapper>
+        <div className="container-about-conference">
+          <h2>About the Conference</h2>
+          <div className="about-conference-description">
+            The IRS is spending $80 billion dollars to find your crypto.
+            <br />
+            You need to<span> protect yourself and your assets.</span>
+          </div>
+          {/* <div className="block-conference-link">
+            <span>You need to protect yourself and your assets</span>
+          </div> */}
+          <div className="block-paragragh-conference">
+            Every American must now answer at the top of the 1040 “At any time
+            during 2022, did you receive, sell, exchange, or otherwise dispose
+            of any financial interest in any virtual currency?” IF you lie (and
+            the IRS can see the Blockchain)- it’s Perjury and Jail time!
+          </div>
+          <div className="block-paragragh-conference">
+            YOU MUST take this seriously and learn the strategies to educate
+            and/or find a better accountant.
+          </div>
+          <div className="block-paragragh-conference">
+            Do you know the best tax reporting strategy? Do you have a strategy
+            at all?
+          </div>
+          <div className="block-paragragh-conference">
+            Join Mark J. Kohler as he hosts the first ever, end of year crypto
+            tax strategy livestream on December 8th, 2022.
+          </div>
+          <div className="about-conference-description">SCHEDULE</div>
+          <div className="about-conference-description-list">
+            <div className="about-conference-container-list">
+              <ul>
+                <li>11am – 11:15</li>
+                <li>11:15 – 12:00</li>
+                <li>12:00 – 12:45</li>
+              </ul>
+              <ul>
+                <li>Welcome</li>
+                <li>Trading Crypto Strategies: ST and LT Gains and Losses</li>
+                <li>Crypto Mining Income: The Trifecta and S-Corps</li>
+              </ul>
+            </div>
+            <div className="about-conference-container-list">
+              <ul>
+                <li>12:45 – 1:00 BREAK</li>
+              </ul>
+            </div>
+            <div className="about-conference-container-list">
+              <ul>
+                <li>1:00 – 1:45</li>
+                <li>1:45 – 2:15 </li>
+              </ul>
+              <ul>
+                <li>Staking and Defi: “The Illusion” </li>
+                <li>NFTs: Utility versus Collectables </li>
+              </ul>
+            </div>
+            <div className="about-conference-container-list">
+              <ul>
+                <li>2:15 – 3:15 LUNCH</li>
+              </ul>
+            </div>
+            <div className="about-conference-container-list">
+              <ul>
+                <li>3:15 – 4:00</li>
+                <li>4:00 – 4:45 </li>
+              </ul>
+              <ul>
+                <li>Crypto Strategies in Roth IRAs & 401ks</li>
+                <li>Charitable Remainder Trusts Unleashed</li>
+              </ul>
+            </div>
+            <div className="about-conference-container-list">
+              <ul>
+                <li>4:45 – 5:00 BREAK</li>
+              </ul>
+            </div>
+            <div className="about-conference-container-list">
+              <ul>
+                <li>5:00 – 5:30</li>
+                <li>5:30 – 6:00</li>
+                <li>6:00 – 7:00 </li>
+              </ul>
+              <ul>
+                <li>
+                  Virtual Real Estate Tax Strategies and Pitfalls to avoid
+                </li>
+                <li>DAOs and Taxing Meta-Ventures</li>
+                <li>
+                  Bringing it all together with Asset Protection and General Q&A
+                </li>
+              </ul>
+            </div>
+            <div className="about-conference-description end-summit">
+              All times are in EAstern Standard
+            </div>
+          </div>
+        </div>
+        <div className="container-about-conference">
+          <h2>How To Access</h2>
+          <div className="container-about-conference-image">
+            <div className="container-about-conference-image-text">
+              <div className="block-paragragh-conference">
+                To get access to this 6-hour livestream dedicated to educating
+                you on the most cutting-edge tax strategy as it pertains to your
+                Crypto, NFTs, and Metaverse assets, you must follow the steps in
+                the GIF.
+              </div>
+              <div className="block-paragragh-conference">
+                After completing the mint steps, you will gain exclusive access
+                to the event NFT ticket sale before it goes public for a mint
+                price of 0.27 ETH. Following this, the public mint price will be
+                0.35 ETH.
+              </div>
+            </div>
+            <>
+              <img src={RairLogo_Koholertext} alt="Rair Logo Koholertext" />
+            </>
+          </div>
+
+          <div className="block-paragragh-conference">
+            These NFT tickets will provide you access to tune into the
+            livestream, the NFT will allow you to view a recording of the
+            livestream immediately following the conclusion of the livestream-
+            until December 31st, 2022.
+          </div>
+          <div className="block-paragragh-conference">
+            This gives you three weeks to reference the material and build your
+            tax strategy yourself, or with your personal CPA. The livestream
+            event will ONLY be accessible to those who actively hold the NFT
+            ticket in their crypto wallet. Think of this NFT as your movie
+            ticket or DVD that you get to take home after the movie!
+          </div>
+          <div className="block-paragragh-conference">
+            For only 0.27 ETH
+            <span>
+              {' '}
+              we guarantee that you will save money on your tax bill{' '}
+            </span>
+            and you will walk away from this educational experience feeling like
+            you can own the tax game
+          </div>
+
+          <button className="btn-enter-summit">
+            ENTER THE SUMMIT (COMING SOON)
+          </button>
+        </div>
+        <div className="block-video-the-summit">
+          <div className="container-title-of-video">
+            <h2 className="splashpage-subtitle">HOLDERS only Content</h2>
+            <button
+              className="btn-help-the-summit"
+              onClick={() => toggleCheckList()}>
+              Need Help
+            </button>
+          </div>
+          <VideoPlayerView
+            productsFromOffer={productsFromOffer}
+            primaryColor={primaryColor}
+            selectVideo={selectVideo}
+            setSelectVideo={setSelectVideo}
+            whatSplashPage={'genesis-font'}
+          />
+        </div>
+        <TeamMeet arraySplash={'taxHacksSummit'} />
+        <div className="gap-for-aboutus" />
+        <NotCommercialTemplate
+          primaryColor={primaryColor}
+          NFTName={'#taxhackNFT'}
+        />
       </div>
     </div>
   );

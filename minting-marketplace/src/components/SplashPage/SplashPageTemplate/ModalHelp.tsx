@@ -36,7 +36,7 @@ const ModalHelp: React.FC<IModalHelp> = ({
       <div className="tutorial-show-list" onClick={() => togglePurchaseList()}>
         <i className={`fas fa-chevron-${purchaseList ? 'down' : 'up'}`}></i>
       </div>
-      <div className="tutorial-close" onClick={() => toggleCheckList?.()}>
+      <div className="tutorial-close" onClick={toggleCheckList}>
         <i className="fas fa-times"></i>
       </div>
       <ul style={{ display: `${purchaseList ? 'block' : 'none'}` }}>

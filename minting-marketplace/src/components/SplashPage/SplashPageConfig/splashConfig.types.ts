@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { TSplashDataType } from '../splashPage.types';
 
 export type TSplashPageCardWrapper = TStyledSplashPageCardWrapper & {
@@ -46,7 +48,7 @@ export type TSplashCardInfoBlock = TStyledSplashCardInfoBlock & {
 };
 
 export type TSplashCardText = TStyledSplashCardText & {
-  text?: string;
+  text?: string | React.ReactNode;
 };
 
 export type TStyledHigherWrapperSplashPage = {

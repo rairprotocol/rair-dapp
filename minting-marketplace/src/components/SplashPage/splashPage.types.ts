@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { TFileType } from '../../axios.responseTypes';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
 
@@ -8,9 +10,8 @@ export interface INumberedCircle {
 
 export interface ISplashPageProps {
   loginDone?: boolean;
-  connectUserData?: () => Promise<void>;
+  connectUserData: () => Promise<void>;
   setIsSplashPage?: (isSplashPage: boolean) => void;
-  isSplashPage: boolean;
 }
 
 export type TSplashPageIsActive = {
@@ -59,7 +60,7 @@ export type TSplashPageDataButtonType = {
   buttonTextColor?: string;
   buttonMarginTop?: string;
   buttonMarginBottom?: string;
-  buttonAction?: (() => void) | (() => Promise<void>);
+  buttonAction?: () => void;
 };
 
 export type TCarouselDataType = {
@@ -95,7 +96,7 @@ export type TExclusiveNFtType = {
 
 export type TParamsMarketplaceDemo = {
   blockchain: BlockchainType | undefined;
-  contract?: string;
+  contract: string;
   product: string;
 };
 
@@ -138,10 +139,10 @@ export type TCounterData = {
 
 export type TSplashDataType = {
   LicenseName?: string;
-  title?: string;
+  title?: string | null;
   titleColor?: string;
   titleImage?: string;
-  description?: string;
+  description?: string | React.ReactNode;
   textDescriptionCustomStyles?: React.CSSProperties;
   seoInformation?: TSeoInformationType;
   backgroundImage?: string;
@@ -316,6 +317,7 @@ export type TArraySplashType =
   | 'nuts'
   | 'coinagenda'
   | 'sim-dogs'
+  | 'taxHacksSummit'
   | 'main-page'
   | 'wallstreet80sclub';
 
@@ -444,7 +446,7 @@ export interface ITokenLeftTemplate {
 }
 
 export type TMainContractType = {
-  contractAddress?: string;
+  contractAddress: string;
   requiredBlockchain: BlockchainType | undefined;
   offerIndex: string[];
 };

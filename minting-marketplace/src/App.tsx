@@ -65,6 +65,7 @@ import RAIRGenesisSplashPage from './components/SplashPage/RAIRGenesis/RAIRGenes
 import SimDogsSplashPage from './components/SplashPage/SimDogs/SimDogs';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
+import TaxHacksSummit from './components/SplashPage/TaxHacksSummit/TaxHacksSummit';
 import { TermsUse } from './components/SplashPage/TermsUse';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
