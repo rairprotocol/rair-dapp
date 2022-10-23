@@ -70,12 +70,8 @@ const testContract: TMainContractType = {
 const splashData: TSplashDataType = {
   title: '#UkraineGlitch',
   titleColor: '#FFD505',
-  description: [
-    '1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ',
-    // <br key={Math.random() * 1_000_000} />,
-    // <br key={Math.random() * 1_000_000} />,
-    '100% of proceeds fund tactical first aid supplies and Ukrainian developers'
-  ],
+  description:
+    '1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress 100% of proceeds fund tactical first aid supplies and Ukrainian developers',
   buttonLabel: 'Mint for .1991 Eth',
   buttonBackgroundHelp: 'rgb(3, 91, 188)',
   backgroundImage: UKR_rounded,

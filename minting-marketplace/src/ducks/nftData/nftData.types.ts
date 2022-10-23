@@ -16,7 +16,7 @@ export interface InitialNftDataStateType {
   nftListTotal: number | undefined;
   itemsPerPage: number;
   errorMessage: string;
-  tokenData: TTokenData[] | null;
+  tokenData: TTokenData[];
 }
 
 export type TNftDataItem = {

@@ -76,7 +76,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
   };
-  const mainChain = '0x5';
+  const mainChain = '0x1';
   const splashData: TSplashDataType = useMemo(
     () => ({
       // NFTName: 'Genesis Pass artwork',
@@ -85,14 +85,14 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
       textBottom: false,
       videoPlayerParams: {
-        contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
+        contract: '0xa5a823294af53b983969bb48caa3cdb28545828f',
         product: '0',
-        blockchain: '0x5'
+        blockchain: '0x1'
       },
       marketplaceDemoParams: {
-        contract: '0xf18b176db95cf176f25f88edcabb165d388b287f',
+        contract: '0xa5a823294af53b983969bb48caa3cdb28545828f',
         product: '0',
-        blockchain: '0x5'
+        blockchain: '0x1'
       },
       purchaseButton: {
         requiredBlockchain: '0x38',
@@ -112,9 +112,9 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       button3: {
         buttonTextColor: '#FFFFFF',
         buttonColor: '#55CFFF',
-        buttonLabel: 'PREMINT',
+        buttonLabel: 'Opensea',
         buttonImg: null,
-        buttonLink: 'https://www.premint.xyz/simdogsxyz/'
+        buttonLink: 'https://opensea.io/collection/sim-dogs'
       },
       exclusiveNft: {
         title: 'NFTs',
@@ -139,9 +139,9 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       image: SimDogs1,
       imageClass: 'zero',
       buyFunctionality: true,
-      offerIndexInMarketplace: '108',
+      offerIndexInMarketplace: '6',
       switchToNetwork: mainChain,
-      contractAddress: '0xf18b176db95cf176f25f88edcabb165d388b287f',
+      contractAddress: '0xa5a823294af53b983969bb48caa3cdb28545828f',
       buttonData: {
         buttonTextColor: '#FFFFFF',
         buttonColor: '#384190',
@@ -158,26 +158,24 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       ]
     },
     {
-      title: 'SUPREME COURT',
-      image: SimDogs2,
-      imageClass: 'zero',
+      title: 'DETECTIVE',
+      image: SimDogs4,
+      imageClass: 'one',
       buyFunctionality: true,
-      offerIndexInMarketplace: '109',
+      offerIndexInMarketplace: '7',
       switchToNetwork: mainChain,
-      contractAddress: '0xf18b176db95cf176f25f88edcabb165d388b287f',
+      contractAddress: '0xa5a823294af53b983969bb48caa3cdb28545828f',
       buttonData: {
         buttonTextColor: '#FFFFFF',
         buttonColor: '#006EE9',
         buttonLabel: 'Mint for 1.07 ETH'
       },
       textBoxArray: [
-        'Nine unique “1-of-1” original drawings by Andre Miripolsky',
-        'Work directly with Miripolsky to design',
-        '+++ +',
-        '100 free Blockchain Wire press releases (Express circuit)',
-        '$150K CoinAgenda sponsorships',
-        'Lifetime conference pass to all CoinAgenda conferences',
-        'Ten hours of personal meetings with Michael Terpin'
+        '1,000 unique pieces of generative art, with various degrees of rarity',
+        'Unreleased audio from conversations with convicted SIM swapper',
+        '++',
+        '10 free Blockchain Wire press releases (Express circuit)',
+        'One free CoinAgenda conference pass (value $3,000)'
       ]
     },
     {
@@ -203,9 +201,9 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       ]
     },
     {
-      title: 'DETECTIVE',
-      image: SimDogs4,
-      imageClass: 'one',
+      title: 'SUPREME COURT',
+      image: SimDogs2,
+      imageClass: 'zero',
       buttonData: {
         buttonAction: () => {
           Swal.fire('Coming soon!');
@@ -215,11 +213,13 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
         buttonLabel: 'Coming soon'
       },
       textBoxArray: [
-        '1,000 unique pieces of generative art, with various degrees of rarity',
-        'Unreleased audio from conversations with convicted SIM swapper',
-        '++',
-        '10 free Blockchain Wire press releases (Express circuit)',
-        'One free CoinAgenda conference pass (value $3,000)'
+        'Nine unique “1-of-1” original drawings by Andre Miripolsky',
+        'Work directly with Miripolsky to design',
+        '+++ +',
+        '100 free Blockchain Wire press releases (Express circuit)',
+        '$150K CoinAgenda sponsorships',
+        'Lifetime conference pass to all CoinAgenda conferences',
+        'Ten hours of personal meetings with Michael Terpin'
       ]
     }
   ];

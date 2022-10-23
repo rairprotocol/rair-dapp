@@ -18,7 +18,7 @@ export interface IListOfTokensComponent {
 
 export interface ICurrentTokensComponent {
   primaryColor: ColorChoice;
-  items: TTokenData[] | SelectNumberItem[];
+  items: SelectNumberItem[];
   isBack?: boolean;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;

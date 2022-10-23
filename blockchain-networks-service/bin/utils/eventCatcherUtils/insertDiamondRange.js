@@ -30,23 +30,31 @@ module.exports = async (
   if (!contract) {
     return;
   }
-  const offer = new dbModels.Offer({
-    // offerIndex: undefined, // Offer is not defined yet
+  const searchParam = {
+    diamondRangeIndex: rangeIndex,
     contract: contract._id,
     product: productIndex,
-    // offerPool: undefined, // Diamond contracts have no offer pools
-    copies: end.sub(start),
-    price,
-    range: [start, end],
-    offerName: name,
-    diamond: true,
-    diamondRangeIndex: rangeIndex,
-    transactionHash: transactionReceipt.transactionHash
-      ? transactionReceipt.transactionHash
-      : transactionReceipt.hash,
-  });
-
-  await offer.save().catch(handleDuplicateKey);
+  };
+  // check if offer already exists:
+  let offer = await dbModels.Offer.findOne(searchParam);
+  if (!offer) {
+    offer = new dbModels.Offer({
+      // offerIndex: undefined, // Offer is not defined yet
+      contract: contract._id,
+      product: productIndex,
+      // offerPool: undefined, // Diamond contracts have no offer pools
+      copies: end.sub(start),
+      price,
+      range: [start, end],
+      offerName: name,
+      diamond: true,
+      diamondRangeIndex: rangeIndex,
+      transactionHash: transactionReceipt.transactionHash
+        ? transactionReceipt.transactionHash
+        : transactionReceipt.hash,
+    });
+    await offer.save().catch(handleDuplicateKey);
+  }
 
   // Locks are always made on Diamond Contracts, they're part of the range event
   const tokenLock = new dbModels.LockedTokens({

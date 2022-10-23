@@ -16,6 +16,18 @@
 }
 
 @font-face {
+  font-family: 'Nebulosa Black Display Stencil';
+  src: url(./fonts/Nebulosa/Graviton\ -\ NebulosaBlackDisplayStencil.otf)
+    format('opentype');
+}
+
+@font-face {
+  font-family: 'Nebulosa Black Display Solid';
+  src: url(./fonts/Nebulosa/Graviton\ -\ NebulosaBlackDisplaySolid.otf)
+    format('opentype');
+}
+
+@font-face {
   font-family: 'Acme';
   src: local('Acme'), url(./fonts/Acme/Acme-Regular.ttf) format('truetype');
 }

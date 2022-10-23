@@ -947,9 +947,9 @@ video {
     margin-top: 0;
   }
 
-  .col-12.blockchain-switcher {
+  /* .col-12.blockchain-switcher {
     height: 0vw !important;
-  }
+  } */
 
   #nft-data-page-wrapper {
     padding: 16px 45px 33px;

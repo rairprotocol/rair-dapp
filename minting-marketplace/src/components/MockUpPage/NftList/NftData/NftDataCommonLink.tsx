@@ -53,6 +53,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const [someUsersData, setSomeUsersData] = useState<UserType | null>();
   const [dataForUser, setDataForUser] = useState<TProducts>();
   const [userToken, setUserToken] = useState<string | null>();
+  const [tokenBought, setTokenBought] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const currentUserAddress = useSelector<RootState, string | undefined>(
@@ -115,7 +116,8 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
       setSelectedToken(tokenId);
     },
-    [product, contract, tokenId, blockchain, dispatch]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [product, contract, tokenId, blockchain, dispatch, tokenBought]
   );
 
   const getProductsFromOffer = useCallback(async () => {
@@ -214,6 +216,10 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       setSomeUsersData(result.user);
     }
   }, [neededUserAddress]);
+
+  const handleTokenBoughtButton = useCallback(() => {
+    setTokenBought((prev) => !prev);
+  }, [setTokenBought]);
 
   useEffect(() => {
     getInfoFromUser();
@@ -327,6 +333,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         ownerInfo={ownerInfo}
         offerDataInfo={offerDataInfo}
         loginDone={loginDone}
+        handleTokenBoughtButton={handleTokenBoughtButton}
       />
     );
   } else {

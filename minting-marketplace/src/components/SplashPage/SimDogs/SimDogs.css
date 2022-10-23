@@ -262,11 +262,19 @@
   border-radius: 1rem;
 }
 
+.swal2-container.swal2-center > .swal2-popup {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: flex-start;
+  justify-self: center;
+}
+
 .simdog-resp {
   display: flex !important;
   flex-direction: column;
   height: 90vh;
-  width: 80%;
+  max-height: 1200px;
+  width: 1440px;
 }
 
 .genesis-textCenter {
@@ -349,21 +357,34 @@
 }
 
 .main-wrapper-nyc-simdogs img {
-  width: 33vmin;
-  height: 58.28vmin;
+  width: 330px;
+  height: 559px;
+  margin-top: 12px;
+}
+
+div#swal2-html-container.swal2-html-container {
+  margin-top: 70px;
+}
+
+.swal2-title.text-simdogs {
+  font-size: 30px;
+  color: #f15621;
+  font-family: 'Aldrich', sans-serif;
+  height: 100px;
+  margin-top: 100px;
+}
+
+.main-wrapper-nyc-simdogs div h3 {
+  flex: 1;
+  font-family: 'Aldrich', sans-serif;
+  font-size: 28px;
 }
 
 .bad-simdogs {
-  flex: 1;
-  font-family: 'Aldrich', sans-serif;
-  font-size: 2rem;
   color: red;
 }
 
 .good-simdogs {
-  flex: 1;
-  font-family: 'Aldrich', sans-serif;
-  font-size: 2rem;
   color: green;
 }
 
@@ -373,18 +394,6 @@
 
 .good-simdogs div {
   padding: 0.7rem;
-}
-
-.swal2-title.text-simdogs {
-  color: #f15621;
-  /* margin-top: 1rem; */
-  font-family: 'Aldrich', sans-serif;
-  height: 7vw;
-  margin-top: 50px;
-}
-
-div#swal2-html-container.swal2-html-container {
-  margin: 0px;
 }
 
 /**/
@@ -526,30 +535,38 @@ div#swal2-html-container.swal2-html-container {
 }
 /**/
 
-@media screen and (max-width: 1500px) {
+@media screen and (max-width: 1440px) {
   /* warning modal */
-  .main-wrapper-nyc-simdogs img {
-    width: 30vmin;
-    height: 52.98vmin;
+
+  div#swal2-html-container.swal2-html-container {
+    margin-top: 40px;
   }
 
   .swal2-title.text-simdogs {
-    height: 10vw;
+    height: fit-content;
+    margin-top: 30px;
   }
 
-  /**/
+  .main-wrapper-nyc-simdogs div h3 {
+    font-size: 2vw;
+  }
+
+  .simdog-resp {
+    width: 80vw;
+    max-height: 1000px;
+  }
+
+  .main-wrapper-nyc-simdogs img {
+    width: 27.273vmin;
+    height: 50.818vmin;
+  }
+
+  .swal2-title.text-simdogs {
+    font-size: 2.083vw;
+  }
 }
 
 @media screen and (max-width: 1330px) {
-  .swal2-title.text-simdogs {
-    font-size: 1.5rem;
-  }
-
-  .main-wrapper-nyc-simdogs img {
-    width: 24.85vmin;
-    height: 42vmin;
-  }
-
   .wrapper-splash-page.simdogs .backstory-text {
     font-size: 1.944vw;
     line-height: 2.222vw;
@@ -772,14 +789,28 @@ div#swal2-html-container.swal2-html-container {
 }
 
 @media screen and (max-width: 1100px) {
+  .main-wrapper-nyc-simdogs div h3 {
+    font-size: 2.3vw;
+  }
+
+  div#swal2-html-container.swal2-html-container {
+    margin-top: 30px;
+  }
+
+  .swal2-title.text-simdogs {
+    height: fit-content;
+    margin-top: 10px;
+  }
+  .simdog-resp {
+    width: 80vw;
+    max-height: 800px;
+  }
+
   /* warning modal */
   .main-wrapper-nyc-simdogs img {
     width: 25vmin;
     height: 44.15vmin;
-  }
-
-  .swal2-title.text-simdogs {
-    height: 14vw;
+    margin-top: 6px;
   }
 
   /**/
@@ -1063,23 +1094,7 @@ div#swal2-html-container.swal2-html-container {
   }
 }
 
-@media screen and (max-width: 850px) {
-  .bad-simdogs {
-    font-size: 1.2rem;
-  }
-
-  .good-simdogs {
-    font-size: 1.2rem;
-  }
-}
-
 @media screen and (max-width: 800px) {
-  .swal2-title.text-simdogs {
-    height: 14vmin;
-    margin-top: 10vw;
-    font-size: 3vmin;
-  }
-
   .warning-modal-col-0 {
     width: 37%;
   }
@@ -1098,6 +1113,27 @@ div#swal2-html-container.swal2-html-container {
 }
 
 @media screen and (max-width: 700px) {
+  .simdog-resp {
+    max-height: 500px;
+  }
+
+  .main-wrapper-nyc-simdogs img {
+    margin-top: 0px;
+  }
+
+  .main-wrapper-nyc-simdogs {
+    justify-content: space-between;
+    margin: 0 2vw;
+  }
+
+  .swal2-title.text-simdogs {
+    font-size: 3.2vw;
+  }
+
+  .main-wrapper-nyc-simdogs div h3 {
+    font-size: 2.9vw;
+  }
+
   .wrapper-splash-page.simdogs .left-tokens-response {
     margin-top: 90px;
   }
@@ -1196,9 +1232,6 @@ div#swal2-html-container.swal2-html-container {
 
 @media screen and (max-width: 600px) {
   /* modal img */
-  .swal2-title.text-simdogs {
-    height: 20vw;
-  }
   /* carousel styles - breakpoint*/
   .wrapper-splash-page.simdogs .carousel-container .join-pic-img {
     width: 50vw;
@@ -1271,20 +1304,6 @@ div#swal2-html-container.swal2-html-container {
   }
 
   /* modal img */
-
-  .bad-simdogs {
-    font-size: 0.8rem;
-  }
-
-  .good-simdogs {
-    font-size: 0.8rem;
-  }
-
-  .swal2-title.text-simdogs {
-    height: 14vmin;
-    margin-top: 10vw;
-    font-size: 3vmin;
-  }
 
   .wrapper-splash-page.simdogs .left-tokens-content .tokens-description p {
     font-size: 1.2rem;
@@ -1377,20 +1396,26 @@ div#swal2-html-container.swal2-html-container {
   }
 }
 
+@media screen and (max-width: 430px) {
+  div#swal2-html-container.swal2-html-container {
+    margin-top: 40px;
+  }
+
+  .swal2-title.text-simdogs {
+    margin-top: 40px;
+  }
+  .simdog-resp {
+    width: 80vw;
+    max-height: 400px;
+  }
+}
+
 @media screen and (max-width: 390px) {
   .template-home-splash-page .splash-team-greyman {
     margin-bottom: 56.25rem;
   }
   .wrapper-splash-page.simdogs .splash-team {
     margin-bottom: 900px;
-  }
-
-  .bad-simdogs {
-    font-size: 0.6rem;
-  }
-
-  .good-simdogs {
-    font-size: 0.6rem;
   }
 }
 

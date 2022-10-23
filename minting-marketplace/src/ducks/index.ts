@@ -1,6 +1,11 @@
-//@ts-nocheck
 import { createReduxEnhancer } from '@sentry/react';
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import {
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore,
+  StoreEnhancer
+} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import rootSaga from './sagas';
@@ -39,7 +44,7 @@ const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
   reducers,
   undefined,
-  compose(sentryReduxEnhancer, applyMiddleware(sagaMiddleware))
+  compose(sentryReduxEnhancer as StoreEnhancer, applyMiddleware(sagaMiddleware))
 );
 sagaMiddleware.run(rootSaga);
 

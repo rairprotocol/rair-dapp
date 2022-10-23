@@ -3,7 +3,7 @@
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
 }
 
@@ -62,13 +62,13 @@
 }
 
 .donation-square-textbox.zero {
-  height: 1200px;
+  height: auto;
   margin-bottom: 136px;
 }
 
 .donation-square-inner-textbox.zero {
   height: 1000px;
-  margin-top: 90px;
+  margin-top: 60px;
 }
 
 .donation-square-textbox.one {

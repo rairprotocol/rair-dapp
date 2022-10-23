@@ -60,7 +60,7 @@ const DonationSquare = ({
                   height: '126px',
                   font: 'normal 700 40px/28px Plus Jakarta Sans'
                 },
-                customWrapperClassName: 'btn-submit-with-form',
+                customWrapperClassName: 'btn-submit-with-form more-padding',
                 contractAddress: contractAddress,
                 requiredBlockchain: switchToNetwork,
                 offerIndex: [offerIndexInMarketplace],

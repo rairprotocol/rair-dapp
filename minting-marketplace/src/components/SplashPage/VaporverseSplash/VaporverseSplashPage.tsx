@@ -43,9 +43,9 @@ import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './VaporverseSplash.css';
 
 const splashData: TSplashDataType = {
-  title: null,
+  title: '',
   titleColor: 'rgb(234,51,127)',
-  description: null,
+  description: '',
   cardFooter: '/utility drop for OG degens /mintpass to vaporverse',
   buttonLabel: 'Mint for .1991 Eth',
   buttonBackgroundHelp: undefined,

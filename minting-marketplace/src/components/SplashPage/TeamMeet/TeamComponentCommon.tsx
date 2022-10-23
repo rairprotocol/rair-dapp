@@ -28,6 +28,7 @@ const TeamMeetComponentCommon: React.FC<ITeamMeetComponentCommon> = ({
             name={t.nameTeammate}
             desc={t.aboutTeammate}
             socials={t.socials}
+            chain={t.chain}
             primaryColor={primaryColor}
             url={t.imageUrl}
             readMoreCountFlag={t.readMoreCountFlag}

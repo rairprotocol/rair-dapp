@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { TFileType } from '../../axios.responseTypes';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
 
@@ -99,7 +101,8 @@ export type TParamsMarketplaceDemo = {
 };
 
 export type TPurchaseButtonType = {
-  contractAddress: string;
+  contractAddress?: string;
+  buttonLabel?: string;
   requiredBlockchain: BlockchainType | undefined;
   buttonComponent?: React.ElementType;
   customStyle?: React.CSSProperties;
@@ -139,7 +142,7 @@ export type TSplashDataType = {
   title?: string | null;
   titleColor?: string;
   titleImage?: string;
-  description?: string[] | string | null;
+  description?: string | React.ReactNode;
   textDescriptionCustomStyles?: React.CSSProperties;
   seoInformation?: TSeoInformationType;
   backgroundImage?: string;
@@ -314,6 +317,7 @@ export type TArraySplashType =
   | 'nuts'
   | 'coinagenda'
   | 'sim-dogs'
+  | 'taxHacksSummit'
   | 'main-page'
   | 'wallstreet80sclub';
 
@@ -481,7 +485,7 @@ export type TDonationGridDataItem = {
 
 export interface IDonationGrid {
   donationGridArray: TDonationGridDataItem[];
-  connectUserData: () => Promise<void>;
+  connectUserData: (() => Promise<void>) | undefined;
 }
 
 export type TUseGetProductsReturn = [

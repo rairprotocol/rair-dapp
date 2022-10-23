@@ -409,7 +409,8 @@
   /* background: red; */
 }
 
-.btn-buy-metamask button img.metamask-logo {
+.btn-buy-metamask button img.metamask-logo,
+.metamask-logo {
   width: 32px;
   height: 32px;
   margin-right: 10px;
@@ -441,6 +442,10 @@
   width: 32px;
   height: 32px;
   margin-right: 10px;
+}
+
+.more-padding {
+  padding-top: 30px;
 }
 
 .btn-submit-with-form {

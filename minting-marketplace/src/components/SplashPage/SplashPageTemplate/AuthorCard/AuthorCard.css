@@ -295,11 +295,11 @@
   }
 }
 
-@media screen and (min-width: 800px) and (max-width: 1024px) {
+/* @media screen and (min-width: 800px) and (max-width: 1024px) {
   .wrapper-splash-page {
     margin-top: 0;
   }
-}
+} */
 
 @media screen and (min-width: 600px) and (max-width: 800px) {
   .template-author-card .btn-help {
@@ -319,8 +319,8 @@
   }
 
   .template-home-splash-page {
-    padding-left: 7vw;
-    align-items: center;
+    /* padding-left: 7vw; */
+    /* align-items: center; */
   }
 
   .template-author-card {
@@ -411,8 +411,8 @@
 
 @media screen and (max-width: 700px) {
   .template-home-splash-page {
-    padding-left: 0;
-    align-items: center;
+    /* padding-left: 0;
+    align-items: center; */
     max-width: 95vw;
   }
 

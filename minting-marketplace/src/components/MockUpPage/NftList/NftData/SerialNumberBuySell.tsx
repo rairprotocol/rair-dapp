@@ -14,6 +14,7 @@ import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
 import { ISerialNumberBuySell } from '../../mockupPage.types';
 import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
+import { currentTokenData } from '../utils/currentTokenData';
 
 const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   tokenData,
@@ -27,7 +28,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   primaryColor,
   offerData,
   currentUser,
-  loginDone
+  loginDone,
+  handleTokenBoughtButton
 }) => {
   const { minterInstance, diamondMarketplaceInstance, currentChain } =
     useSelector<RootState, ContractsInitialType>(
@@ -84,7 +86,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (
       await metamaskCall(
         marketplaceCall(...marketplaceArguments),
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
+        handleTokenBoughtButton
       )
     ) {
       Swal.fire('Success', 'Now, you are the owner of this token', 'success');
@@ -94,7 +97,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     offerData,
     diamondMarketplaceInstance,
     contractData,
-    selectedToken
+    selectedToken,
+    handleTokenBoughtButton
   ]);
 
   useEffect(() => {
@@ -186,17 +190,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               handleClickToken={handleClickToken}
               selectedToken={selectedToken}
               setSelectedToken={setSelectedToken}
-              items={
-                tokenData &&
-                tokenData.map((p) => {
-                  return {
-                    value: p.metadata.name,
-                    id: p._id,
-                    token: p.token,
-                    sold: p.isMinted
-                  };
-                })
-              }
+              items={currentTokenData(tokenData)}
             />
           ) : (
             <></>

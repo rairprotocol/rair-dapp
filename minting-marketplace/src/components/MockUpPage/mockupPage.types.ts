@@ -106,6 +106,7 @@ export interface ISerialNumberBuySell {
   offerData: TOfferType | undefined;
   currentUser: string | undefined;
   loginDone?: boolean;
+  handleTokenBoughtButton: () => void;
 }
 export interface ISellButton {
   currentUser: string | undefined;
@@ -188,6 +189,7 @@ export interface INftDataPageMain {
   ownerInfo?: TProducts | undefined;
   embeddedParams?: TEmbeddedParams | undefined;
   loginDone?: boolean;
+  handleTokenBoughtButton: () => void;
 }
 
 export type TOffersIndexesData = {

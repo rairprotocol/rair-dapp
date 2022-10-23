@@ -47,6 +47,7 @@ const NftDataExternalLink = () => {
   const [someUsersData, setSomeUsersData] = useState<UserType | null>(null);
   const [selectedIndexInContract, setSelectedIndexInContract] =
     useState<string>();
+  const [tokenBought, setTokenBought] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -82,7 +83,11 @@ const NftDataExternalLink = () => {
         Swal.fire('Error', `${error.message}`, 'error');
       }
     } else return null;
-  }, [contractId, product, token]);
+  }, [contractId, product, token, tokenBought]);
+
+  const handleTokenBoughtButton = () => {
+    setTokenBought((prev) => !prev);
+  };
 
   const getProductsFromOffer = useCallback(async () => {
     if (neededBlockchain && neededContract) {
@@ -143,6 +148,7 @@ const NftDataExternalLink = () => {
       primaryColor={primaryColor}
       productsFromOffer={productsFromOffer}
       product={product}
+      handleTokenBoughtButton={handleTokenBoughtButton}
     />
   );
 };
