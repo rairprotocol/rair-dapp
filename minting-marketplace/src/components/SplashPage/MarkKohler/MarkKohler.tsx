@@ -64,7 +64,7 @@ export const splashData: TSplashDataType = {
   title: 'TAX HACKS SUMMIT',
   description: (
     <>
-      Thursday December 8th 11AM—7PM <br /> ET An NFT Gated Event
+      Thursday December 8th 11AM—7PM ET <br /> An NFT Gated Event
     </>
   ),
   backgroundImage: MarkKohlerImage,
@@ -266,9 +266,6 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             <br />
             You need to<span> protect yourself and your assets.</span>
           </div>
-          {/* <div className="block-conference-link">
-            <span>You need to protect yourself and your assets</span>
-          </div> */}
           <div className="block-paragragh-conference">
             Every American must now answer at the top of the 1040 “At any time
             during 2022, did you receive, sell, exchange, or otherwise dispose
@@ -288,7 +285,60 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             tax strategy livestream on December 8th, 2022.
           </div>
           <div className="about-conference-description">SCHEDULE</div>
-          <div className="about-conference-description-list">
+          <div className="about-conference-container-list-mobile">
+            <ul>
+              <li>11am – 11:15</li>
+              <li>Welcome</li>
+            </ul>
+            <ul>
+              <li>11:15 – 12:00</li>
+              <li>Trading Crypto Strategies: ST and LT Gains and Losses</li>
+            </ul>
+            <ul>
+              <li>12:00 – 12:45</li>
+              <li>Crypto Mining Income: The Trifecta and S-Corps</li>
+            </ul>
+            <ul>
+              <li>12:45 – 1:00 BREAK</li>
+            </ul>
+            <ul>
+              <li>1:00 – 1:45</li>
+              <li>Staking and Defi: “The Illusion”</li>
+            </ul>
+            <ul>
+              <li>1:45 – 2:15</li>
+              <li>NFTs: Utility versus Collectables</li>
+            </ul>
+            <ul>
+              <li>2:15 – 3:15 LUNCH</li>
+            </ul>
+            <ul>
+              <li>3:15 – 4:00</li>
+              <li>Crypto Strategies in Roth IRAs & 401ks</li>
+            </ul>
+            <ul>
+              <li>4:00 – 4:45</li>
+              <li>Charitable Remainder Trusts Unleashed</li>
+            </ul>
+            <ul>
+              <li>4:45 – 5:00 BREAK</li>
+            </ul>
+            <ul>
+              <li>5:00 – 5:30</li>
+              <li>Virtual Real Estate Tax Strategies and Pitfalls to avoid</li>
+            </ul>
+            <ul>
+              <li>5:30 – 6:00</li>
+              <li>DAOs and Taxing Meta-Ventures</li>
+            </ul>
+            <ul>
+              <li>6:00 – 7:00</li>
+              <li>
+                Bringing it all together with Asset Protection and General Q&A
+              </li>
+            </ul>
+          </div>
+          <div className="about-conference-description-list desktop">
             <div className="about-conference-container-list">
               <ul>
                 <li>11am – 11:15</li>
@@ -309,11 +359,11 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             <div className="about-conference-container-list">
               <ul>
                 <li>1:00 – 1:45</li>
-                <li>1:45 – 2:15 </li>
+                <li>1:45 – 2:15</li>
               </ul>
               <ul>
-                <li>Staking and Defi: “The Illusion” </li>
-                <li>NFTs: Utility versus Collectables </li>
+                <li>Staking and Defi: “The Illusion”</li>
+                <li>NFTs: Utility versus Collectables</li>
               </ul>
             </div>
             <div className="about-conference-container-list">
@@ -324,7 +374,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             <div className="about-conference-container-list">
               <ul>
                 <li>3:15 – 4:00</li>
-                <li>4:00 – 4:45 </li>
+                <li>4:00 – 4:45</li>
               </ul>
               <ul>
                 <li>Crypto Strategies in Roth IRAs & 401ks</li>
@@ -340,7 +390,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               <ul>
                 <li>5:00 – 5:30</li>
                 <li>5:30 – 6:00</li>
-                <li>6:00 – 7:00 </li>
+                <li>6:00 – 7:00</li>
               </ul>
               <ul>
                 <li>
