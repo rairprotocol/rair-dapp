@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
+import { teamCoinAgendaArray } from './AboutUsTeam';
+
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
@@ -18,7 +20,7 @@ import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton'
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
-import WarningModal from '../WarningModal';
+import WarningModal from '../WarningModal/WarningModal';
 
 import favicon_CoinAgenda21 from './../images/favicons/coinagenda.ico';
 
@@ -155,7 +157,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
           <AuthorCardButton buttonData={splashData.button1} />
           <AuthorCardButton buttonData={splashData.button2} />
         </div>
-        <TeamMeet arraySplash={'coinagenda'} />
+        <TeamMeet arraySplash={'coinagenda'} teamArray={teamCoinAgendaArray} />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

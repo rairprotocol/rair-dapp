@@ -1,7 +1,7 @@
 /* eslint-disable  */
 import React, { memo, useEffect } from 'react';
 import cl from './PrivacyPolicy.module.css';
-import { IPrivacyPolicyComponent } from './splashPage.types';
+import { IPrivacyPolicyComponent } from '../splashPage.types';
 
 const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
   setIsSplashPage

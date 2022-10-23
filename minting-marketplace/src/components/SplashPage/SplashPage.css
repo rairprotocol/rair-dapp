@@ -1361,12 +1361,13 @@
 
 .meet-team .box-teammate .position-teammate .box-socials {
   margin-left: 20px;
+  margin-top: 20px;
 }
 
 .img-teammate img {
   border-radius: 16px;
-  width: 384px;
-  height: 384px;
+  width: 21vw;
+  height: 21vw;
   object-fit: cover;
 }
 

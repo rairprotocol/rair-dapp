@@ -4,6 +4,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
+import { teamSimDogsArray } from './AboutUsTeam';
+
 import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
@@ -43,7 +45,7 @@ import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 /* importing Components*/
-import WarningModal from '../WarningModal';
+import WarningModal from '../WarningModal/WarningModal';
 
 import favion_SimDogs from './../images/favicons/favicon-simdogs.ico';
 
@@ -404,8 +406,13 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
           which are described below. Please join us in supporting this
           groundbreaking case and project.
         </div>
-        <h1 className="splashpage-subtitle above-meet-team"> TEAM </h1>
-        <TeamMeet arraySplash={'sim-dogs'} />
+        {/* <h1 className="splashpage-subtitle above-meet-team"> TEAM </h1> */}
+        <TeamMeet
+          titleHeadFirst="TEAM"
+          classNameHead="splashpage-subtitle above-meet-team"
+          arraySplash={'sim-dogs'}
+          teamArray={teamSimDogsArray}
+        />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={'NFT'} />
       </div>
     </div>

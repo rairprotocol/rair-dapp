@@ -33,6 +33,7 @@ import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { InitialState } from '../../../ducks/seo/reducers';
 import MetaTags from '../../SeoTags/MetaTags';
+import { teamNutArray } from './AboutUsTeam';
 
 const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
   const dispatch = useDispatch();
@@ -352,7 +353,12 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
           </div>
         </div>
         <div className="block-photos-nuts"></div>
-        <TeamMeet primaryColor={primaryColor} arraySplash={'nuts'} />
+        <TeamMeet
+          primaryColor={primaryColor}
+          arraySplash={'nuts'}
+          classNameGap={true}
+          teamArray={teamNutArray}
+        />
         <div className="powered-by-rair">
           <img src={PoweredRair} alt="Powered by Rair tech" />
         </div>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
+import { teamTaxHacksSummit } from './AboutUsTeam';
+
 import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
@@ -473,7 +475,12 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             whatSplashPage={'genesis-font'}
           />
         </div>
-        <TeamMeet arraySplash={'taxHacksSummit'} />
+        <TeamMeet
+          arraySplash={'taxHacksSummit'}
+          titleHeadFirst={'About'}
+          teamArray={teamTaxHacksSummit}
+          classNameGap={true}
+        />
         <div className="gap-for-aboutus" />
         <NotCommercialTemplate
           primaryColor={primaryColor}

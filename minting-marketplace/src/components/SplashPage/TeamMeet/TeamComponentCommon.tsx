@@ -18,24 +18,24 @@ const TeamMeetComponentCommon: React.FC<ITeamMeetComponentCommon> = ({
     (state) => state.colorStore.primaryColor
   );
   return (
-    <div className={className ? 'splash-team-greyman' : ''}>
-      {teamArray.map((t, index) => {
-        return (
-          <Teammate
-            readMoreCount={readMoreCount}
-            setReadMoreCount={setReadMoreCount}
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            chain={t.chain}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-            readMoreCountFlag={t.readMoreCountFlag}
-            arraySplash={arraySplash}
-          />
-        );
-      })}
+    <div className={!className ? 'splash-team-greyman' : ''}>
+      {teamArray &&
+        teamArray.map((t, index) => {
+          return (
+            <Teammate
+              readMoreCount={readMoreCount}
+              setReadMoreCount={setReadMoreCount}
+              key={index + t.nameTeammate}
+              name={t.nameTeammate}
+              desc={t.aboutTeammate}
+              socials={t.socials}
+              primaryColor={primaryColor}
+              url={t.imageUrl}
+              readMoreCountFlag={t.readMoreCountFlag}
+              arraySplash={arraySplash}
+            />
+          );
+        })}
     </div>
   );
 };

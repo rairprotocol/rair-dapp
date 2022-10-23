@@ -2,38 +2,39 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
+import { teamImmersiverseArray } from './AboutUsTeam';
 
-import { RootState } from '../../ducks';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
-import { setInfoSEO } from '../../ducks/seo/actions';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
-import { TInfoSeo } from '../../ducks/seo/seo.types';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 /* importing images*/
-import { DocumentIcon, metaMaskIcon } from '../../images';
-import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
-import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
+import { DocumentIcon, metaMaskIcon } from '../../../images';
+import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
-import MetaTags from '../SeoTags/MetaTags';
-
-import AuthorBlock from './AuthorBlock/AuthorBlock';
-import favion_Immersil from './images/favicons/ImmersiverseATX.ico';
-import { SXSW1, SXSW2, SXSW3 } from './images/SxSw/sxSw';
+import MetaTags from '../../SeoTags/MetaTags';
+import AuthorBlock from '../AuthorBlock/AuthorBlock';
+import { SXSW1, SXSW2, SXSW3 } from '../images/SxSw/sxSw';
 //Google Analytics
-import NotCommercialGeneric from './NotCommercial/NotCommercialGeneric';
+import NotCommercialGeneric from '../NotCommercial/NotCommercialGeneric';
+import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
 /* importing Components*/
-import TeamMeet from './TeamMeet/TeamMeetList';
+import TeamMeet from '../TeamMeet/TeamMeetList';
 
-import './SplashPage.css';
-import './GreymanSplashPageMobile.css';
-import './../AboutPage/AboutPageNew/AboutPageNew.css';
+import favion_Immersil from './../images/favicons/ImmersiverseATX.ico';
+
+import './../SplashPage.css';
+import './../Greyman/./GreymanSplashPageMobile.css';
+import './../../AboutPage/AboutPageNew/AboutPageNew.css';
 
 const customStyles = {
   overlay: {
@@ -308,7 +309,11 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
             </MobileCarouselNfts>
           )}
         </div>
-        <TeamMeet arraySplash={'immersiverse'} />
+        <TeamMeet
+          teamArray={teamImmersiverseArray}
+          arraySplash={'immersiverse'}
+          titleHeadFirst={'About'}
+        />
         <NotCommercialGeneric primaryColor={primaryColor} />
       </div>
     </div>

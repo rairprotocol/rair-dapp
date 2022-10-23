@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
+import { teamWallstreetArray } from './AboutUsTeam';
+
 import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
@@ -316,11 +318,12 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
           carouselTitle={splashData.carouselTitle}
           carouselData={splashData.carouselData}
         />
-        <h1 className="splashpage-subtitle above-meet-team">
-          {' '}
-          Founding Members{' '}
-        </h1>
-        <TeamMeet arraySplash={'wallstreet80sclub'} />
+        <TeamMeet
+          classNameHead="splashpage-subtitle above-meet-team"
+          arraySplash={'wallstreet80sclub'}
+          titleHeadFirst="Founding Members"
+          teamArray={teamWallstreetArray}
+        />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.LicenseName}
