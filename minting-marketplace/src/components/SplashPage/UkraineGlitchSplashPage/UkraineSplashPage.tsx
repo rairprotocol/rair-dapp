@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
+import { teamUkraineArray } from './AboutUsTeam';
+
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
@@ -343,7 +345,13 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
           carouselTitle={splashData.carouselTitle}
           carouselData={splashData.carouselData}
         />
-        <TeamMeet arraySplash={'ukraine'} />
+        <TeamMeet
+          arraySplash={'ukraine'}
+          titleHeadFirst={'About the'}
+          titleHeadSecond={'Cause'}
+          colorHeadSecond={'#035BBC'}
+          teamArray={teamUkraineArray}
+        />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

@@ -1,23 +1,26 @@
-# Get full contracts
+# Get all tokens
 
-Find all <entities>
+Find all tokens
 
-**URL** : `/api/<entities>/`
+**URL** : `/api/v2/tokens`
 
 **Method** : `GET`
 
-**Query parameters:**
-
-*** Query string ***
-Spescial fields: 'page', 'sort', 'limit', 'fields'
+*** Query string: ***
+**Spescial fields:**
+'page', 'sort', 'limit', 'fields'
   Avoid this naming in models.
-Special fields usage: 
-  [x] 'fields' - adds projection to the query. Provide list of fileds to limit response to it.
-  [x] 'sort' - adds sorting parameter. use like 'price' for asc or '-price' for desc
-  [x] 'limit' - number of fields to return, by default is 36, capped at 100
-  [x] 'page' - pagination of results used in conjuction with limit. By default shows 1st page, otherr rule 0=1, {<=0} = 1 (do not support 3rd prom the end with -3)
+  
+## Special fields usage:
+
+*    'fields' - adds projection to the query. Provide list of fileds to limit response to it.
+ *   'sort' - adds sorting parameter. use like 'price' for asc or '-price' for desc
+  *  'limit' - number of fields to return, by default is 36, capped at 100
+   * 'page' - pagination of results used in conjuction with limit. By default shows 1st page, otherr rule 0=1, {<=0} = 1 (do not support 3rd prom the end with -3)
+    
 *NOTE: contract is required!*
 The route supports contract filtering with both ID and address network tuple. (req.query.contractAddress && req.query.networkId) || req.query.contract)
+
 ## Success Response
 
 Returns found entity according to it's schema. The dafault projection is full data, this can be limited on model level or in request, depending on security needs.

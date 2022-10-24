@@ -5,6 +5,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
+import { teamRAIRBasicArray } from './AboutUsTeam';
+
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
@@ -22,7 +24,7 @@ import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
-import WarningModal from '../WarningModal';
+import WarningModal from '../WarningModal/WarningModal';
 
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
@@ -257,7 +259,11 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
           {' '}
           About{' '}
         </h1>
-        <TeamMeet primaryColor={primaryColor} arraySplash={'rair-basic-2'} />
+        <TeamMeet
+          primaryColor={primaryColor}
+          arraySplash={'rair-basic-2'}
+          teamArray={teamRAIRBasicArray}
+        />
         <NotCommercialTemplate2
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

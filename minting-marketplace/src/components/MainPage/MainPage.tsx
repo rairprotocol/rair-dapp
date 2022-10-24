@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
+import { rairAdvisorsTeam, teamMainPage } from './AboutUsTeam';
+
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -405,13 +407,25 @@ const MainPage: React.FC<IMainPage> = ({
       </div>
       <div className={styles.meet_team_wrapper}>
         <div className="rairpage about-page--team">
-          <TeamMeet arraySplash={'main-page'} />
+          <TeamMeet
+            arraySplash={'main-page'}
+            titleHeadFirst={'Meet the'}
+            titleHeadSecond={'Team'}
+            classNameHeadSpan={'text-gradient'}
+            teamArray={teamMainPage}
+            classNameGap={true}
+          />
         </div>
         <div className="rairpage about-page--team">
           <TeamMeet
             readMoreCount={readMoreCount}
             setReadMoreCount={setReadMoreCount}
             arraySplash={'rair-advisors'}
+            titleHeadFirst={'Meet the'}
+            titleHeadSecond={'Advisors'}
+            classNameHeadSpan={'text-gradient'}
+            teamArray={rairAdvisorsTeam}
+            classNameGap={true}
           />
         </div>
       </div>

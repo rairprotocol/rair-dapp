@@ -79,7 +79,6 @@ router
   )
   .post(
     JWTVerification,
-
     pinMetadataToPinata,
   );
 

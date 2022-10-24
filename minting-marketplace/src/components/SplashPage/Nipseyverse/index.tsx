@@ -5,30 +5,25 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import {
-  ISplashPageProps,
-  TMetamaskError,
-  TSplashPageIsActive
-} from './splashPage.types';
+import { teamNipseyverseArray } from './AboutUsTeam';
 
-import { TProductResponseType } from '../../axios.responseTypes';
-import { erc721Abi } from '../../contracts/index';
-import { RootState } from '../../ducks';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
-import { setRealChain } from '../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { setInfoSEO } from '../../ducks/seo/actions';
-import { InitialState } from '../../ducks/seo/reducers';
-import { TInfoSeo } from '../../ducks/seo/seo.types';
+import { TProductResponseType } from '../../../axios.responseTypes';
+import { erc721Abi } from '../../../contracts/index';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { InitialState } from '../../../ducks/seo/reducers';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
 /* importing images*/
-import { discrodIconNoBorder, metaMaskIcon } from '../../images';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import { rFetch } from '../../utils/rFetch';
-import { TAddChainData } from '../../utils/utils.types';
-import MetaTags from '../SeoTags/MetaTags';
-
-import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
-import { LogoAuthor } from './images/commingSoon/commingSoonImages';
+import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
+import { metamaskCall } from '../../../utils/metamaskUtils';
+import { rFetch } from '../../../utils/rFetch';
+import { TAddChainData } from '../../../utils/utils.types';
+import MetaTags from '../../SeoTags/MetaTags';
+import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
+import { LogoAuthor } from '../images/commingSoon/commingSoonImages';
 import {
   Bandana,
   Cepk,
@@ -45,16 +40,21 @@ import {
   RairTechMobile,
   UnlockableVideo,
   VideoPresent
-} from './images/splashPageImages/splashPage';
-import NipseyRelease from './NipseyRelease/NipseyRelease';
-import RoadMap from './Roadmap/RoadMap';
-import TeamMeet from './TeamMeet/TeamMeetList';
-import { Countdown } from './Timer/CountDown';
+} from '../images/splashPageImages/splashPage';
+import NipseyRelease from '../NipseyRelease/NipseyRelease';
+import RoadMap from '../Roadmap/RoadMap';
+import {
+  ISplashPageProps,
+  TMetamaskError,
+  TSplashPageIsActive
+} from '../splashPage.types';
+import TeamMeet from '../TeamMeet/TeamMeetList';
+import { Countdown } from '../Timer/CountDown';
 /* importing Components*/
-import TokenLeft from './TokenLeft/TokenLeft';
-import UnlockVideos from './UnlockVideos/UnlockVideos';
+import TokenLeft from '../TokenLeft/TokenLeft';
+import UnlockVideos from '../UnlockVideos/UnlockVideos';
 
-import './SplashPage.css';
+import './../SplashPage.css';
 
 const customStyles = {
   overlay: {
@@ -429,7 +429,14 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           JoinCommunity={JoinCommunity}
           primaryColor={primaryColor}
         /> */}
-        <TeamMeet arraySplash={'nipsey'} />
+        <TeamMeet
+          arraySplash={'nipsey'}
+          titleHeadFirst={'Meet the'}
+          titleHeadSecond={'Team'}
+          classNameHeadSpan={'text-gradient'}
+          teamArray={teamNipseyverseArray}
+          classNameGap={true}
+        />
         <div className="nipsey-img-masks">
           <img src={Bandana} alt="Bandana" />
           <img src={Pods} alt="headphones" />
@@ -635,7 +642,13 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
               </div>
             </div>
             <NipseyRelease DiscordIcon={discrodIconNoBorder} />
-            <TeamMeet arraySplash={'nipsey'} />
+            <TeamMeet
+              arraySplash={'nipsey'}
+              titleHeadFirst={'Meet the'}
+              titleHeadSecond={'Team'}
+              classNameHeadSpan={'text-gradient'}
+              teamArray={teamNipseyverseArray}
+            />
             <div className="content-owners-mobile">
               <div className="owner-box">
                 <div className="owner-img">

@@ -283,6 +283,13 @@ export interface ITeamComponentCommon {
   arraySplash?: TArraySplashType;
   readMoreCount?: number;
   setReadMoreCount?: (value: number) => void;
+  classNameHead?: string;
+  classNameHeadSpan?: string;
+  titleHeadFirst?: string;
+  titleHeadSecond?: string;
+  colorHeadSecond?: string;
+  classNameGap?: boolean;
+  teamArray?: TTeamArrayItemType[];
 }
 
 export type TSocialsItem = {
@@ -313,7 +320,6 @@ export type TArraySplashType =
   | 'rair-advisors'
   | 'rair-basic'
   | 'rair-basic-2'
-  | 'bruce-fenton'
   | 'nuts'
   | 'coinagenda'
   | 'sim-dogs'
@@ -395,9 +401,9 @@ export interface INotCommercialTemplate {
 }
 
 export interface ITeamMeetComponentCommon {
-  teamArray: TTeamArrayItemType[];
+  teamArray?: TTeamArrayItemType[];
   arraySplash?: TArraySplashType;
-  className: boolean;
+  className?: boolean;
   readMoreCount?: number;
   setReadMoreCount?: (value: number) => void;
   readMoreCountFlag?: number;

@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
+import { teamNFTNYCArray } from './AboutUsTeam';
+
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
@@ -23,7 +25,7 @@ import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
-import WarningModal from '../WarningModal';
+import WarningModal from '../WarningModal/WarningModal';
 
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
@@ -220,7 +222,12 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
           whatSplashPage={whatSplashPage}
         />
         <div style={{ height: '108px' }} />
-        <TeamMeet arraySplash={'nftnyc'} />
+        <TeamMeet
+          arraySplash={'nftnyc'}
+          classNameHead={'nftnyc-font nftnyc-textCenter'}
+          titleHeadFirst={'About'}
+          teamArray={teamNFTNYCArray}
+        />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

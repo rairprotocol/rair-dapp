@@ -5,44 +5,45 @@ import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
-import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
+import { teamGreymanArray } from './AboutUsTeam';
 
-import { diamondFactoryAbi } from '../../contracts/index';
-import { RootState } from '../../ducks';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
-import { setRealChain } from '../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { setInfoSEO } from '../../ducks/seo/actions';
-import { TInfoSeo } from '../../ducks/seo/seo.types';
+import { diamondFactoryAbi } from '../../../contracts/index';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
 /* importing images*/
-import { metaMaskIcon } from '../../images';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import { web3Switch } from '../../utils/switchBlockchain';
-import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
-import PurchaseTokenButton from '../common/PurchaseToken';
-import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
-import MetaTags from '../SeoTags/MetaTags';
-import StandaloneVideoPlayer from '../video/videoPlayerGenerall';
-
-import AuthorBlock from './AuthorBlock/AuthorBlock';
-import GreymanFavicon from './images/favicons/greyman-favicon.ico';
+import { metaMaskIcon } from '../../../images';
+import { metamaskCall } from '../../../utils/metamaskUtils';
+import { web3Switch } from '../../../utils/switchBlockchain';
+import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
+import PurchaseTokenButton from '../../common/PurchaseToken';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
+import MetaTags from '../../SeoTags/MetaTags';
+import StandaloneVideoPlayer from '../../video/videoPlayerGenerall';
+import AuthorBlock from '../AuthorBlock/AuthorBlock';
 import {
   GreyMan,
   GreyManNotFun,
   playImagesColored
-} from './images/greyMan/grayMan';
-import NotCommercial from './NotCommercial/NotCommercial';
-import ButtonHelp from './PurchaseChecklist/ButtonHelp';
-import PurchaseChecklist from './PurchaseChecklist/PurchaseChecklist';
+} from '../images/greyMan/grayMan';
+import NotCommercial from '../NotCommercial/NotCommercial';
+import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
+import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
+import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
 /* importing Components*/
-import TeamMeet from './TeamMeet/TeamMeetList';
-import { Timeline } from './Timeline/Timeline';
-import { Countdown } from './Timer/CountDown';
-import TokenLeftGreyman from './TokenLeft/TokenLeftGreyman';
+import TeamMeet from '../TeamMeet/TeamMeetList';
+import { Timeline } from '../Timeline/Timeline';
+import { Countdown } from '../Timer/CountDown';
+import TokenLeftGreyman from '../TokenLeft/TokenLeftGreyman';
 
-import './SplashPage.css';
+import GreymanFavicon from './../images/favicons/greyman-favicon.ico';
+
+import './../SplashPage.css';
 import './GreymanSplashPageMobile.css';
-import './../AboutPage/AboutPageNew/AboutPageNew.css';
+import './../../AboutPage/AboutPageNew/AboutPageNew.css';
 
 // Google Analytics
 const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -882,7 +883,13 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
               </h1>
             </div>
             <Timeline />
-            <TeamMeet arraySplash={'greyman'} />
+            <TeamMeet
+              arraySplash={'greyman'}
+              titleHeadFirst={'About the'}
+              titleHeadSecond={'Artist'}
+              classNameHeadSpan={'text-gradient'}
+              teamArray={teamGreymanArray}
+            />
             <NotCommercial primaryColor={primaryColor} />
           </>
         )}

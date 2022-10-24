@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
+import { teamSlideLockArray } from './AboutUsTeam';
+
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
@@ -321,7 +323,13 @@ const SlideLock: React.FC<ISplashPageProps> = ({
           colorText={splashData.exclusiveNft?.titleColor}
           carousel={carousel}
         />
-        <TeamMeet arraySplash={'slidelock'} />
+        <TeamMeet
+          arraySplash={'slidelock'}
+          titleHeadFirst={'Meet the'}
+          titleHeadSecond={'Team'}
+          colorHeadSecond={'#57B69C'}
+          teamArray={teamSlideLockArray}
+        />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

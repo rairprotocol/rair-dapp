@@ -1,6 +1,6 @@
 /* eslint-disable  */
 import React, { memo, useEffect } from 'react';
-import { ITermsUseComponent } from './splashPage.types';
+import { ITermsUseComponent } from '../splashPage.types';
 import cl from './TermsUse.module.css';
 
 const TermsUseComponent: React.FC<ITermsUseComponent> = ({

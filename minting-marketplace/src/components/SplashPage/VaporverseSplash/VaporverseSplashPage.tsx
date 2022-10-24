@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v1 } from 'uuid';
 
+import { teamVaporVerseArray } from './AboutUsTeam';
+
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
@@ -329,7 +331,11 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
         <div style={{ height: '10vw' }} />
 
-        <TeamMeet arraySplash={'vaporverse'} />
+        <TeamMeet
+          arraySplash={'vaporverse'}
+          titleHeadFirst={'mak0r'}
+          teamArray={teamVaporVerseArray}
+        />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}
