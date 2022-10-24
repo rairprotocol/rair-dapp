@@ -26,34 +26,54 @@ const updateCommonTokenMetadata = require('./updateCommonTokenMetadata');
 const createFavoriteToken = require('./createFavoriteToken');
 const withProductV2 = require('./withProductV2');
 const manageContract = require('./manageContract');
+const getProductsByUserAddress = require('./getProductsByUserAddress');
+const getLocksByProduct = require('./getLocksByProduct');
+const getFilesByProduct = require('./getFilesByProduct');
 
 module.exports = {
   admin,
   addMedia,
   authentication,
   createContract,
-  createUser,
   getChallenge,
   filterAndSort,
   getToken,
-  singleUser,
   removeMedia,
   stream,
   uploadVideo,
   uploadVideoFile,
   updateContract,
-  updateUser,
   singleContract,
   getFilesByNFT,
   nftContract,
   nftProduct,
   getTokensByContractProduct,
   search,
-  updateTokenMetadata,
   pinningMultiple,
+  // V2
+
+  // user
+  createUser,
+  singleUser,
+  updateUser,
+
+  // token
+  updateTokenMetadata,
   updateCommonTokenMetadata,
-  createFavoriteToken,
   manageContract,
   getChallengeV2,
   withProductV2,
+
+  //product
+  getProductsByUserAddress,
+
+  //files
+  getFilesByProduct,
+
+  //lock
+  getLocksByProduct,
+
+  // favorites
+  createFavoriteToken,
+
 };
