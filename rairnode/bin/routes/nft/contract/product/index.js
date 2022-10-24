@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const AppError = require('../../../../utils/errors/AppError');
 const { validation, assignUser } = require('../../../../middleware');
-const { verifyAccessRightsToFile } = require('../../../../utils/helpers');
+const { verifyAccessRightsToFile, attributesCounter } = require('../../../../utils/helpers');
 const { Offer, OfferPool, Product, MintedToken, File, LockedTokens } = require('../../../../models');
 const tokenRoutes = require('./token');
 
@@ -153,9 +153,11 @@ module.exports = (context) => {
           .get('tokens', 0)
           .value();
 
-        const tokens = await MintedToken.aggregate(aggregateOptions)
+        const tokensSorted = await MintedToken.aggregate(aggregateOptions)
           .sort(_.assign({}, sortByPrice ? { 'offer.price': Number(sortByPrice) } : {}, sortByToken ? { token: Number(sortByToken) } : {}))
           .collation({ locale: 'en_US', numericOrdering: true });
+
+        const tokens = attributesCounter(tokensSorted)
 
         return res.json({ success: true, result: { totalCount, tokens } });
       } catch (err) {
