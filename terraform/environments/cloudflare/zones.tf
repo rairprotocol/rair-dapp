@@ -17,3 +17,7 @@ resource "cloudflare_zone" "ukraineglitch_com" {
 resource "cloudflare_zone" "vaporverse_xyz" {
   zone = "vaporverse.xyz"
 }
+
+resource "cloudflare_zone" "taxhacks_xyz" {
+  zone = "taxhacks.xyz"
+}
