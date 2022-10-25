@@ -18,27 +18,26 @@ const sendErrorDev = (err, req, res) => {
     });
   } else {
     res.status(err.statusCode).json({
-      title: 'Spmething went wrong',
+      title: 'Something went wrong!',
       msg: err.message,
     });
   }
 };
 
 const sendErrorProd = (err, res) => {
-  if (res.req.originalUrl.startsWith('/api')) {
-    // Operational, trusted error: send message to client
-    if (err.isOperational) {
-      return res.status(err.statusCode).json({
-        status: err.status,
-        message: err.message,
-      });
-    }
+  // Operational, trusted error: send message to client
+  if (err.isOperational) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+    });
+  } else {
     // Programming or other unknown error: don't leak error details
     // 1) Log error
     log.error('ERROR', err);
 
     // 2) Send generic message
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Something went very wrong!',
     });
@@ -61,9 +60,8 @@ module.exports = async (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   // eslint-disable-next-line no-param-reassign
   err.status = err.status || 'error';
-
+  let error = Object.assign(err);
   if (process.env.PRODUCTION !== 'true') {
-    let error = Object.assign(err);
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === 'ValidationError') {
@@ -71,11 +69,9 @@ module.exports = async (err, req, res, next) => {
     }
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
-    sendErrorDev(error, req, res);
   }
 
   if (process.env.PRODUCTION === 'true') {
-    let error = Object.assign(err);
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === 'ValidationError') {
@@ -83,7 +79,8 @@ module.exports = async (err, req, res, next) => {
     }
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
-    sendErrorProd(error, res);
   }
-  return next();
+  return process.env.PRODUCTION === 'true'
+    ? sendErrorProd(error, res)
+    : sendErrorDev(error, req, res);
 };
