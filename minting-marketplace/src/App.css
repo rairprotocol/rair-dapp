@@ -657,6 +657,8 @@ a:hover {
 .modal-content-video-thumbnail {
   border-radius: 1rem;
   width: inherit;
+  height: 428px;
+  object-fit: cover;
 }
 .modal-content-video-choice {
   display: flex;
@@ -1857,6 +1859,11 @@ button.metamask-on-boarding:focus {
     align-content: center;
     align-items: center;
   }
+
+  .modal-content-wrapper-for-video .modal-content-video-thumbnail {
+    height: 432px;
+  }
+
   .more-info-wrapper {
     width: 46.875rem;
   }
@@ -1903,6 +1910,11 @@ button.metamask-on-boarding:focus {
     align-content: center;
     align-items: center;
   }
+
+  .modal-content-wrapper-for-video .modal-content-video-thumbnail {
+    height: 315px;
+  }
+
   .more-info-wrapper {
     width: 33.875rem;
   }
@@ -1944,6 +1956,11 @@ button.metamask-on-boarding:focus {
     place-content: space-between !important;
     flex-wrap: nowrap !important;
   }
+
+  .modal-content-wrapper-for-video .modal-content-video-thumbnail {
+    height: 198px;
+  }
+
   .modal-content-wrapper-for-video {
     width: 95%;
     height: auto;

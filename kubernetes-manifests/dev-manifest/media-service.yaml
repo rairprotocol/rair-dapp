@@ -57,6 +57,11 @@ spec:
                 secretKeyRef:
                   name: app-role-secret-id
                   key: APP_ROLE_SECRET_ID
+            - name: GCP_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: rair-manager-key
+                  key: key.json
           envFrom:
           - configMapRef:
               name: media-service-env

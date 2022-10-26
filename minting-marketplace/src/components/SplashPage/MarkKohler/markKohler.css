@@ -29,9 +29,9 @@
 .wrapper-splash-page.mark-kohler
   .container-about-conference
   .about-conference-description {
-  text-align: left;
+  text-align: center;
   padding: 40px 0;
-  font-size: 42px;
+  font-size: 40px;
 }
 
 .wrapper-splash-page.mark-kohler
@@ -155,8 +155,8 @@
 }
 
 .container-about-conference-image img {
-  width: 400px;
-  height: 400px;
+  width: 35rem;
+  height: 27rem;
 }
 
 .mark-kohler-card-wrapper {
@@ -471,7 +471,7 @@
 
 @media screen and (max-width: 500px) {
   .container-about-conference-image img {
-    width: 200px;
-    height: 200px;
+    width: 20rem;
+    height: 13rem;
   }
 }

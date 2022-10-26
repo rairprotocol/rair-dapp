@@ -4,7 +4,6 @@ import Swal from 'sweetalert2';
 
 import { teamTaxHacksSummit } from './AboutUsTeam';
 
-import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
@@ -16,7 +15,7 @@ import PurchaseTokenButton from '../../common/PurchaseToken';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import { MarkKohlerImage } from '../images/markKohler/markHohler';
-import { RairLogo_Koholertext } from '../images/teamMeetList/teamMeetList';
+import { TaxHacksDemoGif } from '../images/markKohler/markHohler';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps, TMainContractType } from '../splashPage.types';
 import { TSplashDataType } from '../splashPage.types';
@@ -31,12 +30,14 @@ import { useGetProducts } from '../splashPageProductsHook';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 
+import KohlerFavicon from './assets/favicon.ico';
+
 import './markKohler.css';
 
 const mainContract: TMainContractType = {
   contractAddress: '0x711fe7fccdf84875c9bdf663c89b5f5f726a11d7',
   requiredBlockchain: '0x1',
-  offerIndex: ['1']
+  offerIndex: ['11']
 };
 // const testContract: TMainContractType = {
 //   contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
@@ -71,8 +72,9 @@ export const splashData: TSplashDataType = {
   ),
   backgroundImage: MarkKohlerImage,
   button2: {
-    buttonLabel: 'Email Updates',
-    buttonAction: () => hyperlink('https://www.google.com')
+    buttonLabel: 'OpenSea',
+    buttonAction: () =>
+      hyperlink('https://opensea.io/collection/tax-hacks-summit')
   },
   purchaseButton: {
     buttonLabel: 'Mint for .27',
@@ -155,8 +157,8 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
           'THURSDAY DECEMBER 8TH 10AM-6PM ET AN NFT GATED EVENT',
         image:
           'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
-        favicon: RairFavicon,
-        faviconMobile: RairFavicon
+        favicon: KohlerFavicon,
+        faviconMobile: KohlerFavicon
       })
     );
     //eslint-disable-next-line
@@ -264,9 +266,10 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
         <div className="container-about-conference">
           <h2>About the Conference</h2>
           <div className="about-conference-description">
-            The IRS is spending $80 billion dollars to find your crypto.
+            The IRS is spending $80 billion dollars to find your crypto!
             <br />
-            You need to<span> protect yourself and your assets.</span>
+            <br />
+            You need to<span> protect yourself and your assets!</span>
           </div>
           <div className="block-paragragh-conference">
             Every American must now answer at the top of the 1040 “At any time
@@ -427,7 +430,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               </div>
             </div>
             <>
-              <img src={RairLogo_Koholertext} alt="Rair Logo Koholertext" />
+              <img src={TaxHacksDemoGif} alt="Rair Logo Koholertext" />
             </>
           </div>
 

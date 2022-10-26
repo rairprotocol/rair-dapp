@@ -10,12 +10,7 @@ export const teamTaxHacksSummit: TTeamArrayItemType[] = [
     nameTeammate: 'Mark J. Kohler',
     imageUrl: MarkJKohler,
     aboutTeammate: [
-      `Mark J. Kohler, M.Pr.A., C.P.A., J.D. is a best-selling author; national speaker; 
-        radio show host; writer and video personality for Entrepreneur.com; real estate investor;
-         senior partner in the law firm, Kyler, Kohler, Ostermiller & Sorensen, and the accounting 
-         firm of Kohler & Eyre, CPAs. Mark is a personal and small business tax and legal expert, 
-         who helps clients build and protect wealth through wealth management strategies, and business 
-         and tax remedies often overlooked in this challenging, ever-changing economic climate.`
+      `Mark J. Kohler, M.Pr.A., C.P.A., J.D. is a best-selling author; national speaker; radio show host; writer and video personality for Entrepreneur.com; real estate investor; senior partner in the law firm, Kyler, Kohler, Ostermiller & Sorensen, and the accounting firm of Kohler & Eyre, CPAs. Mark is a personal and small business tax and legal expert, who helps clients build and protect wealth through wealth management strategies, and business and tax remedies often overlooked in this challenging, ever-changing economic climate.`
     ],
     socials: [
       {
@@ -30,16 +25,9 @@ export const teamTaxHacksSummit: TTeamArrayItemType[] = [
     nameTeammate: 'RAIR Technologies',
     imageUrl: RairLogoKohler,
     aboutTeammate: [
-      ` RAIR is a blockchain-based digital rights management platform that
-          uses NFTs to gate access to streaming content.Data monopolies like Amazon,
-          YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
-          and can change their terms of service at any time locking out creators
-          and users alike.  DIY distribution meanwhile offers no protection, and cannot
-          help package works into a scarce, valuable, tradeable framework.`,
+      ` RAIR is a blockchain-based digital rights management platform that uses NFTs to gate access to streaming content.Data monopolies like Amazon, YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics, and can change their terms of service at any time locking out creators and users alike.  DIY distribution meanwhile offers no protection, and cannot help package works into a scarce, valuable, tradeable framework.\n\n`,
 
-      `RAIR, through its decentralized key management node system, empowers
-          anyone to create unique, controllable, and transferable digital assets
-          tied to the actual underlying content.`
+      `RAIR, through its decentralized key management node system, empowers anyone to create unique, controllable, and transferable digital assets tied to the actual underlying content.`
     ],
     socials: [
       {

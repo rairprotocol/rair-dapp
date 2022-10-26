@@ -5,11 +5,12 @@ FROM node:16.13.0 as build
 WORKDIR /usr/src/minting
 
 
-COPY package*.json ./
-RUN npm install
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
 COPY . /usr/src/minting
-RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
-RUN npm run build
+#RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
+RUN yarn build
 
 
 # production environment
