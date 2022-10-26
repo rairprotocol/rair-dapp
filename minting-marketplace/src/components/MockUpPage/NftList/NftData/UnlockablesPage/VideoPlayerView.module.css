@@ -132,6 +132,13 @@
   flex-direction: row;
 }
 
+.playImagesColoredOnListVideos {
+  width: 50px;
+}
+.playImagesColoredOnSingleVideo {
+  margin-top: 5rem;
+}
+
 @media screen and (max-width: 1100px) and (min-width: 900px) {
   .SingleVideoWrapper {
     width: 50%;
