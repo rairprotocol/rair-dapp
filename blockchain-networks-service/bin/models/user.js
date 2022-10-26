@@ -17,7 +17,7 @@ const User = new Schema(
       required: true,
       unique: true,
     },
-    nonce: { type: String, default: () => nanoid() },
+    nonce: { type: String, default: () => nanoid(), select: false },
     creationDate: { type: Date, default: Date.now },
   },
   { versionKey: false },
