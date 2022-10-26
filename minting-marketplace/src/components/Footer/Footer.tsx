@@ -91,9 +91,6 @@ const Footer = () => {
           <NavFooterBox primaryColor={primaryColor}>
             <h4>Company</h4>
             <li>
-              <NavLink to="/main-page">About</NavLink>
-            </li>
-            <li>
               <a
                 href="https://etherscan.io/token/0xc76c3ebea0ac6ac78d9c0b324f72ca59da36b9df"
                 target={'_blank'}
