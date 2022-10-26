@@ -9,6 +9,7 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { metaMaskIcon } from '../../../images';
 import { rFetch } from '../../../utils/rFetch';
 import PurchaseTokenButton from '../../common/PurchaseToken';
@@ -19,13 +20,18 @@ import { TaxHacksDemoGif } from '../images/markKohler/markHohler';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps, TMainContractType } from '../splashPage.types';
 import { TSplashDataType } from '../splashPage.types';
-import SplashCardButton from '../SplashPageConfig/CardBlock/SplashCardButton';
-import SplashCardButtonsWrapper from '../SplashPageConfig/CardBlock/SplashCardButtonsWrapper';
-import SplashCardImage from '../SplashPageConfig/CardBlock/SplashCardImage';
-import SplashCardInfoBlock from '../SplashPageConfig/CardBlock/SplashCardInfoBlock';
-import SplashCardText from '../SplashPageConfig/CardBlock/SplashCardText';
-import SplashPageCardWrapper from '../SplashPageConfig/CardBlock/SplashPageCardWrapper';
+import SplashPageCardWrapper from '../SplashPageConfig/CardBlock/CardBlockWrapper/SplashPageCardWrapper';
+import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
+import SplashCardButtonsWrapper from '../SplashPageConfig/CardBlock/CardButtonWrapper/SplashCardButtonsWrapper';
+import SplashCardImage from '../SplashPageConfig/CardBlock/CardImage/SplashCardImage';
+import SplashCardInfoBlock from '../SplashPageConfig/CardBlock/CardInfoBlock/SplashCardInfoBlock';
+import SplashCardText from '../SplashPageConfig/CardBlock/CardText/SplashCardText';
 import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
+import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
+import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
+import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
+import SplashVideoText from '../SplashPageConfig/VideoBlock/VideoText/SplashVideoText';
+import SplashVideoTextBlock from '../SplashPageConfig/VideoBlock/VideoTextBlock/SplashVideoTextBlock';
 import { useGetProducts } from '../splashPageProductsHook';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import TeamMeet from '../TeamMeet/TeamMeetList';
@@ -39,29 +45,29 @@ const mainContract: TMainContractType = {
   requiredBlockchain: '0x1',
   offerIndex: ['11']
 };
-// const testContract: TMainContractType = {
-//   contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
-//   requiredBlockchain: '0x5',
-//   offerIndex: ['126']
-// };
+const testContract: TMainContractType = {
+  contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
+  requiredBlockchain: '0x5',
+  offerIndex: ['126']
+};
 
-const contract = mainContract.contractAddress;
-const blockchain = mainContract.requiredBlockchain;
-const offerIndex = mainContract.offerIndex;
+// const contract = mainContract.contractAddress;
+// const blockchain = mainContract.requiredBlockchain;
+// const offerIndex = mainContract.offerIndex;
 
-// const contract =
-//   process.env.REACT_APP_TEST_CONTRACTS === 'true'
-//     ? testContract.contractAddress
-//     : mainContract.contractAddress;
-// const blockchain =
-//   process.env.REACT_APP_TEST_CONTRACTS === 'true'
-//     ? testContract.requiredBlockchain
-//     : mainContract.requiredBlockchain;
+const contract =
+  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ? testContract.contractAddress
+    : mainContract.contractAddress;
+const blockchain =
+  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ? testContract.requiredBlockchain
+    : mainContract.requiredBlockchain;
 
-// const offerIndex =
-//   process.env.REACT_APP_TEST_CONTRACTS === 'true'
-//     ? testContract.offerIndex
-//     : mainContract.offerIndex;
+const offerIndex =
+  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ? testContract.offerIndex
+    : mainContract.offerIndex;
 
 export const splashData: TSplashDataType = {
   title: 'TAX HACKS SUMMIT',
@@ -82,18 +88,7 @@ export const splashData: TSplashDataType = {
     requiredBlockchain: blockchain,
     contractAddress: contract,
     offerIndex: offerIndex,
-    customStyle: {
-      width: '100%',
-      height: '64px',
-      background: `linear-gradient(96.34deg, #035BBC 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)`,
-      fontFamily: 'Plus Jakarta Sans',
-      fontWeight: '700',
-      fontSize: '22px',
-      lineHeight: '28px',
-      padding: '14px 0px',
-      color: '#FFFFFF',
-      borderRadius: '16px'
-    },
+    customButtonClassName: 'mark-kohler-purchase-button',
     blockchainOnly: true,
     customSuccessAction: async (nextToken) => {
       const tokenMetadata = await rFetch(
@@ -131,9 +126,12 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   const [productsFromOffer, selectVideo, setSelectVideo] =
     useGetProducts(splashData);
 
+  useEffect(() => {
+    setSelectVideo(productsFromOffer[0]);
+  }, [setSelectVideo, productsFromOffer]);
+
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
-
   /* UTILITIES FOR NFT PURCHASE */
 
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
@@ -142,6 +140,8 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
+  const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
+    useOpenVideoPlayer();
 
   useEffect(() => {
     dispatch(
@@ -238,21 +238,12 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               <PurchaseTokenButton
                 connectUserData={connectUserData}
                 {...splashData.purchaseButton}
-                // isSplashPage={isSplashPage}
                 diamond={true}
               />
               <SplashCardButton
-                borderRadius="16px"
-                background="#000000"
+                className="card-button-mark-kohler"
                 buttonLabel={splashData.button2?.buttonLabel}
                 buttonAction={splashData.button2?.buttonAction}
-                fontFamily={'Plus Jakarta Sans'}
-                fontWeight={'700'}
-                lineHeight={'28px'}
-                fontSize={'22px'}
-                color={'#FFFFFF'}
-                height="64px"
-                width="100%"
               />
             </SplashCardButtonsWrapper>
           </SplashCardInfoBlock>
@@ -461,23 +452,30 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             ENTER THE SUMMIT (COMING SOON)
           </button>
         </div>
-        <div className="block-video-the-summit">
-          <div className="container-title-of-video">
-            <h2 className="splashpage-subtitle">HOLDERS only Content</h2>
-            <button
-              className="btn-help-the-summit"
-              onClick={() => toggleCheckList()}>
-              Need Help
-            </button>
-          </div>
-          <VideoPlayerView
-            productsFromOffer={productsFromOffer}
-            primaryColor={primaryColor}
+
+        {/* Reusable Video Component */}
+        <SplashVideoWrapper>
+          <SplashVideoTextBlock>
+            <SplashVideoText
+              className="video-text-kohler"
+              text={'HOLDERS ONLY CONTENT'}
+            />
+            <SplashCardButton
+              className="need-help-kohler"
+              buttonAction={handleReactSwal}
+              buttonLabel={'Need Help'}
+            />
+          </SplashVideoTextBlock>
+          <UnlockableVideosWrapper
             selectVideo={selectVideo}
             setSelectVideo={setSelectVideo}
-            whatSplashPage={'genesis-font'}
+            productsFromOffer={productsFromOffer}
+            openVideoplayer={openVideoplayer}
+            setOpenVideoPlayer={setOpenVideoPlayer}
+            handlePlayerClick={handlePlayerClick}
+            primaryColor={primaryColor}
           />
-        </div>
+        </SplashVideoWrapper>
         <TeamMeet
           arraySplash={'taxHacksSummit'}
           titleHeadFirst={'About'}
@@ -495,3 +493,25 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
 };
 
 export default MarkKohler;
+
+//old video player
+
+{
+  /* <div className="block-video-the-summit">
+          <div className="container-title-of-video">
+            <h2 className="splashpage-subtitle">HOLDERS only Content</h2>
+            <button
+              className="btn-help-the-summit"
+              onClick={() => toggleCheckList()}>
+              Need Help
+            </button>
+          </div>
+          <VideoPlayerView
+            productsFromOffer={productsFromOffer}
+            primaryColor={primaryColor}
+            selectVideo={selectVideo}
+            setSelectVideo={setSelectVideo}
+            whatSplashPage={'genesis-font'}
+          />
+        </div> */
+}

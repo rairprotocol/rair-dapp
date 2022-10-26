@@ -67,7 +67,6 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
   const purchaseButton = (
     <PurchaseTokenButton
       {...{
-        customStyle: {},
         customWrapperClassName: 'btn-buy-metamask',
         img: metaMaskIcon,
         contractAddress: aboutPageAddress,

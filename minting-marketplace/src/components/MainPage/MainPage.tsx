@@ -165,7 +165,6 @@ const MainPage: React.FC<IMainPage> = ({
       <img className={styles.graphic} src={MainPageImage0} />
       <PurchaseTokenButton
         {...{
-          customStyle: {},
           customWrapperClassName: '',
           altButtonFormat: true,
           customButtonClassName: styles.button,

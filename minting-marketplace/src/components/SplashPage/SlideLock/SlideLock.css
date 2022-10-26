@@ -15,6 +15,10 @@
   margin-bottom: 0;
 }
 
+.slide-lock-custom-button {
+  background-color: #57b69c !important;
+}
+
 .wrapper-splash-page.slidelock .template-author-card .text-splash {
   display: flex;
   flex-direction: column;

@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { TSplashCardButtonsWrapper } from '../splashConfig.types';
-import { StyledSplashCardButtonsWrapper } from '../styles/StyledButtonsContainer.styled';
+import { StyledSplashCardButtonsWrapper } from './StyledSplashCardButtonsWrapper';
+
+import { TSplashCardButtonsWrapper } from '../../splashConfig.types';
 
 const SplashCardButtonsWrapper: React.FC<TSplashCardButtonsWrapper> = ({
   children,

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { TUnlockableVideosSingleTokenPage } from '../../MockUpPage/mockupPage.types';
 import { TSplashDataType } from '../splashPage.types';
 
 export type TSplashPageCardWrapper = TStyledSplashPageCardWrapper & {
@@ -122,6 +124,7 @@ export type TSplashCardButton = TStyledSplashCardButton & {
   buttonLabel?: string;
   buttonImg?: string;
   buttonAction?: () => void;
+  className: string;
 };
 
 export type TStyledSplashCardButton = {
@@ -148,4 +151,25 @@ export type TStyledButtonMainBlockWrapper = {
 
 export type TButtonMainBlockWrapper = TStyledButtonMainBlockWrapper & {
   children: React.ReactNode;
+};
+
+export type TSplashVideoWrapper = {
+  children: React.ReactNode;
+  className?: string;
+};
+
+export type TUnlockableVideosWrapper = TUnlockableVideosSingleTokenPage;
+
+export type TStyledUnlockableVideosWrapper = {
+  primaryColor: ColorChoice;
+};
+
+export type TSplashVideoText = {
+  text: string;
+  className: string;
+};
+
+export type TSplashVideoTextBlock = {
+  children: React.ReactNode;
+  className?: string;
 };

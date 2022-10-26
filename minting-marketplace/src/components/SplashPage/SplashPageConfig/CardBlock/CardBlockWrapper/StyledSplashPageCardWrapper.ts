@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
-import {
-  TStyledSplashCardImage,
-  TStyledSplashPageCardWrapper
-} from '../splashConfig.types';
+import { TStyledSplashPageCardWrapper } from '../../splashConfig.types';
 
 export const StyledSplashPageCardWrapper = styled.div<TStyledSplashPageCardWrapper>`
   display: flex;
@@ -17,18 +14,4 @@ export const StyledSplashPageCardWrapper = styled.div<TStyledSplashPageCardWrapp
     flex-direction: column-reverse;
     border-radius: 16px;
   } ;
-`;
-
-export const StyledSplashCardImage = styled.img<TStyledSplashCardImage>`
-  width: 100%;
-  height: auto;
-  min-width: 400px;
-  margin: ${({ imageMargin }) => imageMargin};
-
-  @media (max-width: 930px) {
-    margin: 0px;
-    padding: 5px;
-    border-radius: 0px;
-    min-width: 100%;
-  }
 `;

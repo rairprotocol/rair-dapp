@@ -1,6 +1,42 @@
 .wrapper-splash-page.mark-kohler {
 }
 
+.splash-button-card {
+  border-radius: 16px;
+  height: 64px;
+  width: 100%;
+  border: none;
+  color: #ffffff;
+}
+
+.mark-kohler-purchase-button {
+  width: 100%;
+  height: 64px;
+  background: linear-gradient(
+    96.34deg,
+    #035bbc 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+  font-family: 'Plus Jakarta Sans';
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 28px;
+  padding: 14px 0px;
+  color: #ffffff;
+  border-radius: 16px;
+  border: none;
+}
+
 .wrapper-splash-page.mark-kohler .template-home-splash-page {
   width: 80vw;
   white-space: pre-line;
@@ -289,6 +325,10 @@
   .wrapper-splash-page.mark-kohler .template-home-splash-page {
     width: 90vw;
   }
+
+  .video-text-kohler {
+    font-size: 35px;
+  }
 }
 
 @media screen and (max-width: 1100px) {
@@ -347,7 +387,7 @@
   }
 }
 
-@media screen and (max-width: 925px) {
+@media screen and (max-width: 930px) {
   .container-about-conference
     .about-conference-description-list
     .about-conference-container-list
@@ -426,7 +466,7 @@
   }
 
   .wrapper-splash-page.mark-kohler .container-about-conference {
-    padding: 60px 10px;
+    padding: 60px 10px 0px;
     display: flex;
     flex-direction: column;
     align-items: center;

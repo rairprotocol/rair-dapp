@@ -19,6 +19,10 @@
   max-width: 1600px;
 }
 
+.ukranian-custom-button {
+  background-color: #035bbc !important;
+}
+
 /* .btn-help {
     position: absolute;
     top: 20px;

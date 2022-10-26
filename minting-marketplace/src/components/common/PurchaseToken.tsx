@@ -14,7 +14,6 @@ import { getRandomValues } from '../../utils/getRandomValues';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
-import SplashCardButton from '../SplashPage/SplashPageConfig/CardBlock/SplashCardButton';
 
 import {
   IAgreementsPropsType,
@@ -348,11 +347,9 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   customButtonClassName,
   customButtonIconClassName,
   customButtonTextClassName,
-  customStyle,
   customWrapperClassName,
   img,
   buttonLabel = 'Mint!',
-  isSplashPage,
 
   contractAddress,
   requiredBlockchain,
@@ -409,29 +406,9 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
       </button>
     );
   } else {
-    if (isSplashPage) {
-      return (
-        <SplashCardButton
-          width={customStyle?.width}
-          height={customStyle?.height}
-          background={customStyle?.background}
-          fontFamily={customStyle?.fontFamily}
-          fontWeight={customStyle?.fontWeight}
-          fontSize={customStyle?.fontSize}
-          lineHeight={customStyle?.lineHeight}
-          margin={customStyle?.margin}
-          buttonAction={fireAgreementModal}
-          borderRadius={customStyle?.borderRadius}
-          padding={customStyle?.padding}
-          color={customStyle?.color}
-          buttonLabel={buttonLabel}
-          buttonImg={img}
-        />
-      );
-    }
     return (
       <div className={customWrapperClassName}>
-        <button style={customStyle} onClick={fireAgreementModal}>
+        <button className={customButtonClassName} onClick={fireAgreementModal}>
           {img && (
             <img alt="metamask-logo" className="metamask-logo" src={img} />
           )}{' '}
@@ -440,6 +417,7 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
       </div>
     );
   }
+  // }
 };
 
 export default PurchaseTokenButton;

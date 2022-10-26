@@ -130,7 +130,7 @@ export interface IBuySellButton {
   disabled?: boolean;
 }
 
-export interface IUnlockableVideosSingleTokenPage {
+export type TUnlockableVideosSingleTokenPage = {
   productsFromOffer: TFileType[];
   selectVideo: TFileType | undefined;
   setSelectVideo: (videoFile: TFileType | undefined) => void;
@@ -138,7 +138,7 @@ export interface IUnlockableVideosSingleTokenPage {
   setOpenVideoPlayer: (value: boolean) => void;
   handlePlayerClick: () => void;
   primaryColor: ColorChoice;
-}
+};
 
 export interface ITitleCollection {
   title: string | undefined;

@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { TSplashCardText } from '../splashConfig.types';
-import { StyledSplashCardText } from '../styles/MainBlockTextContainer.styled';
+import { StyledSplashCardText } from './StyledSplashCardText';
+
+import { TSplashCardText } from '../../splashConfig.types';
 
 const SplashCardText: React.FC<TSplashCardText> = ({
   color,

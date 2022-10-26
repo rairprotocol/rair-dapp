@@ -87,9 +87,7 @@ const splashData: TSplashDataType = {
       ? testContract
       : mainContract),
     // Custom style for the button
-    customStyle: {
-      backgroundColor: '#035BBC'
-    },
+    customButtonClassName: 'ukranian-custom-button',
     presaleMessage:
       'By accepting these terms, I agree to glitch the flag and support the country in distress.',
     // Custom class for the div surrounding the button

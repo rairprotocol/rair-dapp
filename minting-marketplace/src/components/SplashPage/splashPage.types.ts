@@ -105,9 +105,9 @@ export type TPurchaseButtonType = {
   buttonLabel?: string;
   requiredBlockchain: BlockchainType | undefined;
   buttonComponent?: React.ElementType;
-  customStyle?: React.CSSProperties;
   presaleMessage?: string;
   customWrapperClassName?: string;
+  customButtonClassName?: string;
   blockchainOnly?: boolean;
   customSuccessAction?: (nextToken: number) => Promise<void>;
   img?: string;

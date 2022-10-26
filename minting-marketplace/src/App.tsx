@@ -491,7 +491,11 @@ function App() {
                       connectUserData: connectUserData
                     }
                   },
-                  { path: '/markkohler-splash', content: MarkKohler },
+                  {
+                    path: '/markkohler-splash',
+                    content: MarkKohler,
+                    props: { connectUserData, setIsSplashPage }
+                  },
                   {
                     path: '/genesis-splash',
                     content: RAIRGenesisSplashPage
