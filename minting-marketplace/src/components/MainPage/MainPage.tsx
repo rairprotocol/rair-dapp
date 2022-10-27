@@ -68,6 +68,10 @@ const MainPage: React.FC<IMainPage> = ({
     (store) => store.colorStore
   );
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   /* SHOW MORE BUTTONS */
   const [showMore0, setShowMore0] = useState(true);
   const [showMore1, setShowMore1] = useState(true);
