@@ -33,7 +33,7 @@ import {
   TSplashDataType
 } from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
+import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 // import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
 // import UnlockableVideo from "../images/nipsey1.png";
@@ -87,9 +87,7 @@ const splashData: TSplashDataType = {
       ? testContract
       : mainContract),
     // Custom style for the button
-    customStyle: {
-      backgroundColor: '#035BBC'
-    },
+    customButtonClassName: 'ukranian-custom-button',
     presaleMessage:
       'By accepting these terms, I agree to glitch the flag and support the country in distress.',
     // Custom class for the div surrounding the button
@@ -340,7 +338,7 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
           videoData={splashData.videoData}
         />
         {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
-        <CarouselModule
+        <ListExlusiveProduct
           carousel={!carousel}
           carouselTitle={splashData.carouselTitle}
           carouselData={splashData.carouselData}

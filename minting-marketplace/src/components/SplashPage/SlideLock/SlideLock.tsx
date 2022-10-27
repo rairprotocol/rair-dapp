@@ -93,9 +93,7 @@ const splashData: TSplashDataType = {
       ? testContract
       : mainContract),
     // Custom style for the button
-    customStyle: {
-      backgroundColor: '#57B69C'
-    },
+    customButtonClassName: 'slide-lock-custom-button',
     // presaleMessage: 'By accepting these terms, I agree to glitch the flag and support the country in distress.',
     // Custom class for the div surrounding the button
     customWrapperClassName: 'btn-submit-with-form',

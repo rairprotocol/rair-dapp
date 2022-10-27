@@ -450,6 +450,7 @@ video::-webkit-media-controls-panel {
 .unlockables-video-player {
   width: 100%;
   height: 100%;
+  background-color: var(--charcoal-80);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -1066,7 +1067,7 @@ video {
 
   .video-js {
     width: 100%;
-    height: 250px;
+    height: 300px;
   }
 
   .unlockables-video-player-container {
@@ -1077,9 +1078,6 @@ video {
   }
 
   .unlockables-video-player-circle {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 70px;
     height: 70px;
   }

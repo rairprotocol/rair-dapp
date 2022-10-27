@@ -51,10 +51,10 @@ import './MainPage_ConflictingGlobalStyles.css';
 import styles from './MainPage.module.css';
 
 /* GLOBAL VALUES */
-const blockchain: BlockchainType = '0x38';
-const contract = '0xb6163454da87e9f3fd63683c5d476f7d067f75a2';
-const product = '1';
-const offerIndexInMarketplace = ['1'];
+const blockchain: BlockchainType = '0x1';
+const contract = '0x88af5cdac0b834f502f1cb865b26f92748b861c3';
+const product = '0';
+const offerIndexInMarketplace = ['0', '1988'];
 const iframeLink =
   'https://iframetester.com/?url=https://staging.rair.market/watch/0x48e89cb354a30d4ce0dafac77205792040ef485f/FaR4Z7kLDOZ87Rx1UU6CaLce_bip0X7vnrPjBu2t3APd9s/stream.m3u8';
 
@@ -165,7 +165,6 @@ const MainPage: React.FC<IMainPage> = ({
       <img className={styles.graphic} src={MainPageImage0} />
       <PurchaseTokenButton
         {...{
-          customStyle: {},
           customWrapperClassName: '',
           altButtonFormat: true,
           customButtonClassName: styles.button,

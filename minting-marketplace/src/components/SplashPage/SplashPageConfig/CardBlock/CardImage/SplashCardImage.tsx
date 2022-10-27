@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { TSplashCardImage } from '../splashConfig.types';
-import { StyledSplashCardImage } from '../styles/SplashMainBlockStyled.styled';
+import { StyledSplashCardImage } from './StyledSplashCardImage';
+
+import { TSplashCardImage } from '../../splashConfig.types';
 
 const SplashCardImage: React.FC<TSplashCardImage> = ({
   image,

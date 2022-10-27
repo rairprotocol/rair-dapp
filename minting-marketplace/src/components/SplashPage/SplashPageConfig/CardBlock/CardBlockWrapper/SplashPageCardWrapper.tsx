@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { TSplashPageCardWrapper } from '../splashConfig.types';
-import { StyledSplashPageCardWrapper } from '../styles/SplashMainBlockStyled.styled';
+import { StyledSplashPageCardWrapper } from './StyledSplashPageCardWrapper';
+
+import { TSplashPageCardWrapper } from '../../splashConfig.types';
 
 const SplashPageCardWrapper: React.FC<TSplashPageCardWrapper> = ({
   bgColor,

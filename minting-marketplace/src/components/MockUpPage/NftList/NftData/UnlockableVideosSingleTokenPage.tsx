@@ -3,13 +3,12 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { TFileType } from '../../../../axios.responseTypes';
 import { playImagesColored } from '../../../SplashPage/images/greyMan/grayMan';
 import { ReactComponent as LockWhite } from '../../assets/LockWhite.svg';
-import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
-import { IUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
+import { TUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
 
 import NftVideoplayer from './NftVideoplayer/NftVideoplayer';
 
 const UnlockableVideosSingleTokenPage: React.FC<
-  IUnlockableVideosSingleTokenPage
+  TUnlockableVideosSingleTokenPage
 > = ({
   productsFromOffer,
   selectVideo,
@@ -89,7 +88,6 @@ const UnlockableVideosSingleTokenPage: React.FC<
                               height={'35px'}
                               src={playImagesColored}
                               className="video-single-token-unlock-play-circle"
-                              onClick={handlePlayerClick}
                             />
                           </div>
                         </>

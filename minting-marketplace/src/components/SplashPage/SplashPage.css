@@ -69,10 +69,6 @@
   display: none;
 }
 
-.wrapper-splash-page img {
-  pointer-events: none;
-}
-
 /* main block */
 
 .wrapper-splash-page {

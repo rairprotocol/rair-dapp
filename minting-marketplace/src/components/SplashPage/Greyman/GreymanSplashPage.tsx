@@ -458,7 +458,6 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                 {timerLeft === 0 && (
                   <PurchaseTokenButton
                     {...{
-                      customStyle: {},
                       customWrapperClassName: '',
                       img: metaMaskIcon,
                       contractAddress: GraymanSplashPageTESTNET,

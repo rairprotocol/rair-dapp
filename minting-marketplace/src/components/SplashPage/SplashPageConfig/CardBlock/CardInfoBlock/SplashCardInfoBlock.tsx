@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { TSplashCardInfoBlock } from '../splashConfig.types';
-import { StyledSplashCardInfoBlock } from '../styles/MainBlockTextContainer.styled';
+import { StyledSplashCardInfoBlock } from './StyledSplashCardInfoBlock';
+
+import { TSplashCardInfoBlock } from '../../splashConfig.types';
 
 const SplashCardInfoBlock: React.FC<TSplashCardInfoBlock> = ({
   children,

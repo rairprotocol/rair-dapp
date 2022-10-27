@@ -19,7 +19,6 @@ export interface IPurchaseTokenButtonProps {
   customButtonClassName?: string;
   customButtonIconClassName?: string;
   customButtonTextClassName?: string;
-  customStyle?: CSSProperties;
   customWrapperClassName?: string;
   img?: string;
   contractAddress?: string;
@@ -32,7 +31,6 @@ export interface IPurchaseTokenButtonProps {
   customSuccessAction?: (nextToken: number) => any;
   blockchainOnly?: boolean;
   databaseOnly?: boolean;
-  isSplashPage?: boolean;
 }
 
 export interface IRangeDataType {
