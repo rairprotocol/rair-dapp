@@ -33,7 +33,7 @@ import {
   TSplashDataType
 } from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
+import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 // import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
 // import UnlockableVideo from "../images/nipsey1.png";
@@ -338,7 +338,7 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
           videoData={splashData.videoData}
         />
         {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
-        <CarouselModule
+        <ListExlusiveProduct
           carousel={!carousel}
           carouselTitle={splashData.carouselTitle}
           carouselData={splashData.carouselData}

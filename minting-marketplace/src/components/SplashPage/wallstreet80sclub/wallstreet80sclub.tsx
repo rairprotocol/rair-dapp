@@ -36,7 +36,7 @@ import {
 } from '../splashPage.types';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
+import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 /* importing Components*/
@@ -313,7 +313,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
         <h1 className="splashpage-subtitle">
           <div> Styles for Every Executive</div>
         </h1>
-        <CarouselModule
+        <ListExlusiveProduct
           carousel={!carousel}
           carouselTitle={splashData.carouselTitle}
           carouselData={splashData.carouselData}

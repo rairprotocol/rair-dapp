@@ -23,6 +23,7 @@ import {
 } from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
+import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
 import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
@@ -209,7 +210,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
       <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <AuthorCard splashData={splashData} />
-        <CarouselModule
+        <ListExlusiveProduct
           carousel={!carousel}
           carouselTitle={splashData.carouselTitle}
           carouselData={splashData.carouselData}
