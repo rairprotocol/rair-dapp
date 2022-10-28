@@ -73,10 +73,10 @@
 
 .wrapper-splash-page {
   overflow: hidden;
-  background-image: url('./images/splashPageImages/victory_lap.webp'),
+  /* background-image: url('./images/splashPageImages/victory_lap.webp'),
     url('./images/splashPageImages/maraphon.webp'),
     url('./images/splashPageImages/or.webp'),
-    url('./images/splashPageImages/humble.webp');
+    url('./images/splashPageImages/humble.webp'); */
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
   background-size: 891px 353px, 1203px 432px, 992px 420px, 1202px 415px;
   background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;

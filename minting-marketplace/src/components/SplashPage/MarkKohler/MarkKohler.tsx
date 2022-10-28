@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
 import { teamTaxHacksSummit } from './AboutUsTeam';
+import { AccessTextMarkKohler } from './InformationText';
 
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
@@ -26,6 +27,7 @@ import SplashCardButtonsWrapper from '../SplashPageConfig/CardBlock/CardButtonWr
 import SplashCardImage from '../SplashPageConfig/CardBlock/CardImage/SplashCardImage';
 import SplashCardInfoBlock from '../SplashPageConfig/CardBlock/CardInfoBlock/SplashCardInfoBlock';
 import SplashCardText from '../SplashPageConfig/CardBlock/CardText/SplashCardText';
+import CardParagraphText from '../SplashPageConfig/CardParagraphText/CardParagraphText';
 import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
 import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
@@ -403,51 +405,12 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             </div>
           </div>
         </div>
+        <CardParagraphText
+          fontFamilyTitle={'Nebulosa Black Display Stencil'}
+          title={'How To Access'}
+          arrayParagragh={AccessTextMarkKohler}
+        />
         <div className="container-about-conference">
-          <h2>How To Access</h2>
-          <div className="container-about-conference-image">
-            <div className="container-about-conference-image-text">
-              <div className="block-paragragh-conference">
-                To get access to this 6-hour livestream dedicated to educating
-                you on the most cutting-edge tax strategy as it pertains to your
-                Crypto, NFTs, and Metaverse assets, you must follow the steps in
-                the GIF.
-              </div>
-              <div className="block-paragragh-conference">
-                After completing the mint steps, you will gain exclusive access
-                to the event NFT ticket sale before it goes public for a mint
-                price of 0.27 ETH. Following this, the public mint price will be
-                0.35 ETH.
-              </div>
-            </div>
-            <>
-              <img src={TaxHacksDemoGif} alt="Rair Logo Koholertext" />
-            </>
-          </div>
-
-          <div className="block-paragragh-conference">
-            These NFT tickets will provide you access to tune into the
-            livestream, the NFT will allow you to view a recording of the
-            livestream immediately following the conclusion of the livestream-
-            until December 31st, 2022.
-          </div>
-          <div className="block-paragragh-conference">
-            This gives you three weeks to reference the material and build your
-            tax strategy yourself, or with your personal CPA. The livestream
-            event will ONLY be accessible to those who actively hold the NFT
-            ticket in their crypto wallet. Think of this NFT as your movie
-            ticket or DVD that you get to take home after the movie!
-          </div>
-          <div className="block-paragragh-conference">
-            For only 0.27 ETH
-            <span>
-              {' '}
-              we guarantee that you will save money on your tax bill{' '}
-            </span>
-            and you will walk away from this educational experience feeling like
-            you can own the tax game
-          </div>
-
           <button className="btn-enter-summit">
             ENTER THE SUMMIT (COMING SOON)
           </button>
