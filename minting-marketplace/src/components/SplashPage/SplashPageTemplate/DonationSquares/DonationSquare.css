@@ -163,6 +163,10 @@
     padding: 0 0 2vw 0;
   }
 
+  .donation-square:last-child {
+    margin-bottom: 0;
+  }
+
   .donation-square-title:hover {
     color: #8ffdff;
   }

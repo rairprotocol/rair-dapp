@@ -68,7 +68,8 @@
 .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
   display: flex;
   flex-direction: row-reverse;
-  margin: 56px 0 96px 0;
+  /* margin: 56px 0 96px 0; */
+  margin: 0 0 120px 0;
 }
 
 .wrapper-splash-page.simdogs .btn-submit-with-form.need-help button {
@@ -575,11 +576,11 @@ div#swal2-html-container.swal2-html-container {
 
   /* need help button */
 
-  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
+  /* .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
     display: flex;
     flex-direction: row-reverse;
     margin-top: 3.889vw 0 3.889vw 0;
-  }
+  } */
 
   .wrapper-splash-page.simdogs .btn-submit-with-form.need-help button {
     font-family: 'Aldrich', sans-serif;
@@ -817,11 +818,11 @@ div#swal2-html-container.swal2-html-container {
 
   /* need help button */
 
-  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
+  /* .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
     display: flex;
     flex-direction: row-reverse;
     margin: 3.889vw 0 12vw 0;
-  }
+  } */
 
   .wrapper-splash-page.simdogs .btn-submit-with-form.need-help button {
     font-family: 'Aldrich', sans-serif;
@@ -854,6 +855,10 @@ div#swal2-html-container.swal2-html-container {
 
   .wrapper-splash-page.simdogs .tokens-description p:nth-child(9) {
     margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .splashpage-subtitle {
+    justify-content: center;
   }
 
   .wrapper-splash-page.simdogs .splashpage-subtitle.below-need-help {
@@ -1053,6 +1058,13 @@ div#swal2-html-container.swal2-html-container {
 }
 
 @media screen and (max-width: 900px) {
+  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
+    /* display: flex;
+    flex-direction: row-reverse; */
+    /* margin-top: 3.889vw 0 3.889vw 0; */
+    margin-top: 0 0 13.4vw 0;
+  }
+
   /* carousel styles - mobile*/
   .wrapper-splash-page.simdogs .join-pic-carousel {
     display: flex;
@@ -1264,6 +1276,13 @@ div#swal2-html-container.swal2-html-container {
     font-size: 6.7vw;
     line-height: 6.7vw;
     margin: 12vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
+    /* display: flex;
+    flex-direction: row-reverse; */
+    /* margin: 3.889vw 0 3.889vw 0; */
+    margin: 0 0 12vw 0;
   }
 
   .wrapper-splash-page.simdogs .splashpage-subtitle {

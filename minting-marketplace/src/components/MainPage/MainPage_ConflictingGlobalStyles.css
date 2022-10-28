@@ -15,6 +15,10 @@
   max-width: 1200px;
 }
 
+.rairpage.about-page--team {
+  margin-top: 0;
+}
+
 .rairpage.about-page--team .img-teammate {
   display: flex;
   flex-direction: column;
@@ -122,7 +126,7 @@
       656.286vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
     );
     width: 100%;
-    height: 52.143vw;
+    height: 61.286vw;
   }
 
   .rairpage.about-page--team .img-teammate img {

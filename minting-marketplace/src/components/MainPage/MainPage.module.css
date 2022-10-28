@@ -29,7 +29,7 @@
   height: 234px;
   left: calc(((100% - 1440px) / var(--X_offset)) + 120px);
   /* left: 120px; */
-  top: 264px;
+  top: 292.8px;
   letter-spacing: 0.025em;
   line-height: 78px;
   text-align: left;
@@ -72,7 +72,7 @@
   height: 61px;
   left: calc(((100% - 1440px) / var(--X_offset)) + 120px);
   /* left: 120px; */
-  top: 582px;
+  top: 524.4px;
   background: linear-gradient(
     90deg,
     #12c2e9 -15.84%,
@@ -786,9 +786,10 @@
   padding-left: 0.5em;
   text-indent: -0.5em;
 }
+
 .meet_team_wrapper {
   position: absolute;
-  top: 7458px;
+  top: 7567px;
   left: calc(((100% - 1440px) / var(--X_offset)) + 115px);
   /* left: 115px; */
 }
@@ -1231,7 +1232,7 @@
   }
 
   .meet_team_wrapper {
-    top: 517.917vw;
+    top: 525.486vw;
     left: 7.986vw;
   }
 
@@ -1319,7 +1320,7 @@
     width: 65.397vw;
     height: 57.571vw;
     left: 15vw;
-    top: calc(46vw + var(--Y_offset));
+    top: calc(38vw + var(--Y_offset));
   }
 
   .button {
@@ -1669,9 +1670,10 @@
   }
 
   .videoplayer_textbox {
-    width: 96.286vw;
+    text-align: center;
+    width: 100%;
     height: 8.714vw;
-    left: 33.857vw;
+    left: 0vw;
     top: calc(
       639.571vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
     );
@@ -1684,6 +1686,8 @@
     height: 6.857vw;
     line-height: 6.857vw;
     font-size: 5.143vw;
+    left: 0vw;
+    width: 100%;
     top: calc(
       739.286vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
     );
@@ -1719,7 +1723,7 @@
 
   .meet_team_wrapper {
     top: calc(
-      806vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
+      812.286vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
     );
   }
 
@@ -1810,6 +1814,12 @@
     height: calc(
       1830vw + var(--demo_offset) + var(--usecase_offset) +
         var(--readmore_offset)
+    );
+  }
+
+  .meet_team_wrapper {
+    top: calc(
+      810vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
     );
   }
 }

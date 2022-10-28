@@ -304,7 +304,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
           }}
         />
         <div className="btn-submit-with-form need-help">
-          <button
+          {/* <button
             className="genesis-font"
             onClick={() =>
               reactSwal.fire({
@@ -325,7 +325,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
               })
             }>
             Need Help
-          </button>
+          </button> */}
         </div>
         <DonationGrid
           donationGridArray={donationGridData}
