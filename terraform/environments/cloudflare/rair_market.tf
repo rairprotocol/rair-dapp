@@ -61,6 +61,12 @@ resource "cloudflare_record" "rair_market__nftnyc_rair_market" {
   type    = local.record_type.A
 }
 
+resource "cloudflare_record" "rair_market__test_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "Test"
+  value   = "34.149.180.211"
+  type    = local.record_type.A
+}
 
 #######################################################
 # Start: Rairnode API endpoint
