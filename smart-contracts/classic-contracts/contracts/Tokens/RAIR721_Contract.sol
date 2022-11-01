@@ -57,7 +57,7 @@ contract RAIR721_Contract is
     bytes32 public constant MINTER = keccak256("MINTER");
     bytes32 public constant TRADER = keccak256("TRADER");
 
-    address public creatorAddress;
+    address public owner;
     address public factory;
     string private _symbol;
     uint16 private _royaltyFee;
@@ -97,7 +97,7 @@ contract RAIR721_Contract is
         _setupRole(MINTER, _creatorAddress);
         _setupRole(TRADER, _creatorAddress);
         _requireTrader = false;
-        creatorAddress = _creatorAddress;
+        owner = _creatorAddress;
     }
 
     /// @notice  Updates the metadata extension added at the end of all tokens
@@ -116,7 +116,7 @@ contract RAIR721_Contract is
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         _grantRole(DEFAULT_ADMIN_ROLE, newOwner);
-        creatorAddress = newOwner;
+        owner = newOwner;
         renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
@@ -493,12 +493,18 @@ contract RAIR721_Contract is
         );
 
         selectedRange.tokensAllowed = tokensAllowed_;
-        if (lockedTokens_ > 0) {
+        if (lockedTokens_ > 0 && selectedRange.lockedTokens == 0) {
             emit TradingLocked(
                 rangeId,
                 selectedRange.rangeStart,
                 selectedRange.rangeEnd,
                 lockedTokens_
+            );
+        } else if (lockedTokens_ == 0 && selectedRange.lockedTokens > 0) {
+            emit TradingUnlocked(
+                rangeId,
+                selectedRange.rangeStart,
+                selectedRange.rangeEnd
             );
         }
         selectedRange.lockedTokens = lockedTokens_;
@@ -724,7 +730,7 @@ contract RAIR721_Contract is
             _exists(_tokenId),
             "RAIR ERC721: Royalty query for a non-existing token"
         );
-        return (creatorAddress, (_salePrice * _royaltyFee) / 100000);
+        return (owner, (_salePrice * _royaltyFee) / 100000);
     }
 
     function supportsInterface(bytes4 interfaceId)
