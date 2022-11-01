@@ -10,7 +10,7 @@ export const StyledSplashCardImage = styled.img<TStyledSplashCardImage>`
 
   @media (max-width: 930px) {
     margin: 0px;
-    padding: 5px;
+    padding: 15px;
     border-radius: 0px;
     min-width: 100%;
   }

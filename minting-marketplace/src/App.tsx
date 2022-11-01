@@ -854,7 +854,7 @@ function App() {
           </MainBlockApp>
         </div>
       </AppContainerFluid>
-      {!isIframePage && <Footer />}
+      {!isIframePage && <Footer isSplashPage={isSplashPage} />}
     </ErrorBoundary>
   );
 }

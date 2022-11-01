@@ -14,7 +14,6 @@ import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { metaMaskIcon } from '../../../images';
 import { rFetch } from '../../../utils/rFetch';
 import PurchaseTokenButton from '../../common/PurchaseToken';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import { MarkKohlerImage } from '../images/markKohler/markHohler';
 import { TaxHacksDemoGif } from '../images/markKohler/markHohler';
@@ -47,35 +46,26 @@ const mainContract: TMainContractType = {
   requiredBlockchain: '0x1',
   offerIndex: ['11']
 };
+
+// Code for test contracts
 const testContract: TMainContractType = {
   contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
   requiredBlockchain: '0x5',
   offerIndex: ['126']
 };
 
-// const contract = mainContract.contractAddress;
-// const blockchain = mainContract.requiredBlockchain;
-// const offerIndex = mainContract.offerIndex;
-
-const contract =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.contractAddress
-    : mainContract.contractAddress;
-const blockchain =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.requiredBlockchain
-    : mainContract.requiredBlockchain;
-
-const offerIndex =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.offerIndex
-    : mainContract.offerIndex;
+const contract = mainContract.contractAddress;
+const blockchain = mainContract.requiredBlockchain;
+const offerIndex = mainContract.offerIndex;
 
 export const splashData: TSplashDataType = {
   title: 'TAX HACKS SUMMIT',
   description: (
     <>
-      Thursday December 8th 11AM—7PM ET <br /> An NFT Gated Event
+      Thursday December <span className="nebulosa-font-style">8</span>
+      th <span className="nebulosa-font-style">11</span>
+      AM —<span className="nebulosa-font-style"> 7</span>
+      PM ET <br /> An NFT Gated Event
     </>
   ),
   backgroundImage: MarkKohlerImage,
@@ -282,7 +272,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             Join Mark J. Kohler as he hosts the first ever, end of year crypto
             tax strategy livestream on December 8th, 2022.
           </div>
-          <div className="about-conference-description">SCHEDULE</div>
+          <div className="about-conference-description schedule">SCHEDULE</div>
           <div className="about-conference-container-list-mobile">
             <ul>
               <li>11am – 11:15</li>
@@ -410,35 +400,39 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
           title={'How To Access'}
           arrayParagragh={AccessTextMarkKohler}
         />
-        <div className="container-about-conference">
-          <button className="btn-enter-summit">
-            ENTER THE SUMMIT (COMING SOON)
-          </button>
-        </div>
+        <SplashCardButtonsWrapper justifyContent={'center'} marginTop="50px">
+          <SplashCardButton
+            className="enter-summit-kohler"
+            buttonAction={() => console.info('Enter the summit')}
+            buttonLabel={'ENTER THE SUMMIT (COMING SOON)'}
+          />
+        </SplashCardButtonsWrapper>
 
         {/* Reusable Video Component */}
-        <SplashVideoWrapper>
-          <SplashVideoTextBlock>
-            <SplashVideoText
-              className="video-text-kohler"
-              text={'HOLDERS ONLY CONTENT'}
+        {productsFromOffer.length !== 0 && (
+          <SplashVideoWrapper>
+            <SplashVideoTextBlock>
+              <SplashVideoText
+                className="video-text-kohler"
+                text={'HOLDERS ONLY CONTENT'}
+              />
+              <SplashCardButton
+                className="need-help-kohler"
+                buttonAction={handleReactSwal}
+                buttonLabel={'Need Help'}
+              />
+            </SplashVideoTextBlock>
+            <UnlockableVideosWrapper
+              selectVideo={selectVideo}
+              setSelectVideo={setSelectVideo}
+              productsFromOffer={productsFromOffer}
+              openVideoplayer={openVideoplayer}
+              setOpenVideoPlayer={setOpenVideoPlayer}
+              handlePlayerClick={handlePlayerClick}
+              primaryColor={primaryColor}
             />
-            <SplashCardButton
-              className="need-help-kohler"
-              buttonAction={handleReactSwal}
-              buttonLabel={'Need Help'}
-            />
-          </SplashVideoTextBlock>
-          <UnlockableVideosWrapper
-            selectVideo={selectVideo}
-            setSelectVideo={setSelectVideo}
-            productsFromOffer={productsFromOffer}
-            openVideoplayer={openVideoplayer}
-            setOpenVideoPlayer={setOpenVideoPlayer}
-            handlePlayerClick={handlePlayerClick}
-            primaryColor={primaryColor}
-          />
-        </SplashVideoWrapper>
+          </SplashVideoWrapper>
+        )}
         <TeamMeet
           arraySplash={'taxHacksSummit'}
           titleHeadFirst={'About'}
@@ -457,24 +451,10 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
 
 export default MarkKohler;
 
-//old video player
-
 {
-  /* <div className="block-video-the-summit">
-          <div className="container-title-of-video">
-            <h2 className="splashpage-subtitle">HOLDERS only Content</h2>
-            <button
-              className="btn-help-the-summit"
-              onClick={() => toggleCheckList()}>
-              Need Help
-            </button>
-          </div>
-          <VideoPlayerView
-            productsFromOffer={productsFromOffer}
-            primaryColor={primaryColor}
-            selectVideo={selectVideo}
-            setSelectVideo={setSelectVideo}
-            whatSplashPage={'genesis-font'}
-          />
+  /* <div className="container-about-conference">
+          <button className="btn-enter-summit">
+            ENTER THE SUMMIT (COMING SOON)
+          </button>
         </div> */
 }

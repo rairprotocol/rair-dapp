@@ -1305,6 +1305,7 @@
 /* Splash Team Block*/
 
 .splash-team {
+  margin-top: 147px;
   margin-bottom: 108px;
 }
 
@@ -2923,6 +2924,7 @@ img.block-img-mobile {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 100px;
   }
   .meet-team .box-teammate {
     display: flex;

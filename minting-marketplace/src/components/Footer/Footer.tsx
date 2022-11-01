@@ -1,8 +1,9 @@
-//@ts-nocheck
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Swal from 'sweetalert2';
+
+import { IFooter } from './footer.types';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
@@ -23,7 +24,7 @@ import {
   NavFooterBox
 } from './FooterItems/FooterItems';
 
-const Footer = () => {
+const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
   const [emailChimp, setEmailChimp] = useState<string>('');
 
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
@@ -90,6 +91,11 @@ const Footer = () => {
         <NavFooter>
           <NavFooterBox primaryColor={primaryColor}>
             <h4>Company</h4>
+            {!isSplashPage && (
+              <li>
+                <NavLink to="/main-page">About</NavLink>
+              </li>
+            )}
             <li>
               <a
                 href="https://etherscan.io/token/0xc76c3ebea0ac6ac78d9c0b324f72ca59da36b9df"
@@ -152,7 +158,7 @@ const Footer = () => {
           </form>
         </FooterEmailBlock>
       </FooterWrapper>
-      <FooterTextRairTech>
+      <FooterTextRairTech primaryColor={primaryColor}>
         <ul>
           <li>© Rairtech 2022. All rights reserved</li>
           <li>

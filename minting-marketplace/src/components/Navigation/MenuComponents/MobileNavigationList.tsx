@@ -16,6 +16,7 @@ interface IMobileNavigationList {
   toggleMenu: (otherPage?: string) => void;
   logout: () => void;
   setTabIndexItems: (arg: number) => void;
+  isSplashPage: boolean;
 }
 
 const MobileNavigationList: React.FC<IMobileNavigationList> = ({
@@ -25,7 +26,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   toggleMenu,
   currentUserAddress,
   logout,
-  setTabIndexItems
+  setTabIndexItems,
+  isSplashPage
 }) => {
   const goToMyItems = (tab: number) => {
     setTabIndexItems(tab);
@@ -77,9 +79,11 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         <NavFooterBox
           className="nav-header-box-mobile"
           primaryColor={primaryColor}>
-          <li onClick={() => toggleMenu()}>
-            <NavLink to="/about-page">About</NavLink>
-          </li>
+          {!isSplashPage && (
+            <li onClick={() => toggleMenu()}>
+              <NavLink to="/about-page">About</NavLink>
+            </li>
+          )}
           <li>
             <a
               href="https://etherscan.io/token/0xc76c3ebea0ac6ac78d9c0b324f72ca59da36b9df"

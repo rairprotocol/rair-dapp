@@ -1,4 +1,4 @@
-import { RairLogo_Koholertext } from '../../images/teamMeetList/teamMeetList';
+import { TaxHacksDemoGif } from '../../images/markKohler/markHohler';
 
 export const AccessTextMarkKohler = [
   {
@@ -13,7 +13,7 @@ export const AccessTextMarkKohler = [
         0.35 ETH.`
     ],
     imgText: {
-      img: RairLogo_Koholertext,
+      img: TaxHacksDemoGif,
       alt: 'Rair Logo Mark Kohler'
     }
   },

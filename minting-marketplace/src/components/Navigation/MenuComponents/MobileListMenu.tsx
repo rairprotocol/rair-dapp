@@ -24,6 +24,7 @@ interface IMobileListMenu {
   setMessageAlert;
   toggleMenu: (otherPage?: string | undefined) => void;
   setTabIndexItems: (arg: number) => void;
+  isSplashPage: boolean;
 }
 
 const MobileListMenu: React.FC<IMobileListMenu> = ({
@@ -34,7 +35,8 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   toggleMenu,
   messageAlert,
   setMessageAlert,
-  setTabIndexItems
+  setTabIndexItems,
+  isSplashPage
 }) => {
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -70,6 +72,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
           currentUserAddress={currentUserAddress}
           logout={logout}
           setTabIndexItems={setTabIndexItems}
+          isSplashPage={isSplashPage}
         />
       </div>
       <CommunityBlock primaryColor={primaryColor}>

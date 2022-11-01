@@ -23,5 +23,11 @@ export const StyledSplashVideoText = styled.h2`
   @media screen and (max-width: 844px) {
     font-size: 5vw !important;
     text-align: center;
+    margin-right: 0px !important;
+    margin-bottom: 30px;
+  }
+
+  @media screen and (max-width: 700px) {
+    margin-bottom: 15px;
   }
 `;
