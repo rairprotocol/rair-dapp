@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { Maybe } from '@metamask/providers/dist/utils';
 
+import { metaMaskIcon } from '../../../images';
+
 import './OnboardingButton.css';
 
 const ONBOARD_TEXT = 'Click here to install MetaMask!';
@@ -81,7 +83,8 @@ export function OnboardingButton() {
   return showButtonPhone ? (
     <a href={metamaskAppDeepLink}>
       <button className="metamask-on-boarding">
-        Connect your phone to MetaMask
+        Connect to
+        <img src={metaMaskIcon}></img>
       </button>
     </a>
   ) : (
