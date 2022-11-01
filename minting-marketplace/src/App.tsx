@@ -73,7 +73,6 @@ import ThankYouPage from './components/ThankYouPage';
 // import setTitle from './utils/setTitle';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 import FileUpload from './components/video/videoUpload/videoUpload';
-import MyContracts from './components/whitelabel/myContracts';
 import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
 import { setChainId, setUserAddress } from './ducks/contracts/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
@@ -660,11 +659,6 @@ function App() {
                   },
 
                   // Old Creator UI (Using the Database)
-                  {
-                    path: '/new-factory',
-                    content: MyContracts,
-                    requirement: loginDone && !creatorViewsDisabled
-                  },
                   {
                     path: '/on-sale',
                     content: MinterMarketplace,

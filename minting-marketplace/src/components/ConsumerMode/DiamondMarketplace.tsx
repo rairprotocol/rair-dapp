@@ -133,6 +133,7 @@ const TokenSelector: React.FC<ITokenSelector> = ({ buyCall, max, min }) => {
 };
 
 const DiamondMarketplace = () => {
+  const [loadingData, setLoadingData] = useState<Boolean>(true);
   const [offersArray, setOffersArray] = useState<TOffersArrayItem[]>([]);
   const [transactionInProgress, setTransactionInProgress] =
     useState<boolean>(false);
@@ -177,6 +178,7 @@ const DiamondMarketplace = () => {
       });
     }
     setOffersArray(offerData);
+    setLoadingData(false);
   }, [diamondMarketplaceInstance]);
 
   useEffect(() => {
@@ -254,7 +256,9 @@ const DiamondMarketplace = () => {
           <i className="fas fa-gem" />
         </h1>
         <h5> Diamond Marketplace </h5>
-        {offersArray.length} offers found.
+        {loadingData
+          ? 'Loading data, please wait...'
+          : `${offersArray.length} offers found.`}
       </div>
       {treasuryAddress === constants.AddressZero && (
         <button
@@ -277,12 +281,15 @@ const DiamondMarketplace = () => {
             }}
             key={index}
             className="col-12 p-2 col-md-6 my-3 rounded-rair">
-            <div style={{ position: 'absolute', top: 0, left: 0 }}>
-              #{index + 1}
-            </div>
+            <abbr
+              title={'Offer Index on the marketplace'}
+              style={{ position: 'absolute', top: 0, left: 0 }}>
+              #{index}
+            </abbr>
             <small>
               {' '}
-              @{offer.contractAddress}:{offer.productIndex}{' '}
+              @<abbr title="Contract address">{offer.contractAddress}</abbr>:
+              <abbr title="Product index">{offer.productIndex}</abbr>{' '}
             </small>
             <br />
             Range #{offer.rangeIndex}
