@@ -43,7 +43,7 @@
 }
 
 .wrapper-splash-page.mark-kohler .container-about-conference {
-  padding: 130px 0 0 0;
+  padding: 130px 0px 0px;
 }
 
 .wrapper-splash-page.mark-kohler .container-about-conference h2 {
@@ -62,12 +62,23 @@
   color: #fff;
 }
 
+.nebulosa-font-style {
+  font-size: 2.08vw;
+}
+
 .wrapper-splash-page.mark-kohler
   .container-about-conference
   .about-conference-description {
   text-align: center;
   padding: 40px 0;
   font-size: 40px;
+}
+
+.wrapper-splash-page.mark-kohler
+  .container-about-conference
+  .about-conference-description.schedule {
+  text-align: left;
+  font-family: Nebulosa Black Display Stencil;
 }
 
 .wrapper-splash-page.mark-kohler
@@ -137,15 +148,13 @@
   display: flex;
   margin-bottom: 40px;
 }
+
 .container-about-conference
   .about-conference-description-list
-  .about-conference-container-list
+  .about-conference-container-list:nth-child(odd)
   ul:first-child {
+  width: 250px;
   margin-right: 80px;
-}
-
-.container-about-conference .about-conference-description-list ul li {
-  /* list-style-type: disc; */
 }
 
 .wrapper-splash-page.mark-kohler .gap-for-aboutus {
@@ -288,10 +297,12 @@
 }
 
 @media screen and (max-width: 1448px) {
-  .about-conference-description-list
-    .about-conference-container-list:nth-child(7)
-    ul:last-child {
-    padding-left: 0;
+  .container-about-conference
+    .about-conference-description-list
+    .about-conference-container-list:nth-child(odd)
+    ul:first-child {
+    width: 200px;
+    margin-right: 50px;
   }
 
   .about-conference-description-list
@@ -349,6 +360,10 @@
   .wrapper-splash-page.mark-kohler .template-home-splash-page {
     padding-left: 0;
   }
+
+  .nebulosa-font-style {
+    font-size: 2.1vw;
+  }
 }
 
 @media screen and (max-width: 1032px) {
@@ -394,6 +409,10 @@
     ul:first-child {
     margin-right: 20px;
   }
+
+  .nebulosa-font-style {
+    font-size: 3.2vw;
+  }
 }
 
 @media screen and (max-width: 900px) {
@@ -403,6 +422,15 @@
     display: flex;
     margin-bottom: 15px;
   }
+
+  .container-about-conference
+    .about-conference-description-list
+    .about-conference-container-list:nth-child(odd)
+    ul:first-child {
+    width: 150px;
+    margin-right: 30px;
+  }
+
   .container-about-conference
     .about-conference-description-list
     .about-conference-container-list
@@ -432,6 +460,12 @@
 
   .container-about-conference .about-conference-description-list.desktop {
     display: none;
+  }
+}
+
+@media screen and (max-width: 725px) {
+  .nebulosa-font-style {
+    font-size: 3.29vw;
   }
 }
 
@@ -506,6 +540,12 @@
   .about-conference-description-list ul {
     font-size: 14px;
     padding-left: 0;
+  }
+}
+
+@media screen and (max-width: 539px) {
+  .nebulosa-font-style {
+    font-size: 21px;
   }
 }
 

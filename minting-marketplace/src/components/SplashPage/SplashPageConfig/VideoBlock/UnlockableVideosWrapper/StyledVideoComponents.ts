@@ -9,7 +9,7 @@ export const StyledUnlockableVideosWrapper = styled.div<TStyledUnlockableVideosW
   background-color: ${({ primaryColor }) =>
     primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'};
 
-  @media screen and (max-device-width: 539px) {
-    height: inherit;
+  @media screen and (max-width: 844px) {
+    height: auto;
   }
 `;

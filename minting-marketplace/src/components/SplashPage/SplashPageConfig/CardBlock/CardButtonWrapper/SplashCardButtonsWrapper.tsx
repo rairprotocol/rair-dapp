@@ -10,7 +10,8 @@ const SplashCardButtonsWrapper: React.FC<TSplashCardButtonsWrapper> = ({
   height,
   width,
   gap,
-  flexDirection
+  flexDirection,
+  justifyContent
 }) => {
   return (
     <StyledSplashCardButtonsWrapper
@@ -18,7 +19,8 @@ const SplashCardButtonsWrapper: React.FC<TSplashCardButtonsWrapper> = ({
       height={height}
       width={width}
       gap={gap}
-      flexDirection={flexDirection}>
+      flexDirection={flexDirection}
+      justifyContent={justifyContent}>
       {children}
     </StyledSplashCardButtonsWrapper>
   );

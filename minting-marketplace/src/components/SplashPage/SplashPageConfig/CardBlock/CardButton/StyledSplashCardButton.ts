@@ -3,19 +3,26 @@ import styled from 'styled-components';
 import { TStyledSplashCardButton } from '../../splashConfig.types';
 
 export const StyledSplashCardButton = styled.button<TStyledSplashCardButton>`
-  max-width: 100%;
   border-radius: 16px;
   height: 64px;
   color: #ffffff;
   border: none;
+  outline: none;
 
   &.need-help-kohler {
     background: var(--stimorol);
     font-family: 'Plus Jakarta Sans';
     font-size: 28px;
     font-weight: 700;
-    line-height: 28px;
     width: 303px !important;
+  }
+
+  &.enter-summit-kohler {
+    background: var(--stimorol);
+    font-family: 'Plus Jakarta Sans';
+    font-size: 28px;
+    font-weight: 700;
+    width: 735px;
   }
 
   &.card-button-mark-kohler {
@@ -25,10 +32,28 @@ export const StyledSplashCardButton = styled.button<TStyledSplashCardButton>`
     font-size: 22px;
   }
 
-  @media screen and (max-width: 539px) {
+  @media screen and (max-width: 1032px) {
+    &.enter-summit-kohler {
+      width: 535px !important;
+      height: 48px;
+      font-size: 20px;
+    }
+  }
+
+  @media screen and (max-width: 844px) {
     &.need-help-kohler {
-      width: 100% !important;
-      font-size: 22px;
+      width: 535px !important;
+      height: 48px;
+      font-size: 20px;
+    }
+  }
+
+  @media screen and (max-width: 670px) {
+    &.need-help-kohler,
+    &.enter-summit-kohler {
+      width: 80vw !important;
+      font-size: 16px !important;
+      height: 48px;
     }
   }
 `;

@@ -12,6 +12,10 @@ export const StyledSplashCardButtonsWrapper = styled.div<TStyledSplashCardButton
   margin-top: ${({ marginTop }) => marginTop || '0px'};
   gap: ${({ gap }) => gap};
 
+  @media screen and (min-width: 2000px) {
+    min-width: 21.8vw;
+  }
+
   @media (max-width: 930px) {
     width: 100%;
     text-align: center;

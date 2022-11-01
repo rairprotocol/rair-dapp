@@ -5,5 +5,13 @@ export const StyledSplashVideoWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   justify-content: space-between;
-  margin: 50px 0px;
+  margin-top: 134px;
+
+  @media screen and (max-width: 844px) {
+    margin-top: 100px;
+  }
+
+  @media screen and (max-width: 539px) {
+    margin-top: 70px;
+  }
 `;

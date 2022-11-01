@@ -64,8 +64,8 @@ export const CardParagraghImageContainer = styled.div`
   justify-content: space-between;
 
   img {
-    width: 400px;
-    heght: 400px;
+    width: 34rem;
+    heght: auto;
   }
 
   @media screen and (max-width: 980px) {
@@ -73,29 +73,26 @@ export const CardParagraghImageContainer = styled.div`
     justify-content: center;
 
     img {
-      width: 350px;
-      heght: 350px;
+      width: 28rem;
     }
   }
 
   @media screen and (max-width: 580px) {
     img {
-      width: 250px;
-      heght: 250px;
+      width: 20rem;
     }
   }
 
   @media screen and (max-width: 400px) {
     img {
-      width: 200px;
-      heght: 200px;
+      // width: 200px;
     }
   }
 
   @media screen and (min-width: 2000px) {
     img {
-      width: -webkit-calc(16vw + 5rem);
-      height: -webkit-calc(16vw + 5rem);
+      width: -webkit-calc(24vw + 5rem);
+      // height: -webkit-calc(16vw + 5rem);
     }
   }
 `;

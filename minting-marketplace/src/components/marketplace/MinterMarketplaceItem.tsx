@@ -22,14 +22,12 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
     RootState,
     ColorStoreType
   >((state) => state.colorStore);
-  const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
+  const { currentChain } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
   const store = useStore();
 
-  const programmaticProviderExtended = programmaticProvider as
-    | ethers.providers.JsonRpcSigner
-    | undefined;
+  const onMyChain = chainData[item.blockchain]?.chainId === currentChain;
 
   return (
     <div key={index} className={`col-${colWidth ? colWidth : 4} p-2`}>
@@ -57,12 +55,6 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
         <button
           id={`button_${index}`}
           onClick={async () => {
-            const onMyChain = window.ethereum
-              ? chainData[item.blockchain]?.chainId === window.ethereum.chainId
-              : chainData[item.blockchain]?.chainId ===
-                `0x${programmaticProviderExtended?.provider._network.chainId.toString(
-                  16
-                )}`;
             if (!onMyChain) {
               if (window.ethereum) {
                 await window.ethereum.request({
@@ -98,14 +90,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
             }
           }}
           className="btn btn-royal-ice py-0">
-          {(
-            window.ethereum
-              ? chainData[item.blockchain]?.chainId === window.ethereum.chainId
-              : chainData[item.blockchain]?.chainId ===
-                `0x${programmaticProviderExtended?.provider._network.chainId.toString(
-                  16
-                )}`
-          ) ? (
+          {onMyChain ? (
             <>Buy</>
           ) : (
             <>

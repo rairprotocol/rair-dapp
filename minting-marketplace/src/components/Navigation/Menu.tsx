@@ -181,6 +181,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
             messageAlert={messageAlert}
             setMessageAlert={setMessageAlert}
             setTabIndexItems={setTabIndexItems}
+            isSplashPage={isSplashPage}
           />
         )}
         <RightSideMenu>

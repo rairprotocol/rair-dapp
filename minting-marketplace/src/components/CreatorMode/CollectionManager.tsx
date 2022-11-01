@@ -13,10 +13,6 @@ import {
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { metamaskCall } from '../../utils/metamaskUtils';
-// import { Link } from 'react-router-dom';
-import CustomPayRate from '../whitelabel/customizePayRate';
-
-// const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
 // 	const [start, setStart] = useState(array[index].startingToken);
 // 	const [end, setEnd] = useState(array[index].endingToken);
@@ -401,14 +397,6 @@ const ProductManager: React.FC<IProductManager> = ({
       <summary>
         Product #{productIndex + 1}: {productInfo.name}
       </summary>
-      {offerIndex && (
-        <CustomPayRate
-          address={tokenInstance?.address}
-          blockchain={window.ethereum.chainId}
-          catalogIndex={offerIndex}
-          customStyle={{ position: 'absolute', top: 0, left: 0 }}
-        />
-      )}
       <div className="row mx-0 px-0">
         <div className="col-12">
           <h5> Product Info </h5>
