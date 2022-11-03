@@ -49,6 +49,7 @@ import MyItems from './components/nft/myItems';
 import RairProduct from './components/nft/rairCollection';
 import Token from './components/nft/Token';
 import NotFound from './components/NotFound/NotFound';
+import ResalePage from './components/ResalePage/ResalePage';
 import MetaTags from './components/SeoTags/MetaTags';
 import CoinAgenda2021SplashPage from './components/SplashPage/CoinAgenda2021/CoinAgenda2021';
 import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
@@ -70,8 +71,8 @@ import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/U
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
 import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80sclub/wallstreet80sclub';
 import ThankYouPage from './components/ThankYouPage';
-// import setTitle from './utils/setTitle';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
+// import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
 import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
 import { setChainId, setUserAddress } from './ducks/contracts/actions';
@@ -133,7 +134,6 @@ function App() {
     useSelector((store) => store.colorStore);
   const { token } = useSelector((store) => store.accessStore);
   const { adminRights } = useSelector((store) => store.userStore);
-
   const connectUserData = useCallback(async () => {
     setStartedLogin(true);
     let currentUser;
@@ -628,7 +628,14 @@ function App() {
                     content: TransferTokens,
                     constraint: loginDone && !creatorViewsDisabled
                   },
-
+                  // Resale offers page
+                  {
+                    path: '/resale-offers',
+                    content: ResalePage,
+                    requirement:
+                      loginDone && adminRights && !creatorViewsDisabled,
+                    exact: true
+                  },
                   // Creator UI - New Views based on Figma
                   {
                     path: '/creator/deploy',

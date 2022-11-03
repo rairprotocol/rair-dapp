@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+//import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+//import { RootState } from '../../ducks';
+//import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import { VideoPlayerParams } from '../video/video.types';
 import VideoPlayer from '../video/videoPlayer';

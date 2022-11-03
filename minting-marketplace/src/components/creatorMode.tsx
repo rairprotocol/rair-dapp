@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import * as ethers from 'ethers';
 
 import { TCreatorMode } from './creatorAndConsumerModes.types';
 
-import { abi } from '../contracts/Minter_Marketplace.json';
 import { RootState } from '../ducks';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import setTitle from '../utils/setTitle';
@@ -13,37 +11,13 @@ import ERC721Manager from './CreatorMode/ERC721Manager';
 import ERC777Manager from './CreatorMode/erc777';
 import FactoryManager from './CreatorMode/factory';
 
-const CreatorMode: React.FC<TCreatorMode> = ({ account, addresses }) => {
-  const [minterInstance, setMinterInstance] = useState<
-    ethers.Contract | undefined
-  >();
+const CreatorMode: React.FC<TCreatorMode> = ({ account }) => {
   const [deployedTokens, setDeployedTokens] = useState<string[]>();
 
-  const { erc777Instance, factoryInstance, programmaticProvider } = useSelector<
+  const { erc777Instance, factoryInstance } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
-
-  useEffect(() => {
-    if (!addresses) {
-      return;
-    }
-
-    let signer: ethers.Wallet | ethers.providers.JsonRpcSigner | undefined =
-      programmaticProvider;
-    if (window.ethereum) {
-      // Ethers Connection
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      signer = provider.getSigner(0);
-    }
-
-    const ethersMinterInstance = new ethers.Contract(
-      addresses.minterMarketplace,
-      abi,
-      signer
-    );
-    setMinterInstance(ethersMinterInstance);
-  }, [addresses, programmaticProvider]);
 
   useEffect(() => {
     setTitle('Old Factory');

@@ -17,6 +17,7 @@ import contractStore from './contracts/reducer';
 import metadataStore from './metadata/reducers';
 import nftDataStore from './nftData/reducers';
 import getPageStore from './pages/reducers';
+import resalesStore from './resales/reducers';
 import allInformationFromSearch from './search/reducers';
 import seoStore from './seo/reducers';
 import userStore from './users/reducers';
@@ -32,6 +33,7 @@ const reducers = combineReducers({
   getPageStore,
   allInformationFromSearch,
   nftDataStore,
+  resalesStore,
   seoStore
 });
 

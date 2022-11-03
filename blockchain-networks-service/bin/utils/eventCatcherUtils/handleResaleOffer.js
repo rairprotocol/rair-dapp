@@ -43,6 +43,7 @@ module.exports = async (
     switch (status.toString()) {
       case '1':
         log.info('OFFER CLOSED');
+        token.ownerAddress = operator.toLowerCase();
         break;
       case '2':
         log.info('OFFER CANCELLED');
@@ -62,5 +63,6 @@ module.exports = async (
       tradeid,
     });
   }
+  await token.save();
   await offer.save();
 };
