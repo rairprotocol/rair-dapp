@@ -1,9 +1,11 @@
+/* eslint-disable no-promise-executor-return */
 const express = require('express');
 const fs = require('fs');
 const csv = require('csv-parser');
 const _ = require('lodash');
 const path = require('path');
 const { nanoid } = require('nanoid');
+const { constants } = require('ethers');
 const AppError = require('../../utils/errors/AppError');
 const { JWTVerification, validation, isAdmin } = require('../../middleware');
 const log = require('../../utils/logger')(module);
@@ -272,7 +274,7 @@ module.exports = (context) => {
 
   // Pin batch of metadata to pinata cloud
   router.post('/pinningMultiple', JWTVerification, validation('pinningMultiple'), async (req, res, next) => {
-    const { contractId, product } = req.body;
+    const { contractId, product, overwritePin = 'false' } = req.body;
     const { user } = req;
     const folderName = `${Date.now()}-${nanoid()}`;
     const pathTo = `${process.cwd()}/tmp`;
@@ -295,9 +297,13 @@ module.exports = (context) => {
 
       let options = {
         contract: contract._id,
-        isMetadataPinned: false,
         'metadata.name': { $nin: ['', 'none'] },
       };
+
+      // If we are not overwriting, find all tokens that aren't pinned already
+      if (overwritePin !== 'true') {
+        options.isMetadataPinned = false;
+      }
 
       if (product) {
         foundProduct = await Product.findOne({
@@ -343,8 +349,8 @@ module.exports = (context) => {
 
       let foundTokens = await MintedToken.find(options);
 
-      if (_.isEmpty(foundTokens)) {
-        return next(new AppError('Tokens not found.', 400));
+      if (!foundTokens?.length) {
+        return next(new AppError(`No tokens found ${overwritePin === true ? '' : ' with unpinned metadata'}`, 400));
       }
 
       // create a folder with all metadata files for uploading
@@ -358,6 +364,12 @@ module.exports = (context) => {
         }
 
         await Promise.all(_.map(foundTokens, async (item) => {
+          // If the IPFS gateway exists, replace with an universal prefix
+          // This will NOT affect the database, only the JSON files being generated
+          item.metadata.image = item.metadata.image.replace(
+            'https://ipfs.io/ipfs/',
+            'ipfs://',
+          );
           await fsPromises.writeFile(`${pathTo}/${folderName}/${item.uniqueIndexInContract}.json`, JSON.stringify(item.metadata, null, 2));
         }));
 
@@ -420,13 +432,19 @@ module.exports = (context) => {
       // removed the temporary folder
       if (!singleMetadataFor) await fsPromises.rm(`${pathTo}/${folderName}`, { recursive: true });
 
-      return res.json(!singleMetadataFor ? { success: true } : { success: true, metadataURI });
+      return res.json(!singleMetadataFor ? {
+        success: true,
+        CID,
+        totalCount: foundTokens.length,
+      } : { success: true, metadataURI });
     } catch (err) {
       // removed the temporary folder
       try {
         await fsPromises.access(`${pathTo}/${folderName}`);
         await fsPromises.rm(`${pathTo}/${folderName}`, { recursive: true });
-      } catch (e) {}
+      } catch (e) {
+        // console.error('There was an error removing files');
+      }
 
       return next(err);
     }

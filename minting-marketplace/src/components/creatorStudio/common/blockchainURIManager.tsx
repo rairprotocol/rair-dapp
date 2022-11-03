@@ -84,7 +84,8 @@ const TokenURIRow: React.FC<ITokenURIRow> = ({
 const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
   contractData,
   collectionIndex,
-  refreshNFTMetadata
+  refreshNFTMetadata,
+  changeFile
 }) => {
   const { currentChain } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -93,6 +94,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
   const lastTokenInProduct = contractData?.product?.copies || 0;
   const [blockchainOperationInProgress, setBlockchainOperationInProgress] =
     useState<boolean>(false);
+  const [pinOverwrite, setPinOverwrite] = useState<boolean>(false);
   const [contractWideMetadata, setContractWideMetadata] = useState<string>('');
   const [appendTokenForContract, setAppendTokenForContract] =
     useState<boolean>(false);
@@ -175,17 +177,24 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
       },
       body: JSON.stringify({
         contractId: contractData._id,
-        product: contractData.product.collectionIndexInContract
+        product: contractData.product.collectionIndexInContract,
+        overwritePin: pinOverwrite.toString()
       })
     });
 
-    if (!pinAllResponse.success) {
-      return;
-    }
+    Swal.fire(
+      'Success',
+      `${pinAllResponse?.totalCount} tokens pinned on CID ${pinAllResponse?.CID}`,
+      'success'
+    );
 
-    const nftDataResult = await refreshNFTMetadata();
-    console.info(nftDataResult);
-    if (!nftDataResult || nftDataResult.totalCount.toString() === '0') {
+    const preppedIPFSURI = `ipfs://${pinAllResponse?.CID}/`;
+
+    setContractWideMetadata(preppedIPFSURI);
+    setCollectionWideMetadata(preppedIPFSURI);
+    return;
+    /*const nftDataResult = await refreshNFTMetadata();
+    if (!nftDataResult || nftDataResult?.totalCount.toString() === '0') {
       Swal.fire('Error', 'There are no NFTs to send', 'error');
       return;
     }
@@ -227,7 +236,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
       } else {
         break;
       }
-    } while (aux2.length > 0);
+    } while (aux2.length > 0);*/
   };
 
   return (
@@ -446,7 +455,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
       </details>*/}
       <hr />
       <details>
-        <summary>Metadata Extension for batch metadata</summary>
+        <summary>Metadata Extension for general metadata</summary>
         <InputField
           customClass="form-control"
           getter={metadataExtension}
@@ -486,15 +495,31 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
       </details>
       <hr />
       <details>
-        <summary className="col-12"> Unique metadata for each token </summary>
-        <button onClick={pinAll} className="btn btn-stimorol">
-          Pin and set metadata for all tokens
+        <summary className="col-12"> Pinning to IPFS </summary>
+        {changeFile
+          ? 'The CSV File is not loaded to the database yet, send the CSV file first!'
+          : ''}
+        <br />
+        <button
+          onClick={() => setPinOverwrite(!pinOverwrite)}
+          disabled={changeFile}
+          className={`btn btn-${pinOverwrite ? 'stimorol' : 'secondary'}`}>
+          {!pinOverwrite ? "Don't" : ''} Overwrite already pinned metadata
         </button>
         <br />
-        or
+        <button
+          onClick={pinAll}
+          disabled={changeFile}
+          className="btn btn-stimorol">
+          Pin token metadata to IPFS
+        </button>
+      </details>
+      <hr />
+      <details>
+        <summary className="col-12"> Unique metadata for each token </summary>
         <br />
         <div className="col-12">
-          You can set each NFT with an unique URI
+          Set each NFT with an unique URI
           <table
             style={{ color: 'inherit' }}
             className="table table-responsive w-100">

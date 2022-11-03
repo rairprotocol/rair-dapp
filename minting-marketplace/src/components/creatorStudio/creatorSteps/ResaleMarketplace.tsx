@@ -34,7 +34,9 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   const [customPayments, setCustomPayments] = useState<TCustomPayments[]>([]);
   const [approving, setApproving] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
-  const [resaleAddress, setResaleAddress] = useState<string>('');
+  const [resaleAddress, setResaleAddress] = useState<string>(
+    resaleInstance?.address
+  );
   const [nodeFee, setNodeFee] = useState<BigNumber>(BigNumber.from(0));
   const [treasuryFee, setTreasuryFee] = useState<BigNumber>(BigNumber.from(0));
   const [minterDecimals, setMinterDecimals] = useState<BigNumber>(

@@ -31,6 +31,7 @@ export type TNftDataItem = {
   productId: string;
   title: string;
   user: string;
+  price?: string;
 };
 
 export type TOfferData = {

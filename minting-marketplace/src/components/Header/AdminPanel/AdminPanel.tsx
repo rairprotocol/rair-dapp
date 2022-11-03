@@ -34,6 +34,16 @@ const AdminPanel = ({
               },
               {
                 name: <i className="fa fa-shopping-cart" aria-hidden="true" />,
+                route: '/resale-offers',
+                disabled: !loginDone
+              },
+              {
+                name: <i className="fa fa-id-card" aria-hidden="true" />,
+                route: '/new-factory',
+                disabled: !loginDone
+              },
+              {
+                name: <i className="fa fa-shopping-cart" aria-hidden="true" />,
                 route: '/on-sale',
                 disabled: !loginDone
               },
