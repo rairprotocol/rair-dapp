@@ -389,6 +389,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
               {collectionIndex && address && (
                 <BlockchainURIManager
                   {...{
+                    changeFile,
                     contractData,
                     address,
                     collectionIndex,

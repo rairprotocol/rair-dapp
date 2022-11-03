@@ -76,6 +76,7 @@ export interface IIBlockchainURIManager {
   contractData: TContractData;
   collectionIndex: string;
   refreshNFTMetadata: () => Promise<TNftItemResult | undefined>;
+  changeFile: boolean;
 }
 export type TParamsBatchMetadata = {
   address: string;
