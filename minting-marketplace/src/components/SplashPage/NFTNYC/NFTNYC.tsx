@@ -13,6 +13,7 @@ import { metaMaskIcon } from '../../../images';
 import { reactSwal } from '../../../utils/reactSwal';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import CustomButton from '../../MockUpPage/utils/button/CustomButton';
 import MetaTags from '../../SeoTags/MetaTags';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import { NFTNYC_TITLE, warning0 } from '../images/NFTNYC/nftnyc';
@@ -180,8 +181,14 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
             alt="Matamask Signature Request"
           />
           <div className="btn-submit-with-form">
-            <button
-              className="nftnyc-font"
+            <CustomButton
+              // width={'200px'}
+              height={'4rem'}
+              text={'Need Help?'}
+              font={'Charriot Deluxe'}
+              background={'#F15621'}
+              hoverBackground={'#F15621'}
+              padding={'0 10px'}
               onClick={() =>
                 reactSwal.fire({
                   title:
@@ -195,11 +202,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
                   showConfirmButton: false
                 })
               }
-              style={{
-                background: '#F15621'
-              }}>
-              Need Help?
-            </button>
+            />
           </div>
         </div>
         <div style={{ height: '58px' }} />

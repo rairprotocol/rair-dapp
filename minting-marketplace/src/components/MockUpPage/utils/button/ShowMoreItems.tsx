@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import {
   TModalContentCloseBtnStyled,
   TShowMoreContainer,
-  TShowMoreItem
+  TShowMoreItem,
+  TShowMoreText
 } from '../../NftList/nftList.types';
 
 export const ShowMoreContainer = styled.div<TShowMoreContainer>`
@@ -11,24 +12,31 @@ export const ShowMoreContainer = styled.div<TShowMoreContainer>`
   height: ${(props) => props.height};
   color: ${(props) => props.textColor};
   margin: ${(props) => props.margin};
+  background: ${(props) => props.background};
   @media screen and (max-width: 659px) and (min-width: 410px) {
     margin: 0.5rem;
   }
   @media screen and (max-width: 409px) and (min-width: 250px) {
-    width: 13rem;
+    width: -webkit-fill-available;
   }
 `;
 
 export const ShowMoreItem = styled.div<TShowMoreItem>`
   width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  min-height: ${(props) => props.height};
   color: ${(props) => props.textColor};
+  border: ${(props) => props.border};
   background: ${(props) =>
     props.background
       ? 'none'
       : props.primaryColor === 'rhyno'
       ? '#F2F2F2'
       : '#434343'};
+  padding: ${(props) => props.padding};
+  transition-duration: 0.5s;
+  &:hover {
+    transition-duration: 0.5s;
+    background: ${(props) => props.hoverBackground};
   @media screen and (max-width: 409px) and (min-width: 250px) {
     width: -webkit-fill-available;
   }
@@ -64,4 +72,10 @@ export const ModalContentCloseBtn = styled.div<TModalContentCloseBtnStyled>`
     font-weight: 100;
     line-height: normal;
   }
+`;
+
+export const ShowMoreText = styled.span<TShowMoreText>`
+  font-family: ${(props) => props.font};
+  color: ${(props) => props.fontColor};
+  font-size: ${(props) => props.fontSize};
 `;
