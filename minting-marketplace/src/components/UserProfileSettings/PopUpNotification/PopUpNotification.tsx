@@ -3,21 +3,21 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Popup } from 'reactjs-popup';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { reactSwal } from '../../../utils/reactSwal';
 import NotificationPage from '../NotificationPage/NotificationPage';
 
 import NftImg from './images/image.png';
-
-const MySwal = withReactContent(Swal);
 
 const PopUpNotification = () =>
   // props was - isNotification
   {
     const [openModal, setOpenModal] = useState(false);
-    const { headerLogo, primaryColor } = useSelector(
+    const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
       (store) => store.colorStore
     );
 
@@ -53,7 +53,7 @@ const PopUpNotification = () =>
             }}
             onClick={() => {
               setOpenModal(false);
-              MySwal.fire({
+              reactSwal.fire({
                 html: (
                   <NotificationPage
                     NftImg={NftImg}

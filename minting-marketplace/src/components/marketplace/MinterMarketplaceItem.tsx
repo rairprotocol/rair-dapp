@@ -1,8 +1,6 @@
 import React from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { BigNumber, ethers } from 'ethers';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import BuyTokenModalContent from './BuyTokenModalContent';
 import { TMinterMarketplaceItemType } from './marketplace.types';
@@ -11,7 +9,7 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import chainData from '../../utils/blockchainData';
-const rSwal = withReactContent(Swal);
+import { reactSwal } from '../../utils/reactSwal';
 
 const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
   item,
@@ -65,7 +63,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
                 // Code for suresh goes here
               }
             } else {
-              rSwal.fire({
+              reactSwal.fire({
                 html: (
                   <Provider store={store}>
                     <BuyTokenModalContent

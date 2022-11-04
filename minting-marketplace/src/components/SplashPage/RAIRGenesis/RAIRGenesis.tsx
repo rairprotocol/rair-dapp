@@ -2,16 +2,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { teamRAIRBasicArray } from './AboutUsTeam';
 
+import { TNftFilesResponse } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { metaMaskIcon } from '../../../images';
+import { reactSwal } from '../../../utils/reactSwal';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
@@ -19,7 +19,11 @@ import MetaTags from '../../SeoTags/MetaTags';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import { Genesis_TV, GenesisMember } from '../images/rairGenesis/rairGenesis';
 import NotCommercialTemplate2 from '../NotCommercial-2/NotCommercialTemplate-2';
-import { INumberedCircle, ISplashPageProps } from '../splashPage.types';
+import {
+  INumberedCircle,
+  ISplashPageProps,
+  TSplashDataType
+} from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
@@ -32,8 +36,6 @@ import './RAIRGenesis.css';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
-
-const reactSwal = withReactContent(Swal);
 
 const NumberedCircle: React.FC<INumberedCircle> = ({ index, primaryColor }) => {
   return (
@@ -53,7 +55,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   const currentUserAddress = useSelector<RootState, string | undefined>(
     (store) => store.contractStore.currentUserAddress
   );
-  const splashData = {
+  const splashData: TSplashDataType = {
     NFTName: 'Genesis Pass artwork',
     title: 'RAIR Genesis Pass',
     titleColor: '#000000',

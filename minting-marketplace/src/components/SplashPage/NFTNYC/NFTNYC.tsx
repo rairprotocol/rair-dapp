@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { teamNFTNYCArray } from './AboutUsTeam';
 
@@ -12,6 +10,7 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { metaMaskIcon } from '../../../images';
+import { reactSwal } from '../../../utils/reactSwal';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -30,8 +29,6 @@ import WarningModal from '../WarningModal/WarningModal';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './NFTNYC.css';
-
-const reactSwal = withReactContent(Swal);
 
 const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,

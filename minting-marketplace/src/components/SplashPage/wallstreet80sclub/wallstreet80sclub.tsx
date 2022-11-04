@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { teamWallstreetArray } from './AboutUsTeam';
 
@@ -51,9 +50,6 @@ import './wallstreet80sclub.css';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
-
-//unused-snippet
-const reactSwal = withReactContent(Swal);
 
 // default contract
 const mainContract: TMainContractType = {

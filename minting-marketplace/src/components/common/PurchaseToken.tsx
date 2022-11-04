@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { ethers } from 'ethers';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
@@ -12,6 +11,7 @@ import { metaMaskIcon } from '../../images';
 import blockchainData from '../../utils/blockchainData';
 import { getRandomValues } from '../../utils/getRandomValues';
 import { metamaskCall } from '../../utils/metamaskUtils';
+import { reactSwal } from '../../utils/reactSwal';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
 
@@ -20,8 +20,6 @@ import {
   IPurchaseTokenButtonProps,
   IRangeDataType
 } from './commonTypes/PurchaseTokenTypes.types';
-
-const reactSwal = withReactContent(Swal);
 
 const queryRangeDataFromBlockchain = async (
   marketplaceInstance: ethers.Contract | undefined,

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { teamSimDogsArray } from './AboutUsTeam';
 import { BackStorySimDogs } from './InformationText';
@@ -14,6 +13,7 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { discrodIconNoBorder } from '../../../images';
+import { reactSwal } from '../../../utils/reactSwal';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import {
@@ -58,8 +58,6 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
-
-const reactSwal = withReactContent(Swal);
 
 const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,

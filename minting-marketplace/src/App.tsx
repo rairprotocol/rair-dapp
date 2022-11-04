@@ -10,9 +10,7 @@ import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 import Analytics from 'analytics';
 import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
-// Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { TUserResponse } from './axios.responseTypes';
 // logos for About Page
@@ -85,13 +83,12 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
+import { reactSwal } from './utils/reactSwal';
 import { getJWT, isTokenValid } from './utils/rFetch';
 // views
 import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
 
 import './App.css';
-
-const rSwal = withReactContent(Swal);
 
 /* Track a page view */
 const analytics = getInformationGoogleAnalytics();
@@ -156,7 +153,7 @@ function App() {
       );
       currentUser = programmaticProvider.address;
     } else {
-      rSwal.fire({
+      reactSwal.fire({
         title: 'Please install a Crypto wallet',
         html: (
           <div>
