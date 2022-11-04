@@ -1,10 +1,8 @@
-// @ts-nocheck
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import videojs from 'video.js';
 
 import { VideoPlayerParams } from './video.types';
@@ -15,9 +13,9 @@ import {
 } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { reactSwal } from '../../utils/reactSwal';
 import setDocumentTitle from '../../utils/setTitle';
 
-const reactSwall = withReactContent(Swal);
 const VideoPlayer = () => {
   const params = useParams<VideoPlayerParams>();
   const { /*contract,*/ mainManifest, videoId } = params;
@@ -90,11 +88,17 @@ const VideoPlayer = () => {
     } catch (err) {
       const error = err as AxiosError;
       console.error(error.message);
-      reactSwall.fire({
+      reactSwal.fire({
         title: 'NFT required to view this content'
       });
     }
-  }, [mainManifest, videoId, videoName, programmaticProvider]);
+  }, [
+    mainManifest,
+    videoId,
+    videoName,
+    programmaticProvider,
+    currentUserAddress
+  ]);
 
   useEffect(() => {
     requestChallenge();

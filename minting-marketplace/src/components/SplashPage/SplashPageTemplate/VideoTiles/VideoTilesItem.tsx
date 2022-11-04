@@ -1,11 +1,12 @@
-//@ts-nocheck
 import React, { useCallback, useState } from 'react';
 import Modal from 'react-modal';
 import { Provider, useSelector, useStore } from 'react-redux';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { metaMaskIcon } from '../../../../images';
+import { reactSwal } from '../../../../utils/reactSwal';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
@@ -38,11 +39,8 @@ const customStylesForVideo = {
 };
 Modal.setAppElement('#root');
 
-const reactSwal = withReactContent(Swal);
-
 const VideoTilesItem = ({
   videoName,
-  // videoType,
   videoTime,
   videoSRC,
   baseURL,
@@ -61,7 +59,6 @@ const VideoTilesItem = ({
         </Provider>
       ),
       width: '90vw',
-      height: '90vh',
       customClass: {
         popup: `bg-${primaryColor}`,
         title: `text-${textColor}`
@@ -83,7 +80,9 @@ const VideoTilesItem = ({
     setVideoIsOpen(false);
   }
 
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   return (
     <>

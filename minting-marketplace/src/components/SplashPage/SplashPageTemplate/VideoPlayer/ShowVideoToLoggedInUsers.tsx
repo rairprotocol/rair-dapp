@@ -2,21 +2,18 @@ import React from 'react';
 import { useCallback, useState } from 'react';
 import Modal from 'react-modal';
 import { Provider, useSelector, useStore } from 'react-redux';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import VideoPlayerBySignature from './VideoPlayerBySignature ';
 
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { reactSwal } from '../../../../utils/reactSwal';
 import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import { playImagesColored } from '../../images/greyMan/grayMan';
 import { IShowVideoToLoggedInUsers } from '../../splashPage.types';
 
 import './VideoPlayer.css';
-
-const reactSwal = withReactContent(Swal);
 
 const customStylesForVideo = {
   overlay: {

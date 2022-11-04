@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { ethers } from 'ethers';
 import Swal from 'sweetalert2';
 import videojs from 'video.js';
 

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { teamCoinAgendaArray } from './AboutUsTeam';
 
@@ -10,6 +8,7 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { reactSwal } from '../../../utils/reactSwal';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
@@ -27,8 +26,6 @@ import favicon_CoinAgenda21 from './../images/favicons/coinagenda.ico';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './CoinAgenda2021.css';
-
-const reactSwal = withReactContent(Swal);
 
 const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
   setIsSplashPage

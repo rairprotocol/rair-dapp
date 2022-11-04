@@ -1,21 +1,18 @@
 import React from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { TalkSalesButton } from './TalkSalesButton';
 
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { reactSwal } from '../../../../utils/reactSwal';
 import InquiriesPage from '../../../InquiriesPage/InquiriesPage';
 
 interface ITalkSalesComponent {
   classes?: string;
   text: string;
 }
-
-const reactSwal = withReactContent(Swal);
 
 const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
   classes,

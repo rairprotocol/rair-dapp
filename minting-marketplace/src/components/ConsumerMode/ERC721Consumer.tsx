@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { utils } from 'ethers';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import BatchMinting from './BatchMinting';
 import {
@@ -18,7 +17,7 @@ import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import blockchainData from '../../utils/blockchainData';
 import { metamaskCall } from '../../utils/metamaskUtils';
-const MySwal = withReactContent(Swal);
+import { reactSwal } from '../../utils/reactSwal';
 
 const Range: React.FC<IRange> = ({
   tokenInstance,
@@ -134,7 +133,7 @@ const Range: React.FC<IRange> = ({
       </button>
       <button
         onClick={() => {
-          MySwal.fire({
+          reactSwal.fire({
             html: (
               <BatchMinting
                 name={name}

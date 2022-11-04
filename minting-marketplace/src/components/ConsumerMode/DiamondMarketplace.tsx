@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { BigNumber, constants, utils } from 'ethers';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import {
   IBatchTokenSelector,
@@ -17,9 +16,9 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import blockchainData from '../../utils/blockchainData';
 import { metamaskCall } from '../../utils/metamaskUtils';
+import { reactSwal } from '../../utils/reactSwal';
 import InputField from '../common/InputField';
 import BuyTokenModalContent from '../marketplace/BuyTokenModalContent';
-const rSwal = withReactContent(Swal);
 
 const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({
   batchMint,
@@ -363,7 +362,7 @@ const DiamondMarketplace = () => {
               <button
                 id={`button_${index}`}
                 onClick={async () => {
-                  rSwal.fire({
+                  reactSwal.fire({
                     html: (
                       <Provider store={store}>
                         <BuyTokenModalContent
