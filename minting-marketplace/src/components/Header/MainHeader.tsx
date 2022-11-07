@@ -121,8 +121,10 @@ const MainHeader: React.FC<IMainHeader> = ({
   const Highlight = (props) => {
     const { filter, str } = props;
     if (!filter) return str;
-
-    const regexp = new RegExp(filter, 'ig');
+    const regexp = new RegExp(
+      filter.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1'),
+      'ig'
+    );
     const matchValue = str.match(regexp);
 
     if (matchValue) {
