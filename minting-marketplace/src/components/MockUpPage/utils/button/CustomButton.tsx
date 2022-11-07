@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { ShowMoreContainer, ShowMoreItem } from './ShowMoreItems';
+import { ShowMoreContainer, ShowMoreItem, ShowMoreText } from './ShowMoreItems';
 
 import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
@@ -16,7 +16,11 @@ const CustomButton: React.FC<ICustomButton> = ({
   onClick,
   textColor,
   margin,
-  custom
+  custom,
+  font,
+  background,
+  hoverBackground,
+  padding
 }) => {
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
@@ -28,17 +32,26 @@ const CustomButton: React.FC<ICustomButton> = ({
       width={width}
       height={height}
       textColor={textColor}
+      background={background ? background : undefined}
       margin={margin}>
       {onClick ? (
         <ShowMoreItem
-          background={custom}
+          background={background}
+          hoverBackground={hoverBackground}
           width={width}
           height={height}
           textColor={textColor}
           primaryColor={primaryColor}
           className={cl.nftDataPageShowMore}
-          onClick={onClick}>
-          <span className={cl.nftDataPageShowMoreText}>{text}</span>
+          onClick={onClick}
+          padding={padding}>
+          <ShowMoreText
+            className={cl.nftDataPageShowMoreText}
+            font={font}
+            fontSize={'1.25rem'}
+            fontColor={'#fff'}>
+            {text}
+          </ShowMoreText>
         </ShowMoreItem>
       ) : (
         <ShowMoreItem
@@ -46,7 +59,13 @@ const CustomButton: React.FC<ICustomButton> = ({
           height={height}
           textColor={textColor}
           className={cl.nftDataPageShowMore}>
-          <span className={cl.nftDataPageShowMoreText}>{text}</span>
+          <ShowMoreText
+            className={cl.nftDataPageShowMoreText}
+            font={font}
+            fontSize={'1.25rem'}
+            fontColor={'#fff'}>
+            {text}
+          </ShowMoreText>
         </ShowMoreItem>
       )}
     </ShowMoreContainer>

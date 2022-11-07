@@ -20,13 +20,11 @@
     #e882d5 100%
   );
 }
-.nftDataPageShowMoreWrapper:hover {
-  background: #8c63da;
-}
 .nftDataPageShowMore {
   /* background: #434343; */
   border-radius: 16px;
-  padding-top: auto;
+  display: flex;
+  justify-content: center;
 }
 .nftDataPageShowMore:hover {
   /* background: #8d18916e; */
@@ -50,7 +48,9 @@
 }
 .nftDataPageShowMoreText {
   text-align: center;
-  display: inline-block;
-  padding: 12.5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: inherit;
+  /* padding: 0 10px; */
 }

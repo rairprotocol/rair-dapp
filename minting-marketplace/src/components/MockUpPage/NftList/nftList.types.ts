@@ -152,6 +152,11 @@ export interface ICustomButton {
   textColor?: string | undefined;
   margin?: string;
   custom?: boolean;
+  border?: string;
+  font?: string;
+  background?: string;
+  hoverBackground?: string;
+  padding?: string;
 }
 
 export type TShowMoreContainer = {
@@ -159,15 +164,27 @@ export type TShowMoreContainer = {
   height: string | undefined;
   textColor: string | undefined;
   margin: string | undefined;
+  background?: string | undefined;
 };
 
 export type TShowMoreItem = {
   width: string | undefined;
   height: string | undefined;
   textColor: string | undefined;
-  background?: boolean | undefined;
+  background?: string | undefined;
+  border?: string | undefined;
   primaryColor?: ColorChoice;
   onClick?: () => void;
+  font?: string;
+  bacground?: string;
+  hoverBackground?: string | undefined;
+  padding?: string | undefined;
+};
+
+export type TShowMoreText = {
+  font?: string | undefined;
+  fontColor?: string | undefined;
+  fontSize?: string | undefined;
 };
 
 export type TModalContentCloseBtnStyled = {
