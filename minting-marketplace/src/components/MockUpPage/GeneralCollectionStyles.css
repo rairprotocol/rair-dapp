@@ -227,6 +227,7 @@ img.single-token-block-img {
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   transition-duration: 0.5s;
+  /* z-index: 4; */
 }
 
 .nft-item-collection .description-wrapper:not(:hover),

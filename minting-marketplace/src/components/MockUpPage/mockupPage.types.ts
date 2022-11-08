@@ -25,6 +25,9 @@ export interface INftItemForCollectionView {
   someUsersData: UserType | null | undefined;
   userName: string | undefined;
   tokenDataLength?: number;
+  playing: number | null;
+  indexId: number;
+  setPlaying: (arg: null | number) => void;
 }
 
 export type TParamsNftItemForCollectionView = {

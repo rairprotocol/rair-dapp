@@ -1131,7 +1131,13 @@ i.fas-custom {
   justify-content: center;
   align-content: center;
   z-index: 1;
+  transition: 0.3s;
   cursor: pointer;
+}
+
+.btn-play:hover {
+  background: #d2d2d2;
+  transition: 0.3s;
 }
 
 .btn-play div {
