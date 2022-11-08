@@ -46,6 +46,7 @@ const MintedToken = new Schema(
     isMetadataPinned: { type: Boolean },
     isURIStoredToBlockchain: { type: Boolean, default: false },
     creationDate: { type: Date, default: Date.now },
+    product: { type: String, select: 0 },
   },
   { versionKey: false },
 );
