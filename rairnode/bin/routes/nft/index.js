@@ -217,7 +217,7 @@ module.exports = (context) => {
       await removeTempFile(roadToFile);
 
       if (_.isEmpty(forSave) && _.isEmpty(forUpdate)) {
-        return next(new AppError( 'Don\'t have tokens for creation / update.', 400));
+        return next(new AppError('Don\'t have tokens for creation / update.', 400));
       }
 
       if (!_.isEmpty(forSave)) {

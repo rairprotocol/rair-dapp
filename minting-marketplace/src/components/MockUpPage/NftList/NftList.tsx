@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CircularProgress } from '@mui/material';
 
@@ -16,6 +16,8 @@ const NftListComponent: React.FC<INftListComponent> = ({
   const loading = useSelector<RootState, boolean>(
     (store) => store.nftDataStore.loading
   );
+
+  const [playing, setPlaying] = useState<null | number>(null);
 
   if (loading) {
     return (
@@ -77,6 +79,9 @@ const NftListComponent: React.FC<INftListComponent> = ({
                   blockchain={contractData.blockchain}
                   collectionName={contractData.name}
                   ownerCollectionUser={contractData.user}
+                  index={index}
+                  playing={playing}
+                  setPlaying={setPlaying}
                   collectionIndexInContract={
                     contractData.collectionIndexInContract
                   }

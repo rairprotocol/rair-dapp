@@ -22,21 +22,35 @@ const NftItemForCollectionViewComponent: React.FC<
   pict,
   offerPrice,
   index,
+  indexId,
   metadata,
   offer,
   selectedData,
   someUsersData,
   userName,
-  tokenDataLength
+  tokenDataLength,
+  setPlaying,
+  playing
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
 
-  const [playing, setPlaying] = useState<boolean>(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
 
-  const handlePlaying = () => {
-    setPlaying((prev) => !prev);
+  const handlePlaying = (el?: unknown) => {
+    if (el === null) {
+      setPlaying(null);
+    } else {
+      setPlaying(indexId);
+    }
+  };
+
+  const toggleVideoPlay = () => {
+    if (playing === indexId) {
+      setPlaying(null);
+    } else {
+      setPlaying(indexId);
+    }
   };
 
   const checkUrl = useCallback(() => {
@@ -117,17 +131,25 @@ const NftItemForCollectionViewComponent: React.FC<
         {metadata?.animation_url &&
           (isFileUrl === 'gif' ? (
             <></>
+          ) : playing === indexId ? (
+            <div
+              className="btn-play"
+              onClick={() => {
+                handlePlaying(null);
+              }}>
+              <div>
+                <i className="fas fa-pause"></i>
+              </div>
+            </div>
           ) : (
-            <div onClick={handlePlaying} className="btn-play">
-              {playing ? (
-                <div>
-                  <i className="fas fa-pause"></i>
-                </div>
-              ) : (
-                <div>
-                  <i className="fas fa-play"></i>
-                </div>
-              )}
+            <div
+              onClick={() => {
+                handlePlaying();
+              }}
+              className="btn-play">
+              <div>
+                <i className="fas fa-play"></i>
+              </div>
             </div>
           ))}
         {metadata?.animation_url ? (
@@ -146,6 +168,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 overflow: 'hidden'
               }}>
               <ReactPlayer
+                onClick={() => toggleVideoPlay()}
                 alt="metadata?.name === 'none' ? 'NFT token' : metadata?.name"
                 url={`${metadata?.animation_url}`}
                 light={metadata?.image ? metadata?.image : pict}
@@ -155,11 +178,11 @@ const NftItemForCollectionViewComponent: React.FC<
                   borderRadius: '16px',
                   overflow: 'hidden'
                 }}
-                autoPlay={false}
+                autoPlay={true}
                 className="col-12 h-100 w-100"
                 onReady={handlePlaying}
-                playing={playing}
-                onEnded={handlePlaying}
+                playing={playing === indexId}
+                onEnded={() => handlePlaying(null)}
               />
             </div>
           )

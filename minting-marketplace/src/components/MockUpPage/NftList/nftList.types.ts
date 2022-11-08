@@ -27,6 +27,9 @@ export interface INftItemComponent {
   collectionIndexInContract: string;
   collectionName: string;
   ownerCollectionUser: string;
+  index: number;
+  playing: number | null;
+  setPlaying: (arg: null | number) => void;
 }
 
 export type TSortChoice = 'down' | 'up';

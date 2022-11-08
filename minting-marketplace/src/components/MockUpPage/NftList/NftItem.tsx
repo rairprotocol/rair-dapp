@@ -28,7 +28,10 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   contractName,
   collectionIndexInContract,
   collectionName,
-  ownerCollectionUser
+  ownerCollectionUser,
+  index,
+  playing,
+  setPlaying
 }) => {
   const navigate = useNavigate();
   const [metaDataProducts, setMetaDataProducts] = useStateIfMounted<
@@ -37,7 +40,6 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   const [accountData, setAccountData] = useStateIfMounted<UserType | null>(
     null
   );
-  const [playing, setPlaying] = useState<boolean>(false);
   const [isFileUrl, setIsFileUrl] = useState<string>();
 
   const { width } = useWindowDimensions();
@@ -70,8 +72,20 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
     }
   }, [ownerCollectionUser, setAccountData]);
 
-  const handlePlaying = () => {
-    setPlaying((prev) => !prev);
+  const handlePlaying = (el?: unknown) => {
+    if (el === null) {
+      setPlaying(null);
+    } else {
+      setPlaying(index);
+    }
+  };
+
+  const toggleVideoPlay = () => {
+    if (playing === index) {
+      setPlaying(null);
+    } else {
+      setPlaying(index);
+    }
   };
 
   const getProductAsync = useCallback(async () => {
@@ -164,17 +178,25 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
           {metaDataProducts?.metadata?.animation_url &&
             (isFileUrl === 'gif' ? (
               <></>
+            ) : playing === index ? (
+              <div
+                className="btn-play"
+                onClick={() => {
+                  handlePlaying(null);
+                }}>
+                <div>
+                  <i className="fas fa-pause"></i>
+                </div>
+              </div>
             ) : (
-              <div onClick={handlePlaying} className="btn-play">
-                {playing ? (
-                  <div>
-                    <i className="fas fa-pause"></i>
-                  </div>
-                ) : (
-                  <div>
-                    <i className="fas fa-play"></i>
-                  </div>
-                )}
+              <div
+                onClick={() => {
+                  handlePlaying();
+                }}
+                className="btn-play">
+                <div>
+                  <i className="fas fa-play"></i>
+                </div>
               </div>
             ))}
           {metaDataProducts?.metadata?.animation_url ? (
@@ -196,26 +218,29 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                   borderRadius: '16px',
                   overflow: 'hidden'
                 }}>
-                <ReactPlayer
-                  alt={collectionName}
-                  url={`${metaDataProducts.metadata?.animation_url}`}
-                  light={
-                    metaDataProducts.metadata?.image
-                      ? metaDataProducts.metadata?.image
-                      : pict
-                  }
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    borderRadius: '16px',
-                    overflow: 'hidden'
-                  }}
-                  autoPlay={false}
-                  className="col-12 h-100 w-100"
-                  onReady={handlePlaying}
-                  playing={playing}
-                  onEnded={handlePlaying}
-                />
+                {
+                  <ReactPlayer
+                    onClick={() => toggleVideoPlay()}
+                    alt={collectionName}
+                    url={`${metaDataProducts.metadata?.animation_url}`}
+                    light={
+                      metaDataProducts.metadata?.image
+                        ? metaDataProducts.metadata?.image
+                        : pict
+                    }
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      borderRadius: '16px',
+                      overflow: 'hidden'
+                    }}
+                    autoPlay={true}
+                    className="col-12 h-100 w-100"
+                    onReady={handlePlaying}
+                    playing={playing === index}
+                    onEnded={() => handlePlaying(null)}
+                  />
+                }
               </div>
             )
           ) : (

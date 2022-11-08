@@ -41,6 +41,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const dispatch = useDispatch();
   const myRef = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState<boolean>(true);
+  const [playing, setPlaying] = useState<null | number>(null);
 
   const loadToken = useCallback(() => {
     setShowToken(showToken * 2);
@@ -127,9 +128,12 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                         blockchain={blockchain}
                         selectedData={selectedData}
                         index={token.token}
+                        indexId={index}
                         offer={token.offer.offerIndex}
                         someUsersData={someUsersData}
                         userName={offerAllData?.owner}
+                        setPlaying={setPlaying}
+                        playing={playing}
                       />
                     );
                   } else {
@@ -153,10 +157,13 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                         blockchain={blockchain}
                         selectedData={selectedData}
                         index={String(index)}
+                        indexId={index}
                         offer={token.offer.offerIndex}
                         someUsersData={someUsersData}
                         userName={offerAllData?.owner}
                         tokenDataLength={tokenData.length}
+                        setPlaying={setPlaying}
+                        playing={playing}
                       />
                     );
                   } else {
