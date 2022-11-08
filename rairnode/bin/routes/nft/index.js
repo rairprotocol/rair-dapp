@@ -34,7 +34,7 @@ module.exports = (context) => {
       const { user } = req;
       const prod = product;
       const defaultFields = ['nftid', 'name', 'description', 'artist'];
-      const optionalFields = ['image', 'animation_url', 'publicaddress'];
+      const optionalFields = ['image', 'animation_url', 'publicaddress', 'base_external_url'];
       const roadToFile = `${req.file.destination}${req.file.filename}`;
       const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
       const records = [];
@@ -127,22 +127,27 @@ module.exports = (context) => {
           if (isValid && isCoverPresent) records.push(data);
         })
         .on('end', () => {
-          _.forEach(offers, (offer) => {
-            _.forEach(records, (record) => {
+          offers.forEach((offer) => {
+            records.forEach((record) => {
               const token = record.nftid;
 
-              if (BigInt(token) >= BigInt(offer.range[0]) && BigInt(token) <= BigInt(offer.range[1])) {
-                const address = record.publicaddress ? record.publicaddress : `0xooooooooooooooooooooooooooooooooooo${token}`;
+              if (BigInt(token) >= BigInt(offer.range[0]) &&
+                    BigInt(token) <= BigInt(offer.range[1])) {
+                const address = record.publicaddress ? record.publicaddress
+                                                      : constants.AddressZero;
                 const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
                   .assign({})
-                  .omit(_.concat(defaultFields, optionalFields))
+                  .omit(defaultFields.concat(optionalFields))
                   .reduce((re, v, k) => {
                     re.push({ trait_type: k, value: v });
                     return re;
                   }, [])
                   .value();
-                const foundToken = _.find(foundTokens, (t) => t.offer === (foundContract.diamond ? offer.diamondRangeIndex : offer.offerIndex) && t.token === token);
+                const foundToken = foundTokens.find(
+                  (t) => t.offer === (foundContract.diamond ? offer.diamondRangeIndex
+                    : offer.offerIndex) && t.token === token
+                );
                 const mainFields = {
                   contract,
                   token,
@@ -156,7 +161,16 @@ module.exports = (context) => {
                   ? offer.diamondRangeIndex
                   : offer.offerIndex;
 
-                const externalURL = encodeURI(`https://${process.env.SERVICE_HOST}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`);
+                // External URL will combine the base URL (if it exists) or use the env variable
+                const baseExternalURL = record?.base_external_url !== '' ? record.base_external_url
+                                                                        : process.env.SERVICE_HOST;
+                const externalURL = encodeURI(`https://${baseExternalURL}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`);
+
+                // If ipfs:// exists, replace with a browser readable gateway
+                record.image = record.image.replace(
+                  'ipfs://',
+                  'https://ipfs.io/ipfs/',
+                );
 
                 if (!foundToken) {
                   forSave.push({
@@ -195,7 +209,8 @@ module.exports = (context) => {
                           external_url: externalURL,
                           image: record.image || '',
                           animation_url: record.animation_url || '',
-                          isMetadataPinned: reg.test(token.metadataURI || ''),
+                          // Set to false because THIS new metadata is not pinned.
+                          isMetadataPinned: false,
                           attributes,
                         },
                       },
