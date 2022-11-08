@@ -88,6 +88,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   const addRow = () => {
     const aux = [...propertiesArray];
     aux.push({
+      percentage: '',
       trait_type: '',
       value: ''
     });

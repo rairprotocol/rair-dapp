@@ -16,6 +16,7 @@ export type TNftItemResult = {
 export type TAttributes = {
   trait_type: string;
   value: string;
+  percentage: string;
 };
 
 export type TCheckMetadataOnBlockchain = {

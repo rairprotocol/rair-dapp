@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Tooltip } from '@mui/material';
 
 import { ISingleTokenViewProperties } from '../../mockupPage.types';
 
@@ -6,16 +7,24 @@ const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
   selectedData,
   textColor
 }) => {
-  const randomInteger = (min: number, max: number) => {
-    const rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
+  const [toolTipMobile, setToolTipMobile] = useState<boolean>(false);
+
+  // unused code
+  // const randomInteger = (min: number, max: number) => {
+  //   const rand = min + Math.random() * (max + 1 - min);
+  //   return Math.floor(rand);
+  // };
+
+  const toggleToolTipMobile = () => {
+    setToolTipMobile((prev) => !prev);
   };
 
-  const percentToRGB = (percent: number) => {
-    if (percent) {
-      if (percent < 15) {
+  const percentToRGB = (percent: string) => {
+    const percentNumber = parseInt(percent);
+    if (percentNumber) {
+      if (percentNumber < 15) {
         return '#95F619';
-      } else if (15 <= percent && percent < 35) {
+      } else if (15 <= percentNumber && percentNumber < 35) {
         return '#F6ED19';
       } else {
         return '#F63419';
@@ -72,7 +81,6 @@ const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
               </div>
             );
           }
-          const percent = randomInteger(1, 40);
           return (
             <div
               key={index}
@@ -86,17 +94,36 @@ const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
                 {`${item?.trait_type.toUpperCase()} `}
               </div>
               <div className="custom-offer-percents">
-                <div
-                  className="text-bold"
-                  title={toUpper(item?.value.toString().toLowerCase())}>
-                  {`${toUpper(item?.value.toString().toLowerCase())} `}
-                </div>
+                {item?.value.length > 12 ? (
+                  item.value && (
+                    <Tooltip
+                      onClose={toggleToolTipMobile}
+                      onOpen={toggleToolTipMobile}
+                      open={toolTipMobile}
+                      placement="left"
+                      arrow
+                      title={item.value}>
+                      <div className="text-bold" onClick={toggleToolTipMobile}>
+                        {`${toUpper(
+                          item?.value.toString().toLowerCase()
+                        )?.slice(0, 10)}`}
+                        ...
+                      </div>
+                    </Tooltip>
+                  )
+                ) : (
+                  <div
+                    className="text-bold"
+                    title={toUpper(item?.value.toString().toLowerCase())}>
+                    {`${toUpper(item?.value.toString().toLowerCase())}`}
+                  </div>
+                )}
                 <div
                   className="custom-offer-percents-percent"
                   style={{
-                    color: percentToRGB(percent)
+                    color: percentToRGB(item?.percentage)
                   }}>
-                  {percent}%
+                  {item.percentage}
                 </div>
               </div>
             </div>
