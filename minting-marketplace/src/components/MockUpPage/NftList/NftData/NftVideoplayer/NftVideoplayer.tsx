@@ -4,6 +4,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import videojs from 'video.js';
 
+import NewVideo from './NewVideo';
+
 import {
   TAuthGetChallengeResponse,
   TOnlySuccessResponse
@@ -15,7 +17,7 @@ import { INftVideoplayer } from '../../../mockupPage.types';
 
 const NftVideoplayer: React.FC<INftVideoplayer> = ({
   selectVideo,
-  main,
+  // main,
   setSelectVideo
 }) => {
   const mainManifest = 'stream.m3u8';
@@ -39,7 +41,7 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
         const response = await axios.post<TAuthGetChallengeResponse>(
           '/api/auth/get_challenge/',
           {
-            userAddress: currentUserAddress,
+            userAddress: currentUserAddress || (account && account[0]),
             intent: 'decrypt',
             mediaId: selectVideo?._id
           }
@@ -119,36 +121,25 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
     };
   }, [videoName]);
 
-  if (main) {
+  if (mediaAddress.length > 0) {
     return (
       <>
-        <div className="col-12 row mx-0 bg-secondary h1">
-          <video
-            id={'vjs-' + videoName}
-            className="video-js vjs-16-9"
-            controls
-            preload="auto"
-            data-setup="{}">
-            <source src={mediaAddress} type="application/x-mpegURL" />
-          </video>
+        <div className="col-12 row mx-0 h1">
+          <NewVideo
+            videoData={mediaAddress}
+            selectVideo={selectVideo}
+            videoIdName={videoName}
+          />
         </div>
       </>
     );
   } else {
     return (
-      <>
-        <div className="nft-video-player-video">
-          <video
-            id={'vjs-' + videoName}
-            className="video-js"
-            controls
-            preload="auto"
-            autoPlay
-            data-setup="{}">
-            <source src={mediaAddress} type="application/x-mpegURL" />
-          </video>
+      <div style={{ paddingTop: '20%' }}>
+        <div className="loader-wrapper">
+          <div className="load" />
         </div>
-      </>
+      </div>
     );
   }
 };

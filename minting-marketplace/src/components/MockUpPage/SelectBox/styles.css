@@ -416,6 +416,14 @@ video::-webkit-media-controls-panel {
   width: 100%;
   height: inherit;
 }
+.video-js .vjs-tech {
+  object-fit: cover;
+}
+.vjs-fluid:not(.vjs-audio-only-mode) {
+  padding-top: 0 !important;
+  /* height: 29vh; */
+  height: calc(428px - 0.8rem);
+}
 
 .nft-video-player-video {
   height: 405px;
@@ -1705,3 +1713,14 @@ video {
     width: 126px !important;
   }
 }
+/* @media screen and (max-width: 3030px) and (min-width: 2029px) {
+  .vjs-fluid:not(.vjs-audio-only-mode) {
+    height: calc(428px - 0.8rem);
+  }
+} */
+
+/* @media screen and (max-width: 5030px) and (min-width: 3029px) {
+  .vjs-fluid:not(.vjs-audio-only-mode) {
+    height: 12vh;
+  }
+} */
