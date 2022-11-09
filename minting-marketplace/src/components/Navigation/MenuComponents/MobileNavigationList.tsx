@@ -94,7 +94,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           </li>
           <li>
             <TalkSalesComponent
-              text={'Talk to sales'}
+              text={'Inquiries'}
               classes={'inquiries-sales'}
             />
           </li>

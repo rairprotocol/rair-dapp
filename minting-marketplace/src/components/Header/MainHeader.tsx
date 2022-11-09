@@ -373,7 +373,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             />
           </div>
         </div>
-        <TalkSalesComponent text={'Talk to sales'} />
+        <TalkSalesComponent text={'Inquiries'} />
       </div>
     </HeaderContainer>
   );
