@@ -2,14 +2,17 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 import { teamSimDogsArray } from './AboutUsTeam';
 import { BackStorySimDogs } from './InformationText';
 
 import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
+import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { discrodIconNoBorder } from '../../../images';
@@ -39,7 +42,11 @@ import {
   TDonationGridDataItem,
   TSplashDataType
 } from '../splashPage.types';
+// import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
 import CardParagraphText from '../SplashPageConfig/CardParagraphText/CardParagraphText';
+// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
+// import GenesisMember from '../images/creator-flow.png';
+/* importing Components*/
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
 import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
@@ -65,19 +72,14 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const primaryColor = useSelector<RootState, ColorChoice>(
-    (store) => store.colorStore.primaryColor
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
   );
   /* UTILITIES FOR NFT PURCHASE */
-  const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
-  const [purchaseList, setPurchaseList] = useState<boolean>(true);
   /* UTILITIES FOR VIDEO PLAYER VIEW */
   const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
   const [selectVideo, setSelectVideo] = useState<TFileType>();
 
-  const togglePurchaseList = () => {
-    setPurchaseList((prev) => !prev);
-  };
   const mainChain = '0x1';
   const splashData: TSplashDataType = useMemo(
     () => ({
@@ -225,6 +227,79 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       ]
     }
   ];
+  // const splashData: TSplashDataType = {
+  //   // NFTName: 'Genesis Pass artwork',
+  //   title: 'SIM DOGS',
+  //   titleColor: '#495CB0',
+  //   description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+  //   textBottom: false,
+  //   videoPlayerParams: {
+  //     contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
+  //     product: '0',
+  //     blockchain: '0x5'
+  //   },
+  //   marketplaceDemoParams: {
+  //     contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
+  //     product: '0',
+  //     blockchain: '0x5'
+  //   },
+  //   purchaseButton: {
+  //     requiredBlockchain: '0x38',
+  //     contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f'
+  //   },
+  //   buttonLabel: 'Connect Wallet',
+  //   buttonBackgroundHelp: 'rgb(3, 91, 188)',
+  //   backgroundImage: SimDogs0,
+  //   button1: {
+  //     buttonImg: discrodIconNoBorder,
+  //     buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
+  //   },
+  //   button2: {
+  //     buttonCustomLogo: <i className="fab fa-twitter twitter-logo" />,
+  //     buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
+  //   },
+  //   button3: {
+  //     buttonTextColor: '#FFFFFF',
+  //     buttonColor: '#55CFFF',
+  //     buttonLabel: 'PREMINT',
+  //     buttonImg: null,
+  //     buttonLink: 'https://www.premint.xyz/simdogsxyz/'
+  //   },
+  //   exclusiveNft: {
+  //     title: 'NFTs',
+  //     titleColor: 'rgb(3, 91, 188)'
+  //   },
+  //   timelinePics: [
+  //     Flyinggreyman,
+  //     GreymanVariants,
+  //     GreymanMonument,
+  //     GreymanRose,
+  //     GreymanArmy,
+  //     GreymanMatrix,
+  //     GreyManTimes
+  //   ]
+  // };
+
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'Sim Dogs',
+        ogTitle: 'Sim Dogs',
+        twitterTitle: 'Sim Dogs',
+        contentName: 'author',
+        content: '',
+        description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        ogDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        twitterDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        image: SimDogs0,
+        favicon: RairFavicon,
+        faviconMobile: RairFavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
+
+  //an option for custom button arrangment
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
@@ -251,6 +326,19 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
   };
 
   const customButtonBlock = <CustomButtonBlock splashData={splashData} />;
+
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
+
+  /* UTILITIES FOR NFT PURCHASE */
+  const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
+  const [purchaseList, setPurchaseList] = useState<boolean>(true);
+  const ukraineglitchChainId = '0x1';
+
+  const togglePurchaseList = () => {
+    setPurchaseList((prev) => !prev);
+  };
 
   useEffect(() => {
     dispatch(
