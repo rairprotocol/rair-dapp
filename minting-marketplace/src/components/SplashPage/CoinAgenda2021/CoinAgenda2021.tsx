@@ -19,6 +19,7 @@ import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton'
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
+/* importing Components*/
 import WarningModal from '../WarningModal/WarningModal';
 
 import favicon_CoinAgenda21 from './../images/favicons/coinagenda.ico';

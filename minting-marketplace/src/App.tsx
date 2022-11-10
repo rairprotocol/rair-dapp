@@ -2,17 +2,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import googleAnalytics from '@analytics/google-analytics';
 // React Redux types
 import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 // import * as ethers from 'ethers';
 // import * as colorTypes from './ducks/colors/types';
-import Analytics from 'analytics';
-import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
-import Swal from 'sweetalert2';
 
-import { TUserResponse } from './axios.responseTypes';
 // logos for About Page
 import { headerLogoBlack, headerLogoWhite } from './images';
 
@@ -21,7 +16,6 @@ import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
 import TransferTokens from './components/adminViews/transferTokens';
 import AlertMetamask from './components/AlertMetamask/index';
-import { OnboardingButton } from './components/common/OnboardingButton/OnboardingButton';
 import ConsumerMode from './components/consumerMode';
 import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
 import CreatorMode from './components/creatorMode';
@@ -38,7 +32,6 @@ import TestIframe from './components/iframePage/testIframe';
 import InquiriesPage from './components/InquiriesPage/InquiriesPage';
 import MainPage from './components/MainPage/MainPage';
 import MinterMarketplace from './components/marketplace/MinterMarketplace';
-import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico';
 import MockUpPage from './components/MockUpPage/MockUpPage';
 import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
@@ -73,9 +66,10 @@ import NotificationPage from './components/UserProfileSettings/NotificationPage/
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
 import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
-import { setChainId, setUserAddress } from './ducks/contracts/actions';
+import { setChainId } from './ducks/contracts/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setAdminRights } from './ducks/users/actions';
+import useConnectUser from './hooks/useConnectUser';
 import {
   AppContainerFluid,
   MainBlockApp
@@ -83,8 +77,7 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
-import { reactSwal } from './utils/reactSwal';
-import { getJWT, isTokenValid } from './utils/rFetch';
+import { isTokenValid } from './utils/rFetch';
 // views
 import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
 
@@ -98,9 +91,6 @@ const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const dispatch = useDispatch();
-  const [userData, setUserData] = useState();
-  const [startedLogin, setStartedLogin] = useState(false);
-  const [loginDone, setLoginDone] = useState(false);
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
@@ -131,106 +121,9 @@ function App() {
     useSelector((store) => store.colorStore);
   const { token } = useSelector((store) => store.accessStore);
   const { adminRights } = useSelector((store) => store.userStore);
-  const connectUserData = useCallback(async () => {
-    setStartedLogin(true);
-    let currentUser;
-    const dispatchStack = [];
-    if (window.ethereum) {
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-      dispatchStack.push(setUserAddress(accounts[0]));
-      dispatchStack.push(setChainId(window.ethereum.chainId?.toLowerCase()));
-      currentUser = accounts[0];
-    } else if (programmaticProvider) {
-      dispatchStack.push(setUserAddress(programmaticProvider.address));
-      dispatchStack.push(
-        setChainId(
-          `0x${programmaticProvider.provider._network.chainId
-            ?.toString(16)
-            ?.toLowerCase()}`
-        )
-      );
-      currentUser = programmaticProvider.address;
-    } else {
-      reactSwal.fire({
-        title: 'Please install a Crypto wallet',
-        html: (
-          <div>
-            <OnboardingButton />
-          </div>
-        ),
-        icon: 'error'
-      });
-      setStartedLogin(false);
-      return;
-    }
 
-    if (!currentUser && currentUser !== undefined) {
-      Swal.fire('Error', 'No user address found', 'error');
-      setStartedLogin(false);
-      return;
-    }
-
-    try {
-      // Check if user exists in DB
-      const userData = await axios.get<TUserResponse>(
-        `/api/users/${currentUser}`
-      );
-      const { success, user } = userData.data;
-      if (!success || !user) {
-        // If the user doesn't exist, send a request to register him using a TEMP adminNFT
-        console.info('Address is not registered!');
-        const userCreation = await axios.post<TUserResponse>(
-          '/api/users',
-          JSON.stringify({ publicAddress: currentUser }),
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        const { user } = userCreation.data;
-        setUserData(user);
-      } else {
-        setUserData(user);
-      }
-
-      // Authorize user and get JWT token
-      if (
-        adminRights === null ||
-        adminRights === undefined ||
-        !localStorage.token ||
-        !isTokenValid(localStorage.token)
-      ) {
-        dispatchStack.push(getTokenStart());
-        const token = await getJWT(programmaticProvider, currentUser);
-
-        if (!success) {
-          setStartedLogin(false);
-          setLoginDone(false);
-          dispatchStack.push(setAdminRights(false));
-          dispatchStack.push(getTokenComplete(token));
-          localStorage.setItem('token', token);
-        } else {
-          const decoded = jsonwebtoken.decode(token);
-          dispatchStack.push(setAdminRights(decoded.adminRights));
-          dispatchStack.push(getTokenComplete(token));
-          localStorage.setItem('token', token);
-        }
-      }
-
-      setStartedLogin(false);
-      dispatchStack.forEach((dispatchItem) => {
-        dispatch(dispatchItem);
-      });
-      setLoginDone(true);
-    } catch (err) {
-      console.error('Error', err);
-      setStartedLogin(false);
-    }
-  }, [programmaticProvider, adminRights, dispatch]);
+  const { startedLogin, userData, loginDone, connectUserData, setLoginDone } =
+    useConnectUser();
 
   const goHome = () => {
     navigate('/');

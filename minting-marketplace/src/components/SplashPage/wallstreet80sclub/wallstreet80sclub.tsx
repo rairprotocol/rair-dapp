@@ -47,6 +47,9 @@ import './wallstreet80sclub.css';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './wallstreet80sclub.css';
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './wallstreet80sclub.css';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);

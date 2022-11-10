@@ -3,6 +3,11 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { teamNFTLAarray } from './AboutUsTeam';
+import {
+  ISplashPageProps,
+  TNftLaSelectedVideo,
+  TSplashDataType
+} from './splashPage.types';
 
 import { TFileType } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
@@ -16,11 +21,6 @@ import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
 import { NFTLA1, NFTLA1_rounded, NFTLA2, NFTLA3 } from '../images/NFTLA/nftLA';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import {
-  ISplashPageProps,
-  TNftLaSelectedVideo,
-  TSplashDataType
-} from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
 import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
@@ -31,10 +31,8 @@ import TeamMeet from '../TeamMeet/TeamMeetList';
 import NFTfavicon from './../images/favicons/NFT_favicon.ico';
 import NFTLA_Video from './../images/NFTLA/NFT-LA-RAIR-2021.mp4';
 
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import './../../AboutPage/AboutPageNew/AboutPageNew.css';
-import './../SplashPageTemplate/AuthorCard/AuthorCard.css';
-import './../../AboutPage/AboutPageNew/AboutPageNew.css';
 
 //TODO:Until we have a contract it will be commented
 // import { TNftFilesResponse } from '../../axios.responseTypes';

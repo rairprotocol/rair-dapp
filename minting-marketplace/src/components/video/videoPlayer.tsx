@@ -15,6 +15,7 @@ import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { reactSwal } from '../../utils/reactSwal';
 import setDocumentTitle from '../../utils/setTitle';
+import NewVideo from '../MockUpPage/NftList/NftData/NftVideoplayer/NewVideo';
 
 const VideoPlayer = () => {
   const params = useParams<VideoPlayerParams>();
@@ -122,7 +123,12 @@ const VideoPlayer = () => {
       <div
         className="col-12 row mx-0 h1 iframe-video-player"
         style={{ minHeight: '100vh' }}>
-        <video
+        <NewVideo
+          videoData={mediaAddress}
+          selectVideo={''}
+          videoIdName={videoName}
+        />
+        {/* <video
           id={'vjs-' + videoName}
           className="video-js vjs-16-9"
           controls
@@ -133,8 +139,8 @@ const VideoPlayer = () => {
           <source
             src={mediaAddress !== null ? mediaAddress : ''}
             type="application/x-mpegURL"
-          />
-        </video>
+          /> */}
+        {/* </video> */}
       </div>
     </>
   );
