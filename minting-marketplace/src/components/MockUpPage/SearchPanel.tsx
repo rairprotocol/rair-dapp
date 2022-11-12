@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
@@ -16,8 +16,8 @@ import {
   getCurrentPageNull
 } from '../../ducks/pages/actions';
 import { getListVideosStart } from '../../ducks/videos/actions';
-import { TVideosInitialState } from '../../ducks/videos/videosDucks.types';
 import InputField from '../common/InputField';
+import { MediaListResponseType } from '../video/video.types';
 import VideoList from '../video/videoList';
 
 import FilteringBlock from './FilteringBlock/FilteringBlock';
@@ -35,18 +35,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
   tabIndex,
   setTabIndex
 }) => {
-  const dispatch = useDispatch();
-  const currentPage = useSelector<RootState, number>(
-    (store) => store.getPageStore.currentPage
-  );
-  const { nftListTotal, nftList, itemsPerPage } = useSelector<
-    RootState,
-    InitialNftDataStateType
-  >((store) => store.nftDataStore);
-  const totalNumberVideo = useSelector<RootState, number | undefined>(
-    (store) => store.videosStore.totalNumberVideo
-  );
-
+  const [videoUnlocked, setVideoUnlocked] = useState<boolean>(false);
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [sortItem, setSortItem] = useState<TSortChoice | undefined>();
   const [blockchain, setBlockchain] = useState<BlockchainType | undefined>();
@@ -62,9 +51,24 @@ const SearchPanel: React.FC<ISearchPanel> = ({
   const [blockchainClick, setBlockchainClick] =
     useState<TBlockchainNames | null>(null);
   const [currentPageForVideo, setCurrentPageForVideo] = useState<number>(1);
-  const { videos, loading } = useSelector<RootState, TVideosInitialState>(
-    (store) => store.videosStore
+  const dispatch = useDispatch();
+  const currentPage = useSelector<RootState, number>(
+    (store) => store.getPageStore.currentPage
   );
+  const { nftListTotal, nftList, itemsPerPage } = useSelector<
+    RootState,
+    InitialNftDataStateType
+  >((store) => store.nftDataStore);
+  const totalNumberVideo = useSelector<RootState, number | undefined>(
+    (store) => store.videosStore.totalNumberVideo
+  );
+  const videos = useSelector<RootState, MediaListResponseType | null>(
+    (store) => store.videosStore.videos
+  );
+
+  const handleVideoIsUnlocked = useCallback(() => {
+    setVideoUnlocked((prev) => !prev);
+  }, [setVideoUnlocked]);
 
   const _locTok: string = localStorage.token;
 
@@ -106,17 +110,26 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     (params) => {
       dispatch(getListVideosStart(params));
     },
-    [dispatch]
+    [dispatch, videoUnlocked]
   );
 
-  useEffect(() => {
-    const params = {
+  const globalParams = useMemo(
+    () => ({
       itemsPerPage: itemsPerPage,
       pageNum: currentPageForVideo,
       xTok: _locTok
-    };
-    updateVideo(params);
-  }, [_locTok, currentPageForVideo, itemsPerPage, updateVideo]);
+    }),
+    [itemsPerPage, currentPageForVideo, _locTok]
+  );
+
+  useEffect(() => {
+    // const params = {
+    //   itemsPerPage: itemsPerPage,
+    //   pageNum: currentPageForVideo,
+    //   xTok: _locTok
+    // };
+    updateVideo(globalParams);
+  }, [updateVideo, globalParams]);
 
   useEffect(() => {
     const params = {
@@ -257,8 +270,8 @@ const SearchPanel: React.FC<ISearchPanel> = ({
         <TabPanel>
           <VideoList
             videos={videos}
-            loading={loading}
             titleSearch={titleSearch}
+            handleVideoIsUnlocked={handleVideoIsUnlocked}
           />
           <PaginationBox
             totalPageForPagination={totalNumberVideo}

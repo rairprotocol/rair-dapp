@@ -1,4 +1,6 @@
-import { TContract, TTokenData } from '../../axios.responseTypes';
+import { TTokenData } from '../../axios.responseTypes';
+
+import { ContractType } from './../adminViews/adminView.types';
 export interface IVideoPlayer {
   mediaId?: string;
   mainManifest?: string;
@@ -12,17 +14,15 @@ export type VideoPlayerParams = {
   contract: string;
 };
 
-export type TParticularProduct = {
-  contract: TContract;
-  tokens: Array<TTokenData>;
-  totalCount: number;
+export type TVideoItemContractData = ContractType & {
+  tokens: TTokenData[];
 };
 export interface IVideoList {
-  titleSearch?: string;
+  titleSearch: string;
   responseLabel?: string;
   endpoint?: string;
-  loading?: boolean;
   videos?: MediaListResponseType | null;
+  handleVideoIsUnlocked?: () => void;
 }
 
 export type MediaListResponseType = {
@@ -53,4 +53,5 @@ export type MediaListResponseType = {
 export interface IVideoItem {
   mediaList: MediaListResponseType;
   item: string;
+  handleVideoIsUnlocked?: () => void;
 }

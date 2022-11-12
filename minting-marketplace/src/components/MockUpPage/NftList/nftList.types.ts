@@ -160,6 +160,7 @@ export interface ICustomButton {
   background?: string;
   hoverBackground?: string;
   padding?: string;
+  loading?: boolean;
 }
 
 export type TShowMoreContainer = {
@@ -168,6 +169,7 @@ export type TShowMoreContainer = {
   textColor: string | undefined;
   margin: string | undefined;
   background?: string | undefined;
+  loading?: boolean;
 };
 
 export type TShowMoreItem = {

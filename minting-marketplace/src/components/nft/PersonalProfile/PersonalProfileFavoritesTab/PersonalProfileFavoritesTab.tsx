@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 
 import { IPersonalProfileFavoritesTab } from './myFavorites.types';
 
 import { TDocData } from '../../../../axios.responseTypes';
+import LoadingComponent from '../../../common/LoadingComponent';
 
 import MyfavoriteItem from './MyfavoriteItem/MyfavoriteItem';
 
@@ -64,13 +64,7 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
   return (
     <div className="gen">
       {loading ? (
-        <div className="list-wrapper-empty">
-          <CircularProgress
-            sx={{ color: '#E882D5' }}
-            size={100}
-            thickness={4.6}
-          />
-        </div>
+        <LoadingComponent />
       ) : (
         <div className="my-items-product-wrapper row favorite">
           {myFavoriteItems ? (
