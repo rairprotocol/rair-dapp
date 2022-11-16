@@ -229,18 +229,28 @@ module.exports = (context) => {
     }
   });
 
-  router.get(
-    '/import/network/:networkId/:contractAddress/:limit',
+  router.post(
+    '/import/',
     JWTVerification,
     isAdmin,
+    validation('importContract', 'body'),
     async (req, res, next) => {
       try {
-        const { networkId, contractAddress, limit } = req.params;
+        if (!req.user.adminRights) {
+          log.error("User doesn't have admin rights");
+          return {
+            success: false,
+            result: undefined,
+            message: 'Admin rights are required to import!',
+          };
+        }
+        const { networkId, contractAddress, limit, contractCreator } = req.body;
         const { success, result, message } = await importContractData(
           networkId,
           contractAddress,
           limit,
-          req.user,
+          contractCreator,
+          context.db,
         );
         return res.json({ success, result, message });
       } catch (err) {

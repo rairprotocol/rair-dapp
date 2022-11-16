@@ -29,6 +29,7 @@ const manageContract = require('./manageContract');
 const getProductsByUserAddress = require('./getProductsByUserAddress');
 const getLocksByProduct = require('./getLocksByProduct');
 const getFilesByProduct = require('./getFilesByProduct');
+const importContract = require('./importContract');
 
 module.exports = {
   admin,
@@ -52,6 +53,9 @@ module.exports = {
   pinningMultiple,
   // V2
 
+  // Import contract logic
+  importContract,
+
   // user
   createUser,
   singleUser,
@@ -64,13 +68,13 @@ module.exports = {
   getChallengeV2,
   withProductV2,
 
-  //product
+  // product
   getProductsByUserAddress,
 
-  //files
+  // files
   getFilesByProduct,
 
-  //lock
+  // lock
   getLocksByProduct,
 
   // favorites
