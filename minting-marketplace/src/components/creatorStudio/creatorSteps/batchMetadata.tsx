@@ -57,7 +57,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   }, []);
 
   useEffect(() => {
-    if (!metadata) {
+    if (!metadata?.at(0)) {
       setButtons([
         {
           label: 'Continue',
