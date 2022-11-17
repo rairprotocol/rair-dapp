@@ -42,7 +42,7 @@ export type TTokenData = {
   metadata: TMetadataType;
   metadataURI: string;
   offer: TOfferType;
-  offerPool: string;
+  offerPool?: string;
   ownerAddress: string;
   token: string;
   uniqueIndexInContract: string;

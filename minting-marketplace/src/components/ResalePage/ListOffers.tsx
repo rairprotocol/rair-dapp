@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
-import { CircularProgress } from '@mui/material';
 
 import { NftItem } from './ItemOffer';
 import { IListOffersComponent } from './listOffers.types';
 
 import { RootState } from '../../ducks';
+import LoadingComponent from '../common/LoadingComponent';
 
 const ListOffers: React.FC<IListOffersComponent> = ({ data }) => {
   const loading = useSelector<RootState, boolean>(
@@ -12,15 +12,7 @@ const ListOffers: React.FC<IListOffersComponent> = ({ data }) => {
   );
 
   if (loading) {
-    return (
-      <div className="list-wrapper-empty">
-        <CircularProgress
-          sx={{ color: '#E882D5' }}
-          size={100}
-          thickness={4.6}
-        />
-      </div>
-    );
+    return <LoadingComponent />;
   }
   return (
     <div className={'list-button-wrapper'}>

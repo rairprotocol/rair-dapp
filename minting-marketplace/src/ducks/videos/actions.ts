@@ -9,6 +9,9 @@ const getListVideosStart = (params: TUpdataVideoParams) =>
     params
   } as const);
 
+const setLoading = (loading: boolean) =>
+  ({ type: types.SET_LOADING, loading } as const);
+
 const getVideoListComplete = (videoList: MediaListResponseType | null) =>
   ({ type: types.GET_LIST_VIDEOS_COMPLETE, videoList } as const);
 
@@ -20,12 +23,6 @@ const getVideoListTotalClear = () =>
 const getVideoListTotal = (totalNumberVideo: number) =>
   ({ type: types.GET_LIST_VIDEOS_TOTAL, totalNumberVideo } as const);
 
-const refreshAction = (refresh: boolean) =>
-  ({
-    type: types.REFRESH_LIST_VIDEOS,
-    refresh
-  } as const);
-
 const getListVideosError = (error: string | null) =>
   ({ type: types.GET_LIST_VIDEOS_ERROR, error } as const);
 
@@ -35,5 +32,5 @@ export {
   getVideoListComplete,
   getVideoListTotal,
   getVideoListTotalClear,
-  refreshAction
+  setLoading
 };

@@ -1,12 +1,12 @@
 import React, { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { CircularProgress } from '@mui/material';
 
 import { NftItem } from './NftItem';
 import { INftListComponent } from './nftList.types';
 
 import { RootState } from '../../../ducks';
 import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
+import LoadingComponent from '../../common/LoadingComponent';
 
 const NftListComponent: React.FC<INftListComponent> = ({
   data,
@@ -20,15 +20,7 @@ const NftListComponent: React.FC<INftListComponent> = ({
   const [playing, setPlaying] = useState<null | number>(null);
 
   if (loading) {
-    return (
-      <div className="list-wrapper-empty">
-        <CircularProgress
-          sx={{ color: '#E882D5' }}
-          size={100}
-          thickness={4.6}
-        />
-      </div>
-    );
+    return <LoadingComponent />;
     //unused-snippet
     // return (
     //   <div className="loader-wrapper">

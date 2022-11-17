@@ -13,6 +13,7 @@ export const ShowMoreContainer = styled.div<TShowMoreContainer>`
   color: ${(props) => props.textColor};
   margin: ${(props) => props.margin};
   background: ${(props) => props.background};
+  pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
   @media screen and (max-width: 659px) and (min-width: 410px) {
     margin: 0.5rem;
   }
@@ -37,6 +38,7 @@ export const ShowMoreItem = styled.div<TShowMoreItem>`
   &:hover {
     transition-duration: 0.5s;
     background: ${(props) => props.hoverBackground};
+  }
   @media screen and (max-width: 409px) and (min-width: 250px) {
     width: -webkit-fill-available;
   }

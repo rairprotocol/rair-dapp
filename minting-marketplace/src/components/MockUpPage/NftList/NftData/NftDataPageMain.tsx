@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 
 import CustomShareButton from './CustomShareButton';
 import EtherscanIconComponent from './EtherscanIconComponent';
@@ -16,6 +15,7 @@ import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import setDocumentTitle from '../../../../utils/setTitle';
+import LoadingComponent from '../../../common/LoadingComponent';
 import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { INftDataPageMain, TOffersIndexesData } from '../../mockupPage.types';
@@ -138,15 +138,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   }, [offerDataInfo]);
 
   if (!selectedData?.name) {
-    return (
-      <div className="list-wrapper-empty">
-        <CircularProgress
-          sx={{ color: '#E882D5' }}
-          size={100}
-          thickness={4.6}
-        />
-      </div>
-    );
+    return <LoadingComponent />;
   }
 
   return (

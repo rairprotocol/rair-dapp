@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
@@ -7,9 +6,12 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
-import { IVideoItem, TParticularProduct } from './video.types';
+import { IVideoItem, TVideoItemContractData } from './video.types';
 
-import { TUserResponse } from '../../axios.responseTypes';
+import { TTokenData, TUserResponse } from '../../axios.responseTypes';
+import { RootState } from '../../ducks';
+import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
 import chainData from '../../utils/blockchainData';
 import { metamaskCall } from '../../utils/metamaskUtils';
@@ -20,16 +22,25 @@ import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';
 import { playImagesColored } from '../SplashPage/images/greyMan/grayMan';
-// import { TChainItemData } from '../../utils/utils.types';
 
 Modal.setAppElement('#root');
 
-const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
-  const navigate = useNavigate();
-  const { minterInstance, diamondMarketplaceInstance } = useSelector(
-    (state) => state.contractStore
+const VideoItem: React.FC<IVideoItem> = ({
+  mediaList,
+  item,
+  handleVideoIsUnlocked
+}) => {
+  const loading = useSelector<RootState, boolean>(
+    (state) => state.videosStore.loading
   );
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const navigate = useNavigate();
+  const { minterInstance, diamondMarketplaceInstance } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
 
   const customStyles = {
     overlay: {
@@ -55,16 +66,15 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
     }
   };
 
-  let availableToken = [];
+  let availableToken: TTokenData[] = [];
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  // const [modalBuy, setModalBuy] = useState(false);
   const [modalHelp, setModalHelp] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [owned /*setOwned*/] = useState(false);
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
   const [contractData, setContractData] =
-    useStateIfMounted<TParticularProduct | null>(null);
+    useStateIfMounted<TVideoItemContractData | null>(null);
   const [dataUser, setDataUser] = useStateIfMounted<UserType | null>(null);
 
   // primaryColor === 'rhyno' ? '#F2F2F2' : '#383637'
@@ -84,7 +94,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
       showConfirmButton: false
     });
     let marketplaceCall, marketplaceArguments;
-    if (contractData.diamond) {
+    if (contractData?.diamond) {
       marketplaceCall = diamondMarketplaceInstance?.buyMintingOffer;
       marketplaceArguments = [
         offerIndex, // Offer Index
@@ -102,7 +112,8 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
     if (
       await metamaskCall(
         marketplaceCall(...marketplaceArguments),
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
+        handleVideoIsUnlocked
       )
     ) {
       Swal.fire('Success', 'Now, you are the owner of this token', 'success');
@@ -231,7 +242,6 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
             position: 'absolute',
             bottom: 0,
             borderRadius: '16px',
-            // objectFit: 'contain',
             background: 'black'
           }}
           className="col-12 h-100 w-100"
@@ -269,8 +279,10 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
             </div>
             <div className="user-name">
               <span>
-                {dataUser?.nickName.slice(0, 25)}
-                {dataUser?.nickName.length > 26 ? '...' : ''}
+                {dataUser?.nickName?.slice(0, 25)}
+                {dataUser?.nickName && dataUser?.nickName.length > 26
+                  ? '...'
+                  : ''}
               </span>
             </div>
           </div>
@@ -351,6 +363,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                         onClick={openHelp}
                         margin={'0 45px 37px'}
                         custom={true}
+                        loading={loading}
                       />
                     </div>
                   )}
@@ -375,7 +388,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                 </div>
               </div>
             </div>
-            {modalHelp && (
+            {modalHelp && mediaList[item]?.isUnlocked === false && (
               <div className="more-info-wrapper">
                 <span className="more-info-text">
                   These NFTs unlock this video
@@ -392,25 +405,28 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                             src={token.metadata.image}
                             alt="NFT token powered by Rair Tech"
                           />
-                          <CustomButton
-                            text={
-                              token.offer.price +
-                              ' ' +
-                              chainData[contractData?.blockchain]?.symbol
-                            }
-                            width={'auto'}
-                            height={'45px'}
-                            textColor={'white'}
-                            onClick={() => {
-                              buy({
-                                offerIndex: token.offer.offerIndex,
-                                selectedToken: token.token,
-                                price: token.offer.price
-                              });
-                            }}
-                            margin={'0'}
-                            custom={true}
-                          />
+                          {contractData && contractData?.blockchain && (
+                            <CustomButton
+                              loading={loading}
+                              text={
+                                token.offer.price +
+                                ' ' +
+                                chainData[contractData?.blockchain]?.symbol
+                              }
+                              width={'auto'}
+                              height={'45px'}
+                              textColor={'white'}
+                              onClick={() => {
+                                buy({
+                                  offerIndex: token.offer.offerIndex,
+                                  selectedToken: token.token,
+                                  price: token.offer.price
+                                });
+                              }}
+                              margin={'0'}
+                              custom={true}
+                            />
+                          )}
                         </div>
                       );
                     })

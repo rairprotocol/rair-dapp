@@ -5,7 +5,6 @@ const InitialState: TVideosInitialState = {
   videos: null,
   error: null,
   totalNumberVideo: undefined,
-  refresh: false,
   loading: false
 };
 
@@ -14,27 +13,19 @@ export default function videosStore(
   action: TVideosActions
 ): TVideosInitialState {
   switch (action.type) {
-    case types.GET_LIST_VIDEOS_START:
-      return {
-        ...state,
-        videos: null,
-        loading: true
-      };
     case types.GET_LIST_VIDEOS_COMPLETE:
       return {
         ...state,
-        videos: action.videoList,
-        loading: false
+        videos: action.videoList
       };
     case types.GET_LIST_VIDEOS_TOTAL_CLEAR:
       return {
         ...state,
-        totalNumberVideo: undefined
+        totalNumberVideo: 0
       };
     case types.GET_LIST_VIDEOS_TOTAL:
       return {
         ...state,
-        loading: false,
         totalNumberVideo: action.totalNumberVideo
       };
     case types.GET_LIST_VIDEOS_ERROR:
@@ -43,10 +34,11 @@ export default function videosStore(
         videos: null,
         error: action.error
       };
-    case types.REFRESH_LIST_VIDEOS:
+
+    case types.SET_LOADING:
       return {
         ...state,
-        refresh: action.refresh
+        loading: action.loading
       };
     default:
       return state;
