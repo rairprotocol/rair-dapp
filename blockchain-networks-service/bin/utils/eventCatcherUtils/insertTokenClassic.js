@@ -119,10 +119,22 @@ module.exports = async (
   foundToken.contract = contract._id;
   foundToken.isMinted = true;
 
-  foundOffer.soldCopies += 1;
-  product.soldCopies += 1;
+  await foundToken.save().catch(handleDuplicateKey);
 
-  foundToken.save().catch(handleDuplicateKey);
+  const totalSoldTokensOffer = (await dbModels.MintedToken.find({
+    contract: contract._id,
+    offer: foundOffer.offerIndex,
+    isMinted: true
+    })).length;
+  const totalSoldTokensProduct = (await dbModels.MintedToken.find({
+    contract: contract._id,
+    product: product.collectionIndexInContract,
+    isMinted: true
+  })).length;
+
+  foundOffer.soldCopies = totalSoldTokensOffer;
+  product.soldCopies = totalSoldTokensProduct;
+
   foundOffer.save().catch(handleDuplicateKey);
   product.save().catch(handleDuplicateKey);
 
