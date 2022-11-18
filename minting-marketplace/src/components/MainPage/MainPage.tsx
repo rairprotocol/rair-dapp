@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { style } from '@mui/system';
 import Swal from 'sweetalert2';
 
 import { rairAdvisorsTeam, teamMainPage } from './AboutUsTeam';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 /* image imports */
 import { metaMaskIcon } from '../../images/index';
 import {
@@ -59,12 +59,10 @@ const iframeLink =
   'https://iframetester.com/?url=https://staging.rair.market/watch/0x48e89cb354a30d4ce0dafac77205792040ef485f/FaR4Z7kLDOZ87Rx1UU6CaLce_bip0X7vnrPjBu2t3APd9s/stream.m3u8';
 
 const MainPage: React.FC<IMainPage> = ({
-  loginDone,
   connectUserData,
-  setIsSplashPage,
-  seoInformation
+  setIsSplashPage
 }) => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
@@ -97,95 +95,85 @@ const MainPage: React.FC<IMainPage> = ({
     setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
-  /* ABOUT ME OFFSET */
-  const breakpoint_0 = window.matchMedia('(max-width: 1100px)');
-  const breakpoint_1 = window.matchMedia('(max-width: 900px)');
-  const breakpoint_2 = window.matchMedia('(max-width: 700px)');
-  const breakpoint_3 = window.matchMedia('(max-width: 450px)');
-  const [breakpoint_0_match, setBreakpoint_0_match] = useState(false);
-  const [breakpoint_1_match, setBreakpoint_1_match] = useState(false);
-  const [breakpoint_2_match, setBreakpoint_2_match] = useState(false);
-  const [breakpoint_3_match, setBreakpoint_3_match] = useState(false);
+  /* SHOW MORE BUTTON */
 
-  useEffect(() => {
-    window.addEventListener('resize', () => {
-      setBreakpoint_0_match(breakpoint_0.matches);
-      setBreakpoint_1_match(breakpoint_1.matches);
-      setBreakpoint_2_match(breakpoint_2.matches);
-      setBreakpoint_3_match(breakpoint_3.matches);
-    });
-    return () =>
-      window.removeEventListener('resize', () => {
-        setBreakpoint_0_match(breakpoint_0.matches);
-        setBreakpoint_1_match(breakpoint_1.matches);
-        setBreakpoint_2_match(breakpoint_2.matches);
-        setBreakpoint_3_match(breakpoint_3.matches);
-      });
-  }, [
-    breakpoint_0.matches,
-    breakpoint_1.matches,
-    breakpoint_2.matches,
-    breakpoint_3.matches
-  ]);
-  const [offset, setOffset] = useState(0);
-  useEffect(() => {
-    if (breakpoint_3_match) {
-      setOffset(533);
-    } else if (breakpoint_2_match) {
-      setOffset(480);
-    } else if (breakpoint_1_match) {
-      setOffset(100);
-    } else if (breakpoint_0_match) {
-      setOffset(210);
+  const ShowMoreButton = ({
+    showMore,
+    setShowMore,
+    className,
+    variableName
+  }) => {
+    if (showMore) {
+      return (
+        <button
+          className={className}
+          onClick={() => {
+            const r = document.querySelector(':root') as HTMLElement;
+            r.style.setProperty(variableName, 'flex');
+            setShowMore(false);
+          }}>
+          SHOW MORE
+        </button>
+      );
     } else {
-      setOffset(140);
+      return <></>;
     }
-  }, [
-    breakpoint_0_match,
-    breakpoint_1_match,
-    breakpoint_2_match,
-    breakpoint_3_match
-  ]);
-  const [readMoreCount, setReadMoreCount] = useState(0);
-  useEffect(() => {
-    const r = document.querySelector(':root') as HTMLElement;
-    if (readMoreCount) {
-      const offsetNum = (offset / 12) * readMoreCount;
-      const offsetStr = `${offsetNum}vw`;
-      r.style.setProperty('--readmore_offset', offsetStr);
+  };
+
+  const ShowLessButton = ({
+    showMore,
+    setShowMore,
+    className,
+    variableName
+  }) => {
+    if (!showMore) {
+      return (
+        <button
+          className={className}
+          onClick={() => {
+            const r = document.querySelector(':root') as HTMLElement;
+            r.style.setProperty(variableName, 'none');
+            setShowMore(true);
+          }}>
+          SHOW LESS
+        </button>
+      );
     } else {
-      r.style.setProperty('--readmore_offset', '0px');
+      return <></>;
     }
-  }, [readMoreCount, offset]);
+  };
 
   return (
     <div className={styles.mainpage_wrapper}>
-      <div className={styles.title}>
-        <span className={styles.typography_2}>
-          Powering next <br className={styles.title_break} /> generation
-        </span>
-        <span className={styles.typography_1}> NFTs</span>
+      <div
+        className={styles.title_card}
+        style={{ backgroundImage: 'url(' + MainPageImage0 + ')' }}>
+        <div className={styles.title}>
+          <span className={styles.typography_2}>
+            Powering next <br className={styles.title_break} /> generation
+          </span>
+          <span className={styles.typography_1}> NFTs</span>
+        </div>
+        <PurchaseTokenButton
+          {...{
+            customWrapperClassName: '',
+            altButtonFormat: true,
+            customButtonClassName: styles.button,
+            customButtonIconClassName: styles.button_icon,
+            customButtonTextClassName: styles.button_text,
+            img: metaMaskIcon,
+            contractAddress: contract,
+            requiredBlockchain: blockchain,
+            offerIndex: offerIndexInMarketplace,
+            connectUserData,
+            buttonLabel: 'Test our Streaming',
+            presaleMessage: '',
+            diamond: true,
+            customSuccessAction: (nextToken) =>
+              Swal.fire('Success', `You own token #${nextToken}!`, 'success')
+          }}
+        />
       </div>
-      <img className={styles.graphic} src={MainPageImage0} />
-      <PurchaseTokenButton
-        {...{
-          customWrapperClassName: '',
-          altButtonFormat: true,
-          customButtonClassName: styles.button,
-          customButtonIconClassName: styles.button_icon,
-          customButtonTextClassName: styles.button_text,
-          img: metaMaskIcon,
-          contractAddress: contract,
-          requiredBlockchain: blockchain,
-          offerIndex: offerIndexInMarketplace,
-          connectUserData,
-          buttonLabel: 'Test our Streaming',
-          presaleMessage: '',
-          diamond: true,
-          customSuccessAction: (nextToken) =>
-            Swal.fire('Success', `You own token #${nextToken}!`, 'success')
-        }}
-      />
       <div className={styles.subtitle}>
         Minting Engine | Encrypted Streams | Marketplace
       </div>
@@ -234,102 +222,117 @@ const MainPage: React.FC<IMainPage> = ({
         RAIR API AVAILABLE FOR ALL SERVICES{' '}
       </div>
       <div className={styles.hook_mint} ref={hookMint} />
-      <img className={styles.demonstration_img_0} src={MainPageImage4} />
-      <div className={styles.demonstration_title_0}>
-        RAIR
-        <span className={styles.demonstration_title_alt_0}>mint</span>
-      </div>
-      <div className={styles.demonstration_subtitle_0}>
-        Industry leading NFT minting engine
-      </div>
-      <br />
-      <div className={styles.demonstration_description_0}>
-        <br />
-        <p>
-          &#8226; Mint on an EVM compatible blockchain. ETH, MATIC, BSC &#38;
-          EVM integrations
-        </p>
-        <p>&#8226; Gas Optimized. Free mints. Upgradable JSONs</p>
-        <p>
-          &#8226; Prevent Sudoswap attacks. RAIRpay royalty engine protects
-          resales
-        </p>
+      <div className={styles.demonstration_wrapper_0}>
+        <img className={styles.demonstration_img_0} src={MainPageImage4} />
+        <div className={styles.demonstration_container_0}>
+          <div className={styles.demonstration_title_0}>
+            RAIR
+            <span className={styles.demonstration_title_alt_0}>mint</span>
+          </div>
+          <div className={styles.demonstration_subtitle_0}>
+            Industry leading NFT minting engine
+          </div>
+          <br />
+          <div className={styles.demonstration_description_0}>
+            <p>
+              &#8226; Mint on an EVM compatible blockchain. ETH, MATIC, BSC
+              &#38; EVM integrations
+            </p>
+            <p>&#8226; Gas Optimized. Free mints. Upgradable JSONs</p>
+            <p>
+              &#8226; Prevent Sudoswap attacks. RAIRpay royalty engine protects
+              resales
+            </p>
+          </div>
+        </div>
       </div>
       <div className={styles.hook_stream} ref={hookStream}></div>
-      <img className={styles.demonstration_img_1} src={MainPageImage5} />
-      <div className={styles.demonstration_title_1}>
-        RAIR
-        <span className={styles.demonstration_title_alt_0}>stream</span>
+      <div className={styles.demonstration_wrapper_1}>
+        <div className={styles.demonstration_container_1}>
+          <div className={styles.demonstration_title_1}>
+            RAIR
+            <span className={styles.demonstration_title_alt_0}>stream</span>
+          </div>
+          <div className={styles.demonstration_subtitle_1}>
+            Patent-pending streaming engine. Securely stream via NFT
+          </div>
+          <br />
+          <div className={styles.demonstration_description_1}>
+            <p>&#8226; Multimedia streaming video/music/data</p>
+            <p>&#8226; Capture wallet analytics </p>
+            <p>&#8226; Wallet authenticated access</p>
+          </div>
+        </div>
+        <img className={styles.demonstration_img_1} src={MainPageImage5} />
       </div>
-      <div className={styles.demonstration_subtitle_1}>
-        Patent-pending streaming engine. Securely stream via NFT
-      </div>
-      <br />
-      <div className={styles.demonstration_description_1}>
-        <p>&#8226; Multimedia streaming video/music/data</p>
-        <p>&#8226; Capture wallet analytics </p>
-        <p>&#8226; Wallet authenticated access</p>
-      </div>
-      <button
+      <ShowMoreButton
+        showMore={showMore0}
+        setShowMore={setShowMore0}
         className={styles.showmore_button_0}
-        onClick={() => {
-          const r = document.querySelector(':root') as HTMLElement;
-          if (showMore0) {
-            r.style.setProperty('--demo_offset', '335vw');
-            r.style.setProperty('--demo_display', 'block');
-            setShowMore0(false);
-          } else {
-            r.style.setProperty('--demo_offset', '0vw');
-            r.style.setProperty('--demo_display', 'none');
-            setShowMore0(true);
-          }
-        }}>
-        SHOW {showMore0 ? 'MORE' : 'LESS'}
-      </button>
-      <img className={styles.demonstration_img_2} src={MainPageImage6} />
-      <div className={styles.demonstration_title_2}>
-        RAIR
-        <span className={styles.demonstration_title_alt_0}>player</span>
-      </div>
-      <div className={styles.demonstration_subtitle_2}>
-        Upgrade any website to Web3 streaming
-      </div>
-      <br />
-      <div className={styles.demonstration_description_2}>
-        <p>&#8226; Embeddable </p>
-        <p>&#8226; No Web3 integration required </p>
-        <p>&#8226; Collect analytics</p>
-        <p> &#8226; Make sales directly via player</p>
+        variableName={'--demo_display'}
+      />
+      <div className={styles.demonstration_wrapper_2}>
+        <img className={styles.demonstration_img_2} src={MainPageImage6} />
+        <div className={styles.demonstration_container_2}>
+          <div className={styles.demonstration_title_2}>
+            RAIR
+            <span className={styles.demonstration_title_alt_0}>player</span>
+          </div>
+          <div className={styles.demonstration_subtitle_2}>
+            Upgrade any website to Web3 streaming
+          </div>
+          <br />
+          <div className={styles.demonstration_description_2}>
+            <p>&#8226; Embeddable </p>
+            <p>&#8226; No Web3 integration required </p>
+            <p>&#8226; Collect analytics</p>
+            <p> &#8226; Make sales directly via player</p>
+          </div>
+        </div>
       </div>
       <div className={styles.hook_distribute} ref={hookDistribute}></div>
-      <img className={styles.demonstration_img_3} src={MainPageImage7} />
-      <div className={styles.demonstration_title_3}>
-        RAIR
-        <span className={styles.demonstration_title_alt_0}>market</span>
-      </div>
-      <div className={styles.demonstration_subtitle_3}>
-        Deploy your own NFT marketplace. <br /> Sell unlockable content
-      </div>
-      <br />
-      <div className={styles.demonstration_description_3}>
-        <p>&#8226; Sell any 0x NFT, secure royalties </p>
-        <p>&#8226; Minting sales pages</p>
-        <p>&#8226; Attach unlockable content</p>
+      <div className={styles.demonstration_wrapper_3}>
+        <div className={styles.demonstration_container_3}>
+          <div className={styles.demonstration_title_3}>
+            RAIR
+            <span className={styles.demonstration_title_alt_0}>market</span>
+          </div>
+          <div className={styles.demonstration_subtitle_3}>
+            Deploy your own NFT marketplace. <br /> Sell unlockable content
+          </div>
+          <br />
+          <div className={styles.demonstration_description_3}>
+            <p>&#8226; Sell any 0x NFT, secure royalties </p>
+            <p>&#8226; Minting sales pages</p>
+            <p>&#8226; Attach unlockable content</p>
+          </div>
+        </div>
+        <img className={styles.demonstration_img_3} src={MainPageImage7} />
       </div>
       <div className={styles.hook_api} ref={hookApi}></div>
-      <img className={styles.demonstration_img_4} src={MainPageImage8} />
-      <div className={styles.demonstration_title_4}>
-        RAIR
-        <span className={styles.demonstration_title_alt_0}>API</span>
-      </div>
-      <div className={styles.demonstration_subtitle_4}>
-        All services available via API
-      </div>
-      <br />
-      <div className={styles.demonstration_description_4}>
-        <p>&#8226; Endpoints for minting </p>
-        <p> &#8226; Scraping blockchain & analytics</p>
-        <p> &#8226; Uploading & managing content</p>
+      <div className={styles.demonstration_wrapper_4}>
+        <img className={styles.demonstration_img_4} src={MainPageImage8} />
+        <div className={styles.demonstration_container_4}>
+          <div className={styles.demonstration_title_4}>
+            RAIR
+            <span className={styles.demonstration_title_alt_0}>API</span>
+          </div>
+          <div className={styles.demonstration_subtitle_4}>
+            All services available via API
+          </div>
+          <br />
+          <div className={styles.demonstration_description_4}>
+            <p>&#8226; Endpoints for minting </p>
+            <p> &#8226; Scraping blockchain & analytics</p>
+            <p> &#8226; Uploading & managing content</p>
+          </div>
+        </div>
+        <ShowLessButton
+          showMore={showMore0}
+          setShowMore={setShowMore0}
+          className={styles.showmore_button_0}
+          variableName={'--demo_display'}
+        />
       </div>
       <div className={styles.use_cases_textbox}>
         <span>Use</span>
@@ -340,34 +343,46 @@ const MainPage: React.FC<IMainPage> = ({
           RAIR provides Web3 streaming infrastructure for:{' '}
         </span>
       </div>
-      <img className={styles.use_cases_item_image_0} src={MainPageImageA} />
-      <div className={styles.use_cases_item_name_0}>Brand Engagement</div>
-      <img className={styles.use_cases_item_image_1} src={MainPageImageB} />
-      <div className={styles.use_cases_item_name_1}>Music & Podcasts</div>
-      <img className={styles.use_cases_item_image_2} src={MainPageImageC} />
-      <div className={styles.use_cases_item_name_2}>Media & Entertainment</div>
-      <button
-        className={styles.showmore_button_1}
-        onClick={() => {
-          const r = document.querySelector(':root') as HTMLElement;
-          if (showMore1) {
-            r.style.setProperty('--usecase_offset', '85vw');
-            r.style.setProperty('--usecase_display', 'block');
-            setShowMore1(false);
-          } else {
-            r.style.setProperty('--usecase_offset', '0vw');
-            r.style.setProperty('--usecase_display', 'none');
-            setShowMore1(true);
-          }
-        }}>
-        SHOW {showMore1 ? 'MORE' : 'LESS'}
-      </button>
-      <img className={styles.use_cases_item_image_3} src={MainPageImageD} />
-      <div className={styles.use_cases_item_name_3}>Live Events</div>
-      <img className={styles.use_cases_item_image_4} src={MainPageImageE} />
-      <div className={styles.use_cases_item_name_4}>E-Learning</div>
-      <img className={styles.use_cases_item_image_5} src={MainPageImageF} />
-      <div className={styles.use_cases_item_name_5}>Gaming</div>
+      <div className={styles.use_cases_wrapper}>
+        <div className={styles.use_cases_container_0}>
+          <img className={styles.use_cases_item_image_0} src={MainPageImageA} />
+          <div className={styles.use_cases_item_name_0}>Brand Engagement</div>
+        </div>
+        <div className={styles.use_cases_container_2}>
+          <img className={styles.use_cases_item_image_2} src={MainPageImageC} />
+          <div className={styles.use_cases_item_name_2}>
+            Media & Entertainment
+          </div>
+        </div>
+        <div className={styles.use_cases_container_4}>
+          <img className={styles.use_cases_item_image_4} src={MainPageImageE} />
+          <div className={styles.use_cases_item_name_4}>E-Learning</div>
+        </div>
+        <ShowMoreButton
+          showMore={showMore1}
+          setShowMore={setShowMore1}
+          className={styles.showmore_button_1}
+          variableName={'--usecase_display'}
+        />
+        <div className={styles.use_cases_container_1}>
+          <img className={styles.use_cases_item_image_1} src={MainPageImageB} />
+          <div className={styles.use_cases_item_name_1}>Music & Podcasts</div>
+        </div>
+        <div className={styles.use_cases_container_3}>
+          <img className={styles.use_cases_item_image_3} src={MainPageImageD} />
+          <div className={styles.use_cases_item_name_3}>Live Events</div>
+        </div>
+        <div className={styles.use_cases_container_5}>
+          <img className={styles.use_cases_item_image_5} src={MainPageImageF} />
+          <div className={styles.use_cases_item_name_5}>Gaming</div>
+        </div>
+        <ShowLessButton
+          showMore={showMore1}
+          setShowMore={setShowMore1}
+          className={styles.showmore_button_1}
+          variableName={'--usecase_display'}
+        />
+      </div>
       <div className={styles.videoplayer_textbox}>
         <span>Test our</span>
         <span className={styles.videoplayer_title_alt}> Player</span>
@@ -408,29 +423,25 @@ const MainPage: React.FC<IMainPage> = ({
           COPY TO CLIPBOARD{' '}
         </div>
       </div>
-      <div className={styles.meet_team_wrapper}>
-        <div className="rairpage about-page--team">
-          <TeamMeet
-            arraySplash={'main-page'}
-            titleHeadFirst={'Meet the'}
-            titleHeadSecond={'Team'}
-            classNameHeadSpan={'text-gradient'}
-            teamArray={teamMainPage}
-            classNameGap={true}
-          />
-        </div>
-        <div className="rairpage about-page--team">
-          <TeamMeet
-            readMoreCount={readMoreCount}
-            setReadMoreCount={setReadMoreCount}
-            arraySplash={'rair-advisors'}
-            titleHeadFirst={'Meet the'}
-            titleHeadSecond={'Advisors'}
-            classNameHeadSpan={'text-gradient'}
-            teamArray={rairAdvisorsTeam}
-            classNameGap={true}
-          />
-        </div>
+      <div className="rairpage about-page--team zero">
+        <TeamMeet
+          arraySplash={'main-page'}
+          titleHeadFirst={'Meet the'}
+          titleHeadSecond={'Team'}
+          classNameHeadSpan={'text-gradient'}
+          teamArray={teamMainPage}
+          classNameGap={true}
+        />
+      </div>
+      <div className="rairpage about-page--team">
+        <TeamMeet
+          arraySplash={'rair-advisors'}
+          titleHeadFirst={'Meet the'}
+          titleHeadSecond={'Advisors'}
+          classNameHeadSpan={'text-gradient'}
+          teamArray={rairAdvisorsTeam}
+          classNameGap={true}
+        />
       </div>
     </div>
   );

@@ -3,24 +3,11 @@ import { useState } from 'react';
 import { ITeammateDesc } from '../splashPage.types';
 
 const TeammateDesc: React.FC<ITeammateDesc> = ({
-  readMoreCount,
-  setReadMoreCount,
   desc,
   primaryColor,
-  readMoreCountFlag,
   arraySplash
 }) => {
   const [showMore, setShowMore] = useState<boolean>(false);
-  const readMoreCounter = () => {
-    if (setReadMoreCount && readMoreCount != undefined && readMoreCountFlag) {
-      if (showMore) {
-        setReadMoreCount(readMoreCount - 1 * readMoreCountFlag);
-      } else {
-        setReadMoreCount(readMoreCount + 1 * readMoreCountFlag);
-      }
-    }
-  };
-
   return (
     <div className="teammate-description">
       {desc.length === 1 &&
@@ -38,7 +25,6 @@ const TeammateDesc: React.FC<ITeammateDesc> = ({
                   className="btn-show-more"
                   onClick={() => {
                     setShowMore(!showMore);
-                    readMoreCounter();
                   }}>
                   {showMore ? 'Read less' : 'Read more...'}
                 </button>
@@ -71,7 +57,6 @@ const TeammateDesc: React.FC<ITeammateDesc> = ({
                   className="btn-show-more"
                   onClick={() => {
                     setShowMore(!showMore);
-                    readMoreCounter();
                   }}>
                   {showMore ? 'Read less' : 'Read more...'}
                 </button>
@@ -93,7 +78,6 @@ const TeammateDesc: React.FC<ITeammateDesc> = ({
                     className="btn-show-more"
                     onClick={() => {
                       setShowMore(!showMore);
-                      readMoreCounter();
                     }}>
                     Read less
                   </button>

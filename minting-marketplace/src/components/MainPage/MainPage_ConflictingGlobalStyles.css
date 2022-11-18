@@ -1,11 +1,9 @@
 /* this style sheet is for overriding global styles for reused components */
 .rairpage-videoplayer-wrapper {
-  position: absolute;
   width: 1200px;
   height: 475px;
-  left: calc(((100% - 1440px) / var(--X_offset)) + 110px);
-  /* left: 110px; */
-  top: 6462px;
+  margin-left: calc(110px - var(--left_offset));
+  margin-top: 55px;
 }
 
 .rairpage-videoplayer-wrapper .nft-collection {
@@ -16,7 +14,12 @@
 }
 
 .rairpage.about-page--team {
+  margin-left: calc(115px - var(--left_offset));
   margin-top: 0;
+}
+
+.rairpage.about-page--team.zero {
+  margin-top: 315px;
 }
 
 .rairpage.about-page--team .img-teammate {
@@ -52,11 +55,10 @@
 
 @media screen and (max-width: 1440px) {
   .rairpage-videoplayer-wrapper {
-    position: absolute;
     width: 83.333vw;
     height: 33vw;
-    left: 7.639vw;
-    top: 448.75vw;
+    margin-left: calc(7.634vw - var(--left_offset));
+    margin-top: 3.8168vw;
   }
 
   .rairpage-videoplayer-wrapper .nft-collection.nft-collection-video-wrapper {
@@ -69,6 +71,14 @@
 
   .rairpage-videoplayer-wrapper .nft-video-player-video {
     height: 29.653vw;
+  }
+
+  .rairpage.about-page--team {
+    margin-left: calc(7.981vw - var(--left_offset));
+  }
+
+  .rairpage.about-page--team.zero {
+    margin-top: 21.86vw;
   }
 
   .rairpage.about-page--team .img-teammate img {
@@ -91,6 +101,12 @@
   .rairpage.about-page--team .teammate-description div {
     font-size: 1.528vw;
     line-height: 1.944vw;
+  }
+}
+
+@media screen and (max-width: 970px) {
+  .rairpage.about-page--team {
+    margin: 0 auto;
   }
 }
 
@@ -121,11 +137,8 @@
   }
 
   .rairpage-videoplayer-wrapper {
-    left: 0;
-    top: calc(
-      656.286vw + var(--Y_offset) + var(--demo_offset) + var(--usecase_offset)
-    );
-    width: 100%;
+    margin: 0;
+    width: 100vw;
     height: 61.286vw;
   }
 
