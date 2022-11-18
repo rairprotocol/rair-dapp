@@ -20,7 +20,7 @@ export interface INftItemForCollectionView {
   offerPrice: string[] | undefined;
   index: string;
   metadata: TMetadataType;
-  offer: string;
+  offer: string | undefined;
   selectedData: TMetadataType | undefined;
   someUsersData: UserType | null | undefined;
   userName: string | undefined;
@@ -28,6 +28,8 @@ export interface INftItemForCollectionView {
   playing: number | null;
   indexId: number;
   setPlaying: (arg: null | number) => void;
+  diamond: boolean;
+  offerData: TOfferType[] | undefined;
 }
 
 export type TParamsNftItemForCollectionView = {

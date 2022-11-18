@@ -16,7 +16,8 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
   productsFromOffer,
   setTokenDataFiltered,
   primaryColor,
-  setSelectVideo
+  setSelectVideo,
+  isDiamond
 }) => {
   const [sections, setSections] =
     useState<TNftSingleUnlockablesSections | null>(null);
@@ -27,7 +28,9 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
   ]);
 
   useEffect(() => {
-    const ope = productsFromOffer.some((i) => i.isUnlocked === true);
+    const ope = productsFromOffer.some((i) => {
+      return i.isUnlocked === true;
+    });
     if (ope) {
       setRarity(['Ultra Rair', 'Rair', 'Common']);
     }
@@ -35,6 +38,19 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
 
   useEffect(() => {
     const result = productsFromOffer.reduce((acc, item) => {
+      if (isDiamond) {
+        const key = item.offer.length;
+        const value = acc[key];
+        console.info(value, 'value');
+
+        if (value) {
+          acc[key] = [...value, item];
+        } else {
+          acc[key] = [item];
+        }
+        return acc;
+      }
+
       const key = item.offer[0];
       const value = acc[key];
 
@@ -46,18 +62,19 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
       return acc;
     }, {});
     setSections(result);
-  }, [productsFromOffer]);
+  }, [productsFromOffer, isDiamond]);
 
   return (
     <div className="nft-single-unlockables-page">
       {sections &&
         Object.entries(sections).map(([key, item]) => {
+          const diamondKey = isDiamond ? +key - 1 : key;
           return (
             <div className="nft-rarity-wrapper" key={key}>
               <NftDifferentRarity
                 embeddedParams={embeddedParams}
                 setTokenDataFiltered={setTokenDataFiltered}
-                title={rarity[key]}
+                title={rarity[diamondKey]}
                 isUnlocked={item.map((i) => i.isUnlocked)}
               />
               <div className="video-wrapper">

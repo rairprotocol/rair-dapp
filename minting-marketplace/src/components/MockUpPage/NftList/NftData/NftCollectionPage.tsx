@@ -122,11 +122,17 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                         selectedData={selectedData}
                         index={token.token}
                         indexId={index}
-                        offer={token.offer.offerIndex}
+                        offerData={offerDataCol}
+                        offer={
+                          token.offer.diamond
+                            ? token.offer.diamondRangeIndex
+                            : token.offer.offerIndex
+                        }
                         someUsersData={someUsersData}
                         userName={offerAllData?.owner}
                         setPlaying={setPlaying}
                         playing={playing}
+                        diamond={token.offer.diamond}
                       />
                     );
                   } else {
@@ -150,13 +156,19 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                         blockchain={blockchain}
                         selectedData={selectedData}
                         index={String(index)}
+                        offerData={offerDataCol}
                         indexId={index}
-                        offer={token.offer.offerIndex}
+                        offer={
+                          token.offer.diamond
+                            ? token.offer.diamondRangeIndex
+                            : token.offer.offerIndex
+                        }
                         someUsersData={someUsersData}
                         userName={offerAllData?.owner}
                         tokenDataLength={tokenData.length}
                         setPlaying={setPlaying}
                         playing={playing}
+                        diamond={token.offer.diamond}
                       />
                     );
                   } else {

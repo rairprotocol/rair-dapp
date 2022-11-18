@@ -46,7 +46,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
             offerData
               ?.sort((a, b) => {
                 if (b.offerIndex > a.offerIndex) {
-                  return -1;
+                  return 1;
                 }
                 return 0;
               })
@@ -67,17 +67,55 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                       <div className="item-name-text">{token.offerName}</div>
                     </div>
                     <div className="item-rank">
-                      {token.offerIndex === '0' ? (
-                        <i style={{ color: 'red' }} className="fas fa-key" />
-                      ) : token.offerIndex === '1' ? (
-                        '🔑'
+                      {token.diamond ? (
+                        <>
+                          {index.toString() === '0' && (
+                            <i
+                              style={{ color: 'red' }}
+                              className="fas fa-key"
+                            />
+                          )}
+                          {index.toString() === '1' && '🔑'}
+                          {index.toString() >= '2' && (
+                            <i
+                              style={{ color: 'silver' }}
+                              className="fas fa-key"
+                            />
+                          )}
+                        </>
                       ) : (
-                        <i style={{ color: 'silver' }} className="fas fa-key" />
+                        <>
+                          {token.offerIndex === '0' && (
+                            <i
+                              style={{ color: 'red' }}
+                              className="fas fa-key"
+                            />
+                          )}
+                          {token.offerIndex === '1' && '🔑'}
+                          {token.offerIndex >= '2' && (
+                            <i
+                              style={{ color: 'silver' }}
+                              className="fas fa-key"
+                            />
+                          )}
+                        </>
                       )}{' '}
                       &nbsp;
-                      {token.offerIndex === '0' && 'Ultra Rair'}
-                      {token.offerIndex === '1' && 'Rair'}
-                      {token.offerIndex >= '2' && 'Common'}
+                      {token.diamond ? (
+                        <>
+                          {index.toString() === '0' && 'Ultra Rair'}
+                          {index.toString() === '1' && 'Rair'}
+                          {index.toString() &&
+                            index.toString() >= '2' &&
+                            'Common'}
+                        </>
+                      ) : (
+                        <>
+                          {token.offerIndex === '0' && 'Ultra Rair'}
+                          {token.offerIndex === '1' && 'Rair'}
+                          {token.offerIndex >= '2' && 'Common'}
+                        </>
+                      )}
                     </div>
                     <div className="item-availa">
                       <p>

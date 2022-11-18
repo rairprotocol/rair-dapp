@@ -25,6 +25,8 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   setTokenDataFiltered
 }) => {
   const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [isDiamond, setIsDiamond] = useState<undefined | boolean>(undefined);
+
   const myRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
@@ -42,6 +44,12 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (tokenData && tokenData.length > 0) {
+      setIsDiamond(tokenData[0].offer.diamond);
+    }
+  }, [tokenData]);
 
   useEffect(() => {
     setSelectVideo(productsFromOffer[0]);
@@ -77,6 +85,7 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
             setSelectVideo={setSelectVideo}
             setTokenDataFiltered={setTokenDataFiltered}
             primaryColor={primaryColor}
+            isDiamond={isDiamond}
           />
         </div>
 

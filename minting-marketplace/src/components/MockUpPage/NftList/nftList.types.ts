@@ -112,6 +112,7 @@ export interface INftSingleUnlockables {
   setTokenDataFiltered: (filteredData: any) => void;
   primaryColor: ColorChoice;
   setSelectVideo: (selectedVideo: TFileType) => void;
+  isDiamond: undefined | boolean;
 }
 
 export type TRarity = 'Ultra Rair' | 'Rair' | 'Common';
