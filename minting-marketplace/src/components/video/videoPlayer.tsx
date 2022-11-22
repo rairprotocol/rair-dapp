@@ -74,13 +74,13 @@ const VideoPlayer = () => {
     }
 
     try {
-      const streamAddress = await axios.get<TOnlySuccessResponse>(
-        '/api/auth/get_token/' +
-          parsedResponse.message.challenge +
-          '/' +
-          signature +
-          '/' +
-          videoId
+      const streamAddress = await axios.post<TOnlySuccessResponse>(
+        '/api/auth/validate/',
+        {
+          MetaMessage: parsedResponse.message.challenge,
+          MetaSignature: signature,
+          mediaId: videoId
+        }
       );
       if (streamAddress.data.success) {
         await setMediaAddress('/stream/' + videoId + '/' + mainManifest);

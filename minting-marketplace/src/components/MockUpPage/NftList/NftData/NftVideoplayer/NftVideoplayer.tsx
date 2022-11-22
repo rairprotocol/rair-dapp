@@ -73,13 +73,13 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
     }
     if (signature) {
       try {
-        const streamAddress = await axios.get<TOnlySuccessResponse>(
-          '/api/auth/get_token/' +
-            parsedResponse.message.challenge +
-            '/' +
-            signature +
-            '/' +
-            selectVideo?._id
+        const streamAddress = await axios.post<TOnlySuccessResponse>(
+          '/api/auth/validate/',
+          {
+            MetaMessage: parsedResponse.message.challenge,
+            MetaSignature: signature,
+            mediaId: selectVideo?._id
+          }
         );
         if (streamAddress.data.success) {
           await setMediaAddress(

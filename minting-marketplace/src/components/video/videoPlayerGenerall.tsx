@@ -73,13 +73,13 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
       return;
     }
     try {
-      const streamAddress = await axios.get<TOnlySuccessResponse>(
-        '/api/auth/get_token/' +
-          parsedResponse.message.challenge +
-          '/' +
-          signature +
-          '/' +
+      const streamAddress = await axios.post<TOnlySuccessResponse>(
+        '/api/auth/validate/',
+        {
+          MetaMessage: parsedResponse.message.challenge,
+          MetaSignature: signature,
           mediaId
+        }
       );
       if (streamAddress.data.success) {
         await setMediaAddress('/stream/' + mediaId + '/' + mainManifest);

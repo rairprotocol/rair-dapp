@@ -1,4 +1,5 @@
 const admin = require('./admin');
+const metaValidate = require('./metaValidate');
 const addMedia = require('./addMedia');
 const authentication = require('./authentication');
 const createContract = require('./createContract');
@@ -52,6 +53,8 @@ module.exports = {
   search,
   pinningMultiple,
   // V2
+
+  metaValidate,
 
   // Import contract logic
   importContract,

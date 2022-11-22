@@ -102,6 +102,20 @@ function createChallenge(address, customDescription) {
   return challenge;
 }
 
+async function validateChallenge(req, target) {
+  if (req[target][OPTIONS.message] && req[target][OPTIONS.signature]) {
+    const recovered = await checkChallenge(
+      req[target][OPTIONS.message],
+      req[target][OPTIONS.signature],
+    );
+    const token = {
+      recovered,
+    };
+    return token;
+  }
+  return undefined;
+}
+
 module.exports = {
   generateChallenge: (message) => (req, res, next) => {
     if (req.params[OPTIONS.address]) {
@@ -128,16 +142,11 @@ module.exports = {
     }
   },
   validateChallenge: async (req, res, next) => {
-    if (req.params[OPTIONS.message] && req.params[OPTIONS.signature]) {
-      const recovered = await checkChallenge(
-        req.params[OPTIONS.message],
-        req.params[OPTIONS.signature],
-      );
-      const token = {
-        recovered,
-      };
-      req.metaAuth = token;
-    }
+    req.metaAuth = await validateChallenge(req, 'params');
+    next();
+  },
+  validateChallengeV2: async (req, res, next) => {
+    req.metaAuth = await validateChallenge(req, 'body');
     next();
   },
 };
