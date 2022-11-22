@@ -18,6 +18,8 @@ const {
   ADMIN_NETWORK,
   ADMIN_CONTRACT,
   SUPER_ADMIN_VAULT_STORE,
+  ZOOMSECRET,
+  ZOOMCLIENTID,
 } = process.env;
 
 const binanceTestnetData = {
@@ -64,6 +66,10 @@ module.exports = {
   admin: {
     network: ADMIN_NETWORK,
     contract: ADMIN_CONTRACT,
+  },
+  zoom: {
+    zoomSecret: ZOOMSECRET,
+    zoomClientID: ZOOMCLIENTID,
   },
   superAdmin: {
     storageKey: SUPER_ADMIN_VAULT_STORE || null,

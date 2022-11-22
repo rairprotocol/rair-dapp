@@ -2,7 +2,10 @@ const { File, MintedToken } = require('../models');
 const eFactory = require('../utils/entityFactory');
 const { verifyAccessRightsToFile } = require('../utils/helpers');
 
-exports.getFiles = eFactory.getAll(File, { dataTransform: { func: verifyAccessRightsToFile, parameters: ['user'] } });
+exports.getFiles = eFactory.getAll(File, {
+  dataTransform: { func: verifyAccessRightsToFile, parameters: ['user'] },
+});
+exports.getFile = eFactory.getOne(File);
 
 exports.getFilesForToken = async (req, res, next) => {
   try {
