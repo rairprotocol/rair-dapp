@@ -104,11 +104,11 @@ module.exports = {
   },
   ipfsService: IPFS_SERVICE || 'pinata',
   redis: {
-    connection: { host: REDIS_HOST, port: REDIS_PORT }
+    connection: { host: REDIS_HOST, port: REDIS_PORT },
   },
   session: {
     secret: SESSION_SECRET,
-    ttl: SESSION_TTL || 12,
+    ttl: SESSION_TTL || 10,
   },
   sentry: {
     dsn: SENTRY_DSN || '',
