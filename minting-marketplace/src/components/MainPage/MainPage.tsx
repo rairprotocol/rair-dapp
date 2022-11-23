@@ -232,7 +232,6 @@ const MainPage: React.FC<IMainPage> = ({
           <div className={styles.demonstration_subtitle_0}>
             Industry leading NFT minting engine
           </div>
-          <br />
           <div className={styles.demonstration_description_0}>
             <p>
               &#8226; Mint on an EVM compatible blockchain. ETH, MATIC, BSC
@@ -256,7 +255,6 @@ const MainPage: React.FC<IMainPage> = ({
           <div className={styles.demonstration_subtitle_1}>
             Patent-pending streaming engine. Securely stream via NFT
           </div>
-          <br />
           <div className={styles.demonstration_description_1}>
             <p>&#8226; Multimedia streaming video/music/data</p>
             <p>&#8226; Capture wallet analytics </p>
@@ -281,7 +279,6 @@ const MainPage: React.FC<IMainPage> = ({
           <div className={styles.demonstration_subtitle_2}>
             Upgrade any website to Web3 streaming
           </div>
-          <br />
           <div className={styles.demonstration_description_2}>
             <p>&#8226; Embeddable </p>
             <p>&#8226; No Web3 integration required </p>
@@ -300,7 +297,6 @@ const MainPage: React.FC<IMainPage> = ({
           <div className={styles.demonstration_subtitle_3}>
             Deploy your own NFT marketplace. <br /> Sell unlockable content
           </div>
-          <br />
           <div className={styles.demonstration_description_3}>
             <p>&#8226; Sell any 0x NFT, secure royalties </p>
             <p>&#8226; Minting sales pages</p>
@@ -320,7 +316,6 @@ const MainPage: React.FC<IMainPage> = ({
           <div className={styles.demonstration_subtitle_4}>
             All services available via API
           </div>
-          <br />
           <div className={styles.demonstration_description_4}>
             <p>&#8226; Endpoints for minting </p>
             <p> &#8226; Scraping blockchain & analytics</p>
@@ -433,7 +428,7 @@ const MainPage: React.FC<IMainPage> = ({
           classNameGap={true}
         />
       </div>
-      <div className="rairpage about-page--team">
+      <div className="rairpage about-page--team one">
         <TeamMeet
           arraySplash={'rair-advisors'}
           titleHeadFirst={'Meet the'}
