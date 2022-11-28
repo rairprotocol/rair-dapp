@@ -286,7 +286,7 @@ module.exports = (context) => {
           // Special case for Mark Kohler's Zoom
           if (zoomId === 'Kohler') {
             media = {
-              contract: ObjectId('63765d2db62bf07fcb74ccef'),
+              contract: ObjectId(process.env.KOHLER_CONTRACT_ID),
               offer: '0',
             };
           }
