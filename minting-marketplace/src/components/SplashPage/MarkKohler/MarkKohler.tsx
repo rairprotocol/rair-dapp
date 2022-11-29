@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Maybe } from '@metamask/providers/dist/utils';
+import axios from 'axios';
+import { TypedDataDomain } from 'ethers';
 import Swal from 'sweetalert2';
 
 import { teamTaxHacksSummit } from './AboutUsTeam';
 import { AccessTextMarkKohler } from './InformationText';
 
+import {
+  TAuthGetChallengeResponse,
+  TOnlySuccessResponse
+} from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
@@ -74,13 +82,19 @@ export const splashData: TSplashDataType = {
     buttonAction: () =>
       hyperlink('https://opensea.io/collection/tax-hacks-summit')
   },
+  button3: {
+    buttonLabel: 'CONNECT WALLET',
+    buttonImg: metaMaskIcon,
+    buttonColor: '#000',
+    buttonAction: () =>
+      hyperlink('https://opensea.io/collection/tax-hacks-summit')
+  },
   purchaseButton: {
     buttonLabel: 'Mint for .27',
     img: metaMaskIcon,
     requiredBlockchain: blockchain,
     contractAddress: contract,
     offerIndex: offerIndex,
-    customButtonClassName: 'mark-kohler-purchase-button',
     blockchainOnly: true,
     customSuccessAction: async (nextToken) => {
       const tokenMetadata = await rFetch(
@@ -128,12 +142,104 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
 
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
+  const [hasNFT, setHasNFT] = useState<boolean>();
+
+  if (splashData?.purchaseButton?.customSuccessAction) {
+    splashData.purchaseButton.customSuccessAction = async (nextToken) => {
+      const tokenMetadata = await rFetch(
+        `/api/nft/network/${blockchain}/${contract}/0/token/${nextToken}`
+      );
+      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
+        Swal.fire({
+          imageUrl: tokenMetadata.result.metadata.image,
+          imageHeight: 'auto',
+          imageWidth: '65%',
+          imageAlt: "Your NFT's image",
+          title: `You own #${nextToken}!`,
+          icon: 'success'
+        });
+      } else {
+        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+      }
+      setHasNFT(undefined);
+    };
+  }
 
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
+
+  const { programmaticProvider, currentUserAddress } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
+
+  const joinZoom = () => {
+    // Missing zoom meeting URL?
+  };
+
+  const unlockZoom = async () => {
+    let signature;
+    let parsedResponse;
+    try {
+      if (currentUserAddress) {
+        const response = await axios.post<TAuthGetChallengeResponse>(
+          '/api/auth/get_challenge/',
+          {
+            userAddress: currentUserAddress,
+            intent: 'decrypt',
+            zoomId: 'Kohler'
+          }
+        );
+        parsedResponse = JSON.parse(response.data.response);
+        signature = await window.ethereum.request({
+          method: 'eth_signTypedData_v4',
+          params: [currentUserAddress, response.data.response],
+          from: currentUserAddress
+        });
+      } else if (programmaticProvider) {
+        const response = await axios.get<TAuthGetChallengeResponse>(
+          '/api/auth/get_challenge/' + programmaticProvider.address
+        );
+        parsedResponse = JSON.parse(response.data.response);
+        // EIP712Domain is added automatically by Ethers.js!
+        const { ...revisedTypes } = parsedResponse.types;
+        signature = await programmaticProvider._signTypedData(
+          parsedResponse.domain,
+          revisedTypes,
+          parsedResponse.message
+        );
+      } else {
+        Swal.fire('Error', 'Unable to decrypt videos', 'error');
+        return;
+      }
+    } catch (err) {
+      console.info(err);
+    }
+    if (signature) {
+      try {
+        const streamAddress = await axios.post<TOnlySuccessResponse>(
+          '/api/auth/validate/',
+          {
+            MetaMessage: parsedResponse.message.challenge,
+            MetaSignature: signature,
+            zoomId: 'Kohler'
+          }
+        );
+        if (streamAddress.data.success) {
+          setHasNFT(true);
+        }
+      } catch (requestError) {
+        Swal.fire('NFT Required to unlock this meeting', '', 'info');
+        setHasNFT(false);
+      }
+    } else {
+      console.error('Signature was not provided');
+      return;
+    }
+  };
 
   useEffect(() => {
     dispatch(
@@ -198,6 +304,53 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             lightTheme: 'var(--stimorol)'
           }}
         />
+        <SplashCardText
+          color="#DF76DF"
+          fontSize="3vw"
+          fontWeight={400}
+          text={'SIGN WITH WALLET TO JOIN ZOOM'}
+          fontFamily={'Nebulosa Black Display Stencil'}
+          lineHeight={'113.7%'}
+          textAlign="center"
+          marginBottom="2vw"
+          padding="50px 0 0 0"
+          mediafontSize="4.5vw"
+        />
+        <SplashPageCardWrapper height="80px">
+          <SplashCardButtonsWrapper
+            marginTop={'10px !important'}
+            height="148px"
+            width="335px"
+            gap="20px"
+            flexDirection="column"
+            margin="auto">
+            {hasNFT !== undefined && !hasNFT ? (
+              <PurchaseTokenButton
+                connectUserData={connectUserData}
+                {...splashData.purchaseButton}
+                buttonLabel="PURCHASE"
+                diamond={true}
+                customButtonClassName="mark-kohler-purchase-button-black"
+              />
+            ) : (
+              <SplashCardButton
+                className="card-button-mark-kohler"
+                buttonImg={splashData.button3?.buttonImg || ''}
+                buttonLabel={
+                  !loginDone
+                    ? splashData.button3?.buttonLabel
+                    : hasNFT
+                    ? 'Join Zoom'
+                    : 'Unlock Meeting'
+                }
+                buttonAction={
+                  loginDone ? (hasNFT ? joinZoom : unlockZoom) : connectUserData
+                }
+              />
+            )}
+          </SplashCardButtonsWrapper>
+        </SplashPageCardWrapper>
+        <br />
         <SplashPageCardWrapper>
           <SplashCardInfoBlock paddingLeft="5.9vw">
             <SplashCardText
@@ -230,6 +383,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               <PurchaseTokenButton
                 connectUserData={connectUserData}
                 {...splashData.purchaseButton}
+                customButtonClassName="mark-kohler-purchase-button"
                 diamond={true}
               />
               <SplashCardButton
@@ -451,10 +605,8 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
 
 export default MarkKohler;
 
-{
-  /* <div className="container-about-conference">
+/* <div className="container-about-conference">
           <button className="btn-enter-summit">
             ENTER THE SUMMIT (COMING SOON)
           </button>
         </div> */
-}

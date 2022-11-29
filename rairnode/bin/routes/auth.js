@@ -285,8 +285,15 @@ module.exports = (context) => {
           // media = await context.db.<ZoomSchema>.findOne({ _id: zoomId });
           // Special case for Mark Kohler's Zoom
           if (zoomId === 'Kohler') {
+            const kohlerContract = await context.db.Contract.findOne({
+              contractAddress: '0x711fe7fccdf84875c9bdf663c89b5f5f726a11d7'.toLowerCase(),
+              blockchain: '0x1',
+            });
+            if (!kohlerContract) {
+              return next(new AppError('No contract found', 400));
+            }
             media = {
-              contract: ObjectId(process.env.KOHLER_CONTRACT_ID),
+              contract: kohlerContract._id,
               offer: '0',
             };
           }
@@ -296,6 +303,9 @@ module.exports = (context) => {
         }
 
         const contract = await context.db.Contract.findOne(media.contract);
+        if (!contract) {
+          return next(new AppError('No contract found', 400));
+        }
         const offers = await context.db.Offer.find(
           _.assign(
             { contract: media.contract },

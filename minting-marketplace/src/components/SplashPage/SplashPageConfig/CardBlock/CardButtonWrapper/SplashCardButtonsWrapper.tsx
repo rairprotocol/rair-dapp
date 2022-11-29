@@ -9,6 +9,7 @@ const SplashCardButtonsWrapper: React.FC<TSplashCardButtonsWrapper> = ({
   marginTop,
   height,
   width,
+  margin,
   gap,
   flexDirection,
   justifyContent
@@ -18,6 +19,7 @@ const SplashCardButtonsWrapper: React.FC<TSplashCardButtonsWrapper> = ({
       marginTop={marginTop}
       height={height}
       width={width}
+      margin={margin}
       gap={gap}
       flexDirection={flexDirection}
       justifyContent={justifyContent}>
