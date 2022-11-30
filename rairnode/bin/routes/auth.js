@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
+const { default: axios } = require('axios');
 const { generateChallenge, generateChallengeV2, validateChallenge, validateChallengeV2 } = require('../integrations/ethers/web3Signature');
 const AppError = require('../utils/errors/AppError');
 const {
@@ -10,6 +11,7 @@ const {
   checkBalanceAny,
 } = require('../integrations/ethers/tokenValidation');
 const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
+const { generateJWT, getMeetingInvite } = require('../integrations/zoom/zoomController');
 const log = require('../utils/logger')(module);
 
 // TODO: remove ARTIFACT
@@ -295,6 +297,7 @@ module.exports = (context) => {
             media = {
               contract: kohlerContract._id,
               offer: '0',
+              meetingIdentifier: process.env.KOHLER_MEETING_ID,
             };
           }
         }
@@ -368,6 +371,16 @@ module.exports = (context) => {
           sess.media_id = mediaId;
           sess.zoom_id = zoomId;
           sess.streamAuthorized = true;
+
+          if (zoomId) {
+            const token = generateJWT();
+            try {
+              const invites = await getMeetingInvite(media.meetingIdentifier, token, user);
+              return res.send({ success: true, invite: invites.attendees?.at(0) });
+            } catch (error) {
+              console.log(error);
+            }
+          }
 
           return res.send({ success: true });
         }

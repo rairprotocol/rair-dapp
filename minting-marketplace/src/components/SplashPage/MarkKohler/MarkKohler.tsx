@@ -10,6 +10,7 @@ import { AccessTextMarkKohler } from './InformationText';
 
 import {
   TAuthGetChallengeResponse,
+  TMeetingInviteResponse,
   TOnlySuccessResponse
 } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
@@ -143,6 +144,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const [hasNFT, setHasNFT] = useState<boolean>();
+  const [meetingInvite, setMeetingInvite] = useState<string>();
 
   if (splashData?.purchaseButton?.customSuccessAction) {
     splashData.purchaseButton.customSuccessAction = async (nextToken) => {
@@ -177,7 +179,9 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   >((state) => state.contractStore);
 
   const joinZoom = () => {
-    // Missing zoom meeting URL?
+    if (meetingInvite) {
+      window.open(meetingInvite, '_blank');
+    }
   };
 
   const unlockZoom = async () => {
@@ -220,7 +224,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
     }
     if (signature) {
       try {
-        const streamAddress = await axios.post<TOnlySuccessResponse>(
+        const streamAddress = await axios.post<TMeetingInviteResponse>(
           '/api/auth/validate/',
           {
             MetaMessage: parsedResponse.message.challenge,
@@ -230,6 +234,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
         );
         if (streamAddress.data.success) {
           setHasNFT(true);
+          setMeetingInvite(streamAddress?.data?.invite?.join_url);
         }
       } catch (requestError) {
         Swal.fire('NFT Required to unlock this meeting', '', 'info');
