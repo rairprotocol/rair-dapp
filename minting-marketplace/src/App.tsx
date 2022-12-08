@@ -644,7 +644,8 @@ function App() {
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',
-                    content: NftDataExternalLink
+                    content: NftDataExternalLink,
+                    props: { loginDone }
                   },
                   {
                     path: '/coming-soon',
