@@ -93,7 +93,7 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
             <h4>Company</h4>
             {!isSplashPage && (
               <li>
-                <NavLink to="/main-page">About</NavLink>
+                <NavLink to="//rair.tech/">About</NavLink>
               </li>
             )}
             <li>
