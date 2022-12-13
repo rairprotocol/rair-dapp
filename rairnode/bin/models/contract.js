@@ -28,106 +28,133 @@ Contract.statics = {
     blockchain: 1,
     diamond: 1,
   },
-  lookupProduct: {
-    $lookup: {
-      from: 'Product',
-      let: {
-        contr: '$_id',
-      },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $eq: ['$contract', '$$contr'],
-                },
-              ],
+  lookupProduct: [
+    {
+      $lookup: {
+        from: 'Product',
+        let: {
+          contr: '$_id',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ['$contract', '$$contr'],
+                  },
+                ],
+              },
             },
           },
-        },
-      ],
-      as: 'products',
-    },
-  },
-  lookupLockedTokens: {
-    $lookup: {
-      from: 'LockedTokens',
-      let: {
-        contr: '$_id',
-        prod: '$products.collectionIndexInContract',
+        ],
+        as: 'products',
       },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $eq: ['$contract', '$$contr'],
-                },
-                {
-                  $eq: ['$product', '$$prod'],
-                },
-              ],
+    },
+    { $unwind: '$products' },
+  ],
+  lookupLockedTokens: [
+    {
+      $lookup: {
+        from: 'LockedTokens',
+        let: {
+          contr: '$_id',
+          prod: '$products.collectionIndexInContract',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ['$contract', '$$contr'],
+                  },
+                  {
+                    $eq: ['$product', '$$prod'],
+                  },
+                ],
+              },
             },
           },
-        },
-      ],
-      as: 'tokenLock',
-    },
-  },
-  offerPoolLookup: {
-    $lookup: {
-      from: 'OfferPool',
-      let: {
-        contr: '$_id',
-        prod: '$products.collectionIndexInContract',
+        ],
+        as: 'tokenLock',
       },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $eq: ['$contract', '$$contr'],
-                },
-                {
-                  $eq: ['$product', '$$prod'],
-                },
-              ],
+    },
+    { $unwind: '$tokenLock' },
+  ],
+  lookupOfferAndOfferPoolsAggregationOptions: [
+    {
+      $lookup: {
+        from: 'OfferPool',
+        let: {
+          contr: '$_id',
+          prod: '$products.collectionIndexInContract',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ['$contract', '$$contr'],
+                  },
+                  {
+                    $eq: ['$product', '$$prod'],
+                  },
+                ],
+              },
             },
           },
-        },
-      ],
-      as: 'offerPool',
-    },
-  },
-  offerLookup: {
-    $lookup: {
-      from: 'Offer',
-      let: {
-        prod: '$products.collectionIndexInContract',
-        contractL: '$_id',
+        ],
+        as: 'offerPool',
       },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $eq: ['$contract', '$$contractL'],
-                },
-                {
-                  $eq: ['$product', '$$prod'],
-                },
-              ],
+    },
+    {
+      $unwind: {
+        path: '$offerPool',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: 'Offer',
+        let: {
+          prod: '$products.collectionIndexInContract',
+          contractL: '$_id',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ['$contract', '$$contractL'],
+                  },
+                  {
+                    $eq: ['$product', '$$prod'],
+                  },
+                ],
+              },
             },
           },
-        },
-      ],
-      as: 'products.offers',
+        ],
+        as: 'products.offers',
+      },
     },
-  },
+    {
+      $match: {
+        $or: [
+          { diamond: true, 'products.offers': { $not: { $size: 0 } } },
+          {
+            diamond: { $in: [false, undefined] },
+            offerPool: { $ne: null },
+            'products.offers': { $not: { $size: 0 } },
+          },
+        ],
+      },
+    },
+  ],
+
   async findContractsByUser(user) {
     return this.find({ user }, this.defaultProjection);
   },

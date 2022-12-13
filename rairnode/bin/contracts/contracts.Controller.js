@@ -18,7 +18,13 @@ router.get(
   contractService.getAllContracts,
 );
 router.get('/full', contractService.getFullContracts);
-router.get('/my', JWTVerification, contractService.getMyContracts);
+router.get(
+  '/my',
+  JWTVerification,
+  isSuperAdmin,
+  contractService.queryMyContracts,
+  contractService.getAllContracts,
+);
 router.post(
   '/import',
   JWTVerification,
