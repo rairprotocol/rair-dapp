@@ -4,7 +4,7 @@ metadata:
   name: api-ingress
   annotations:
 #CREATE DEDICATED IP ADDRESS -- gcloud compute addresses create $IP-NAME --global
-    kubernetes.io/ingress.global-static-ip-name: "api-dev-ip"
+    kubernetes.io/ingress.global-static-ip-name: "new-api-ip"
     networking.gke.io/managed-certificates: api-managed-cert
     kubernetes.io/ingress.class: "gce"
     networking.gke.io/v1beta1.FrontendConfig: ssl-redirect
