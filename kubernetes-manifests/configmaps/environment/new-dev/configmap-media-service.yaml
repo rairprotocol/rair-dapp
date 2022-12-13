@@ -15,7 +15,7 @@ data:
   MONGO_LOG_COLLECTION: Log
   LOG_LEVEL: debug
   MEDIA_SERVICE_PORT: "5002"
-  BASE_RAIRNODE_URL: https://new-api.rair.tech
+  BASE_RAIRNODE_URL: http://new-api.rair.tech
   USE_X509_CERT_AUTH: "false"
   IPFS_API: http://rairipfs:5001
   VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
