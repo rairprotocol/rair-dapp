@@ -98,7 +98,6 @@ async function main() {
         path: '/',
         httpOnly: config.production,
         secure: config.production,
-        expires: false,
         maxAge: (`${config.session.ttl}` * 60 * 1000), // 10 min
       },
     }),

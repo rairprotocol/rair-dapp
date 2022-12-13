@@ -1,7 +1,7 @@
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: dev-managed-cert
+  name: managed-cert
 spec:
   domains:
-    -  dev.rair.tech
+    -  new-dev.rair.tech

@@ -12,7 +12,7 @@ services:
     environment:
       PRODUCTION: "true"
       MONGO_URI:  ${db}
-      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      MONGO_URI_LOCAL: ${db}
       GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${rairnode_generate_mongo_uri_with_vault_credential_util}
       USE_X509_CERT_AUTH: ${VAULT_RAIRNODE_use_x509_cert_auth}
       MONGO_DB_HOSTNAME: ${RAIRNODE_mongo_db_hostname}

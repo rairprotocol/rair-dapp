@@ -4,4 +4,4 @@ metadata:
   name: api-managed-cert
 spec:
   domains:
-    -  api.rair.tech
+    -  new-api.rair.tech
