@@ -3,10 +3,8 @@ kind: Service
 metadata:
   name: rair-redis
 spec:
-  type: LoadBalancer
   ports:
-  - protocol: TCP
-    port: 6379
+  - port: 6379
     targetPort: 6379
     name: redis
   selector:
@@ -39,3 +37,4 @@ spec:
           - "no"
         ports:
         - containerPort: 6379
+        resources: {}
