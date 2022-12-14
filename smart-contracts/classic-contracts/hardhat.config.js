@@ -6,8 +6,6 @@ require("@nomiclabs/hardhat-etherscan");
 require('hardhat-contract-sizer');
 require("hardhat-tracer");
 require("@nomicfoundation/hardhat-toolbox");
-// Disabled because there's no use for Types
-//require('@typechain/hardhat');
 require('dotenv').config()
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -16,32 +14,32 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: process.env.ETHEREUM_ARCHIVE_SPEEDY_NODE,
-        blockNumber: 14000000,
+        url: process.env.ETH_MAIN_RPC,
+        blockNumber: 16000000
       }
     },
-    ethMainnet: {
-      url: process.env.ETHEREUM_ARCHIVE_SPEEDY_NODE,
+    "0x1": {
+      url: process.env.ETH_MAIN_RPC,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
-    goerli: {
-      url: process.env.GOERLI_SPEEDY_NODE,
+    "0x5": {
+      url: process.env.GOERLI_RPC,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
-    mumbai: {
-      url: process.env.MUMBAI_SPEEDY_NODE,
+    "0x13881": {
+      url: process.env.MUMBAI_RPC,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
-    matic: {
-      url: process.env.MATIC_MAINNET_SPEEDY_NODE,
+    "0x89": {
+      url: process.env.MATIC_RPC,
+      accounts: [process.env.ADDRESS_PRIVATE_KEY],
+    },
+    "0x61": {
+      url: process.env.BSC_TEST_RPC,
       accounts: [process.env.ADDRESS_PRIVATE_KEY]
     },
-    binanceTestnet: {
-      url: process.env.BINANCE_TESTNET_SPEEDY_NODE,
-      accounts: [process.env.ADDRESS_PRIVATE_KEY]
-    },
-    binanceMainnet: {
-      url: process.env.BINANCE_MAINNET_SPEEDY_NODE,
+    "0x38": {
+      url: process.env.BSC_MAIN_RPC,
       accounts: [process.env.ADDRESS_PRIVATE_KEY]
     }
   },
@@ -68,7 +66,7 @@ module.exports = {
     enabled: true,
     currency: 'USD',
     showTimeSpent: true,
-    coinmarketcap: process.env.COINMARKETCAP || undefined
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY || undefined
   },
   contractSizer: {
     runOnCompile: true,

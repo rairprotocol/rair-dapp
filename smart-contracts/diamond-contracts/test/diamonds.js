@@ -7,8 +7,8 @@ const FacetCutAction_REMOVE = 2;
 const initialRAIR777Supply = 1000;
 const priceToDeploy = 150;
 
-const firstDeploymentAddress = '0x33791c463B145298c575b4409d52c2BcF743BF67';
-const secondDeploymentAddress = '0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa';
+const firstDeploymentAddress = '0x0cE7946e65c3682c55D7Fb2c4D1e3851b8139a64';
+const secondDeploymentAddress = '0xD77E4804680e04361692F58B033884D74f5f528D';
 
 let usedSelectorsForFactory = {};
 let usedSelectorsForMarketplace = {};
