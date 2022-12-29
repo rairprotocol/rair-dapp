@@ -14,6 +14,7 @@ import {
   TUserResponse
 } from '../../../axios.responseTypes';
 import { UserType } from '../../../ducks/users/users.types';
+import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import chainData from '../../../utils/blockchainData';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
@@ -45,6 +46,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   const { width } = useWindowDimensions();
 
   const { maxPrice, minPrice } = gettingPrice(price);
+  const ipfsLink = useIPFSImageLink(metaDataProducts?.metadata?.image);
 
   const mobileFont = width > 400 ? '' : { fontSize: '9px' };
   const checkUrl = useCallback(() => {
@@ -248,11 +250,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               className="col-12 h-100 w-100 zoom-event"
               width={'282px'}
               height={'282px'}
-              src={
-                metaDataProducts?.metadata?.image
-                  ? metaDataProducts?.metadata?.image
-                  : pict
-              }
+              src={metaDataProducts?.metadata?.image ? ipfsLink : pict}
               alt={collectionName}
             />
           )}

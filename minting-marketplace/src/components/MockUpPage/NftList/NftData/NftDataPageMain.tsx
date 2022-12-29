@@ -14,6 +14,7 @@ import { TFileType } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
+import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
 import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
@@ -72,6 +73,8 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
       setIsFileUrl(ext);
     }
   }, [selectedData, setIsFileUrl]);
+
+  const ipfsLink = useIPFSImageLink(selectedData?.image);
 
   useEffect(() => {
     checkUrl();
@@ -228,7 +231,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 <ImageLazy
                   src={
                     selectedData?.image
-                      ? selectedData.image
+                      ? ipfsLink
                       : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
                   }
                   alt="nft token image"

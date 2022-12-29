@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { SvgKey } from './SvgKey';
 
+import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import chainData from '../../../utils/blockchainData';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
@@ -38,6 +39,7 @@ const NftItemForCollectionViewComponent: React.FC<
   const navigate = useNavigate();
 
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
+  const ipfsLink = useIPFSImageLink(metadata?.image);
 
   const handlePlaying = (el?: unknown) => {
     if (el === null) {
@@ -196,7 +198,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 width={'282px'}
                 height={'282px'}
                 alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
-                src={metadata?.image ? metadata?.image : pict}
+                src={metadata?.image ? ipfsLink : pict}
               />
             )}
             {diamond ? (
