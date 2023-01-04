@@ -215,8 +215,8 @@
 }
 
 .container-about-conference-image img {
-  width: 35rem;
-  height: 27rem;
+  width: 34rem;
+  height: 20rem;
 }
 
 .mark-kohler-card-wrapper {
@@ -567,7 +567,7 @@
 
 @media screen and (max-width: 500px) {
   .container-about-conference-image img {
-    width: 20rem;
-    height: 13rem;
+    width: 16rem;
+    height: 9rem;
   }
 }
