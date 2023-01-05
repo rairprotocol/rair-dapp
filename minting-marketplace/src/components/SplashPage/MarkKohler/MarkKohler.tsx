@@ -1,8 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Maybe } from '@metamask/providers/dist/utils';
 import axios from 'axios';
-import { TypedDataDomain } from 'ethers';
 import Swal from 'sweetalert2';
 
 import { teamTaxHacksSummit } from './AboutUsTeam';
@@ -10,8 +8,7 @@ import { AccessTextMarkKohler } from './InformationText';
 
 import {
   TAuthGetChallengeResponse,
-  TMeetingInviteResponse,
-  TOnlySuccessResponse
+  TMeetingInviteResponse
 } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
@@ -20,15 +17,16 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
-import { metaMaskIcon } from '../../../images';
+import {
+  blockchain,
+  contract,
+  splashData
+} from '../../../utils/infoSplashData/markKohler';
 import { rFetch } from '../../../utils/rFetch';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import MetaTags from '../../SeoTags/MetaTags';
-import { MarkKohlerImage } from '../images/markKohler/markHohler';
-import { TaxHacksDemoGif } from '../images/markKohler/markHohler';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ISplashPageProps, TMainContractType } from '../splashPage.types';
-import { TSplashDataType } from '../splashPage.types';
+import { ISplashPageProps } from '../splashPage.types';
 import SplashPageCardWrapper from '../SplashPageConfig/CardBlock/CardBlockWrapper/SplashPageCardWrapper';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import SplashCardButtonsWrapper from '../SplashPageConfig/CardBlock/CardButtonWrapper/SplashCardButtonsWrapper';
@@ -36,7 +34,6 @@ import SplashCardImage from '../SplashPageConfig/CardBlock/CardImage/SplashCardI
 import SplashCardInfoBlock from '../SplashPageConfig/CardBlock/CardInfoBlock/SplashCardInfoBlock';
 import SplashCardText from '../SplashPageConfig/CardBlock/CardText/SplashCardText';
 import CardParagraphText from '../SplashPageConfig/CardParagraphText/CardParagraphText';
-import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
 import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
 import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
@@ -49,78 +46,6 @@ import TeamMeet from '../TeamMeet/TeamMeetList';
 import KohlerFavicon from './assets/favicon.ico';
 
 import './markKohler.css';
-
-const mainContract: TMainContractType = {
-  contractAddress: '0x711fe7fccdf84875c9bdf663c89b5f5f726a11d7',
-  requiredBlockchain: '0x1',
-  offerIndex: ['11']
-};
-
-// Code for test contracts
-const testContract: TMainContractType = {
-  contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
-  requiredBlockchain: '0x5',
-  offerIndex: ['126']
-};
-
-const contract = mainContract.contractAddress;
-const blockchain = mainContract.requiredBlockchain;
-const offerIndex = mainContract.offerIndex;
-
-export const splashData: TSplashDataType = {
-  title: 'TAX HACKS SUMMIT',
-  description: (
-    <>
-      Thursday December <span className="nebulosa-font-style">8</span>
-      th <span className="nebulosa-font-style">11</span>
-      AM —<span className="nebulosa-font-style"> 7</span>
-      PM ET <br /> An NFT Gated Event
-    </>
-  ),
-  backgroundImage: MarkKohlerImage,
-  button2: {
-    buttonLabel: 'OpenSea',
-    buttonAction: () =>
-      hyperlink('https://opensea.io/collection/tax-hacks-summit')
-  },
-  button3: {
-    buttonLabel: 'CONNECT WALLET',
-    buttonImg: metaMaskIcon,
-    buttonColor: '#000',
-    buttonAction: () =>
-      hyperlink('https://opensea.io/collection/tax-hacks-summit')
-  },
-  purchaseButton: {
-    buttonLabel: 'Mint for .27',
-    img: metaMaskIcon,
-    requiredBlockchain: blockchain,
-    contractAddress: contract,
-    offerIndex: offerIndex,
-    blockchainOnly: true,
-    customSuccessAction: async (nextToken) => {
-      const tokenMetadata = await rFetch(
-        `/api/nft/network/${blockchain}/${contract}/0/token/${nextToken}`
-      );
-      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
-        Swal.fire({
-          imageUrl: tokenMetadata.result.metadata.image,
-          imageHeight: 'auto',
-          imageWidth: '65%',
-          imageAlt: "Your NFT's image",
-          title: `You own #${nextToken}!`,
-          icon: 'success'
-        });
-      } else {
-        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
-      }
-    }
-  },
-  videoPlayerParams: {
-    blockchain: blockchain,
-    contract: contract,
-    product: '0'
-  }
-};
 
 const MarkKohler: React.FC<ISplashPageProps> = ({
   loginDone,

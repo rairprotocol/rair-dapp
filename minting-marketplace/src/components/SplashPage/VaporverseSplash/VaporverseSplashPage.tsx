@@ -9,6 +9,7 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { splashData } from '../../../utils/infoSplashData/vapoverseSplashPage';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
@@ -26,11 +27,7 @@ import {
 } from '../images/vaporverse/vaporverse';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
-import {
-  IInfoBlock,
-  IVaporverseSplashPage,
-  TSplashDataType
-} from '../splashPage.types';
+import { IInfoBlock, IVaporverseSplashPage } from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
@@ -43,57 +40,6 @@ import favion_Vaporverse from './../images/favicons/vv_Rair_logo.ico';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './VaporverseSplash.css';
-
-const splashData: TSplashDataType = {
-  title: '',
-  titleColor: 'rgb(234,51,127)',
-  description: '',
-  cardFooter: '/utility drop for OG degens /mintpass to vaporverse',
-  buttonLabel: 'Mint for .1991 Eth',
-  buttonBackgroundHelp: undefined,
-  backgroundImage: vaporverse_background,
-  purchaseButton: undefined,
-  button1: {
-    buttonColor: 'rgb(234,51,127)',
-    buttonLabel: 'premint.xyz',
-    buttonImg: null,
-    buttonLink: 'https://www.premint.xyz/vaporversexyz/'
-  },
-
-  button2: {
-    buttonColor: 'rgb(189,52,183)',
-    buttonLabel: 'discord',
-    buttonImg: null,
-    buttonLink: 'https://discord.gg/pSTbf2yz7V'
-  },
-
-  button3: {
-    buttonColor: 'rgb(189,52,183)',
-    buttonLabel: 'twitter',
-    buttonImg: null,
-    buttonLink: 'https://twitter.com/rairtech'
-  },
-  videoDataDemo: {
-    video: null,
-    // 'https://storage.googleapis.com/rair-videos/tx2cV7kzqFXF9lTC5iy1VCYoXBwonyG-HcjunEI5j1rqfX/2596768157',
-    videoTitle: '',
-    videoModuleDescription: null,
-    videoModuleTitle: 'loading...',
-    baseURL: 'https://staging.rair.market/stream/',
-    mediaId: '9zG0NPK0DXRpCzMQeZ2y6yQYfpDMDJS-Pc1WSewRUaspE9'
-    // demo: true
-  },
-  videoData: {
-    video: null,
-    videoTitle: '',
-    videoModuleDescription: null,
-    videoModuleTitle: 'loading...',
-    baseURL: 'https://staging.rair.market/stream/',
-    mediaId: 'tx2cV7kzqFXF9lTC5iy1VCYoXBwonyG-HcjunEI5j1rqfX'
-  },
-  tilesTitle: null,
-  NFTName: 'NFT'
-};
 
 const InfoBlock: React.FC<IInfoBlock> = ({
   infoArray,

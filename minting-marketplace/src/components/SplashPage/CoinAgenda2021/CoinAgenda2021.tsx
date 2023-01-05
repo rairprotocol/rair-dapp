@@ -8,12 +8,12 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { splashData } from '../../../utils/infoSplashData/coicAgenda2021';
 import { reactSwal } from '../../../utils/reactSwal';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
-import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
+import { ISplashPageProps } from '../splashPage.types';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
@@ -33,31 +33,6 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const splashData: TSplashDataType = {
-    NFTName: '#coinagenda NFT',
-    videoPlayerParams: {
-      contract: '0x551213286900193ff3882a3f3d0441aadd32d42d',
-      product: '0',
-      blockchain: '0x89'
-    },
-    button2: {
-      buttonTextColor: '#FFFFFF',
-      buttonColor: '#f69220',
-      buttonLabel: 'REGISTER FOR GLOBAL',
-      buttonImg: null,
-      buttonAction: () =>
-        hyperlink(
-          'https://www.eventbrite.com/e/coinagenda-global-2022-feat-bitangels-tickets-297407703447'
-        )
-    },
-    button1: {
-      buttonTextColor: '#FFFFFF',
-      buttonColor: '#f69220',
-      buttonLabel: 'VIEW ON OPENSEA',
-      buttonImg: null,
-      buttonAction: () => hyperlink('https://opensea.io/collection/coinagenda')
-    }
-  };
 
   useEffect(() => {
     dispatch(

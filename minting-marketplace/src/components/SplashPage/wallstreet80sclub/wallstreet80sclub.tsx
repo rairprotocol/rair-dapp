@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 
 import { teamWallstreetArray } from './AboutUsTeam';
 
@@ -11,28 +10,15 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
-import { rFetch } from '../../../utils/rFetch';
-import PurchaseTokenButton from '../../common/PurchaseToken';
+import {
+  blockchain,
+  splashData
+} from '../../../utils/infoSplashData/wallStreet80Club';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
-import {
-  WallstreetA,
-  WallstreetB,
-  WallstreetC,
-  WallstreetCounter,
-  WallstreetD,
-  WallstreetE,
-  WallstreetF,
-  WallstreetImg
-} from '../images/wallstreet80sclub/wallstreet80sclub';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
-import {
-  ISplashPageProps,
-  TMainContractType,
-  TSplashDataType
-} from '../splashPage.types';
+import { ISplashPageProps } from '../splashPage.types';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
@@ -53,127 +39,6 @@ import './wallstreet80sclub.css';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
-
-// default contract
-const mainContract: TMainContractType = {
-  contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
-  requiredBlockchain: '0x1',
-  offerIndex: ['0', '1']
-};
-// test contract
-const testContract: TMainContractType = {
-  contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
-  requiredBlockchain: '0x5',
-  offerIndex: ['52', '0']
-};
-
-const contract =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.contractAddress
-    : mainContract.contractAddress;
-const blockchain =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
-    ? testContract.requiredBlockchain
-    : mainContract.requiredBlockchain;
-
-const splashData: TSplashDataType = {
-  LicenseName: '#wallstreet80sclub',
-  title: 'wallstreet80sclub',
-  titleColor: '#000000',
-  description: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW',
-  carouselData: [
-    {
-      img: WallstreetA,
-      description: 'SILIAN RAIL'
-    },
-    {
-      img: WallstreetB,
-      description: 'ROMAN TYPE'
-    },
-    {
-      img: WallstreetC,
-      description: 'GUERILAN SEMIBOLD'
-    },
-    {
-      img: WallstreetD,
-      description: 'AREAOL ROUND'
-    },
-    {
-      img: WallstreetE,
-      description: 'TASTEFUL THICKNESS'
-    },
-    {
-      img: WallstreetF,
-      description: 'RAISED LETTERING'
-    }
-  ],
-  videoPlayerParams: {
-    contract: contract,
-    product: '0',
-    blockchain: blockchain
-  },
-  buttonBackgroundHelp: 'rgb(90,27,3)',
-  buttonBackgroundHelpText: 'NEED HELP',
-  buttonLabel: 'freemint',
-  customStyle: {
-    background: 'rgb(89,25,8)'
-  },
-  backgroundImage: WallstreetImg,
-  purchaseButton: {
-    buttonComponent: PurchaseTokenButton,
-    img: metaMaskIcon,
-    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
-      ? testContract
-      : mainContract),
-    presaleMessage: '',
-    customWrapperClassName: 'btn-submit-with-form',
-    blockchainOnly: true,
-    customSuccessAction: async (nextToken) => {
-      const tokenMetadata = await rFetch(
-        `/api/nft/network/${blockchain}/${contract}/0/token/${nextToken}`
-      );
-      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
-        Swal.fire({
-          imageUrl: tokenMetadata.result.metadata.image,
-          imageHeight: 'auto',
-          imageWidth: '65%',
-          imageAlt: "Your NFT's image",
-          title: `You own #${nextToken}!`,
-          icon: 'success'
-        });
-      } else {
-        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
-      }
-    }
-  },
-  button2: {
-    buttonTextColor: '#FFFFFF',
-    buttonColor: '#000000',
-    buttonLabel: 'Join our Discord',
-    buttonImg: discrodIconNoBorder,
-    buttonLink: 'https://discord.com/invite/y98EMXRsCE'
-  },
-  counterOverride: true,
-  counterData: {
-    titleColor: '#000000',
-    title1: null,
-    title2: 'YOUR TICKET TO THE BOARDROOM',
-    backgroundImage: `url(${WallstreetCounter})`,
-    btnColorIPFS: 'rgb(89,25,8)',
-    nftCount: 1987,
-    description: [
-      `WE'RE BUYING`,
-      '+ LUNCH WITH WARREN BUFFETT',
-      '+ DOWNTOWN MANHATTAN LOFT SPACE',
-      '+ TWO TICKETS TO PARADISE IN A RED TESTAROSSA',
-      '\n',
-      'SHARING EXCLUSIVE ALPHA',
-      '+ STONKS',
-      '+ CRYPTO',
-      '+ PROTIPS'
-    ]
-  }
-};
 
 const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   loginDone,
