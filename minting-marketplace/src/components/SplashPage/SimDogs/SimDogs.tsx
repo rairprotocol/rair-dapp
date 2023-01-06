@@ -13,6 +13,7 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import {
   donationGridData,
   splashData
@@ -22,7 +23,13 @@ import MetaTags from '../../SeoTags/MetaTags';
 import { SimDogs0 } from '../images/simDogs/simDogs';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ICustomButtonBlock, ISplashPageProps } from '../splashPage.types';
+import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import CardParagraphText from '../SplashPageConfig/CardParagraphText/CardParagraphText';
+import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
+import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
+import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
+import SplashVideoText from '../SplashPageConfig/VideoBlock/VideoText/SplashVideoText';
+import SplashVideoTextBlock from '../SplashPageConfig/VideoBlock/VideoTextBlock/SplashVideoTextBlock';
 /* importing Components*/
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
@@ -55,6 +62,9 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
   /* UTILITIES FOR VIDEO PLAYER VIEW */
   const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
   const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
+    useOpenVideoPlayer();
+
   const mainChain = '0x1';
 
   useEffect(() => {
@@ -197,20 +207,28 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
           connectUserData={connectUserData}
         />
         {productsFromOffer && productsFromOffer.length > 0 && (
-          <>
-            <h1
-              className="splashpage-subtitle"
-              style={{ justifyContent: 'center' }}>
-              <div>SUPPORTER ONLY CONTENT</div>
-            </h1>
-            <VideoPlayerView
-              productsFromOffer={productsFromOffer}
-              primaryColor={primaryColor}
+          <SplashVideoWrapper>
+            <SplashVideoTextBlock>
+              <SplashVideoText
+                className="video-text-kohler"
+                text={'SUPPORTER ONLY CONTENT'}
+              />
+              <SplashCardButton
+                className="need-help-kohler"
+                buttonAction={handleReactSwal}
+                buttonLabel={'Need Help'}
+              />
+            </SplashVideoTextBlock>
+            <UnlockableVideosWrapper
               selectVideo={selectVideo}
               setSelectVideo={setSelectVideo}
-              whatSplashPage={'genesis-font'}
+              productsFromOffer={productsFromOffer}
+              openVideoplayer={openVideoplayer}
+              setOpenVideoPlayer={setOpenVideoPlayer}
+              handlePlayerClick={handlePlayerClick}
+              primaryColor={primaryColor}
             />
-          </>
+          </SplashVideoWrapper>
         )}
         <CardParagraphText
           fontFamilyTitle={`'Acme', sans-serif`}

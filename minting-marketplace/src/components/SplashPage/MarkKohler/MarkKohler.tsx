@@ -493,30 +493,30 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
         </SplashCardButtonsWrapper>
 
         {/* Reusable Video Component */}
-        {productsFromOffer.length !== 0 && (
-          <SplashVideoWrapper>
-            <SplashVideoTextBlock>
-              <SplashVideoText
-                className="video-text-kohler"
-                text={'HOLDERS ONLY CONTENT'}
-              />
-              <SplashCardButton
-                className="need-help-kohler"
-                buttonAction={handleReactSwal}
-                buttonLabel={'Need Help'}
-              />
-            </SplashVideoTextBlock>
-            <UnlockableVideosWrapper
-              selectVideo={selectVideo}
-              setSelectVideo={setSelectVideo}
-              productsFromOffer={productsFromOffer}
-              openVideoplayer={openVideoplayer}
-              setOpenVideoPlayer={setOpenVideoPlayer}
-              handlePlayerClick={handlePlayerClick}
-              primaryColor={primaryColor}
+        {/* {productsFromOffer.length !== 0 && ( */}
+        <SplashVideoWrapper>
+          <SplashVideoTextBlock>
+            <SplashVideoText
+              className="video-text-kohler"
+              text={'HOLDERS ONLY CONTENT'}
             />
-          </SplashVideoWrapper>
-        )}
+            <SplashCardButton
+              className="need-help-kohler"
+              buttonAction={handleReactSwal}
+              buttonLabel={'Need Help'}
+            />
+          </SplashVideoTextBlock>
+          <UnlockableVideosWrapper
+            selectVideo={selectVideo}
+            setSelectVideo={setSelectVideo}
+            productsFromOffer={productsFromOffer}
+            openVideoplayer={openVideoplayer}
+            setOpenVideoPlayer={setOpenVideoPlayer}
+            handlePlayerClick={handlePlayerClick}
+            primaryColor={primaryColor}
+          />
+        </SplashVideoWrapper>
+        {/* )} */}
         <TeamMeet
           arraySplash={'taxHacksSummit'}
           titleHeadFirst={'About'}

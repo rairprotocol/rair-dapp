@@ -8,20 +8,25 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { splashData } from '../../../utils/infoSplashData/coicAgenda2021';
 import { reactSwal } from '../../../utils/reactSwal';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps } from '../splashPage.types';
+import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
+import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
+import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
+import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
+import SplashVideoTextBlock from '../SplashPageConfig/VideoBlock/VideoTextBlock/SplashVideoTextBlock';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
-/* importing Components*/
-import WarningModal from '../WarningModal/WarningModal';
 
+/* importing Components*/
 import favicon_CoinAgenda21 from './../images/favicons/coinagenda.ico';
 
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
@@ -33,6 +38,8 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
+    useOpenVideoPlayer();
 
   useEffect(() => {
     dispatch(
@@ -96,36 +103,29 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-        <div className="splashpage-title">BEST OF COINAGENDA 2021</div>
-        <div className="splashpage-description">
-          Check out some of the featured content from the CoinAgenda 2021 series
-          in Dubai, Monaco, Las Vegas and Puerto Rico.
-        </div>
-        <VideoPlayerView
-          productsFromOffer={productsFromOffer}
-          primaryColor={primaryColor}
-          selectVideo={selectVideo}
-          setSelectVideo={setSelectVideo}
-          whatSplashPage={whatSplashPage}
-        />
-        <div className="btn-submit-with-form need-help">
-          <button
-            className="genesis-font"
-            onClick={() =>
-              reactSwal.fire({
-                title:
-                  'Watch out for sign requests that look like this. There are now gasless attack vectors that can set permissions to drain your wallet',
-                html: <WarningModal />,
-                customClass: {
-                  popup: `bg-${primaryColor} genesis-radius genesis-resp `,
-                  title: 'text-genesis'
-                },
-                showConfirmButton: false
-              })
-            }>
-            Need Help?
-          </button>
-        </div>
+        <SplashVideoWrapper>
+          <div className="splashpage-title">BEST OF COINAGENDA 2021</div>
+          <SplashVideoTextBlock>
+            <div className="splashpage-description">
+              Check out some of the featured content from the CoinAgenda 2021
+              series in Dubai, Monaco, Las Vegas and Puerto Rico.
+            </div>
+            <SplashCardButton
+              className="need-help-kohler"
+              buttonAction={handleReactSwal}
+              buttonLabel={'Need Help'}
+            />
+          </SplashVideoTextBlock>
+          <UnlockableVideosWrapper
+            selectVideo={selectVideo}
+            setSelectVideo={setSelectVideo}
+            productsFromOffer={productsFromOffer}
+            openVideoplayer={openVideoplayer}
+            setOpenVideoPlayer={setOpenVideoPlayer}
+            handlePlayerClick={handlePlayerClick}
+            primaryColor={primaryColor}
+          />
+        </SplashVideoWrapper>
         <div className="coinagenda-button-container">
           <AuthorCardButton buttonData={splashData.button1} />
           <AuthorCardButton buttonData={splashData.button2} />

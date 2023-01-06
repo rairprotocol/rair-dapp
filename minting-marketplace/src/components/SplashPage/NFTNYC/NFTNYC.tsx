@@ -8,6 +8,7 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useNFTNYC } from '../../../utils/infoSplashData/nftnyc';
 import { reactSwal } from '../../../utils/reactSwal';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
@@ -18,6 +19,11 @@ import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import { NFTNYC_TITLE, warning0 } from '../images/NFTNYC/nftnyc';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps } from '../splashPage.types';
+import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
+import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
+import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
+import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
+import SplashVideoTextBlock from '../SplashPageConfig/VideoBlock/VideoTextBlock/SplashVideoTextBlock';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
@@ -65,6 +71,8 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
   /* UTILITIES FOR VIDEO PLAYER VIEW (placed this functionality into custom hook for reusability)*/
   const [productsFromOffer, selectVideo, setSelectVideo] =
     useGetProducts(splashData);
+  const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
+    useOpenVideoPlayer();
 
   /* UTILITIES FOR NFT PURCHASE */
   const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
@@ -155,6 +163,24 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
           </div>
         </div>
         <div style={{ height: '58px' }} />
+        <SplashVideoWrapper>
+          <SplashVideoTextBlock>
+            <SplashCardButton
+              className="need-help-kohler"
+              buttonAction={handleReactSwal}
+              buttonLabel={'Need Help'}
+            />
+          </SplashVideoTextBlock>
+          <UnlockableVideosWrapper
+            selectVideo={selectVideo}
+            setSelectVideo={setSelectVideo}
+            productsFromOffer={productsFromOffer}
+            openVideoplayer={openVideoplayer}
+            setOpenVideoPlayer={setOpenVideoPlayer}
+            handlePlayerClick={handlePlayerClick}
+            primaryColor={primaryColor}
+          />
+        </SplashVideoWrapper>
         {/* <VideoPlayerModule
           videoData={splashData.videoData}
         /> */}
@@ -163,13 +189,6 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
           {' '}
           Unlockable Conferences Videos Coming Soon
         </div> */}
-        <VideoPlayerView
-          productsFromOffer={productsFromOffer}
-          primaryColor={primaryColor}
-          selectVideo={selectVideo}
-          setSelectVideo={setSelectVideo}
-          whatSplashPage={whatSplashPage}
-        />
         <div style={{ height: '108px' }} />
         <TeamMeet
           arraySplash={'nftnyc'}

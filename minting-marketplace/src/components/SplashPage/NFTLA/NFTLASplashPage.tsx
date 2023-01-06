@@ -9,6 +9,7 @@ import { TFileType } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
+import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { splashData } from '../../../utils/infoSplashData/nftla';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import { TVideoPlayerViewSpecialVideoType } from '../../MockUpPage/NftList/nftList.types';
@@ -16,6 +17,12 @@ import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
 import { NFTLA1, NFTLA2, NFTLA3 } from '../images/NFTLA/nftLA';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
+import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
+import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
+import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
+import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
+import SplashVideoTextBlock from '../SplashPageConfig/VideoBlock/VideoTextBlock/SplashVideoTextBlock';
+import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
 import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
@@ -38,7 +45,6 @@ import './../SplashPageTemplate/AuthorCard/AuthorCard.css';
 const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const [selectVideo, setSelectVideo] = useState<TNftLaSelectedVideo | {}>({});
   // TODO: Until we have a contract it will be commented
   const [allVideos /*setAllVideos*/] = useState<TFileType[]>([]);
   const primaryColor = useSelector<RootState, ColorChoice>(
@@ -47,6 +53,10 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
+  const [productsFromOffer, selectVideo, setSelectVideo] =
+    useGetProducts(splashData);
+  const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
+    useOpenVideoPlayer();
 
   const whatSplashPage = 'nftla-page';
 
@@ -128,21 +138,27 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           backgroundImage={splashData.backgroundImage}
           videoData={splashData.videoData}
         />
-        <div className="unlockable-video">
-          <div className="title-gets">
-            <h3> NFTLA </h3>
-          </div>
-          <div className="block-videos">
-            <VideoPlayerView
-              productsFromOffer={allVideos}
-              primaryColor={primaryColor}
-              selectVideo={selectVideo}
-              setSelectVideo={setSelectVideo}
-              whatSplashPage={whatSplashPage}
-              someAdditionalData={someAdditionalData}
+        <SplashVideoWrapper>
+          <SplashVideoTextBlock>
+            <div className="title-gets">
+              <h3> NFTLA </h3>
+            </div>
+            <SplashCardButton
+              className="need-help-kohler"
+              buttonAction={handleReactSwal}
+              buttonLabel={'Need Help'}
             />
-          </div>
-        </div>
+          </SplashVideoTextBlock>
+          <UnlockableVideosWrapper
+            selectVideo={selectVideo}
+            setSelectVideo={setSelectVideo}
+            productsFromOffer={productsFromOffer}
+            openVideoplayer={openVideoplayer}
+            setOpenVideoPlayer={setOpenVideoPlayer}
+            handlePlayerClick={handlePlayerClick}
+            primaryColor={primaryColor}
+          />
+        </SplashVideoWrapper>
         <TeamMeet
           arraySplash={'NFTLA'}
           titleHeadFirst={'About'}
