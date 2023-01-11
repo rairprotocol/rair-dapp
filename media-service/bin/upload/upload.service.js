@@ -18,6 +18,51 @@ const AppError = require('../utils/errors/AppError');
 const { baseUri } = config.rairnode;
 
 module.exports = {
+  hardcodedDemoData: async (req, res, next) => {
+    const contractData = await axios
+      .get(`${baseUri}/api/contracts/network/0x1/0x571acc173f57c095f1f63b28f823f0f33128a6c4`)
+      .catch(console.error);
+
+    if (!contractData?.data || contractData?.data?.success === false) {
+      return next(new AppError('Unable to prepare demo data', 400));
+    }
+
+    // Middleware to hardcode the free demo contract to the request's body
+    // Validation will continue as usual with this
+    req.body = {
+      ...req.body,
+      contract: contractData.data.contract._id,
+      product: "0",
+      offer: ["0"],
+      demo: "true",
+      storage: 'gcp',
+    };
+    req.context = {
+      publicDemoOverride: true,
+    }
+    return next();
+  },
+  validateForDemo: async (req, res, next) => {
+    if (req.file.size >= (500 * 1024 * 1024)) {
+      return next(new AppError('500MB Limit Exceeded', 400));
+    }
+    // Check that the user has an email setup
+    if (!req.user.email) {
+      return next(new AppError('Email required for demo use.', 400));
+    }
+    // Check that the user hasn't gone over the 2 video limit
+    const userData = await axios
+      .get(`${baseUri}/api/media/list`, {
+        params: {
+          userAddress: req.user.publicAddress
+        },
+      })
+      .catch(console.error);
+    if (userData.data.totalNumber >= 3) {
+      return next(new AppError('File limit reached for demo', 400));
+    }
+    return next();
+  },
   uploadMedia: async (req, res, next) => {
     // Get video information from the request's body
     const {
@@ -30,6 +75,8 @@ module.exports = {
       demo = 'false',
       storage = 'gcp',
     } = req.body;
+
+    const { publicDemoOverride } = req.context;
 
     // Get the user information
     const { publicAddress, superAdmin } = req.user;
@@ -64,8 +111,8 @@ module.exports = {
 
     const foundContractId = foundContract._id;
 
-    if (foundContract.user !== publicAddress && !superAdmin) {
-      return next(new AppError('Contract not belong to you.', 400));
+    if (publicDemoOverride === false && foundContract.user !== publicAddress && !superAdmin) {
+      return next(new AppError('Only contract owner is allowed to upload videos', 400));
     }
 
     // Get the socket connection from Express app
@@ -197,9 +244,14 @@ module.exports = {
         );
         delete req.file.destination;
 
+        let authorPublicAddress = publicAddress;
+        if (!publicDemoOverride && superAdmin) {
+          authorPublicAddress = foundContract.user
+        }
+
         const meta = {
           mainManifest: 'stream.m3u8',
-          authorPublicAddress: superAdmin ? foundContract.user : publicAddress,
+          authorPublicAddress: authorPublicAddress,
           encryptionType: 'aes-256-gcm',
           title: textPurify.sanitize(title),
           contract: foundContractId,

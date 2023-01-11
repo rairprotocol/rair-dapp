@@ -262,7 +262,6 @@ module.exports = (context) => {
 
   router.use(
     '/network/:networkId/:contractAddress',
-    JWTVerification,
     validation('singleContract', 'params'),
     async (req, res, next) => {
       const contract = await context.db.Contract.findOne({
