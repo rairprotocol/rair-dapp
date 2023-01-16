@@ -43,12 +43,15 @@ module.exports = {
     return next();
   },
   validateForDemo: async (req, res, next) => {
+    if (!req?.file) {
+      return next(new AppError('An error has occurred', 400));
+    }
     if (req.file.size >= (500 * 1024 * 1024)) {
-      return next(new AppError('500MB Limit Exceeded', 400));
+      return next(new AppError('You have exceeded the size limit of videos for tier of usage. Please remove existing videos to free up space or contact RAIR support to upgrade your subscription.', 400));
     }
     // Check that the user has an email setup
     if (!req.user.email) {
-      return next(new AppError('Email required for demo use.', 400));
+      return next(new AppError('Uploading a video with RAIR requires an email registered with our profile settings. Please use the user profile menu in the upper right corner to add your email address to your profile.', 400));
     }
     // Check that the user hasn't gone over the 2 video limit
     const userData = await axios
@@ -59,7 +62,7 @@ module.exports = {
       })
       .catch(console.error);
     if (userData.data.totalNumber >= 3) {
-      return next(new AppError('File limit reached for demo', 400));
+      return next(new AppError('You have exceeded the file limit of videos for tier of usage. Please remove existing videos to free up space or contact RAIR support to upgrade your subscription.', 400));
     }
     return next();
   },
