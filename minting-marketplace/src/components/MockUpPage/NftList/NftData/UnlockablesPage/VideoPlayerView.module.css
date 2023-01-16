@@ -212,6 +212,8 @@
     /* margin-top: 6.4vh; */
     width: 20vw;
   }
+}
+@media screen and (max-width: 570px) {
   .playImagesOnSingleVideo {
     margin-top: 3rem;
     transform: scale(0.7);

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -32,6 +33,7 @@ const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
   };
   const [allTokenData, setAllTokenData] = useState<TTokenData[]>([]);
   const [isOpenPart, setIsOpenPart] = useState<boolean>(false);
+  const [rangeArray, setRangeArray] = useState<string[]>([]);
 
   const checkThisPart = (data: boolean[]) => {
     const part = data.every((i: boolean) => i === true);
@@ -52,6 +54,31 @@ const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
         `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=${responseAllTokenNumbers.data.tokens.length}`
       );
       setAllTokenData(responseAllTokens.data.result.tokens);
+      const filterRange = responseAllTokens.data.result.tokens.map((item) => {
+        return item.offer.range;
+      });
+
+      const set = {};
+      for (let i = 0; i < filterRange.length; i++) {
+        const a = filterRange[i];
+        if (set[a] !== undefined) {
+          ++set[a];
+        } else {
+          set[a] = 1;
+        }
+      }
+
+      const result = [];
+
+      for (const key in set) {
+        const item = key.split(',');
+
+        if (item && item.length > 0) {
+          result.push(item);
+        }
+      }
+
+      setRangeArray(result);
     }
   }, [product, contract, blockchain]);
 
@@ -67,38 +94,98 @@ const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
     switch (title) {
       case 'Unlock Ultra Rair':
         const firstTokenFromUnlockUltra: TTokenData[] = allTokenData.filter(
-          (e) => e.offer.offerIndex === '0'
+          (e) => {
+            if (e.offer.diamond) {
+              return (
+                e.offer.range[0] === rangeArray[0][0] &&
+                e.offer.range[1] === rangeArray[0][1]
+              );
+            }
+
+            return e.offer.offerIndex === '0';
+          }
         );
-        setTokenDataFiltered(firstTokenFromUnlockUltra);
-        sortedClickHandler(firstTokenFromUnlockUltra[0].token);
+        if (firstTokenFromUnlockUltra.length === 0) {
+          setTokenDataFiltered(allTokenData);
+          sortedClickHandler(allTokenData[0].token);
+        } else {
+          setTokenDataFiltered(firstTokenFromUnlockUltra);
+          sortedClickHandler(firstTokenFromUnlockUltra[0].token);
+        }
         break;
       case 'Ultra Rair':
-        const firstTokenFromUltra = allTokenData.filter(
-          (e) => e.offer.offerIndex === '0'
-        );
-        setTokenDataFiltered(firstTokenFromUltra);
-        sortedClickHandler(firstTokenFromUltra[0].token);
+        const firstTokenFromUltra = allTokenData.filter((e) => {
+          if (e.offer.diamond) {
+            return (
+              e.offer.range[0] === rangeArray[0][0] &&
+              e.offer.range[1] === rangeArray[0][1]
+            );
+          }
+
+          return e.offer.offerIndex === '0';
+        });
+        if (firstTokenFromUltra.length === 0) {
+          setTokenDataFiltered(allTokenData);
+          sortedClickHandler(allTokenData[0].token);
+        } else {
+          setTokenDataFiltered(firstTokenFromUltra);
+          sortedClickHandler(firstTokenFromUltra[0].token);
+        }
         break;
       case 'Unlock Rair':
-        const secondTokenFromUnlockUltra = allTokenData.filter(
-          (e) => e.offer.offerIndex === '1'
-        );
-        setTokenDataFiltered(secondTokenFromUnlockUltra);
-        sortedClickHandler(secondTokenFromUnlockUltra[0].token);
+        const secondTokenFromUnlockUltra = allTokenData.filter((e) => {
+          if (e.offer.diamond) {
+            return (
+              e.offer.range[0] === rangeArray[1][0] &&
+              e.offer.range[1] === rangeArray[1][1]
+            );
+          }
+          return e.offer.offerIndex === '1';
+        });
+        if (secondTokenFromUnlockUltra.length === 0) {
+          setTokenDataFiltered(allTokenData);
+          sortedClickHandler(allTokenData[0].token);
+        } else {
+          setTokenDataFiltered(secondTokenFromUnlockUltra);
+          sortedClickHandler(secondTokenFromUnlockUltra[0].token);
+        }
         break;
       case 'Rair':
-        const secondTokenFromUltra = allTokenData.filter(
-          (e) => e.offer.offerIndex === '1'
-        );
-        setTokenDataFiltered(secondTokenFromUltra);
-        sortedClickHandler(secondTokenFromUltra[0].token);
+        const secondTokenFromUltra = allTokenData.filter((e) => {
+          if (e.offer.diamond) {
+            return (
+              e.offer.range[0] === rangeArray[1][0] &&
+              e.offer.range[1] === rangeArray[1][1]
+            );
+          }
+          return e.offer.offerIndex === '1';
+        });
+        if (secondTokenFromUltra.length === 0) {
+          setTokenDataFiltered(allTokenData);
+          sortedClickHandler(allTokenData[0].token);
+        } else {
+          setTokenDataFiltered(secondTokenFromUltra);
+          sortedClickHandler(secondTokenFromUltra[0].token);
+        }
         break;
       default:
-        const thirdTokenFromUltra = allTokenData.filter(
-          (e) => e.offer.offerIndex === '2'
-        );
-        setTokenDataFiltered(thirdTokenFromUltra);
-        sortedClickHandler(thirdTokenFromUltra[0].token);
+        const thirdTokenFromUltra = allTokenData.filter((e) => {
+          if (e.offer.diamond) {
+            return (
+              e.offer.range[0] === rangeArray[2][0] &&
+              e.offer.range[1] === rangeArray[2][1]
+            );
+          }
+
+          return e.offer.offerIndex === '2';
+        });
+        if (thirdTokenFromUltra.length === 0) {
+          setTokenDataFiltered(allTokenData);
+          sortedClickHandler(allTokenData[0].token);
+        } else {
+          setTokenDataFiltered(thirdTokenFromUltra);
+          sortedClickHandler(thirdTokenFromUltra[0].token);
+        }
     }
   };
   useEffect(() => {

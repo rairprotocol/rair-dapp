@@ -3,6 +3,8 @@
 const {
   handleDuplicateKey,
   findContractFromAddress,
+  generateTokensCollectionByRange,
+  log
 } = require('./eventsCommonUtils');
 
 module.exports = async (
@@ -54,6 +56,13 @@ module.exports = async (
         : transactionReceipt.hash,
     });
     await offer.save().catch(handleDuplicateKey);
+
+    // tokens docs in DB
+    const tokenDocuments = await generateTokensCollectionByRange(contract, offer, dbModels);
+    log.info(`Storing ${tokenDocuments.length} tokens from the new range: ${name}`);
+    for (const tokenDoc of tokenDocuments) {
+      await tokenDoc.save().catch(handleDuplicateKey);
+    }
   }
 
   // Locks are always made on Diamond Contracts, they're part of the range event

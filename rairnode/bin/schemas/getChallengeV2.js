@@ -7,4 +7,5 @@ module.exports = Joi.object({
     .required(),
   intent: Joi.string().required(),
   mediaId: Joi.string(),
+  zoomId: Joi.string(),
 });

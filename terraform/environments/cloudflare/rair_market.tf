@@ -98,6 +98,12 @@ resource "cloudflare_record" "api_rair_market" {
   type    = local.record_type.A
 }
 
+resource "cloudflare_record" "rair_market__new-qa_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "New-qa"
+  value   = "34.160.222.33"
+  type    = local.record_type.A
+}
 
 # End: Rairnode API endpoint
 #######################################################

@@ -15,7 +15,7 @@ module.exports = {
 		hardhat: {
 			forking: {
 				url: process.env.ETH_MAIN_RPC,
-				blockNumber: 13000000,
+				blockNumber: 16000000
 			}
 		},
 		"0x1": {
@@ -72,7 +72,7 @@ module.exports = {
 	gasReporter: {
 		currency: 'USD',
 		showTimeSpent: true,
-		coinmarketcap: process.env.COINMARKETCAP || undefined
+		coinmarketcap: process.env.COINMARKETCAP_API_KEY || undefined
 	},
 	etherscan: {
 		apiKey: {

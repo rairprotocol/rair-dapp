@@ -1,8 +1,11 @@
+/* eslint-disable no-console */
 //@ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 import Swal from 'sweetalert2';
+
+import AdminView from './adminView';
 
 import {
   // TAuthGetChallengeResponse,
@@ -112,7 +115,9 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
                   ? 'Diamond'
                   : 'Classic'
               })`,
-              value: item._id
+              value: item._id,
+              blockSync: item.blockSync,
+              blockView: item.blockView
             });
           }
         });
@@ -515,6 +520,16 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
         </div>
         <div>{status !== 100 && status !== 0 ? `Step: ${message}` : ''}</div>
         <hr className="w-100 my-5" />
+      </div>
+
+      <div className="new">
+        <AdminView
+          primaryColor={primaryColor}
+          contractOptions={contractOptions}
+          reusableStyle={reusableStyle}
+          contract={contract}
+          getFullContractData={getFullContractData}
+        />
       </div>
     </>
   );

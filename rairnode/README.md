@@ -72,8 +72,10 @@ Provide ability to make some specific actions on the platform
     * [x] /search - POST - searching by files, products, users, [see details here](readme/search.md)
     * [x] /stream/out - GET - terminating access for video streaming session, [see details here](readme/terminate_stream_session.md)
     * [x] /auth
-        * [x] /get_challenge/:MetaAddress - GET - request an auth challenge for the given ethereum address, [see details here](readme/get_challenge.md)
+        * [x] /get_challenge - POST - Generate an auth challenge for the given eth address and intent [see details here](readme/get_challengeV2.md)
+            * [x] /:MetaAddress- GET - request an auth challenge for the given ethereum address, [see details here](readme/get_challenge.md)
         * [x] /get_token/:MetaMessage/:MetaSignature/:mediaId - GET - respond to a challenge to receive a JWT, [see details here](readme/get_token.md)
+        * [x] /validate - POST - Validate a meta signature, [see details here](readme/validate_signature.md)
         * [x] /admin/:MetaMessage/:MetaSignature - GET - verify with a Metamask challenge if the user holds the current Administrator token, [see details here](readme/admin.md)
         * [x] /authentication/:MetaMessage/:MetaSignature - GET - verification of user Metamask challenge and generating of JWT token, [see details here](readme/get_jwt_token.md)
         * [x] /user_info - GET - get details about user by JWT token, [see details here](readme/get_user_details.md)

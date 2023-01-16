@@ -33,6 +33,7 @@ const {
   Offer,
   OfferPool,
   Product,
+  User,
 } = require('../models');
 
 module.exports = () => {
@@ -154,20 +155,32 @@ module.exports = () => {
           itemsPerPage = '20',
           blockchain = '',
           category = '',
+          userAddress = '',
+          contractAddress = '',
         } = req.query;
         const searchQuery = {};
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
-        const foundCategory = await Category.findOne({ name: category });
+        const foundUser = await User.findOne({ publicAddress: userAddress });
+        if (foundUser) {
+          searchQuery.authorPublicAddress = userAddress;
+        }
 
+        const foundCategory = await Category.findOne({ name: category });
         if (foundCategory) {
           searchQuery.category = foundCategory._id;
         }
-        const foundBlockchain = await Blockchain.findOne({ hash: blockchain });
 
+        const foundBlockchain = await Blockchain.findOne({ hash: blockchain });
         if (foundBlockchain) {
-          const arrayOfContracts = await Contract.find({ blockchain }).distinct(
+          const query = {
+            blockchain,
+          };
+          if (contractAddress) {
+            query.contractAddress = contractAddress;
+          }
+          const arrayOfContracts = await Contract.find(query).distinct(
             '_id',
           );
           searchQuery.contract = { $in: arrayOfContracts };
@@ -199,243 +212,257 @@ module.exports = () => {
     },
   );
 
-  router.post('/upload', JWTVerification, isAdmin, isSuperAdmin, upload.single('video'), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
-    // Get video information from the request's body
-    const {
-      title, description, contract, product, offer = [], category, demo = 'false', storage = 'ipfs',
-    } = req.body;
-    // Get the user information
-    const { publicAddress, superAdmin } = req.user;
-    // Get the socket ID from the request's query
-    const { socketSessionId } = req.query;
+  router.post(
+    '/upload',
+    JWTVerification,
+    isAdmin,
+    isSuperAdmin,
+    upload.single('video'),
+    validation('uploadVideoFile', 'file'),
+    formDataHandler,
+    validation('uploadVideo'),
+    async (req, res, next) => {
+      // Get video information from the request's body
+      const {
+        title, description, contract, product, offer = [], category, demo = 'false', storage = 'ipfs',
+      } = req.body;
+      // Get the user information
+      const { publicAddress, superAdmin } = req.user;
+      // Get the socket ID from the request's query
+      const { socketSessionId } = req.query;
 
-    let cid = '';
-    let defaultGateway = '';
-    let storageLink = '';
+      let cid = '';
+      let defaultGateway = '';
+      let storageLink = '';
 
-    const foundContract = await Contract.findById(contract);
+      const foundContract = await Contract.findById(contract);
 
-    if (!foundContract) {
-      return next(new AppError(`Contract ${contract} not found.`, 404));
-    }
-
-    if (foundContract.user !== publicAddress && !superAdmin) {
-      return next(new AppError(`Contract ${contract} not belong to you.`, 400));
-    }
-
-    const foundProduct = await Product.findOne({
-      contract: foundContract._id,
-      collectionIndexInContract: product,
-    });
-
-    if (!foundProduct) {
-      return next(new AppError(`Product ${product} not found.`, 404));
-    }
-
-    const foundCategory = await Category.findOne({ name: category });
-
-    if (!foundCategory) {
-      return next(new AppError('Category not found.', 404));
-    }
-
-    // Diamond contracts have no offerPools
-    const foundOfferPool = await OfferPool.findOne({
-      contract: foundContract._id,
-      product: foundProduct.collectionIndexInContract,
-    });
-
-    if (demo === 'false') {
-      let foundOffers;
-      if (foundContract?.diamond) {
-        foundOffers = await Offer.find({ contract: foundContract._id, diamondRangeIndex: { $in: offer } }).distinct('diamondRangeIndex');
-      } else {
-        foundOffers = await Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
+      if (!foundContract) {
+        return next(new AppError(`Contract ${contract} not found.`, 404));
       }
 
-      offer.forEach((item) => {
-        if (!_.includes(foundOffers, item)) {
-          return next(new AppError(`Offer ${item} not found.`, 404));
-        }
+      if (foundContract.user !== publicAddress && !superAdmin) {
+        return next(new AppError(`Contract ${contract} not belong to you.`, 400));
+      }
 
-        return true;
+      const foundProduct = await Product.findOne({
+        contract: foundContract._id,
+        collectionIndexInContract: product,
       });
-    }
 
-    // Get the socket connection from Express app
-    const io = req.app.get('io');
-    const sockets = req.app.get('sockets');
-    const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
-    const socketInstance = !_.isNull(thisSocketId) ? io.to(thisSocketId) : {
-      emit: (eventName, eventData) => {
-        log.info(`Dummy event: "${eventName}" socket emitter fired with message: "${eventData.message}" `);
-      },
-    };
+      if (!foundProduct) {
+        return next(new AppError(`Product ${product} not found.`, 404));
+      }
 
-    if (req.file) {
-      try {
-        const storageName = {
-          ipfs: 'IPFS',
-          gcp: 'Google Cloud',
-        }[storage];
-        socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
-        log.info(`Processing: ${req.file.originalname}`);
-        log.info(`${req.file.originalname} generating thumbnails`);
+      const foundCategory = await Category.findOne({ name: category });
 
-        res.json({ success: true, result: req.file.filename });
+      if (!foundCategory) {
+        return next(new AppError('Category not found.', 404));
+      }
 
-        // Adds 'duration' to the req.file object
-        await getMediaData(req.file);
+      // Diamond contracts have no offerPools
+      const foundOfferPool = await OfferPool.findOne({
+        contract: foundContract._id,
+        product: foundProduct.collectionIndexInContract,
+      });
 
-        // Adds 'thumbnailName' to the req.file object
-        // Generates a static webp thumbnail and an animated gif thumbnail
-        // ONLY for videos
-        // TODO: make the verification for making thumbnails only for videos
-        await generateThumbnails(req.file, socketInstance);
-
-        log.info(`${req.file.originalname} converting to stream`);
-        socketInstance.emit('uploadProgress', {
-          message: `${req.file.originalname} converting to stream`,
-          last: false,
-          done: 11,
-        });
-
-        // Converts the file with FFMPEG
-        await convertToHLS(req.file, socketInstance);
-
-        const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
-
-        log.info('ffmpeg DONE: converted to stream.');
-
-        const rairJson = {
-          title: textPurify.sanitize(title),
-          mainManifest: 'stream.m3u8',
-          author: superAdmin ? foundContract.user : publicAddress,
-          encryptionType: 'aes-256-gcm',
-        };
-
-        if (description) {
-          rairJson.description = textPurify.sanitize(description);
+      if (demo === 'false') {
+        let foundOffers;
+        if (foundContract?.diamond) {
+          foundOffers = await Offer.find({ contract: foundContract._id, diamondRangeIndex: { $in: offer } }).distinct('diamondRangeIndex');
+        } else {
+          foundOffers = await Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
         }
 
-        fs.writeFileSync(`${req.file.destination}/rair.json`, JSON.stringify(rairJson, null, 4));
+        offer.forEach((item) => {
+          if (!_.includes(foundOffers, item)) {
+            return next(new AppError(`Offer ${item} not found.`, 404));
+          }
 
-        log.info(`${req.file.originalname} uploading to ${storageName}`);
-        socketInstance.emit('uploadProgress', {
-          message: `${req.file.originalname} uploading to ${storageName}`,
-          last: false,
+          return true;
         });
+      }
 
-        switch (storage) {
-          case 'ipfs':
-            cid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
-            defaultGateway = `${config.pinata.gateway}/${cid}`;
-            storageLink = _.get(
-              {
-                ipfs: `${config.ipfs.gateway}/${cid}`,
-                pinata: `${config.pinata.gateway}/${cid}`,
-              },
-              config.ipfsService,
-              defaultGateway,
-            );
-            break;
-          case 'gcp':
-            cid = await gcp.uploadFolder(
-              config.gcp.videoBucketName,
-              req.file.destination,
-              socketInstance,
-            );
-            defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
-            storageLink = defaultGateway;
-            break;
-          default:
-            // gcp -> default
-            cid = await gcp.uploadFolder(
-              config.gcp.videoBucketName,
-              req.file.destination,
-              socketInstance,
-            );
-            defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
-            storageLink = defaultGateway;
-            break;
-        }
+      // Get the socket connection from Express app
+      const io = req.app.get('io');
+      const sockets = req.app.get('sockets');
+      const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
+      const socketInstance = !_.isNull(thisSocketId) ? io.to(thisSocketId) : {
+        emit: (eventName, eventData) => {
+          log.info(`Dummy event: "${eventName}" socket emitter fired with message: "${eventData.message}" `);
+        },
+      };
 
-        fs.rm(req.file.destination, { recursive: true }, (err) => {
-          if (err) log.error(err);
-        });
-        log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
-        delete req.file.destination;
+      if (req.file) {
+        try {
+          const storageName = {
+            ipfs: 'IPFS',
+            gcp: 'Google Cloud',
+          }[storage];
+          socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
+          log.info(`Processing: ${req.file.originalname}`);
+          log.info(`${req.file.originalname} generating thumbnails`);
 
-        const meta = {
-          mainManifest: 'stream.m3u8',
-          authorPublicAddress: superAdmin ? foundContract.user : publicAddress,
-          encryptionType: 'aes-256-gcm',
-          title: textPurify.sanitize(title),
-          contract: foundContract._id,
-          product,
-          offer: demo === 'false' ? offer : [],
-          category: foundCategory._id,
-          staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
-          animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
-          type: req.file.type,
-          extension: req.file.extension,
-          duration: req.file.duration,
-          demo: demo === 'true',
-        };
+          res.json({ success: true, result: req.file.filename });
 
-        if (description) {
-          meta.description = textPurify.sanitize(description);
-        }
+          // Adds 'duration' to the req.file object
+          await getMediaData(req.file);
 
-        log.info(`${req.file.originalname} uploaded to ${storageName}: ${cid}`);
-        socketInstance.emit('uploadProgress', { message: `uploaded to ${storageName}.`, last: false, done: 90 });
+          // Adds 'thumbnailName' to the req.file object
+          // Generates a static webp thumbnail and an animated gif thumbnail
+          // ONLY for videos
+          // TODO: make the verification for making thumbnails only for videos
+          await generateThumbnails(req.file, socketInstance);
 
-        log.info(`${req.file.originalname} storing to DB.`);
-        socketInstance.emit('uploadProgress', {
-          message: `${req.file.originalname} storing to database.`,
-          last: false,
-        });
+          log.info(`${req.file.originalname} converting to stream`);
+          socketInstance.emit('uploadProgress', {
+            message: `${req.file.originalname} converting to stream`,
+            last: false,
+            done: 11,
+          });
 
-        const key = { ...exportedKey, key: exportedKey.key.toJSON() };
+          // Converts the file with FFMPEG
+          await convertToHLS(req.file, socketInstance);
 
-        await vaultKeyManager.write({
-          secretName: cid,
-          data: {
-            uri: storageLink,
-            key,
-          },
-          vaultToken: vaultAppRoleTokenManager.getToken(),
-        });
+          const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
 
-        log.info('Key wrote to vault.');
+          log.info('ffmpeg DONE: converted to stream.');
 
-        await File.create({
-          _id: cid,
-          ...meta,
-        });
+          const rairJson = {
+            title: textPurify.sanitize(title),
+            mainManifest: 'stream.m3u8',
+            author: superAdmin ? foundContract.user : publicAddress,
+            encryptionType: 'aes-256-gcm',
+          };
 
-        log.info(`${req.file.originalname} stored to DB.`);
-        socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: !!['gcp'].includes(storage), done: ['gcp'].includes(storage) ? 100 : 96 });
+          if (description) {
+            rairJson.description = textPurify.sanitize(description);
+          }
 
-        log.info(`${req.file.originalname} pinning to ${storageName}.`);
-        socketInstance.emit('uploadProgress', {
-          message: `${req.file.originalname} pinning to ${storageName}.`,
-          last: false,
-        });
+          fs.writeFileSync(`${req.file.destination}/rair.json`, JSON.stringify(rairJson, null, 4));
 
-        if (storage === 'ipfs') await addPin(cid, title, socketInstance);
-      } catch (e) {
-        if (req.file.destination) {
+          log.info(`${req.file.originalname} uploading to ${storageName}`);
+          socketInstance.emit('uploadProgress', {
+            message: `${req.file.originalname} uploading to ${storageName}`,
+            last: false,
+          });
+
+          switch (storage) {
+            case 'ipfs':
+              cid = await addFolder(
+                req.file.destination,
+                req.file.destinationFolder,
+                socketInstance
+              );
+              defaultGateway = `${config.pinata.gateway}/${cid}`;
+              storageLink = _.get(
+                {
+                  ipfs: `${config.ipfs.gateway}/${cid}`,
+                  pinata: `${config.pinata.gateway}/${cid}`,
+                },
+                config.ipfsService,
+                defaultGateway,
+              );
+              break;
+            case 'gcp':
+              cid = await gcp.uploadFolder(
+                config.gcp.videoBucketName,
+                req.file.destination,
+                socketInstance,
+              );
+              defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
+              storageLink = defaultGateway;
+              break;
+            default:
+              // gcp -> default
+              cid = await gcp.uploadFolder(
+                config.gcp.videoBucketName,
+                req.file.destination,
+                socketInstance,
+              );
+              defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
+              storageLink = defaultGateway;
+              break;
+          }
+
           fs.rm(req.file.destination, { recursive: true }, (err) => {
             if (err) log.error(err);
           });
-        }
+          log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
+          delete req.file.destination;
 
-        log.error('An error has occurred encoding the file', e);
+          const meta = {
+            mainManifest: 'stream.m3u8',
+            authorPublicAddress: superAdmin ? foundContract.user : publicAddress,
+            encryptionType: 'aes-256-gcm',
+            title: textPurify.sanitize(title),
+            contract: foundContract._id,
+            product,
+            offer: demo === 'false' ? offer : [],
+            category: foundCategory._id,
+            staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
+            animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
+            type: req.file.type,
+            extension: req.file.extension,
+            duration: req.file.duration,
+            demo: demo === 'true',
+          };
+
+          if (description) {
+            meta.description = textPurify.sanitize(description);
+          }
+
+          log.info(`${req.file.originalname} uploaded to ${storageName}: ${cid}`);
+          socketInstance.emit('uploadProgress', { message: `uploaded to ${storageName}.`, last: false, done: 90 });
+
+          log.info(`${req.file.originalname} storing to DB.`);
+          socketInstance.emit('uploadProgress', {
+            message: `${req.file.originalname} storing to database.`,
+            last: false,
+          });
+
+          const key = { ...exportedKey, key: exportedKey.key.toJSON() };
+
+          await vaultKeyManager.write({
+            secretName: cid,
+            data: {
+              uri: storageLink,
+              key,
+            },
+            vaultToken: vaultAppRoleTokenManager.getToken(),
+          });
+
+          log.info('Key wrote to vault.');
+
+          await File.create({
+            _id: cid,
+            ...meta,
+          });
+
+          log.info(`${req.file.originalname} stored to DB.`);
+          socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: !!['gcp'].includes(storage), done: ['gcp'].includes(storage) ? 100 : 96 });
+
+          log.info(`${req.file.originalname} pinning to ${storageName}.`);
+          socketInstance.emit('uploadProgress', {
+            message: `${req.file.originalname} pinning to ${storageName}.`,
+            last: false,
+          });
+
+          if (storage === 'ipfs') await addPin(cid, title, socketInstance);
+        } catch (e) {
+          if (req.file.destination) {
+            fs.rm(req.file.destination, { recursive: true }, (err) => {
+              if (err) log.error(err);
+            });
+          }
+
+          log.error('An error has occurred encoding the file', e);
+        }
+      } else {
+        return next(new AppError('File not provided.', 400));
       }
-    } else {
-      return next(new AppError('File not provided.', 400));
-    }
-  });
+    },
+  );
 
   return router;
 };

@@ -1,7 +1,6 @@
 /* eslint-disable no-restricted-syntax */
-const Moralis = require('moralis/node');
+const { Network, Alchemy } = require('alchemy-sdk');
 const fetch = require('node-fetch');
-const { BigNumber } = require('ethers');
 const log = require('../../utils/logger')(module);
 
 // Contract ABIs
@@ -9,195 +8,183 @@ const log = require('../../utils/logger')(module);
 // so as long as standard functions are called,
 // we can connect other NFTs contracts with this ABI
 
-const insertTokens = async (tokens, contract, dbModels) => {
-  let validCounter = 0;
-  for await (const token of tokens) {
-    let metadata;
-    if (token.metadata === null && token.token_uri) {
-      try {
-        log.info(`${token.token_id} has no metadata in Moralis, will try to fetch metadata from ${token.token_uri}`);
-        metadata = await (await fetch(token.token_uri)).json();
-        // console.log('Fetched data', metadata);
-      } catch (err) {
-        log.error('Cannot fetch metadata URI!');
-        console.log(token.metadata);
-        continue;
-      }
-    } else {
-      try {
-        // console.log('Metadata', token.metadata);
-        metadata = JSON.parse(token.metadata);
-      } catch (err) {
-        log.error('Cannot parse metadata!');
-        console.log(token.metadata);
-        continue;
+const insertToken = async (token, contractId, dbModels) => {
+  let metadata;
+  if (token.metadataError !== undefined) {
+    log.error(`Error importing token #${token.tokenId}: ${token.metadataError}`);
+    return false;
+  }
+  if (!token.rawMetadata && token.tokenUri) {
+    try {
+      log.info(`${token.token_id} has no metadata in Moralis, will try to fetch metadata from ${token.tokenUri}`);
+      metadata = await (await fetch(token.tokenUri.gateway)).json();
+      // console.log('Fetched data', metadata);
+    } catch (err) {
+      log.error('Cannot fetch metadata URI!');
+      return false;
+    }
+  } else {
+    // Use the image loaded in the metadata
+    metadata = token?.rawMetadata;
+    if (!metadata.image) {
+      if (token?.metadata?.at) {
+        metadata.image = token?.media?.at(0)?.gateway;
+      } else {
+        metadata.image = token?.media?.gateway;
       }
     }
-    if (metadata && metadata.image && metadata.name && token.owner_of) {
-      // Handle images from IPFS (Use the moralis default gateway)
-      metadata.image = metadata.image.replace('ipfs://', 'https://gateway.moralisipfs.com/ipfs/');
-      if (!metadata.description) {
-        metadata.description = 'No description available';
-      }
-      if (typeof metadata?.attributes?.at(0) === 'string') {
-        metadata.attributes = metadata.attributes.map((item) => ({
-          trait_type: '',
-          value: item,
-        }));
-      }
-      try {
-        await (new dbModels.MintedToken({
-          ownerAddress: token.owner_of.toLowerCase(),
-          metadataURI: token.token_uri,
-          metadata,
-          contract: contract._id,
-          token: token.token_id,
-          uniqueIndexInContract: token.token_id,
-          isMinted: true,
-          offer: 0,
-          offerPool: 0,
-          product: 0,
-        })).save();
-        validCounter += 1;
-      } catch (error) {
-        log.error(`Error inserting token ${token.token_id}, ${error.name}`);
-      }
+    // Use the image from Alchemy's gateway
+    // We do it regardless of the value in rawMetadata because some ipfs gateways
+    // get disabled over time, Alchemy's gateway should be more reliable
+    if (!metadata.image) {
+      // Use the raw IPFS link and use the default gateway
+      metadata.image = token?.media?.raw;
+    }
+    if (metadata.image) {
+      // If the ipfs prefix still exists, replace it
+      metadata.image = metadata?.image?.replace('ipfs://', 'https://ipfs.io/ipfs/');
     }
   }
-  return validCounter;
+  if (metadata && metadata.image && metadata.name && token.owner) {
+    // Handle images from IPFS (Use the moralis default gateway)
+    if (!metadata.description) {
+      metadata.description = 'No description available';
+    }
+    if (typeof metadata?.attributes?.at(0) === 'string') {
+      metadata.attributes = metadata.attributes.map((item) => ({
+        trait_type: '',
+        value: item,
+      }));
+    }
+    try {
+      await (new dbModels.MintedToken({
+        ownerAddress: token.owner.toLowerCase(),
+        metadataURI: token.token_uri,
+        metadata,
+        contract: contractId,
+        token: token.tokenId,
+        uniqueIndexInContract: token.tokenId,
+        isMinted: true,
+        offer: 0,
+        offerPool: 0,
+        product: 0,
+      })).save();
+    } catch (error) {
+      log.error(`Error inserting token ${token.token_id}, ${error.name}`);
+    }
+  }
+  return true;
 };
 
+// Used to be to avoid Moralis rate limiting
 const wasteTime = (ms) => new Promise((resolve) => {
   setTimeout(resolve, ms);
 });
 
+const alchemyMapping = {
+  '0x1': Network.ETH_MAINNET,
+  '0x5': Network.ETH_GOERLI,
+  '0x89': Network.MATIC_MAINNET,
+  '0x13881': Network.MATIC_MUMBAI,
+};
+
 module.exports = {
   importContractData: async (networkId, contractAddress, limit, contractCreator, dbModels) => {
     let contract;
-    try {
-      Moralis.start({
-        serverUrl: process.env.MORALIS_SERVER_TEST,
-        appId: process.env.MORALIS_API_KEY_TEST,
-      });
 
-      contract = await dbModels.Contract.findOne({
-        contractAddress,
-        blockchain: networkId,
-        external: true,
-      });
+    // Optional Config object, but defaults to demo api-key and eth-mainnet.
+    const settings = {
+      apiKey: process.env.ALCHEMY_API_KEY, // ''
+      network: alchemyMapping[networkId], // Replace with your network.
+    };
+    if (!settings.network) {
+      return { success: false, result: undefined, message: 'Invalid blockchain' };
+    }
+    const alchemy = new Alchemy(settings);
 
-      if (contract) {
-        return { success: false, result: undefined, message: 'NFTs already imported' };
+    contract = await dbModels.Contract.findOne({
+      contractAddress,
+      blockchain: networkId,
+      external: true,
+    });
+
+    if (contract) {
+      return { success: false, result: undefined, message: 'NFTs already imported' };
+    }
+
+    const contractMetadata = await alchemy.nft.getContractMetadata(contractAddress);
+
+    if (contractMetadata.tokenType !== 'ERC721') {
+      return { success: false, result: undefined, message: `Only ERC721 is supported, tried to process a ${contractMetadata.tokenType} contract` };
+    }
+
+    contract = await (new dbModels.Contract({
+      user: contractCreator,
+      title: contractMetadata.name,
+      contractAddress,
+      blockchain: networkId,
+      diamond: false,
+      external: true,
+    }));
+
+    const product = await (new dbModels.Product({
+      name: contractMetadata.name,
+      collectionIndexInContract: 0,
+      contract: contract._id,
+      copies: contractMetadata.totalSupply,
+      soldCopies: contractMetadata.totalSupply,
+      sold: true,
+      firstTokenIndex: 0,
+      transactionHash: 'UNKNOWN - External Import',
+    }));
+
+    const offer = await new dbModels.Offer({
+      offerIndex: 0,
+      contract: contract._id,
+      product: 0,
+      offerPool: 0,
+      copies: contractMetadata.totalSupply,
+      soldCopies: contractMetadata.totalSupply - 1,
+      sold: true,
+      price: '0',
+      range: [0, contractMetadata.totalSupply],
+      offerName: contractMetadata.name,
+      transactionHash: 'UNKNOWN - External Import',
+    });
+
+    const offerPool = await (new dbModels.OfferPool({
+      marketplaceCatalogIndex: 0,
+      contract: contract._id,
+      product: 0,
+      rangeNumber: 0,
+      transactionHash: 'UNKNOWN - External Import',
+    }));
+
+    // Can't be used, it doesn't say which NFT they own
+    // console.log(await alchemy.nft.getOwnersForContract(contractAddress));
+
+    let numberOfTokensAdded = 0;
+    for await (const nft of alchemy.nft.getNftsForContractIterator(contractAddress, {
+      omitMetadata: false,
+    })) {
+      const ownerResponse = await alchemy.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
+      [nft.owner] = ownerResponse.owners;
+      if (insertToken(nft, contract._id, dbModels)) {
+        numberOfTokensAdded += 1;
       }
+      if (limit !== '0' && numberOfTokensAdded >= limit) {
+        break;
+      }
+    }
 
-      const options = {
-        chain: networkId,
-        address: contractAddress,
+    if (numberOfTokensAdded === 0) {
+      return {
+        success: false,
+        message: 'An error has occurred, 0 tokens imported from the contract',
       };
-      let allNFTs;
-      try {
-        allNFTs = await Moralis.Web3API.token.getNFTOwners(options);
-      } catch (err) {
-        log.error(err);
-        return {
-          success: false,
-          result: undefined,
-          message: 'There was an error calling the Moralis API',
-        };
-      }
+    }
 
-      if (allNFTs.total === 0) {
-        return {
-          success: false,
-          result: undefined,
-          message: "Couldn't find ERC721 tokens!",
-        };
-      }
-
-      log.info(`Found ${allNFTs.total}, with ${allNFTs.page_size} tokens on every page`);
-      const timesNeeded = Math.round(allNFTs.total / allNFTs.page_size);
-      log.info(`Need to do this ${timesNeeded} more times`);
-
-      contract = await (new dbModels.Contract({
-        user: contractCreator,
-        title: allNFTs.result[0].name,
-        contractAddress,
-        blockchain: networkId,
-        diamond: false,
-        external: true,
-      }));
-
-      const product = await (new dbModels.Product({
-        name: allNFTs.result[0].name,
-        collectionIndexInContract: 0,
-        contract: contract._id,
-        copies: allNFTs.total,
-        soldCopies: allNFTs.total,
-        sold: true,
-        firstTokenIndex: 0,
-        transactionHash: 'UNKNOWN - External Import',
-      }));
-
-      const offer = await new dbModels.Offer({
-        offerIndex: 0,
-        contract: contract._id,
-        product: 0,
-        offerPool: 0,
-        copies: allNFTs.total,
-        soldCopies: allNFTs.total - 1,
-        sold: true,
-        price: '0',
-        range: [0, allNFTs.total],
-        offerName: allNFTs.result[0].name,
-        transactionHash: 'UNKNOWN - External Import',
-      });
-
-      const offerPool = await (new dbModels.OfferPool({
-        marketplaceCatalogIndex: 0,
-        contract: contract._id,
-        product: 0,
-        rangeNumber: 0,
-        transactionHash: 'UNKNOWN - External Import',
-      }));
-
-      let numberOfTokensAdded = await insertTokens(allNFTs.result, contract, dbModels);
-
-      let escapeCounter = 0;
-      while (allNFTs?.next) {
-        await wasteTime(10000);
-        try {
-          allNFTs = await allNFTs.next();
-        } catch (err) {
-          // If next() fails it will retry another 5 times before aborting the process
-          log.error(`An error has occured calling page ${allNFTs?.page} of ${timesNeeded}! Will retry...`);
-          log.error(err);
-          // This avoids the case where it's stuck in a loop of failed requests
-          if (escapeCounter < 5) {
-            escapeCounter += 1;
-            // Since the update of allNFTs failed, allNFTs is still
-            // on the same page as before, continuing will retry the call to get the next page
-            continue;
-          } else {
-            throw Error(`Aborted import of contract ${contractAddress}, request for page ${allNFTs.page} failed too many times`);
-          }
-        }
-        // Resets the counter for the next page
-        escapeCounter = 0;
-        numberOfTokensAdded += await insertTokens(allNFTs.result, contract, dbModels);
-        log.info(`Inserted page ${allNFTs?.page} of ${timesNeeded} for ${networkId}/${contractAddress} (${numberOfTokensAdded} NFTs so far)`);
-        if (BigNumber.from(limit).gt(0) && BigNumber.from(numberOfTokensAdded).gt(limit)) {
-          break;
-        }
-      }
-
-      if (numberOfTokensAdded === 0) {
-        return {
-          success: false,
-          result: undefined,
-          message: `Of the ${allNFTs.total} tokens inserted, none of them had metadata!`,
-        };
-      }
-
+    try {
       await contract.save();
       await product.save();
       await offer.save();

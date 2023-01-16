@@ -138,6 +138,11 @@ const PopUpSettings = ({
           }}>
           {imagePreviewUrl ? (
             <img
+              onClick={(event) =>
+                event.altKey && event.shiftKey
+                  ? alert('Front v0.06.12.22 iFrame+qualityVideo')
+                  : null
+              }
               style={{
                 width: '100%',
                 height: '100%',

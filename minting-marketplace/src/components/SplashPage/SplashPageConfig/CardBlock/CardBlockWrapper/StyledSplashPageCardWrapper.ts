@@ -9,7 +9,7 @@ export const StyledSplashPageCardWrapper = styled.div<TStyledSplashPageCardWrapp
   border-radius: 20px;
   background-color: ${({ bgColor }) => bgColor || '#FFFFFF'};
   width: 100%;
-  height: auto;
+  height: ${({ height }) => height || 'auto'};
   @media (max-width: 930px) {
     flex-direction: column-reverse;
     border-radius: 16px;

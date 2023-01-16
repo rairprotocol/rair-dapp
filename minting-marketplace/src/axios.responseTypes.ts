@@ -188,6 +188,14 @@ export type TOnlySuccessResponse = {
   message?: string;
 };
 
+export type TMeetingInviteResponse = {
+  success: boolean;
+  invite?: {
+    join_url: string;
+    name: string;
+  };
+};
+
 export type TTokenResponseData = {
   success: boolean;
   result: TTokenData;

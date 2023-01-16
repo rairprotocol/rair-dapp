@@ -9,6 +9,20 @@
   color: #ffffff;
 }
 
+.mark-kohler-purchase-button-black {
+  width: 100%;
+  height: 64px;
+  background: #000;
+  font-family: 'Plus Jakarta Sans';
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 28px;
+  padding: 14px 0px;
+  color: #ffffff;
+  border-radius: 16px;
+  border: none;
+}
+
 .mark-kohler-purchase-button {
   width: 100%;
   height: 64px;
@@ -135,6 +149,7 @@
   li:last-child {
   margin-top: 5px;
 }
+
 .container-about-conference
   .about-conference-container-list-mobile
   ul
@@ -200,8 +215,8 @@
 }
 
 .container-about-conference-image img {
-  width: 35rem;
-  height: 27rem;
+  width: 34rem;
+  height: 20rem;
 }
 
 .mark-kohler-card-wrapper {
@@ -371,6 +386,7 @@
     flex-direction: column;
     justify-content: center;
   }
+
   .container-about-conference-image-text {
     width: 100%;
     margin-right: 0;
@@ -551,7 +567,7 @@
 
 @media screen and (max-width: 500px) {
   .container-about-conference-image img {
-    width: 20rem;
-    height: 13rem;
+    width: 16rem;
+    height: 9rem;
   }
 }

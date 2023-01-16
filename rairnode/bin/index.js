@@ -86,18 +86,19 @@ async function main() {
     session({
       store: new RedisStorage({
         client,
-        ttl: config.session.ttl * 60 * 60, // default 12 hours
+        // config.session.ttl was removed from here and used for maxAge, because when maxAge used it will have no effect.
       }),
       secret: config.session.secret,
       saveUninitialized: true,
-      resave: false,
+      resave: true,
       proxy: config.production,
+      rolling: true,
       cookie: {
         sameSite: config.production ? 'none' : 'lax',
         path: '/',
         httpOnly: config.production,
         secure: config.production,
-        // maxAge:  (12 * 60 * 60 * 1000)  // 12 hours
+        maxAge: (`${config.session.ttl}` * 60 * 1000), // 10 min
       },
     }),
   );

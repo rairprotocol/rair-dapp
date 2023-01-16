@@ -10,20 +10,21 @@ import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { metaMaskIcon } from '../../../images';
+import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import { useSplashData } from '../../../utils/infoSplashData/rairGenesis';
 import { reactSwal } from '../../../utils/reactSwal';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import { Genesis_TV, GenesisMember } from '../images/rairGenesis/rairGenesis';
 import NotCommercialTemplate2 from '../NotCommercial-2/NotCommercialTemplate-2';
-import {
-  INumberedCircle,
-  ISplashPageProps,
-  TSplashDataType
-} from '../splashPage.types';
+import { INumberedCircle, ISplashPageProps } from '../splashPage.types';
+import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
+import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
+import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
+import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
+import SplashVideoTextBlock from '../SplashPageConfig/VideoBlock/VideoTextBlock/SplashVideoTextBlock';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
@@ -52,59 +53,12 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const currentUserAddress = useSelector<RootState, string | undefined>(
-    (store) => store.contractStore.currentUserAddress
-  );
-  const splashData: TSplashDataType = {
-    NFTName: 'Genesis Pass artwork',
-    title: 'RAIR Genesis Pass',
-    titleColor: '#000000',
-    description: 'The future of streaming. 222 spots. 222m RAIR tokens',
-    textDescriptionCustomStyles: connectUserData
-      ? { paddingTop: '3vw' }
-      : undefined,
-    videoPlayerParams: {
-      contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
-      product: '0',
-      blockchain: '0x5'
-    },
-    marketplaceDemoParams: {
-      contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
-      product: '0',
-      blockchain: '0x5'
-    },
-    purchaseButton: {
-      requiredBlockchain: '0x38',
-      contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f'
-    },
-    /*  this block needs to be changed */
-    buttonLabel: 'Connect Wallet',
-    buttonBackgroundHelp: 'rgb(3, 91, 188)',
-    backgroundImage: Genesis_TV,
-    button1: currentUserAddress === undefined && {
-      buttonLabel: 'Connect wallet',
-      buttonImg: metaMaskIcon,
-      buttonAction: connectUserData
-    },
-    button2: {
-      buttonMarginTop: currentUserAddress === undefined ? 0 : '2vw',
-      buttonMarginBottom: currentUserAddress === undefined ? 0 : '6vw',
-      buttonBorder: '3px solid #77B9F3',
-      buttonTextColor: '#000000',
-      buttonColor: '#FFFFFF',
-      buttonLabel: 'View on Opensea',
-      buttonImg: null,
-      buttonLink: 'https://opensea.io/collection/swagnftnyc'
-    },
-    exclusiveNft: {
-      title: 'NFTs',
-      titleColor: 'rgb(3, 91, 188)'
-    }
-  };
-
+  const { splashData } = useSplashData(connectUserData);
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
+  const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
+    useOpenVideoPlayer();
 
   /* UTILITIES FOR MARKETPLACE DEMO */
   const [mode, setMode] = useState<TModeType>('collection');
@@ -188,35 +142,29 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
         />
         <AuthorCard {...{ splashData, connectUserData, whatSplashPage }} />
         <div style={{ height: '32px' }} />
-        <div className="btn-submit-with-form need-help">
-          <button
-            className="genesis-font"
-            onClick={() =>
-              reactSwal.fire({
-                title:
-                  'Watch out for sign requests that look like this. There are now gasless attack vectors that can set permissions to drain your wallet',
-                html: <WarningModal className="genesis" />,
-                customClass: {
-                  popup: `bg-${primaryColor} genesis-radius genesis-resp `,
-                  title: 'text-genesis'
-                },
-                showConfirmButton: false
-              })
-            }>
-            Need Help?
-          </button>
-        </div>
-        <h1 className="splashpage-subtitle">
-          <div style={{ color: '#AA82d5' }}>Streaming &nbsp;</div>
-          <div>Player</div>
-        </h1>
-        <VideoPlayerView
-          productsFromOffer={productsFromOffer}
-          primaryColor={primaryColor}
-          selectVideo={selectVideo}
-          setSelectVideo={setSelectVideo}
-          whatSplashPage={whatSplashPage}
-        />
+        <SplashVideoWrapper>
+          <SplashVideoTextBlock>
+            <h1 className="splashpage-subtitle">
+              <div style={{ color: '#AA82d5' }}>Streaming &nbsp;</div>
+              <div>Player</div>
+            </h1>
+            <SplashCardButton
+              className="need-help-kohler"
+              buttonAction={handleReactSwal}
+              buttonLabel={'Need Help'}
+            />
+          </SplashVideoTextBlock>
+          <UnlockableVideosWrapper
+            selectVideo={selectVideo}
+            setSelectVideo={setSelectVideo}
+            productsFromOffer={productsFromOffer}
+            openVideoplayer={openVideoplayer}
+            setOpenVideoPlayer={setOpenVideoPlayer}
+            handlePlayerClick={handlePlayerClick}
+            primaryColor={primaryColor}
+          />
+        </SplashVideoWrapper>
+
         <h1 className="splashpage-subtitle" style={{ marginTop: '150px' }}>
           <div>Marketplace &nbsp;</div>
           <div style={{ color: '#ee82d5' }}>Demo</div>

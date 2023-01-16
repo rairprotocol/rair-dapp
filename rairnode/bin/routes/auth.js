@@ -2,7 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
-const { generateChallenge, generateChallengeV2, validateChallenge } = require('../integrations/ethers/web3Signature');
+const { default: axios } = require('axios');
+const { generateChallenge, generateChallengeV2, validateChallenge, validateChallengeV2 } = require('../integrations/ethers/web3Signature');
 const AppError = require('../utils/errors/AppError');
 const {
   checkBalanceProduct,
@@ -10,6 +11,7 @@ const {
   checkBalanceAny,
 } = require('../integrations/ethers/tokenValidation');
 const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
+const { generateJWT, getMeetingInvite } = require('../integrations/zoom/zoomController');
 const log = require('../utils/logger')(module);
 
 // TODO: remove ARTIFACT
@@ -68,7 +70,6 @@ const getTokensForUser = async (
 
 module.exports = (context) => {
   const router = express.Router();
-
   router.post(
     '/get_challenge',
     validation('getChallengeV2'),
@@ -82,6 +83,22 @@ module.exports = (context) => {
           publicAddress: fileData?.authorPublicAddress,
         });
         messages.decrypt = `Complete this signature request to unlock media: ${fileData?.title} by ${authorData?.nickName ? authorData?.nickName : fileData?.authorPublicAddress}`;
+      }
+      if (req.body.zoomId) {
+        let zoomData;
+        if (req.body.zoomId === 'Kohler') {
+          zoomData = {
+            title: 'Tax Hacks Summit',
+            user: 'Mark Kohler',
+          };
+        } else {
+          return next(new AppError('Invalid meeting ID', 400));
+        }
+        /* const fileData = await context.db.File.findById(req.body.mediaId);
+        const authorData = await context.db.User.findOne({
+          publicAddress: fileData?.authorPublicAddress,
+        }); */
+        messages.decrypt = `Complete this signature request to unlock the meeting: ${zoomData.title} by ${zoomData.user}`;
       }
       req.metaAuth = {
         customDescription: messages[req.body.intent],
@@ -237,6 +254,137 @@ module.exports = (context) => {
           return res.send({ success: true });
         }
         return next(new AppError('Something went wrong', 400));
+      } catch (err) {
+        return next(err);
+      }
+    },
+  );
+
+  router.post(
+    '/validate/',
+    validation('metaValidate', 'body'),
+    validateChallengeV2,
+    async (req, res, next) => {
+      const { mediaId, zoomId } = req.body;
+      const ethAddress = req.metaAuth.recovered;
+
+      let ownsTheAdminToken;
+      const ownsTheAccessTokens = [];
+
+      const user = await context.db.User.findOne({
+        publicAddress: ethAddress,
+      });
+
+      if (_.isNull(user)) {
+        return next(new AppError('User not found.', 404));
+      }
+
+      try {
+        let media;
+        if (mediaId) {
+          media = await context.db.File.findOne({ _id: mediaId });
+        } else if (zoomId) {
+          // media = await context.db.<ZoomSchema>.findOne({ _id: zoomId });
+          // Special case for Mark Kohler's Zoom
+          if (zoomId === 'Kohler') {
+            const kohlerContract = await context.db.Contract.findOne({
+              contractAddress: '0x711fe7fccdf84875c9bdf663c89b5f5f726a11d7'.toLowerCase(),
+              blockchain: '0x1',
+            });
+            if (!kohlerContract) {
+              return next(new AppError('No contract found', 400));
+            }
+            media = {
+              contract: kohlerContract._id,
+              offer: '0',
+              meetingIdentifier: process.env.KOHLER_MEETING_ID,
+            };
+          }
+        }
+        if (!media) {
+          return next(new AppError('No media file found', 400));
+        }
+
+        const contract = await context.db.Contract.findOne(media.contract);
+        if (!contract) {
+          return next(new AppError('No contract found', 400));
+        }
+        const offers = await context.db.Offer.find(
+          _.assign(
+            { contract: media.contract },
+            contract.diamond
+              ? { diamondRangeIndex: { $in: media.offer } }
+              : { offerIndex: { $in: media.offer } },
+          ),
+        );
+
+        if (ethAddress) {
+          // Verify the user has the tokens needed in a RAIR contract
+          // eslint-disable-next-line no-restricted-syntax
+          for await (const offer of offers) {
+            const result = contract.external
+              ? await checkBalanceAny(
+                ethAddress,
+                contract.blockchain,
+                contract.contractAddress,
+              )
+              : await checkBalanceProduct(
+                ethAddress,
+                contract.blockchain,
+                contract.contractAddress,
+                offer.product,
+                offer.range[0],
+                offer.range[1],
+              );
+            ownsTheAccessTokens.push(result);
+            if (ownsTheAccessTokens.includes(true)) {
+              break;
+            }
+          }
+
+          // verify the account holds the required admin NFT
+          if (
+            !ownsTheAccessTokens.includes(true) &&
+            media.authorPublicAddress === ethAddress.toLowerCase()
+          ) {
+            try {
+              ownsTheAdminToken = await checkAdminTokenOwns(ethAddress);
+
+              if (ownsTheAdminToken) {
+                log.info('Verifying user account has the admin token');
+              }
+            } catch (e) {
+              return next(new AppError(`Could not verify account: ${e}`, 403));
+            }
+          }
+
+          if (
+            !ownsTheAdminToken &&
+            !ownsTheAccessTokens.includes(true) &&
+            !media.demo
+          ) {
+            return next(new AppError("You don't have permission.", 403));
+          }
+
+          const sess = req.session;
+          sess.eth_addr = ethAddress;
+          sess.media_id = mediaId;
+          sess.zoom_id = zoomId;
+          sess.streamAuthorized = true;
+
+          if (zoomId) {
+            const token = generateJWT();
+            try {
+              const invites = await getMeetingInvite(media.meetingIdentifier, token, user);
+              return res.send({ success: true, invite: invites.attendees?.at(0) });
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+          return res.send({ success: true });
+        }
+        return next(new AppError('Incorrect credentials.', 400));
       } catch (err) {
         return next(err);
       }

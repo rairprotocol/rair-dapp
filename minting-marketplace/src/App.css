@@ -1497,19 +1497,16 @@ i.fas-custom {
 }
 
 .video-size {
-  font-size: 14px;
+  font-size: 12px;
 }
 .user-info {
   display: flex;
+  align-items: center;
 }
 .user-info img {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border-radius: 8px;
-  margin-top: -10px;
-}
-.user-image {
-  padding-right: 10px;
 }
 .price-info {
   display: flex;

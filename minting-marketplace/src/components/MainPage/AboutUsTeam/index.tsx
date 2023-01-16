@@ -201,8 +201,7 @@ export const rairAdvisorsTeam: TTeamArrayItemType[] = [
         link: 'https://www.linkedin.com/in/michaelterpin/',
         classLink: ''
       }
-    ],
-    readMoreCountFlag: 2
+    ]
   },
   {
     nameTeammate: 'Julia Yan  | Strategic Advisor',
@@ -225,8 +224,7 @@ export const rairAdvisorsTeam: TTeamArrayItemType[] = [
         link: 'https://www.linkedin.com/in/juliayan',
         classLink: ''
       }
-    ],
-    readMoreCountFlag: 1
+    ]
   },
   {
     nameTeammate: 'David Jensen  |  Strategic Advisor + Investor',
@@ -266,8 +264,7 @@ export const rairAdvisorsTeam: TTeamArrayItemType[] = [
         link: 'https://www.linkedin.com/in/davidnjensen/',
         classLink: ''
       }
-    ],
-    readMoreCountFlag: 4
+    ]
   },
   // {
   //     nameTeammate: "Gunther Sonnenfeld CSO",
@@ -350,7 +347,6 @@ export const rairAdvisorsTeam: TTeamArrayItemType[] = [
         link: 'https://www.linkedin.com/in/mattneco/',
         classLink: ''
       }
-    ],
-    readMoreCountFlag: 5
+    ]
   }
 ];

@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { teamTaxHacksSummit } from './AboutUsTeam';
 import { AccessTextMarkKohler } from './InformationText';
 
+import {
+  TAuthGetChallengeResponse,
+  TMeetingInviteResponse
+} from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
-import { metaMaskIcon } from '../../../images';
+import {
+  blockchain,
+  contract,
+  splashData
+} from '../../../utils/infoSplashData/markKohler';
 import { rFetch } from '../../../utils/rFetch';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import MetaTags from '../../SeoTags/MetaTags';
-import { MarkKohlerImage } from '../images/markKohler/markHohler';
-import { TaxHacksDemoGif } from '../images/markKohler/markHohler';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ISplashPageProps, TMainContractType } from '../splashPage.types';
-import { TSplashDataType } from '../splashPage.types';
+import { ISplashPageProps } from '../splashPage.types';
 import SplashPageCardWrapper from '../SplashPageConfig/CardBlock/CardBlockWrapper/SplashPageCardWrapper';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import SplashCardButtonsWrapper from '../SplashPageConfig/CardBlock/CardButtonWrapper/SplashCardButtonsWrapper';
@@ -27,7 +34,6 @@ import SplashCardImage from '../SplashPageConfig/CardBlock/CardImage/SplashCardI
 import SplashCardInfoBlock from '../SplashPageConfig/CardBlock/CardInfoBlock/SplashCardInfoBlock';
 import SplashCardText from '../SplashPageConfig/CardBlock/CardText/SplashCardText';
 import CardParagraphText from '../SplashPageConfig/CardParagraphText/CardParagraphText';
-import { hyperlink } from '../SplashPageConfig/utils/hyperLink';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
 import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
 import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
@@ -40,72 +46,6 @@ import TeamMeet from '../TeamMeet/TeamMeetList';
 import KohlerFavicon from './assets/favicon.ico';
 
 import './markKohler.css';
-
-const mainContract: TMainContractType = {
-  contractAddress: '0x711fe7fccdf84875c9bdf663c89b5f5f726a11d7',
-  requiredBlockchain: '0x1',
-  offerIndex: ['11']
-};
-
-// Code for test contracts
-const testContract: TMainContractType = {
-  contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
-  requiredBlockchain: '0x5',
-  offerIndex: ['126']
-};
-
-const contract = mainContract.contractAddress;
-const blockchain = mainContract.requiredBlockchain;
-const offerIndex = mainContract.offerIndex;
-
-export const splashData: TSplashDataType = {
-  title: 'TAX HACKS SUMMIT',
-  description: (
-    <>
-      Thursday December <span className="nebulosa-font-style">8</span>
-      th <span className="nebulosa-font-style">11</span>
-      AM —<span className="nebulosa-font-style"> 7</span>
-      PM ET <br /> An NFT Gated Event
-    </>
-  ),
-  backgroundImage: MarkKohlerImage,
-  button2: {
-    buttonLabel: 'OpenSea',
-    buttonAction: () =>
-      hyperlink('https://opensea.io/collection/tax-hacks-summit')
-  },
-  purchaseButton: {
-    buttonLabel: 'Mint for .27',
-    img: metaMaskIcon,
-    requiredBlockchain: blockchain,
-    contractAddress: contract,
-    offerIndex: offerIndex,
-    customButtonClassName: 'mark-kohler-purchase-button',
-    blockchainOnly: true,
-    customSuccessAction: async (nextToken) => {
-      const tokenMetadata = await rFetch(
-        `/api/nft/network/${blockchain}/${contract}/0/token/${nextToken}`
-      );
-      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
-        Swal.fire({
-          imageUrl: tokenMetadata.result.metadata.image,
-          imageHeight: 'auto',
-          imageWidth: '65%',
-          imageAlt: "Your NFT's image",
-          title: `You own #${nextToken}!`,
-          icon: 'success'
-        });
-      } else {
-        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
-      }
-    }
-  },
-  videoPlayerParams: {
-    blockchain: blockchain,
-    contract: contract,
-    product: '0'
-  }
-};
 
 const MarkKohler: React.FC<ISplashPageProps> = ({
   loginDone,
@@ -128,12 +68,108 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
 
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
+  const [hasNFT, setHasNFT] = useState<boolean>();
+  const [meetingInvite, setMeetingInvite] = useState<string>();
+
+  if (splashData?.purchaseButton?.customSuccessAction) {
+    splashData.purchaseButton.customSuccessAction = async (nextToken) => {
+      const tokenMetadata = await rFetch(
+        `/api/nft/network/${blockchain}/${contract}/0/token/${nextToken}`
+      );
+      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
+        Swal.fire({
+          imageUrl: tokenMetadata.result.metadata.image,
+          imageHeight: 'auto',
+          imageWidth: '65%',
+          imageAlt: "Your NFT's image",
+          title: `You own #${nextToken}!`,
+          icon: 'success'
+        });
+      } else {
+        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+      }
+      setHasNFT(undefined);
+    };
+  }
 
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
+
+  const { programmaticProvider, currentUserAddress } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
+
+  const joinZoom = () => {
+    if (meetingInvite) {
+      window.open(meetingInvite, '_blank');
+    }
+  };
+
+  const unlockZoom = async () => {
+    let signature;
+    let parsedResponse;
+    try {
+      if (currentUserAddress) {
+        const response = await axios.post<TAuthGetChallengeResponse>(
+          '/api/auth/get_challenge/',
+          {
+            userAddress: currentUserAddress,
+            intent: 'decrypt',
+            zoomId: 'Kohler'
+          }
+        );
+        parsedResponse = JSON.parse(response.data.response);
+        signature = await window.ethereum.request({
+          method: 'eth_signTypedData_v4',
+          params: [currentUserAddress, response.data.response],
+          from: currentUserAddress
+        });
+      } else if (programmaticProvider) {
+        const response = await axios.get<TAuthGetChallengeResponse>(
+          '/api/auth/get_challenge/' + programmaticProvider.address
+        );
+        parsedResponse = JSON.parse(response.data.response);
+        // EIP712Domain is added automatically by Ethers.js!
+        const { ...revisedTypes } = parsedResponse.types;
+        signature = await programmaticProvider._signTypedData(
+          parsedResponse.domain,
+          revisedTypes,
+          parsedResponse.message
+        );
+      } else {
+        Swal.fire('Error', 'Unable to decrypt videos', 'error');
+        return;
+      }
+    } catch (err) {
+      console.info(err);
+    }
+    if (signature) {
+      try {
+        const streamAddress = await axios.post<TMeetingInviteResponse>(
+          '/api/auth/validate/',
+          {
+            MetaMessage: parsedResponse.message.challenge,
+            MetaSignature: signature,
+            zoomId: 'Kohler'
+          }
+        );
+        if (streamAddress.data.success) {
+          setHasNFT(true);
+          setMeetingInvite(streamAddress?.data?.invite?.join_url);
+        }
+      } catch (requestError) {
+        Swal.fire('NFT Required to unlock this meeting', '', 'info');
+        setHasNFT(false);
+      }
+    } else {
+      console.error('Signature was not provided');
+      return;
+    }
+  };
 
   useEffect(() => {
     dispatch(
@@ -198,6 +234,53 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             lightTheme: 'var(--stimorol)'
           }}
         />
+        <SplashCardText
+          color="#DF76DF"
+          fontSize="3vw"
+          fontWeight={400}
+          text={'SIGN WITH WALLET TO JOIN ZOOM'}
+          fontFamily={'Nebulosa Black Display Stencil'}
+          lineHeight={'113.7%'}
+          textAlign="center"
+          marginBottom="2vw"
+          padding="50px 0 0 0"
+          mediafontSize="4.5vw"
+        />
+        <SplashPageCardWrapper height="80px">
+          <SplashCardButtonsWrapper
+            marginTop={'10px !important'}
+            height="148px"
+            width="335px"
+            gap="20px"
+            flexDirection="column"
+            margin="auto">
+            {hasNFT !== undefined && !hasNFT ? (
+              <PurchaseTokenButton
+                connectUserData={connectUserData}
+                {...splashData.purchaseButton}
+                buttonLabel="PURCHASE"
+                diamond={true}
+                customButtonClassName="mark-kohler-purchase-button-black"
+              />
+            ) : (
+              <SplashCardButton
+                className="card-button-mark-kohler"
+                buttonImg={splashData.button3?.buttonImg || ''}
+                buttonLabel={
+                  !loginDone
+                    ? splashData.button3?.buttonLabel
+                    : hasNFT
+                    ? 'Join Zoom'
+                    : 'Unlock Meeting'
+                }
+                buttonAction={
+                  loginDone ? (hasNFT ? joinZoom : unlockZoom) : connectUserData
+                }
+              />
+            )}
+          </SplashCardButtonsWrapper>
+        </SplashPageCardWrapper>
+        <br />
         <SplashPageCardWrapper>
           <SplashCardInfoBlock paddingLeft="5.9vw">
             <SplashCardText
@@ -230,6 +313,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               <PurchaseTokenButton
                 connectUserData={connectUserData}
                 {...splashData.purchaseButton}
+                customButtonClassName="mark-kohler-purchase-button"
                 diamond={true}
               />
               <SplashCardButton
@@ -409,30 +493,30 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
         </SplashCardButtonsWrapper>
 
         {/* Reusable Video Component */}
-        {productsFromOffer.length !== 0 && (
-          <SplashVideoWrapper>
-            <SplashVideoTextBlock>
-              <SplashVideoText
-                className="video-text-kohler"
-                text={'HOLDERS ONLY CONTENT'}
-              />
-              <SplashCardButton
-                className="need-help-kohler"
-                buttonAction={handleReactSwal}
-                buttonLabel={'Need Help'}
-              />
-            </SplashVideoTextBlock>
-            <UnlockableVideosWrapper
-              selectVideo={selectVideo}
-              setSelectVideo={setSelectVideo}
-              productsFromOffer={productsFromOffer}
-              openVideoplayer={openVideoplayer}
-              setOpenVideoPlayer={setOpenVideoPlayer}
-              handlePlayerClick={handlePlayerClick}
-              primaryColor={primaryColor}
+        {/* {productsFromOffer.length !== 0 && ( */}
+        <SplashVideoWrapper>
+          <SplashVideoTextBlock>
+            <SplashVideoText
+              className="video-text-kohler"
+              text={'HOLDERS ONLY CONTENT'}
             />
-          </SplashVideoWrapper>
-        )}
+            <SplashCardButton
+              className="need-help-kohler"
+              buttonAction={handleReactSwal}
+              buttonLabel={'Need Help'}
+            />
+          </SplashVideoTextBlock>
+          <UnlockableVideosWrapper
+            selectVideo={selectVideo}
+            setSelectVideo={setSelectVideo}
+            productsFromOffer={productsFromOffer}
+            openVideoplayer={openVideoplayer}
+            setOpenVideoPlayer={setOpenVideoPlayer}
+            handlePlayerClick={handlePlayerClick}
+            primaryColor={primaryColor}
+          />
+        </SplashVideoWrapper>
+        {/* )} */}
         <TeamMeet
           arraySplash={'taxHacksSummit'}
           titleHeadFirst={'About'}
@@ -451,10 +535,8 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
 
 export default MarkKohler;
 
-{
-  /* <div className="container-about-conference">
+/* <div className="container-about-conference">
           <button className="btn-enter-summit">
             ENTER THE SUMMIT (COMING SOON)
           </button>
         </div> */
-}

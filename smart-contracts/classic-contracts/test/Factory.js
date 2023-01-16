@@ -26,9 +26,9 @@ describe("Token Factory", function () {
 	const rairFeePercentage = 9000; // 9.000%
 	const nodeFeePercentage = 1000; // 1.000%
 
-	const firstDeploymentAddress = '0x2F2f161281f393837cf30a89E4BD18f38Dc07418';
-	const secondDeploymentAddress = '0x5B494da05Fe18De2Fb15393360625D9FC4BcA5EF';
-	const thirdDeploymentAddress = '0x0Ccf6a85510fc2ECD2DB37EF2C886c787D6C4A1d';
+	const firstDeploymentAddress = '0x0cE7946e65c3682c55D7Fb2c4D1e3851b8139a64';
+	const secondDeploymentAddress = '0xD77E4804680e04361692F58B033884D74f5f528D';
+	const thirdDeploymentAddress = '0x3dfBA4615B5D2BbC2Dd9Af503490C3EdC17eE32A';
 	const resaleOfferPrice = 123000;
 
 	const OfferStatus = {

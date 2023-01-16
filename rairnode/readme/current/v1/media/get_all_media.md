@@ -46,6 +46,18 @@ List all the registered media, their URIs and encrypted status
     "content": {
       "type": "string"
     }
+  },
+  "userAddress": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "contractAddress": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
   }
 }
 ```

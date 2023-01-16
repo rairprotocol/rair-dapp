@@ -18,6 +18,8 @@ const {
   ADMIN_NETWORK,
   ADMIN_CONTRACT,
   SUPER_ADMIN_VAULT_STORE,
+  ZOOMSECRET,
+  ZOOMCLIENTID,
 } = process.env;
 
 const binanceTestnetData = {
@@ -65,6 +67,10 @@ module.exports = {
     network: ADMIN_NETWORK,
     contract: ADMIN_CONTRACT,
   },
+  zoom: {
+    zoomSecret: ZOOMSECRET,
+    zoomClientID: ZOOMCLIENTID,
+  },
   superAdmin: {
     storageKey: SUPER_ADMIN_VAULT_STORE || null,
   },
@@ -104,11 +110,11 @@ module.exports = {
   },
   ipfsService: IPFS_SERVICE || 'pinata',
   redis: {
-    connection: { host: REDIS_HOST, port: REDIS_PORT }
+    connection: { host: REDIS_HOST, port: REDIS_PORT },
   },
   session: {
     secret: SESSION_SECRET,
-    ttl: SESSION_TTL || 12,
+    ttl: SESSION_TTL || 10,
   },
   sentry: {
     dsn: SENTRY_DSN || '',

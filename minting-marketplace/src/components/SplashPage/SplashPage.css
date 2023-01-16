@@ -1357,7 +1357,7 @@
 }
 
 .meet-team .box-teammate .position-teammate .box-socials {
-  margin-left: 20px;
+  margin-left: 0px;
   margin-top: 20px;
 }
 
@@ -1376,7 +1376,7 @@
 }
 
 .position-teammate .teammate-description {
-  max-width: 770px;
+  max-width: 928px;
   margin-top: 16px;
   text-align: left;
   cursor: default;
@@ -1664,6 +1664,9 @@ img.block-img-mobile {
 @media screen and (max-width: 1430px) {
   .block-videos {
     justify-content: center;
+  }
+  .position-teammate .teammate-description {
+    max-width: 64.3997vw;
   }
 }
 

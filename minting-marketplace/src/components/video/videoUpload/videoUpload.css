@@ -42,3 +42,37 @@
     #e882d5 100%
   );
 }
+.hidden-block-wrapper {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 230px;
+}
+.hidden-table-col-one {
+  color: red;
+}
+.hidden-table-col-two {
+  color: green;
+}
+.hidden-table-title {
+  color: lemonchiffon;
+}
+.hidden-table-button {
+  background-color: green;
+  border-radius: 16px;
+}
+.hidden-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 70%;
+}
+.hidden-options-wrapper {
+  display: flex;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  justify-content: space-evenly;
+}
+.hidden-options-button {
+  background-color: red;
+  border-radius: 16px;
+}

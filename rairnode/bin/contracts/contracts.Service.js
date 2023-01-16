@@ -40,16 +40,16 @@ exports.getContractsByUserAddress = async (req, res, next) => {
   }
 };
 
-exports.getMyContracts = async (req, res, next) => {
+exports.queryMyContracts = async (req, res, next) => {
   try {
-    const user = req.user.publicAddress;
-    const contracts = await Contract.findContractsByUser(user);
-
-    if (!contracts || contracts.length < 1) {
-      next(new AppError('No contract found for user', 404));
-    } else {
-      res.json({ success: true, contracts });
+    let user;
+    if (req.query.user) {
+      user = req.query.user.toLowerCase();
     }
+    req.query.user = req.user.superAdmin
+      ? user || undefined
+      : req.user.publicAddress;
+    next();
   } catch (e) {
     next(e);
   }
@@ -120,39 +120,17 @@ exports.getFullContracts = async (req, res, next) => {
     const contractIdArr = contractId.split(',');
     const addOffersFlag = addOffers * 1;
     const addLocksFlag = addLocks * 1;
-    const options = [Contract.lookupProduct, { $unwind: '$products' }];
+    const options = [...Contract.lookupProduct];
+
     if (addLocksFlag) {
-      options.push(Contract.lookupLockedTokens, { $unwind: '$tokenLock' });
+      options.push(...Contract.lookupLockedTokens);
     }
     if (addOffersFlag) {
-      options.push(
-        Contract.offerPoolLookup,
-        {
-          $unwind: {
-            path: '$offerPool',
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        Contract.offerLookup,
-        {
-          $match: {
-            $or: [
-              { diamond: true, 'products.offers': { $not: { $size: 0 } } },
-              {
-                diamond: { $in: [false, undefined] },
-                offerPool: { $ne: null },
-                'products.offers': { $not: { $size: 0 } },
-              },
-            ],
-          },
-        },
-      );
+      options.push(...Contract.lookupOfferAndOfferPoolsAggregationOptions);
     }
-
     const foundBlockchain = await Blockchain.find({
       hash: [...blockchainArr],
     });
-
     if (foundBlockchain.length >= 1) {
       options.unshift({
         $match: {
@@ -202,7 +180,6 @@ exports.getFullContracts = async (req, res, next) => {
     } else {
       options.unshift(...blockOption);
     }
-
     const totalNumber = _.chain(
       await Contract.aggregate(options).count('contracts'),
     )

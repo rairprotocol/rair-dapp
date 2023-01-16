@@ -67,6 +67,7 @@ export type TDefaultThemeType = {
 
 export type TStyledSplashPageCardWrapper = {
   bgColor?: string;
+  height?: string;
 };
 
 export type TStyledSplashCardImage = {
@@ -114,6 +115,7 @@ export type TStyledSplashCardButtonsWrapper = {
   flexDirection?: TFlexDirection;
   justifyContent?: TJustifyContent;
   flexWrap?: TFlexWrap;
+  margin?: string;
 };
 
 export type TSplashCardButtonsWrapper = TStyledSplashCardButtonsWrapper & {
@@ -122,7 +124,7 @@ export type TSplashCardButtonsWrapper = TStyledSplashCardButtonsWrapper & {
 
 export type TSplashCardButton = TStyledSplashCardButton & {
   buttonLabel?: string;
-  buttonImg?: string;
+  buttonImg?: string | null;
   buttonAction?: () => void;
   className: string;
 };

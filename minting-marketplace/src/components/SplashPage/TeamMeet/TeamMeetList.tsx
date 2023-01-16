@@ -5,8 +5,6 @@ import TeamMeetComponentCommon from './TeamComponentCommon';
 import { ITeamComponentCommon } from '../splashPage.types';
 
 const TeamMeet: React.FC<ITeamComponentCommon> = ({
-  readMoreCount,
-  setReadMoreCount,
   arraySplash,
   classNameHead,
   classNameHeadSpan,
@@ -36,8 +34,6 @@ const TeamMeet: React.FC<ITeamComponentCommon> = ({
           arraySplash={arraySplash}
           teamArray={teamArray}
           className={classNameGap}
-          readMoreCount={readMoreCount}
-          setReadMoreCount={setReadMoreCount}
         />
       </div>
     </div>

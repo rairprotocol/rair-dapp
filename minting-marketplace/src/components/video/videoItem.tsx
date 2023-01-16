@@ -22,6 +22,7 @@ import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';
 import { playImagesColored } from '../SplashPage/images/greyMan/grayMan';
+import defaultAvatar from '../UserProfileSettings/images/defaultUserPictures.png';
 
 Modal.setAppElement('#root');
 
@@ -271,12 +272,11 @@ const VideoItem: React.FC<IVideoItem> = ({
         </span>
         <div className="info-wrapper video-size">
           <div className="user-info">
-            <div className="user-image">
-              <img
-                src={dataUser?.avatar ? dataUser?.avatar : ''}
-                alt="User Avatar"
-              />
-            </div>
+            <img
+              src={dataUser?.avatar ? dataUser.avatar : defaultAvatar}
+              alt="User Avatar"
+              style={{ marginRight: '10px' }}
+            />
             <div className="user-name">
               <span>
                 {dataUser?.nickName?.slice(0, 25)}
@@ -343,7 +343,10 @@ const VideoItem: React.FC<IVideoItem> = ({
                   <ModalContentCloseBtn
                     primaryColor={primaryColor}
                     onClick={closeModal}>
-                    <i className="fas fa-times" />
+                    <i
+                      className="fas fa-times"
+                      style={{ lineHeight: 'inherit' }}
+                    />
                   </ModalContentCloseBtn>
                 </div>
                 <div className="modal-content-block-btns">

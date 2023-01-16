@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { teamSimDogsArray } from './AboutUsTeam';
 import { BackStorySimDogs } from './InformationText';
@@ -15,37 +13,23 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { discrodIconNoBorder } from '../../../images';
-import { reactSwal } from '../../../utils/reactSwal';
+import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import {
+  donationGridData,
+  splashData
+} from '../../../utils/infoSplashData/simDogs';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
-import {
-  Flyinggreyman,
-  GreymanArmy,
-  GreymanMatrix,
-  GreymanMonument,
-  GreymanRose,
-  GreyManTimes,
-  GreymanVariants
-} from '../images/greyMan/grayMan';
-import {
-  SimDogs0,
-  SimDogs1,
-  SimDogs2,
-  SimDogs3,
-  SimDogs4
-} from '../images/simDogs/simDogs';
+import { SimDogs0 } from '../images/simDogs/simDogs';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import {
-  ICustomButtonBlock,
-  ISplashPageProps,
-  TDonationGridDataItem,
-  TSplashDataType
-} from '../splashPage.types';
-// import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
+import { ICustomButtonBlock, ISplashPageProps } from '../splashPage.types';
+import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import CardParagraphText from '../SplashPageConfig/CardParagraphText/CardParagraphText';
-// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
-// import GenesisMember from '../images/creator-flow.png';
+import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
+import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
+import SplashVideoWrapper from '../SplashPageConfig/VideoBlock/VideoBlockWrapper/SplashVideoWrapper';
+import SplashVideoText from '../SplashPageConfig/VideoBlock/VideoText/SplashVideoText';
+import SplashVideoTextBlock from '../SplashPageConfig/VideoBlock/VideoTextBlock/SplashVideoTextBlock';
 /* importing Components*/
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
@@ -53,9 +37,8 @@ import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
-/* importing Components*/
-import WarningModal from '../WarningModal/WarningModal';
 
+/* importing Components*/
 import favion_SimDogs from './../images/favicons/favicon-simdogs.ico';
 
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
@@ -79,206 +62,10 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
   /* UTILITIES FOR VIDEO PLAYER VIEW */
   const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
   const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
+    useOpenVideoPlayer();
 
   const mainChain = '0x1';
-  const splashData: TSplashDataType = useMemo(
-    () => ({
-      // NFTName: 'Genesis Pass artwork',
-      title: 'SIM DOGS',
-      titleColor: '#495CB0',
-      description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-      textBottom: false,
-      videoPlayerParams: {
-        contract: '0xa5a823294af53b983969bb48caa3cdb28545828f',
-        product: '0',
-        blockchain: '0x1'
-      },
-      marketplaceDemoParams: {
-        contract: '0xa5a823294af53b983969bb48caa3cdb28545828f',
-        product: '0',
-        blockchain: '0x1'
-      },
-      purchaseButton: {
-        requiredBlockchain: '0x38',
-        contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f'
-      },
-      buttonLabel: 'Connect Wallet',
-      buttonBackgroundHelp: 'rgb(3, 91, 188)',
-      backgroundImage: SimDogs0,
-      button1: {
-        buttonImg: discrodIconNoBorder,
-        buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
-      },
-      button2: {
-        buttonCustomLogo: <i className="fab fa-twitter twitter-logo" />,
-        buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
-      },
-      button3: {
-        buttonTextColor: '#FFFFFF',
-        buttonColor: '#55CFFF',
-        buttonLabel: 'Opensea',
-        buttonImg: null,
-        buttonLink: 'https://opensea.io/collection/sim-dogs'
-      },
-      exclusiveNft: {
-        title: 'NFTs',
-        titleColor: 'rgb(3, 91, 188)'
-      },
-      timelinePics: [
-        Flyinggreyman,
-        GreymanVariants,
-        GreymanMonument,
-        GreymanRose,
-        GreymanArmy,
-        GreymanMatrix,
-        GreyManTimes
-      ]
-    }),
-    []
-  );
-
-  const donationGridData: TDonationGridDataItem[] = [
-    {
-      title: 'PROSECUTOR',
-      image: SimDogs1,
-      imageClass: 'zero',
-      buyFunctionality: true,
-      offerIndexInMarketplace: '6',
-      switchToNetwork: mainChain,
-      contractAddress: '0xa5a823294af53b983969bb48caa3cdb28545828f',
-      buttonData: {
-        buttonTextColor: '#FFFFFF',
-        buttonColor: '#384190',
-        buttonLabel: 'Mint for 10.7 ETH'
-      },
-      textBoxArray: [
-        '107 unique drawings with various rarity traits',
-        '“Bored Ape” style ownership rights',
-        '+++',
-        '25 free Blockchain Wire press releases (Express circuit)',
-        '$15K CoinAgenda sponsorships',
-        'One year of free CoinAgenda conference passes (value: $12,000)',
-        'Private Zoom updates on trial'
-      ]
-    },
-    {
-      title: 'DETECTIVE',
-      image: SimDogs4,
-      imageClass: 'one',
-      buyFunctionality: true,
-      offerIndexInMarketplace: '7',
-      switchToNetwork: mainChain,
-      contractAddress: '0xa5a823294af53b983969bb48caa3cdb28545828f',
-      buttonData: {
-        buttonTextColor: '#FFFFFF',
-        buttonColor: '#006EE9',
-        buttonLabel: 'Mint for 1.07 ETH'
-      },
-      textBoxArray: [
-        '1,000 unique pieces of generative art, with various degrees of rarity',
-        'Unreleased audio from conversations with convicted SIM swapper',
-        '++',
-        '10 free Blockchain Wire press releases (Express circuit)',
-        'One free CoinAgenda conference pass (value $3,000)'
-      ]
-    },
-    {
-      title: 'SUPPORTER',
-      image: SimDogs3,
-      imageClass: 'one',
-      buttonData: {
-        buttonAction: () => {
-          Swal.fire('Coming soon!');
-        },
-        buttonTextColor: '#FFFFFF',
-        buttonColor: '#51E84D',
-        buttonLabel: 'Coming soon'
-      },
-      textBoxArray: [
-        '10,000 unique pieces of generative art, with various degrees of rarity',
-        '+',
-        '1 free Blockchain Wire press release',
-        '$250 off any CoinAgenda conference',
-        'Video updates on trial',
-        'Membership to StopSIMCrimeOrg',
-        ' '
-      ]
-    },
-    {
-      title: 'SUPREME COURT',
-      image: SimDogs2,
-      imageClass: 'zero',
-      buttonData: {
-        buttonAction: () => {
-          Swal.fire('Coming soon!');
-        },
-        buttonTextColor: '#FFFFFF',
-        buttonColor: '#FE94FF',
-        buttonLabel: 'Coming soon'
-      },
-      textBoxArray: [
-        'Nine unique “1-of-1” original drawings by Andre Miripolsky',
-        'Work directly with Miripolsky to design',
-        '+++ +',
-        '100 free Blockchain Wire press releases (Express circuit)',
-        '$150K CoinAgenda sponsorships',
-        'Lifetime conference pass to all CoinAgenda conferences',
-        'Ten hours of personal meetings with Michael Terpin'
-      ]
-    }
-  ];
-  // const splashData: TSplashDataType = {
-  //   // NFTName: 'Genesis Pass artwork',
-  //   title: 'SIM DOGS',
-  //   titleColor: '#495CB0',
-  //   description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-  //   textBottom: false,
-  //   videoPlayerParams: {
-  //     contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
-  //     product: '0',
-  //     blockchain: '0x5'
-  //   },
-  //   marketplaceDemoParams: {
-  //     contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
-  //     product: '0',
-  //     blockchain: '0x5'
-  //   },
-  //   purchaseButton: {
-  //     requiredBlockchain: '0x38',
-  //     contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f'
-  //   },
-  //   buttonLabel: 'Connect Wallet',
-  //   buttonBackgroundHelp: 'rgb(3, 91, 188)',
-  //   backgroundImage: SimDogs0,
-  //   button1: {
-  //     buttonImg: discrodIconNoBorder,
-  //     buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
-  //   },
-  //   button2: {
-  //     buttonCustomLogo: <i className="fab fa-twitter twitter-logo" />,
-  //     buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
-  //   },
-  //   button3: {
-  //     buttonTextColor: '#FFFFFF',
-  //     buttonColor: '#55CFFF',
-  //     buttonLabel: 'PREMINT',
-  //     buttonImg: null,
-  //     buttonLink: 'https://www.premint.xyz/simdogsxyz/'
-  //   },
-  //   exclusiveNft: {
-  //     title: 'NFTs',
-  //     titleColor: 'rgb(3, 91, 188)'
-  //   },
-  //   timelinePics: [
-  //     Flyinggreyman,
-  //     GreymanVariants,
-  //     GreymanMonument,
-  //     GreymanRose,
-  //     GreymanArmy,
-  //     GreymanMatrix,
-  //     GreyManTimes
-  //   ]
-  // };
 
   useEffect(() => {
     dispatch(
@@ -420,20 +207,28 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
           connectUserData={connectUserData}
         />
         {productsFromOffer && productsFromOffer.length > 0 && (
-          <>
-            <h1
-              className="splashpage-subtitle"
-              style={{ justifyContent: 'center' }}>
-              <div>SUPPORTER ONLY CONTENT</div>
-            </h1>
-            <VideoPlayerView
-              productsFromOffer={productsFromOffer}
-              primaryColor={primaryColor}
+          <SplashVideoWrapper>
+            <SplashVideoTextBlock>
+              <SplashVideoText
+                className="video-text-kohler"
+                text={'SUPPORTER ONLY CONTENT'}
+              />
+              <SplashCardButton
+                className="need-help-kohler"
+                buttonAction={handleReactSwal}
+                buttonLabel={'Need Help'}
+              />
+            </SplashVideoTextBlock>
+            <UnlockableVideosWrapper
               selectVideo={selectVideo}
               setSelectVideo={setSelectVideo}
-              whatSplashPage={'genesis-font'}
+              productsFromOffer={productsFromOffer}
+              openVideoplayer={openVideoplayer}
+              setOpenVideoPlayer={setOpenVideoPlayer}
+              handlePlayerClick={handlePlayerClick}
+              primaryColor={primaryColor}
             />
-          </>
+          </SplashVideoWrapper>
         )}
         <CardParagraphText
           fontFamilyTitle={`'Acme', sans-serif`}
