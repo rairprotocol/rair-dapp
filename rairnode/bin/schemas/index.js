@@ -10,6 +10,7 @@ const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
 const singleUser = require('./singleUser');
 const removeMedia = require('./removeMedia');
+const updateMedia = require('./updateMedia');
 const stream = require('./stream');
 const uploadVideo = require('./uploadVideo');
 const uploadVideoFile = require('./uploadVideoFile');
@@ -52,6 +53,10 @@ module.exports = {
   getTokensByContractProduct,
   search,
   pinningMultiple,
+
+  // Media files
+  updateMedia,
+
   // V2
 
   metaValidate,
