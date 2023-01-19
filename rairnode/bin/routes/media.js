@@ -89,6 +89,37 @@ module.exports = () => {
     },
   );
 
+  router.patch(
+    '/update/:mediaId',
+    JWTVerification,
+    validation('removeMedia', 'params'),
+    validation('updateMedia', 'body'),
+    isOwner(File),
+    async (req, res, next) => {
+      try {
+        const { mediaId } = req.params;
+
+        if (!req.user.adminRights) {
+          const { contract, offer, product, demo, bodyForNonAdmins } = req.body;
+          req.body = bodyForNonAdmins;
+        }
+
+        const updateRes = await File.updateOne({ _id: mediaId }, req.body);
+
+        if (!updateRes.ok) {
+          return res.json({ success: false, message: 'An error has ocurred' });
+        }
+        if (updateRes.n === 1 && updateRes.nModified === 0) {
+          return res.json({ success: false, message: 'Nothing to update' });
+        }
+        log.info(`File with ID: ${mediaId}, was updated on DB.`);
+        return res.json({ success: true });
+      } catch (err) {
+        next(err);
+      }
+    },
+  );
+
   /**
    * @swagger
    *
@@ -352,7 +383,7 @@ module.exports = () => {
               cid = await addFolder(
                 req.file.destination,
                 req.file.destinationFolder,
-                socketInstance
+                socketInstance,
               );
               defaultGateway = `${config.pinata.gateway}/${cid}`;
               storageLink = _.get(

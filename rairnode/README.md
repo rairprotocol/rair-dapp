@@ -82,6 +82,7 @@ Provide ability to make some specific actions on the platform
     * [x] /media
         * [x] /add/:mediaId - POST - register a new piece of media, [see details here](readme/add_media.md)
         * [x] /remove/:mediaId - DELETE - find and delete the media, [see details here](readme/remove_media.md)
+        * [x] /update/:mediaId - PATCH - find and update the media, [see details here](readme/current/v1/media/update_media.md)
         * [x] /list - GET - list all the registered media, their URIs and encrypted status, [see details here](readme/get_all_media.md)
         * [x] /upload - POST - upload the media, [see details here](readme/upload_media.md)
     * [x] /users - POST - create new user, [see details here](readme/create_user.md)
