@@ -204,22 +204,22 @@ const PopUpSettings = ({
                   }}>
                   <SvgUserIcon primaryColor={primaryColor} /> Profile settings
                 </li>
-                <li
+                {/* <li
                   onClick={() => pushToMyItems(2)}
                   style={{
                     color:
                       primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
                   }}>
                   <SvgMyFavorites primaryColor={primaryColor} /> My favorites
-                </li>
-                <li
+                </li> */}
+                {/* <li
                   onClick={() => pushToMyItems(0)}
                   style={{
                     color:
                       primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
                   }}>
                   <SvgItemsIcon primaryColor={primaryColor} /> My Items
-                </li>
+                </li> */}
                 {process.env.REACT_APP_DISABLE_CREATOR_VIEWS !== 'true' &&
                   adminRights && (
                     <li

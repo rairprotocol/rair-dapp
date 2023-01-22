@@ -114,9 +114,9 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
           {currentUserAddress && (
             <NavFooterBox primaryColor={primaryColor}>
               <h4>My Account</h4>
-              <li>
+              {/* <li>
                 <NavLink to="/my-items">My items</NavLink>
-              </li>
+              </li> */}
               {/* <li>My collections</li> */}
               {/* <li>My favorites</li> */}
             </NavFooterBox>
