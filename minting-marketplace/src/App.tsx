@@ -24,6 +24,7 @@ import Contracts from './components/creatorStudio/Contracts';
 import Deploy from './components/creatorStudio/Deploy';
 import ListCollections from './components/creatorStudio/ListCollections';
 import WorkflowSteps from './components/creatorStudio/workflowSteps';
+import DemoMediaUpload from './components/DemoMediaUpload/DemoMediaUpload';
 import Footer from './components/Footer/Footer';
 import WelcomeHeader from './components/FrontPage/WelcomeHeader';
 import MainHeader from './components/Header/MainHeader';
@@ -374,6 +375,13 @@ function App() {
 										complex than just a boolean
 									*/}
                 {[
+                  {
+                    path: '/demo',
+                    content: DemoMediaUpload,
+                    props: {
+                      contractData: connectUserData
+                    }
+                  },
                   {
                     path: '/simdogs-splash',
                     content: SimDogsSplashPage,

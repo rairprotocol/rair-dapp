@@ -1,0 +1,79 @@
+.medialist-box .mediaitem-block .btn.btn-danger.rounded-rairo.rhyno {
+  background-color: var(--rhyno-80);
+  border: 1px solid #f63419;
+  color: #565656;
+}
+
+.medialist-box .mediaitem-block .btn.btn-danger.rounded-rairo {
+  background-color: var(--charcoal-80);
+  border: 1px solid #f63419;
+}
+
+.medialist-box .mediaitem-block .btn.btn-danger.rounded-rairo:hover,
+.medialist-box .mediaitem-block .btn.btn-danger.rounded-rairo.rhyno:hover {
+  background-color: #f63419;
+  color: #fff;
+}
+
+.medialist-box {
+  padding-right: 5rem;
+  overflow: hidden;
+}
+
+.medialist-box .mediaitem-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.medialist-box .mediaitem-block video,
+.medialist-box .mediaitem-block img {
+  width: 200px !important;
+  height: 113px;
+  object-fit: cover;
+}
+
+.medialist-box .mediaitem-block .border-stimorol.rounded-rair.col-12 {
+  width: 15rem;
+}
+
+.medialist-box .mediaitem-block .btn-stimorol.btn.rounded-rair.white {
+  width: 15rem;
+}
+
+.medialist-box
+  .mediaitem-block
+  .btn-stimorol.btn.rounded-rair.white
+  .MuiLinearProgress-root.MuiLinearProgress-colorPrimary.MuiLinearProgress-determinate.css-eglki6-MuiLinearProgress-root {
+  background-color: #385682;
+  color: #fff;
+  height: 8px;
+  border-radius: 5px;
+}
+
+.medialist-box
+  .mediaitem-block
+  .btn-stimorol.btn.rounded-rair.white
+  .MuiLinearProgress-bar.MuiLinearProgress-barColorPrimary.MuiLinearProgress-bar1Determinate.css-5xe99f-MuiLinearProgress-bar1 {
+  background-color: #a36bd9;
+}
+
+.medialist-box
+  .mediaitem-block
+  .btn-stimorol.btn.rounded-rair.white
+  .MuiTypography-root.MuiTypography-body2.css-r40f8v-MuiTypography-root {
+  color: #fff;
+}
+
+@media screen and (max-width: 1360px) {
+  .medialist-box .mediaitem-block .btn-stimorol.btn.rounded-rair.white,
+  .medialist-box .mediaitem-block .border-stimorol.rounded-rair.col-12 {
+    width: 10rem;
+  }
+}
+
+@media screen and (max-width: 1230px) {
+  .medialist-box {
+    padding-right: 2rem;
+  }
+}

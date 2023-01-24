@@ -79,9 +79,10 @@ const InputSelect: React.FC<InputSelectProps> = ({
           </option>
         )}
         {options &&
-          options.map(({ label, value }, index) => {
+          options.map(({ label, value, disabled }, index) => {
             return (
               <option
+                disabled={disabled === undefined ? false : disabled}
                 key={id + '-' + index}
                 value={value}
                 style={{ ...optionCSS }}

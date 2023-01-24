@@ -36,6 +36,7 @@ module.exports = {
       offer: ["0"],
       demo: "true",
       storage: 'gcp',
+      description: 'demo',
     };
     req.context = {
       publicDemoOverride: true,
@@ -90,7 +91,7 @@ module.exports = {
     // Currently remains unchanged and is not used in frontend
     // available values: 'fast', 'faster', 'veryfast', 'ultrafast'
     // using this valuas saves encoding time at the expense of much lower quality.
-    const { speed = 'medium' } = req.query;
+    const { speed = 'ultrafast' } = req.query;
 
     let cid = '';
     let defaultGateway = '';
