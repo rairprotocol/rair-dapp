@@ -64,26 +64,31 @@ const verifyAccessRightsToFile = (files, user) => Promise.all(_.map(files, async
 
     if (!clonedFile.isUnlocked) {
       const contract = await Contract.findOne(file.contract);
-      const offers = await Offer.find(_.assign(
-          { contract: file.contract },
-          contract.diamond
-              ? { diamondRangeIndex: { $in: file.offer } }
-              : { offerIndex: { $in: file.offer } },
-      ));
-
-      // verify the user have needed tokens
-      for await (const offer of offers) {
-        ownsTheAccessTokens.push(await checkBalanceProduct(
-            user.publicAddress,
-            contract.blockchain,
-            contract.contractAddress,
-            offer.product,
-            offer.range[0],
-            offer.range[1],
+      if (!contract) {
+        log.error(`Could not find contract ${file.contract}`);
+      } else {
+        const offers = await Offer.find(_.assign(
+            { contract: file.contract },
+            contract.diamond
+                ? { diamondRangeIndex: { $in: file.offer } }
+                : { offerIndex: { $in: file.offer } },
         ));
-        if (ownsTheAccessTokens.includes(true)) {
-          clonedFile.isUnlocked = true;
-          break;
+
+        // verify the user have needed tokens
+        // eslint-disable-next-line no-restricted-syntax
+        for await (const offer of offers) {
+          ownsTheAccessTokens.push(await checkBalanceProduct(
+              user.publicAddress,
+              contract.blockchain,
+              contract.contractAddress,
+              offer.product,
+              offer.range[0],
+              offer.range[1],
+          ));
+          if (ownsTheAccessTokens.includes(true)) {
+            clonedFile.isUnlocked = true;
+            break;
+          }
         }
       }
     }
