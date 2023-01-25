@@ -148,6 +148,27 @@ resource "cloudflare_record" "rair_tech__new-api_rair_tech" {
   type    = local.record_type.A
 }
 
+resource "cloudflare_record" "rair_tech__demo-api_rair_tech" {
+  zone_id = cloudflare_zone.rair_tech.id
+  name    = "demo-api"
+  value   = "34.149.248.143"
+  type    = local.record_type.A
+}
+
+resource "cloudflare_record" "rair_tech__demo-ms_rair_tech" {
+  zone_id = cloudflare_zone.rair_tech.id
+  name    = "demo-ms"
+  value   = "35.190.88.94"
+  type    = local.record_type.A
+}
+
+resource "cloudflare_record" "rair_tech__new-demo_rair_tech" {
+  zone_id = cloudflare_zone.rair_tech.id
+  name    = "new-demo"
+  value   = "34.110.154.63"
+  type    = local.record_type.A
+}
+
 resource "cloudflare_record" "rair_tech__new-ms_rair_tech" {
   zone_id = cloudflare_zone.rair_tech.id
   name    = "new-ms"
