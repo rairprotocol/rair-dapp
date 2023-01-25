@@ -85,7 +85,7 @@ const PopUpSettings = ({
 
   const pushToMyItems = (tab: number) => {
     setTabIndexItems(tab);
-    navigate('/my-items');
+    navigate('/demo');
   };
 
   const pushToFactory = () => {

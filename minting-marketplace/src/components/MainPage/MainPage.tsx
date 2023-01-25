@@ -166,7 +166,7 @@ const MainPage: React.FC<IMainPage> = ({
             requiredBlockchain: blockchain,
             offerIndex: offerIndexInMarketplace,
             connectUserData,
-            buttonLabel: 'Test our Streaming',
+            buttonLabel: 'Closed Beta Now Live',
             presaleMessage: '',
             diamond: true,
             customSuccessAction: (nextToken) =>

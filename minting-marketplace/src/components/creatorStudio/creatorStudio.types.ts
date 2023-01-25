@@ -221,6 +221,7 @@ export type TSteps = {
 };
 
 export type TMediaType = {
+  id(contractAddress: string, id: any): void;
   category: string;
   contractAddress: string;
   description: string;

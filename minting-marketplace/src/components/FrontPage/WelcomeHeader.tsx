@@ -29,13 +29,12 @@ const WelcomeHeader = ({
       <MetaTags seoMetaTags={seo} />
       <div className="col-6 text-left main">
         <h1 className="w-100 general-title">
-          Digital <b className="title">Ownership</b>
-          <br />
-          Encryption
+          RAIR CLOSED <b className="title">BETA</b>
         </h1>
         <p className="w-100 general-title">
-          RAIR is a Blockchain-based digital rights management platform that
-          uses NFTs to gate access to streaming content
+          This marketplace is currently in closed beta access. Contact us for a
+          RAIR Genesis Pass if you would like to test our tools. Mint NFTs,
+          Create Metadata, Upload token-gated content.
         </p>
       </div>
       <div className="col-12 mt-3 row">

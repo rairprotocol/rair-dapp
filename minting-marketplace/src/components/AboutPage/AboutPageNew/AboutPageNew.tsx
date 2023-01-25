@@ -73,7 +73,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
         requiredBlockchain: switchToNetwork,
         offerIndex: [offerIndexInMarketplace],
         connectUserData,
-        buttonLabel: 'Test our Streaming',
+        buttonLabel: 'Closed Beta Now Live',
         presaleMessage: termsText,
         diamond: true,
         customSuccessAction: (nextToken) =>

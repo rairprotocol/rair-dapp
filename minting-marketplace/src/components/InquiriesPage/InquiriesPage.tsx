@@ -70,6 +70,15 @@ const InquiriesPage = () => {
             />
           </InquireField>
           <InquireField>
+            <InquireLabel primaryColor={primaryColor}>
+              Ethereum Address
+            </InquireLabel>{' '}
+            <InquireInput
+              name="SingleLine"
+              placeholder="Type in your wallet address"
+            />
+          </InquireField>
+          <InquireField>
             <InquireLabel primaryColor={primaryColor}>Website</InquireLabel>{' '}
             <InquireInput
               name="SingleLine1"
