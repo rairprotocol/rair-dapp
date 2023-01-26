@@ -163,6 +163,7 @@ services:
       VAULT_MEDIA_SERVICE_APP_ROLE_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_ID}
       VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID}
       SENTRY_DSN: ${sentry_dsn}
+      SERVICE_HOST: ${hostname}
     ports:
       - 5002:5002
     networks:
