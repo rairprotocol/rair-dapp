@@ -17,10 +17,13 @@ const AppError = require('../utils/errors/AppError');
 
 const { baseUri } = config.rairnode;
 
+const demoContractAddress = '0x571acc173f57c095f1f63b28f823f0f33128a6c4'
+const demoContractBlockchain = '0x1'
+
 module.exports = {
   hardcodedDemoData: async (req, res, next) => {
     const contractData = await axios
-      .get(`${baseUri}/api/contracts/network/0x1/0x571acc173f57c095f1f63b28f823f0f33128a6c4`)
+      .get(`${baseUri}/api/contracts/network/${demoContractBlockchain}/${demoContractAddress}`)
       .catch(console.error);
 
     if (!contractData?.data || contractData?.data?.success === false) {
@@ -54,11 +57,13 @@ module.exports = {
     if (!req.user.email) {
       return next(new AppError('Uploading a video with RAIR requires an email registered with our profile settings. Please use the user profile menu in the upper right corner to add your email address to your profile.', 400));
     }
-    // Check that the user hasn't gone over the 2 video limit
+    // Check that the user hasn't gone over the 3 video limit
     const userData = await axios
       .get(`${baseUri}/api/media/list`, {
         params: {
-          userAddress: req.user.publicAddress
+          userAddress: req.user.publicAddress,
+          blockchain: "0x1",
+          contractAddress: demoContractAddress.toLowerCase()
         },
       })
       .catch(console.error);
@@ -172,7 +177,7 @@ module.exports = {
           socketInstance,
         );
 
-        const exportedKey = await encryptFolderContents(
+        const { exportedKey, totalEncryptedFiles } = await encryptFolderContents(
           req.file,
           ['ts'],
           socketInstance,
@@ -272,6 +277,9 @@ module.exports = {
           extension: req.file.extension,
           duration: req.file.duration,
           demo: demo === 'true',
+          totalEncryptedFiles,
+          storage,
+          storagePath: storageLink,
         };
 
         if (description) {

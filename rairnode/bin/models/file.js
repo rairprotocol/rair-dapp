@@ -32,6 +32,14 @@ const File = new Schema(
     demo: { type: Boolean, default: false },
 
     creationDate: { type: Date, default: Date.now },
+
+    // Analytics
+    views: { type: Number, default: 0, required: false },
+    totalEncryptedFiles: { type: Number, default: 1, required: false },
+
+    // Help for delete functions
+    storage: { type: String, required: false },
+    storagePath: { type: String, required: false },
   },
   { versionKey: false },
 );

@@ -228,16 +228,13 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
 
   const deleterUploaded = async (index: number) => {
     try {
-      await axios
-        .delete(`/api/media/remove/${index}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'x-rair-token': localStorage.token
-          }
-        })
-        .then((res) => {
-          getMediaList();
-        });
+      await rFetch(`/api/media/remove/${index}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      getMediaList();
     } catch (e) {
       console.info(e);
     }

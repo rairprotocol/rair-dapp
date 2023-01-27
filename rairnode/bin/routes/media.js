@@ -147,14 +147,39 @@ module.exports = () => {
       try {
         const { mediaId } = req.params;
 
-        await File.deleteOne({ _id: mediaId });
+        const fileData = await File.findOne({ _id: mediaId });
 
-        log.info(`File with ID: ${mediaId}, was removed from DB.`);
+        let deleteResponse;
+        if (!fileData.storage) {
+          log.error(`Can't tell where media ID ${mediaId} is stored, will not unpin/delete from storage, just from DB`);
+          deleteResponse = { success: true };
+        } else {
+          switch (fileData.storage) {
+            case 'gcp':
+              deleteResponse = await gcp.removeFile(config.gcp.videoBucketName, mediaId);
+            break;
+            case 'ipfs':
+              deleteResponse = await removePin(mediaId);
+            break;
+            default:
+              log.error(`Unknown storage type for media ID ${mediaId} : ${fileData.storage}`);
+            break;
+          }
+        }
 
-        // unpin from ipfsService
-        await removePin(mediaId);
+        if (deleteResponse.success) {
+          await File.deleteOne({ _id: mediaId });
+          log.info(`File with ID: ${mediaId}, was removed from DB.`);
+          res.json({
+            success: true,
+          });
+          return;
+        }
 
-        res.sendStatus(200);
+        res.json({
+          success: false,
+          message: deleteResponse.response,
+        });
       } catch (err) {
         next(err);
       }
