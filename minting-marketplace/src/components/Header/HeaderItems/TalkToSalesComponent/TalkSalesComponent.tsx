@@ -6,6 +6,7 @@ import { TalkSalesButton } from './TalkSalesButton';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import { reactSwal } from '../../../../utils/reactSwal';
 import InquiriesPage from '../../../InquiriesPage/InquiriesPage';
 
@@ -20,6 +21,10 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
 }) => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
+  );
+
+  const { adminRights } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
   );
 
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
@@ -46,6 +51,7 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
 
   return (
     <TalkSalesButton
+      adminPanel={adminRights}
       primaryColor={primaryColor}
       className={classes ? classes : ''}
       currentUserAddress={currentUserAddress}
