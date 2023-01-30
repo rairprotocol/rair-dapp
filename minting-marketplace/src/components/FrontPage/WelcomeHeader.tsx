@@ -34,7 +34,7 @@ const WelcomeHeader = ({
         <p className="w-100 general-title">
           This marketplace is currently in closed beta access. Contact us for a
           RAIR Genesis Pass if you would like to test our tools. Mint NFTs,
-          Create Metadata, Upload token-gated content.
+          Create Metadata, Upload token-gated content, Collect Analytics.
         </p>
       </div>
       <div className="col-12 mt-3 row">
