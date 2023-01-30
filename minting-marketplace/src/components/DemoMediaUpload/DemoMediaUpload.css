@@ -15,6 +15,10 @@
   color: #fff;
 }
 
+.medialist-box .mediaitem-block img {
+  cursor: pointer;
+}
+
 .medialist-box {
   padding-right: 5rem;
   overflow: hidden;
@@ -63,6 +67,15 @@
   .btn-stimorol.btn.rounded-rair.white
   .MuiTypography-root.MuiTypography-body2.css-r40f8v-MuiTypography-root {
   color: #fff;
+}
+
+@media screen and (min-width: 1260px) {
+  .modal-content-wrapper-for-video.demo-pop-up {
+    width: 53rem;
+    height: 26.26rem;
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 @media screen and (max-width: 1360px) {

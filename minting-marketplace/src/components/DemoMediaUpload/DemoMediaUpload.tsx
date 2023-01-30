@@ -11,11 +11,10 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import videoIcon from '../../images/videoIcon.svg';
 import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
-import InputSelect from '../common/InputSelect';
 import { IMediaUpload, TMediaType } from '../creatorStudio/creatorStudio.types';
 
-import MediaItemChange from './MediaItemChange/MediaItemChange';
 import MediaListBox from './MediaListBox/MediaListBox';
+import UploadedListBox from './UploadedListBox/UploadedListBox';
 
 import './DemoMediaUpload.css';
 
@@ -39,14 +38,16 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   };
 
   const [mediaList, setMediaList] = useState<TMediaType[]>([]);
-  const [mediaUploadedList, setMediaUploadedList] = useState<any[]>([]);
+  const [mediaUploadedList, setMediaUploadedList] = useState<any>([]);
   const [categories, setCategories] = useState<OptionsType[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
   const [thisSessionId, setThisSessionId] = useState<string>('');
   const [socketMessage, setSocketMessage] = useState<string | undefined>();
-  const [uploadProgress, setUploadProgress] = useState<any>(null);
+  const [uploadProgress, setUploadProgress] = useState<
+    boolean | number | undefined
+  >(undefined);
   const [currentTitleVideo, setCurrentTitleVideo] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<
     string | undefined
@@ -174,6 +175,10 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   const StringToNumber = useCallback((message) => {
     const str = message.substr(message.length - 8, 10);
     const lastString = message.split(' pin');
+    const lastString2 = message.split(' upload');
+    if (lastString2[1] === 'ing to Google Cloud') {
+      setSocketMessage('uploaing to Google Cloud');
+    }
     const specSymb = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
     const newStr = str.split('').filter((item) => {
       if (specSymb.includes(item)) {
@@ -182,16 +187,18 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     });
     if (isNaN(newStr.join(''))) {
       if (message === 'uploaded to Google Cloud.') {
-        setUploading(false);
         setUploadSuccess(true);
         getMediaList();
         setUploadProgress(false);
         setUploadSuccess(null);
+        setSocketMessage('');
       } else if (lastString[1] === 'ning to Google Cloud.') {
         setMediaList((prev) => [
           ...prev.filter((item) => item.file.name !== lastString[0])
         ]);
+        setUploading(false);
         setCurrentTitleVideo('');
+        setSocketMessage('');
       }
       return false;
     } else {
@@ -221,16 +228,13 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
 
   const deleterUploaded = async (index: number) => {
     try {
-      await axios
-        .delete(`/api/media/remove/${index}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'x-rair-token': localStorage.token
-          }
-        })
-        .then((res) => {
-          getMediaList();
-        });
+      await rFetch(`/api/media/remove/${index}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      getMediaList();
     } catch (e) {
       console.info(e);
     }
@@ -303,63 +307,20 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
         {Object.keys(mediaUploadedList).map((item, index) => {
           const fileData = mediaUploadedList[item];
           return (
-            <div
-              className="medialist-box"
-              key={index}
-              style={{
-                backgroundColor: `var(--${primaryColor}-80)`,
-                color: textColor,
-                borderRadius: '15px',
-                marginTop: '20px'
-              }}>
-              <div className="mediaitem-block col-12">
-                <img className="w-100" src={fileData.animatedThumbnail} />
-                {/* <p className="col-12">{fileData.title}</p> */}
-                <MediaItemChange
-                  setMediaList={setMediaList}
-                  item={fileData}
-                  index={index}
-                  mediaList={mediaList}
-                  uploadSuccess={uploadSuccess}
-                  textFlag={true}
-                />
-                <button
-                  // disabled={
-                  //   uploadSuccess === false ||
-                  //   uploading ||
-                  //   fileData.category === 'null' ||
-                  //   fileData.description === 'test' ||
-                  //   fileData.offer === 'null'
-                  // }
-                  onClick={() => copyEmbebed(fileData._id)}
-                  className="col-12 btn-stimorol btn rounded-rair white">
-                  <>
-                    <i className="fas fa-check" /> Copy embed code{' '}
-                  </>
-                </button>
-                <div className="border-stimorol rounded-rair col-12">
-                  <InputSelect
-                    options={categories}
-                    setter={() =>
-                      updateMediaCategory(
-                        mediaUploadedList,
-                        index,
-                        fileData.category
-                      )
-                    }
-                    placeholder="Unlockable status"
-                    getter={fileData.category}
-                    disabled={true}
-                    {...selectCommonInfo}
-                  />
-                </div>
-                <button
-                  onClick={() => deleterUploaded(fileData._id)}
-                  className="btn btn-danger rounded-rairo">
-                  <i className="fas fa-trash" />
-                </button>
-              </div>
-            </div>
+            <UploadedListBox
+              key={fileData.title + index}
+              fileData={fileData}
+              index={index}
+              setMediaList={setMediaList}
+              mediaList={mediaList}
+              uploadSuccess={uploadSuccess}
+              copyEmbebed={copyEmbebed}
+              selectCommonInfo={selectCommonInfo}
+              updateMediaCategory={updateMediaCategory}
+              mediaUploadedList={mediaUploadedList}
+              deleterUploaded={deleterUploaded}
+              categories={categories}
+            />
           );
         })}
         {mediaList.map((item, index, array) => {
@@ -379,6 +340,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
               deleter={deleter}
               updateMediaCategory={updateMediaCategory}
               currentTitleVideo={currentTitleVideo}
+              socketMessage={socketMessage}
             />
           );
         })}

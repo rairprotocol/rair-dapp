@@ -35,10 +35,18 @@ const removePin = async (CID) => {
 
     log.info(`Unpin IPFS: ${response.data.Pins}`);
 
-    return response.data;
+    return {
+      success: true,
+      mediaId: CID,
+      response: response.data,
+    };
   } catch (err) {
     log.error(`Could not remove pin from IPFS ${CID}: ${err}`);
-    return {};
+    return {
+      success: false,
+      mediaId: CID,
+      response: err,
+    };
   }
 };
 

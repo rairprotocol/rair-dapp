@@ -21,7 +21,8 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   selectCommonInfo,
   deleter,
   updateMediaCategory,
-  currentTitleVideo
+  currentTitleVideo,
+  socketMessage
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -63,7 +64,11 @@ const MediaListBox: React.FC<IMediaListBox> = ({
             <>
               {(uploading && currentTitleVideo === item.title) ||
               (uploadSuccess === false && currentTitleVideo === item.title) ? (
-                <>... Loading</>
+                <>
+                  {socketMessage === 'uploaing to Google Cloud'
+                    ? 'uploaing to Google Cloud'
+                    : '... Loading'}
+                </>
               ) : (
                 <>
                   <i className="fas fa-upload" />

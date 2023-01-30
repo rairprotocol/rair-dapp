@@ -65,9 +65,10 @@ const encryptFolderContents = async (mediaData, encryptExtensions, socketInstanc
       done: 15,
       parts: promiseList.length,
     });
+    const totalEncryptedFiles = promiseList.length;
     const authOfChunks = await Promise.all(promiseList);
     const authTag = authOfChunks.reduce((pv, value) => ({ ...pv, ...value }), {});
-    return { key: key.export(), authTag };
+    return { exportedKey: { key: key.export(), authTag }, totalEncryptedFiles };
   } catch (e) {
     log.error(e);
     return new AppError('Encrypting process faild', 500);

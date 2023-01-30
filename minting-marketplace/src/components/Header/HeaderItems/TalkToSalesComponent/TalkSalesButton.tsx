@@ -5,19 +5,26 @@ import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 interface ITalkSalesButton {
   currentUserAddress: string | undefined;
   primaryColor?: ColorChoice;
+  adminPanel?: boolean;
 }
 
 export const TalkSalesButton = styled.button<ITalkSalesButton>`
   position: absolute;
   top: ${(props) => (props.currentUserAddress ? '79.5px' : '84px')};
-  right: 0;
+  right: ${(props) =>
+    props.currentUserAddress && props.adminPanel
+      ? '163px'
+      : props.currentUserAddress && !props.adminPanel
+      ? '131px'
+      : '120px'};
   background: var(--royal-ice);
   border: none;
   color: #fff;
   height: 40px;
-  width: 150px;
+  width: ${(props) => (props.currentUserAddress ? '186px' : '200px')};
   font-weight: 700;
   border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
   transition: all 0.3s ease;
 
   &.inquiries-sales {
@@ -42,5 +49,23 @@ export const TalkSalesButton = styled.button<ITalkSalesButton>`
 
   &:active {
     background: var(--royal-ice-click);
+  }
+
+  @media screen and (max-width: 1320px) {
+    right: ${(props) =>
+      props.currentUserAddress && props.adminPanel
+        ? '83px'
+        : props.currentUserAddress && !props.adminPanel
+        ? '51px'
+        : '40px'};
+  }
+
+  @media screen and (max-width: 1100px) {
+    right: ${(props) =>
+      props.currentUserAddress && props.adminPanel
+        ? '63px'
+        : props.currentUserAddress && !props.adminPanel
+        ? '31px'
+        : '20px'};
   }
 `;

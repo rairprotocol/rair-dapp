@@ -24,7 +24,7 @@ module.exports = (config) => {
     });
   } catch (e) {
     log.error(e);
-    throw new AppError('Authorized to GSP faild', 403);
+    throw new AppError('Authorized to GSP failed', 403);
   }
 
   const uploadFile = async (bucketName, file) => {
@@ -104,9 +104,31 @@ module.exports = (config) => {
     }
   };
 
+  const removeFile = async (bucketName, file) => {
+    try {
+      const bucket = storage.bucket(bucketName);
+      const response = await bucket.deleteFiles({
+        prefix: file,
+      });
+      return {
+        success: true,
+        mediaId: file,
+        response,
+      };
+    } catch (e) {
+      log.error(e.message);
+      return {
+        success: false,
+        mediaId: file,
+        response: e,
+      };
+    }
+  };
+
   return ({
     storage,
     uploadFile,
     uploadFolder,
+    removeFile,
   });
 };

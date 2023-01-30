@@ -36,10 +36,18 @@ const removePin = async (CID) => {
 
     log.info(`Unpin PINATA: ${CID}, status: ${response}`);
 
-    return response;
+    return {
+      success: true,
+      mediaId: CID,
+      response,
+    };
   } catch (err) {
     log.error(`Could not remove pin from PINATA ${CID}: ${err}`);
-    return {};
+    return {
+      success: false,
+      mediaId: CID,
+      response: err,
+    };
   }
 };
 

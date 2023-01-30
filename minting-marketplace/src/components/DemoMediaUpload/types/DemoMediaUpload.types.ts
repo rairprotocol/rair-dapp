@@ -24,4 +24,19 @@ export interface IMediaListBox {
   deleter: (index: number) => void;
   updateMediaCategory: (array, index, value: string) => void;
   currentTitleVideo: string;
+  socketMessage: string | undefined;
+}
+
+export interface IUploadedListBox {
+  fileData: any;
+  index: number;
+  setMediaList: (arg: TMediaType[]) => void;
+  mediaList: TMediaType[];
+  uploadSuccess: boolean | null;
+  copyEmbebed: (videoId: number) => void;
+  selectCommonInfo: any;
+  updateMediaCategory: (array, index, value: string) => void;
+  mediaUploadedList: any | null;
+  deleterUploaded: (index: number) => void;
+  categories: OptionsType[];
 }
