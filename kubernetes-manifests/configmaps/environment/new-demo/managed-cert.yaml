@@ -4,4 +4,4 @@ metadata:
   name: managed-cert
 spec:
   domains:
-    -  new-demo.rair.tech
+    -  beta.rair.tech

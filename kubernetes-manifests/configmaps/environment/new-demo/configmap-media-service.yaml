@@ -22,4 +22,4 @@ data:
   VAULT_MEDIA_SERVICE_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9"
   VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: "f537dd61-bd49-e564-9b16-d718d8f37060"
   VAULT_MEDIA_SERVICE_use_x509_cert_auth: "false"
-  SERVICE_HOST: demo-ms.rair.tech
+  SERVICE_HOST: beta.rair.tech

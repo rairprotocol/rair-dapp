@@ -4,4 +4,4 @@ metadata:
   name: ingress-env
 data:
   IP_NAME: new-demo-ip
-  HOSTNAME: new-demo.rair.tech
+  HOSTNAME: beta.rair.tech
