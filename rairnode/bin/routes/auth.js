@@ -13,6 +13,7 @@ const {
 const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
 const { generateJWT, getMeetingInvite } = require('../integrations/zoom/zoomController');
 const log = require('../utils/logger')(module);
+const { File, MediaViewLog, User } = require('../models');
 
 // TODO: remove ARTIFACT
 
@@ -78,8 +79,8 @@ module.exports = (context) => {
         login: 'Login to RAIR. This sign request securely logs you in to RAIR. Check for a second sign request to play videos.',
       };
       if (req?.body?.mediaId) {
-        const fileData = await context.db.File.findById(req.body.mediaId);
-        const authorData = await context.db.User.findOne({
+        const fileData = await File.findById(req.body.mediaId);
+        const authorData = await User.findOne({
           publicAddress: fileData?.authorPublicAddress,
         });
         messages.decrypt = `Complete this signature request to unlock media: ${fileData?.title} by ${authorData?.nickName ? authorData?.nickName : fileData?.authorPublicAddress}`;
@@ -366,7 +367,22 @@ module.exports = (context) => {
             return next(new AppError("You don't have permission.", 403));
           }
 
+          const viewData = new MediaViewLog({
+            userAddress: ethAddress,
+            file: mediaId,
+            timeWatched: 0,
+          });
+          if (mediaId) {
+            viewData.save();
+            if (!media.views) {
+              media.views = 0;
+            }
+            media.views += 1;
+            media.save();
+          }
+
           const sess = req.session;
+          sess.viewLogId = viewData._id;
           sess.eth_addr = ethAddress;
           sess.media_id = mediaId;
           sess.zoom_id = zoomId;

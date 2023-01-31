@@ -1,7 +1,8 @@
+/* eslint-disable global-require */
 const express = require('express');
-const _ = require('lodash');
 const searchController = require('../search/search.Controller');
 const v2 = require('./v2.router');
+const analyticsRoutes = require('./analytics');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -15,6 +16,7 @@ module.exports = (context) => {
   router.use('/blockchains', require('./blockchains')(context));
   router.use('/categories', require('./categories')(context));
   router.use('/transaction', require('./transactions')(context));
+  router.use('/analytics', analyticsRoutes);
 
   // Searches ->
   router.use('/search', searchController);
