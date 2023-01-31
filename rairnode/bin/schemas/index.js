@@ -32,6 +32,7 @@ const getProductsByUserAddress = require('./getProductsByUserAddress');
 const getLocksByProduct = require('./getLocksByProduct');
 const getFilesByProduct = require('./getFilesByProduct');
 const importContract = require('./importContract');
+const { analyticsParams, analyticsQuery } = require('./analytics');
 
 module.exports = {
   admin,
@@ -56,6 +57,8 @@ module.exports = {
 
   // Media files
   updateMedia,
+  analyticsParams,
+  analyticsQuery,
 
   // V2
 

@@ -13,8 +13,7 @@ import EditMode from './EditMode/EditMode';
 import defaultPictures from './images/defaultUserPictures.png';
 import {
   SvgFactoryIcon,
-  SvgItemsIcon,
-  SvgMyFavorites,
+  SvgUpload,
   SvgUserIcon
 } from './SettingsIcons/SettingsIcons';
 
@@ -83,7 +82,7 @@ const PopUpSettings = ({
     navigate('/');
   };
 
-  const pushToMyItems = (tab: number) => {
+  const pushToUploadVideo = (tab: number) => {
     setTabIndexItems(tab);
     navigate('/demo');
   };
@@ -203,6 +202,14 @@ const PopUpSettings = ({
                       primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
                   }}>
                   <SvgUserIcon primaryColor={primaryColor} /> Profile settings
+                </li>
+                <li
+                  onClick={() => pushToUploadVideo(2)}
+                  style={{
+                    color:
+                      primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
+                  }}>
+                  <SvgUpload /> Upload video
                 </li>
                 {/* <li
                   onClick={() => pushToMyItems(2)}

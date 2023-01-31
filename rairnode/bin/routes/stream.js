@@ -1,5 +1,21 @@
 const express = require('express');
+const url = require('url');
 const { validation, streamVerification } = require('../middleware');
+const { MediaViewLog } = require('../models');
+
+const updateVideoAnalytics = async (req, res, next) => {
+  const { viewLogId } = req.session;
+  const viewData = await MediaViewLog.findById(viewLogId);
+  const requestedFile = url.parse(req.url).pathname;
+  if (requestedFile.includes('.ts')) {
+    const currentChunk = requestedFile.split('p')[1]?.split('.ts')[0];
+    if (currentChunk && currentChunk > viewData.decryptedFiles) {
+      viewData.decryptedFiles = currentChunk;
+      viewData.save();
+    }
+  }
+  next();
+};
 
 module.exports = (context) => {
   const router = express.Router();
@@ -39,6 +55,7 @@ module.exports = (context) => {
     '/:mediaId',
     streamVerification,
     validation('stream', 'params'),
+    updateVideoAnalytics,
     context.hls.middleware,
   );
 
