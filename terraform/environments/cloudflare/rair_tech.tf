@@ -162,9 +162,9 @@ resource "cloudflare_record" "rair_tech__demo-ms_rair_tech" {
   type    = local.record_type.A
 }
 
-resource "cloudflare_record" "rair_tech__new-demo_rair_tech" {
+resource "cloudflare_record" "rair_tech__beta_rair_tech" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "new-demo"
+  name    = "beta"
   value   = "34.110.154.63"
   type    = local.record_type.A
 }

@@ -15,7 +15,6 @@ import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { reactSwal } from '../../utils/reactSwal';
 import setDocumentTitle from '../../utils/setTitle';
-import NewVideo from '../MockUpPage/NftList/NftData/NftVideoplayer/NewVideo';
 
 const VideoPlayer = () => {
   const params = useParams<VideoPlayerParams>();
@@ -74,13 +73,13 @@ const VideoPlayer = () => {
     }
 
     try {
-      const streamAddress = await axios.post<TOnlySuccessResponse>(
-        '/api/auth/validate/',
-        {
-          MetaMessage: parsedResponse.message.challenge,
-          MetaSignature: signature,
-          mediaId: videoId
-        }
+      const streamAddress = await axios.get<TOnlySuccessResponse>(
+        '/api/auth/get_token/' +
+          parsedResponse.message.challenge +
+          '/' +
+          signature +
+          '/' +
+          videoId
       );
       if (streamAddress.data.success) {
         await setMediaAddress('/stream/' + videoId + '/' + mainManifest);
@@ -123,12 +122,7 @@ const VideoPlayer = () => {
       <div
         className="col-12 row mx-0 h1 iframe-video-player"
         style={{ minHeight: '100vh' }}>
-        <NewVideo
-          videoData={mediaAddress}
-          selectVideo={''}
-          videoIdName={videoName}
-        />
-        {/* <video
+        <video
           id={'vjs-' + videoName}
           className="video-js vjs-16-9"
           controls
@@ -139,8 +133,8 @@ const VideoPlayer = () => {
           <source
             src={mediaAddress !== null ? mediaAddress : ''}
             type="application/x-mpegURL"
-          /> */}
-        {/* </video> */}
+          />
+        </video>
       </div>
     </>
   );

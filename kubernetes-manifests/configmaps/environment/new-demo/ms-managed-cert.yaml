@@ -4,4 +4,4 @@ metadata:
   name: ms-managed-cert
 spec:
   domains:
-    -  demo-ms.rair.tech
+    -  beta.rair.tech

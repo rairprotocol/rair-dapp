@@ -11,7 +11,7 @@ metadata:
 spec:
   rules:
 #Add the host for DNS rules
-  - host: new-demo.rair.tech
+  - host: beta.rair.tech
     http:
       paths:
       - path: /*
