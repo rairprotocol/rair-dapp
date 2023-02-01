@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import GitInfo from 'react-git-info/macro';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -25,6 +26,7 @@ import {
 } from './FooterItems/FooterItems';
 
 const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
+  const gitInfo = GitInfo();
   const [emailChimp, setEmailChimp] = useState<string>('');
 
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
@@ -107,6 +109,13 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
             <li>
               <TalkSalesComponent
                 text={'Inquiries'}
+                classes={'inquiries-sales'}
+              />
+            </li>
+            <br />
+            <li>
+              <TalkSalesComponent
+                text={`Build #${gitInfo.commit.hash}`}
                 classes={'inquiries-sales'}
               />
             </li>
