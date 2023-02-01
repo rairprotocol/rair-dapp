@@ -45,21 +45,29 @@
 .hidden-block-wrapper {
   display: flex;
   justify-content: space-around;
-  padding: 30px 230px;
+  padding: 30px 230px 50px;
 }
 .hidden-table-col-one {
-  color: red;
+  color: rgb(211, 47, 47);
 }
 .hidden-table-col-two {
-  color: green;
+  color: rgb(46, 125, 50);
 }
 .hidden-table-title {
   color: lemonchiffon;
 }
 .hidden-table-button {
-  background-color: green;
-  border-radius: 16px;
+  background-color: rgb(46, 125, 50);
+  border-radius: 12px;
+  padding: 5px 10px;
+  color: #fff;
+  border: 1px solid #fff;
 }
+
+.hidden-table-button:hover {
+  background: rgb(27, 94, 32);
+}
+
 .hidden-input-wrapper {
   display: flex;
   flex-direction: column;
@@ -73,6 +81,30 @@
   justify-content: space-evenly;
 }
 .hidden-options-button {
-  background-color: red;
-  border-radius: 16px;
+  background-color: rgb(211, 47, 47);
+  border-radius: 12px;
+  padding: 5px 10px;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+.hidden-options-button:hover {
+  background: rgb(168, 50, 50);
+}
+
+.hidden-block-wrapper .add_contact {
+  padding: 5px 10px;
+  border-radius: 12px;
+  background: var(--stimorol);
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+.hidden-block-wrapper .add_contact:hover {
+  background: var(--stimorol-hover);
+}
+
+.hidden-block-wrapper .add_contact:focus,
+.hidden-block-wrapper .add_contact:active {
+  background: var(--stimorol-click);
 }

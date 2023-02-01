@@ -427,7 +427,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
         <button
           type="button"
           disabled={
-            uploading ||
             storage === 'null' ||
             title === '' ||
             description === '' ||
