@@ -127,8 +127,11 @@ const VideoPlayer = () => {
           className="video-js vjs-16-9"
           controls
           preload="auto"
-          // autoPlay
-          //poster={ video && ('/thumbnails/' + video.thumbnail + '.png') }
+          onClick={() => {
+            if (mediaAddress === '') {
+              requestChallenge();
+            }
+          }}
           data-setup="{}">
           <source
             src={mediaAddress !== null ? mediaAddress : ''}

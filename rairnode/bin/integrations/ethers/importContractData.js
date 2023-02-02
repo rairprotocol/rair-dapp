@@ -172,7 +172,7 @@ module.exports = {
       if (insertToken(nft, contract._id, dbModels)) {
         numberOfTokensAdded += 1;
       }
-      if (limit !== '0' && numberOfTokensAdded >= limit) {
+      if (limit.toString() !== '0' && numberOfTokensAdded >= limit) {
         break;
       }
     }

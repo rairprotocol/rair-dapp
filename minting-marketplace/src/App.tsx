@@ -181,7 +181,7 @@ function App() {
         setCarousel(carousel_match.matches)
       );
   }, [carousel_match.matches]);
-
+  /*
   useEffect(() => {
     let timeout;
     if (token) {
@@ -199,11 +199,11 @@ function App() {
       }
     };
   }, [token, connectUserData]);
-
+  */
   useEffect(() => {
     if (localStorage.token && isTokenValid(localStorage.token)) {
       if (window.ethereum) {
-        connectUserData();
+        //connectUserData();
         dispatch(getTokenStart());
         dispatch(getTokenComplete(token));
       } else {

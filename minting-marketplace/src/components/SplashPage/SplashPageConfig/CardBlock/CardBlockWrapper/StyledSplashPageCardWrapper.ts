@@ -13,5 +13,5 @@ export const StyledSplashPageCardWrapper = styled.div<TStyledSplashPageCardWrapp
   @media (max-width: 930px) {
     flex-direction: column-reverse;
     border-radius: 16px;
-  } ;
+  }
 `;
