@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
-import videojs from 'video.js';
 
 import { VideoPlayerParams } from './video.types';
 
@@ -15,6 +14,7 @@ import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { reactSwal } from '../../utils/reactSwal';
 import setDocumentTitle from '../../utils/setTitle';
+import NewVideo from '../MockUpPage/NftList/NftData/NftVideoplayer/NewVideo';
 
 const VideoPlayer = () => {
   const params = useParams<VideoPlayerParams>();
@@ -26,9 +26,7 @@ const VideoPlayer = () => {
     return state.contractStore;
   });
   const [videoName] = useState(videoId);
-  const [mediaAddress, setMediaAddress] = useState<string | null>(
-    String(videoId)
-  );
+  const [mediaAddress, setMediaAddress] = useState<string | null>('');
 
   const requestChallenge = useCallback(async () => {
     let signature;
@@ -73,17 +71,17 @@ const VideoPlayer = () => {
     }
 
     try {
-      const streamAddress = await axios.get<TOnlySuccessResponse>(
-        '/api/auth/get_token/' +
-          parsedResponse.message.challenge +
-          '/' +
-          signature +
-          '/' +
-          videoId
+      const streamAddress = await axios.post<TOnlySuccessResponse>(
+        '/api/auth/validate/',
+        {
+          MetaMessage: parsedResponse.message.challenge,
+          MetaSignature: signature,
+          mediaId: videoId
+        }
       );
       if (streamAddress.data.success) {
-        await setMediaAddress('/stream/' + videoId + '/' + mainManifest);
-        videojs('vjs-' + videoName);
+        setMediaAddress('/stream/' + videoId + '/' + mainManifest);
+        //videojs('vjs-' + videoName);
       }
     } catch (err) {
       const error = err as AxiosError;
@@ -92,13 +90,7 @@ const VideoPlayer = () => {
         title: 'NFT required to view this content'
       });
     }
-  }, [
-    mainManifest,
-    videoId,
-    videoName,
-    programmaticProvider,
-    currentUserAddress
-  ]);
+  }, [mainManifest, videoId, programmaticProvider, currentUserAddress]);
 
   useEffect(() => {
     requestChallenge();
@@ -118,28 +110,22 @@ const VideoPlayer = () => {
   }, [videoName]);
 
   return (
-    <>
-      <div
-        className="col-12 row mx-0 h1 iframe-video-player"
-        style={{ minHeight: '100vh' }}>
-        <video
-          id={'vjs-' + videoName}
-          className="video-js vjs-16-9"
-          controls
-          preload="auto"
-          onClick={() => {
-            if (mediaAddress === '') {
-              requestChallenge();
-            }
-          }}
-          data-setup="{}">
-          <source
-            src={mediaAddress !== null ? mediaAddress : ''}
-            type="application/x-mpegURL"
-          />
-        </video>
-      </div>
-    </>
+    <div
+      className="col-12 row mx-0 h1 iframe-video-player"
+      onClick={() => {
+        if (mediaAddress === '') {
+          requestChallenge();
+        }
+      }}
+      style={{ minHeight: '100vh' }}>
+      {mediaAddress !== '' && (
+        <NewVideo
+          videoData={mediaAddress}
+          selectVideo={''}
+          videoIdName={videoName}
+        />
+      )}
+    </div>
   );
 };
 

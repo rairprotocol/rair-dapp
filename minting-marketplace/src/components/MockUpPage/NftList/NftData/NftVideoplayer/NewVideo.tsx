@@ -1,21 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import videojs from 'video.js';
 import contribQualityLevels from 'videojs-contrib-quality-levels';
 import qualitySelector from 'videojs-hls-quality-selector';
+videojs.registerPlugin('hlsQualitySelector', qualitySelector);
+videojs.registerPlugin('qualityLevels', contribQualityLevels);
 
 export default function NewVideo({ videoData, selectVideo, videoIdName }) {
   const videoRef = useRef(null);
   const playerRef = useRef<any>(null);
   const poster = selectVideo && selectVideo.staticThumbnail;
-  videojs.registerPlugin('hlsQualitySelector', qualitySelector);
-  videojs.registerPlugin('qualityLevels', contribQualityLevels);
 
   useEffect(() => {
     if (videoRef.current) {
       const video = videoRef.current;
 
       playerRef.current = videojs(video, {
-        autoplay: true,
         controls: true,
         preload: 'auto',
         fluid: true,
@@ -92,6 +91,10 @@ export default function NewVideo({ videoData, selectVideo, videoIdName }) {
       playerRef.current.on('pause', () => {
         playerRef.current.bigPlayButton.show();
       });
+
+      playerRef.current.on('ready', () => {
+        playerRef.current.bigPlayButton.show();
+      });
     }
 
     return () => {
@@ -105,9 +108,8 @@ export default function NewVideo({ videoData, selectVideo, videoIdName }) {
     <video
       id={'vjs-' + videoIdName}
       ref={videoRef}
-      autoPlay
-      className="video video-js"
-      playsInline>
+      autoPlay={true}
+      className="video video-js">
       <source src={videoData} type="application/x-mpegURL" />
     </video>
   );
