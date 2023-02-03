@@ -43,6 +43,18 @@ Product.statics = {
     const skip = (page - 1) * limit;
     return this.aggregate([
       { $match: productSearchQuery },
+      // Filter hidden contracts
+      {
+          $lookup: {
+              from: 'Contract',
+              localField: 'contract',
+              foreignField: '_id',
+              as: 'contractData',
+          },
+      },
+      { $unwind: { path: '$contractData' } },
+      { $match: { 'contractData.blockView': false } },
+
       {
         $lookup: {
           from: 'OfferPool',
@@ -76,7 +88,6 @@ Product.statics = {
         },
       },
 
-      // eslint-disable-next-line no-dupe-keys
       {
         $lookup: {
           from: 'Offer',
@@ -103,7 +114,6 @@ Product.statics = {
           as: 'offers',
         },
       },
-
       {
         $match: {
           $and: [

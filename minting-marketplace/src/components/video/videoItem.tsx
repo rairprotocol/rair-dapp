@@ -168,7 +168,12 @@ const VideoItem: React.FC<IVideoItem> = ({
   }, [mediaList, item, setContractData]);
 
   const getInfoUser = useCallback(async () => {
-    if (mediaList && item && contractData) {
+    if (
+      mediaList &&
+      item &&
+      contractData &&
+      mediaList[item].authorPublicAddress
+    ) {
       const response = await axios.get<TUserResponse>(
         `/api/users/${mediaList[item].authorPublicAddress}`
         // `/api/users/${data.data.result.contract.user}`
