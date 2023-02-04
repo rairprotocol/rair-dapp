@@ -91,26 +91,6 @@ pipeline {
             }
           }
         }
-    stage('Build and push rairnode new-infra') {
-          when {
-            not { branch 'dev'}
-          }
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
-                    --context ./rairnode/ \
-                    --verbosity debug \
-                    --cleanup \
-                    --destination rairtechinc/rairservernode-new-infra:latest \
-                    --destination rairtechinc/rairservernode-new-infra:${GIT_COMMIT}
-                '''
-              }
-            }
-          }
-        }
     stage('Build and push event-listener') {
           when {
             not { branch 'dev'}
@@ -132,27 +112,6 @@ pipeline {
             }
           }
         }
-    stage('Build and push event-listener new infra') {
-          when {
-            not { branch 'dev'}
-          }
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
-                    --context ./blockchain-networks-service/ \
-                    --verbosity debug \
-                    --cleanup \
-                    --destination rairtechinc/blockchain-event-listener-new-infra:latest \
-                    --destination rairtechinc/blockchain-event-listener-new-infra:${GIT_COMMIT}
-                '''
-              }
-
-            }
-          }
-        }
     stage('Build and push media-service') {
           when {
             not { branch 'dev'}
@@ -166,25 +125,6 @@ pipeline {
                     --context ./media-service/ \
                     --verbosity debug \
                     --destination rairtechinc/media-service:${GIT_COMMIT}
-                '''
-              }
-
-            }
-          }
-        }
-    stage('Build and push media-service new infra') {
-          when {
-            not { branch 'dev'}
-          }
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
-                    --context ./media-service/ \
-                    --verbosity debug \
-                    --destination rairtechinc/media-service-new-infra:${GIT_COMMIT}
                 '''
               }
 

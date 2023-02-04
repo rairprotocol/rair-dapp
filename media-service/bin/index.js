@@ -27,7 +27,10 @@ async function main() {
   const app = express();
   /* CORS */
   const origin = `https://${serviceHost}`;
-  app.use(cors({ origin }));
+  const allowedHeaders = ['abcd'];
+  const credentials = true;
+  const methods = ['GET', 'POST'];
+  app.use(cors(origin, /* allowedHeaders, credentials, methods */));
 
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
@@ -37,9 +40,17 @@ async function main() {
   app.use(errorHandler);
 
   const server = app.listen(port, () => {
-    log.info(`Media service listening at http://localhost:${port}`);
+    log.info(`Media service listening at http://media-service:${port}`);
   });
-
+  app.get('/', (req, res) => {
+    res.send('OK');
+  });
+  app.get('/health-check', (req, res) => {
+    res.send('Health check passed');
+  });
+  app.get('/bad-health', (req, res) => {
+    res.send('Health check did not pass');
+  });
   const io = Socket(server);
   const sockets = {};
 

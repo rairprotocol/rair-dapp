@@ -1,0 +1,13 @@
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: ssl-redirect
+spec:
+  redirectToHttps:
+    enabled: true
+
+
+# add below to ingress
+# metadata:
+#   annotations:
+#     networking.gke.io/v1beta1.FrontendConfig: ssl-redirect
