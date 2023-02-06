@@ -60,7 +60,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   useEffect(() => {
     const sessionId = Math.random().toString(36).substr(2, 9);
     setThisSessionId(sessionId);
-    const so = io(`http://localhost:5002`, { transports: ['websocket'] });
+    const so = io();
     so.emit('init', sessionId);
     so.on('uploadProgress', (data) => {
       const { last, message } = data;
@@ -177,7 +177,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     const lastString = message.split(' pin');
     const lastString2 = message.split(' upload');
     if (lastString2[1] === 'ing to Google Cloud') {
-      setSocketMessage('uploaing to Google Cloud');
+      setSocketMessage('uploading to Cloud');
     }
     const specSymb = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
     const newStr = str.split('').filter((item) => {

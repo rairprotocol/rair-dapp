@@ -65,8 +65,8 @@ const MediaListBox: React.FC<IMediaListBox> = ({
               {(uploading && currentTitleVideo === item.title) ||
               (uploadSuccess === false && currentTitleVideo === item.title) ? (
                 <>
-                  {socketMessage === 'uploaing to Google Cloud'
-                    ? 'uploaing to Google Cloud'
+                  {socketMessage === 'uploading to Cloud'
+                    ? 'uploading to Cloud'
                     : '... Loading'}
                 </>
               ) : (
