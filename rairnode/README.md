@@ -66,6 +66,7 @@ Provide ability to make some specific actions on the platform
 # API
 
 * [x] /api
+    * [x] /analytics/:mediaId - GET - Return analytics data for a media file, [see details here](readme/current/v1/analytics/get_analytics.md)
     * [x] /transaction/:network/:hash - POST - Process the transaction hash given, [see details here](readme/current/v1/transaction/get_transaction.md)
     * [x] /blockchains - GET - get blockchains list, [see details here](readme/current/v1/blockchains/get_blockchains.md)
     * [x] /categories - GET - get categories list, [see details here](readme/current/v1/categories/get_categories.md)
