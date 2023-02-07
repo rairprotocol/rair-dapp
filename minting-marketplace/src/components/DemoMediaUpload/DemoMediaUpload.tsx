@@ -3,11 +3,13 @@ import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import io from 'socket.io-client';
+import Swal from 'sweetalert2';
 
 import WorkflowContext from '../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 import videoIcon from '../../images/videoIcon.svg';
 import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
@@ -25,6 +27,8 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
+  const { width } = useWindowDimensions();
 
   const selectCommonInfo = {
     customClass: 'form-control rounded-rair',
@@ -258,6 +262,21 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     setMediaList(array);
     rerenderFC();
   };
+
+  useEffect(() => {
+    if (width <= 1000) {
+      Swal.fire({
+        imageWidth: 70,
+        imageHeight: 'auto',
+        imageAlt: 'Custom image',
+        imageUrl:
+          'https://new-dev.rair.tech/static/media/RAIR-Tech-Logo-POWERED-BY-BLACK-2021.abf50c70.webp',
+        title: 'Oops...',
+        text: 'Our Beta Upload is currently not optimized for mobile, please use a desktop browser for the best experience'
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="demo-media-wrapper">

@@ -36,4 +36,19 @@
   .media-item-title {
     width: 12rem;
   }
+
+  .media-item-title p {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .media-item-title input,
+  .media-item-title {
+    width: 10rem;
+  }
+
+  .media-item-title p {
+    font-size: 14px;
+  }
 }
