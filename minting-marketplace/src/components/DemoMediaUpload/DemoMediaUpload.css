@@ -81,12 +81,34 @@
 @media screen and (max-width: 1360px) {
   .medialist-box .mediaitem-block .btn-stimorol.btn.rounded-rair.white,
   .medialist-box .mediaitem-block .border-stimorol.rounded-rair.col-12 {
-    width: 10rem;
+    width: 12rem;
+  }
+
+  .col-12.btn-stimorol.btn.rounded-rair.white {
+    font-size: 15px;
   }
 }
 
 @media screen and (max-width: 1230px) {
   .medialist-box {
     padding-right: 2rem;
+  }
+}
+
+@media screen and (max-width: 1130px) {
+  .medialist-box .mediaitem-block .border-stimorol.rounded-rair.col-12 {
+    width: 10rem;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .medialist-box .mediaitem-block .btn-stimorol.btn.rounded-rair.white,
+  .medialist-box .mediaitem-block .border-stimorol.rounded-rair.col-12 {
+    width: 10rem;
+  }
+
+  .medialist-box .mediaitem-block video,
+  .medialist-box .mediaitem-block img {
+    width: 180px !important;
   }
 }

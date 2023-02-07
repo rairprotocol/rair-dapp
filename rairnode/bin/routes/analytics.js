@@ -1,17 +1,30 @@
 const express = require('express');
-const { JWTVerification, validation } = require('../middleware');
-const { MediaViewLog } = require('../models');
+const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
+const { MediaViewLog, File } = require('../models');
+const AppError = require('../utils/errors/AppError');
 
 const router = express.Router();
 
 router.get(
     '/:mediaId',
     JWTVerification,
+    isSuperAdmin,
     validation('analyticsParams', 'params'),
     validation('analyticsQuery', 'query'),
     async (req, res, next) => {
         try {
             const { mediaId } = req.params;
+            const mediaData = await File.findById(mediaId);
+            if (!mediaData) {
+                return next(new AppError('Invalid media Id', 404));
+            }
+            if (
+                !req.user.superAdmin &&
+                req.user.publicAddress !== mediaData.authorPublicAddress
+            ) {
+                return next(new AppError('Invalid user address', 403));
+            }
+
             const { fromDate, toDate, userAddress, onlyCount } = req.query;
             let { itemsPerPage, pageNum } = req.query;
             if (!pageNum || pageNum === '') {
@@ -48,13 +61,13 @@ router.get(
                     .limit(pageSize);
             }
 
-            res.json({
+            return res.json({
                 success: true,
                 results,
                 totalCount,
             });
         } catch (e) {
-            next(e);
+            return next(e);
         }
     },
 );
