@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { style } from '@mui/system';
 import Swal from 'sweetalert2';
 
@@ -65,6 +66,8 @@ const MainPage: React.FC<IMainPage> = ({
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -156,6 +159,7 @@ const MainPage: React.FC<IMainPage> = ({
         </div>
         <PurchaseTokenButton
           {...{
+            handleClick: () => navigate('/demo'),
             customWrapperClassName: '',
             altButtonFormat: true,
             customButtonClassName: styles.button,

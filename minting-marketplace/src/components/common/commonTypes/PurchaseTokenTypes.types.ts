@@ -31,6 +31,7 @@ export interface IPurchaseTokenButtonProps {
   customSuccessAction?: (nextToken: number) => any;
   blockchainOnly?: boolean;
   databaseOnly?: boolean;
+  handleClick?: () => void;
 }
 
 export interface IRangeDataType {
