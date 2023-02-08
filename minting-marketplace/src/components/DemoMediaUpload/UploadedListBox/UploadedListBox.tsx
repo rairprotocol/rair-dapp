@@ -5,12 +5,15 @@ import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { rFetch } from '../../../utils/rFetch';
 import InputSelect from '../../common/InputSelect';
 import NftVideoplayer from '../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import { ModalContentCloseBtn } from '../../MockUpPage/utils/button/ShowMoreItems';
 import { playImagesColored } from '../../SplashPage/images/greyMan/grayMan';
 import MediaItemChange from '../MediaItemChange/MediaItemChange';
 import { IUploadedListBox } from '../types/DemoMediaUpload.types';
+
+import AnalyticsPopUp from './AnalyticsPopUp/AnalyticsPopUp';
 
 const UploadedListBox: React.FC<IUploadedListBox> = ({
   fileData,
@@ -22,8 +25,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   selectCommonInfo,
   updateMediaCategory,
   mediaUploadedList,
-  deleterUploaded,
-  categories
+  categories,
+  getMediaList
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -31,6 +34,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
 
   const [openVideoplayer, setOpenVideoplayer] = useState<boolean>(false);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [watchCounter, setWatchCounter] = useState<number | null>(null);
+  const [loadDeleting, setLoadDeleting] = useState(false);
 
   const customStyles = {
     overlay: {
@@ -54,6 +59,44 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
       border: 'none',
       borderRadius: '16px',
       height: 'auto'
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getCounterVideo = async () => {
+    try {
+      const req = await rFetch(
+        `/api/analytics/${fileData._id}?onlyCount=true`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      setWatchCounter(req.totalCount);
+    } catch (e) {
+      console.info(e);
+    }
+  };
+
+  const deleterUploaded = async (index: number) => {
+    setLoadDeleting(true);
+
+    try {
+      const req = await rFetch(`/api/media/remove/${index}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (req.success) {
+        setLoadDeleting(false);
+        getMediaList();
+      }
+    } catch (e) {
+      console.info(e);
     }
   };
 
@@ -87,6 +130,10 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
     closeModal();
   }, [closeModal]);
 
+  useEffect(() => {
+    getCounterVideo();
+  }, [getCounterVideo]);
+
   return (
     <div
       className="medialist-box"
@@ -103,7 +150,6 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           className="w-100"
           src={fileData.animatedThumbnail}
         />
-        {/* <p className="col-12">{fileData.title}</p> */}
         <MediaItemChange
           setMediaList={setMediaList}
           item={fileData}
@@ -113,13 +159,6 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           textFlag={true}
         />
         <button
-          // disabled={
-          //   uploadSuccess === false ||
-          //   uploading ||
-          //   fileData.category === 'null' ||
-          //   fileData.description === 'test' ||
-          //   fileData.offer === 'null'
-          // }
           onClick={() => copyEmbebed(fileData._id)}
           className="col-12 btn-stimorol btn rounded-rair white">
           <>
@@ -140,9 +179,13 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
         </div>
         <button
           onClick={() => removeVideoAlert()}
-          className="btn btn-danger rounded-rairo">
+          disabled={loadDeleting}
+          className={`btn btn-danger rounded-rairo ${
+            primaryColor === 'rhyno' ? 'rhyno' : ''
+          }`}>
           <i className="fas fa-trash" />
         </button>
+        <AnalyticsPopUp videoId={fileData._id} watchCounter={watchCounter} />
       </div>
       <>
         <Modal

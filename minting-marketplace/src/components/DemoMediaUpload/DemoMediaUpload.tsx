@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import io from 'socket.io-client';
 import Swal from 'sweetalert2';
 
@@ -230,20 +229,6 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     setMediaList(aux);
   };
 
-  const deleterUploaded = async (index: number) => {
-    try {
-      await rFetch(`/api/media/remove/${index}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      getMediaList();
-    } catch (e) {
-      console.info(e);
-    }
-  };
-
   const deleter = async (index: number) => {
     const aux = [...mediaList];
     aux.splice(index, 1);
@@ -337,8 +322,8 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
               selectCommonInfo={selectCommonInfo}
               updateMediaCategory={updateMediaCategory}
               mediaUploadedList={mediaUploadedList}
-              deleterUploaded={deleterUploaded}
               categories={categories}
+              getMediaList={getMediaList}
             />
           );
         })}

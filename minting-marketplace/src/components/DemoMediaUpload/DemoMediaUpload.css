@@ -22,6 +22,32 @@
 .medialist-box {
   padding-right: 5rem;
   overflow: hidden;
+  position: relative;
+}
+
+.medialist-box .btn-video-views {
+  background: var(--stimorol);
+  padding: 3px 0;
+  border-bottom-right-radius: 12px;
+  /* border-top-right-radius: 12px; */
+  /* border-top-left-radius: 12px; */
+  border: none;
+  color: #fff;
+  width: 100px;
+  position: absolute;
+  left: 200px;
+  top: 0;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+.bg-analytics {
+  background: linear-gradient(to right, #725bdb, #e882d5) !important;
+}
+
+.mediaitem-block .btn-video-views:hover {
+  background: var(--stimorol-hover);
 }
 
 .medialist-box .mediaitem-block {
@@ -48,7 +74,8 @@
 .medialist-box
   .mediaitem-block
   .btn-stimorol.btn.rounded-rair.white
-  .MuiLinearProgress-root.MuiLinearProgress-colorPrimary.MuiLinearProgress-determinate.css-eglki6-MuiLinearProgress-root {
+  .MuiBox-root.css-1bhivts
+  span {
   background-color: #385682;
   color: #fff;
   height: 8px;
@@ -58,7 +85,9 @@
 .medialist-box
   .mediaitem-block
   .btn-stimorol.btn.rounded-rair.white
-  .MuiLinearProgress-bar.MuiLinearProgress-barColorPrimary.MuiLinearProgress-bar1Determinate.css-5xe99f-MuiLinearProgress-bar1 {
+  .MuiBox-root.css-1bhivts
+  span
+  > span {
   background-color: #a36bd9;
 }
 
