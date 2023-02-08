@@ -37,6 +37,6 @@ export interface IUploadedListBox {
   selectCommonInfo: any;
   updateMediaCategory: (array, index, value: string) => void;
   mediaUploadedList: any | null;
-  deleterUploaded: (index: number) => void;
   categories: OptionsType[];
+  getMediaList: () => void;
 }
