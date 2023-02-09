@@ -38,17 +38,17 @@ const InquiriesPage = () => {
           <InquireField>
             <InquireLabel primaryColor={primaryColor}>First name</InquireLabel>{' '}
             <InquireInput
-              name="Name_First"
+              name="Name_Last"
               required
-              placeholder="Type in your name"
+              placeholder="Type in your First name"
             />
           </InquireField>
           <InquireField>
             <InquireLabel primaryColor={primaryColor}>Last name</InquireLabel>{' '}
             <InquireInput
-              name="Name_Last"
+              name="Name_First"
               required
-              placeholder="Type in your name"
+              placeholder="Type in your Last name"
             />
           </InquireField>
           <InquireField>

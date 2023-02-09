@@ -348,7 +348,7 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   customWrapperClassName,
   img,
   buttonLabel = 'Mint!',
-
+  handleClick,
   contractAddress,
   requiredBlockchain,
   offerIndex,
@@ -395,7 +395,9 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
 
   if (altButtonFormat) {
     return (
-      <button className={customButtonClassName} onClick={fireAgreementModal}>
+      <button
+        className={customButtonClassName}
+        onClick={handleClick ? handleClick : fireAgreementModal}>
         <img className={customButtonIconClassName} src={img} />
         <div style={{ color: textColor }} className={customButtonTextClassName}>
           {' '}
@@ -406,7 +408,9 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   } else {
     return (
       <div className={customWrapperClassName}>
-        <button className={customButtonClassName} onClick={fireAgreementModal}>
+        <button
+          className={customButtonClassName}
+          onClick={handleClick ? handleClick : fireAgreementModal}>
           {img && (
             <img alt="metamask-logo" className="metamask-logo" src={img} />
           )}{' '}
