@@ -25,6 +25,10 @@
   position: relative;
 }
 
+.pop-up-uploading-message h2 {
+  font-size: 22px;
+}
+
 .medialist-box .btn-video-views {
   background: var(--stimorol);
   padding: 3px 0;

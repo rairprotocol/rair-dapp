@@ -138,6 +138,17 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   }, [currentUserAddress]);
 
   const uploadVideoDemo = async (item) => {
+    Swal.fire({
+      position: 'top-end',
+      icon: 'info',
+      title:
+        'Don’t click away! You can navigate away from the page once your video is done uploading',
+      showConfirmButton: false,
+      customClass: {
+        popup: `pop-up-uploading-message`
+      },
+      timer: 5000
+    });
     setCurrentTitleVideo(item.title);
     setUploadSuccess(false);
     const formData = new FormData();
