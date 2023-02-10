@@ -1,0 +1,3719 @@
+openapi: 3.0.0
+info:
+  title: RAIR API
+  description: API for interfacing with RAIR server nodes.
+  version: 3.0.0
+servers:
+  - url: api.rair.tech/
+paths:
+  /api/auth/admin/{MetaMessage}/{MetaSignature}:
+    get:
+      summary: Verify user admin
+      tags:
+        - Authentication
+      description: Verify with a Metamask challenge if the user holds the current Administrator token
+      parameters:
+      - name: MetaMessage
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: MetaSignature
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: BAD REQUEST - Incorrect credentials.
+        "401":
+          description: UNAUTHORIZED - User does not hold the current admin token/ Could not verify account
+        "404":
+          description: NOT FOUND - User not found.
+        "500":
+          description: INTERNAL SERVER ERROR
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500'
+  /api/auth/authentication:
+    get:
+      summary: Verify Metamask Challenge
+      tags:
+        - Authentication
+      description: Verification of user Metamask challenge, check admin rights and generating of JWT token
+      parameters:
+      - name: metaMessage
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: metaSignature
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK - Returns if verification passed successfully
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "404":
+          description: NOT FOUND - User not found.
+          content:
+            text/html:
+              schema:
+                type: string
+                example: User with publicAddress 123 is not found in database
+        "402":
+          description: UNAUTHORIZED - Decrypted public address not equal to user address.
+          content:
+            text/html:
+              schema:
+                type: string
+                example: Signature verification failed
+  /api/auth/get_challenge/{MetaAddress}:
+    get:
+      summary: Request challenge
+      tags:
+        - Authentication
+      description: Request an auth challenge for the given ethereum address. The challenge could be signed and then sent to /auth/:message/:signature to get a JWT
+      parameters:
+      - name: MetaAddress
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK - Returns a challenge for the client to sign with the ethereum private key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "500":
+          description: INTERNAL SERVER ERROR
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_1'
+  /api/auth/get_token/{MetaMessage}/{MetaSignature}/{mediaId}:
+    get:
+      summary: Get token
+      tags:
+        - Authentication
+      description: Respond to a challenge to receive a JWT
+      parameters:
+      - name: MetaMessage
+        in: path
+        description: The previously issued challenge
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: MetaSignature
+        in: path
+        description: The user's signature for the provided message
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: mediaId
+        in: path
+        description: The Id of media that an access token is being requested for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK - If the signer meets the requirments (signature valid, holds required token) returns a JWT which grants stream access.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        "400":
+          description: BAD REQUEST - Ethereum account not found.
+        "500":
+          description: INTERNAL SERVER ERROR
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_2'
+  /api/blockchains:
+    get:
+      summary: Get blockchains
+      tags:
+        - Blockchains
+      description: List all blockchains supported on platform
+      responses:
+        "200":
+          description: OK - Returns a list of blockchains
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+  /api/categories:
+    get:
+      summary: Get categories
+      description: Get list of all categories
+      tags:
+        - Categories
+      responses:
+        "200":
+          description: OK - Returns a list of categories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+  /api/{contractId}/{productIndex}:
+    get:
+      summary: Get full product
+      tags:
+        - General
+      description: Get full data about particular product and get list of tokens for it
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: productIndex
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+  /api/contracts:
+    get:
+      summary: Get contracts
+      description: Find all contracts for specified user
+      tags:
+        - Contracts
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found contracts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+        "500":
+          description: INTERNAL SERVER ERROR - token expired / token not valid / token not provided / user not found
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_3'
+  /api/contracts/{contractAddress}:
+    delete:
+      summary: Remove contract
+      tags:
+        - Contracts
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: contractAddress
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK - Returns if removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+        "500":
+          description: INTERNAL SERVER ERROR - Token expired / Token not valid / Token not provided / User not found
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_4'
+  /api/contracts/full:
+    get:
+      summary: Get full contracts
+      description: Find all contracts with all products and offers on the platform
+      tags:
+        - Contracts
+      parameters:
+      - name: pageNum
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: number
+      - name: itemsPerPage
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: number
+      - name: blockchain
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+      - name: category
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Returns found full contracts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_9'
+  /api/contracts/import/network/{networkId}/{contractAddress}:
+    get:
+      summary: Get token
+      description: Respond to a challenge to receive a JWT
+      tags:
+        - Contracts
+      parameters:
+      - name: networkId
+        in: path
+        description: The blockchain where the external contract is located
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: contractAddress
+        in: path
+        description: The address of the external contract
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: If the user has admin access, NFTs will get imported in pages of 500 (This is a limit by Moralis)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_10'
+        "500":
+          description: INTERNAL SERVER ERROR - If an error happens in the middle of the import / None of the tokens have metadata, making their insertion useless
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_5'
+  /api/contracts/network/{networkId}/{contractAddress}:
+    get:
+      summary: Get Specific contract
+      description: Find specific contract with all data by contract address
+      tags:
+        - Contracts
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: networkId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: contractAddress
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found contract
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_11'
+        "500":
+          description: INTERNAL SERVER ERROR - Token expired / token invalid / token not provided / user not found
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_6'
+  /api/contracts/network/{networkId}/{contractAddress}/product:
+    get:
+      summary: Get products
+      description: Get all products for specific contract
+      tags:
+        - Contracts
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: networkId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: contractAddress
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_12'
+        "500":
+          description: INTERNAL SERVER ERROR - Token expired / token invalid / token not provided / user not found
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_6'
+  /api/contracts/network/{networkId}/{contractAddress}/products/offers:
+    get:
+      summary: Get products with all offers
+      description: Find all products with all offers for each of them for particular user
+      tags:
+        - Contracts
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: networkId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: contractAddress
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: 'OK - '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+        "500":
+          description: INTERNAL SERVER ERROR - Token expired / token invalid / token not provided / user not found
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_6'
+  /api/contracts/singleContract/{contractId}:
+    get:
+      summary: Get by ID
+      description: Get single contract by ID
+      tags:
+        - Contracts
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found contract
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_14'
+  /api/<entities>/:
+    get:
+      summary: Get full contract
+      tags:
+        - General
+      description: Find all <entities>
+      parameters:
+      - name: fields
+        in: query
+        description: adds projection to the query. Provide list of fileds to limit response to it.
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+      - name: sort
+        in: query
+        description: adds sorting parameter. use like 'price' for asc or '-price' for desc
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+      - name: limit
+        in: query
+        description: number of fields to return, by default is 36, capped at 100
+        required: false
+        content:
+          json:
+            schema:
+              type: number
+      - name: page
+        in: query
+        description: pagination of results used in conjuction with limit. By default shows 1st page, otherr rule 0=1, {<=0} = 1 (do not support 3rd prom the end with -3)
+        required: false
+        content:
+          json:
+            schema:
+              type: number
+      responses:
+        "200":
+          description: OK - Returns found entity according to it's schema. The dafault projection is full data, this can be limited on model level or in request, depending on security needs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_15'
+  /api/media/add/{mediaId}:
+    post:
+      summary: Register new media
+      description: Register a new piece of media and pin content to the provided IPFS store. Optionally provide a decrypt key.
+      tags:
+        - Media
+      parameters:
+      - name: mediaId
+        in: path
+        description: The IPFS content identifier (CID) for a RAIR compatible media folder. Must contain a rair.json manifest.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: A .key file containing the private key for this media stream in binary encoding
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/add_mediaId_body'
+      responses:
+        "200":
+          description: OK - Returns if added successfully
+        "500":
+          description: INTERNAL SERVER ERROR
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_7'
+  /api/media/remove/{mediaId}:
+    delete:
+      summary: Remove media
+      description: Register a new piece of media. Optinally provide a decrypt key
+      tags:
+        - Media
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: mediaId
+        in: path
+        description: The IPFS content identifier (CID) for a RAIR compatible media folder. Must contain a rair.json manifest.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK - Returns if media successfully found and deleted
+        "403":
+          description: FORBIDDEN - Media does not belong to specified user
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "500":
+          description: INTERNAL SERVER ERROR - Token expired / token invalid / token not provided / user not found
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_6'
+  /api/media/list:
+    get:
+      summary: List media
+      description: List all the registered media, their URIs and encrypted status
+      tags:
+        - Media
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: pageNum
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: itemsPerPage
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: blockchain
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: category
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns a list of the currently registered media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_16'
+        "500":
+          description: INTERNAL SERVER ERROR - Token expired / token invalid / token not provided / user not found
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_6'
+  /api/media/upload:
+    post:
+      summary: Upload media
+      description: Upload the media
+      tags:
+        - Media
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/media_upload_body'
+      responses:
+        "200":
+          description: OK - Returns if added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_17'
+        "403":
+          description: FORBIDDEN - If specified user not have admin rights
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+        "500":
+          description: INTERNAL SERVER ERROR - JWT error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_8'
+  /api/nft:
+    post:
+      summary: Create new tokens
+      description: Add new or update existing lazy minted tokens from a csv file
+      tags:
+        - NFT
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: csv
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+              example: csv file
+      - name: contract
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+              example: contract ID
+      - name: product
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: number
+              example: number
+      - name: updateMeta
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: boolean
+              example: boolean
+      responses:
+        "200":
+          description: OK - Returns if added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_18'
+        "403":
+          description: FORBIDDEN - If specified user does not have admin rights.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_2'
+        "500":
+          description: INTERNAL SERVER ERROR - JWT error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_8'
+  /api/nft/{contract}/{product}/locks:
+    get:
+      summary: Get locks for product
+      description: Find all locks for specific product
+      tags:
+        - NFT
+      parameters:
+      - name: contract
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: product
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found locks for specific product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_19'
+  /api/nft/csv/sample:
+    get:
+      summary: 'Get CSV sample file '
+      description: Get CSV sample file
+      tags:
+        - NFT
+      responses:
+        "200":
+          description: OK - Will return CSV sample file
+  /api/nft/network/{networkId}/{contract}/{product}:
+    get:
+      summary: Get files by product
+      description: Get all files which belong to a particular product.
+      tags:
+        - NFT
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: contract
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: product
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+      - name: fromToken
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: toToken
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: limit
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: OK - Returns the found token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_20'
+  /api/nft/network/{networkId}/{contract}/{product}/files:
+    get:
+      summary: Get files by product
+      description: Get all files which belong to a particular product.
+      tags:
+        - NFT
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+      - name: networkId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: contract
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: product
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+      responses:
+        "200":
+          description: OK - Returns a list of the files information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_21'
+        "400":
+          description: BAD REQUEST - If contract address invalid.
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+  /api/nft/network/{networkId}/{contract}/{product}/files/{token}:
+    get:
+      summary: Get files by NFT token
+      description: Get all files which belong to a particular NFT token
+      tags:
+        - NFT
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: contract
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: product
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: token
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK - Returns a list of the files information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_21'
+        "400":
+          description: BAD REQUEST - contract address invalid.
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+  /api/nft/network/{networkId}/{contract}/{product}/offers:
+    get:
+      summary: Get product with offers
+      description: Find product with all offers
+      tags:
+        - NFT
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: contract
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: product
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: number
+      responses:
+        "200":
+          description: OK - Returns found product with offers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+  /api/nft/network/{networkId}/{contract}/{product}/tokenNumbers:
+    get:
+      summary: Get Product token numbers
+      description: Get tokens for the product
+      tags:
+        - NFT
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: contract
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: product
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: number
+      responses:
+        "200":
+          description: OK - Returns if tokens found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_22'
+  /api/nft/network/{networkId}/{contract}/{product}/token/{token}/pinning:
+    get:
+      summary: Pin token metadata to IPFS cloud
+      description: Pin token metadata to IPFS cloud
+      tags:
+        - NFT
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: networkId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: contract
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: product
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: number
+      - name: token
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: number
+      responses:
+        "200":
+          description: OK - Returns if pinned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_23'
+  /api/nft/network/{networkId}/{contract}/{product}/token/{token}:
+    get:
+      summary: Get token by contract, product and internal ID
+      description: Get specific token by contract, product and internal ID
+      tags:
+        - NFT
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: networkId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: contract
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: product
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: number
+      - name: token
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: number
+      responses:
+        "200":
+          description: OK - Returns the found token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_20'
+  /api/nft/network/{networkId}/{contract}/token/{tokenInContract}:
+    get:
+      summary: Get token by contract and unique ID
+      description: Get specific token by contract address and unique toke ID in contract
+      tags:
+        - NFT
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: contract
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: tokenInContract
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: number
+      responses:
+        "200":
+          description: OK - Returns the found token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_20'
+  /api/nft/pinningMultiple:
+    post:
+      summary: Pin multiple tokens to the cloud
+      description: Upload multiple tokens metadata to the cloud, with unique tokens metadata or with common metadata for batch of tokens.
+      tags:
+        - NFT
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/nft_pinningMultiple_body'
+      responses:
+        "200":
+          description: OK - Returns if found some tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_24'
+  /api/search:
+    post:
+      summary: Search
+      description: searching by files, products, users
+      tags:
+        - Search
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/api_search_body'
+      responses:
+        "200":
+          description: OK - Returned result depends on `searchBy` requested
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_25'
+  /api/stream/out:
+    get:
+      summary: Terminate access for streaming session
+      description: Terminating access for video streaming session
+      tags:
+        - Streaming
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+  /api/tokenGroups/{tokenGroupAddress}:
+    put:
+      summary: Update TokenGroup
+      description: Updating fields of the specific TokenGroup
+      tags:
+        - Token Groups
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: tokenGroupAddress
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/tokenGroups_tokenGroupAddress_body'
+      responses:
+        "200":
+          description: OK - Returns if created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_26'
+        "500":
+          description: INTERNAL SERVER ERROR - token expired / token not valid / token not provided / user not found
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_3'
+  /api/users:
+    post:
+      summary: Create User
+      description: Adding new user to the database with required data
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api_users_body'
+      responses:
+        "200":
+          description: OK - Returns if created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_28'
+  /api/users/{publicAddress}:
+    get:
+      summary: Update User
+      description: Updating specific user
+      tags:
+        - Users
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: publicAddress
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: file
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+              example: image file
+      - name: nickName
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+      - name: avatar
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+      - name: email
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_29'
+  /api/v2/contracts/{contractId}:
+    get:
+      summary: Get user products
+      description: Get product by ID
+      tags:
+        - Contracts
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        default:
+          description: Returns found contract - No specific error handling
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_default'
+  /api/v2/<entity>s/{id}:
+    get:
+      summary: Get user products
+      description: Get <entity> by ID
+      tags:
+        - General
+      parameters:
+      - name: id
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+              example: Schema.ObjectId
+      responses:
+        default:
+          description: No specific error handling - Returns found <entity>
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_default_1'
+  /api/v2/favorites:
+    post:
+      summary: Store favorite token (V2)
+      description: Store a favorite token for current user in DB
+      tags:
+        - Favorites
+      parameters:
+        - name: x-rair-token
+          in: header
+          required: true
+          content:
+            json:
+              schema:
+                type: string
+      requestBody:
+        required: true
+        content:
+          json:
+            schema:
+              type: object
+              properties:
+                token:
+                  description: Token to favorite
+                  type: object
+                  properties:
+                    content:
+                      description: _id of MintedToken
+                      type: string
+
+      responses:
+        "201":
+          description: OK - Returns found products
+          content:
+            json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  data:
+                    doc:
+                      _id: 62f3fc41f208d6001c1bea22
+                      token: 62dff1566ac9d9001d16715e
+                      userAddress: publicAddress 
+  /api/v2/products/{productId}:
+    get:
+      summary: Get user products
+      description: Get product by ID
+      tags:
+        - Products
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        default:
+          description: No specific error handling - Returns found product
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_default_2'
+  /api/v2/products/user/{userAddress}:
+    get:
+      summary: Get user products
+      description: Get all products for specific contract
+      tags:
+        - Products
+      parameters:
+      - name: userAddress
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found products
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_default_2'
+        "500":
+          description: INTERNAL SERVER ERROR - Contracts not found.
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_9'
+  /api/v2/resales/byOffer/{offerId}:
+    get:
+      summary: Get resale tokens by product
+      description: Find all resale tokens for a provided offer
+      tags:
+        - Resales
+      parameters:
+      - name: offerId
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK - Returns found resale items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_30'
+  /api/v2/search/{textParam}:
+    get:
+      summary: Search
+      description: searching by tokens, products, users
+      tags:
+        - Search
+      parameters:
+      - name: textParam
+        in: path
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Returns found items (3 arrays capped at 4 results)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_31'
+  /api/v2/tokens:
+    post:
+      summary: Create batch tokens with common metadata
+      description: Create a batch of tokens with common metadata for contract or product
+      tags:
+        - NFT
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/v2_tokens_body'
+      responses:
+        "200":
+          description: OK - Returns if updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_32'
+  /api/v2/upload/file:
+    post:
+      summary: Add file after media upload
+      description: Add new file data to database after successful media upload
+      tags:
+        - Uploads
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/upload_file_body'
+      responses:
+        "200":
+          description: OK - Returns if file is added successfully.
+        "500":
+          description: INTERNAL SERVER ERROR
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_10'
+  /api/v2/upload/validate:
+    get:
+      summary: 'Validate data for video upload '
+      description: 'Validate data for video upload '
+      tags:
+        - Uploads
+      parameters:
+      - name: contract
+        in: query
+        description: contract ID
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: product
+        in: query
+        required: true
+        content:
+          json:
+            schema:
+              type: number
+      - name: offer
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: array
+              items:
+                type: number
+      - name: category
+        in: query
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      - name: demo
+        in: query
+        required: false
+        content:
+          json:
+            schema:
+              type: boolean
+      responses:
+        "200":
+          description: OK - Return founded categoy $ product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_33'
+  /api/v2/verify:
+    get:
+      summary: Verify User
+      description: Verify userAdmin
+      tags:
+        - Verification 
+      parameters:
+      - name: x-rair-token
+        in: header
+        required: true
+        content:
+          json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: 200 - Returns verify userAdmin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_34'
+  /api/stream/{token}/{mediaId}/{fileName}:
+    post:
+      summary: Register a new piece of media
+      description: Register a new piece of media. Optionally provide a decrypt key
+      tags:
+        - Streaming
+      parameters:
+      - name: token
+        in: path
+        description: The JSON web token granted by the auth API to access the media given by the mediaId. Must be current and generated by this node.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: mediaId
+        in: path
+        description: RAIR unique identifier for a piece of media.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: fileName
+        in: path
+        description: Sub-file of the media. For HLS can be a manifest/playlist file (.m3u8) or a media chunk (.ts) or the rair.json manifest
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns if added successfull
+components:
+  schemas:
+    inline_response_200:
+      oneOf:
+      - type: object
+        properties:
+          success:
+            type: boolean
+            example: true
+          message:
+            type: string
+            example: Admin token holder.
+      - type: object
+        properties:
+          success:
+            type: boolean
+            example: false
+          message:
+            type: string
+            example: You do not hold the current admin token.
+    inline_response_500:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Could not verify account / Invalid Ethereum address passed to eth-auth
+    inline_response_200_1:
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJldGhfYWRkciI6IjB4Njc5ZjQ3ZGI1ZDBlNWZmNzJkMzIxNmE1NGVkMWZiZTAzNDY0YTU3OSIsImlhdCI6MTYyMjExNDQ4MiwiZXhwIjoxNjIyMjAwODgyfQ.B43GmgXyBShHTa1qLK5Ozo_7UcHzZp4HlfFISzhp24I
+    inline_response_200_2:
+      type: object
+      properties:
+        success:
+          type: boolean
+        response:
+          type: object
+          properties:
+            types:
+              type: object
+              properties:
+                EIP712Domain:
+                  type: array
+                  items:
+                    properties:
+                      name:
+                        type: string
+                        example: name
+                      type:
+                        type: string
+                Challenge:
+                  type: array
+                  items:
+                    properties:
+                      name:
+                        type: string
+                        example: challenge
+                      type:
+                        type: string
+            domain:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: RAIR Inc.
+            primaryType:
+              type: string
+              example: Challenge
+            message:
+              type: object
+              properties:
+                challenge:
+                  type: string
+                  example: 0efb69a5d972acdffecd0d24dc7ffe73cfb46fc7e0cf24a0af01c05538669122
+    inline_response_500_1:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+        message:
+          type: string
+          example: Invalid Ethereum address passed to eth-auth
+    inline_response_200_3:
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+          example: ceyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJldGhfYWdRkciI6IjB4Njc5ZjQ3ZGI1ZDBlNWZmNzJkMzxNmE1NGVkMWZiZTAzNDY0YTU3OSIsIm1lZGlhX2lkIjoiUW1kS2RBWk5WSG4xcGlCR1VFWFREUjJDU1rYzNyRXQzQWdGMzk5NEJzRXZ0cCIsImlhdCI6MTYxNzg3OTM4OCwiZXhwIjoxNjE3OTY1Nzg4fQ.9V9sGPcQCavJYGUP7Gm5WhgSln-4Xz4MwIV5ocXNKDy
+    inline_response_500_2:
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: boolean
+        message:
+          type: string
+          example: Account does not hold required token [nftIdentifier] / Could not verify account / Could not create JWT / Invalid Ethereum address passed to eth-auth
+    inline_response_200_4:
+      type: object
+      properties:
+        success:
+          type: boolean
+        blockchains:
+          type: array
+          example:
+          - _id: 61b0d2775f0a55001c272658
+            name: Binance Testnet
+            hash: 0x61
+          - _id: 61b0d2775f0a55001c272659
+            name: Goerli Testnet
+            hash: 0x5
+          - _id: 61b0d2775f0a55001c27265a
+            name: Matic Mainnet
+            hash: 0x89
+          - _id: 61b0d2775f0a55001c27265b
+            name: Matic Mumbai Testnet
+            hash: 0x13881
+          items:
+            required:
+            - _id
+            - hash
+            - name
+            type: object
+            properties:
+              _id:
+                type: string
+              name:
+                type: string
+              hash:
+                type: string
+    inline_response_200_5:
+      properties:
+        success:
+          type: boolean
+        categories:
+          type: array
+          example:
+          - _id: 61b21ab159492e001cfc35ac
+            name: Music
+          - _id: 61b21ab159492e001cfc35ad
+            name: Art
+          - _id: 61b21ab159492e001cfc35ae
+            name: Conference
+          - _id: 61b21ab159492e001cfc35af
+            name: Science
+          items:
+            required:
+            - _id
+            - name
+    inline_response_200_6:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: object
+          properties:
+            contract:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  example: 6149eeea440c69001dc2c50
+                user:
+                  type: string
+                  example: "591578127499254192914825937767678189585383597433"
+                title:
+                  type: string
+                  example: contract 2
+                contractAddress:
+                  type: string
+                  example: contractAddress
+                blockchain:
+                  type: string
+                  example: BNB
+                creationDate:
+                  type: string
+                  example: 2021-09-21T14:40:42.185Z
+                products:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 615cb87f12aed2001c49c740
+                    soldCopies:
+                      type: number
+                      example: 1
+                    sold:
+                      type: boolean
+                      example: false
+                    royalty:
+                      type: number
+                      example: 0
+                    cover:
+                      type: string
+                      example: none
+                    name:
+                      type: string
+                      example: Product 2.1
+                    collectionIndexInContract:
+                      type: number
+                      example: 0
+                    contract:
+                      type: string
+                      example: contract Address
+                    copies:
+                      type: number
+                      example: 300
+                    firstTokenIndex:
+                      type: number
+                      example: 0
+                    creationDate:
+                      type: string
+                      example: 2021-10-05T20:41:35.632Z
+                    offers:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          _id:
+                            type: string
+                            example: 614891fc656bf4001ef56e10
+                          soldCopies:
+                            type: number
+                            example: 5
+                          sold:
+                            type: boolean
+                            example: false
+                          range:
+                            type: array
+                            example:
+                            - 0
+                            - 10
+                            items:
+                              type: number
+                          offerName:
+                            type: string
+                            example: Offer 1.1.1
+                          offerIndex:
+                            type: number
+                            example: 0
+                          contract:
+                            type: string
+                            example: contractId
+                          product:
+                            type: number
+                            example: 0
+                          offerPool:
+                            type: number
+                            example: 11
+                          price:
+                            type: number
+                            example: 111
+                          creationDate:
+                            type: string
+                            example: 2021-09-20T13:51:56.246Z
+                          copies:
+                            type: number
+                            example: 11
+            tokens:
+              type: array
+              items:
+                type: object
+                properties:
+                  metadataURI:
+                    type: string
+                    example: none
+                  _id:
+                    type: string
+                    example: 61601da5624323001d7fc442
+                  token:
+                    type: number
+                    example: 0
+                  ownerAddress:
+                    type: string
+                    example: publicAddress
+                  offerPool:
+                    type: number
+                    example: 14
+                  offer:
+                    type: number
+                    example: 0
+                  contract:
+                    type: string
+                    example: contractAddress
+                  uniqueIndexInContract:
+                    type: number
+                    example: 0
+                  isMinted:
+                    type: boolean
+                  metadata:
+                    type: object
+                    properties:
+                      artist:
+                        type: string
+                        example: chrisissweet
+                      exrternal_url:
+                        type: string
+                        example: none
+                      attributes:
+                        type: array
+                        example:
+                        - trait_type: Crystal Color
+                          value: Pink
+                        - trait_type: Suit Color
+                          value: Black
+                        - trait_type: Background Color
+                          value: Original
+                        - trait_type: Crystal Color
+                          value: Pink
+                        - trait_type: Suit Color
+                          value: Black
+                        - trait_type: Background Color
+                          value: Original
+                        - trait_type: Speaker
+                          value: true
+                        - trait_type: Sponsor
+                          value: true
+                        - trait_type: Staff
+                          value: false
+                        - trait_type: Attendee
+                          value: true
+                        - trait_type: Original Owner
+                          value: Charles Hoskinson
+                        - trait_type: External URL rair.market/0/factory/product/URI
+                          value: url
+                        - trait_type: ""
+                          value: ""
+                        items:
+                          required:
+                          - trait_type
+                          - value
+                          properties:
+                            trait_type:
+                              type: string
+                            value:
+                              type: string
+                      name:
+                        type: string
+                        example: CoinAgenda Monaco 2021
+                      description:
+                        type: string
+                        example: description
+                      image:
+                        type: string
+                        example: coinagendamonaco
+                  creationDate:
+                    type: string
+                    example: 2021-10-08T10:29:57.553Z
+            totalCount:
+              type: number
+              example: 28
+    inline_response_200_7:
+      properties:
+        success:
+          type: boolean
+        contracts:
+          type: array
+          items:
+            properties:
+              _id:
+                type: string
+                example: 60d0819870a807001c75164d
+              title:
+                type: string
+                example: SOme title
+              contractAddress:
+                type: string
+                example: contractAddress
+              blockchain:
+                type: string
+                example: 0x61
+              diamond:
+                type: boolean
+                example: false
+    inline_response_500_3:
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+        message:
+          type: string
+          example: jwt expired / invalid signature / jwt malformed / jwt not provided / User with provided Token is not found in database
+    inline_response_200_8:
+      type: object
+      properties:
+        success:
+          type: boolean
+    inline_response_500_4:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+        message:
+          type: string
+          example: JWT expired / invalid signature / JWT malformed / JWT must be provided / User with provided Token is not found in database
+    inline_response_200_9:
+      type: object
+      properties:
+        success:
+          type: boolean
+        contracts:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                example: 6148912f656bf4001ef56e08
+              user:
+                type: string
+                example: address of user
+              title:
+                type: string
+                example: Contract 1
+              contractAddress:
+                type: string
+                example: contractId
+              blockchain:
+                type: string
+                example: 0x61
+              creationDate:
+                type: string
+                example: 2021-09-20T13:48:31.700Z
+              products:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: 61489163656bf4001ef56e0d
+                  soldCopies:
+                    type: number
+                    example: 5
+                  sold:
+                    type: boolean
+                    example: false
+                  royalty:
+                    type: number
+                    example: 0
+                  name:
+                    type: string
+                    example: Product 1.1
+                  collectionIndexInContract:
+                    type: number
+                    example: 0
+                  contract:
+                    type: string
+                    example: contractId
+                  copies:
+                    type: number
+                    example: 500
+                  firstTokenIndex:
+                    type: number
+                    example: 0
+                  creationDate:
+                    type: string
+                    example: 2021-09-20T13:49:23.781Z
+                  offers:
+                    type: array
+                    example:
+                    - _id: 614891fc656bf4001ef56e10
+                      soldCopies: 5
+                      sold: false
+                      range:
+                      - 0
+                      - 10
+                      offerName: Offer 1.1.1
+                      offerIndex: 0
+                      contract: contractId
+                      product: 0
+                      offerPool: 11
+                      price: 111
+                      creationDate: 2021-09-20T13:51:56.246Z
+                      copies: 11
+                    - _id: 614891fc656bf4001ef56e12
+                      soldCopies: 0
+                      sold: false
+                      range:
+                      - 11
+                      - 50
+                      offerName: Offer 1.1.2
+                      offerIndex: 1
+                      contract: contractId
+                      product: 0
+                      offerPool: 11
+                      price: 55
+                      creationDate: 2021-09-20T13:51:56.250Z
+                      copies: 40
+                    items:
+                      required:
+                      - _id
+                      - contract
+                      - copies
+                      - creationDate
+                      - offerIndex
+                      - offerName
+                      - offerPool
+                      - price
+                      - product
+                      - range
+                      - sold
+                      - soldCopies
+                      properties:
+                        _id:
+                          type: string
+                        soldCopies:
+                          type: number
+                        sold:
+                          type: boolean
+                        range:
+                          type: array
+                          items:
+                            type: number
+                        offerName:
+                          type: string
+                        offerIndex:
+                          type: number
+                        contract:
+                          type: string
+                        product:
+                          type: number
+                        offerPool:
+                          type: number
+                        price:
+                          type: number
+                        creationDate:
+                          type: string
+                        copies:
+                          type: number
+              offerPool:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: 618e82eb23dc5b001d58946e
+                  marketplaceCatalogueIndex:
+                    type: number
+                    example: 12
+                  contract:
+                    type: string
+                    example: contractId
+                  product:
+                    type: number
+                    example: 0
+                  rangeNumber:
+                    type: number
+                    example: 1
+                  minterAddress:
+                    type: string
+                    example: minterAddress
+                  creationDate:
+                    type: string
+                    example: 2021-11-12T15:06:19.756Z
+        totalNumber:
+          type: number
+          example: 12
+    inline_response_200_10:
+      properties:
+        success:
+          type: boolean
+        result:
+          type: object
+          properties:
+            contract:
+              type: object
+              example: '...contractSchema'
+            numberOfTokensAdded:
+              type: number
+              example: 500
+        message:
+          type: string
+          example: undefined
+    inline_response_500_5:
+      properties:
+        success:
+          type: boolean
+          example: false
+        result:
+          type: string
+          example: undefined
+        message:
+          type: string
+          example: There was a problem importing the tokens! / Of the XX tokens inserted, none of them had metadata!
+    inline_response_200_11:
+      type: object
+      properties:
+        success:
+          type: boolean
+        contract:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 60d0819870a807001c75164d
+            title:
+              type: string
+              example: test contract 1
+            contractAddress:
+              type: string
+              example: contractAddress
+            blockchain:
+              type: string
+              example: 0x61
+            creationDate:
+              type: string
+              example: 2021-06-21T12:10:00.623Z"
+    inline_response_500_6:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+        message:
+          type: string
+          example: jwt expired / invalid signature / jwt malformed / jwt must be provided / User with provided Token is not found in database
+    inline_response_200_12:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 610d14c03de2f5001dafc429
+        soldCopies:
+          type: number
+          example: 3
+        sold:
+          type: boolean
+          example: false
+        royalty:
+          type: number
+          example: 0
+        name:
+          type: string
+          example: The Dark Knight
+        collectionIndexInCOntract:
+          type: number
+          example: 1
+        contract:
+          type: string
+          example: contractAddress
+        copies:
+          type: number
+          example: 4
+        owner:
+          type: string
+          example: userAddress
+        creationDate:
+          type: string
+          example: 2021-08-06T10:53:52.441Z
+    inline_response_200_13:
+      type: object
+      properties:
+        success:
+          type: boolean
+        product:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 610d14c03de2f5001dafc429
+            soldCopies:
+              type: number
+              example: 3
+            sold:
+              type: boolean
+              example: false
+            royalty:
+              type: number
+              example: 0
+            name:
+              type: string
+              example: The Dark Knight
+            collectionIndexInCOntract:
+              type: number
+              example: 1
+            contract:
+              type: string
+              example: contractAddress
+            copies:
+              type: number
+              example: 4
+            owner:
+              type: string
+              example: userAddress
+            creationDate:
+              type: string
+              example: 2021-08-06T10:53:52.441Z
+            offers:
+              type: array
+              example:
+              - _id: 610d15043de2f5001dafc42e
+                soldCopies: 2
+                sold: true
+                range:
+                - 0
+                - 1
+                offerIndex: 0
+                contract: contractAddress
+                product: 1
+                offerPool: 21
+                price: 111
+                offerName: Some Name 1
+                creationDate: 2021-08-06T10:55:00.621Z
+                copies: 2
+              - _id: 610d15983de2f5001dafc432
+                soldCopies: 1
+                sold: false
+                range:
+                - 2
+                - 3
+                offerIndex: 1
+                contract: contractAddress
+                product: 1
+                offerPool: 21
+                price: 55
+                offerName: Some Name 2
+                creationDate: 2021-08-06T10:57:28.313Z
+                copies: 2
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  soldCopies:
+                    type: number
+                  range:
+                    type: array
+                    items:
+                      type: number
+                  offerIndex:
+                    type: number
+                  contract:
+                    type: string
+                  product:
+                    type: number
+                  offerPool:
+                    type: number
+                  price:
+                    type: number
+                  offerName:
+                    type: string
+                  creationDate:
+                    type: string
+                  copies:
+                    type: number
+    inline_response_200_14:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        contract:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 60d0819870a807001c75164d
+            title:
+              type: string
+              example: some title
+            contractAddress:
+              type: string
+              example: contractAddress
+            blockchain:
+              type: string
+              example: 0x61
+    inline_response_200_15:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        results:
+          type: number
+          example: 36
+        data:
+          properties:
+            doc:
+              type: array
+              items:
+                properties:
+                  soldCopies:
+                    type: number
+                    example: 0
+                  sold:
+                    type: boolean
+                    example: false
+                  range:
+                    type: array
+                    example:
+                    - 0
+                    - 1
+                    items:
+                      type: number
+                  offerName:
+                    type: string
+                    example: OpSeTe5Col2Ran1
+                  diamond:
+                    type: boolean
+                    example: true
+                  _id:
+                    type: string
+                    example: 6267fcd9151f2128b43379cd
+                  contract:
+                    type: string
+                    example: 6267fc52151f2128b43373b0
+                  product:
+                    type: number
+                    example: 1
+                  copies:
+                    type: number
+                    example: 6
+                  price:
+                    type: number
+                    example: 500000
+                  diamondRangeIndex:
+                    type: number
+                    example: 1
+                  transactionHash:
+                    type: string
+                    example: "46169417297202891258410998290626742790176186493213721916528787551103684765772"
+                  creationDate:
+                    type: string
+                    example: 2022-04-26T14:08:25.454Z
+                  offerIndex:
+                    type: number
+                    example: 16
+    add_mediaId_body:
+      type: object
+      properties:
+        type:
+          type: string
+        format:
+          type: number
+    inline_response_500_7:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+        message:
+          type: string
+          example: Cannot retrieve rair.json manifest for [mediaId]. Check the CID is correct and is a folder containing a manifest. [Original error]
+    inline_response_403:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: You don't have permission to manage this file.
+    inline_response_200_16:
+      type: object
+      properties:
+        success:
+          type: boolean
+        totalNumber:
+          type: number
+          example: 4
+        list:
+          type: object
+          properties:
+            QmfUHHWHaT1jCuiMcJGZJG4pdo4A6ddoaZKPz6rbCDeNMA:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  example: QmfUHHWHaT1jCuiMcJGZJG4pdo4A6ddoaZKPz6rbCDeNMA
+                mainManifest:
+                  type: string
+                  example: stream.m3u8
+                author:
+                  type: string
+                  example: author NFT
+                authorPublicAddress:
+                  type: string
+                  example: author address
+                encryptionType:
+                  type: string
+                  example: aes-128-cbc
+                title:
+                  type: string
+                  example: M01
+                thumbnail:
+                  type: string
+                  example: 1624271911556-887258899
+                currentOwner:
+                  type: string
+                  example: author NFT
+                contractAddress:
+                  type: string
+                  example: temp value of contract address
+                description:
+                  type: string
+                  example: Desc 01
+                creationDate:
+                  type: string
+                  example: 2021-06-21T10:38:34.095Z
+                isOwner:
+                  type: boolean
+    apimediaupload_video_content:
+      type: object
+      properties:
+        type:
+          type: string
+          example: file
+    apimediaupload_video:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: true
+        content:
+          $ref: '#/components/schemas/apimediaupload_video_content'
+    apimediaupload_title_content:
+      type: object
+      properties:
+        type:
+          type: string
+    apimediaupload_title:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: true
+        content:
+          $ref: '#/components/schemas/apimediaupload_title_content'
+    apimediaupload_contract:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: true
+        content:
+          $ref: '#/components/schemas/apimediaupload_title_content'
+        description:
+          type: string
+          example: contract ID
+    apimediaupload_product_content:
+      type: object
+      properties:
+        type:
+          type: number
+    apimediaupload_product:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: true
+        content:
+          $ref: '#/components/schemas/apimediaupload_product_content'
+    apimediaupload_offer:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          type: array
+          items:
+            type: number
+    apimediaupload_demo_content:
+      type: object
+      properties:
+        type:
+          type: boolean
+    apimediaupload_demo:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          $ref: '#/components/schemas/apimediaupload_demo_content'
+    apimediaupload_storage_content:
+      type: object
+      properties:
+        type:
+          type: string
+        variants:
+          type: array
+          example:
+          - ipfs
+          - gcp
+          items:
+            type: string
+    apimediaupload_storage:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          $ref: '#/components/schemas/apimediaupload_storage_content'
+    media_upload_body:
+      type: object
+      properties:
+        video:
+          $ref: '#/components/schemas/apimediaupload_video'
+        title:
+          $ref: '#/components/schemas/apimediaupload_title'
+        description:
+          $ref: '#/components/schemas/apimediaupload_title'
+        contract:
+          $ref: '#/components/schemas/apimediaupload_contract'
+        product:
+          $ref: '#/components/schemas/apimediaupload_product'
+        offer:
+          $ref: '#/components/schemas/apimediaupload_offer'
+        category:
+          $ref: '#/components/schemas/apimediaupload_title'
+        demo:
+          $ref: '#/components/schemas/apimediaupload_demo'
+        storage:
+          $ref: '#/components/schemas/apimediaupload_storage'
+    inline_response_200_17:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: string
+          example: fileName
+    inline_response_403_1:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: string
+          example: You don't have permission to upload the files.
+    inline_response_500_8:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: JWT expired, invalid signature, JWT malformed, JWT must be provided, or User with provided Token is not found in database.
+    inline_response_200_18:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        result:
+          type: array
+          items:
+            properties:
+              metadataURI:
+                type: string
+              _id:
+                type: string
+              token:
+                type: number
+              ownerAddress:
+                type: string
+                example: 0xethereumaddress
+              offerPool:
+                type: number
+              offer:
+                type: number
+              contract:
+                type: string
+                example: contract_address
+              metadata:
+                type: array
+                items:
+                  properties:
+                    artist:
+                      type: string
+                      example: artist
+                    external_url:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    image:
+                      type: string
+                      example: image.png
+                    attributes:
+                      type: array
+                      items:
+                        properties:
+                          attribute1:
+                            type: string
+                          attribute2:
+                            type: string
+                          attribute3:
+                            type: string
+              creationDate:
+                type: string
+                example: 2021-09-07T10:53:37.170Z
+    inline_response_403_2:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: You don't have permission to upload the files.
+    inline_response_200_19:
+      type: object
+      properties:
+        success:
+          type: boolean
+        locks:
+          type: array
+          items:
+            type: object
+            properties:
+              range:
+                type: array
+                example:
+                - 120
+                - 129
+                items:
+                  type: number
+              _id:
+                type: string
+                example: 61966fb6bf7dc9001c9ce86a
+              lockIndex:
+                type: number
+                example: 0
+              contract:
+                type: string
+                example: contractAddress
+              product:
+                type: number
+                example: 3
+              lockedTokens:
+                type: number
+                example: 2
+              isLocked:
+                type: boolean
+    inline_response_200_20:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 61489247656bf4001ef56e24
+            metadataURI:
+              type: string
+              example: some URL
+            token:
+              type: number
+              example: 1
+            ownerAddress:
+              type: string
+              example: userAddress
+            offerPool:
+              type: number
+              example: 11
+            offer:
+              type: number
+              example: 0
+            contract:
+              type: string
+              example: contractAddress
+            uniqueIndexInContract:
+              type: number
+              example: 1
+            isMinted:
+              type: boolean
+            metadata:
+              type: object
+              properties:
+                artist:
+                  type: string
+                  example: chrissweet
+                external_url:
+                  type: string
+                  example: none
+                name:
+                  type: string
+                  example: CoinAgenda Monaco 2021
+                description:
+                  type: string
+                  example: Stream the conference Link
+                image:
+                  type: string
+                  example: coinagendamonaco1
+                attributes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      trait_type:
+                        type: string
+                        example: Crystal Color
+                      value:
+                        type: string
+                        example: Pink
+            creationDate:
+              type: string
+              example: 2021-09-20T13:53:11.567Z
+            authenticityLink:
+              type: string
+              example: link
+    inline_response_200_21:
+      type: object
+      properties:
+        success:
+          type: boolean
+        files:
+          type: array
+          items:
+            properties:
+              _id:
+                type: string
+                example: QmSPuRGsDB13kSyGKciYb59zzfRUqCkFRVE6VFm4hskSSL
+              offer:
+                type: number
+              key:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: Buffer
+                  data:
+                    type: number
+              uri:
+                type: string
+                example: http://rairipfs:8080/ipfs/QmfUHHWHaT1jCuiMcJGZJG4pdo4A6ddoaZKPz6rbCDeNMA
+              mainManifest:
+                type: string
+                example: stream.m3u8
+              author:
+                type: string
+                example: author NFT
+              authorPublicAddress:
+                type: string
+                example: authorPublicAddress
+              encryptionType:
+                type: string
+                example: aes-128-cbc
+              title:
+                type: string
+                example: M89
+              thumbnail:
+                type: string
+                example: 1628777087428-545316449
+              currentOwner:
+                type: string
+                example: owner NFT
+              contract:
+                type: string
+                example: contract address
+              product:
+                type: number
+                example: 3
+              description:
+                type: string
+                example: Desc 89
+              creationDate:
+                type: string
+                example: 2021-08-12T14:04:59.252Z
+    inline_response_400:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+        message:
+          type: string
+          example: Invalid Contract address
+    inline_response_400_1:
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+        message:
+          type: string
+          example: Invalid Contract address
+    inline_response_200_22:
+      type: object
+      properties:
+        success:
+          type: boolean
+        tokens:
+          type: array
+          example:
+          - 0
+          - 1
+          - '...'
+          - 999
+          items:
+            type: number
+    inline_response_200_23:
+      type: object
+      properties:
+        success:
+          type: boolean
+        metadataURI:
+          type: string
+          example: https://some.url
+    nft_pinningMultiple_body:
+      type: object
+      properties:
+        contractId:
+          type: number
+          example: 1
+        product:
+          type: number
+          example: 1
+    inline_response_200_24:
+      oneOf:
+      - type: object
+        properties:
+          success:
+            type: boolean
+        description: If each token have unique metadata
+      - type: object
+        properties:
+          success:
+            type: boolean
+          metadataURI:
+            type: string
+            example: link to metadata
+        description: If tokens have common metadata
+    apisearch_searchBy_content:
+      type: object
+      properties:
+        type:
+          type: string
+        variants:
+          type: array
+          example:
+          - users
+          - products
+          - files
+          items:
+            type: string
+    apisearch_searchBy:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          $ref: '#/components/schemas/apisearch_searchBy_content'
+    apisearch_blockchain:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          $ref: '#/components/schemas/apimediaupload_title_content'
+    api_search_body:
+      type: object
+      properties:
+        searchString:
+          $ref: '#/components/schemas/apimediaupload_title'
+        searchBy:
+          $ref: '#/components/schemas/apisearch_searchBy'
+        blockchain:
+          $ref: '#/components/schemas/apisearch_blockchain'
+        category:
+          $ref: '#/components/schemas/apisearch_blockchain'
+    inline_response_200_25:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: array
+          items:
+            type: string
+    apitokenGroupstokenGroupAddress_title:
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/apimediaupload_title_content'
+    tokenGroups_tokenGroupAddress_body:
+      type: object
+      properties:
+        title:
+          $ref: '#/components/schemas/apitokenGroupstokenGroupAddress_title'
+    inline_response_200_26:
+      type: object
+      properties:
+        success:
+          type: boolean
+        tokenGroup:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 60d0819870a807001c75164d
+            title:
+              type: string
+              example: test contract 1
+            tokenGroupAddress:
+              type: string
+              example: tokenGroupAddress
+            creationDate:
+              type: string
+              example: 2021-06-21T12:10:00.623Z
+    api_users_body:
+      type: object
+      properties:
+        publicAddress:
+          $ref: '#/components/schemas/apimediaupload_title'
+    inline_response_200_28:
+      type: object
+      properties:
+        success:
+          type: boolean
+        user:
+          type: object
+          properties:
+            email:
+              type: string
+            avatar:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            _id:
+              type: string
+              example: 61af976dc4444d001c98d851
+            publicAddress:
+              type: string
+              example: publicAddress
+            nonce:
+              type: string
+              example: some_string
+            creationDate:
+              type: string
+              example: 2021-12-07T17:18:37.231Z
+            nickName:
+              type: string
+              example: publicAddress_by_default
+    inline_response_200_29:
+      type: object
+      properties:
+        success:
+          type: boolean
+        user:
+          type: object
+          properties:
+            email:
+              type: string
+            avatar:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            _id:
+              type: string
+              example: 61af976dc4444d001c98d851
+            publicAddress:
+              type: string
+              example: publicAddress
+            nonce:
+              type: string
+              example: some_string
+            creationDate:
+              type: string
+              example: 2021-05-18T14:20:17.957Z
+            nickName:
+              type: string
+              example: '@test'
+    inline_response_default:
+      type: object
+      properties:
+        success:
+          type: boolean
+        contract:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 629f308eb550f7001d6ee2cf
+            title:
+              type: string
+              example: mike_test_001
+            blockchain:
+              type: string
+              example: 0x5
+            contractAddress:
+              type: string
+              example: "184552054943259873005678719113817389091049506159"
+            diamond:
+              type: boolean
+              example: false
+    inline_response_default_1:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            doc:
+              type: object
+              properties:
+                soldCopies:
+                  type: number
+                  example: 0
+                sold:
+                  type: boolean
+                  example: false
+                range:
+                  type: array
+                  example:
+                  - 0
+                  - 22221
+                  items:
+                    type: number
+                offerName:
+                  type: string
+                  example: OpSeTe5Col2Ran1
+                diamond:
+                  type: boolean
+                  example: true
+                _id:
+                  type: string
+                  example: 6267fcd9151f2128b43379cd
+                contract:
+                  type: string
+                  example: 6267fc52151f2128b43373b0
+                product:
+                  type: number
+                  example: 1
+                copies:
+                  type: number
+                  example: 6
+                price:
+                  type: number
+                  example: 500000
+                diamondRangeIndex:
+                  type: number
+                  example: 1
+                transactionHash:
+                  type: string
+                  example: "46169417297202891258410998290626742790176186493213721916528787551103684765772"
+                creationDate:
+                  type: string
+                  example: 2022-04-26T14:08:25.454Z
+                offerIndex:
+                  type: number
+                  example: 16
+    inline_response_default_2:
+      type: object
+      properties:
+        success:
+          type: boolean
+        product:
+          type: object
+          properties:
+            soldCopies:
+              type: number
+              example: 0
+            sold:
+              type: boolean
+              example: false
+            royalty:
+              type: number
+              example: 0
+            cover:
+              type: string
+              example: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
+            diamond:
+              type: boolean
+              example: false
+            _id:
+              type: string
+              example: 629f310cb550f7001d6ee2eb
+            name:
+              type: string
+              example: Mike_test_collection_01_001
+            collectionIndexInContract:
+              type: number
+              example: 0
+            contract:
+              type: string
+              example: 629f308eb550f7001d6ee2cf
+            copies:
+              type: number
+              example: 100
+            firstTokenIndex:
+              type: number
+              example: 0
+            transactionHash:
+              type: string
+              example: "94383454786790905601210801920333796599214747097737836198206704342445368798837"
+            creationDate:
+              type: string
+              example: 2022-06-07T11:05:48.406Z
+    inline_response_500_9:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+        message:
+          type: string
+          example: No contracts/products exist for the user 0x2c1b196A2Ef816D3Ff5C68F22722Ccv49ea058A42
+    inline_response_200_30:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          example:
+          - _id: 62c443a6506169001d9165c8
+            operator: testOperator
+            contract: 626bc93f3a67b03f7001c3cd
+            tokenId: 12
+            price: 101
+            status: Open
+            tradeid: 0
+            __v: 0
+          - _id: 62c443a9506169001d9165ca
+            operator: testOperator
+            contract: 626bc93f3a67b03f7001c3cd
+            tokenId: 42
+            price: 101
+            status: Open
+            tradeid: 0
+            __v: 0
+          items:
+            required:
+            - __v
+            - _id
+            - contract
+            - operator
+            - price
+            - status
+            - tokenId
+            - tradeId
+            type: object
+            properties:
+              _id:
+                type: string
+              operator:
+                type: string
+              contract:
+                type: string
+              tokenId:
+                type: number
+              price:
+                type: number
+              status:
+                type: string
+              tradeId:
+                type: number
+              __v:
+                type: number
+    inline_response_200_31:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: object
+                properties:
+                  avatar:
+                    type: string
+                  _id:
+                    type: string
+                    example: 627ba2c475a9ab001d9bd6af
+                  nickName:
+                    type: string
+                    example: "251799927976121093952929820256537711412076972610"
+            products:
+              required:
+              - _id
+              - collectionIndexInContract
+              - contract
+              - copies
+              - cover
+              - name
+              type: array
+              properties:
+                _id:
+                  type: string
+                name:
+                  type: string
+                collectionIndexInContract:
+                  type: string
+                contract:
+                  type: string
+                copies:
+                  type: number
+                cover:
+                  type: string
+              example:
+              - _id: 626bcc9c3a67b03f7001cf68
+                name: AdminNFT DIamond
+                collectionIndexInContract: 0
+                contract: 626bcb973a67b03f7001c915
+                copies: 5
+                cover: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
+              - _id: 626bc9b53a67b03f7001c638
+                name: Binance-Test2-Coll1
+                collectionIndexInContract: 0
+                contract: 626bc93f3a67b03f7001c3c7
+                copies: 3
+                cover: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
+              - _id: 626bcc943a67b03f7001cf5f
+                name: ASDASD
+                collectionIndexInContract: 13
+                contract: 626bcb973a67b03f7001c912
+                copies: 333
+                cover: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
+              - _id: 626bc9ad3a67b03f7001c628
+                name: Binance-Contract-Col1
+                collectionIndexInContract: 0
+                contract: 626bc93f3a67b03f7001c3c4
+                copies: 3
+                cover: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
+              items:
+                type: object
+            tokens:
+              required:
+              - _id
+              - animation_url
+              - artist
+              - contract
+              - description
+              - image
+              - metadata
+              - name
+              - uniqueIndexInContract
+              type: array
+              properties:
+                _id:
+                  type: string
+                metadata:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    artist:
+                      type: string
+                    image:
+                      type: string
+                    animation_url:
+                      type: string
+                uniqueIndexInContract:
+                  type: string
+                contract:
+                  type: string
+              example:
+              - _id: 6267fca1151f2128b43378f0
+                metadata:
+                  name: Testing-1
+                  description: Example description
+                  artist: none
+                  image: https://gateway.pinata.cloud/ipfs/QmeAJyczgMyZDGepSnMzkhcE98AVA1EFKB6U1n7dn53ui9
+                  animation_url: https://rair.mypinata.cloud/ipfs/QmPvFb65dk1o7Upd2sFKDBSBsZwLdTVD5i6nqd9jrBZdss
+                uniqueIndexInContract: 1
+                contract: 6267fc4f151f2128b4337383
+              - _id: 6267fca1151f2128b43378fd
+                metadata:
+                  name: Testing-0
+                  description: Example description
+                  artist: none
+                  image: https://gateway.pinata.cloud/ipfs/QmeAJyczgMyZDGepSnMzkhcE98AVA1EFKB6U1n7dn53ui9
+                  animation_url: https://rair.mypinata.cloud/ipfs/QmPvFb65dk1o7Upd2sFKDBSBsZwLdTVD5i6nqd9jrBZdss
+                uniqueIndexInContract: 0
+                contract: 6267fc4f151f2128b4337383
+              - _id: 6267fca1151f2128b433790a
+                metadata:
+                  name: Testing-0
+                  description: Example description
+                  artist: none
+                  image: https://rair.mypinata.cloud/ipfs/QmbUd8cVY8zygLrrG4qynXjzCZ6WoDwqsib6Knzyb7zAiA/cloneX01.png
+                  animation_url: https://rair.mypinata.cloud/ipfs/idfjs b65dk1o7Upd2sFKDBSBsZwLdTVD5i6nqd9jrdfgd
+                uniqueIndexInContract: 2
+                contract: 6267fc4f151f2128b4337383
+              - _id: 6267fca1151f2128b433792c
+                metadata:
+                  name: Testing-0
+                  description: Example description
+                  artist: none
+                  image: https://gateway.pinata.cloud/ipfs/QmeAJyczgMyZDGepSnMzkhcE98AVA1EFKB6U1n7dn53ui9
+                  animation_url: https://rair.mypinata.cloud/ipfs/QmPvFb65dk1o7Upd2sFKDBSBsZwLdTVD5i6nqd9jrBZdss
+                uniqueIndexInContract: 601
+                contract: 6267fc4f151f2128b4337383
+              items:
+                type: object
+    apiv2tokens_files_content:
+      type: object
+      properties:
+        type:
+          type: array
+          items:
+            type: string
+            example: file
+    apiv2tokens_files:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          $ref: '#/components/schemas/apiv2tokens_files_content'
+    apiv2tokens_commonMetadataFor:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: true
+        content:
+          $ref: '#/components/schemas/apimediaupload_title_content'
+        variants:
+          type: array
+          example:
+          - contract
+          - product
+          items:
+            type: string
+    apiv2tokens_artist:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          $ref: '#/components/schemas/apimediaupload_title_content'
+        description:
+          type: string
+          example: contractID
+    apiv2tokens_external_url_content:
+      type: object
+      properties:
+        type:
+          type: string
+          example: URI
+    apiv2tokens_external_url:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          $ref: '#/components/schemas/apiv2tokens_external_url_content'
+    apiv2tokens_image_content:
+      type: object
+      properties:
+        type:
+          type: string
+          example: full name of file
+    apiv2tokens_image:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          $ref: '#/components/schemas/apiv2tokens_image_content'
+    apiv2tokens_attributes_fields:
+      type: object
+      properties:
+        trait_type:
+          type: string
+        value:
+          type: string
+    apiv2tokens_attributes_content:
+      type: object
+      properties:
+        fields:
+          $ref: '#/components/schemas/apiv2tokens_attributes_fields'
+    apiv2tokens_attributes:
+      type: object
+      properties:
+        required:
+          type: boolean
+          example: false
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/apiv2tokens_attributes_content'
+    v2_tokens_body:
+      type: object
+      properties:
+        files:
+          $ref: '#/components/schemas/apiv2tokens_files'
+        contract:
+          $ref: '#/components/schemas/apimediaupload_title'
+        commonMetadataFor:
+          $ref: '#/components/schemas/apiv2tokens_commonMetadataFor'
+        product:
+          $ref: '#/components/schemas/apimediaupload_title'
+        name:
+          $ref: '#/components/schemas/apimediaupload_title'
+        description:
+          $ref: '#/components/schemas/apimediaupload_title'
+        artist:
+          $ref: '#/components/schemas/apiv2tokens_artist'
+        external_url:
+          $ref: '#/components/schemas/apiv2tokens_external_url'
+        image:
+          $ref: '#/components/schemas/apiv2tokens_image'
+        animation_url:
+          $ref: '#/components/schemas/apiv2tokens_image'
+        attributes:
+          $ref: '#/components/schemas/apiv2tokens_attributes'
+    inline_response_200_32:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+    apiv2uploadfile_meta:
+      type: object
+      description: Metadata to be stored in database
+      properties:
+        mainManifest:
+          type: string
+        author:
+          type: string
+        authorPublicAddress:
+          type: string
+        encryptionType:
+          type: string
+        title:
+          type: string
+        contract:
+          type: string
+        product:
+          type: number
+        offer:
+          type: number
+        category:
+          type: string
+        staticThumbnail:
+          type: string
+        animatedThumbnail:
+          type: string
+        type:
+          type: string
+        extension:
+          type: string
+        duration:
+          type: string
+        demo:
+          type: boolean
+        description:
+          type: string
+    upload_file_body:
+      type: object
+      properties:
+        cid:
+          type: string
+          description: Content Identifier - Used to locate an asset on IPFS
+          example: gQrotDfRLLnJ3rWiXvd3mVwJwFrJ4lWnZMp7L
+        meta:
+          $ref: '#/components/schemas/apiv2uploadfile_meta'
+    inline_response_500_10:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: failed to add data
+    inline_response_200_33:
+      type: object
+      properties:
+        foundContract:
+          type: string
+          example: 629f36b768a821001c4b37ea
+        foundCategory:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 62948796558076001e29bb5d
+            name:
+              type: string
+              example: art
+    inline_response_200_34:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user email
+        avatar:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        _id:
+          type: string
+          example: 6295e23d279c31001d009d18
+        publicAddress:
+          type: string
+          example: some public address
+        creationDate:
+          type: string
+          example: 2022-05-31T09:39:09.152Z
+        nickName:
+          type: string
+        adminRights:
+          type: string
