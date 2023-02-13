@@ -1,0 +1,2395 @@
+openapi: 3.0.0
+info:
+  title: RAIR API
+  version: 1.0.5
+  description: API for interfacing with RAIR server nodes.
+servers:
+  - url: api.rair.tech/
+tags:
+  - name: Admin
+  - name: Authentication
+  - name: Marketplace
+  - name: Media 
+  - name: Metadata
+  - name: User
+paths:
+
+#admin
+  /api/auth/admin/{MetaMessage}/{MetaSignature}:
+    get:
+      summary: Verify Admin
+      description: Respond to MetaMask challenge and verify that user holds an Admin token. <br><br> *<code>MetaMessage</code> and <code>MetaSignature</code> cannot be accessed outside of MetaAuth middleware and cannot be tested here*.
+      tags:
+        - Admin
+      parameters:
+      - $ref: '#/components/parameters/path_MetaMessage'
+      - $ref: '#/components/parameters/path_MetaSignature'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_adminTokenOK"
+        "400":
+          description: BAD REQUEST - Incorrect credentials.
+        "401":
+          description: UNAUTHORIZED - User does not hold the current admin token/ Could not verify account
+        "404":
+          description: NOT FOUND - User not found.
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/v2/verify:
+    get:
+      summary: Verify Admin For Upload🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Verifies a user has Admin rights to upload media.
+      tags:
+        - Admin 
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getUser"
+
+#authentication
+  /api/auth/get_challenge/{MetaAddress}:
+    get:
+      summary: Get Challenge
+      tags:
+        - Authentication
+      description: Returns a <code>MetaAuth</code> challenge for the given <code>MetaAddress</code>. 
+      parameters:
+        - $ref: '#/components/parameters/path_MetaAddress'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getChallenge"
+        "500":
+          $ref: "#/components/responses/500_generic" 
+  /api/auth/user_info:
+    get:
+      summary: Get User 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br>  Return a <code>User</code> object from the database.
+      tags:
+        - Authentication
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_authGetUser"
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/auth/authentication/{MetaMessage}/{MetaSignature}:
+    get:
+      summary: Get Auth Token
+      description: Confirm MetaAuth challenge and generate a JSON Web Token used for logging into RAIR. <br><br> *<code>MetaMessage</code> and <code>MetaSignature</code> cannot be accessed outside of MetaAuth middleware and cannot be tested here.*
+      tags:
+        - Authentication
+      parameters:
+      - $ref: '#/components/parameters/path_MetaMessage'
+      - $ref: '#/components/parameters/path_MetaSignature'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_authGetToken"
+        "404":
+          $ref: "#/components/responses/404_authGetToken"
+        "401":
+          $ref: "#/components/responses/401_authGetToken"
+  /api/auth/get_token/{MetaMessage}/{MetaSignature}/{mediaId}:
+    get:
+      summary: Validate Stream Request
+      description: Authenticate user by validating the MetaMask challenge request. Returns a T/F condition which handles streaming session validation. <br><br> *<code>MetaMessage</code> and <code>MetaSignature</code> cannot be accessed outside of MetaAuth middleware and cannot be tested here.*
+      tags:
+        - Authentication
+      parameters:
+      - $ref: '#/components/parameters/path_MetaMessage'
+      - $ref: '#/components/parameters/path_MetaSignature'
+      - $ref: '#/components/parameters/path_mediaId'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_authGetToken"
+        "400":
+          description: BAD REQUEST - No media/contract found.
+        "403":
+          description: FORBIDDEN - Verification Error
+        "404":
+          description: BAD REQUEST - User Not found.
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/auth/validate:
+    post:
+      summary: Validate Stream Request
+      description: Authenticate user by validating the MetaMask challenge request. Returns a T/F condition which handles streaming session validation. <br><br> *<code>MetaMessage</code> and <code>MetaSignature</code> cannot be accessed outside of MetaAuth middleware and cannot be tested here.*
+      tags:
+        - Authentication
+      requestBody:
+        $ref: "#/components/requestBodies/unlockStream"
+      responses:
+        "200":
+          $ref: "#/components/responses/200_authGetToken"
+        "400":
+          description: BAD REQUEST - No media/contract found.
+        "403":
+          description: FORBIDDEN - Verification Error
+        "404":
+          description: BAD REQUEST - User Not found.
+        "500":
+          $ref: "#/components/responses/500_generic"
+
+#marketplace
+  /api/blockchains:
+    get:
+      summary: Get Blockchains
+      description: Returns a list of all <code>blockchains</code> currently supported on the platform.
+      tags:
+        - Marketplace
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getBlockchains"
+  /api/categories:
+    get:
+      summary: Get Categories
+      description: Find and return a list of all <code>categories</code> currently in the database. <br><br> <code>Categories</code> defines a list of <code>_id</code> or <code>name</code> attributes which may be assigned to a piece of content.
+      tags:
+        - Marketplace
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getCategories"
+  /api/v2/contracts/{contractId}:
+    get:
+      summary: Get Contract
+      description: Find and return data about a specific <code>contract</code> by its database-associated <code>_id</code> 
+      tags:
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/path_contractId'
+      responses:
+        default:
+          $ref: "#/components/responses/default_getContract"
+    patch:
+      summary: Update Contract 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and update synchronization (<code>blockSync</code>) and/or visibility (<code>blockView</code>) of a specific <code>contract</code> by its database-associated <code>contractId</code>.
+      tags:
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/path_contractId'
+      requestBody:
+        $ref: "#/components/requestBodies/updateContractSync"
+      responses:
+        "200":
+          description: OK - Returns if updated successfully
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/response_properties_contracts"
+  /api/v2/contracts/full:
+    get:
+      summary: Get Full Contract
+      description: Find and return a <code>contract</code> as well as any associated <code>products</code> and <code>offers</code>.
+      tags:
+        - Marketplace
+      parameters:
+      - $ref: '#/components/parameters/query_pageNum'
+      - $ref: '#/components/parameters/query_itemsPerPage'
+      - $ref: '#/components/parameters/query_blockchainHash'
+      - $ref: '#/components/parameters/query_contractAddress'
+      - $ref: '#/components/parameters/query_contractId'
+      - $ref: '#/components/parameters/query_addLocks'
+      - $ref: '#/components/parameters/query_addOffers'
+      responses:
+        default:
+          $ref: '#/components/responses/default_contracts_full'
+  /api/v2/resales/customRoyalties: 
+      get:
+        summary: Get Custom Royalty Sets
+        description: Find and return all Contracts with <code>customRoyalties</code> enabled. 
+        tags:
+          - Marketplace
+        responses:
+          "200":
+            $ref: "#/components/responses/200_getCustomRoyaltySets"
+  /api/v2/offers/{_id}: 
+      get:
+        summary: Get Offer
+        description: Find and return a single <code>offer</code> by its <code>_id</code>. 
+        tags:
+          - Marketplace
+        parameters:
+          - $ref: '#/components/parameters/path__Id'
+        responses:
+          "200":
+            description: OK - Offer found. 
+  /api/v2/offers: 
+      get:
+        summary: Get Offers
+        description: Find and return all <code>offers</code> from the database. 
+        tags:
+          - Marketplace
+        responses:
+          "200":
+            $ref: "#/components/responses/200_getOffers"
+  /api/v2/offers/byAddressAndProduct:
+    get:
+      summary: Get Offers By Product Index And Address
+      description: Returns a list of <code>Offers</code> filtered by <code>Contract</code> and <code>Product</code> <br><br> *Example -  "/api/v2/offers/byAddressAndProduct/?product=0&contract=6267fc52151f2128b43373a1"*
+      tags:
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/query_collectionIndexInContract'
+          required: true
+        - $ref: '#/components/parameters/query_contractId'
+          required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getOffersByAddressAndProduct"
+  /api/v2/products: 
+      get:
+        summary: Get Products
+        description: Find and return all <code>Products</code> from the database. 
+        tags:
+          - Marketplace
+        responses:
+          "200":
+            description: OK - Products found. 
+  /api/v2/products/{productId}:
+    get:
+      summary: Get Product By ID
+      description: Find and return a <code>product</code> by its <code>productId</code>
+      tags: 
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/path_productId'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getProductsById"
+  /api/v2/locks:
+    get:
+      summary: Get Locked Tokens
+      description: Find and return locked tokens from within a specific <code>product</code>. <code>Product</code> is located by its <code>contractId</code> and <code>product</code> number. <br><br> *Locks prevent any token from being transferred to another address until a certain number of tokens inside the product have been minted.* 
+      tags:
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/query_contractId'
+          required: true
+        - $ref: '#/components/parameters/query_productIndex'
+          required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getLocks"
+  /api/v2/resales: 
+      get:
+        summary: Get Resale Tokens
+        description: Find and return all <code>resaleTokenOffers</code>. 
+        tags:
+          - Marketplace
+        responses:
+          "200":
+            $ref: "#/components/responses/200_getResaleTokenOffer"
+  /api/v2/resales/{_id}: 
+      get:
+        summary: Get Resale Token By ID
+        description: Find and return a <code>resaleTokenOffer</code> by its <code>_id</code>. 
+        tags:
+          - Marketplace
+        parameters:
+          - $ref: '#/components/parameters/path__Id'
+        responses:
+          "200":
+            description: OK - Resale Offers found. 
+  /api/v2/resales/byOffer/{offerId}:
+    get:
+      summary: Get Resale Token Offer By OfferId
+      description: Find and return all <code>resaleTokenOffers</code> for a provided <code>offerId</code>
+      tags:
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/path_offerId'
+      responses:
+        "200":
+          $ref: '#/components/responses/200_getResaleTokenOffer'
+  /api/v2/resales/byProduct/{productId}:
+    get:
+      summary: Get Resale Token Offer By ProductId
+      description: Find and return an <code>array</code> of <code>resaleTokenOffers</code> for a provided <code>productId</code>
+      tags:
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/path_productId'
+      responses:
+        "200":
+          $ref: '#/components/responses/200_getResaleTokenOffer'
+  /api/transaction/{network}/{hash}:
+    post:
+      summary: Get Transaction 🔒
+      description: Find and return a <code>Transaction</code> by its <code>Network</code> and transaction <code>Hash</code>.
+      tags:
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/path_network'
+        - $ref: '#/components/parameters/path_hash'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getTransaction"
+  /api/v2/tokens/tokenNumbers:
+    get:
+      summary: Get Token Numbers 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and return all <code>tokens</code> from a specified <code>product</code>. <br><br> Optionally provide a <code>networkId</code>, <code>contractAddress</code>, or <code>contract</code> ID.
+      tags:
+        - Marketplace
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/query_productId'
+          required: true
+        - $ref: '#/components/parameters/query_networkId'
+        - $ref: '#/components/parameters/query_contractAddress'
+        - $ref: '#/components/parameters/query_contractId'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getTokenNumbers"
+  /api/v2/search/{textParam}:
+    get:
+      summary: Search
+      description: Find and return top [4] results amongst each <code>tokens</code>, <code>products</code>, and <code>users</code> from a single <code>textParam</code>.
+      tags:
+        - Marketplace
+      parameters:
+      - $ref: '#/components/parameters/path_textParam'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_search"
+
+#media
+  /api/v2/upload/file:
+    post:
+      summary: Add File
+      description: Add metadata for a new <code>File</code> to the database after a successful upload to external storage.
+      tags:
+        - Media
+      requestBody:
+        $ref: '#/components/requestBodies/uploadFile'
+      responses:
+        "200":
+          description: OK - Returns if file is added successfully.
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/media/list:
+    get:
+      summary: Get All Media 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and return a list of all registered media from the database. <br><br> Optional query parameters available.
+      tags:
+        - Media
+      parameters:
+      - $ref: '#/components/parameters/header_x-rair-token'
+      - $ref: '#/components/parameters/query_pageNum'
+      - $ref: '#/components/parameters/query_itemsPerPage'
+      - $ref: '#/components/parameters/query_blockchain'
+      - $ref: '#/components/parameters/query_category'
+      - $ref: '#/components/parameters/query_userAddress'
+      - $ref: '#/components/parameters/query_contractAddress'
+      responses:
+        "200":
+          $ref: '#/components/responses/200_getAllMedia'
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/v2/files: 
+    get:
+      summary: Get Files By Product 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and return all files associated with a particular <code>product</code>.
+      tags: 
+        - Media
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/query_contractId'
+          required: true
+        - $ref: '#/components/parameters/query_productId'
+          required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/200_files'
+  /api/v2/files/{token}: 
+    get:
+      summary: Get Files By Token
+      description: Find and return files associated with a particular <code>token</code>
+      tags: 
+        - Media
+      parameters:
+        - $ref: '#/components/parameters/path_token'
+        - $ref: '#/components/parameters/query_contractId'
+          required: true
+        - $ref: '#/components/parameters/query_productId'
+          required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/200_files'
+        "400":
+          $ref: '#/components/responses/400_invalidContractAddress'           
+  /api/media/remove/{mediaId}:
+    delete:
+      summary: Remove media 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and remove file metadata from the database.
+      tags:
+        - Media
+      parameters:
+      - $ref: '#/components/parameters/header_x-rair-token'
+      - $ref: '#/components/parameters/path_mediaId'
+      responses:
+        "200":
+          description: OK - Returns if media successfully found and deleted
+        "403":
+          $ref: "#/components/responses/403_notOwnerOfMedia"
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/stream/out:
+    get:
+      summary: Terminate Stream
+      description: Terminate current video streaming session
+      tags:
+        - Media
+      responses:
+        "200":
+          $ref: "#/components/responses/200_terminateStreamingSession"
+  /api/media/update/{mediaId}: 
+    patch:
+      summary: Update Media 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Locate and update <code>File</code> metadata. <br><br> Normal users are able to update basic information such as <code>title</code>, <code>description</code>, and/or <code>category</code> <br><br> Admin users can update contract info such as <code>contract</code>, <code>product</code>, <code>offer</code>, and/or <code>demo flag</code>
+      tags:
+        - Media
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/path_mediaId'
+      requestBody:
+        $ref: '#/components/requestBodies/updateMedia'
+      responses:
+        "200":
+          description: OK - Media updated successfully.
+        "403":
+          $ref: "#/components/responses/403_notOwnerOfMedia"
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/v2/upload/validate:
+    get:
+      summary: Validate Media Upload 
+      description: Checks that the <code>contract</code>, <code>product</code>, and <code>category</code> associated with a video upload are valid (ie they exist in the database). <br><br> Optional requests can be made with <code>offer</code> or <code>demo</code>.
+      tags:
+        - Media
+      parameters:
+      - $ref: '#/components/parameters/query_contractId'
+        required: true
+      - $ref: '#/components/parameters/query_productId'
+        required: true
+      - $ref: '#/components/parameters/query_category'
+        required: true
+      - $ref: '#/components/parameters/query_offers'
+      - $ref: '#/components/parameters/query_demo'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_validateUpload"
+
+#metadata
+  /api/v2/tokens:
+    post:
+      summary: Create Common Tokens 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Create a batch of tokens with common metadata.
+      tags:
+        - Metadata
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      requestBody:
+        $ref: '#/components/requestBodies/tokens'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_updateToken"
+  /api/nft/csv/sample:
+    get:
+      summary: Get CSV Sample
+      description: Returns a sample CSV (Comma Separated Value) file which outlines the necessary formatting for parsing token metadata.
+      tags:
+        - Metadata
+      responses:
+        "200":
+          description: OK - Returns CSV sample file
+  /api/v2/tokens/{token}:
+    get:
+      summary: Get Token
+      description: Find and return a single <code>token</code>.
+      tags: 
+        - Metadata
+      parameters:
+        - $ref: '#/components/parameters/path_token'
+          required: true
+        - $ref: '#/components/parameters/query_productId'
+          required: true
+        - $ref: '#/components/parameters/query_networkId'
+          required: true
+        - $ref: '#/components/parameters/query_contractAddress'
+          required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getToken"
+    post:
+      summary: Pin Token
+      description: Fetch <code>token</code> metadata and pin it to IPFS cloud. <br><br> Returns a <code>metadataURI</code> which can be used afterward to retrieve the pinned token.
+      tags:
+        - Metadata
+      parameters:
+        - $ref: '#/components/parameters/path_token'
+        - $ref: '#/components/parameters/query_networkId'
+          required: true
+        - $ref: '#/components/parameters/query_contractAddress'
+          required: true
+        - $ref: '#/components/parameters/query_productId'
+          required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/200_pinTokenMetadata"
+    patch:
+      summary: Update Token Metadata 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Fetch <code>token</code> metadata by its <code>networkId</code>, <code>contractAddress</code>, AND <code>product</code> and update any fields included in <code>requestBody</code>.
+      tags: 
+        - Metadata
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/path_token'
+        - $ref: '#/components/parameters/query_networkId'
+        - $ref: '#/components/parameters/query_contractAddress'
+        - $ref: '#/components/parameters/query_productId'
+      requestBody:
+        $ref: "#/components/requestBodies/tokens"
+      responses:
+        "200":  
+          $ref: '#/components/responses/200_updateToken'
+  /api/v2/contracts/import: 
+    post:
+      summary: Import External Contract
+      description: Imports tokens from an external contract in groups of 100. <br><br> Contract is located by <code>networkId</code> AND <code>contractAddress</code>. <br><br> A <code>limit</code> must also be specified.
+      tags:
+        - Metadata
+      requestBody:
+        $ref: '#/components/requestBodies/importContracts'        
+      responses:
+        "200":
+          $ref: "#/components/responses/200_importExternalContract"
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/nft/pinningMultiple:
+    post:
+      summary: Pin Token Collection 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Upload multiple token's metadata to IPFS. <br><br> Returns a <code>metadataURI</code> which can be used afterward to retrieve the pinned token.
+      tags:
+        - Metadata
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      requestBody:
+        $ref: '#/components/requestBodies/NFTPinningMultiple'
+      responses:
+        "200":
+            $ref: "#/components/responses/200_pinTokenMetadata"
+  /api/v2/tokens/viaCSV:
+    post:
+      summary: Update Tokens Via CSV 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Update token metadata based on an uploaded <code>csv</code> 
+      tags:
+        - Metadata
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      requestBody:
+        $ref: '#/components/requestBodies/tokens'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_updateToken"
+
+#user
+  /api/v2/users:
+    post:
+      summary: Create User
+      description: Adds a new user to the database by their <code>publicAddress</code>.
+      tags: 
+        - User
+      requestBody:
+        $ref: '#/components/requestBodies/createUser'
+      responses:
+        "200":
+          description: OK - User created.
+  /api/v2/favorites:
+    get:
+      summary: Get Favorite Tokens 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and list favorite tokens for current user.
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getToken"
+    post:
+      summary: Add Favorite Token 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Appends <code>_id</code> of a single <code>token</code> to current user's favorites list.
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      requestBody:
+        $ref: '#/components/requestBodies/favorites'
+      responses:
+        "201":
+          $ref: "#/components/responses/201_postFavoriteToken"
+  /api/v2/favorites/{id}: 
+    delete:
+      summary: Remove Favorite Token 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and remove favorite <code>token</code> for current user from database. 
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/path_Id'
+      responses:
+        "204":
+          description: OK - Returns if favorite removed successfully
+  /api/v2/contracts/my: 
+    get:
+      summary: Get Contracts 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and return every <code>contract</code> beloning to the current user.
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      responses:
+        "200":
+          description: OK - Contracts found. 
+  /api/v2/contracts/byUser/{userId}: 
+    get:
+      summary: Get Contracts By Id
+      description: Find and return every <code>contract</code> for the user referenced by <code>userId</code>. 
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/path_userId'
+      responses:
+        "200":
+          description: OK - Contracts found. 
+  /api/v2/users/{publicAddress}:
+    get:
+      summary: Get User
+      description: Find and return user metadata by their <code>publicAddress</code>. 
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/path_publicAddress'
+      responses:
+        "200":
+          $ref: "#/components/responses/200_getUser"
+    patch:
+      summary: Update User 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and locate a user by their <code>publicAddress</code> and update their <code>nickName</code>, <code>avatar</code>, <code>email</code>, or <code>background</code>. 
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+        - $ref: '#/components/parameters/path_publicAddress'
+      requestBody:
+        $ref: '#/components/requestBodies/updateUser'
+      responses:
+        "200":
+          description: OK - User found.
+  /api/v2/products/user/{userAddress}:
+    get:
+      summary: Get Products
+      description: Find and return <code>products</code> for a specific <code>userAddress</code>. Optional query parameters.
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/path_userAddress'
+      requestBody:
+        $ref: '#/components/requestBodies/products'
+      responses:
+        "200":
+          $ref: '#/components/responses/200_getProduct'
+        "500":
+          $ref: "#/components/responses/500_generic"
+  /api/v2/tokens/my: 
+    get:
+      summary: Get Tokens 🔒
+      description: <b>AUTHENTICATION REQUIRED</b> <br><br> Find and return <code>tokens</code> belonging to the current user.
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/header_x-rair-token'
+      responses:
+        "200": 
+          $ref: "#/components/responses/200_getToken"
+components:
+
+  parameters:
+    #Path Params
+    path_contractId:
+      name: contractId
+      description: A unique <code>_id</code> associated with a specific <code>contract</code> in the database. <b>Not the 0x address.</b>
+      in: path
+      required: true
+      schema:
+        type: string
+    path_hash:
+      name: hash
+      description: A unique <code>string</code> used to reference a particular blockchain event.
+      in: path
+      required: true
+      schema:
+        type: string
+    path_Id:
+      name: id
+      description: A unique string used to reference a spacific <code>Token</code> or subset of <code>Tokens</code> within a particular <code>Product</code>.
+      in: path
+      required: true
+      schema:   
+        type: string
+    path__Id:
+      name: _id
+      description: A unique string used to reference a generic <code>Entity</code> in the database.
+      in: path
+      required: true
+      schema:   
+        type: string
+    path_mediaId:
+      name: mediaId
+      description: <code>_id</code> used for locating a <code>File</code> object from the database. The file referenced in <code>mainManifest</code> must contain a rair.json manifest.
+      in: path
+      required: true
+      schema:
+        type: string
+    path_MetaAddress:
+      name: MetaAddress
+      description: An Ethereum wallet address for which to generate a <code>MetaAuth</code> challenge.
+      in: path
+      required: true
+      schema:
+        type: string
+    path_MetaMessage:
+      name: MetaMessage
+      description: The previously issued MetaAuth challenge. 
+      in: path
+      required: true
+      schema:
+        type: string
+    path_MetaSignature:
+      name: MetaSignature
+      description: The user's signature for the provided MetaMessage.
+      in: path
+      required: true
+      schema:
+        type: string
+    path_network:
+      name: network
+      description: A unique <code>string</code> used to reference a particular blockchain network.
+      in: path
+      required: true
+      schema:
+        type: string
+    path_offerId:
+      name: offerId
+      description: A unique <code>_id</code> used to reference a subset of <code>Tokens</code> within a particular <code>Product</code>. <br><br> *Use the **Get Offers** endpoint to return a list of available offers.*
+      in: path
+      required: true
+      schema:   
+        type: string
+    path_productId:
+      name: productId
+      description: A unique <code>_id</code> which associates a collection of <code>Tokens</code> with a particular <code>Contract</code>.
+      required: true
+      in: path
+      schema:
+        type: string
+    path_publicAddress:
+      name: publicAddress
+      description: Public Ethereum 0x address which identifies the owner of an account. 
+      in: path 
+      required: true
+      schema:
+        type: string
+    path_token:
+      name: token
+      description: A integer describing a <code>Token's</code> mint index.
+      in: path
+      required: true
+      schema:
+        type: number
+    path_textParam:
+      name: textParam
+      description: A single (no space) text parameter.
+      in: path
+      required: true
+      schema:
+        type: string
+    path_userId:
+      name: userId
+      description:  A unique string used to reference a particular user in the database.
+      in: path
+      required: true
+      schema:
+        type: string
+    path_userAddress:
+      name: userAddress
+      description: An Ethereum 0x wallet address used to authenticate a user
+      in: path
+      required: true
+      schema:
+        type: string
+    
+    #Headers
+    header_x-rair-token: 
+      name: x-rair-token
+      description: Locally-stored, 253-character JSON Web Token with an encrypted signature. Used to identfy a User within the RAIRauth system.
+      in: header
+      required: true
+      schema:
+        type: string
+
+    #Query Params
+    query_addOffers:
+      name: addOffers
+      in: query
+      schema:
+        type: number
+        example: Use boolean 0 or 1 
+    query_addLocks:
+      name: addLocks
+      in: query
+      schema:
+        type: number
+        example: Use boolean 0 or 1 
+    query_blockchain:
+      name: blockchain
+      in: query
+      schema:
+        type: number
+    query_blockchainHash:
+      name: Blockchain Hash
+      description: A unique <code>hash</code> used to identify a particular <code>Blockchain</code>. <br> *Use the **Get Blockchains** endpoint to return a list of usable networks.*
+      in: query
+      schema:
+        type: string
+    query_category:
+      name: category
+      in: query
+      schema:
+        type: string
+    query_contractAddress:
+      name: contractAddress
+      in: query
+      description: The unique 0x address associated with a particular <code>Contract</code>.
+      schema:
+        type: string
+    query_contractId:
+      name: contractId
+      in: query
+      description: A unique <code>_id</code> given to a particular <code>Contract</code>. 
+      schema:
+        type: string
+    query_demo:
+      name: demo
+      in: query
+      schema:
+        type: boolean
+    query_itemsPerPage:
+      name: itemsPerPage
+      in: query
+      schema:
+        type: number
+    query_networkId:
+      name: networkId
+      in: query
+      description: A unique <code>_id</code> given to a particular <code>Blockchain</code>. Use the **Get Blockchains** endpoint to return a list of usable networks.
+      schema:
+        type: string
+    query_offers:
+      name: offers
+      in: query
+      schema:
+        type: array
+        items:
+          type: number
+    query_offerId:
+      name: offerId
+      in: query
+      description: A unique <code>_id</code> identifier used to reference a subset of <code>Tokens</code> within a particular <code>Product</code>.
+      schema:
+        type: string
+    query_offerPool:
+      name: offerPool
+      in: query
+      description: Associate a subset of <code>Product</code> tokens to a shared sale <code>price</code>.
+      schema:
+        type: string
+    query_pageNum:
+      name: pageNum
+      in: query
+      schema:
+        type: number
+    query_productId:
+      name: productId
+      in: query
+      description: A unique <code>_id</code> which associates a collection of <code>Tokens</code> with a particular <code>Contract</code>.
+      schema:
+        type: string
+    query_productIndex:
+      name: product
+      in: query
+      description: An integer which identifies a collection within a <code>Contract</code>
+      schema:
+        type: number
+    query_userAddress:
+      name: userAddress
+      in: query
+      description: The unique 0x address associated with a particular <code>user</code>.
+      schema:
+        type: string
+    query_collectionIndexInContract:
+      name: product
+      in: query
+      description: Numerical index used to locate an <code>Offer</code> within a specific <code>Contract</code>. In the actual <code>Product</code>, this value is reffered to as <code>collectionIndexInContract</code>
+      schema:
+        type: number
+
+  requestBodies:
+    createUser:
+      description: Create a new user
+      content:
+        application/json:
+          schema: 
+            allOf:
+              - $ref: '#/components/schemas/requestBody_properties_createUser'
+    updateUser:
+      description: Update user data
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/requestBody_properties_updateUser'
+    tokens:
+      description: Update token data
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/requestbody_properties_tokens'
+    updateMedia:
+      description: Update Media Metadata
+      content:
+        json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/requestBody_properties_updateMedia'
+    importContracts:
+      content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/requestBody_properties_importContracts'
+    NFTPinningMultiple:
+      content:
+        json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/requestBody_properties_NFTPinningMultiple' 
+    uploadFile:
+      content:
+          json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/requestBody_properties_uploadFile' 
+    favorites:
+      content:
+          json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/requestBody_properties_favorites'  
+    products:
+      content:
+          json:
+            schema: 
+              allOf:
+                - $ref: '#/components/schemas/requestBody_properties_products'  
+    unlockStream:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              MetaMessage:
+                type: string
+                description: The previously issued MetaAuth challenge.
+              MetaSignature:
+                type: string
+                description: The user's signature for the provided MetaMessage.
+              mediaId:
+                type: string
+                description: <code>_id</code> used for locating a <code>File</code> object from the database. The file referenced in <code>mainManifest</code> must contain a rair.json manifest.
+            required:
+              - MetaMessage
+              - MetaSignature
+              - mediaId
+    updateContractSync:
+      content:
+        json:
+          schema:
+            type: object 
+            properties:
+              blockSync:
+                type: boolean
+              blockView:
+                type: boolean
+
+  schemas:
+    requestBody_properties_createUser:
+      type: object
+      properties:
+        publicAddress:
+          type: string
+          description: Public Ethereum 0x address which identifies the controller of an account. 
+      required:
+        - publicAddress
+    requestBody_properties_favorites:
+      properties:
+        token:
+          type: string
+      required:
+          - token
+    requestBody_properties_importContracts:
+      properties:
+        networkId:
+          description: The blockchain where the external contract is located
+          type: string
+          example: "0x13881"
+        contractAddress:
+          description: The address of the external contract
+          type: string
+          example: 0x000000000example4343d5fe518757dbc1dd7460
+        limit:
+          description: The address of the external contract
+          type: number
+          example: 10
+      required:
+                - networkId
+                - contractAddress
+                - limit
+    requestBody_properties_NFTPinningMultiple:
+      type: object
+      properties:
+        contractId:
+          type: number
+          description: A unique identifier associated with a specific smart contract in the database. <b>Not the 0x address.</b>
+          example: 1
+        product:
+          type: number
+          example: 1
+    requestBody_properties_products:
+      properties:
+        page:
+          type: number
+          description: Page index starting with 1 (0=1)
+        sort:
+          type: string
+          description: Field to be sorted by
+        limit:
+          type: number
+          description: Number of items to return (capped at 100)
+        fields:
+          type: string
+          description: Projection
+    requestbody_properties_tokens:
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+        contract:
+          type: string
+        commonMetadataFor:
+          type: array
+          items:
+            type: string
+            example:
+              - contract
+              - product
+        product:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        artist:
+          type: string
+        external_url:
+          type: string
+        image:
+          type: string
+        animation_url:
+          type: string
+        attributes:
+          type: array
+          items:
+            properties:
+              fields:
+                properties:
+                  trait_type:
+                    type: string
+                  value:
+                    type: string
+      required:
+        - contract
+        - commonMetadataFor
+    requestBody_properties_updateMedia:
+      type: object
+      properties:
+        title:
+          description: Title of Media
+          type: string 
+        contract:
+          description: <code>_id</code> of <code>Contract</code> associated with media. 
+          type: string
+        product: 
+          type: number
+          example: 0
+        offer: 
+          type: array
+          items:
+            type: number
+            example: 0
+        category: 
+          type: string
+          example: 62948796558076001e29bb5d
+        demo:
+          type: boolean
+        description:
+          type: string
+          example: Some Description
+    requestBody_properties_updateUser:
+      properties:
+        nickName:
+          type: string
+          description: User name to be displayed on the frontend. (User's 0x address by defaut)
+        avatar:
+          type: string
+          format: binary
+          description: User avatar
+        email:
+          type: string
+          description: User email address.
+        background:
+          type: string
+          format: binary
+          description: Background displayed on user profile page.
+    requestBody_properties_uploadFile:
+      type: object
+      properties:
+        cid:
+          type: string
+          description: Content Identifier (CID) - Unique string used to locate a cloud asset.
+          example: gQrotDfRLLnJ3rWiXvd3mVwJwFrJ4lWnZMp7L 
+        meta:
+          $ref: '#/components/schemas/metadata_uploadfile'
+      required:
+        - cid
+        - meta
+
+    response_properties_blockchains:
+      type: array
+      items:
+        type: object
+        properties:
+          _id:
+            type: string
+          name:
+            type: string
+          hash:
+            type: string
+        example:
+          - _id: 61b0d2775f0a55001c272658
+            name: Binance Testnet
+            hash: 0x61
+          - _id: 61b0d2775f0a55001c272659
+            name: Goerli Testnet
+            hash: 0x5
+          - _id: 61b0d2775f0a55001c27265a
+            name: Matic Mainnet
+            hash: 0x89
+          - _id: 61b0d2775f0a55001c27265b
+            name: Matic Mumbai Testnet
+            hash: 0x13881
+    response_properties_contract: 
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6148912f656bf4001ef56e08
+        title:
+          type: string
+          example: Contract 1
+        user:
+          type: string
+          example: address of user
+        blockchain:
+          type: string
+          example: 0x61
+        contractAddress:
+          type: string
+          example: contractId
+        diamond:
+          type: boolean
+        creationDate:
+          type: string
+        transactionHash:
+          type: string
+        lastSyncedBlock:
+          type: string
+        external:
+          type: boolean
+        singleMetadata:
+          type: boolean
+        metadataURI:
+          type: string
+        blockSync:
+          type: boolean
+        blockView:
+          type: boolean
+      required:
+        - title
+        - user
+        - blockchain
+        - contractAddress
+        - external
+    response_properties_contractFull: 
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6148912f656bf4001ef56e08
+        title:
+          type: string
+          example: Contract 1
+        user:
+          type: string
+          example: address of user
+        blockchain:
+          type: string
+          example: 0x61
+        contractAddress:
+          type: string
+          example: contractId
+        diamond:
+          type: boolean
+        creationDate:
+          type: string
+        transactionHash:
+          type: string
+        lastSyncedBlock:
+          type: string
+        external:
+          type: boolean
+        singleMetadata:
+          type: boolean
+        metadataURI:
+          type: string
+        blockSync:
+          type: boolean
+        blockView:
+          type: boolean
+        products: 
+          $ref: "#/components/schemas/response_properties_productsFull"
+      required:
+        - title
+        - user
+        - blockchain
+        - contractAddress
+        - external      
+    response_properties_contracts:
+      type: object
+      properties:
+        success:
+          type: boolean
+        contracts:
+          type: array
+          items:
+            $ref: "#/components/schemas/response_properties_contractFull"
+        offerPool:
+          $ref: "#/components/schemas/response_properties_offerPool"
+        totalNumber:
+          type: number
+          example: 12
+    response_properties_customRoyaltySet:
+      properties:
+        contract:
+          type: object
+          example:
+            $ref: "#/components/schemas/response_properties_contract"
+        recipients:
+          type: number
+        remainderForSeller:
+          type: number
+      required:
+        - contract
+        - recipients
+        - remainderForSeller
+    response_properties_files:
+      properties:
+        success:    
+          type: string
+          example: success
+        results:  
+          type: number
+          example: 1
+        data: 
+          type: object
+          properties:
+            doc: 
+              type: array
+              items:
+                type: object
+                properties:
+                  isUnlocked:
+                    type: boolean
+                    example: false
+                  offer:
+                    type: array
+                    example: 0
+                  demo: 
+                    type: boolean
+                    example: false
+                  _id: 
+                    type: string
+                    example: QqYZxGHgNhSph-RbsECFlY5ObXNmOvsDCJK4ezbU_RaWHd
+                  mainManifest:
+                    type: string
+                    example: stream.m3u8
+                  authorPublicAddress:
+                    type: string
+                    example: address
+                  encryptionType:
+                    type: string
+                    example: aes-256-gcm
+                  title:
+                    type: string
+                    example: File 18
+                  contract:
+                    type: string
+                    example: 62c1da143d0b4e9133e094a7
+                  product:
+                    type: number
+                    example: 0
+                  category:
+                    type: string
+                    example: 62c1d9d7d5854b001c06cce2
+                  staticThumbnail:
+                    type: string
+                    example: https://some.link
+                  animatedThumbnail:
+                    type: string
+                    example: https://some.link
+                  type:
+                    type: string
+                    example: video
+                  extension:
+                    type: string
+                    example: quicktime
+                  duration:
+                    type: string
+                    example: 00:00:30.57
+                  description:
+                    type: string
+                    example: Desc File 18
+                  creationDate:
+                    type: string
+                    example: 2022-08-08T14:15:12.252Z
+    response_properties_favoriteToken:
+      type: object
+      properties:    
+        _id:
+          type: string
+          example: 62f3fc41f208d6001c1bea22
+        token: 
+          type: string
+          example: 62dff1566ac9d9001d16715e
+        userAddress: 
+          type: string
+          example: publicAddress 
+    response_properties_getToken:
+      type: object
+      properties:
+        success:
+          type: boolean
+        results:
+          type: number
+          example: 2
+        data:
+          type: object
+          properties:
+            doc:
+              type: array
+              items:
+                properties:
+                  _id:
+                    type: string
+                    example: 62f3f9f71e4e6f001caa0630
+                  token:
+                    $ref: "#/components/schemas/response_properties_token"
+                  userAddress:
+                    type: string
+                    example: publicAddress
+    response_properties_generic500:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: boolean
+          example: true
+    response_properties_list:
+        type: object
+        properties:
+          success:
+            type: boolean
+          totalNumber:
+            type: number
+            example: 4
+          list:
+            type: object
+            properties:
+              QmfUHHWHaT1jCuiMcJGZJG4pdo4A6ddoaZKPz6rbCDeNMA:
+                description: A media object named by <code>_id</code>.
+                $ref: '#/components/schemas/response_properties_mediaObject'
+    response_properties_mediaObject:
+        type: object
+        properties:
+          _id:
+            type: string
+            example: QmfUHHWHaT1jCuiMcJGZJG4pdo4A6ddoaZKPz6rbCDeNMA
+          mainManifest:
+            type: string
+            example: stream.m3u8
+          author:
+            type: string
+            example: author NFT
+          authorPublicAddress:
+            type: string
+            example: author address
+          encryptionType:
+            type: string
+            example: aes-128-cbc
+          title:
+            type: string
+            example: M01
+          thumbnail:
+            type: string
+            example: 1624271911556-887258899
+          currentOwner:
+            type: string
+            example: author NFT
+          contractAddress:
+            type: string
+            example: temp value of contract address
+          description:
+            type: string
+            example: Desc 01
+          creationDate:
+            type: string
+            example: 2021-06-21T10:38:34.095Z
+          isOwner:
+            type: boolean
+    response_properties_notOwnerOfMedia:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: You don't have permission to manage this file.
+    response_properties_offers:
+      type: array
+      items:
+        properties:
+          _id:
+            type: string
+            description: offerId
+          soldCopies:
+            type: number
+          sold:
+            type: boolean
+          range:
+            type: array
+            items:
+              type: number
+          offerName:
+            type: string
+          offerIndex:
+            type: number
+          contract:
+            type: string
+          product:
+            type: number
+          offerPool:
+            type: number
+          price:
+            type: number
+          creationDate:
+            type: string
+          copies:
+            type: number
+        example:
+          - _id: 614891fc656bf4001ef56e10
+            soldCopies: 5
+            sold: false
+            range:
+            - 0
+            - 10
+            offerName: Offer 1.1.1
+            offerIndex: 0
+            contract: contractId
+            product: 0
+            offerPool: 11
+            price: 111
+            creationDate: 2021-09-20T13:51:56.246Z
+            copies: 11
+          - _id: 614891fc656bf4001ef56e12
+            soldCopies: 0
+            sold: false
+            range:
+            - 11
+            - 50
+            offerName: Offer 1.1.2
+            offerIndex: 1
+            contract: contractId
+            product: 0
+            offerPool: 11
+            price: 55
+            creationDate: 2021-09-20T13:51:56.250Z
+            copies: 40
+    response_properties_offersFull:
+      type: array
+      items:
+        properties:
+          _id:
+            type: string
+            description: offerId
+          soldCopies:
+            type: number
+          sold:
+            type: boolean
+          range:
+            type: array
+            items:
+              type: number
+          offerName:
+            type: string
+          offerIndex:
+            type: number
+          contract:
+            type: string
+          product:
+            type: number
+          offerPool:
+            type: number
+          price:
+            type: number
+          creationDate:
+            type: string
+          copies:
+            type: number
+        example:
+          - _id: 614891fc656bf4001ef56e10
+            soldCopies: 5
+            sold: false
+            range:
+            - 0
+            - 10
+            offerName: Offer 1.1.1
+            offerIndex: 0
+            contract: contractId
+            product: 0
+            offerPool: 11
+            price: 111
+            creationDate: 2021-09-20T13:51:56.246Z
+            copies: 11
+          - _id: 614891fc656bf4001ef56e12
+            soldCopies: 0
+            sold: false
+            range:
+            - 11
+            - 50
+            offerName: Offer 1.1.2
+            offerIndex: 1
+            contract: contractId
+            product: 0
+            offerPool: 11
+            price: 55
+            creationDate: 2021-09-20T13:51:56.250Z
+            copies: 40
+    response_properties_offerPool:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 618e82eb23dc5b001d58946e
+        marketplaceCatalogueIndex:
+          type: number
+          example: 12
+        contract:
+          type: string
+          example: contractId
+        product:
+          type: number
+          example: 0
+        rangeNumber:
+          type: number
+          example: 1
+        minterAddress:
+          type: string
+          example: minterAddress
+        creationDate:
+          type: string
+          example: 2021-11-12T15:06:19.756Z
+    response_properties_products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: productId
+        name:
+          type: string
+        collectionIndexInContract:
+          type: string
+        contract:
+          type: object 
+          example: contractId
+        copies:
+          type: number
+          example: 500
+        soldCopies:
+          type: number
+        sold:
+          type: boolean
+        royalty:
+          type: number
+          example: 0
+        firstTokenIndex:
+          type: number
+          example: 0
+        cover:  
+          type: string
+        creationDate:
+          type: string
+          example: 2021-09-20T13:49:23.781Z      
+        transactionHash:
+          type: string
+        diamond:
+          type: boolean
+        singleMetadata:
+          type: boolean
+        metadataURI:
+          type: string
+      required:
+        - name
+        - collectionIndexInContract
+        - contract
+        - copies 
+        - firstTokenIndex 
+        - diamond
+    response_properties_productsFull:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: productId
+        name:
+          type: string
+        collectionIndexInContract:
+          type: string
+        contract:
+          type: object 
+          example: contractId
+        copies:
+          type: number
+          example: 500
+        soldCopies:
+          type: number
+        sold:
+          type: boolean
+        royalty:
+          type: number
+          example: 0
+        firstTokenIndex:
+          type: number
+          example: 0
+        cover:  
+          type: string
+        creationDate:
+          type: string
+          example: 2021-09-20T13:49:23.781Z      
+        transactionHash:
+          type: string
+        diamond:
+          type: boolean
+        singleMetadata:
+          type: boolean
+        metadataURI:
+          type: string
+        offers:
+          $ref: "#/components/schemas/response_properties_offersFull" 
+      required:
+        - name
+        - collectionIndexInContract
+        - contract
+        - copies 
+        - firstTokenIndex 
+        - diamond  
+    response_properties_token:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 61489247656bf4001ef56e24
+        metadataURI:
+          type: string
+          example: some URL
+        token:
+          type: number
+          example: 1
+        ownerAddress:
+          type: string
+          example: userAddress
+        offerPool:
+          type: number
+          example: 11
+        offer:
+          type: number
+          example: 0
+        contract:
+          type: string
+          example: contractAddress
+        uniqueIndexInContract:
+          type: number
+          example: 1
+        isMinted:
+          type: boolean
+        metadata:
+          $ref: '#/components/schemas/response_properties_tokenMetadata'
+        creationDate:
+          type: string
+          example: 2021-09-20T13:53:11.567Z
+        authenticityLink:
+          type: string
+          example: link
+    response_properties_tokenMetadata:
+      type: object
+      properties:
+        artist:
+          type: string
+          example: chrissweet
+        external_url:
+          type: string
+          example: none
+        name:
+          type: string
+          example: CoinAgenda Monaco 2021
+        description:
+          type: string
+          example: Stream the conference Link
+        image:
+          type: string
+          example: coinagendamonaco1
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              trait_type:
+                type: string
+                example: Crystal Color
+              value:
+                type: string
+                example: Pink
+    response_properties_transaction:
+      type: object
+      properties:
+        eventSignature:
+          type: string
+        arguments:
+          type: array
+        transactionHash:
+          type: string
+        blockNumber:
+          type: number
+    response_properties_pinningMultiple:
+      oneOf:
+      - type: object
+        properties:
+          success:
+            type: boolean
+        description: If each token have unique metadata
+      - type: object
+        properties:
+          success:
+            type: boolean
+          metadataURI:
+            type: string
+            example: link to metadata
+        description: If tokens have common metadata
+    response_properties_resaleTokenOffer:
+      properties:
+        operator:
+          type: string
+        contract:
+          type: string
+          example: contractId
+        tokenId:
+          type: string
+        price:
+          type: string
+        status:
+          type: string
+        tradeid:
+          type: string
+      required:
+        - operator
+        - contract
+        - tokenId
+        - price
+        - status
+        - tradeid
+    response_properties_user:
+      type: object
+      properties:
+        email:
+          type: string
+        avatar: 
+          type: string
+        background:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        _id:
+          type: string
+        publicAddress:
+          type: string
+        adminNFT:
+          type: string
+        creationDate:
+          type: string
+        adminRights:
+          type: boolean
+    response_properties_validateUpload:
+      type: object
+      properties:
+        foundContract:
+          type: string
+          example: 629f36b768a821001c4b37ea
+        foundCategory:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 62948796558076001e29bb5d
+            name:
+              type: string
+              example: art   
+    response_properties_updateToken:
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          $ref: '#/components/schemas/response_properties_token'
+    response_properties_pinTokenMetadata:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        metadataURI:
+          type: string
+          example: https://example.url
+    response_properties_resaleTokens:
+      type: array
+      items:
+        $ref: '#/components/schemas/response_properties_resaleTokenOffer'
+      example:
+        - _id: 62c443a6506169001d9165c8
+          operator: testOperator
+          contract: 626bc93f3a67b03f7001c3cd
+          tokenId: 12
+          price: 101
+          status: Open
+          tradeid: 0
+          __v: 0
+        - _id: 62c443a9506169001d9165ca
+          operator: testOperator
+          contract: 626bc93f3a67b03f7001c3cd
+          tokenId: 42
+          price: 101
+          status: Open
+          tradeid: 0
+          __v: 0
+    response_properties_searchResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: "#/components/schemas/response_properties_user"
+            products:
+              type: array
+              items:
+                $ref: "#/components/schemas/response_properties_products"
+            tokens:
+              type: array
+              items:
+                $ref: "#/components/schemas/response_properties_token"
+
+    metadata_uploadfile:
+      type: object
+      description: Media metadata to be stored in the database
+      properties:
+        _id:
+          type: string
+        author:
+          type: string
+        authorPublicAddress:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        meetingId:
+          type: string
+        encryptionType:
+          type: string
+        mainManifest:
+          type: string
+        staticThumbnail:
+          type: string
+        animatedThumbnail:
+          type: string
+        contract:
+          type: string
+        product:
+          type: number
+        offer:
+          type: number
+        duration:
+          type: string
+        type:
+          type: string
+        extension:
+          type: string
+        category:
+          type: string
+        demo:
+          type: boolean
+        creationDate: 
+          type: string
+      required:
+        - _id
+        - authorPublicAddress
+        - title
+        - encryptionType
+        - mainManifest
+        - staticThumbnail
+        - contract
+        - product
+        - offer
+        - duration
+        - type
+        - extension
+        - category
+
+  responses:
+  
+    #default
+    default_contracts_full:
+      description: Returns found contract in full
+      content:
+        json:
+          schema:
+            $ref: '#/components/schemas/response_properties_contracts'
+    default_getContract:
+      description: Returns found contract in full
+      content:
+        json:
+          schema:
+            $ref: '#/components/schemas/response_properties_contracts'
+
+    #200
+    200_adminTokenOK:
+      description: OK - User holds admin token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: Admin token holder.
+    200_authGetUser:
+      description: OK - Returns <code>User</code> object if a valid <code>x-rair-token</code> is presented. 
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              user:
+                $ref: "#/components/schemas/response_properties_user"
+    200_authGetToken:
+      description: OK - Returns a T/F condition.
+      content:
+        application/json:
+          schema:
+            properties:
+              success:
+                type: boolean
+    200_files:
+      description: OK - Returns a list of files and information associated with a token
+      content:
+        application/json:
+          schema: 
+            $ref: '#/components/schemas/response_properties_files'
+    200_getAllMedia:
+      description: Returns a list of the currently registered media
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/response_properties_list'
+    200_getBlockchains:
+      description: OK - Returns a list of accessable blockchains from the database
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              blockchains:
+                $ref: "#/components/schemas/response_properties_blockchains"
+    200_getCategories:
+      description: OK - Returns a list of categories
+      content:
+        application/json:
+          schema:
+            properties:
+              success:
+                type: boolean
+              categories:
+                type: array
+                items:
+                  required:
+                    - _id
+                    - name
+                example:
+                  - _id: 61b21ab159492e001cfc35ac
+                    name: Music
+                  - _id: 61b21ab159492e001cfc35ad
+                    name: Art
+                  - _id: 61b21ab159492e001cfc35ae
+                    name: Conference
+                  - _id: 61b21ab159492e001cfc35af
+                    name: Science
+    200_getChallenge:
+      description: OK - Returns a MetaAuth challenge for the User to sign with their private Ethereum key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              response:
+                type: object
+                properties:
+                  types:
+                    type: object
+                    properties:
+                      EIP712Domain:
+                        type: array
+                        items:
+                          properties:
+                            name:
+                              type: string
+                      Challenge:
+                        type: array
+                        items:
+                          properties:
+                            name:
+                              type: string
+                              example: challenge
+                  domain:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: RAIR Inc.
+                  primaryType:
+                    type: string
+                    example: Challenge
+                  message:
+                    type: object
+                    properties:
+                      challenge:
+                        type: string
+                        example: 0efb69a5d972acdffecd0d24dc7ffe73cfb46fc7e0cf24a0af01c05538669122
+    200_getCustomRoyaltySets:
+      description: OK - Custom Royalty Sets found. 
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/response_properties_customRoyaltySet"
+    200_getLocks:
+      description: OK 
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: string
+                example: "success"
+              results:
+                type: number
+                example: 1
+              data:
+                type: object
+                properties:
+                  doc:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/requestBody_properties_products"
+    200_getOffers:
+      description: OK - Offers found. 
+      content:
+        application/json:
+          schema: 
+            properties:
+              success:
+                type: boolean
+                example: true
+              results:
+                type: number
+              data: 
+                type: object
+                properties:
+                  doc: 
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/response_properties_offers"
+    200_getOffersByAddressAndProduct:
+      description: OK - Offers found
+      content:
+        application/json:
+          schema: 
+            properties:
+              success:  
+                type: boolean
+                example: true
+              results:  
+                type: number
+                example: 2
+              data:
+                type: object
+                properties:
+                  doc:
+                    $ref: "#/components/schemas/response_properties_offers"
+    200_getProduct:
+      description: OK - Returns found products
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/response_properties_products'
+    200_getProductsById:
+      description: OK - Products Found
+      content:
+        json:
+          schema: 
+            properties:
+              success:
+                type: boolean
+                example: true
+              product:
+                $ref: "#/components/schemas/response_properties_products"
+    200_getResaleTokenOffer:
+      description: OK - Resale Offer found. 
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                $ref: "#/components/schemas/response_properties_resaleTokenOffer"
+    200_getToken:
+      description: Returns if tokens found
+      content:
+        application/json:
+          schema: 
+            $ref: '#/components/schemas/response_properties_getToken'
+    200_getTokenNumbers:
+      description: OK - Returns if tokens found
+      content:
+        application/json:
+          schema: 
+            properties:
+              success: 
+                type: boolean
+                example: true
+              tokens: 
+                type: array
+                items:
+                  type: number
+                  example: 1
+    200_getTransaction:
+      description: OK - Transaction events found
+      content:
+        application/json:
+          schema: 
+            properties:
+              success:
+                type: boolean
+                example: true
+              result:
+                type: array
+                items:
+                  $ref: "#/components/schemas/response_properties_transaction"
+    200_importExternalContract:
+      description: OK - If the user has admin access, tokens will get slowly imported in groups of 100. <br><br> Once the number of tokens imported is greater than the <code>limit</code>, it will stop.
+      content:
+        application/json:
+          schema: 
+            properties:
+              success:
+                type: boolean
+                example: true 
+              result: 
+                type: object
+                properties:
+                  contract:
+                    type: object
+                    example: contractschema
+                  numberOfTokensAdded:
+                    type: number
+                    example: 100
+              message:
+                type: string
+                example: undefined
+    200_pinningMultiple:
+      description: OK - Returns if found some tokens
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/response_properties_pinningMultiple'
+    200_pinTokenMetadata:
+      description: OK - Returns if pinned successfully
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/response_properties_pinTokenMetadata'
+    200_search:
+      description: OK - Search results found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/response_properties_searchResult'
+    200_terminateStreamingSession:
+      description: OK - Session terminated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+    200_updateToken:
+      description: OK - Returns if updated successfully
+      content:
+        application/json:
+          schema: 
+            $ref: '#/components/schemas/response_properties_updateToken'
+    200_getUser:
+      description: OK - User found.
+      content:
+        application/json:
+          schema: 
+            $ref: '#/components/schemas/response_properties_user'
+    200_validateUpload:
+      description: OK - Return found contract, category, and product
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/response_properties_validateUpload'
+    201_postFavoriteToken:
+      description: OK - Returns found products
+      content:
+        json:
+          schema:
+            properties: 
+              status:
+                type: string
+                example: success
+              data:
+                type: object
+                properties:
+                  doc:
+                    $ref: "#/components/schemas/response_properties_favoriteToken"
+    #400
+    400_invalidContractAddress:
+      description: BAD REQUEST - Contract address invalid
+      content:
+        application/json:
+          schema: 
+            properties:
+              success:
+                type: boolean
+                example: false
+              error:
+                type: boolean
+                example: true
+              message:
+                type: boolean
+                example: invalid contract address     
+    403_notOwnerOfMedia:
+      description: FORBIDDEN - Media does not belong to specified user
+      content:
+        json:
+          schema:
+            $ref: '#/components/schemas/response_properties_notOwnerOfMedia'
+    404_authGetToken:
+      description: NOT FOUND - User ETH address not found.
+      content:
+        application/json:
+          schema:
+            type: string
+            example: User with publicAddress "0xPublicAddress" not found in database.
+    401_authGetToken:
+      description: UNAUTHORIZED - Could not create JWT.
+      content:
+        application/json:
+          schema:
+            type: string
+            example: Signature verification failed
+
+    #500
+    500_generic:
+      description: INTERNAL SERVER ERROR
+      content:
+        json:
+          schema:
+            $ref: '#/components/schemas/response_properties_generic500'

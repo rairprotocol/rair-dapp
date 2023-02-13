@@ -6,6 +6,20 @@ definitions:
 
 pipelines:
 
+  default:
+
+    # Runs whenever file at includePaths (rairapi_current.yaml) is changed
+    - step:
+        name: Update RAIR API definition on rairtech.readme.com
+        script:
+          - npm install -g rdme
+          - ./rairnode/readme/utils/update_readme.sh
+        condition:
+          changesets:
+            includePaths:
+              - "rairnode/readme/openapi/rairapi_current.yaml"
+
+
   pull-requests:
 
     '**': #this runs as default for any branch not elsewhere defined
