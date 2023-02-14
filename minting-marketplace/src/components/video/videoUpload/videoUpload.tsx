@@ -196,7 +196,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     async function goSession() {
       const sessionId = getRandomValues().toString(36).substr(2, 9);
       setThisSessionId(sessionId);
-      const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ['websocket'] });
+      const so = io();
       // const so = io(`http://localhost:5000`, { transports: ["websocket"] });
       setSocket(so);
       // so.on("connect", data => {
@@ -452,6 +452,8 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
               formData.append('category', category);
               formData.append('storage', storage);
               formData.append('product', product);
+              formData.append('demo', false);
+              /* formData.append('publicDemoOverride', true); */
               const acceptedOffers = [];
               selectedOffers.forEach((item) => {
                 if (item !== 'null' && !acceptedOffers.includes(item)) {
@@ -462,7 +464,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
               setUploading(true);
               axios
                 .post<TUploadSocket>(
-                  `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
+                  `/ms/api/v1/media/upload/demo?socketSessionId=${thisSessionId}`,
                   formData,
                   {
                     headers: {
