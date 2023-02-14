@@ -82,17 +82,19 @@ const PopUpContainer = (videoId) => {
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
 
   const getCounterVideo = useCallback(async () => {
-    try {
-      const req = await rFetch(`/api/analytics/${videoId.videoId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      setAnalyticsVideo(req.results);
-      setTotalCount(req.totalCount);
-    } catch (e) {
-      console.info(e);
+    if (videoId) {
+      try {
+        const req = await rFetch(`/api/analytics/${videoId.videoId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        setAnalyticsVideo(req.results);
+        setTotalCount(req.totalCount);
+      } catch (e) {
+        console.info(e);
+      }
     }
   }, [videoId]);
 

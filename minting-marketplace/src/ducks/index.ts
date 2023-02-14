@@ -20,6 +20,7 @@ import getPageStore from './pages/reducers';
 import resalesStore from './resales/reducers';
 import allInformationFromSearch from './search/reducers';
 import seoStore from './seo/reducers';
+import videoDemoStore from './uploadDemo/reducers';
 import userStore from './users/reducers';
 import videosStore from './videos/reducers';
 
@@ -34,7 +35,8 @@ const reducers = combineReducers({
   allInformationFromSearch,
   nftDataStore,
   resalesStore,
-  seoStore
+  seoStore,
+  videoDemoStore
 });
 
 const sentryReduxEnhancer = createReduxEnhancer({

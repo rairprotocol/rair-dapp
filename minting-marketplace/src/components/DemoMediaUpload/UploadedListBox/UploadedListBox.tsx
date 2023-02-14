@@ -64,20 +64,22 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getCounterVideo = async () => {
-    try {
-      const req = await rFetch(
-        `/api/analytics/${fileData._id}?onlyCount=true`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
+    if (fileData._id) {
+      try {
+        const req = await rFetch(
+          `/api/analytics/${fileData._id}?onlyCount=true`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
-        }
-      );
+        );
 
-      setWatchCounter(req.totalCount);
-    } catch (e) {
-      console.info(e);
+        setWatchCounter(req.totalCount);
+      } catch (e) {
+        console.info(e);
+      }
     }
   };
 
@@ -111,8 +113,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
       confirmButtonText: 'Yes'
     }).then((result) => {
       if (result.isConfirmed) {
-        deleterUploaded(fileData._id);
         Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+        deleterUploaded(fileData._id);
       }
     });
   };
@@ -132,7 +134,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
 
   useEffect(() => {
     getCounterVideo();
-  }, [getCounterVideo]);
+  }, [modalIsOpen]);
 
   return (
     <div

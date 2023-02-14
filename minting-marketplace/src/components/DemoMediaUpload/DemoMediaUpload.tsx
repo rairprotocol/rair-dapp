@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import Swal from 'sweetalert2';
 
@@ -8,6 +8,10 @@ import WorkflowContext from '../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import {
+  uploadVideoEnd,
+  uploadVideoStart
+} from '../../ducks/uploadDemo/action';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import videoIcon from '../../images/videoIcon.svg';
 import { rFetch } from '../../utils/rFetch';
@@ -26,6 +30,11 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
+  const { uploadVideo } = useSelector<RootState, any>(
+    (store) => store.videoDemoStore
+  );
+  const dispatch = useDispatch();
 
   const { width } = useWindowDimensions();
 
@@ -137,24 +146,15 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     // eslint-disable-next-line
   }, [currentUserAddress]);
 
-  const uploadVideoDemo = async (item) => {
-    Swal.fire({
-      position: 'top-end',
-      icon: 'info',
-      title:
-        'Don’t click away! You can navigate away from the page once your video is done uploading',
-      showConfirmButton: false,
-      customClass: {
-        popup: `pop-up-uploading-message`
-      },
-      timer: 5000
-    });
+  const uploadVideoDemo = async (item, storage) => {
+    dispatch(uploadVideoStart());
     setCurrentTitleVideo(item.title);
     setUploadSuccess(false);
     const formData = new FormData();
     formData.append('video', item.file);
     formData.append('title', item.title.slice(0, 29));
     formData.append('description', item.description);
+    formData.append('storage', storage);
     if (selectedCategory) {
       formData.append('category', selectedCategory);
     }
@@ -190,9 +190,13 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     const str = message.substr(message.length - 8, 10);
     const lastString = message.split(' pin');
     const lastString2 = message.split(' upload');
-    if (lastString2[1] === 'ing to Google Cloud') {
+    if (
+      lastString2[1] === 'ing to Google Cloud' ||
+      lastString2[1] === 'ing to IPFS'
+    ) {
       setSocketMessage('uploading to Cloud');
     }
+
     const specSymb = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
     const newStr = str.split('').filter((item) => {
       if (specSymb.includes(item)) {
@@ -200,13 +204,21 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
       }
     });
     if (isNaN(newStr.join(''))) {
-      if (message === 'uploaded to Google Cloud.') {
+      if (
+        message === 'uploaded to Google Cloud.' ||
+        message === 'uploaded to IPFS.'
+      ) {
+        dispatch(uploadVideoEnd());
         setUploadSuccess(true);
         getMediaList();
         setUploadProgress(false);
         setUploadSuccess(null);
         setSocketMessage('');
-      } else if (lastString[1] === 'ning to Google Cloud.') {
+      } else if (
+        lastString[1] === 'ning to Google Cloud.' ||
+        lastString[1] === 'ning to IPFS.'
+      ) {
+        dispatch(uploadVideoEnd());
         setMediaList((prev) => [
           ...prev.filter((item) => item.file.name !== lastString[0])
         ]);

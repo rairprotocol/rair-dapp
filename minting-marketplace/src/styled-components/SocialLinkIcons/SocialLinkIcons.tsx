@@ -13,6 +13,7 @@ interface ISocialBox {
   messageAlert?: string | null;
   avatar?: string | null | undefined;
   onClick?: any;
+  notification?: boolean;
 }
 
 export const SocialBox = styled.div<ISocialBox>`
@@ -25,9 +26,21 @@ export const SocialBox = styled.div<ISocialBox>`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   margin-right: ${(props) => props.marginRight};
   margin-left: ${(props) => props.marginLeft};
+
+  span {
+    width: 7px;
+    height: 7px;
+    background: red;
+    position: absolute;
+    top: 0px;
+    right: 0;
+    border-radius: 50%;
+    background: #f63419;
+  }
 
   &.social-sun-icon {
     background: ${(props) =>
@@ -40,6 +53,15 @@ export const SocialBox = styled.div<ISocialBox>`
     background: none;
     border: ${(props) =>
       props.primaryColor === 'rhyno' ? '1px solid #fff' : '1px solid #D0D0D0'};
+
+    svg path {
+      fill: ${(props) =>
+        props.notification
+          ? props.primaryColor === 'rhyno'
+            ? '#383637'
+            : '#fff'
+          : 'none'};
+    }
   }
 
   &.social-sun-icon:hover {

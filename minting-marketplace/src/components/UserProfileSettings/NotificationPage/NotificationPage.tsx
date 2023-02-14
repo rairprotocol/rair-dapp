@@ -31,18 +31,19 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
               <div className="text-notification">
                 <div className="title-notif">Notification from Rair.tech</div>
                 <div className="text-notif">
-                  New announcements coming next Friday
+                  Don’t click away! You can navigate away from the page once
+                  your video is done uploading
                 </div>
               </div>
             </div>
             <div className="notification-right">
-              <div
+              {/* <div
                 className="time-notification"
                 style={{
                   color: `${primaryColor === 'rhyno' && '#000'}`
                 }}>
                 3 hours ago
-              </div>
+              </div> */}
               <div className="icon-remove">
                 <img src={IconRemove} alt="Close notification item" />
               </div>
@@ -57,7 +58,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
             }}>
             Viewed
           </div>
-          <div
+          {/* <div
             className="box-notification"
             style={{
               backgroundColor: `${primaryColor === 'rhyno' && '#c0c0c0'}`
@@ -86,8 +87,8 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
                 <img src={IconRemove} alt="Close notification item" />
               </div>
             </div>
-          </div>
-          <div
+          </div> */}
+          {/* <div
             className="box-notification"
             style={{
               backgroundColor: `${primaryColor === 'rhyno' && '#c0c0c0'}`
@@ -116,7 +117,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
                 <img src={IconRemove} alt="Close notification item" />
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -29,6 +29,10 @@
   font-size: 22px;
 }
 
+.container-choice-clouds button:first-child {
+  margin-right: 20px;
+}
+
 .medialist-box .btn-video-views {
   background: var(--stimorol);
   padding: 3px 0;
