@@ -12,8 +12,9 @@ describe("Token Factory", function () {
 	let NewRair721Factory, newRair721Instance;
 	let testFactory, testInstance;
 	let ResaleFactory, resaleInstance;
+	let tokenPurchaserFactory, tokenPurchaserInstance;
 
-	const initialSupply = 20;
+	const initialSupply = 400;
 	const tokenPrice = 5;
 	const testTokenName = "RAIR Test Token!";
 	const collection1Limit = 2;
@@ -28,7 +29,7 @@ describe("Token Factory", function () {
 
 	const firstDeploymentAddress = '0x0cE7946e65c3682c55D7Fb2c4D1e3851b8139a64';
 	const secondDeploymentAddress = '0xD77E4804680e04361692F58B033884D74f5f528D';
-	const thirdDeploymentAddress = '0x3dfBA4615B5D2BbC2Dd9Af503490C3EdC17eE32A';
+	const thirdDeploymentAddress = '0x9e1DA10A22918e8835344d04C78F051F8A0375C2';
 	const resaleOfferPrice = 123000;
 
 	const OfferStatus = {
@@ -50,6 +51,7 @@ describe("Token Factory", function () {
 		NewRair721Factory = await ethers.getContractFactory("RAIR721_Contract");
 		ResaleFactory = await ethers.getContractFactory('Resale_MarketPlace');
 		testFactory = await ethers.getContractFactory('Test721');
+		tokenPurchaserFactory = await ethers.getContractFactory('RAIR_Token_Purchaser');
 	});
 
 	describe('Deployments', () => {
@@ -89,6 +91,13 @@ describe("Token Factory", function () {
 				erc777Instance.address // Treasury Address
 			);
 			hre.tracer.nameTags[resaleInstance.address] = 'Resale Marketplace';
+		});
+
+		it('Should deploy the token purchaser', async () => {
+			tokenPurchaserInstance = await tokenPurchaserFactory.deploy(
+				erc777Instance.address // 777 Address
+			);
+			hre.tracer.nameTags[resaleInstance.address] = 'Token Purchaser';
 		});
 	})
 
@@ -1854,6 +1863,144 @@ describe("Token Factory", function () {
 						})
 				).to.be.revertedWith("Resale Marketplace: Offer is not available");
 			});
+		});
+	});
+
+	describe('Token purchaser', () => {
+		it ("Shouldn't exchange tokens if it doesn't have any exchange data", async () => {
+			await expect(tokenPurchaserInstance.getRAIR({value: 1000}))
+				.to.be.revertedWithCustomError(tokenPurchaserInstance, "InvalidEthValue")
+				.withArgs(1000);
+		});
+
+		it ("Should accept RAIR tokens", async () => {
+			await expect(await erc777Instance.send(
+				tokenPurchaserInstance.address,
+				180,
+				ethers.utils.toUtf8Bytes("Deposit")
+			))
+				.to.emit(tokenPurchaserInstance, "rairTokensAdded")
+				.withArgs(owner.address, 180);
+		});
+
+		it ("Should accept exchange data only from the administrator role", async () => {
+			let connectedPurchaser = tokenPurchaserInstance.connect(addr1);
+			await expect(connectedPurchaser.setPrices(
+				[20, 30, 100], // newRairPrices
+				[5, 6, 7] // newEthPrices
+			))
+				.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await connectedPurchaser.ADMINISTRATOR()}`);
+			
+			await expect(await tokenPurchaserInstance.setPrices(
+				[20, 30, 100], // newRairPrices
+				[5, 6, 7] // newEthPrices
+			));
+		});
+
+		it ("Shouldn't trade for invalid ETH prices", async () => {
+			
+			for (const invalidValue of [0, 1, 2, 3, 4, 100000000]) {
+				await expect(tokenPurchaserInstance.getRAIR({value: invalidValue}))
+					.to.be.revertedWithCustomError(tokenPurchaserInstance, "InvalidEthValue")
+					.withArgs(invalidValue);
+			}
+		});
+
+		it ("Should trade tokens", async () => {
+			for (const { validValue, validResponse } of [
+				{ validValue: 5, validResponse: 20 },
+				{ validValue: 6, validResponse: 30 },
+				{ validValue: 7, validResponse: 100 }
+			]) {
+				await expect(await tokenPurchaserInstance.getRAIR({value: validValue}))
+					.to.emit(erc777Instance, "Sent")
+					.withArgs(
+						tokenPurchaserInstance.address,
+						tokenPurchaserInstance.address,
+						owner.address,
+						validResponse,
+						ethers.utils.toUtf8Bytes('RAIR Token Purchase'),
+						ethers.utils.toUtf8Bytes(''),
+					);
+			}
+			await expect(await erc777Instance.balanceOf(tokenPurchaserInstance.address))
+				.to.equal(30);
+		});
+
+		it ("Shouldn't trade tokens if it has insufficient funds", async () => {
+			await expect(tokenPurchaserInstance.getRAIR({value: 7}))
+				.to.be.revertedWith("ERC777: transfer amount exceeds balance");
+		});
+
+		it ("Should list all prices available", async () => {
+			const data = await tokenPurchaserInstance.getExhangeRates();
+			let i = 0;
+			for ( const exchange of [
+				{ validValue: 5, validResponse: 20 },
+				{ validValue: 6, validResponse: 30 },
+				{ validValue: 7, validResponse: 100 }
+			]) {
+				expect(exchange.validValue).to.equal(data[0][i]);
+				expect(exchange.validResponse).to.equal(data[1][i]);
+				i++;
+			}
+		})
+
+		it ("Should update exchange information", async () => {
+			await expect(await tokenPurchaserInstance.setPrices(
+				[1, 3, 10], // newRairPrices
+				[1, 3, 10]  // newEthPrices
+			));
+			const data = await tokenPurchaserInstance.getExhangeRates();
+			
+			let i = 0;
+			for ( const exchange of [
+				{ validValue: 1, validResponse: 1 },
+				{ validValue: 3, validResponse: 3 },
+				{ validValue: 10, validResponse: 10 }
+			]) {
+				expect(exchange.validValue).to.equal(data[0][i]);
+				expect(exchange.validResponse).to.equal(data[1][i]);
+				i++;
+			}
+		});
+
+		it ("Shouldn't withdraw RAIR if it's not an admin", async () => {
+			let connectedPurchaser = tokenPurchaserInstance.connect(addr1);
+			await expect(connectedPurchaser.withdrawRAIR(20))
+				.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await connectedPurchaser.ADMINISTRATOR()}`);
+		});
+
+		it ("Shouldn't withdraw RAIR if there's not enough", async () => {
+			await expect(tokenPurchaserInstance.withdrawRAIR(50))
+				.to.be.revertedWith("ERC777: transfer amount exceeds balance");
+		});
+
+		it ("Should withdraw RAIR", async () => {
+			await expect(await tokenPurchaserInstance.withdrawRAIR(30))
+				.to.emit(erc777Instance, "Sent")
+				.withArgs(
+					tokenPurchaserInstance.address,
+					tokenPurchaserInstance.address,
+					owner.address,
+					30,
+					ethers.utils.toUtf8Bytes('RAIR Withdraw'),
+					ethers.utils.toUtf8Bytes(''),
+			);
+		});
+
+		it ("Shouldn't withdraw ETH if it's not an admin", async () => {
+			let connectedPurchaser = tokenPurchaserInstance.connect(addr1);
+			await expect(connectedPurchaser.withdrawAllETH())
+				.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await connectedPurchaser.ADMINISTRATOR()}`);
+		});
+
+		it ("Should withdraw ETH ", async () => {
+			await expect(await tokenPurchaserInstance.withdrawAllETH())
+				.to.changeEtherBalances(
+					[owner, tokenPurchaserInstance],
+					[18, -18]
+				)
 		});
 	});
 })

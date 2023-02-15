@@ -26,6 +26,7 @@ const Factory = () => {
   const [userBalance, setUserBalance] = useState<BigNumber>(BigNumber.from(0));
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
   const [deploying, setDeploying] = useState<boolean>(false);
+  const [exchangeData, setExchangeData] = useState({});
 
   const {
     currentUserAddress,
@@ -33,7 +34,8 @@ const Factory = () => {
     factoryInstance,
     erc777Instance,
     diamondFactoryInstance,
-    currentChain
+    currentChain,
+    tokenPurchaserInstance
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -45,6 +47,18 @@ const Factory = () => {
     (store) => store.userStore
   );
 
+  const getExchangeData = useCallback(async () => {
+    if (tokenPurchaserInstance) {
+      const [ethPrices, rairPrices] =
+        await tokenPurchaserInstance.getExhangeRates();
+      const exchanges = {};
+      ethPrices.forEach((item, index) => {
+        exchanges[item] = rairPrices[index];
+      });
+      setExchangeData(exchanges);
+    }
+  }, [tokenPurchaserInstance]);
+
   const getPrice = useCallback(async () => {
     if (window.ethereum) {
       setChainId(currentChain);
@@ -55,7 +69,11 @@ const Factory = () => {
       setDeploymentPrice(
         await factoryInstance.deploymentCostForERC777(erc777Instance.address)
       );
-      setUserBalance(await erc777Instance.balanceOf(currentUserAddress));
+      const userBalance = await erc777Instance.balanceOf(currentUserAddress);
+      if (userBalance) {
+        getExchangeData();
+      }
+      setUserBalance(userBalance);
       setTokenSymbol(await erc777Instance.symbol());
     }
     if (diamondFactoryInstance && erc777Instance) {
@@ -64,6 +82,7 @@ const Factory = () => {
       );
     }
   }, [
+    getExchangeData,
     currentUserAddress,
     factoryInstance,
     erc777Instance,
@@ -256,6 +275,43 @@ const Factory = () => {
           Your balance: {utils.formatEther(userBalance).toString()}{' '}
           {tokenSymbol} Tokens
         </div>
+        {tokenPurchaserInstance &&
+          Object.keys(exchangeData).map((ethPrice, index) => {
+            return (
+              <button
+                className="btn btn-stimorol col-12 mt-3 rounded-rair"
+                key={index}
+                onClick={async () => {
+                  Swal.fire({
+                    title: 'Please wait',
+                    text: 'Wating for user verification',
+                    icon: 'info',
+                    showConfirmButton: false
+                  });
+                  if (
+                    await metamaskCall(
+                      tokenPurchaserInstance.getRAIR({ value: ethPrice })
+                    )
+                  ) {
+                    Swal.fire({
+                      title: 'Success',
+                      html: `${utils
+                        .formatEther(exchangeData[ethPrice])
+                        .toString()} ${
+                        currentChain && chainData[currentChain]?.symbol
+                      }`,
+                      icon: 'success',
+                      showConfirmButton: true
+                    });
+                    getPrice();
+                  }
+                }}>
+                Purchase {utils.formatEther(exchangeData[ethPrice]).toString()}{' '}
+                {tokenSymbol} for {utils.formatEther(ethPrice).toString()}{' '}
+                {currentChain && chainData[currentChain]?.symbol}
+              </button>
+            );
+          })}
         <div
           className="col-12 p-3 mt-5 rounded-rair"
           style={{ border: '1.3px dashed var(--charcoal-80)' }}>

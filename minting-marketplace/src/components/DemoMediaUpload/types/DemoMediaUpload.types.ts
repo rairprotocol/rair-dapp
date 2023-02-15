@@ -18,7 +18,7 @@ export interface IMediaListBox {
   uploadSuccess: boolean | null;
   uploadProgress: any;
   uploading: boolean;
-  uploadVideoDemo: (item: TMediaType) => void;
+  uploadVideoDemo: (item: TMediaType, storage: string) => void;
   categories: OptionsType[];
   selectCommonInfo: any;
   deleter: (index: number) => void;

@@ -38,7 +38,6 @@ module.exports = {
       product: "0",
       offer: ["0"],
       demo: "true",
-      storage: 'gcp',
       description: 'demo',
     };
     req.context = {

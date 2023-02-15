@@ -39,6 +39,12 @@
   top: 85px;
 }
 
+.popup-content.popup-notification-block-content {
+  position: absolute !important;
+  right: 100px;
+  top: 85px;
+}
+
 .user-block {
   position: relative;
 }
@@ -56,7 +62,7 @@
 }
 
 .pop-up-notification {
-  width: 520px;
+  width: 550px;
   color: #fff;
   margin-top: 12px;
   margin-left: 20px;
@@ -72,7 +78,7 @@
 
 .notification-from-rair {
   padding: 25px 16px;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #2d2d2d;
 }
 
 .notification-from-factory {
@@ -115,7 +121,7 @@
 
 .pop-up-notification .text-notification {
   line-height: 24px;
-  margin-right: 40px;
+  width: 75%;
 }
 
 .pop-up-notification .text-notification .title-notif {

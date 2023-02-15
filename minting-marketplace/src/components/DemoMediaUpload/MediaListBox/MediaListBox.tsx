@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../ducks';
@@ -7,6 +7,8 @@ import InputSelect from '../../common/InputSelect';
 import LinearProgressWithLabel from '../LinearProgressWithLabel/LinearProgressWithLabel';
 import MediaItemChange from '../MediaItemChange/MediaItemChange';
 import { IMediaListBox } from '../types/DemoMediaUpload.types';
+
+import { reactSwal } from './../../../utils/reactSwal';
 
 const MediaListBox: React.FC<IMediaListBox> = ({
   item,
@@ -27,6 +29,45 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  const uploadVideoCloud = (item, cloud) => {
+    uploadVideoDemo(item, cloud);
+    reactSwal.close();
+  };
+
+  const alertChoiceCloud = useCallback(() => {
+    reactSwal.fire({
+      title: 'Select video storage location (Cloud or IPFS)',
+      html: (
+        <div className="container-choice-clouds">
+          <button
+            className="btn-stimorol btn"
+            onClick={() => uploadVideoCloud(item, 'gcp')}>
+            Cloud
+          </button>
+          <button
+            className="btn-stimorol btn"
+            onClick={() => uploadVideoCloud(item, 'ipfs')}>
+            IPFS
+          </button>
+        </div>
+      ),
+      showConfirmButton: false,
+      showCancelButton: true,
+      width: '40vw',
+      background: `${primaryColor === 'rhyno' ? '#fff' : '#2d2d2d'}`,
+      color: `${primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'}`
+    });
+    // Swal.fire({
+    //   title: 'Select video storage location (GCP or IPFS)',
+    //   showCloseButton: true,
+    //   confirmButtonText: 'Google Cloud',
+    //   background: `${primaryColor === 'rhyno' ? '#fff' : '#2d2d2d'}`,
+    //   color: `${primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'}`
+    // }).then(() => {
+    //   // uploadVideoDemo(item);
+    // });
+  }, [primaryColor]);
 
   return (
     <div
@@ -58,7 +99,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           </button>
         ) : (
           <button
-            onClick={() => uploadVideoDemo(item)}
+            onClick={() => alertChoiceCloud()}
             disabled={uploadSuccess === false || uploading}
             className="btn-stimorol btn rounded-rair white">
             <>

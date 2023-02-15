@@ -50,7 +50,7 @@ const UserProfileSettings = ({
         {loginDone && (
           <PopUpNotification
             primaryColor={primaryColor}
-            isNotification={false}
+            isNotification={true}
           />
         )}
         <SocialBox
