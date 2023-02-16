@@ -36,6 +36,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [watchCounter, setWatchCounter] = useState<number | null>(null);
   const [loadDeleting, setLoadDeleting] = useState(false);
+  const [editTitleVideo, setEditTitleVideo] = useState<boolean>(false);
 
   const customStyles = {
     overlay: {
@@ -158,7 +159,12 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           index={index}
           mediaList={mediaList}
           uploadSuccess={uploadSuccess}
-          textFlag={true}
+          textFlag={false}
+          uploadVideo={true}
+          mediaId={fileData._id}
+          getMediaList={getMediaList}
+          setEditTitleVideo={setEditTitleVideo}
+          editTitleVideo={editTitleVideo}
         />
         <button
           onClick={() => copyEmbebed(fileData._id)}
@@ -187,7 +193,9 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           }`}>
           <i className="fas fa-trash" />
         </button>
-        <AnalyticsPopUp videoId={fileData._id} watchCounter={watchCounter} />
+        {!editTitleVideo && (
+          <AnalyticsPopUp videoId={fileData._id} watchCounter={watchCounter} />
+        )}
       </div>
       <>
         <Modal

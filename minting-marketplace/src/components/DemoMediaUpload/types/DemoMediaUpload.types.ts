@@ -8,6 +8,11 @@ export interface IMediaItemChange {
   mediaList: TMediaType[];
   uploadSuccess: null | boolean;
   textFlag?: boolean;
+  uploadVideo?: boolean;
+  mediaId?: string;
+  getMediaList: (() => void) | undefined;
+  editTitleVideo: boolean;
+  setEditTitleVideo: any;
 }
 
 export interface IMediaListBox {

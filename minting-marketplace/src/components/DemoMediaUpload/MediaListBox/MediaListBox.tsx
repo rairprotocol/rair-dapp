@@ -29,6 +29,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const [editTitleVideo, setEditTitleVideo] = useState<boolean>(false);
 
   const uploadVideoCloud = (item, cloud) => {
     uploadVideoDemo(item, cloud);
@@ -87,6 +88,9 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           index={index}
           mediaList={mediaList}
           uploadSuccess={uploadSuccess}
+          getMediaList={undefined}
+          setEditTitleVideo={setEditTitleVideo}
+          editTitleVideo={editTitleVideo}
         />
         {uploadProgress && currentTitleVideo === item.title ? (
           <button
