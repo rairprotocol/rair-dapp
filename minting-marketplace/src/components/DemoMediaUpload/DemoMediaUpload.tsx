@@ -331,25 +331,27 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
             )}
           </Dropzone>
         </div>
-        {Object.keys(mediaUploadedList).map((item, index) => {
-          const fileData = mediaUploadedList[item];
-          return (
-            <UploadedListBox
-              key={fileData.title + index}
-              fileData={fileData}
-              index={index}
-              setMediaList={setMediaList}
-              mediaList={mediaList}
-              uploadSuccess={uploadSuccess}
-              copyEmbebed={copyEmbebed}
-              selectCommonInfo={selectCommonInfo}
-              updateMediaCategory={updateMediaCategory}
-              mediaUploadedList={mediaUploadedList}
-              categories={categories}
-              getMediaList={getMediaList}
-            />
-          );
-        })}
+        {Object.keys(mediaUploadedList)
+          .sort()
+          .map((item, index) => {
+            const fileData = mediaUploadedList[item];
+            return (
+              <UploadedListBox
+                key={fileData.title + index}
+                fileData={fileData}
+                index={index}
+                setMediaList={setMediaList}
+                mediaList={mediaUploadedList}
+                uploadSuccess={uploadSuccess}
+                copyEmbebed={copyEmbebed}
+                selectCommonInfo={selectCommonInfo}
+                updateMediaCategory={updateMediaCategory}
+                mediaUploadedList={mediaUploadedList}
+                categories={categories}
+                getMediaList={getMediaList}
+              />
+            );
+          })}
         {mediaList.map((item, index, array) => {
           return (
             <MediaListBox
