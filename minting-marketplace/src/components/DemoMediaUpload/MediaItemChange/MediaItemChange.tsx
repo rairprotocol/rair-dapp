@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import { MediaItemContainer } from './MediaItem.styled';
+
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { rFetch } from '../../../utils/rFetch';
@@ -81,7 +83,9 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
   };
 
   return (
-    <div className="col-12 media-item-title">
+    <MediaItemContainer
+      editTitleVideo={editTitleVideo}
+      className="col-12 media-item-title">
       {textFlag ? (
         <div>
           <p className="col-12">
@@ -142,7 +146,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
           )}
         </div>
       )}
-    </div>
+    </MediaItemContainer>
   );
 };
 

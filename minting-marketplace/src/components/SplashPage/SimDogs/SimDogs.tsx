@@ -90,7 +90,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
-      `/api/nft/network/${splashData.marketplaceDemoParams?.blockchain}/${splashData.marketplaceDemoParams?.contract}/${splashData.marketplaceDemoParams?.product}/files`
+      `/api/nft/network/0x1/0xA5A823294AF53B983969BB48cAA3cDb28545828F/0/files`
     );
     setProductsFromOffer(response.data.files);
     setSelectVideo(response.data.files[0]);
