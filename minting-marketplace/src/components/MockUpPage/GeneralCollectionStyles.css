@@ -41,6 +41,18 @@
   margin-right: 0px;
 }
 
+.wrapper-collection .nft-item-collection:nth-child(1n + 1) {
+  /* margin-left: 24px; */
+}
+
+.wrapper-collection .nft-item-collection:nth-child(4n + 4) {
+  margin-right: 24px;
+}
+
+/* .wrapper-collection .nft-item-collection:nth-child(5n + 5) {
+  margin-right: 0px;
+} */
+
 #nft-data-page-wrapper .nft-data-content {
   max-width: 85vw;
   border-radius: 16px;
@@ -353,6 +365,85 @@ img.single-token-block-img {
 .container-video-js {
   width: auto;
   height: 406px;
+}
+
+@media screen and (max-width: 568px) {
+  .wrapper-collection .list-button-wrapper {
+    width: 360px;
+  }
+}
+
+@media screen and (min-width: 568px) and (max-width: 700px) {
+  .wrapper-collection .list-button-wrapper {
+    width: 560px;
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 1109px) {
+  .wrapper-collection .list-button-wrapper {
+    width: 600px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(2n + 2) {
+    margin-right: 0px;
+  }
+}
+
+@media screen and (min-width: 1261px) and (max-width: 1415px) {
+  .wrapper-collection .list-button-wrapper {
+    width: 900px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(3n + 3) {
+    margin-right: 0px;
+  }
+}
+
+@media screen and (min-width: 1415px) and (max-width: 1725px) {
+  .wrapper-collection .list-button-wrapper {
+    width: 1200px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(5n + 5) {
+    margin-right: 24px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(4n + 4) {
+    margin-right: 0px;
+  }
+}
+
+@media screen and (min-width: 1726px) and (max-width: 2083px) {
+  .wrapper-collection .list-button-wrapper {
+    width: 1600px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(5n + 5) {
+    margin-right: 0px;
+  }
+}
+
+@media screen and (min-width: 2083px) and (max-width: 2400px) {
+  .wrapper-collection .nft-item-collection:nth-child(5n + 5) {
+    margin-right: 24px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(6n + 6) {
+    margin-right: 0px;
+  }
+
+  .wrapper-collection .list-button-wrapper {
+    width: 87vw;
+  }
+}
+
+@media screen and (min-width: 2400px) {
+  .wrapper-collection .nft-item-collection:nth-child(5n + 5) {
+    margin-right: 24px;
+  }
+  .wrapper-collection .nft-item-collection:nth-child(7n + 7) {
+    margin-right: 0;
+  }
 }
 
 @media screen and (max-width: 1500px) {

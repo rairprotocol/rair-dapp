@@ -27,6 +27,10 @@ const UnlockableVideosSingleTokenPage: React.FC<
     setSelectVideo(selectVideo); // This will always use latest value of count
   }, [setSelectVideo, selectVideo]);
 
+  useEffect(() => {
+    setSelectVideo(productsFromOffer[0]);
+  }, [productsFromOffer, setSelectVideo]);
+
   const handleSelectedItem = (itemSelected: TFileType) => {
     setSelectedItem(itemSelected);
   };
