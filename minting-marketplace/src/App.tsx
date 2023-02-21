@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 // React Redux types
 import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
+
 // import * as ethers from 'ethers';
 // import * as colorTypes from './ducks/colors/types';
-import jsonwebtoken from 'jsonwebtoken';
-
+// import jsonwebtoken from 'jsonwebtoken';
 // logos for About Page
 import { headerLogoBlack, headerLogoWhite } from './images';
 

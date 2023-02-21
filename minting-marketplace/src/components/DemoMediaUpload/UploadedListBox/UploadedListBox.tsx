@@ -135,6 +135,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
 
   useEffect(() => {
     getCounterVideo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalIsOpen]);
 
   return (

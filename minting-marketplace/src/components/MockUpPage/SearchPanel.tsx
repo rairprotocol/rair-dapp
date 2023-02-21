@@ -110,6 +110,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     (params) => {
       dispatch(getListVideosStart(params));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dispatch, videoUnlocked]
   );
 

@@ -31,9 +31,6 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     (store) => store.contractStore
   );
 
-  const { uploadVideo } = useSelector<RootState, any>(
-    (store) => store.videoDemoStore
-  );
   const dispatch = useDispatch();
 
   const { width } = useWindowDimensions();
@@ -120,7 +117,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   const getMediaList = async () => {
     if (currentUserAddress !== undefined) {
       const { success, list } = await rFetch(
-        `/api/media/list?blockchain=0x1&contractAddress=0x571acc173f57c095f1f63b28f823f0f33128a6c4&userAddress=${currentUserAddress}`
+        `/api/media/list?userAddress=${currentUserAddress}`
       );
 
       if (success) setMediaUploadedList(list);
@@ -138,6 +135,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
       setUploading(false);
       setUploadProgress(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadSuccess]);
 
   useEffect(() => {

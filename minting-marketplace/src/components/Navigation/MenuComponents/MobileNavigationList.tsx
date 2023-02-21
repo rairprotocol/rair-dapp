@@ -26,13 +26,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   toggleMenu,
   currentUserAddress,
   logout,
-  setTabIndexItems,
+  // setTabIndexItems,
   isSplashPage
 }) => {
-  const goToMyItems = (tab: number) => {
-    setTabIndexItems(tab);
-    toggleMenu();
-  };
+  // const goToMyItems = (tab: number) => {
+  //   setTabIndexItems(tab);
+  //   toggleMenu();
+  // };
 
   return (
     <NavFooter>

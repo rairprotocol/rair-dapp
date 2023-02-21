@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { ethers } from 'ethers';
 import Swal from 'sweetalert2';
 
 import { TAuthGetChallengeResponse } from '../../../../axios.responseTypes';
@@ -103,6 +102,7 @@ const VideoPlayerBySignature: React.FC<IVideoPlayerBySignature> = ({
       Swal.fire('Error', 'Unable to decrypt videos', 'error');
       return;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programmaticProvider]);
 
   useEffect(() => {

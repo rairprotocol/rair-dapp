@@ -226,16 +226,16 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   }, [getInfoFromUser]);
 
   //unused-snippet
-  const onSelect = useCallback(
-    (id: string) => {
-      tokenData?.forEach((p) => {
-        if (p._id === id) {
-          setSelectedData(p.metadata);
-        }
-      });
-    },
-    [tokenData]
-  );
+  // const onSelect = useCallback(
+  //   (id: string) => {
+  //     tokenData?.forEach((p) => {
+  //       if (p._id === id) {
+  //         setSelectedData(p.metadata);
+  //       }
+  //     });
+  //   },
+  //   [tokenData]
+  // );
 
   const handleClickToken = async (tokenId: string | undefined) => {
     if (embeddedParams && tokenId) {

@@ -18,7 +18,7 @@ import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 
 import './videoUpload.css';
-const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
+// const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 //TODO: alternative env
 // const hostname = window.location.hostname;
