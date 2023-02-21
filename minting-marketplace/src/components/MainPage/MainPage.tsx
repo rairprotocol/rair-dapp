@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { style } from '@mui/system';
 import Swal from 'sweetalert2';
 
 import { rairAdvisorsTeam, teamMainPage } from './AboutUsTeam';
@@ -53,7 +52,7 @@ import styles from './MainPage.module.css';
 
 /* GLOBAL VALUES */
 const blockchain: BlockchainType = '0x1';
-const contract = '0x88af5cdac0b834f502f1cb865b26f92748b861c3';
+const contract = '0xA5A823294AF53B983969BB48cAA3cDb28545828F';
 const product = '0';
 const offerIndexInMarketplace = ['0', '1988'];
 const iframeLink =
@@ -159,7 +158,7 @@ const MainPage: React.FC<IMainPage> = ({
         </div>
         <PurchaseTokenButton
           {...{
-            handleClick: () => navigate('/demo'),
+            handleClick: () => window.open('https://beta.rair.tech/', '_self'),
             customWrapperClassName: '',
             altButtonFormat: true,
             customButtonClassName: styles.button,
@@ -382,29 +381,34 @@ const MainPage: React.FC<IMainPage> = ({
           variableName={'--usecase_display'}
         />
       </div>
-      <div className={styles.videoplayer_textbox}>
-        <span>Test our</span>
-        <span className={styles.videoplayer_title_alt}> Player</span>
-      </div>
-      <div className="rairpage-videoplayer-wrapper">
-        <div
-          className="nft-collection nft-collection-video-wrapper"
-          style={{
-            backgroundColor: `${
-              primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
-            }`
-          }}>
-          <UnlockableVideosSingleTokenPage
-            selectVideo={selectVideo}
-            setSelectVideo={setSelectVideo}
-            productsFromOffer={productsFromOffer}
-            openVideoplayer={openVideoplayer}
-            setOpenVideoPlayer={setOpenVideoPlayer}
-            handlePlayerClick={handlePlayerClick}
-            primaryColor={primaryColor}
-          />
-        </div>
-      </div>
+      {productsFromOffer && productsFromOffer.length > 0 && (
+        <>
+          <div className={styles.videoplayer_textbox}>
+            <span>Test our</span>
+            <span className={styles.videoplayer_title_alt}> Player</span>
+          </div>
+          <div className="rairpage-videoplayer-wrapper">
+            <div
+              className="nft-collection nft-collection-video-wrapper"
+              style={{
+                backgroundColor: `${
+                  primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
+                }`
+              }}>
+              <UnlockableVideosSingleTokenPage
+                selectVideo={selectVideo}
+                setSelectVideo={setSelectVideo}
+                productsFromOffer={productsFromOffer}
+                openVideoplayer={openVideoplayer}
+                setOpenVideoPlayer={setOpenVideoPlayer}
+                handlePlayerClick={handlePlayerClick}
+                primaryColor={primaryColor}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
       <div className={styles.embeddeddemo_textbox}>
         <span>Embed this</span>
         <span className={styles.embeddeddemo_title_alt}> code</span>
