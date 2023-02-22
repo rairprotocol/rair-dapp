@@ -21,7 +21,6 @@ import ModalItem from '../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem';
 import { IMyItems, TDiamondTokensType } from '../nft/nft.types';
 import { PersonalProfileBackground } from '../nft/PersonalProfile/PersonalProfileBackground/PersonalProfileBackground';
 import PersonalProfileFavoritesTab from '../nft/PersonalProfile/PersonalProfileFavoritesTab/PersonalProfileFavoritesTab';
-import { PersonalProfileIcon } from '../nft/PersonalProfile/PersonalProfileIcon/PersonalProfileIcon';
 import { PersonalProfileMyCreated } from '../nft/PersonalProfile/PersonalProfileMyCreated/PersonalProfileMyCreated';
 import { PersonalProfileMyNftTab } from '../nft/PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab';
 import { PersonalProfileMyVideoTab } from '../nft/PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';

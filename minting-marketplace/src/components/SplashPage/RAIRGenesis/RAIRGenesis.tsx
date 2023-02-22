@@ -12,7 +12,6 @@ import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useSplashData } from '../../../utils/infoSplashData/rairGenesis';
-import { reactSwal } from '../../../utils/reactSwal';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -29,7 +28,6 @@ import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
-import WarningModal from '../WarningModal/WarningModal';
 
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';

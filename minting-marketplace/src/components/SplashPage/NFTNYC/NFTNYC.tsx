@@ -12,7 +12,6 @@ import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useNFTNYC } from '../../../utils/infoSplashData/nftnyc';
 import { reactSwal } from '../../../utils/reactSwal';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import CustomButton from '../../MockUpPage/utils/button/CustomButton';
 import MetaTags from '../../SeoTags/MetaTags';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';

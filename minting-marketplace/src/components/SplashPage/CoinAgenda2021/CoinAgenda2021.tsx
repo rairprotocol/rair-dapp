@@ -10,8 +10,6 @@ import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { splashData } from '../../../utils/infoSplashData/coicAgenda2021';
-import { reactSwal } from '../../../utils/reactSwal';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import { ISplashPageProps } from '../splashPage.types';
@@ -87,8 +85,6 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
   };
-
-  const whatSplashPage = 'genesis-font';
 
   return (
     <div className="wrapper-splash-page coinagenda">

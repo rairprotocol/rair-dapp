@@ -59,15 +59,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
       background: `${primaryColor === 'rhyno' ? '#fff' : '#2d2d2d'}`,
       color: `${primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'}`
     });
-    // Swal.fire({
-    //   title: 'Select video storage location (GCP or IPFS)',
-    //   showCloseButton: true,
-    //   confirmButtonText: 'Google Cloud',
-    //   background: `${primaryColor === 'rhyno' ? '#fff' : '#2d2d2d'}`,
-    //   color: `${primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'}`
-    // }).then(() => {
-    //   // uploadVideoDemo(item);
-    // });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [primaryColor]);
 
   return (

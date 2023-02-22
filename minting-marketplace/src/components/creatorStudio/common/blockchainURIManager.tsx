@@ -4,7 +4,7 @@ import { BigNumber } from 'ethers';
 //import InputSelect from '../../common/InputSelect';
 import Swal from 'sweetalert2';
 
-import { TTokenData } from '../../../axios.responseTypes';
+// import { TTokenData } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { metamaskCall } from '../../../utils/metamaskUtils';

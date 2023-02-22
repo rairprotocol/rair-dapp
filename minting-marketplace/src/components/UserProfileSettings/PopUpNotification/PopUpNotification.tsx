@@ -13,7 +13,7 @@ import NotificationPage from '../NotificationPage/NotificationPage';
 
 import NftImg from './images/image.png';
 
-const PopUpNotification = ({ isNotification }) =>
+const PopUpNotification = () =>
   // props was - isNotification
   {
     const [openModal, setOpenModal] = useState(false);

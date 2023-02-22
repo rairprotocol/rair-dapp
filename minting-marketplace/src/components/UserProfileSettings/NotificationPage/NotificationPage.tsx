@@ -6,7 +6,7 @@ import IconRemove from './images/icon-remove.png';
 // import { useSelector } from 'react-redux';
 import './NotificationPage.css';
 
-const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
+const NotificationPage = ({ headerLogo, primaryColor }) => {
   return (
     <div className="wrapper-notification">
       <div className="notification-from-rair">

@@ -47,7 +47,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
     e.preventDefault();
     if (uploadVideo) {
       setDisabledBtn(true);
-      Object.keys(mediaList).map((item, index) => {
+      Object.keys(mediaList).map((item) => {
         const fileData = mediaList[item];
         return fileData;
       });

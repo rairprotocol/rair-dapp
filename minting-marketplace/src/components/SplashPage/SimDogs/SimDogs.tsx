@@ -18,7 +18,6 @@ import {
   donationGridData,
   splashData
 } from '../../../utils/infoSplashData/simDogs';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../SeoTags/MetaTags';
 import { SimDogs0 } from '../images/simDogs/simDogs';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { teamNFTLAarray } from './AboutUsTeam';
-import { ISplashPageProps, TNftLaSelectedVideo } from './splashPage.types';
+import { ISplashPageProps } from './splashPage.types';
 
 import { TFileType } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
@@ -11,7 +11,6 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { splashData } from '../../../utils/infoSplashData/nftla';
-import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import { TVideoPlayerViewSpecialVideoType } from '../../MockUpPage/NftList/nftList.types';
 import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
