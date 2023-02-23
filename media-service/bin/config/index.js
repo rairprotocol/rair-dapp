@@ -16,6 +16,8 @@ const {
   BASE_RAIRNODE_URL,
   SENTRY_DSN,
   LOG_LEVEL,
+  REDIS_HOST,
+  REDIS_PORT,
 } = process.env;
 
 module.exports = {
@@ -47,5 +49,8 @@ module.exports = {
     dsn: SENTRY_DSN || '',
     serverName: 'media-service',
     logLevels: ['error'],
+  },
+  redis: {
+    connection: { host: REDIS_HOST, port: REDIS_PORT },
   },
 };

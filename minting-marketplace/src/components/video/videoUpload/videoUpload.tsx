@@ -438,7 +438,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
             video === undefined
           }
           className="btn py-1 col-8 btn-primary btn-submit-custom"
-          onClick={() => {
+          onClick={async () => {
             if (uploading) {
               return;
             }
@@ -462,14 +462,19 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
               });
               formData.append('offer', JSON.stringify(acceptedOffers));
               setUploading(true);
+              const tokenRequest = await rFetch('/api/v2/upload/token');
+              if (!tokenRequest.success) {
+                setUploading(false);
+                return;
+              }
               axios
                 .post<TUploadSocket>(
-                  `/ms/api/v1/media/upload/demo?socketSessionId=${thisSessionId}`,
+                  `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
                   formData,
                   {
                     headers: {
                       Accept: 'application/json',
-                      'X-rair-token': currentToken
+                      'X-rair-token': tokenRequest.secret
                     }
                   }
                 )

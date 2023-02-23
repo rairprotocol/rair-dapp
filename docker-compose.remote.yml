@@ -118,6 +118,8 @@ services:
       BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
       ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
       ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
       - 5001:5001
     depends_on:
@@ -152,6 +154,8 @@ services:
       VAULT_MEDIA_SERVICE_APP_ROLE_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_ID}
       VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID}
       SENTRY_DSN: ${sentry_dsn}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
       - 5002:5002
     networks:

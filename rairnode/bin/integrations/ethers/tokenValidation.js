@@ -1,8 +1,31 @@
+const { JsonRpcProvider, Network } = require('ethers');
 const ethers = require('ethers');
 const log = require('../../utils/logger')(module);
 const RAIR_ERC721Abi = require('./contracts/RAIR_ERC721.json').abi;
 
 const config = require('../../config');
+
+let maticTestnet = new Network('Matic Testnet', 0x13881);
+let maticMainnet = new Network('Matic Mainnet', 0x89);
+let binanceTestnet = new Network('Binance Testnet', 0x61);
+let binanceMainnet = new Network('Binance Mainnet', 0x38);
+let ethereumGoerli = new Network('Ethereum Goerli', 0x5);
+let ethereumMainnet = new Network('Ethereum Mainnet', 0x1);
+
+const v6Networks = {
+  '0x13881': maticTestnet,
+  mumbai: maticTestnet,
+  '0x89': maticMainnet,
+  matic: maticMainnet,
+  '0x61': binanceTestnet,
+  'binance-testnet': binanceTestnet,
+  '0x38': binanceMainnet,
+  'binance-mainnet': binanceMainnet,
+  '0x1': ethereumMainnet,
+  ethereum: ethereumMainnet,
+  '0x5': ethereumGoerli,
+  goerli: ethereumGoerli,
+}
 
 const endpoints = {
   '0x13881': process.env.MATIC_TESTNET_RPC,
@@ -106,8 +129,10 @@ async function checkBalanceSingle(
 
 const checkBalanceAny = async (userAddress, chain, contractAddress) => {
   try {
-    let provider = new ethers.providers.StaticJsonRpcProvider(
-      endpoints[chain]
+    let provider = new JsonRpcProvider(
+      endpoints[chain], v6Networks[chain], {
+        staticNetwork: v6Networks[chain]
+      }
     );
     const tokenInstance = new ethers.Contract(
       contractAddress,
@@ -115,9 +140,9 @@ const checkBalanceAny = async (userAddress, chain, contractAddress) => {
       provider
     );
     const result = await tokenInstance.balanceOf(userAddress);
-    return result.gt(ethers.BigNumber.from(0));
+    return result > 0;
   } catch (err) {
-    log.error(`Error querying tokens for user ${accountAddress} from admin Contract.`);
+    log.error(`Error querying tokens for user ${userAddress} from admin Contract.`);
     log.error(err);
     return false;
   }

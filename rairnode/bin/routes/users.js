@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const AppError = require('../utils/errors/AppError');
-const { JWTVerification, validation } = require('../middleware');
+const { verifyUserSession, validation } = require('../middleware');
 const upload = require('../Multer/Config');
 const { cleanStorage } = require('../utils/helpers');
 const log = require('../utils/logger')(module);
@@ -39,7 +39,7 @@ module.exports = (context) => {
   });
 
   // Update specific user fields
-  router.post('/:publicAddress', JWTVerification, upload.array('files', 2), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
+  router.post('/:publicAddress', verifyUserSession, upload.array('files', 2), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
       const foundUser = await context.db.User.findOne({ publicAddress });

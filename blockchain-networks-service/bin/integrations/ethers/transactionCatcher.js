@@ -3,7 +3,7 @@ const ethers = require('ethers');
 const Moralis = require('moralis/node');
 const endpoints = require('../../config/blockchainEndpoints');
 const log = require('../../utils/logger')(module);
-const {masterMapping, insertionMapping} = require('../../utils/eventCatcherMapping');
+const { masterMapping, insertionMapping } = require('../../utils/eventCatcherMapping');
 
 const { providersMapping } = require('../../utils/speedyNodeProviders');
 

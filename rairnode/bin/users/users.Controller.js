@@ -1,5 +1,5 @@
 const express = require('express');
-const { JWTVerification, validation } = require('../middleware');
+const { verifyUserSession, validation } = require('../middleware');
 const usersService = require('./users.Service');
 const upload = require('../Multer/Config');
 
@@ -15,7 +15,7 @@ router
   .get(usersService.getUserByAddress)
   // Was POST in V1, no difference in usage, just standard
   .patch(
-    JWTVerification,
+    verifyUserSession,
     upload.array('files', 2),
     validation('updateUser'),
     usersService.updateUserByUserAddress,

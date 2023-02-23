@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const AppError = require('../../utils/errors/AppError');
 const {
-  JWTVerification,
+  verifyUserSession,
   validation,
   isAdmin,
   isSuperAdmin,
@@ -191,7 +191,7 @@ module.exports = (context) => {
   );
 
   // Get list of contracts for current user or all contracts if user have superAdmin rights
-  router.get('/', JWTVerification, isSuperAdmin, (req, res, next) => {
+  router.get('/', verifyUserSession, isSuperAdmin, (req, res, next) => {
     const { publicAddress: user, superAdmin } = req.user;
 
     if (superAdmin) {
@@ -202,7 +202,7 @@ module.exports = (context) => {
   });
 
   // Get list of contracts for specific user
-  router.get('byUser/:userId', JWTVerification, async (req, res, next) => {
+  router.get('byUser/:userId', verifyUserSession, async (req, res, next) => {
     const userFound = await context.db.User.findOne({
       _id: req.params.userId,
     });
@@ -231,7 +231,7 @@ module.exports = (context) => {
 
   router.post(
     '/import/',
-    JWTVerification,
+    verifyUserSession,
     isAdmin,
     validation('importContract', 'body'),
     async (req, res, next) => {

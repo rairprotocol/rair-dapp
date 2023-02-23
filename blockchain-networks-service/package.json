@@ -40,6 +40,7 @@
     "morgan": "^1.10.0",
     "nanoid": "^3.3.3",
     "node-fetch": "2.6.7",
+    "redis": "^4.6.4",
     "triple-beam": "^1.3.0",
     "web3": "^1.7.3",
     "winston": "^3.7.2",

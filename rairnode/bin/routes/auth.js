@@ -2,7 +2,6 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
-const { default: axios } = require('axios');
 const { generateChallenge, generateChallengeV2, validateChallenge, validateChallengeV2 } = require('../integrations/ethers/web3Signature');
 const AppError = require('../utils/errors/AppError');
 const {
@@ -10,10 +9,10 @@ const {
   checkAdminTokenOwns,
   checkBalanceAny,
 } = require('../integrations/ethers/tokenValidation');
-const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
+const { verifyUserSession, validation, isSuperAdmin } = require('../middleware');
 const { generateJWT, getMeetingInvite } = require('../integrations/zoom/zoomController');
 const log = require('../utils/logger')(module);
-const { File, MediaViewLog, User } = require('../models');
+const { File, MediaViewLog, User, Contract } = require('../models');
 
 // TODO: remove ARTIFACT
 
@@ -104,7 +103,7 @@ module.exports = (context) => {
       req.metaAuth = {
         customDescription: messages[req.body.intent],
       };
-      next();
+      return next();
     },
     generateChallengeV2,
     (req, res, next) => {
@@ -272,23 +271,30 @@ module.exports = (context) => {
       let ownsTheAdminToken;
       const ownsTheAccessTokens = [];
 
-      const user = await context.db.User.findOne({
+      const user = await User.findOne({
         publicAddress: ethAddress,
       });
 
-      if (_.isNull(user)) {
+      if (user === null) {
         return next(new AppError('User not found.', 404));
       }
+      const { session } = req;
+      session.userData = user;
+
+      let mediaIdentifier;
+      let mediaType;
 
       try {
         let media;
         if (mediaId) {
-          media = await context.db.File.findOne({ _id: mediaId });
+          media = await File.findOne({ _id: mediaId });
+          mediaIdentifier = mediaId;
+          mediaType = 'media';
         } else if (zoomId) {
-          // media = await context.db.<ZoomSchema>.findOne({ _id: zoomId });
+          // media = await <ZoomSchema>.findOne({ _id: zoomId });
           // Special case for Mark Kohler's Zoom
           if (zoomId === 'Kohler') {
-            const kohlerContract = await context.db.Contract.findOne({
+            const kohlerContract = await Contract.findOne({
               contractAddress: '0x711fe7fccdf84875c9bdf663c89b5f5f726a11d7'.toLowerCase(),
               blockchain: '0x1',
             });
@@ -301,12 +307,14 @@ module.exports = (context) => {
               meetingIdentifier: process.env.KOHLER_MEETING_ID,
             };
           }
+          mediaIdentifier = zoomId;
+          mediaType = 'zoom';
         }
         if (!media) {
           return next(new AppError('No media file found', 400));
         }
 
-        const contract = await context.db.Contract.findOne(media.contract);
+        const contract = await Contract.findOne(media.contract);
         if (!contract) {
           return next(new AppError('No contract found', 400));
         }
@@ -319,88 +327,81 @@ module.exports = (context) => {
           ),
         );
 
-        if (ethAddress) {
-          // Verify the user has the tokens needed in a RAIR contract
-          // eslint-disable-next-line no-restricted-syntax
-          for await (const offer of offers) {
-            const result = contract.external
-              ? await checkBalanceAny(
-                ethAddress,
-                contract.blockchain,
-                contract.contractAddress,
-              )
-              : await checkBalanceProduct(
-                ethAddress,
-                contract.blockchain,
-                contract.contractAddress,
-                offer.product,
-                offer.range[0],
-                offer.range[1],
-              );
-            ownsTheAccessTokens.push(result);
-            if (ownsTheAccessTokens.includes(true)) {
-              break;
-            }
+        // Verify the user has the tokens needed in a RAIR contract
+        // eslint-disable-next-line no-restricted-syntax
+        for await (const offer of offers) {
+          const result = contract.external
+            ? await checkBalanceAny(
+              ethAddress,
+              contract.blockchain,
+              contract.contractAddress,
+            )
+            : await checkBalanceProduct(
+              ethAddress,
+              contract.blockchain,
+              contract.contractAddress,
+              offer.product,
+              offer.range[0],
+              offer.range[1],
+            );
+          ownsTheAccessTokens.push(result);
+          if (ownsTheAccessTokens.includes(true)) {
+            break;
           }
-
-          // verify the account holds the required admin NFT
-          if (
-            !ownsTheAccessTokens.includes(true) &&
-            media.authorPublicAddress === ethAddress.toLowerCase()
-          ) {
-            try {
-              ownsTheAdminToken = await checkAdminTokenOwns(ethAddress);
-
-              if (ownsTheAdminToken) {
-                log.info('Verifying user account has the admin token');
-              }
-            } catch (e) {
-              return next(new AppError(`Could not verify account: ${e}`, 403));
-            }
-          }
-
-          if (
-            !ownsTheAdminToken &&
-            !ownsTheAccessTokens.includes(true) &&
-            !media.demo
-          ) {
-            return next(new AppError("You don't have permission.", 403));
-          }
-
-          const viewData = new MediaViewLog({
-            userAddress: ethAddress,
-            file: mediaId,
-            timeWatched: 0,
-          });
-          if (mediaId) {
-            viewData.save();
-            if (!media.views) {
-              media.views = 0;
-            }
-            media.views += 1;
-            media.save();
-          }
-
-          const sess = req.session;
-          sess.viewLogId = viewData._id;
-          sess.eth_addr = ethAddress;
-          sess.media_id = mediaId;
-          sess.zoom_id = zoomId;
-          sess.streamAuthorized = true;
-
-          if (zoomId) {
-            const token = generateJWT();
-            try {
-              const invites = await getMeetingInvite(media.meetingIdentifier, token, user);
-              return res.send({ success: true, invite: invites.attendees?.at(0) });
-            } catch (error) {
-              console.log(error);
-            }
-          }
-
-          return res.send({ success: true });
         }
-        return next(new AppError('Incorrect credentials.', 400));
+
+        // verify the account holds the required admin NFT
+        if (
+          !ownsTheAccessTokens.includes(true) &&
+          media.authorPublicAddress === ethAddress.toLowerCase()
+        ) {
+          try {
+            ownsTheAdminToken = await checkAdminTokenOwns(ethAddress);
+
+            if (ownsTheAdminToken) {
+              log.info('Verifying user account has the admin token');
+            }
+          } catch (e) {
+            return next(new AppError(`Could not verify account: ${e}`, 403));
+          }
+        }
+
+        if (
+          !ownsTheAdminToken &&
+          !ownsTheAccessTokens.includes(true) &&
+          !media.demo
+        ) {
+          return next(new AppError('Unauthorized', 403));
+        }
+        session.authorizedMediaStream = mediaIdentifier;
+        session.authorizedMediaType = mediaType;
+
+        const viewData = new MediaViewLog({
+          userAddress: ethAddress,
+          file: mediaId,
+          timeWatched: 0,
+        });
+        if (mediaId) {
+          viewData.save();
+          if (!media.views) {
+            media.views = 0;
+          }
+          media.views += 1;
+          media.save();
+          session.viewLogId = viewData._id;
+        }
+
+        if (zoomId) {
+          const token = generateJWT();
+          try {
+            const invites = await getMeetingInvite(media.meetingIdentifier, token, user);
+            return res.send({ success: true, invite: invites.attendees?.at(0) });
+          } catch (error) {
+            log.error(error);
+          }
+        }
+
+        return res.send({ success: true });
       } catch (err) {
         return next(err);
       }
@@ -496,7 +497,7 @@ module.exports = (context) => {
     },
   );
 
-  router.get('/user_info', JWTVerification, async (req, res, next) => {
+  router.get('/user_info', verifyUserSession, async (req, res, next) => {
     const user = _.chain(req.user).assign({}).omit(['nonce']).value();
 
     res.send({
@@ -507,13 +508,11 @@ module.exports = (context) => {
 
   // Terminating access for video streaming session
   router.get('/stream/out', (req, res, next) => {
-    req.session.destroy((err) => {
-      if (err) {
-        return next(err);
-      }
-
-      return res.send({ success: true });
-    });
+    if (req.session) {
+      req.session.authorizedMediaStream = undefined;
+      req.session.authorizedMediaType = undefined;
+    }
+    return res.send({ success: true });
   });
 
   return router;

@@ -2,86 +2,37 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import Swal from 'sweetalert2';
 
 import { VideoPlayerParams } from './video.types';
 
-import {
-  TAuthGetChallengeResponse,
-  TOnlySuccessResponse
-} from '../../axios.responseTypes';
+import { TOnlySuccessResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { reactSwal } from '../../utils/reactSwal';
+import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import NewVideo from '../MockUpPage/NftList/NftData/NftVideoplayer/NewVideo';
 
 const VideoPlayer = () => {
   const params = useParams<VideoPlayerParams>();
   const { /*contract,*/ mainManifest, videoId } = params;
-  const {
-    programmaticProvider,
-    currentUserAddress /*, currentChain, minterInstance*/
-  } = useSelector<RootState, ContractsInitialType>((state) => {
-    return state.contractStore;
-  });
   const [videoName] = useState(videoId);
   const [mediaAddress, setMediaAddress] = useState<string | null>('');
 
   const requestChallenge = useCallback(async () => {
-    let signature;
-    let parsedResponse;
-    if (window.ethereum) {
-      const account = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-      const getChallengeResponse = await axios.post<TAuthGetChallengeResponse>(
-        '/api/auth/get_challenge/',
-        {
-          userAddress: currentUserAddress,
-          intent: 'decrypt',
-          mediaId: videoId
-        }
-      );
-      const { response } = getChallengeResponse.data;
-      parsedResponse = JSON.parse(response);
-      signature = await window.ethereum.request({
-        method: 'eth_signTypedData_v4',
-        params: [account && account[0], response],
-        from: account && account[0]
-      });
-    } else if (programmaticProvider) {
-      const responseWithProgrammaticProvider =
-        await axios.get<TAuthGetChallengeResponse>(
-          '/api/auth/get_challenge/' + programmaticProvider.address
-        );
-      const { response } = responseWithProgrammaticProvider.data;
-      parsedResponse = JSON.parse(response);
-      // EIP712Domain is added automatically by Ethers.js!
-      const { /* EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
-
-      signature = await programmaticProvider._signTypedData(
-        parsedResponse.domain,
-        revisedTypes,
-        parsedResponse.message
-      );
-    } else {
-      Swal.fire('Error', 'Unable to decrypt videos', 'error');
-      return;
-    }
-
     try {
-      const streamAddress = await axios.post<TOnlySuccessResponse>(
-        '/api/auth/validate/',
-        {
-          MetaMessage: parsedResponse.message.challenge,
-          MetaSignature: signature,
-          mediaId: videoId
+      const unlockResponse = await rFetch('/api/v2/auth/unlock/', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'file',
+          fileId: videoId
+        }),
+        headers: {
+          'Content-Type': 'application/json'
         }
-      );
-      if (streamAddress.data.success) {
-        setMediaAddress('/stream/' + videoId + '/' + mainManifest);
-        //videojs('vjs-' + videoName);
+      });
+      if (unlockResponse.success) {
+        setMediaAddress(`/stream/${videoId}/${mainManifest}`);
       }
     } catch (err) {
       const error = err as AxiosError;
@@ -90,7 +41,7 @@ const VideoPlayer = () => {
         title: 'NFT required to view this content'
       });
     }
-  }, [mainManifest, videoId, programmaticProvider, currentUserAddress]);
+  }, [mainManifest, videoId]);
 
   useEffect(() => {
     requestChallenge();

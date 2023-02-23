@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const AppError = require('../../../../utils/errors/AppError');
-const { validation, assignUser } = require('../../../../middleware');
+const { validation, verifyUserSession } = require('../../../../middleware');
 const { verifyAccessRightsToFile, attributesCounter } = require('../../../../utils/helpers');
 const { Offer, OfferPool, Product, MintedToken, File, LockedTokens } = require('../../../../models');
 const tokenRoutes = require('./token');
@@ -50,7 +50,7 @@ module.exports = (context) => {
 
         // set filters
         if (priceFrom || priceTo) {
-          filterOptions['offer.price'] = _.assign({},priceFrom ? { $gte: priceFrom } : {}, priceTo ? { $lte: priceTo } : {});
+          filterOptions['offer.price'] = _.assign({}, priceFrom ? { $gte: priceFrom } : {}, priceTo ? { $lte: priceTo } : {});
         }
 
         if (forSale !== '') {
@@ -157,7 +157,7 @@ module.exports = (context) => {
           .sort(_.assign({}, sortByPrice ? { 'offer.price': Number(sortByPrice) } : {}, sortByToken ? { token: Number(sortByToken) } : {}))
           .collation({ locale: 'en_US', numericOrdering: true });
 
-        const tokens = attributesCounter(tokensSorted)
+        const tokens = attributesCounter(tokensSorted);
 
         return res.json({ success: true, result: { totalCount, tokens } });
       } catch (err) {
@@ -310,7 +310,7 @@ module.exports = (context) => {
   });
 
   // Get list of files for specific product
-  router.get('/files', assignUser, async (req, res, next) => {
+  router.get('/files', verifyUserSession, async (req, res, next) => {
     try {
       const { contract, product } = req;
 

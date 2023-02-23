@@ -231,13 +231,22 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
             formData.append('demo', String(item.offer === '-1'));
             setUploading(true);
             try {
-              const response = await rFetch('/ms/api/v1/media/upload', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json'
-                },
-                body: formData
-              });
+              const tokenRequest = await rFetch('/api/v2/upload/token');
+              if (!tokenRequest.success) {
+                setUploading(false);
+                return;
+              }
+              const response = await rFetch(
+                `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
+                {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'X-rair-token': tokenRequest.secret
+                  },
+                  body: formData
+                }
+              );
               if (!response.success) {
                 setUploading(false);
               }

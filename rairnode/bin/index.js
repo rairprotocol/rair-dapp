@@ -98,7 +98,7 @@ async function main() {
         path: '/',
         httpOnly: config.production,
         secure: config.production,
-        maxAge: (`${config.session.ttl}` * 60 * 1000), // 10 min
+        maxAge: (`${config.session.ttl}` * 60 * 60 * 1000), // TTL * hour
       },
     }),
   );
@@ -107,7 +107,10 @@ async function main() {
     express.static(path.join(__dirname, 'Videos/Thumbnails')),
   );
   app.use('/stream', streamRoute(context));
-  app.use('/api', apiV1Routes(context));
+  app.use('/api', (req, res, next) => {
+    req.redisService = context.redis.redisService;
+    return next();
+  }, apiV1Routes(context));
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(mainErrorHandler);
 

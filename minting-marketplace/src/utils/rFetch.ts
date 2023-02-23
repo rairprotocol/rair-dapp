@@ -4,7 +4,6 @@ import jsonwebtoken from 'jsonwebtoken';
 import Swal from 'sweetalert2';
 
 import {
-  TAuthenticationType,
   TAuthGetChallengeResponse,
   TUserResponse
 } from '../axios.responseTypes';
@@ -12,6 +11,9 @@ import {
 
 const signIn = async (provider: ethers.providers.StaticJsonRpcProvider) => {
   let currentUser = provider?.getSigner()._address;
+  if (!provider && window.ethereum) {
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+  }
   if (window.ethereum) {
     const accounts = await window.ethereum.request({
       method: 'eth_requestAccounts'
@@ -54,8 +56,7 @@ const signIn = async (provider: ethers.providers.StaticJsonRpcProvider) => {
         setAdminAccess(adminResponse.success);
         adminRights = adminResponse.success;
     }
-    */
-
+  */
   const responseData = await axios.get<TUserResponse>(
     `/api/users/${currentUser}`
   );
@@ -64,19 +65,9 @@ const signIn = async (provider: ethers.providers.StaticJsonRpcProvider) => {
   if (!success) {
     return;
   }
-  if (!localStorage.token) {
-    const signer = provider.getSigner();
-    if (window.ethereum) {
-      provider = new ethers.providers.Web3Provider(window.ethereum);
-      // signer = ethProvider.getSigner();
-    }
-    const token = await getJWT(signer, currentUser);
-    if (typeof token === 'string') {
-      localStorage.setItem('token', token);
-      return true;
-    }
-  }
-  return false;
+  const signer = provider.getSigner();
+  const loginResponse = await getJWT(signer, currentUser);
+  return loginResponse?.success;
 };
 
 const getJWT = async (
@@ -115,29 +106,29 @@ const getJWT = async (
       await Swal.fire('Error', "Can't sign messages", 'error');
       return;
     }
+    if (ethResponse) {
+      const loginResponse = await rFetch('/api/v2/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          MetaMessage: JSON.parse(response).message.challenge,
+          MetaSignature: ethResponse
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
 
-    if (userAddress) {
-      const responseUserdata = await axios.get<TAuthenticationType>(
-        `/api/auth/authentication/${
-          JSON.parse(response).message.challenge
-        }/${ethResponse}/`
-      );
-
-      const { success, token } = responseUserdata.data;
+      const { success, user } = loginResponse;
 
       if (!success) {
-        return Swal.fire('Error', `${token}`, 'error');
-      } else {
-        if (!token) {
-          return 'no token';
-        }
-
-        return token;
+        Swal.fire('Error', ``, 'error');
+        return;
       }
+      return { success, user };
     }
   } catch (e) {
     console.error(e);
-    return 'no token';
+    return { success: false };
   }
 };
 
@@ -181,8 +172,7 @@ const rFetch = async (
   const request = await fetch(route, {
     ...options,
     headers: {
-      ...options?.headers,
-      'X-rair-token': `${localStorage.getItem('token')}`
+      ...options?.headers
     }
   });
   try {

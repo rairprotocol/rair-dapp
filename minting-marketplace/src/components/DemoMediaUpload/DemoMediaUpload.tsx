@@ -159,12 +159,18 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     formData.append('demo', String(item.offer === '-1'));
     setUploading(true);
     try {
+      const tokenRequest = await rFetch('/api/v2/upload/token');
+      if (!tokenRequest.success) {
+        setUploading(false);
+        return;
+      }
       const request = await rFetch(
         `/ms/api/v1/media/upload/demo?socketSessionId=${thisSessionId}`,
         {
           method: 'POST',
           headers: {
-            Accept: 'application/json'
+            Accept: 'application/json',
+            'x-rair-token': tokenRequest.secret
           },
           body: formData
         }

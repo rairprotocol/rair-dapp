@@ -16,6 +16,7 @@ import {
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { rFetch } from '../../utils/rFetch';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -107,13 +108,16 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     setOpenProfile((prev) => !prev);
   }, [setOpenProfile]);
 
-  const logout = () => {
-    dispatch(getTokenComplete(null));
-    dispatch(setUserAddress(undefined));
-    navigate('/');
-    localStorage.removeItem('token');
-    setLoginDone(false);
-    toggleMenu();
+  const logout = async () => {
+    const { success } = await rFetch('/api/v2/auth/logout');
+    if (success) {
+      dispatch(getTokenComplete(null));
+      dispatch(setUserAddress(undefined));
+      navigate('/');
+      localStorage.removeItem('token');
+      setLoginDone(false);
+      toggleMenu();
+    }
   };
 
   const getInfoFromUser = useCallback(async () => {

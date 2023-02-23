@@ -1,9 +1,9 @@
 const express = require('express');
-const { JWTVerification, isAdmin, isSuperAdmin } = require('../middleware');
+const { verifyUserSession, isAdmin, isSuperAdmin } = require('../middleware');
 
 const router = express.Router();
 
-router.get('/jwt', JWTVerification, async (req, res, next) => {
+router.get('/jwt', verifyUserSession, async (req, res, next) => {
   try {
     const { user } = req;
     res.json(user);
@@ -13,7 +13,7 @@ router.get('/jwt', JWTVerification, async (req, res, next) => {
 });
 router.get(
   '/',
-  JWTVerification,
+  verifyUserSession,
   isAdmin,
   isSuperAdmin,
   async (req, res, next) => {

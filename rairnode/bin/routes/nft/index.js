@@ -7,7 +7,7 @@ const path = require('path');
 const { nanoid } = require('nanoid');
 const { constants } = require('ethers');
 const AppError = require('../../utils/errors/AppError');
-const { JWTVerification, validation, isAdmin } = require('../../middleware');
+const { verifyUserSession, validation, isAdmin } = require('../../middleware');
 const log = require('../../utils/logger')(module);
 const upload = require('../../Multer/Config');
 const { execPromise } = require('../../utils/helpers');
@@ -28,7 +28,7 @@ module.exports = (context) => {
   const router = express.Router();
 
   // Create batch of lazy minted tokens from csv file
-  router.post('/', JWTVerification, isAdmin, upload.single('csv'), async (req, res, next) => {
+  router.post('/', verifyUserSession, isAdmin, upload.single('csv'), async (req, res, next) => {
     try {
       const { contract, product, updateMeta = 'false' } = req.body;
       const { user } = req;
@@ -265,7 +265,7 @@ module.exports = (context) => {
   });
 
   // Get all tokens which belongs to current user
-  router.get('/', JWTVerification, async (req, res, next) => {
+  router.get('/', verifyUserSession, async (req, res, next) => {
     try {
       const { publicAddress: ownerAddress } = req.user;
       const result = await MintedToken.find({ ownerAddress });
@@ -288,7 +288,7 @@ module.exports = (context) => {
   });
 
   // Pin batch of metadata to pinata cloud
-  router.post('/pinningMultiple', JWTVerification, validation('pinningMultiple'), async (req, res, next) => {
+  router.post('/pinningMultiple', verifyUserSession, validation('pinningMultiple'), async (req, res, next) => {
     const { contractId, product, overwritePin = 'false' } = req.body;
     const { user } = req;
     const folderName = `${Date.now()}-${nanoid()}`;

@@ -5,11 +5,10 @@ const AppError = require('../utils/errors/AppError');
 const { retrieveMediaInfo, addPin, removePin, addFolder } = require('../integrations/ipfsService')();
 const upload = require('../Multer/Config');
 const {
-  JWTVerification,
+  verifyUserSession,
   validation,
   isOwner,
   formDataHandler,
-  assignUser,
   isAdmin,
   isSuperAdmin,
 } = require('../middleware');
@@ -91,7 +90,7 @@ module.exports = () => {
 
   router.patch(
     '/update/:mediaId',
-    JWTVerification,
+    verifyUserSession,
     validation('removeMedia', 'params'),
     validation('updateMedia', 'body'),
     isOwner(File),
@@ -140,7 +139,7 @@ module.exports = () => {
    */
   router.delete(
     '/remove/:mediaId',
-    JWTVerification,
+    verifyUserSession,
     validation('removeMedia', 'params'),
     isOwner(File),
     async (req, res, next) => {
@@ -202,7 +201,6 @@ module.exports = () => {
    */
   router.get(
     '/list',
-    assignUser,
     validation('filterAndSort', 'query'),
     async (req, res, next) => {
       try {
@@ -270,7 +268,7 @@ module.exports = () => {
 
   router.post(
     '/upload',
-    JWTVerification,
+    verifyUserSession,
     isAdmin,
     isSuperAdmin,
     upload.single('video'),
