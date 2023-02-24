@@ -80,18 +80,19 @@ const counterUniqueWallets = (arr) => {
 const PopUpContainer = (videoId) => {
   const [analyticsVideo, setAnalyticsVideo] = useState<any>(null);
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
+  const [uniqueAddresses, setUniqueAddresses] = useState<number>(0);
 
   const getCounterVideo = useCallback(async () => {
     if (videoId) {
       try {
         const req = await rFetch(`/api/analytics/${videoId.videoId}`, {
-          method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         });
         setAnalyticsVideo(req.results);
         setTotalCount(req.totalCount);
+        setUniqueAddresses(req.uniqueAddresses.length);
       } catch (e) {
         console.info(e);
       }
@@ -116,7 +117,7 @@ const PopUpContainer = (videoId) => {
             </div>
             <div className="box-uniqinfo-statistics">
               <p>Unique Wallets:</p>
-              <>{counterUniqueWallets(analyticsVideo)}</>
+              <>{uniqueAddresses}</>
             </div>
             <div className="box-uniqinfo-statistics">
               <p>Watched Wallets:</p>
