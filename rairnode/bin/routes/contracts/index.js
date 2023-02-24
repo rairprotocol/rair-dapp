@@ -12,25 +12,42 @@ const {
 } = require('../../integrations/ethers/importContractData');
 const log = require('../../utils/logger')(module);
 const contractRoutes = require('./contract');
+const { Contract, User } = require('../../models');
+
+const getContractsByUser = async (user, res, next) => {
+  try {
+    const contracts = await Contract.find(user ? { user } : {}, {
+      _id: 1,
+      contractAddress: 1,
+      title: 1,
+      blockchain: 1,
+      diamond: 1,
+    });
+    return res.json({ success: true, contracts });
+  } catch (e) {
+    return next(e);
+  }
+};
 
 module.exports = (context) => {
   const router = express.Router();
 
-  async function getContractsByUser(user, res, next) {
-    // Contex is part of global scope
-    try {
-      const contracts = await context.db.Contract.find(user ? { user } : {}, {
-        _id: 1,
-        contractAddress: 1,
-        title: 1,
-        blockchain: 1,
-        diamond: 1,
-      });
-      return res.json({ success: true, contracts });
-    } catch (e) {
-      return next(e);
-    }
-  }
+  router.get(
+    '/imported',
+    async (req, res, next) => {
+      try {
+        const contracts = await Contract.find({
+          importedBy: req.session.userData.publicAddress,
+        });
+        return res.json({
+          success: true,
+          contracts,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    },
+  );
 
   // Get list of contracts with all products and offers
   router.get(
@@ -172,13 +189,13 @@ module.exports = (context) => {
         }
 
         const totalNumber = _.chain(
-          await context.db.Contract.aggregate(options).count('contracts'),
+          await Contract.aggregate(options).count('contracts'),
         )
           .head()
           .get('contracts', 0)
           .value();
 
-        const contracts = await context.db.Contract.aggregate(options)
+        const contracts = await Contract.aggregate(options)
           .sort({ 'products.name': 1 })
           .skip(skip)
           .limit(pageSize);
@@ -202,8 +219,8 @@ module.exports = (context) => {
   });
 
   // Get list of contracts for specific user
-  router.get('byUser/:userId', verifyUserSession, async (req, res, next) => {
-    const userFound = await context.db.User.findOne({
+router.get('byUser/:userId', verifyUserSession, async (req, res, next) => {
+    const userFound = await User.findOne({
       _id: req.params.userId,
     });
     const { publicAddress: user } = userFound;
@@ -213,7 +230,7 @@ module.exports = (context) => {
   // Get specific contract by ID
   router.get('/singleContract/:contractId', async (req, res, next) => {
     try {
-      const contract = await context.db.Contract.findById(
+      const contract = await Contract.findById(
         req.params.contractId,
         {
           _id: 1,
@@ -250,7 +267,7 @@ module.exports = (context) => {
           contractAddress,
           limit,
           contractCreator,
-          context.db,
+          req.user.publicAddress,
         );
         return res.json({ success, result, message });
       } catch (err) {
@@ -264,7 +281,7 @@ module.exports = (context) => {
     '/network/:networkId/:contractAddress',
     validation('singleContract', 'params'),
     async (req, res, next) => {
-      const contract = await context.db.Contract.findOne({
+      const contract = await Contract.findOne({
         contractAddress: req.params.contractAddress.toLowerCase(),
         blockchain: req.params.networkId,
       });
