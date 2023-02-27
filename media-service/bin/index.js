@@ -4,11 +4,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const Socket = require('socket.io');
 const morgan = require('morgan');
+const redis = require('redis');
 const fs = require('fs');
 const log = require('./utils/logger')(module);
 const apiRoutes = require('./routes');
 const errorHandler = require('./utils/errors/mainErrorHandler');
 const config = require('./config');
+const redisService = require('./services/redis');
 
 const { port, serviceHost } = config;
 
@@ -16,6 +18,25 @@ const { appSecretManager, vaultAppRoleTokenManager } = require('./vault');
 
 async function main() {
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
+
+  // Create Redis client
+  const client = redis.createClient({
+    url: `redis://${config.redis.connection.host}:${config.redis.connection.port}`,
+    legacyMode: true,
+  });
+
+  client.on('connect', () => {
+    log.info('Redis Client connected!');
+  });
+  client.on('error', (error) => {
+    log.error('Redis Client error!', error);
+  });
+
+  await client.connect().catch(log.error);
+  const context = {
+    redis: { client },
+  }
+  context.redis.redisService = redisService(context);
 
   mediaDirectories.forEach((folder) => {
     if (!fs.existsSync(folder)) {
@@ -36,7 +57,10 @@ async function main() {
   app.use(bodyParser.raw());
   app.use(bodyParser.json());
 
-  app.use('/ms/api', apiRoutes());
+  app.use('/ms/api', (req, res, next) => {
+    req.redisService = context.redis.redisService;
+    return next();
+  }, apiRoutes());
   app.use(errorHandler);
 
   const server = app.listen(port, () => {

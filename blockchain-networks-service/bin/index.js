@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const log = require('./utils/logger')(module);
+const redis = require('redis');
 const morgan = require('morgan');
 const _ = require('lodash');
 const { MongoClient } = require('mongodb');
@@ -18,6 +19,7 @@ const {
 } = require('./vault');
 
 const config = require('./config');
+const redisService = require('./services/redis');
 
 async function main() {
   const connectionString = await getMongoConnectionStringURI({appSecretManager});
@@ -43,6 +45,14 @@ async function main() {
   const client = await MongoClient.connect(connectionString, { useNewUrlParser: true });
   const _db = client.db(client.s.options.dbName);
 
+  // Create Redis client
+  const redisClient = redis.createClient({
+    url: `redis://${config.redis.connection.host}:${config.redis.connection.port}`,
+    legacyMode: true,
+  });
+
+  await redisClient.connect().catch(log.error);
+
   const context = {
     db: {
       Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
@@ -62,8 +72,13 @@ async function main() {
       CustomRoyaltiesSet: _mongoose.model('CustomRoyaltiesSet', require('./models/customRoyaltiesSet.js'), 'CustomRoyaltiesSet')
     },
     mongo: _db,
-    config
+    config,
+    redis: {
+      client: redisClient,
+    },
   };
+
+  context.redis.redisService = redisService(context);
 
   // run scheduled tasks flow
   context.agenda = await require('./tasks')(context);

@@ -1,17 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import videojs from 'video.js';
 
 import NewVideo from './NewVideo';
 
-import {
-  TAuthGetChallengeResponse,
-  TOnlySuccessResponse
-} from '../../../../../axios.responseTypes';
-import { RootState } from '../../../../../ducks';
-import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
+import { TOnlySuccessResponse } from '../../../../../axios.responseTypes';
+import { rFetch } from '../../../../../utils/rFetch';
 import setDocumentTitle from '../../../../../utils/setTitle';
 import { INftVideoplayer } from '../../../mockupPage.types';
 
@@ -22,87 +17,30 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
 }) => {
   const mainManifest = 'stream.m3u8';
 
-  const { programmaticProvider, currentUserAddress } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
-
   const [videoName] = useState<number>(Math.round(Math.random() * 10000));
   const [mediaAddress, setMediaAddress] = useState<string>('');
-  /* String(Math.round(Math.random() * 10000)*/
   const requestChallenge = useCallback(async () => {
-    let signature;
-    let parsedResponse;
     try {
-      if (window.ethereum) {
-        const account = await window.ethereum.request({
-          method: 'eth_requestAccounts'
-        });
-        const response = await axios.post<TAuthGetChallengeResponse>(
-          '/api/auth/get_challenge/',
-          {
-            userAddress: currentUserAddress || (account && account[0]),
-            intent: 'decrypt',
-            mediaId: selectVideo?._id
-          }
-        );
-        parsedResponse = JSON.parse(response.data.response);
-        signature = await window.ethereum.request({
-          method: 'eth_signTypedData_v4',
-          params: [account?.[0], response.data.response],
-          from: account?.[0]
-        });
-      } else if (programmaticProvider) {
-        const response = await axios.get<TAuthGetChallengeResponse>(
-          '/api/auth/get_challenge/' + programmaticProvider.address
-        );
-        parsedResponse = JSON.parse(response.data.response);
-        // EIP712Domain is added automatically by Ethers.js!
-        const { ...revisedTypes } = parsedResponse.types;
-        signature = await programmaticProvider._signTypedData(
-          parsedResponse.domain,
-          revisedTypes,
-          parsedResponse.message
-        );
-      } else {
-        Swal.fire('Error', 'Unable to decrypt videos', 'error');
-        return;
-      }
-    } catch (err) {
-      console.info(err);
-    }
-    if (signature) {
-      try {
-        const streamAddress = await axios.post<TOnlySuccessResponse>(
-          '/api/auth/validate/',
-          {
-            MetaMessage: parsedResponse.message.challenge,
-            MetaSignature: signature,
-            mediaId: selectVideo?._id
-          }
-        );
-        if (streamAddress.data.success) {
-          await setMediaAddress(
-            '/stream/' + selectVideo?._id + '/' + mainManifest
-          );
-          setTimeout(() => {
-            videojs('vjs-' + videoName);
-          }, 1000);
+      const streamAddress = await rFetch('/api/v2/auth/unlock/', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'file',
+          fileId: selectVideo?._id
+        }),
+        headers: {
+          'Content-Type': 'application/json'
         }
-      } catch (requestError) {
-        Swal.fire('NFT required to view this content');
+      });
+      if (streamAddress.success) {
+        setMediaAddress(`/stream/${selectVideo?._id}/${mainManifest}`);
+        setTimeout(() => {
+          videojs('vjs-' + videoName);
+        }, 1000);
       }
-    } else {
-      console.error('Signature was not provided');
-      return;
+    } catch (requestError) {
+      Swal.fire('NFT required to view this content');
     }
-  }, [
-    programmaticProvider,
-    selectVideo,
-    mainManifest,
-    videoName,
-    currentUserAddress
-  ]);
+  }, [selectVideo, mainManifest, videoName]);
 
   useEffect(() => {
     requestChallenge();

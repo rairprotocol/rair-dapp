@@ -40,6 +40,8 @@ const {
   SENTRY_DSN,
   BASE_RAIRNODE_URL,
   LOG_LEVEL,
+  REDIS_HOST,
+  REDIS_PORT,
 } = process.env;
 
 module.exports = {
@@ -47,7 +49,6 @@ module.exports = {
   logLevel: LOG_LEVEL || 'info',
   blockchain: {
     networks: {
-      /*
       '0x13881': {
         authenticityHost: TEST_POLYGONSCAN_GATEWAY,
         factoryAddress: MATIC_MUMBAI_FACTORY_ADDRESS,
@@ -123,7 +124,6 @@ module.exports = {
         name: 'Goerli Testnet',
         testnet: true,
       },
-      */
       '0x89': {
         authenticityHost: POLYGONSCAN_GATEWAY,
         factoryAddress: MATIC_MAINNET_FACTORY_ADDRESS,
@@ -160,5 +160,8 @@ module.exports = {
   },
   rairnode: {
     baseUri: BASE_RAIRNODE_URL,
+  },
+  redis: {
+    connection: { host: REDIS_HOST, port: REDIS_PORT },
   },
 };

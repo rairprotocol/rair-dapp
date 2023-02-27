@@ -91,6 +91,7 @@ Provide ability to make some specific actions on the platform
         * [x] /:publicAddress - POST - update specific user, [see details here](readme/current/v1/user/update_user.md)
     * [x] /contracts - GET - [DEPRECIATED] get list of contracts for specific user, [see details here](readme/depreciated/contracts/get_contracts.md)
         * [x] /import/network/:networkId/:contractAddress/ - GET - [DEPRECIATED] Import the given contract's NFTs, [see details here](readme/depreciated/contracts/get_external_contract.md)
+        * [x] /imported - GET - List imported contracts by the current user, [see details here](readme/current/v1/get_imported_contracts.md)
         * [x] /network/:networkId
             * [x] /:contractAddress - GET - [DEPRECIATED] get specific contract, [see details here](readme/depreciated/contracts/get_single_contract.md)
                 * [x] /products - GET - [DEPRECIATED] get all products for specific contract, [see details here](readme/depreciated/contracts/get_products_for_contract.md)

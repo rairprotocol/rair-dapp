@@ -15,6 +15,7 @@ const Contract = new Schema(
     external: { type: Boolean, required: true, default: false },
     singleMetadata: { type: Boolean, default: false },
     metadataURI: { type: String, default: 'none' },
+    importedBy: { type: String, default: '', required: false },
     blockSync: { type: Boolean, default: false, select: 0 },
     blockView: { type: Boolean, default: false, select: 0 },
   },

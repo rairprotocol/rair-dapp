@@ -13,7 +13,7 @@ const verifyController = require('../verification/userVerification.controller');
 const favoritesController = require('../favorites/favorites.Controller');
 const authController = require('../auth/auth.controller');
 const csv = require('./csv');
-const { JWTVerification } = require('../middleware');
+const { verifyUserSession } = require('../middleware');
 
 module.exports = () => {
   const router = express.Router();
@@ -23,7 +23,7 @@ module.exports = () => {
   router.use('/products', productsController);
   router.use('/tokens', tokensController);
   router.use('/locks', locksController);
-  router.use('/favorites', JWTVerification, favoritesController);
+  router.use('/favorites', verifyUserSession, favoritesController);
   router.use('/verify', verifyController);
   router.use('/upload', uploadController);
   router.use('/users', usersController);

@@ -2,13 +2,14 @@
 const { Network, Alchemy } = require('alchemy-sdk');
 const fetch = require('node-fetch');
 const log = require('../../utils/logger')(module);
+const { Contract, Product, Offer, OfferPool, MintedToken } = require('../../models');
 
 // Contract ABIs
 // The RAIR721 contract is still an ERC721 compliant contract,
 // so as long as standard functions are called,
 // we can connect other NFTs contracts with this ABI
 
-const insertToken = async (token, contractId, dbModels) => {
+const insertToken = async (token, contractId) => {
   let metadata;
   if (token.metadataError !== undefined) {
     log.error(`Error importing token #${token.tokenId}: ${token.metadataError}`);
@@ -57,7 +58,7 @@ const insertToken = async (token, contractId, dbModels) => {
       }));
     }
     try {
-      await (new dbModels.MintedToken({
+      await (new MintedToken({
         ownerAddress: token.owner.toLowerCase(),
         metadataURI: token.token_uri,
         metadata,
@@ -76,11 +77,6 @@ const insertToken = async (token, contractId, dbModels) => {
   return true;
 };
 
-// Used to be to avoid Moralis rate limiting
-const wasteTime = (ms) => new Promise((resolve) => {
-  setTimeout(resolve, ms);
-});
-
 const alchemyMapping = {
   '0x1': Network.ETH_MAINNET,
   '0x5': Network.ETH_GOERLI,
@@ -89,7 +85,7 @@ const alchemyMapping = {
 };
 
 module.exports = {
-  importContractData: async (networkId, contractAddress, limit, contractCreator, dbModels) => {
+  importContractData: async (networkId, contractAddress, limit, contractCreator, importerUser) => {
     let contract;
 
     // Optional Config object, but defaults to demo api-key and eth-mainnet.
@@ -102,7 +98,7 @@ module.exports = {
     }
     const alchemy = new Alchemy(settings);
 
-    contract = await dbModels.Contract.findOne({
+    contract = await Contract.findOne({
       contractAddress,
       blockchain: networkId,
       external: true,
@@ -118,16 +114,17 @@ module.exports = {
       return { success: false, result: undefined, message: `Only ERC721 is supported, tried to process a ${contractMetadata.tokenType} contract` };
     }
 
-    contract = await (new dbModels.Contract({
+    contract = await (new Contract({
       user: contractCreator,
       title: contractMetadata.name,
       contractAddress,
       blockchain: networkId,
+      importedBy: importerUser,
       diamond: false,
       external: true,
     }));
 
-    const product = await (new dbModels.Product({
+    const product = await (new Product({
       name: contractMetadata.name,
       collectionIndexInContract: 0,
       contract: contract._id,
@@ -138,7 +135,7 @@ module.exports = {
       transactionHash: 'UNKNOWN - External Import',
     }));
 
-    const offer = await new dbModels.Offer({
+    const offer = await new Offer({
       offerIndex: 0,
       contract: contract._id,
       product: 0,
@@ -152,7 +149,7 @@ module.exports = {
       transactionHash: 'UNKNOWN - External Import',
     });
 
-    const offerPool = await (new dbModels.OfferPool({
+    const offerPool = await (new OfferPool({
       marketplaceCatalogIndex: 0,
       contract: contract._id,
       product: 0,
@@ -169,7 +166,7 @@ module.exports = {
     })) {
       const ownerResponse = await alchemy.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
       [nft.owner] = ownerResponse.owners;
-      if (insertToken(nft, contract._id, dbModels)) {
+      if (insertToken(nft, contract._id)) {
         numberOfTokensAdded += 1;
       }
       if (limit.toString() !== '0' && numberOfTokensAdded >= limit) {
@@ -201,9 +198,9 @@ module.exports = {
     } catch (err) {
       log.error(err);
       if (contract) {
-        dbModels.MintedToken.deleteMany({ contract: contract._id });
-        dbModels.Offer.deleteMany({ contract: contract._id });
-        dbModels.Product.deleteMany({ contract: contract._id });
+        MintedToken.deleteMany({ contract: contract._id });
+        Offer.deleteMany({ contract: contract._id });
+        Product.deleteMany({ contract: contract._id });
       }
       return {
         success: false,

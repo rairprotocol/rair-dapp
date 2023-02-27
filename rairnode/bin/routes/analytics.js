@@ -1,5 +1,5 @@
 const express = require('express');
-const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
+const { verifyUserSession, validation, isSuperAdmin } = require('../middleware');
 const { MediaViewLog, File } = require('../models');
 const AppError = require('../utils/errors/AppError');
 
@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get(
     '/:mediaId',
-    JWTVerification,
+    verifyUserSession,
     isSuperAdmin,
     validation('analyticsParams', 'params'),
     validation('analyticsQuery', 'query'),
@@ -55,8 +55,10 @@ router.get(
 
             const totalCount = await MediaViewLog.countDocuments(query);
             let results = false;
+            const uniqueAddresses = await MediaViewLog.distinct('userAddress', { file: mediaId });
             if (!onlyCount) {
                 results = await MediaViewLog.find(query, '-_id -updatedAt')
+                    .sort({ createdAt: 'descending' })
                     .skip(skip)
                     .limit(pageSize);
             }
@@ -65,6 +67,7 @@ router.get(
                 success: true,
                 results,
                 totalCount,
+                uniqueAddresses,
             });
         } catch (e) {
             return next(e);

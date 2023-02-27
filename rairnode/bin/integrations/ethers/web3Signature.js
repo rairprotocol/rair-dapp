@@ -1,5 +1,5 @@
 const NodeCache = require('node-cache');
-const { utils } = require('ethers');
+const { isAddress } = require('ethers');
 const { recoverTypedSignature } = require('@metamask/eth-sig-util');
 const { v4: uuidv4 } = require('uuid');
 const { createHmac } = require('crypto');
@@ -120,7 +120,7 @@ module.exports = {
   generateChallenge: (message) => (req, res, next) => {
     if (req.params[OPTIONS.address]) {
       const address = req.params[OPTIONS.address];
-      if (utils.isAddress(address)) {
+      if (isAddress(address)) {
         const challenge = createChallenge(address, message);
         const json = {
           challenge,
@@ -134,7 +134,7 @@ module.exports = {
   },
   generateChallengeV2: (req, res, next) => {
     const address = req.body.userAddress;
-    if (utils.isAddress(address)) {
+    if (isAddress(address)) {
       const challenge = createChallenge(address, req.metaAuth.customDescription);
       const json = { challenge };
       req.metaAuth = json;

@@ -132,6 +132,8 @@ services:
       MORALIS_MASTER_KEY_TEST: ${moralis_master_key_test}
       MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
       SENTRY_DSN: ${sentry_dsn}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
       - 5001:5001
     depends_on:
@@ -165,6 +167,8 @@ services:
       VAULT_MEDIA_SERVICE_APP_ROLE_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_ID}
       VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID}
       SENTRY_DSN: ${sentry_dsn}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
       - 5002:5002
     networks:

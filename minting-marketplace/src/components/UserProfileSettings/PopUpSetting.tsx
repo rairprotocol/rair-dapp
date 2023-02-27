@@ -8,6 +8,7 @@ import { Popup } from 'reactjs-popup';
 import { getTokenComplete } from '../../ducks/auth/actions';
 import { setUserAddress } from '../../ducks/contracts/actions';
 import { setAdminRights } from '../../ducks/users/actions';
+import { rFetch } from '../../utils/rFetch';
 
 import EditMode from './EditMode/EditMode';
 import defaultPictures from './images/defaultUserPictures.png';
@@ -73,13 +74,16 @@ const PopUpSettings = ({
     setOpenModal();
   }, [setOpenModal]);
 
-  const logout = () => {
-    dispatch(getTokenComplete(null));
-    dispatch(setUserAddress(undefined));
-    dispatch(setAdminRights(false));
-    localStorage.removeItem('token');
-    setLoginDone(false);
-    navigate('/');
+  const logout = async () => {
+    const { success } = await rFetch('/api/v2/auth/logout');
+    if (success) {
+      dispatch(getTokenComplete(null));
+      dispatch(setUserAddress(undefined));
+      dispatch(setAdminRights(false));
+      localStorage.removeItem('token');
+      setLoginDone(false);
+      navigate('/');
+    }
   };
 
   const pushToUploadVideo = (tab: number) => {

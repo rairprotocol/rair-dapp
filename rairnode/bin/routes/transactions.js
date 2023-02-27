@@ -1,17 +1,22 @@
 const express = require('express');
 const axios = require('axios');
-const { JWTVerification } = require('../middleware');
+const { verifyUserSession } = require('../middleware');
 // eslint-disable-next-line no-unused-vars
 module.exports = (context) => {
   const router = express.Router();
 
-  router.post('/:network/:hash', JWTVerification, async (req, res, next) => {
+  router.post('/:network/:hash', verifyUserSession, async (req, res, next) => {
     try {
+      const { network, hash } = req.params;
+      const redisMessage = {
+        toProcess: true,
+        userPublicAddress: req.session.userData.publicAddress,
+      };
+      context.redis.redisService.set(`${network}:${hash}`, redisMessage);
       const response = await axios({
         method: 'POST',
-        url: `${process.env.BASE_BCN_URL}/api/v1/transaction/${req.params.network}/${req.params.hash}`,
+        url: `${process.env.BASE_BCN_URL}/api/v1/transaction/${network}/${hash}`,
         headers: req.headers,
-        // params: req.params,
         body: req.body,
       });
       res.json({

@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { utils } from 'ethers';
 import { isAddress } from 'ethers/lib/utils';
+import { io } from 'socket.io-client';
 import Swal from 'sweetalert2';
-
-import { TExternalContractType } from './adminView.types';
 
 import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
@@ -18,11 +17,14 @@ import InputSelect from '../common/InputSelect';
 
 const ImportExternalContract = () => {
   const [selectedContract, setSelectedContract] = useState<string>('');
-  const [resultData, setResultData] = useState<TExternalContractType>();
+  const [resultData, setResultData] = useState<string>('');
   const [selectedBlockchain, setSelectedBlockchain] = useState<string>('null');
   const [owner, setOwner] = useState<string>('');
   const [sendingData, setSendingData] = useState<boolean>(false);
   const [limit, setLimit] = useState<number>(0);
+  const [currentTokens, setCurrentTokens] = useState<number>();
+  const [totalTokens, setTotalTokens] = useState<number>();
+  const [sessionId, setSessionId] = useState('');
 
   const blockchainOptions = Object.keys(blockchainData).map((blockchainId) => {
     return {
@@ -36,17 +38,39 @@ const ImportExternalContract = () => {
     ContractsInitialType
   >((store) => store.contractStore);
 
+  useEffect(() => {
+    const sessionId = Math.random().toString(36).substr(2, 9);
+    setSessionId(sessionId);
+    const so = io(`/`, {
+      transports: ['websocket'],
+      protocols: ['http'],
+      path: '/socket'
+    });
+    console.info(so);
+
+    so.emit('init', sessionId);
+
+    so.on('importReport', (data) => {
+      const { current, total } = data;
+      setResultData(`${current} of ${total}`);
+      setCurrentTokens(current);
+      setTotalTokens(total);
+    });
+
+    return () => {
+      so.removeListener('importReport');
+      so.emit('end', sessionId);
+    };
+  }, []);
+
   const callImport = async () => {
     if (!validateInteger(limit)) {
       return;
     }
     setSendingData(true);
-    Swal.fire(
-      'Importing contract',
-      'This will take a LOT of time (depending on the limit of tokens)',
-      'info'
-    );
-    const { success, result } = await rFetch(`/api/contracts/import/`, {
+    Swal.fire('Importing contract', 'Please wait', 'info');
+
+    const { success, message } = await rFetch(`/api/contracts/import/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -55,17 +79,13 @@ const ImportExternalContract = () => {
         networkId: selectedBlockchain,
         contractAddress: selectedContract.toLowerCase(),
         limit: limit,
-        contractCreator: owner.toLowerCase()
+        contractCreator: owner.toLowerCase(),
+        socketSessionId: sessionId
       })
     });
     setSendingData(false);
     if (success) {
-      setResultData(result);
-      Swal.fire(
-        'Success',
-        `Successfully imported ${result.numberOfTokensAdded} tokens`,
-        'success'
-      );
+      Swal.fire('Success', message, 'success');
     }
   };
 
@@ -151,15 +171,11 @@ const ImportExternalContract = () => {
         className="btn btn-stimorol col-12">
         {sendingData ? 'Please wait...' : 'Import Contract!'}
       </button>
-      {resultData && (
-        <div className="mt-5 col-12 text-center">
-          Imported <br />
-          <h3 className="d-inline">{resultData.contract.title}</h3> <br />
-          with <br />
-          <h3 className="d-inline">{resultData.numberOfTokensAdded}</h3> <br />
-          NFTs
-        </div>
-      )}
+      <hr />
+      {resultData}
+      <br />
+      {totalTokens && <progress value={currentTokens} max={totalTokens} />}
+      <br />
     </div>
   );
 };

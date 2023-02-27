@@ -3,7 +3,7 @@ const _ = require('lodash');
 const fs = require('fs').promises;
 const AppError = require('../../../../../utils/errors/AppError');
 const {
-  JWTVerification,
+  verifyUserSession,
   validation,
   dataTransform,
 } = require('../../../../../middleware');
@@ -44,7 +44,7 @@ module.exports = (context) => {
   // Update specific token metadata by internal token ID
   router.post(
     '/',
-    JWTVerification,
+    verifyUserSession,
     upload.array('files', 2),
     dataTransform(['attributes']),
     validation('updateTokenMetadata'),
@@ -200,7 +200,7 @@ module.exports = (context) => {
   );
 
   // Pin metadata to pinata cloud
-  router.get('/pinning', JWTVerification, async (req, res, next) => {
+  router.get('/pinning', verifyUserSession, async (req, res, next) => {
     try {
       const { contract, offers, offerPool, token } = req;
       const { user } = req;

@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const { nanoid } = require('nanoid');
 const AppError = require('../utils/errors/AppError');
 const {
   Category,
@@ -10,6 +11,28 @@ const {
 } = require('../models/index');
 
 module.exports = {
+  getUploadToken: async (req, res, next) => {
+    const { session, redisService } = req;
+    // If the upload token already exists, keep using it
+    if (session.uploadToken) {
+      console.log('Reusing');
+      const userDataOnRedis = await redisService.get(session.uploadToken);
+      if (userDataOnRedis.publicAddress === session.userData.publicAddress) {
+        return res.json({ success: true, secret: session.uploadToken });
+      }
+    }
+    if (session.userData) {
+      console.log('creating');
+      const secret = nanoid();
+      // Tell redis about it
+      redisService.set(secret, session.userData);
+      // Store current token in case the token is unused
+      session.uploadToken = secret;
+      // Give it to the frontend
+      return res.json({ success: true, secret });
+    }
+    return res.json({ success: false });
+  },
   validateData: async (req, res, next) => {
     try {
       const { contract, product, offer, category, demo } = req.query;

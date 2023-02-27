@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 // React Redux types
@@ -7,7 +7,6 @@ import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 
 // import * as ethers from 'ethers';
 // import * as colorTypes from './ducks/colors/types';
-// import jsonwebtoken from 'jsonwebtoken';
 // logos for About Page
 import { headerLogoBlack, headerLogoWhite } from './images';
 
@@ -79,7 +78,7 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
-import { isTokenValid } from './utils/rFetch';
+import { isTokenValid, rFetch } from './utils/rFetch';
 // views
 import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
 
@@ -181,25 +180,7 @@ function App() {
         setCarousel(carousel_match.matches)
       );
   }, [carousel_match.matches]);
-  /*
-  useEffect(() => {
-    let timeout;
-    if (token) {
-      const decoded = jsonwebtoken.decode(token);
 
-      if (decoded?.exp) {
-        timeout = setTimeout(() => {
-          connectUserData();
-        }, decoded.exp * 1000);
-      }
-    }
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-    };
-  }, [token, connectUserData]);
-  */
   useEffect(() => {
     if (localStorage.token && isTokenValid(localStorage.token)) {
       if (window.ethereum) {
@@ -470,10 +451,7 @@ function App() {
                   const isHome = item.path === process.env.REACT_APP_HOME_PAGE;
 
                   if (process.env.REACT_APP_HOME_PAGE !== '/' && !isHome) {
-                    return (
-                      <React.Fragment
-                        key={Math.random() + index}></React.Fragment>
-                    );
+                    return <Fragment key={Math.random() + index}></Fragment>;
                   }
 
                   return (
@@ -749,10 +727,7 @@ function App() {
                 ].map((item, index) => {
                   // If the requirements for the route aren't met, it won't return anything
                   if (item.requirement !== undefined && !item.requirement) {
-                    return (
-                      <React.Fragment
-                        key={Math.random() + index}></React.Fragment>
-                    );
+                    return <Fragment key={Math.random() + index}></Fragment>;
                   }
                   return (
                     <Route

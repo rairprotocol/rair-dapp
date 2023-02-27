@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { teamTaxHacksSummit } from './AboutUsTeam';
 import { AccessTextMarkKohler } from './InformationText';
 
-import {
-  TAuthGetChallengeResponse,
-  TMeetingInviteResponse
-} from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
@@ -98,11 +93,6 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
 
-  const { programmaticProvider, currentUserAddress } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
-
   const joinZoom = () => {
     if (meetingInvite) {
       window.open(meetingInvite, '_blank');
@@ -110,64 +100,24 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   };
 
   const unlockZoom = async () => {
-    let signature;
-    let parsedResponse;
     try {
-      if (currentUserAddress) {
-        const response = await axios.post<TAuthGetChallengeResponse>(
-          '/api/auth/get_challenge/',
-          {
-            userAddress: currentUserAddress,
-            intent: 'decrypt',
-            zoomId: 'Kohler'
-          }
-        );
-        parsedResponse = JSON.parse(response.data.response);
-        signature = await window.ethereum.request({
-          method: 'eth_signTypedData_v4',
-          params: [currentUserAddress, response.data.response],
-          from: currentUserAddress
-        });
-      } else if (programmaticProvider) {
-        const response = await axios.get<TAuthGetChallengeResponse>(
-          '/api/auth/get_challenge/' + programmaticProvider.address
-        );
-        parsedResponse = JSON.parse(response.data.response);
-        // EIP712Domain is added automatically by Ethers.js!
-        const { ...revisedTypes } = parsedResponse.types;
-        signature = await programmaticProvider._signTypedData(
-          parsedResponse.domain,
-          revisedTypes,
-          parsedResponse.message
-        );
-      } else {
-        Swal.fire('Error', 'Unable to decrypt videos', 'error');
-        return;
-      }
-    } catch (err) {
-      console.info(err);
-    }
-    if (signature) {
-      try {
-        const streamAddress = await axios.post<TMeetingInviteResponse>(
-          '/api/auth/validate/',
-          {
-            MetaMessage: parsedResponse.message.challenge,
-            MetaSignature: signature,
-            zoomId: 'Kohler'
-          }
-        );
-        if (streamAddress.data.success) {
-          setHasNFT(true);
-          setMeetingInvite(streamAddress?.data?.invite?.join_url);
+      const unlockResponse = await rFetch('/api/v2/auth/unlock/', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'zoom',
+          fileId: 'Kohler'
+        }),
+        headers: {
+          'Content-Type': 'application/json'
         }
-      } catch (requestError) {
-        Swal.fire('NFT Required to unlock this meeting', '', 'info');
-        setHasNFT(false);
+      });
+      if (unlockResponse.data.success) {
+        setHasNFT(true);
+        setMeetingInvite(unlockResponse?.data?.invite?.join_url);
       }
-    } else {
-      console.error('Signature was not provided');
-      return;
+    } catch (requestError) {
+      Swal.fire('NFT Required to unlock this meeting', '', 'info');
+      setHasNFT(false);
     }
   };
 

@@ -52,9 +52,9 @@ import styles from './MainPage.module.css';
 
 /* GLOBAL VALUES */
 const blockchain: BlockchainType = '0x1';
-const contract = '0xA5A823294AF53B983969BB48cAA3cDb28545828F';
+const contract = '0x571acc173f57c095f1f63b28f823f0f33128a6c4';
 const product = '0';
-const offerIndexInMarketplace = ['0', '1988'];
+const offerIndexInMarketplace = ['0', '221'];
 const iframeLink =
   'https://iframetester.com/?url=https://staging.rair.market/watch/0x48e89cb354a30d4ce0dafac77205792040ef485f/FaR4Z7kLDOZ87Rx1UU6CaLce_bip0X7vnrPjBu2t3APd9s/stream.m3u8';
 
@@ -158,7 +158,7 @@ const MainPage: React.FC<IMainPage> = ({
         </div>
         <PurchaseTokenButton
           {...{
-            handleClick: () => window.open('https://beta.rair.tech/', '_self'),
+            handleClick: () => window.open('https://beta.rair.tech/', '_blank'),
             customWrapperClassName: '',
             altButtonFormat: true,
             customButtonClassName: styles.button,

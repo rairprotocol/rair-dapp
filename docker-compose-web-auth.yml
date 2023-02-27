@@ -99,6 +99,8 @@ services:
       VAULT_MEDIA_SERVICE_APP_ROLE_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_ID}
       VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID}
       SENTRY_DSN: ${sentry_dsn}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
       - 5002:5002
     networks:

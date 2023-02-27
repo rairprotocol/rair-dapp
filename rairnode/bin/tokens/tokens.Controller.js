@@ -19,7 +19,7 @@ const upload = require('../Multer/Config');
 const {
   dataTransform,
   validation,
-  JWTVerification,
+  verifyUserSession,
   isAdmin,
 } = require('../middleware');
 
@@ -29,7 +29,7 @@ router
   .route('/')
   .get(getSpecificContracts, getAllTokens)
   .patch(
-    JWTVerification,
+    verifyUserSession,
     isAdmin,
     upload.array('files', 2),
     dataTransform(['attributes']),
@@ -38,14 +38,14 @@ router
   );
 router.post(
   '/viaCSV',
-  JWTVerification,
+  verifyUserSession,
   isAdmin,
   upload.single('csv'),
   createTokensViaCSV,
 );
 router.get(
   '/my',
-  JWTVerification,
+  verifyUserSession,
   (req, res, next) => {
     req.query.ownerAddress = req.user.publicAddress;
     next();
@@ -58,7 +58,7 @@ router.use(
   getOfferIndexesByContractAndProduct,
   getOfferPoolByContractAndProduct,
 );
-router.get('/tokenNumbers', JWTVerification, getTokenNumbers);
+router.get('/tokenNumbers', verifyUserSession, getTokenNumbers);
 router
   .route('/:token')
   .get((req, res, next) => {
@@ -71,14 +71,14 @@ router
     return next();
   }, getSingleToken)
   .patch(
-    JWTVerification,
+    verifyUserSession,
     upload.array('files', 2),
     dataTransform(['attributes']),
     validation('updateTokenMetadata'),
     updateSingleTokenMetadata,
   )
   .post(
-    JWTVerification,
+    verifyUserSession,
     pinMetadataToPinata,
   );
 
