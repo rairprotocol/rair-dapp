@@ -17,8 +17,8 @@ const AppError = require('../utils/errors/AppError');
 
 const { baseUri } = config.rairnode;
 
-const demoContractAddress = '0x571acc173f57c095f1f63b28f823f0f33128a6c4'
-const demoContractBlockchain = '0x1'
+const demoContractAddress = '0x571acc173f57c095f1f63b28f823f0f33128a6c4';
+const demoContractBlockchain = '0x1';
 
 module.exports = {
   hardcodedDemoData: async (req, res, next) => {
@@ -35,14 +35,14 @@ module.exports = {
     req.body = {
       ...req.body,
       contract: contractData.data.contract._id,
-      product: "0",
-      offer: ["0"],
-      demo: "true",
+      product: '0',
+      offer: ['0'],
+      demo: 'true',
       description: 'demo',
     };
     req.context = {
       publicDemoOverride: true,
-    }
+    };
     return next();
   },
   validateForDemo: async (req, res, next) => {
@@ -61,8 +61,8 @@ module.exports = {
       .get(`${baseUri}/api/media/list`, {
         params: {
           userAddress: req.user.publicAddress,
-          blockchain: "0x1",
-          contractAddress: demoContractAddress.toLowerCase()
+          blockchain: '0x1',
+          contractAddress: demoContractAddress.toLowerCase(),
         },
       })
       .catch(console.error);
@@ -84,7 +84,10 @@ module.exports = {
       storage = 'gcp',
     } = req.body;
 
-    const { publicDemoOverride } = req.context;
+    let publicDemoOverride = false;
+    if (req.context) {
+      publicDemoOverride = req.context.publicDemoOverride;
+    }
 
     // Get the user information
     const { publicAddress, superAdmin } = req.user;
@@ -254,12 +257,12 @@ module.exports = {
 
         let authorPublicAddress = publicAddress;
         if (!publicDemoOverride && superAdmin) {
-          authorPublicAddress = foundContract.user
+          authorPublicAddress = foundContract.user;
         }
 
         const meta = {
           mainManifest: 'stream.m3u8',
-          authorPublicAddress: authorPublicAddress,
+          authorPublicAddress,
           encryptionType: 'aes-256-gcm',
           title: textPurify.sanitize(title),
           contract: foundContractId,
