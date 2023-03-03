@@ -24,7 +24,8 @@ const PopUpSettings = ({
   primaryColor,
   showAlert,
   selectedChain,
-  setTabIndexItems
+  setTabIndexItems,
+  isSplashPage
 }) => {
   const settingBlockRef = useRef();
   const navigate = useNavigate();
@@ -207,14 +208,16 @@ const PopUpSettings = ({
                   }}>
                   <SvgUserIcon primaryColor={primaryColor} /> Profile settings
                 </li>
-                <li
-                  onClick={() => pushToUploadVideo(2)}
-                  style={{
-                    color:
-                      primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
-                  }}>
-                  <SvgUpload /> Upload video
-                </li>
+                {!isSplashPage && (
+                  <li
+                    onClick={() => pushToUploadVideo(2)}
+                    style={{
+                      color:
+                        primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
+                    }}>
+                    <SvgUpload primaryColor={primaryColor} /> Upload video
+                  </li>
+                )}
                 {/* <li
                   onClick={() => pushToMyItems(2)}
                   style={{
@@ -261,7 +264,7 @@ const PopUpSettings = ({
               editMode={editMode}
               onChangeEditMode={onChangeEditMode}
               userEmail={userEmail}
-              mainName={userName}
+              mainName={userName ? userName : cutUserAddress()}
               setMainName={setUserName}
               setMainEmail={setUserEmail}
               setImagePreviewUrl={setImagePreviewUrl}

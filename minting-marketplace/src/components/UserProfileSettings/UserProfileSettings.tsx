@@ -22,7 +22,8 @@ const UserProfileSettings = ({
   userData,
   showAlert,
   selectedChain,
-  setTabIndexItems
+  setTabIndexItems,
+  isSplashPage
 }) => {
   const dispatch = useDispatch();
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -83,6 +84,7 @@ const UserProfileSettings = ({
               showAlert={showAlert}
               selectedChain={selectedChain}
               setTabIndexItems={setTabIndexItems}
+              isSplashPage={isSplashPage}
             />
           </div>
         )}
