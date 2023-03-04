@@ -9,7 +9,7 @@ const {
   checkAdminTokenOwns,
   checkBalanceAny,
 } = require('../integrations/ethers/tokenValidation');
-const { verifyUserSession, validation, isSuperAdmin } = require('../middleware');
+const { verifyUserSession, validation } = require('../middleware');
 const { generateJWT, getMeetingInvite } = require('../integrations/zoom/zoomController');
 const log = require('../utils/logger')(module);
 const { File, MediaViewLog, User, Contract } = require('../models');
@@ -449,7 +449,6 @@ module.exports = (context) => {
     '/authentication/:MetaMessage/:MetaSignature/',
     validation('authentication', 'params'),
     validateChallenge,
-    isSuperAdmin,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
       let adminRights = false;

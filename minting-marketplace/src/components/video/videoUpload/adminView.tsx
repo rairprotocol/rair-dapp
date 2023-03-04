@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { v1 } from 'uuid';
 
@@ -10,7 +10,6 @@ const AdminView = ({
   reusableStyle,
   getFullContractData
 }) => {
-  const [userToken, setUserToken] = useState<string | null>();
   const [selectedContracts, setSelectedContracts] = useState(['null']);
   const options = contractOptions && contractOptions;
 
@@ -25,56 +24,44 @@ const AdminView = ({
     );
   }, []);
 
-  const getUserToken = useCallback(() => {
-    setUserToken(localStorage.getItem('token'));
-  }, []);
-
   const offOrOnContract = useCallback(
     async (contract: string, option: string) => {
       switch (option) {
         case 'off':
-          if (userToken) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const res = await axios.patch(
-              `/api/v2/contracts/${contract}`,
-              {
-                blockSync: true,
-                blockView: true
-              },
-              {
-                headers: {
-                  Accept: 'application/json',
-                  'x-rair-token': userToken
-                }
+          await axios.patch(
+            `/api/v2/contracts/${contract}`,
+            {
+              blockSync: true,
+              blockView: true
+            },
+            {
+              headers: {
+                Accept: 'application/json'
               }
-            );
-            getFullContractData();
-          }
+            }
+          );
+          getFullContractData();
 
           break;
         case 'on':
-          if (userToken) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const res = await axios.patch(
-              `/api/v2/contracts/${contract}`,
-              {
-                blockSync: false,
-                blockView: false
-              },
-              {
-                headers: {
-                  Accept: 'application/json',
-                  'x-rair-token': userToken
-                }
+          await axios.patch(
+            `/api/v2/contracts/${contract}`,
+            {
+              blockSync: false,
+              blockView: false
+            },
+            {
+              headers: {
+                Accept: 'application/json'
               }
-            );
-            getFullContractData();
-          }
+            }
+          );
+          getFullContractData();
 
           break;
       }
     },
-    [getFullContractData, userToken]
+    [getFullContractData]
   );
 
   const createEmptyInput = () => {
@@ -92,10 +79,6 @@ const AdminView = ({
         )
     );
   };
-
-  useEffect(() => {
-    getUserToken();
-  }, [getUserToken]);
 
   useEffect(() => {
     showHiddenContracts(contractOptions);
