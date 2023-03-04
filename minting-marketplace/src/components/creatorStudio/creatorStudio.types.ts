@@ -233,6 +233,12 @@ export type TMediaType = {
   title: string;
 };
 
+export type TChoiceAllOptions = {
+  contract: string;
+  product: string;
+  offer: any;
+};
+
 export type TCategories = {
   name: string;
   _id: string;

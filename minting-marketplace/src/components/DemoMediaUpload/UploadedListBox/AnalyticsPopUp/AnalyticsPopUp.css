@@ -68,6 +68,10 @@
   justify-content: space-between;
 }
 
+select.form-control.input-select-custom-style.nft-choice {
+  margin-top: 10px;
+}
+
 .swal2-close {
   outline: none !important;
   color: #fff !important;

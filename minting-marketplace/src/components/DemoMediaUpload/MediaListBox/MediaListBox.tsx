@@ -1,11 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import InputSelect from '../../common/InputSelect';
+import { TMediaType } from '../../creatorStudio/creatorStudio.types';
 import LinearProgressWithLabel from '../LinearProgressWithLabel/LinearProgressWithLabel';
 import MediaItemChange from '../MediaItemChange/MediaItemChange';
+import PopUpChoiceNFT from '../PopUpChoiceNFT/PopUpChoiceNFT';
 import { IMediaListBox } from '../types/DemoMediaUpload.types';
 
 import { reactSwal } from './../../../utils/reactSwal';
@@ -19,22 +20,30 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   uploadProgress,
   uploading,
   uploadVideoDemo,
-  categories,
   selectCommonInfo,
   deleter,
-  updateMediaCategory,
   currentTitleVideo,
-  socketMessage
+  socketMessage,
+  setUploadSuccess
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const [editTitleVideo, setEditTitleVideo] = useState<boolean>(false);
 
-  const uploadVideoCloud = (item, cloud) => {
-    uploadVideoDemo(item, cloud);
-    reactSwal.close();
-  };
+  const [editTitleVideo, setEditTitleVideo] = useState<boolean>(false);
+  const [currentItem, setCurrentItem] = useState<TMediaType>(item);
+
+  const uploadVideoCloud = useCallback(
+    (cloud) => {
+      uploadVideoDemo(currentItem, cloud);
+      reactSwal.close();
+    },
+    [currentItem, uploadVideoDemo]
+  );
+
+  useEffect(() => {
+    setUploadSuccess(false);
+  }, [setUploadSuccess]);
 
   const alertChoiceCloud = useCallback(() => {
     reactSwal.fire({
@@ -43,12 +52,12 @@ const MediaListBox: React.FC<IMediaListBox> = ({
         <div className="container-choice-clouds">
           <button
             className="btn-stimorol btn"
-            onClick={() => uploadVideoCloud(item, 'gcp')}>
+            onClick={() => uploadVideoCloud('gcp')}>
             Cloud
           </button>
           <button
             className="btn-stimorol btn"
-            onClick={() => uploadVideoCloud(item, 'ipfs')}>
+            onClick={() => uploadVideoCloud('ipfs')}>
             IPFS
           </button>
         </div>
@@ -61,6 +70,10 @@ const MediaListBox: React.FC<IMediaListBox> = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [primaryColor]);
+
+  useEffect(() => {
+    setCurrentItem(item);
+  }, [item, currentItem, mediaList]);
 
   return (
     <div
@@ -115,20 +128,16 @@ const MediaListBox: React.FC<IMediaListBox> = ({
             </>
           </button>
         )}
-        <div className="border-stimorol rounded-rair col-12">
-          <InputSelect
-            options={categories}
-            setter={(value) => updateMediaCategory(mediaList, index, value)}
-            placeholder="Select an option"
-            getter={item.category}
-            {...selectCommonInfo}
-          />
-        </div>
+        <PopUpChoiceNFT
+          selectCommonInfo={selectCommonInfo}
+          setMediaList={setMediaList}
+          mediaList={mediaList}
+          index={index}
+          setUploadSuccess={setUploadSuccess}
+        />
         <button
           disabled={uploading || uploadSuccess === false}
           onClick={() => deleter(index)}
-          // className="btn btn-danger rounded-rairo">
-          // <TrashIcon />
           className={`btn btn-danger rounded-rairo ${
             primaryColor === 'rhyno' ? 'rhyno' : ''
           }`}>
