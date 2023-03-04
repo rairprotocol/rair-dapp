@@ -12,12 +12,19 @@ export const useGetProductsGeneral = (
   const [selectVideo, setSelectVideo] = useState<TFileType>();
 
   const getProductsFromOffer = useCallback(async () => {
-    const response = await axios.get<TNftFilesResponse>(
-      `/api/nft/network/${input.blockchain}/${input.contract}/${input.product}/files`
-    );
-    setProductsFromOffer(response.data.files);
-    setSelectVideo(response.data.files[0]);
-  }, [input.blockchain, input.contract, input.product]);
+    if (input.currentUserAddress) {
+      const response = await axios.get<TNftFilesResponse>(
+        `/api/nft/network/${input.blockchain}/${input.contract}/${input.product}/files`
+      );
+      setProductsFromOffer(response.data.files);
+      setSelectVideo(response.data.files[0]);
+    }
+  }, [
+    input.blockchain,
+    input.contract,
+    input.product,
+    input.currentUserAddress
+  ]);
 
   useEffect(() => {
     getProductsFromOffer();
