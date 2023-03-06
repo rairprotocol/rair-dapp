@@ -1,5 +1,5 @@
 const express = require('express');
-const { verifyUserSession, isAdmin, isSuperAdmin } = require('../middleware');
+const { verifyUserSession, isAdmin } = require('../middleware');
 
 const router = express.Router();
 
@@ -15,7 +15,6 @@ router.get(
   '/',
   verifyUserSession,
   isAdmin,
-  isSuperAdmin,
   async (req, res, next) => {
     try {
       const userAdmin = req.user;

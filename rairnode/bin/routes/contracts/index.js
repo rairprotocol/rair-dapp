@@ -5,7 +5,6 @@ const {
   verifyUserSession,
   validation,
   isAdmin,
-  isSuperAdmin,
 } = require('../../middleware');
 const {
   importContractData,
@@ -208,7 +207,7 @@ module.exports = (context) => {
   );
 
   // Get list of contracts for current user or all contracts if user have superAdmin rights
-  router.get('/', verifyUserSession, isSuperAdmin, (req, res, next) => {
+  router.get('/', verifyUserSession, (req, res, next) => {
     const { publicAddress: user, superAdmin } = req.user;
 
     if (superAdmin) {

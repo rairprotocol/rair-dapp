@@ -11,6 +11,7 @@ import NftVideoplayer from '../../MockUpPage/NftList/NftData/NftVideoplayer/NftV
 import { ModalContentCloseBtn } from '../../MockUpPage/utils/button/ShowMoreItems';
 import { playImagesColored } from '../../SplashPage/images/greyMan/grayMan';
 import MediaItemChange from '../MediaItemChange/MediaItemChange';
+import PopUpChoiceNFT from '../PopUpChoiceNFT/PopUpChoiceNFT';
 import { IUploadedListBox } from '../types/DemoMediaUpload.types';
 
 import AnalyticsPopUp from './AnalyticsPopUp/AnalyticsPopUp';
@@ -37,6 +38,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   const [watchCounter, setWatchCounter] = useState<number | null>(null);
   const [loadDeleting, setLoadDeleting] = useState(false);
   const [editTitleVideo, setEditTitleVideo] = useState<boolean>(false);
+  const [currentContract, setCurrentContract] = useState<any>(null);
 
   const customStyles = {
     overlay: {
@@ -59,7 +61,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
       fontFamily: 'Plus Jakarta Text',
       border: 'none',
       borderRadius: '16px',
-      height: 'auto'
+      height: 'auto',
+      overflow: 'hidden'
     }
   };
 
@@ -120,6 +123,14 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
     });
   };
 
+  const getCurrentContract = async () => {
+    const request = await rFetch(
+      `/api/contracts/singleContract/${fileData.contract}`
+    );
+
+    setCurrentContract(request.contract);
+  };
+
   const openModal = useCallback(() => {
     setModalIsOpen(true);
   }, [setModalIsOpen]);
@@ -132,6 +143,10 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   useEffect(() => {
     closeModal();
   }, [closeModal]);
+
+  useEffect(() => {
+    getCurrentContract();
+  }, []);
 
   useEffect(() => {
     getCounterVideo();
@@ -176,7 +191,23 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
         </button>
         <div className="border-stimorol rounded-rair col-12">
           <InputSelect
-            options={categories}
+            options={
+              currentContract
+                ? [
+                    {
+                      disabled: false,
+                      label: currentContract.title,
+                      value: currentContract.title
+                    }
+                  ]
+                : [
+                    {
+                      disabled: false,
+                      label: 'Unlocked(demp)',
+                      value: 'Unlocked(demp)'
+                    }
+                  ]
+            }
             setter={() =>
               updateMediaCategory(mediaUploadedList, index, fileData.category)
             }
@@ -186,6 +217,14 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
             {...selectCommonInfo}
           />
         </div>
+        {/* <PopUpChoiceNFT
+          updateMediaCategory={updateMediaCategory}
+          mediaUploadedList={mediaUploadedList}
+          index={index}
+          category={fileData.category}
+          selectCommonInfo={selectCommonInfo}
+          item={fileData}
+        /> */}
         <button
           onClick={() => removeVideoAlert()}
           disabled={loadDeleting}

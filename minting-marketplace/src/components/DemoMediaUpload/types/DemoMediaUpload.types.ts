@@ -24,12 +24,11 @@ export interface IMediaListBox {
   uploadProgress: any;
   uploading: boolean;
   uploadVideoDemo: (item: TMediaType, storage: string) => void;
-  categories: OptionsType[];
   selectCommonInfo: any;
   deleter: (index: number) => void;
-  updateMediaCategory: (array, index, value: string) => void;
   currentTitleVideo: string;
   socketMessage: string | undefined;
+  setUploadSuccess: (arg: boolean | null) => void;
 }
 
 export interface IUploadedListBox {
@@ -44,4 +43,12 @@ export interface IUploadedListBox {
   mediaUploadedList: any | null;
   categories: OptionsType[];
   getMediaList: () => void;
+}
+
+export interface IAnalyticsPopUp {
+  index: number;
+  selectCommonInfo: any;
+  setMediaList: (arg: TMediaType[]) => void;
+  mediaList: TMediaType[];
+  setUploadSuccess: (arg: boolean | null) => void;
 }

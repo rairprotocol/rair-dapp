@@ -10,7 +10,6 @@ const {
   isOwner,
   formDataHandler,
   isAdmin,
-  isSuperAdmin,
 } = require('../middleware');
 const log = require('../utils/logger')(module);
 const {
@@ -270,7 +269,6 @@ module.exports = () => {
     '/upload',
     verifyUserSession,
     isAdmin,
-    isSuperAdmin,
     upload.single('video'),
     validation('uploadVideoFile', 'file'),
     formDataHandler,

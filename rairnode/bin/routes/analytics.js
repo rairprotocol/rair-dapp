@@ -1,5 +1,5 @@
 const express = require('express');
-const { verifyUserSession, validation, isSuperAdmin } = require('../middleware');
+const { verifyUserSession, validation } = require('../middleware');
 const { MediaViewLog, File } = require('../models');
 const AppError = require('../utils/errors/AppError');
 
@@ -8,7 +8,6 @@ const router = express.Router();
 router.get(
     '/:mediaId',
     verifyUserSession,
-    isSuperAdmin,
     validation('analyticsParams', 'params'),
     validation('analyticsQuery', 'query'),
     async (req, res, next) => {

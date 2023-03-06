@@ -3,7 +3,6 @@ const contractService = require('./contracts.Service');
 const {
   verifyUserSession,
   isAdmin,
-  isSuperAdmin,
   validation,
   verifySuperAdmin,
 } = require('../middleware');
@@ -21,7 +20,6 @@ router.get('/full', contractService.getFullContracts);
 router.get(
   '/my',
   verifyUserSession,
-  isSuperAdmin,
   contractService.queryMyContracts,
   contractService.getAllContracts,
 );
@@ -36,7 +34,6 @@ router.get(
   '/fullSA',
   verifyUserSession,
   isAdmin,
-  isSuperAdmin,
   verifySuperAdmin,
   contractService.getFullContracts,
 );
@@ -47,7 +44,6 @@ router.patch(
   '/:id',
   verifyUserSession,
   isAdmin,
-  isSuperAdmin,
   verifySuperAdmin,
   validation('manageContract'),
   contractService.updateContract,

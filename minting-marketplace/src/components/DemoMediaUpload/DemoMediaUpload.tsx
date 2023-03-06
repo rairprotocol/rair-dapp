@@ -16,7 +16,11 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import videoIcon from '../../images/videoIcon.svg';
 import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
-import { IMediaUpload, TMediaType } from '../creatorStudio/creatorStudio.types';
+import {
+  IMediaUpload,
+  TChoiceAllOptions,
+  TMediaType
+} from '../creatorStudio/creatorStudio.types';
 
 import MediaListBox from './MediaListBox/MediaListBox';
 import UploadedListBox from './UploadedListBox/UploadedListBox';
@@ -91,28 +95,46 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     //eslint-disable-next-line
   }, []);
 
-  const getCategories = async () => {
-    const newCategories = [
-      {
-        name: 'Unlocked (demo)',
-        disabled: false
-      },
-      {
-        name: `NFT🔒 (coming soon)`,
-        disabled: true
-      }
-    ];
-    setCategories(
-      newCategories.map((item) => {
-        return { label: item.name, value: item.name, disabled: item.disabled };
-      })
-    );
+  const getCategories = useCallback(async () => {
+    if (currentUserAddress !== undefined) {
+      const request = await rFetch('/api/contracts');
+      const demoCategoryArray = [
+        {
+          name: 'Unlocked (demo)',
+          disabled: false
+        },
+        {
+          name: `NFT🔒 (coming soon)`,
+          disabled: false
+        }
+      ];
+
+      const newCategories = demoCategoryArray.concat(
+        request.contracts &&
+          request.contracts.map((el) => {
+            return {
+              name: el.title,
+              disabled: false
+            };
+          })
+      );
+
+      setCategories(
+        newCategories.map((item) => {
+          return {
+            label: item.name,
+            value: item.name,
+            disabled: item.disabled
+          };
+        })
+      );
+    }
     const { success, categories } = await rFetch(`/api/categories`);
 
     if (success) {
       setSelectedCategory(categories[0].name);
     }
-  };
+  }, [currentUserAddress]);
 
   const getMediaList = async () => {
     if (currentUserAddress !== undefined) {
@@ -127,7 +149,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   useEffect(() => {
     getCategories();
     // eslint-disable-next-line
-  }, []);
+  }, [getCategories]);
 
   useEffect(() => {
     if (uploadSuccess) {
@@ -153,10 +175,19 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     formData.append('title', item.title.slice(0, 29));
     formData.append('description', item.description);
     formData.append('storage', storage);
+    if (item.contractAddress && item.productIndex && item.offer) {
+      formData.append('contract', item.contractAddress);
+      formData.append('product', item.productIndex);
+      if (item.offer && item.offer[0].value !== '-1') {
+        formData.append('offer', JSON.stringify([String(item.offer[0].value)]));
+      } else {
+        formData.append('demo', String(item.offer[0].value === '-1'));
+        formData.append('offer', JSON.stringify(['0']));
+      }
+    }
     if (selectedCategory) {
       formData.append('category', selectedCategory);
     }
-    formData.append('demo', String(item.offer === '-1'));
     setUploading(true);
     try {
       const tokenRequest = await rFetch('/api/v2/upload/token');
@@ -165,7 +196,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
         return;
       }
       const request = await rFetch(
-        `/ms/api/v1/media/upload/demo?socketSessionId=${thisSessionId}`,
+        `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
         {
           method: 'POST',
           headers: {
@@ -356,7 +387,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
               />
             );
           })}
-        {mediaList.map((item, index, array) => {
+        {mediaList.map((item, index) => {
           return (
             <MediaListBox
               key={index + item.title}
@@ -366,12 +397,11 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
               setMediaList={setMediaList}
               uploadSuccess={uploadSuccess}
               uploadProgress={uploadProgress}
+              setUploadSuccess={setUploadSuccess}
               uploading={uploading}
               uploadVideoDemo={uploadVideoDemo}
-              categories={categories}
               selectCommonInfo={selectCommonInfo}
               deleter={deleter}
-              updateMediaCategory={updateMediaCategory}
               currentTitleVideo={currentTitleVideo}
               socketMessage={socketMessage}
             />

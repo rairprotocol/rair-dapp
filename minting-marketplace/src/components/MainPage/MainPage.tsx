@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 
 import { rairAdvisorsTeam, teamMainPage } from './AboutUsTeam';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 /* image imports */
 import { metaMaskIcon } from '../../images/index';
 import {
@@ -66,8 +66,6 @@ const MainPage: React.FC<IMainPage> = ({
     (store) => store.colorStore
   );
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -84,9 +82,18 @@ const MainPage: React.FC<IMainPage> = ({
 
   const executeScroll = (ref) => ref.current.scrollIntoView();
 
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+
   /*VIDEO PLAYER VIEW*/
   const [productsFromOffer, selectVideo, setSelectVideo] =
-    useGetProductsGeneral({ blockchain, contract, product });
+    useGetProductsGeneral({
+      blockchain,
+      contract,
+      product,
+      currentUserAddress
+    });
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const handlePlayerClick = () => {
     setOpenVideoPlayer(true);
@@ -408,7 +415,6 @@ const MainPage: React.FC<IMainPage> = ({
           </div>
         </>
       )}
-
       <div className={styles.embeddeddemo_textbox}>
         <span>Embed this</span>
         <span className={styles.embeddeddemo_title_alt}> code</span>

@@ -6,6 +6,7 @@ const { File, User, Contract, Offer, MediaViewLog } = require('../models');
 const AppError = require('../utils/errors/AppError');
 const { zoomSecret, zoomClientID } = require('../config');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
+const { superAdminInstance } = require('../utils/vaultSuperAdmin');
 
 module.exports = {
   identifyCurrentLoggedUser: async (req, res, next) => {
@@ -33,6 +34,8 @@ module.exports = {
         return next(new AppError('User not found.', 404));
       }
       userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
+      userData.superAdmin = await superAdminInstance
+        .hasSuperAdminRights(userData.publicAddress);
       req.session.userData = userData;
 
       // eslint-disable-next-line no-unused-vars

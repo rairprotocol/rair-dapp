@@ -342,6 +342,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             showAlert={showAlert}
             selectedChain={selectedChain}
             setTabIndexItems={setTabIndexItems}
+            isSplashPage={isSplashPage}
           />
           <div className="social-media">
             <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
