@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { rFetch } from '../../../utils/rFetch';
-import InputSelect from '../../common/InputSelect';
 import NftVideoplayer from '../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import { ModalContentCloseBtn } from '../../MockUpPage/utils/button/ShowMoreItems';
 import { playImagesColored } from '../../SplashPage/images/greyMan/grayMan';
@@ -23,11 +22,9 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   mediaList,
   uploadSuccess,
   copyEmbebed,
-  selectCommonInfo,
-  updateMediaCategory,
-  mediaUploadedList,
-  categories,
-  getMediaList
+  getMediaList,
+  setUploadSuccess,
+  setMediaUploadedList
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -123,13 +120,13 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
     });
   };
 
-  const getCurrentContract = async () => {
+  const getCurrentContract = useCallback(async () => {
     const request = await rFetch(
       `/api/contracts/singleContract/${fileData.contract}`
     );
 
     setCurrentContract(request.contract);
-  };
+  }, [fileData]);
 
   const openModal = useCallback(() => {
     setModalIsOpen(true);
@@ -146,7 +143,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
 
   useEffect(() => {
     getCurrentContract();
-  }, []);
+  }, [getCurrentContract]);
 
   useEffect(() => {
     getCounterVideo();
@@ -182,49 +179,30 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           setEditTitleVideo={setEditTitleVideo}
           editTitleVideo={editTitleVideo}
         />
-        <button
-          onClick={() => copyEmbebed(fileData._id)}
-          className="col-12 btn-stimorol btn rounded-rair white">
-          <>
-            <i className="fas fa-check" /> Copy embed code{' '}
-          </>
-        </button>
+        {currentContract && (
+          <button
+            onClick={() => {
+              copyEmbebed(fileData._id, currentContract.contractAddress);
+            }}
+            className="col-12 btn-stimorol btn rounded-rair white">
+            <>
+              <i className="fas fa-check" /> Copy embed code{' '}
+            </>
+          </button>
+        )}
         <div className="border-stimorol rounded-rair col-12">
-          <InputSelect
-            options={
-              currentContract
-                ? [
-                    {
-                      disabled: false,
-                      label: currentContract.title,
-                      value: currentContract.title
-                    }
-                  ]
-                : [
-                    {
-                      disabled: false,
-                      label: 'Unlocked(demp)',
-                      value: 'Unlocked(demp)'
-                    }
-                  ]
-            }
-            setter={() =>
-              updateMediaCategory(mediaUploadedList, index, fileData.category)
-            }
-            placeholder="Unlockable status"
-            getter={fileData.category}
-            disabled={true}
-            {...selectCommonInfo}
-          />
+          {currentContract && (
+            <PopUpChoiceNFT
+              fileData={fileData}
+              setMediaList={setMediaList}
+              mediaList={mediaList}
+              index={index}
+              setUploadSuccess={setUploadSuccess}
+              titleOfContract={currentContract ? currentContract : 'null'}
+              setMediaUploadedList={setMediaUploadedList}
+            />
+          )}
         </div>
-        {/* <PopUpChoiceNFT
-          updateMediaCategory={updateMediaCategory}
-          mediaUploadedList={mediaUploadedList}
-          index={index}
-          category={fileData.category}
-          selectCommonInfo={selectCommonInfo}
-          item={fileData}
-        /> */}
         <button
           onClick={() => removeVideoAlert()}
           disabled={loadDeleting}

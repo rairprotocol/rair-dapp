@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
+import { isArray } from 'jquery';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
@@ -15,10 +16,12 @@ import './../UploadedListBox/AnalyticsPopUp/AnalyticsPopUp.css';
 
 const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   index,
-  selectCommonInfo,
   setMediaList,
   mediaList,
-  setUploadSuccess
+  setUploadSuccess,
+  titleOfContract,
+  fileData,
+  setMediaUploadedList
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [contract, setContract] = useState('null');
@@ -88,30 +91,62 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
     setModalIsOpen(false);
     if (choiceAllOptions === null) {
       setContract('None');
-      setProduct(null);
-      setOffer(null);
+      setProduct('null');
+      setOffer('null');
     }
     // document.body.classList.remove('no-scroll');
   }, [setModalIsOpen, choiceAllOptions]);
 
-  const handleChoiceOffer = useCallback(() => {
+  const handleChoiceOffer = useCallback(async () => {
     if (offer && contract !== 'None') {
       const filteredOffers = offersOptions.filter((el) => el.value === offer);
-      const newArray = mediaList;
-      newArray[index].contractAddress = contract;
-      newArray[index].productIndex = product;
-      newArray[index].offer = filteredOffers;
-      setMediaList(newArray);
+      if (Array.isArray(mediaList)) {
+        const newArray = mediaList;
+        newArray[index].contractAddress = contract;
+        newArray[index].productIndex = product;
+        newArray[index].offer = filteredOffers;
+        setMediaList(newArray);
 
-      const wholeContract = {
-        contract: contract,
-        product: product,
-        offer: filteredOffers
-      };
+        const wholeContract = {
+          contract: contract,
+          product: product,
+          offer: filteredOffers
+        };
 
-      setChoiceAllOptions(wholeContract);
-      setModalIsOpen(false);
-      setUploadSuccess(null);
+        setChoiceAllOptions(wholeContract);
+        setModalIsOpen(false);
+        setUploadSuccess(null);
+      } else {
+        setUploadSuccess(true);
+        let updatedVideo = {};
+        if (offer === '-1') {
+          updatedVideo = {
+            contract: contract,
+            product: product,
+            demo: true
+          };
+        } else {
+          updatedVideo = {
+            contract: contract,
+            product: product,
+            offer: [offer],
+            demo: false
+          };
+        }
+        const request = await rFetch(`/api/media/update/${fileData._id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedVideo)
+        });
+
+        if (request.success) {
+          setMediaUploadedList({});
+          setUploadSuccess(null);
+          setModalIsOpen(false);
+        }
+      }
     } else {
       const newArray = [...mediaList];
       newArray[index] = {
@@ -124,7 +159,17 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
       setChoiceAllOptions(null);
       setUploadSuccess(null);
     }
-  }, [contract, index, mediaList, offer, offersOptions, product, setMediaList]);
+  }, [
+    contract,
+    index,
+    mediaList,
+    offer,
+    offersOptions,
+    product,
+    setMediaList,
+    setMediaUploadedList,
+    setUploadSuccess
+  ]);
 
   const getProduct = useCallback(async () => {
     if (contract && contract !== 'None') {
@@ -264,6 +309,16 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
     closeModal();
   }, [closeModal]);
 
+  // useEffect(() => {
+  //   if (contract) {
+  //     console.info(
+  //       Object.values(mediaList).filter((el) => el.contract === contract),
+  //       'mediaList[contract]'
+  //     );
+  //   }
+  // }, [mediaList, contract]);
+  // console.info(contract, 'contract');
+
   return (
     <>
       <div onClick={openModal} className="border-stimorol rounded-rair col-12">
@@ -279,10 +334,12 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
             style={{
               ...selectCommonInfoNFT,
               color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`,
-              cursor: 'pointer'
-            }}
-            value="Select">
-            {choiceAllOptions !== null
+              cursor: 'pointer',
+              textAlign: 'left'
+            }}>
+            {titleOfContract
+              ? titleOfContract.title
+              : choiceAllOptions !== null
               ? choiceAllOptions.offer[0].label
               : 'Select a Contract'}
           </div>
@@ -343,7 +400,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
                 marginTop: 20
               }}
               className="col-12 btn-stimorol btn rounded-rair white">
-              <>Submit</>
+              <>{titleOfContract ? 'Update' : 'Submit'}</>
             </button>
           </>
         )}

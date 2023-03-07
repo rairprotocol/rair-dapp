@@ -37,18 +37,19 @@ export interface IUploadedListBox {
   setMediaList: (arg: TMediaType[]) => void;
   mediaList: TMediaType[];
   uploadSuccess: boolean | null;
-  copyEmbebed: (videoId: number) => void;
-  selectCommonInfo: any;
-  updateMediaCategory: (array, index, value: string) => void;
-  mediaUploadedList: any | null;
-  categories: OptionsType[];
+  copyEmbebed: (videoId: number, contract: string) => void;
   getMediaList: () => void;
+  setUploadSuccess: (arg: boolean | null) => void;
+  setMediaUploadedList: (arg: any) => void;
 }
 
 export interface IAnalyticsPopUp {
   index: number;
-  selectCommonInfo: any;
   setMediaList: (arg: TMediaType[]) => void;
   mediaList: TMediaType[];
   setUploadSuccess: (arg: boolean | null) => void;
+  titleOfContract?: any | undefined;
+  selectCommonInfo?: any;
+  fileData?: any;
+  setMediaUploadedList?: (arg: any) => void;
 }
