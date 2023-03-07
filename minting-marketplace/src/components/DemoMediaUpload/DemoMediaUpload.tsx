@@ -293,9 +293,9 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     setMediaList(aux);
   };
 
-  const copyEmbebed = (videoId) => {
+  const copyEmbebed = (videoId, contract) => {
     const iframe = `
-      <iframe id="${videoId}" src="${process.env.REACT_APP_SERVER_URL}/watch/0x571acc173f57c095f1f63b28f823f0f33128a6c4/${videoId}/stream.m3u8" width="800px" height="800px"></iframe>
+      <iframe id="${videoId}" src="${process.env.REACT_APP_SERVER_URL}/watch/${contract}/${videoId}/stream.m3u8" width="800px" height="800px"></iframe>
     `;
     navigator.clipboard.writeText(iframe);
   };
@@ -379,11 +379,9 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
                 mediaList={mediaUploadedList}
                 uploadSuccess={uploadSuccess}
                 copyEmbebed={copyEmbebed}
-                selectCommonInfo={selectCommonInfo}
-                updateMediaCategory={updateMediaCategory}
-                mediaUploadedList={mediaUploadedList}
-                categories={categories}
                 getMediaList={getMediaList}
+                setUploadSuccess={setUploadSuccess}
+                setMediaUploadedList={setMediaUploadedList}
               />
             );
           })}
