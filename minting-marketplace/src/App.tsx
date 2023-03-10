@@ -67,7 +67,7 @@ import NotificationPage from './components/UserProfileSettings/NotificationPage/
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
 import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
-import { setChainId } from './ducks/contracts/actions';
+import { setChainId, setUserAddress } from './ducks/contracts/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setAdminRights } from './ducks/users/actions';
 import useConnectUser from './hooks/useConnectUser';
@@ -145,8 +145,19 @@ function App() {
       window.ethereum.on('chainChanged', async (chainId) => {
         dispatch(setChainId(chainId));
       });
+      window.ethereum.on('accountsChanged', async () => {
+        const { success } = await rFetch('/api/v2/auth/logout');
+        if (success) {
+          dispatch(getTokenComplete(null));
+          dispatch(setUserAddress(undefined));
+          dispatch(setAdminRights(false));
+          localStorage.removeItem('token');
+          setLoginDone(false);
+          navigate('/');
+        }
+      });
     }
-  }, [dispatch]);
+  }, [dispatch, navigate, setLoginDone]);
 
   // gtag
 
