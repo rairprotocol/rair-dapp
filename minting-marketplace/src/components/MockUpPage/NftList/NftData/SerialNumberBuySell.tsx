@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import MetaMaskOnboarding from '@metamask/onboarding';
 import Swal from 'sweetalert2';
 
 import { BuySellButton } from './BuySellButton';
@@ -35,7 +36,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     useSelector<RootState, ContractsInitialType>(
       (state) => state.contractStore
     );
-  const currentProvider = window.ethereum.chainId;
+
+  const currentProvider = MetaMaskOnboarding.isMetaMaskInstalled()
+    ? window.ethereum.chainId
+    : blockchain;
   const [contractData, setContractData] = useState<ContractType>();
 
   const realChainProtected = currentChain || currentProvider;
@@ -169,6 +173,21 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     tokenData,
     loginDone
   ]);
+
+  useEffect(() => {
+    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+      Swal.fire({
+        imageWidth: 70,
+        imageHeight: 'auto',
+        imageAlt: 'Custom image',
+        imageUrl:
+          'https://new-dev.rair.tech/static/media/RAIR-Tech-Logo-POWERED-BY-BLACK-2021.abf50c70.webp',
+        title: 'Oops...',
+        text: 'Please use the metamask mobile browser to explore further content or Metamask extension for browser.'
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="main-tab">
