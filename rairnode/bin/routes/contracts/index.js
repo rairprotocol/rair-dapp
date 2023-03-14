@@ -2,9 +2,10 @@ const express = require('express');
 const _ = require('lodash');
 const AppError = require('../../utils/errors/AppError');
 const {
-  verifyUserSession,
   validation,
   isAdmin,
+  requireUserSession,
+  loadUserSession,
 } = require('../../middleware');
 const {
   importContractData,
@@ -207,7 +208,7 @@ module.exports = (context) => {
   );
 
   // Get list of contracts for current user or all contracts if user have superAdmin rights
-  router.get('/', verifyUserSession, (req, res, next) => {
+  router.get('/', requireUserSession, (req, res, next) => {
     const { publicAddress: user, superAdmin } = req.user;
 
     if (superAdmin) {
@@ -218,7 +219,7 @@ module.exports = (context) => {
   });
 
   // Get list of contracts for specific user
-router.get('byUser/:userId', verifyUserSession, async (req, res, next) => {
+router.get('byUser/:userId', loadUserSession, async (req, res, next) => {
     const userFound = await User.findOne({
       _id: req.params.userId,
     });
@@ -247,7 +248,7 @@ router.get('byUser/:userId', verifyUserSession, async (req, res, next) => {
 
   router.post(
     '/import/',
-    verifyUserSession,
+    requireUserSession,
     isAdmin,
     validation('importContract', 'body'),
     async (req, res, next) => {

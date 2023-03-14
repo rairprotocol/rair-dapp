@@ -1,9 +1,9 @@
 const express = require('express');
-const { verifyUserSession, isAdmin } = require('../middleware');
+const { isAdmin, requireUserSession } = require('../middleware');
 
 const router = express.Router();
 
-router.get('/jwt', verifyUserSession, async (req, res, next) => {
+router.get('/jwt', requireUserSession, async (req, res, next) => {
   try {
     const { user } = req;
     res.json(user);
@@ -13,7 +13,7 @@ router.get('/jwt', verifyUserSession, async (req, res, next) => {
 });
 router.get(
   '/',
-  verifyUserSession,
+  requireUserSession,
   isAdmin,
   async (req, res, next) => {
     try {

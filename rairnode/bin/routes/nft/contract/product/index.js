@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const AppError = require('../../../../utils/errors/AppError');
-const { validation, verifyUserSession } = require('../../../../middleware');
+const { validation, loadUserSession } = require('../../../../middleware');
 const { verifyAccessRightsToFile, attributesCounter } = require('../../../../utils/helpers');
 const { Offer, OfferPool, Product, MintedToken, File, LockedTokens } = require('../../../../models');
 const tokenRoutes = require('./token');
@@ -310,7 +310,7 @@ module.exports = (context) => {
   });
 
   // Get list of files for specific product
-  router.get('/files', verifyUserSession, async (req, res, next) => {
+  router.get('/files', loadUserSession, async (req, res, next) => {
     try {
       const { contract, product } = req;
 

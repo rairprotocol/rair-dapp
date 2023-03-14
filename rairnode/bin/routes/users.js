@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const AppError = require('../utils/errors/AppError');
-const { verifyUserSession, validation } = require('../middleware');
+const { validation, requireUserSession } = require('../middleware');
 const upload = require('../Multer/Config');
 const { cleanStorage } = require('../utils/helpers');
 const log = require('../utils/logger')(module);
@@ -39,7 +39,7 @@ module.exports = (context) => {
   });
 
   // Update specific user fields
-  router.post('/:publicAddress', verifyUserSession, upload.array('files', 2), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
+  router.post('/:publicAddress', requireUserSession, upload.array('files', 2), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
       const foundUser = await context.db.User.findOne({ publicAddress });
@@ -58,11 +58,13 @@ module.exports = (context) => {
         const files = await Promise.all(
           _.map(req.files, async (file) => {
             try {
-              const fileLink = await context.gcp.uploadFile(context.config.gcp.imageBucketName, file);
+              const fileLink =
+                await context.gcp.uploadFile(context.config.gcp.imageBucketName, file);
 
               if (fileLink) {
                 log.info(`File ${file.filename} has added to GCP bucket.`);
 
+                // eslint-disable-next-line no-param-reassign
                 file.link = `${context.config.gcp.gateway}/${context.config.gcp.imageBucketName}/${fileLink}`;
               }
 

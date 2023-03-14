@@ -19,8 +19,8 @@ const upload = require('../Multer/Config');
 const {
   dataTransform,
   validation,
-  verifyUserSession,
   isAdmin,
+  requireUserSession,
 } = require('../middleware');
 
 const router = express.Router();
@@ -29,7 +29,7 @@ router
   .route('/')
   .get(getSpecificContracts, getAllTokens)
   .patch(
-    verifyUserSession,
+    requireUserSession,
     isAdmin,
     upload.array('files', 2),
     dataTransform(['attributes']),
@@ -38,14 +38,14 @@ router
   );
 router.post(
   '/viaCSV',
-  verifyUserSession,
+  requireUserSession,
   isAdmin,
   upload.single('csv'),
   createTokensViaCSV,
 );
 router.get(
   '/my',
-  verifyUserSession,
+  requireUserSession,
   (req, res, next) => {
     req.query.ownerAddress = req.user.publicAddress;
     next();
@@ -58,7 +58,7 @@ router.use(
   getOfferIndexesByContractAndProduct,
   getOfferPoolByContractAndProduct,
 );
-router.get('/tokenNumbers', verifyUserSession, getTokenNumbers);
+router.get('/tokenNumbers', requireUserSession, getTokenNumbers);
 router
   .route('/:token')
   .get((req, res, next) => {
@@ -71,14 +71,14 @@ router
     return next();
   }, getSingleToken)
   .patch(
-    verifyUserSession,
+    requireUserSession,
     upload.array('files', 2),
     dataTransform(['attributes']),
     validation('updateTokenMetadata'),
     updateSingleTokenMetadata,
   )
   .post(
-    verifyUserSession,
+    requireUserSession,
     pinMetadataToPinata,
   );
 
