@@ -1,10 +1,10 @@
 const express = require('express');
 const contractService = require('./contracts.Service');
 const {
-  verifyUserSession,
   isAdmin,
   validation,
   verifySuperAdmin,
+  requireUserSession,
 } = require('../middleware');
 const userService = require('../users/users.Service');
 
@@ -19,20 +19,20 @@ router.get(
 router.get('/full', contractService.getFullContracts);
 router.get(
   '/my',
-  verifyUserSession,
+  requireUserSession,
   contractService.queryMyContracts,
   contractService.getAllContracts,
 );
 router.post(
   '/import',
-  verifyUserSession,
+  requireUserSession,
   isAdmin,
   contractService.importContractsMoralis,
 );
 // Overload is implemented on service level
 router.get(
   '/fullSA',
-  verifyUserSession,
+  requireUserSession,
   isAdmin,
   verifySuperAdmin,
   contractService.getFullContracts,
@@ -42,7 +42,7 @@ router.get('/:id', contractService.getContractById);
 // Allows to update only two fields
 router.patch(
   '/:id',
-  verifyUserSession,
+  requireUserSession,
   isAdmin,
   verifySuperAdmin,
   validation('manageContract'),

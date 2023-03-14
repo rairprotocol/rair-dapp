@@ -9,7 +9,7 @@ const {
   checkAdminTokenOwns,
   checkBalanceAny,
 } = require('../integrations/ethers/tokenValidation');
-const { verifyUserSession, validation } = require('../middleware');
+const { validation, requireUserSession } = require('../middleware');
 const { generateJWT, getMeetingInvite } = require('../integrations/zoom/zoomController');
 const log = require('../utils/logger')(module);
 const { File, MediaViewLog, User, Contract } = require('../models');
@@ -496,7 +496,7 @@ module.exports = (context) => {
     },
   );
 
-  router.get('/user_info', verifyUserSession, async (req, res, next) => {
+  router.get('/user_info', requireUserSession, async (req, res, next) => {
     const user = _.chain(req.user).assign({}).omit(['nonce']).value();
 
     res.send({
