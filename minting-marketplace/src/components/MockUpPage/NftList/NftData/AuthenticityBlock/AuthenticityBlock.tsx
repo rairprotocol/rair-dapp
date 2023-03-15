@@ -65,11 +65,9 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
         <div className="table-authenticity-title">Action</div>
         {tokenData && (
           <>
-            {tokenData.map((el: TTokenData, index: number) => {
-              if (
-                Number(el.token) === Number(selectedToken) &&
-                el.authenticityLink !== 'none'
-              ) {
+            {Object.keys(tokenData).map((index: string) => {
+              const el = tokenData[index];
+              if (index === selectedToken && el.authenticityLink !== 'none') {
                 return (
                   <div key={index} className="authenticity-box">
                     {el.authenticityLink !== 'none' && (

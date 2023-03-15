@@ -25,9 +25,9 @@ export interface INftItemForCollectionView {
   someUsersData: UserType | null | undefined;
   userName: string | undefined;
   tokenDataLength?: number;
-  playing: number | null;
-  indexId: number;
-  setPlaying: (arg: null | number) => void;
+  playing: string | null;
+  indexId: string;
+  setPlaying: (arg: null | string) => void;
   diamond: boolean;
   offerData: TOfferType[] | undefined;
 }
@@ -98,7 +98,7 @@ export interface INftVideoplayer {
 }
 
 export interface ISerialNumberBuySell {
-  tokenData: TTokenData[] | null;
+  tokenData: { [index: string]: TTokenData } | null;
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   blockchain: BlockchainType | undefined;
   product: string | undefined;
@@ -115,7 +115,7 @@ export interface ISerialNumberBuySell {
 }
 export interface ISellButton {
   currentUser: string | undefined;
-  tokenData: TTokenData[] | null;
+  tokenData: { [index: string]: TTokenData } | null;
   selectedToken: string | undefined;
   sellingPrice?: string;
   isInputPriceExist: boolean;
@@ -169,7 +169,7 @@ export type TParamsTitleCollection = {
 
 export interface ISellInputButton {
   currentUser: string | undefined;
-  tokenData: TTokenData[] | null;
+  tokenData: { [index: string]: TTokenData } | null;
   selectedToken: string | undefined;
 }
 

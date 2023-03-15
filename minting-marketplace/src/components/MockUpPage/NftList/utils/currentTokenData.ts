@@ -1,12 +1,12 @@
 import { TTokenData } from '../../../../axios.responseTypes';
 
-export const currentTokenData = (tokenData: TTokenData[]) =>
+export const currentTokenData = (tokenData: { [index: string]: TTokenData }) =>
   tokenData &&
-  tokenData.map((p) => {
+  Object.keys(tokenData).map((index) => {
     return {
-      value: p.metadata.name,
-      id: p._id,
-      token: p.token,
-      sold: p.isMinted
+      value: tokenData[index].metadata.name,
+      id: tokenData[index]._id,
+      token: tokenData[index].token,
+      sold: tokenData[index].isMinted
     };
   });

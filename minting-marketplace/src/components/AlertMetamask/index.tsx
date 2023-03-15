@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { IAlertMetamask } from './alertMetamask.types';
 import { Alert } from './styles';
 
-import { CheckEthereumChain } from '../../utils/CheckEthereumChain';
+import { web3Switch } from '../../utils/switchBlockchain';
 
 const AlertMetamask: React.FC<IAlertMetamask> = ({
   selectedChain,
@@ -20,7 +20,7 @@ const AlertMetamask: React.FC<IAlertMetamask> = ({
         network. Please switch to{' '}
         <b
           className="switch-network-text"
-          onClick={() => CheckEthereumChain(selectedChainId)}>
+          onClick={() => web3Switch(selectedChainId)}>
           {realNameChain}
         </b>{' '}
         network

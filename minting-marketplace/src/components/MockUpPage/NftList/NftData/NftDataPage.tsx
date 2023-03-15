@@ -11,6 +11,7 @@ import {
 import Carousel from 'react-multi-carousel';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { rFetch } from '../../../../utils/rFetch';
 import ItemRank from '../../SelectBox/ItemRank';
 import SelectBox from '../../SelectBox/SelectBox';
 import OfferItem from '../OfferItem';
@@ -126,15 +127,19 @@ const NftDataPage = ({ primaryColor, textColor }) => {
 
   const getData = useCallback(async () => {
     if (adminToken && contract && product) {
-      const response = await (
-        await fetch(`/api/${adminToken}/${contract}/${product}`, {
-          method: 'GET'
-        })
-      ).json();
-      //   const data = response.result?.tokens.find(
-      //     (data) => String(data.token) === token
-      //   );
-      setTokenData(response.result.tokens);
+      const { success, result } = await rFetch(
+        `/api/${adminToken}/${contract}/${product}`
+      );
+
+      const tokenMapping = {};
+
+      if (success) {
+        result.tokens.forEach((item) => {
+          tokenMapping[item.token] = item;
+        });
+      }
+
+      setTokenData(tokenMapping);
 
       setData(response.result);
 
@@ -148,13 +153,17 @@ const NftDataPage = ({ primaryColor, textColor }) => {
   }, [adminToken, contract, product, setTokenData]);
 
   const getAllProduct = useCallback(async () => {
-    const responseAllProduct = await (
-      await fetch(`/api/nft/${contract}/${product}`, {
-        method: 'GET'
-      })
-    ).json();
+    const { success, result } = await rFetch(`/api/nft/${contract}/${product}`);
 
-    setTokenData(responseAllProduct.result);
+    const tokenMapping = {};
+
+    if (success) {
+      result.tokens.forEach((item) => {
+        tokenMapping[item.token] = item;
+      });
+      setTokenData(tokenMapping);
+    }
+
     setData(responseAllProduct);
     setSelectedToken(0);
     // if (!Object.keys(params).length)

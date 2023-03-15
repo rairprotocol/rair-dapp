@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import MetaMaskOnboarding from '@metamask/onboarding';
+import { BigNumber } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 import Swal from 'sweetalert2';
 
 import { BuySellButton } from './BuySellButton';
@@ -9,9 +11,9 @@ import SellInputButton from './SellInputButton';
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import chainData from '../../../../utils/blockchainData';
-import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
 import { metamaskCall } from '../../../../utils/metamaskUtils';
 import { rFetch } from '../../../../utils/rFetch';
+import { web3Switch } from '../../../../utils/switchBlockchain';
 import { ContractType } from '../../../adminViews/adminView.types';
 import { ISerialNumberBuySell } from '../../mockupPage.types';
 import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
@@ -117,12 +119,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [offerData]);
 
   const checkOwner = useCallback(() => {
-    const price = offerData?.price;
+    const price = formatEther(
+      BigNumber.from(offerData?.price ? offerData?.price : 0)
+    );
     const handleBuyButton = () => {
       return realChainProtected === blockchain
         ? buyContract
         : () => {
-            CheckEthereumChain(blockchain);
+            web3Switch(blockchain);
             // buyContract();
           };
     };
@@ -131,7 +135,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         handleClick={handleBuyButton()}
         disabled={disableBuyBtn()}
         isColorPurple={true}
-        title={`Buy .${(price && +price !== Infinity && price !== undefined
+        title={`Buy ${(price && +price !== Infinity && price !== undefined
           ? price
           : 0
         ).toString()}
@@ -146,7 +150,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (blockchain !== realChainProtected) {
       return loginDone ? (
         <BuySellButton
-          handleClick={() => CheckEthereumChain(blockchain)}
+          handleClick={() => web3Switch(blockchain)}
           isColorPurple={true}
           title={`Switch network`}
         />
@@ -200,7 +204,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           Serial number
         </div>
         <div>
-          {tokenData?.length ? (
+          {tokenData && Object.keys(tokenData)?.length ? (
             <SelectNumber
               blockchain={blockchain}
               product={product}
@@ -230,7 +234,6 @@ export default SerialNumberBuySell;
 
 // import React, { useCallback, useState, useEffect } from 'react';
 // import { ISerialNumberBuySell } from '../../mockupPage.types';
-// import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
 // import { BuySellButton } from './BuySellButton';
 // import { metamaskCall } from '../../../../utils/metamaskUtils';
 // import { RootState } from '../../../../ducks';
@@ -382,7 +385,7 @@ export default SerialNumberBuySell;
 //       return realChainProtected === blockchain
 //         ? buyContract
 //         : () => {
-//             CheckEthereumChain(blockchain);
+//             web3Switch(blockchain);
 //             // buyContract();
 //           };
 //     };
@@ -406,7 +409,7 @@ export default SerialNumberBuySell;
 //     if (blockchain !== realChainProtected) {
 //       return loginDone ? (
 //         <BuySellButton
-//           handleClick={() => CheckEthereumChain(blockchain)}
+//           handleClick={() => web3Switch(blockchain)}
 //           isColorPurple={true}
 //           title={`Switch network`}
 //         />

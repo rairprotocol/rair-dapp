@@ -26,9 +26,9 @@ import SelectNumber from '../components/MockUpPage/SelectBox/SelectNumber/Select
 import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
 import { setShowSidebarTrue } from '../ducks/metadata/actions';
 import chainData from '../utils/blockchainData';
-import { CheckEthereumChain } from '../utils/CheckEthereumChain';
 import { metamaskCall } from '../utils/metamaskUtils';
 import setDocumentTitle from '../utils/setTitle';
+import { web3Switch } from '../utils/switchBlockchain';
 
 const NftDataPageMain = ({
   // setTokenData,
@@ -232,7 +232,7 @@ const NftDataPageMain = ({
         onClick={
           window?.ethereum?.chainId === blockchain
             ? buyContract
-            : () => CheckEthereumChain(blockchain)
+            : () => web3Switch(blockchain)
         }
         style={{
           color: `var(--${textColor})`

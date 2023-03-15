@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useNavigate, useParams } from 'react-router-dom';
+import { BigNumber } from 'ethers';
 
 import { SvgKey } from './SvgKey';
 
@@ -205,8 +206,8 @@ const NftItemForCollectionViewComponent: React.FC<
               <>
                 {offerData && offerData[0] && (
                   <>
-                    {indexId >= Number(offerData[0].range[0]) &&
-                      indexId <= Number(offerData[0].range[1]) && (
+                    {BigNumber.from(indexId).gte(offerData[0].range[0]) &&
+                      BigNumber.from(indexId).lte(offerData[0].range[1]) && (
                         <SvgKey
                           key={index}
                           color={'#E4476D'}
@@ -217,8 +218,8 @@ const NftItemForCollectionViewComponent: React.FC<
                 )}
                 {offerData && offerData[1] && (
                   <>
-                    {indexId >= Number(offerData[1].range[0]) &&
-                      indexId <= Number(offerData[1].range[1]) && (
+                    {BigNumber.from(indexId).gte(offerData[1].range[0]) &&
+                      BigNumber.from(indexId).lte(offerData[1].range[1]) && (
                         <SvgKey
                           color={'#CCA541'}
                           bgColor={'rgba(34, 32, 33, 0.5)'}
@@ -229,9 +230,9 @@ const NftItemForCollectionViewComponent: React.FC<
                 {offerData && offerData.length > 1 && (
                   <>
                     {offerData[2] &&
-                      indexId >= Number(offerData[2].range[0]) &&
+                      BigNumber.from(indexId).gte(offerData[2].range[0]) &&
                       offerData[2] &&
-                      indexId <= Number(offerData[2].range[1]) && (
+                      BigNumber.from(indexId).lte(offerData[2].range[1]) && (
                         <SvgKey
                           color={'silver'}
                           bgColor={'rgba(34, 32, 33, 0.5)'}
