@@ -1,4 +1,10 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -16,6 +22,10 @@ import {
 import { UserType } from '../../../ducks/users/users.types';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import {
+  GlobalModalContext,
+  TGlobalModalContext
+} from '../../../providers/ModalProvider';
 import chainData from '../../../utils/blockchainData';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 
@@ -47,6 +57,9 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
 
   const { maxPrice, minPrice } = gettingPrice(price);
   const ipfsLink = useIPFSImageLink(metaDataProducts?.metadata?.image);
+
+  const { globalModalState } =
+    useContext<TGlobalModalContext>(GlobalModalContext);
 
   const mobileFont = width > 400 ? '' : { fontSize: '9px' };
   const checkUrl = useCallback(() => {
@@ -164,7 +177,10 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
 
   return (
     <>
-      <div className="text-start video-wrapper nft-item-collection mobile-respinsove">
+      <div
+        className={`text-start video-wrapper nft-item-collection mobile-respinsove ${
+          globalModalState?.isOpen ? 'with-modal' : ''
+        }`}>
         <div
           onClick={() => {
             if (!metaDataProducts?.metadata?.animation_url) RedirectToMockUp();

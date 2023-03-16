@@ -67,6 +67,19 @@ export const SelectSortPopUp = styled.div`
     --${(props: TSelectSortPopUpStyled) => props.primaryColor}
   );
   color: var(--${(props: TSelectSortPopUpStyled) => props.textColor});
+  &:after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-color: var(
+      --${(props) => (props.primaryColor.includes('charcoal') ? 'charcoal-90' : 'rhyno-40')}
+    );
+    position: absolute;
+    transform: rotate(45deg);
+    bottom: 63px;
+    right: 20px;
+    z-index: 29;
+  }
 `;
 
 export const ModalContentPicture = styled.div`

@@ -15,6 +15,8 @@ import { BrowserTracing } from '@sentry/tracing';
 import App from './App';
 import store from './ducks';
 
+import { GlobalModalStateProvider } from './providers/ModalProvider/ModalProvider';
+
 import './index.css';
 
 const sentryIoTraceRate = Number(process.env.REACT_APP_SENTRY_IO_TRACE_RATE);
@@ -45,7 +47,9 @@ ReactDOM.render(
     <HelmetProvider>
       <Provider store={store}>
         <BrowserRouter>
-          <App />
+          <GlobalModalStateProvider>
+            <App />
+          </GlobalModalStateProvider>
         </BrowserRouter>
       </Provider>
     </HelmetProvider>

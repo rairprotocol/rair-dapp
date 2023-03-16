@@ -272,6 +272,7 @@ function App() {
         />
       ) : null}
       <AppContainerFluid
+        id="App"
         className="App p-0 container-fluid"
         backgroundImageEffect={backgroundImageEffect}
         textColor={textColor}

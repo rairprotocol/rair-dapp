@@ -1,4 +1,5 @@
-import React, { memo, useState } from 'react';
+//@ts-nocheck
+import React, { memo, useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { NftItem } from './NftItem';
@@ -6,7 +7,14 @@ import { INftListComponent } from './nftList.types';
 
 import { RootState } from '../../../ducks';
 import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
+import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import {
+  GlobalModalContext,
+  TGlobalModalContext
+} from '../../../providers/ModalProvider';
 import LoadingComponent from '../../common/LoadingComponent';
+import HomePageFilterModal from '../../GlobalModal/FilterModal/FilterModal';
+import GlobalModal from '../../GlobalModal/GlobalModal';
 
 const NftListComponent: React.FC<INftListComponent> = ({
   data,
@@ -16,6 +24,11 @@ const NftListComponent: React.FC<INftListComponent> = ({
   const loading = useSelector<RootState, boolean>(
     (store) => store.nftDataStore.loading
   );
+  const { globalModalState } =
+    useContext<TGlobalModalContext>(GlobalModalContext);
+  const { width, height } = useWindowDimensions();
+  const isMobileDesign = width < 1100;
+  const modalParentNode = width > 1100 ? 'filter-modal-parent' : 'App';
 
   const [playing, setPlaying] = useState<null | number>(null);
 
@@ -55,56 +68,69 @@ const NftListComponent: React.FC<INftListComponent> = ({
       });
 
   return (
-    <div className={'list-button-wrapper'}>
-      {
-        filteredData && filteredData.length > 0 ? (
-          filteredData.map((contractData, index) => {
-            if (contractData.cover !== 'none') {
-              return (
-                <NftItem
-                  key={`${
-                    contractData.id + '-' + contractData.productId + index
-                  }`}
-                  pict={contractData.cover ? contractData.cover : defaultImg}
-                  contractName={contractData.contract}
-                  price={contractData.offerData.map((p) => String(p.price))}
-                  blockchain={contractData.blockchain}
-                  collectionName={contractData.name}
-                  ownerCollectionUser={contractData.user}
-                  index={index}
-                  playing={playing}
-                  setPlaying={setPlaying}
-                  collectionIndexInContract={
-                    contractData.collectionIndexInContract
-                  }
-                />
-              );
-            } else {
-              return null;
-            }
-          })
-        ) : (
-          <div className="list-wrapper-empty">
-            <h2>No items to display</h2>
-          </div>
-        )
-        //unused-snippet
-        // Array.from(new Array(10)).map((item, index) => {
-        //   return (
-        //     <Skeleton
-        //       key={index}
-        //       className={"skeloton-product"}
-        //       variant="rectangular"
-        //       width={283}
-        //       height={280}
-        //       style={{ borderRadius: 20 }}
-        //     />
-        //   );
-        // })
-        // <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: "20px" }} className="preloader-product">
-        //     <CircularProgress size="70px" />
-        // </div>
-      }
+    <div className={'nft-items-wrapper'}>
+      <div
+        className={`list-button-wrapper ${
+          globalModalState?.isOpen ? 'with-modal' : ''
+        }`}>
+        {
+          filteredData && filteredData.length > 0 ? (
+            filteredData.map((contractData, index) => {
+              if (contractData.cover !== 'none') {
+                return (
+                  <NftItem
+                    key={`${
+                      contractData.id + '-' + contractData.productId + index
+                    }`}
+                    pict={contractData.cover ? contractData.cover : defaultImg}
+                    contractName={contractData.contract}
+                    price={contractData.offerData.map((p) => String(p.price))}
+                    blockchain={contractData.blockchain}
+                    collectionName={contractData.name}
+                    ownerCollectionUser={contractData.user}
+                    index={index}
+                    playing={playing}
+                    setPlaying={setPlaying}
+                    collectionIndexInContract={
+                      contractData.collectionIndexInContract
+                    }
+                  />
+                );
+              } else {
+                return null;
+              }
+            })
+          ) : (
+            <div className="list-wrapper-empty">
+              <h2>No items to display</h2>
+            </div>
+          )
+          //unused-snippet
+          // Array.from(new Array(10)).map((item, index) => {
+          //   return (
+          //     <Skeleton
+          //       key={index}
+          //       className={"skeloton-product"}
+          //       variant="rectangular"
+          //       width={283}
+          //       height={280}
+          //       style={{ borderRadius: 20 }}
+          //     />
+          //   );
+          // })
+          // <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: "20px" }} className="preloader-product">
+          //     <CircularProgress size="70px" />
+          // </div>
+        }
+      </div>
+      <div id="filter-modal-parent">
+        <GlobalModal
+          parentContainerId={modalParentNode}
+          renderModalContent={(globalModalState) => (
+            <HomePageFilterModal isMobileDesign={isMobileDesign} />
+          )}
+        />
+      </div>
     </div>
   );
 };
