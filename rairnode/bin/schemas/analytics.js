@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const { customValidator } = require('./helpers');
+const { ethAddress } = require('./reusableCustomTypes');
 
 module.exports = {
   analyticsParams: Joi.object({
@@ -9,9 +10,7 @@ module.exports = {
   analyticsQuery: Joi.object({
     fromDate: Joi.date(),
     toDate: Joi.date(),
-    userAddress: Joi.string()
-      .pattern(/^0x\w{40}$/)
-      .messages({ 'string.pattern.base': 'Invalid publicAddress' }),
+    userAddress: ethAddress,
     onlyCount: Joi.boolean(),
     itemsPerPage: Joi.number(),
     pageNum: Joi.number(),

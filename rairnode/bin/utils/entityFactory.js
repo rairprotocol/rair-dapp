@@ -80,17 +80,17 @@ exports.getOne = (Model, options = {}) =>
     const filterOptions = options.filter
       ? _.reduce(
           options.filter,
-          (r, v, k) => {
+          (result, value, key) => {
             // specificFilterOptions - will be used as is
-            if (k === 'specificFilterOptions') {
+            if (key === 'specificFilterOptions') {
               // eslint-disable-next-line no-param-reassign
-              r = _.assign(r, _.get(req, v, {}));
+              result = _.assign(result, _.get(req, value, {}));
             } else {
               // eslint-disable-next-line no-param-reassign
-              r[k] = _.get(req, v, v);
+              result[key] = _.get(req, value, value);
             }
 
-            return r;
+            return result;
           },
           {},
         )
@@ -123,10 +123,10 @@ exports.getAll = (Model, options = {}) =>
     const filterOptions = options.filter
       ? _.reduce(
           options.filter,
-          (r, v, k) => {
+          (result, value, key) => {
             // eslint-disable-next-line no-param-reassign
-            r[k] = _.get(req, v, v);
-            return r;
+            result[key] = _.get(req, value, value);
+            return result;
           },
           {},
         )
@@ -163,8 +163,7 @@ exports.getAll = (Model, options = {}) =>
       doc = await options.dataTransform.func(
         doc,
         ..._.map(_.get(options, 'dataTransform.parameters', []), (v) =>
-          _.get(req, v, v),
-        ),
+          _.get(req, v, v)),
       );
     }
 

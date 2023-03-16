@@ -68,10 +68,8 @@ const prepareTokens = async (
   options.isMinted = false;
 
   const foundTokens = await MintedToken.find(options);
-  foundTokens.map((token) => {
-    token.isURIStoredToBlockchain = false;
-    token.metadata = metadata;
-    tokens.push({ ...token });
+  foundTokens.forEach((token) => {
+    tokens.push({ ...token, isURIStoredToBlockchain: false, metadata });
   });
 };
 
@@ -82,7 +80,7 @@ exports.getTokenNumbers = async (req, res, next) => {
     // getOfferIndexesByContractAndProduct, -> req.offers = offers (diamondRangeIndex)
     // getOfferPoolByContractAndProduct, -> req.offerPool = offerPool
     // create options \|/
-    const { contract, offerPool, offers } = req;
+    const { contract, offerPool, offers } = req.query;
     const options = offerPool
       ? {
           contract: contract._id,
@@ -237,6 +235,7 @@ exports.updateTokenCommonMetadata = async (req, res, next) => {
             );
           } catch (err) {
             log.error(`for product ${foundProduct.collectionIndexInContract} ${err.message}`);
+            return undefined;
           }
         }),
       );
@@ -490,7 +489,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
 
 exports.pinMetadataToPinata = async (req, res, next) => {
   try {
-    const { contract, offers, offerPool } = req;
+    const { contract, offers, offerPool } = req.query;
     const { token } = req.params;
     const { user } = req;
     // eslint-disable-next-line

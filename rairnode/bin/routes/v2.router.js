@@ -1,5 +1,5 @@
 const express = require('express');
-const searchController = require('../search/search.Controller');
+const searchController = require('../api/search/search.Controller');
 const contractsController = require('../contracts/contracts.Controller');
 const filesController = require('../files/files.Controller');
 const uploadController = require('../media/uploadController');

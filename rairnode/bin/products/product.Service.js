@@ -7,7 +7,7 @@ const eFactory = require('../utils/entityFactory');
 exports.getAllProducts = eFactory.getAll(ProductModel);
 exports.getProductById = async (req, res, next) => {
   try {
-    const product = await ProductModel.findById(req.params.productId);
+    const product = await ProductModel.findById(req.params.id);
     res.json({ success: true, product });
   } catch (e) {
     next(e);

@@ -144,7 +144,7 @@ module.exports = {
   },
   authToZoom: async (req, res, next) => {
     try {
-      // JWT creation deprecated on June 2023
+      // JWT creation will be deprecated on June 2023
       const payload = {
         iss: zoomClientID,
         exp: new Date().getTime() + 5000,

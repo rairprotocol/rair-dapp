@@ -7,10 +7,20 @@ const { getOfferPoolByContractAndProduct } = require('../offerPools/offerPools.S
 
 const router = express.Router();
 
-router.get('/', loadUserSession, validation('getFilesByProduct', 'query'), getFiles);
-router.get('/byID/:id', getFile);
+router.get(
+    '/',
+    loadUserSession,
+    validation('getFilesByProduct', 'query'),
+    getFiles,
+);
+router.get(
+    '/byID/:id',
+    validation('dbId', 'params'),
+    getFile,
+);
 router.get(
     '/:token',
+    validation('filesForTokenId', 'params'),
     getSpecificContracts,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
