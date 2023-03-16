@@ -79,3 +79,21 @@ exports.getFilesForToken = async (req, res, next) => {
     return next(err);
   }
 };
+
+exports.getFilesByCategory = async (req, res) => {
+  const { id } = req.params;
+  const { pageNum = '1', itemsPerPage = '20' } = req.query;
+  const pageSize = parseInt(itemsPerPage, 10);
+  const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+
+  const results = await File.find({ category: id }, '-key')
+    .skip(skip)
+    .limit(pageSize);
+  const totalCount = await File.find({ category: id }).countDocuments();
+
+  res.json({
+    success: true,
+    totalCount,
+    files: results,
+  });
+};
