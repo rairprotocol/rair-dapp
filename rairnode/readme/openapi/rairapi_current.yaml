@@ -4,9 +4,10 @@ info:
   version: 1.0.5
   description: API for interfacing with RAIR server nodes.
 servers:
-  - url: api.rair.tech/
+  - url: demo-api.rair.tech/
 tags:
   - name: Admin
+  - name: Analytics
   - name: Authentication
   - name: Marketplace
   - name: Media 
@@ -47,6 +48,32 @@ paths:
         "200":
           $ref: "#/components/responses/200_getUser"
 
+#analytics
+  /api/analytics/{mediaId}:
+    get:
+      summary: Get Analytics 
+      description: Find and return analytics data for an object with a specific <code>mediaId</code>.
+      tags:
+        - Analytics
+      parameters:
+        - $ref: "#/components/parameters/path_mediaId"
+        - $ref: "#/components/parameters/query_pageNum"
+          required: false
+        - $ref: "#/components/parameters/query_itemsPerPage"
+          required: false
+        - $ref: "#/components/parameters/query_userAddress"
+          required: false
+        - $ref: "#/components/parameters/query_fromDate"
+          required: false
+        - $ref: "#/components/parameters/query_toDate"
+          required: false
+        - $ref: "#/components/parameters/query_onlyCount"
+          required: false
+      responses:
+        "200":
+            $ref: "#/components/responses/200_getAnalytics"
+        "403":
+            $ref: "#/components/responses/403_notOwnerOfMedia"
 #authentication
   /api/auth/get_challenge/{MetaAddress}:
     get:
@@ -892,6 +919,18 @@ components:
       in: query
       schema:
         type: number
+    query_fromDate:
+      name: fromDate
+      in: query
+      description: date.toISOString()
+      schema:
+        type: string
+    query_toDate:
+      name: toDate
+      in: query
+      description: date.toISOString()
+      schema:
+        type: string
     query_networkId:
       name: networkId
       in: query
@@ -917,6 +956,11 @@ components:
       description: Associate a subset of <code>Product</code> tokens to a shared sale <code>price</code>.
       schema:
         type: string
+    query_onlyCount:
+      name: onlyCount
+      in: query
+      schema:
+        type: boolean
     query_pageNum:
       name: pageNum
       in: query
@@ -1500,6 +1544,9 @@ components:
         success:
           type: boolean
           example: false
+        error:
+          type: boolean
+          example: true
         message:
           type: string
           example: You don't have permission to manage this file.
@@ -1741,6 +1788,21 @@ components:
         - copies 
         - firstTokenIndex 
         - diamond  
+    response_properties_results:
+      type: object  
+      properties:
+        decryptedFiles:
+          type: number
+          example: 12
+        userAddress: 
+          type: string
+          example: 0xec30759d0a3f3ce0a730920dc29d74e441f492c3
+        file:
+          type: string
+          example: QmSJ5y6TWTj4YJj17EFWwRPGZTQY5UVwBg2Fp8eGDCcnez
+        createdAt:
+          type: string
+          example: 2023-01-27T19:25:59.414Z
     response_properties_token:
       type: object
       properties:
@@ -2070,6 +2132,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/response_properties_list'
+    200_getAnalytics:
+      description: OK - Responds with analytics data
+      content:
+        application/json:
+          schema:
+            properties:
+              success:
+                type: boolean
+                example: true
+              results:  
+                $ref: '#/components/schemas/response_properties_results'
+              totalCount:
+                type: number
+                example: 11
     200_getBlockchains:
       description: OK - Returns a list of accessable blockchains from the database
       content:

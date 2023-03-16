@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-
-import {
-  IFilteringBlock,
-  TFilterItemCategories,
-  TSortChoice
-} from './filteringBlock.types';
+//@ts-nocheck
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import {
+  GlobalModalContext,
+  TGlobalModalContext
+} from '../../../providers/ModalProvider';
+import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
 
 import {
   SelectFiltersItem,
@@ -25,7 +25,7 @@ import ModalCategories from './portal/ModalCategories/ModalCategories';
 
 import './FilteringBlock.css';
 
-const FilteringBlock: React.FC<IFilteringBlock> = ({
+const FilteringBlock = ({
   primaryColor,
   textColor,
   sortItem,
@@ -37,47 +37,53 @@ const FilteringBlock: React.FC<IFilteringBlock> = ({
   setIsShowCategories,
   setFilterText,
   setFilterCategoriesText,
-  categoryClick,
-  setCategoryClick,
-  blockchainClick,
-  setBlockchainClick
-}) => {
-  const [filterPopUp, setFilterPopUp] = useState<boolean>(false);
-  const [, /*filterItem*/ setFilterItem] = useState<TFilterItemCategories>();
-  const [isOpenCategories, setIsOpenCategories] = useState<boolean>(false);
-  const [isOpenBlockchain, setIsOpenBlockchain] = useState<boolean>(false);
-  const [sortPopUp, setSortPopUp] = useState<boolean>(false);
-  const filterRef = useRef<HTMLDivElement>(null);
-  const sortRef = useRef<HTMLDivElement>(null);
+  click,
+  setClick
+}: any) => {
+  const [filterPopUp, setFilterPopUp] = useState(false);
+  const [, /*filterItem*/ setFilterItem] = useState('Filters');
+  const filterRef = useRef();
 
-  const { width } = useWindowDimensions();
+  const [sortPopUp, setSortPopUp] = useState(false);
+  const sortRef = useRef();
 
-  const onChangeFilterItem = (item: TFilterItemCategories) => {
+  const [isOpenCategories, setIsOpenCategories] = useState(false);
+  const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
+  const { width /*height*/ } = useWindowDimensions();
+
+  const { globalModalState, globalModaldispatch } =
+    useContext<TGlobalModalContext>(GlobalModalContext);
+
+  const onChangeFilterItem = (item) => {
     setFilterItem(item);
     onChangeFilterPopUp();
   };
 
   const onChangeFilterPopUp = () => {
-    setFilterPopUp((prev) => !prev);
+    // setFilterPopUp((prev) => !prev);
+    globalModaldispatch({
+      type: GLOBAL_MODAL_ACTIONS.TOGLE_IS_MODAL_OPEN,
+      payload: null
+    });
   };
 
   const onChangeSortPopUp = () => {
     setSortPopUp((prev) => !prev);
   };
 
-  const onChangeSortItem = (item: TSortChoice) => {
+  const onChangeSortItem = (item) => {
     setSortItem(item);
     onChangeSortPopUp();
   };
 
-  const handleClickOutSideFilter = (e: MouseEvent) => {
-    if (!filterRef.current?.contains(e.target as Node)) {
+  const handleClickOutSideFilter = (e) => {
+    if (!filterRef.current.contains(e.target)) {
       setFilterPopUp(false);
     }
   };
 
-  const handleClickOutSideSort = (e: MouseEvent) => {
-    if (!sortRef.current?.contains(e.target as Node)) {
+  const handleClickOutSideSort = (e) => {
+    if (!sortRef.current.contains(e.target)) {
       setSortPopUp(false);
     }
   };
@@ -93,6 +99,14 @@ const FilteringBlock: React.FC<IFilteringBlock> = ({
     return () =>
       document.removeEventListener('mousedown', handleClickOutSideSort);
   });
+  useEffect(() => {
+    globalModaldispatch({
+      type: GLOBAL_MODAL_ACTIONS.CREATE_MODAL,
+      payload: {
+        isOpen: false
+      }
+    });
+  }, [globalModaldispatch]);
 
   return (
     <>
@@ -135,40 +149,41 @@ const FilteringBlock: React.FC<IFilteringBlock> = ({
         </SelectSortItem>
         {sortPopUp && (
           <SelectSortPopUp
-            className="select-sort-title-pop-up"
+            className={`select-sort-title-pop-up ${
+              primaryColor.includes('charcoal') ? 'dark-theme' : 'light-theme'
+            }`}
             primaryColor={primaryColor}
             textColor={textColor}>
-            {sortItem === 'up' ? (
-              <div
-                onClick={() => onChangeSortItem('down')}
-                className="select-sort-item">
-                <StyledPopupArrowDownIcon />
-                {/* <i className="fas fa-arrow-down"></i> */}
+            {
+              <div className="sort-popup-home-page">
+                <div
+                  className="sotr-item-redesign"
+                  onClick={() => onChangeSortItem('up')}>
+                  Name: A-Z
+                </div>
+                <div
+                  className="sotr-item-redesign"
+                  onClick={() => onChangeSortItem('down')}>
+                  Name: Z-A
+                </div>
               </div>
-            ) : (
-              <div
-                onClick={() => onChangeSortItem('up')}
-                className="select-sort-item">
-                <StyledPopupArrowUpIcon />
-                {/* <i className="fas fa-arrow-up"></i> */}
-              </div>
-            )}
+            }
           </SelectSortPopUp>
         )}
         <ModalCategories
-          click={categoryClick}
+          click={click}
           isOpenCategories={isOpenCategories}
           setIsOpenCategories={setIsOpenCategories}
           setCategory={setCategory}
-          setClick={setCategoryClick}
+          setClick={setClick}
           setIsShowCategories={setIsShowCategories}
           setFilterCategoriesText={setFilterCategoriesText}
         />
         <ModalBlockchain
-          click={blockchainClick}
+          click={click}
           isOpenBlockchain={isOpenBlockchain}
           setBlockchain={setBlockchain}
-          setClick={setBlockchainClick}
+          setClick={setClick}
           setIsOpenBlockchain={setIsOpenBlockchain}
           setIsShow={setIsShow}
           setFilterText={setFilterText}

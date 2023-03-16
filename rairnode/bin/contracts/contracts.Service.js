@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
-const { Contract, Blockchain } = require('../models');
+const { Contract, Blockchain, File } = require('../models');
 const AppError = require('../utils/errors/AppError');
 const eFactory = require('../utils/entityFactory');
 const {
@@ -9,6 +9,27 @@ const {
 
 exports.getAllContracts = eFactory.getAll(Contract);
 exports.updateContract = eFactory.updateOne(Contract);
+
+// Returns all contracts associated with a video with the specified category
+exports.getContractByCategory = async (req, res, next) => {
+  const { id } = req.params;
+  const { pageNum = '1', itemsPerPage = '20' } = req.query;
+  const pageSize = parseInt(itemsPerPage, 10);
+  const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+
+  const contractList = (await File.find({ category: id }))
+    .map((item) => item.contract);
+  const results = await Contract.find({ _id: { $in: contractList } })
+    .skip(skip)
+    .limit(pageSize);
+  const totalCount = await Contract.find({ _id: { $in: contractList } }).countDocuments();
+
+  res.json({
+    success: true,
+    totalCount,
+    contracts: results,
+  });
+};
 
 exports.getContractById = async (req, res, next) => {
   try {

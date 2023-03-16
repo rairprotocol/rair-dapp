@@ -812,6 +812,12 @@ a:hover {
   /* margin-left: 5vw; */
 }
 
+@-moz-document url-prefix() {
+  .nft-items-wrapper {
+    width: 1200px;
+  }
+}
+
 .list-wrapper-empty {
   width: 100%;
   margin: 0 0 40px 0;
@@ -1298,8 +1304,8 @@ i.fas-custom {
 }
 
 .clear-filter:hover::after {
-  content: '\2613';
-  color: red;
+  content: '\274E';
+  color: blue;
   padding-left: 1rem;
 }
 

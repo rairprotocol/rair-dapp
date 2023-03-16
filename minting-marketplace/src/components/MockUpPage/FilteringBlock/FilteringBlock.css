@@ -256,8 +256,8 @@ select.select-price option {
   position: absolute;
   top: 64px;
   left: 0;
-  overflow: hidden;
-  z-index: 1;
+  /* overflow: hidden; */
+  z-index: 10;
 }
 
 .select-sort-item {
@@ -309,6 +309,10 @@ select.select-price option {
   .select-filters {
     margin: 0;
   }
+  .select-sort-title-pop-up {
+    top: 64px;
+    left: -200px;
+  }
 }
 
 @media screen and (max-width: 500px) {
@@ -334,4 +338,27 @@ select.select-price option {
   /* .category-button-nft.category-button {
     width: 130px;
   } */
+}
+
+.nft-items-wrapper {
+  display: flex;
+}
+.sort-popup-home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.sotr-item-redesign {
+  cursor: pointer;
+}
+.sort-popup-home-page div {
+  margin: 5px;
+}
+.select-sort-title-pop-up {
+  max-width: 244px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 30px;
 }

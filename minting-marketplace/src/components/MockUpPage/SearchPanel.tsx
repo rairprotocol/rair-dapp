@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+//@ts-nocheck
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
@@ -16,6 +23,11 @@ import {
   getCurrentPageNull
 } from '../../ducks/pages/actions';
 import { getListVideosStart } from '../../ducks/videos/actions';
+import {
+  GlobalModalContext,
+  TGlobalModalContext
+} from '../../providers/ModalProvider';
+import { GLOBAL_MODAL_ACTIONS } from '../../providers/ModalProvider/actions';
 import InputField from '../common/InputField';
 import { MediaListResponseType } from '../video/video.types';
 import VideoList from '../video/videoList';
@@ -41,8 +53,9 @@ const SearchPanel: React.FC<ISearchPanel> = ({
   const [blockchain, setBlockchain] = useState<BlockchainType | undefined>();
   const [category, setCategory] = useState<TOnClickCategories | null>();
   const [isShow, setIsShow] = useState<boolean>(false);
+  const [click, setClick] = useState(null);
   const [isShowCategories, setIsShowCategories] = useState<boolean>(false);
-  const [filterText, setFilterText] = useState<TBlockchainNames>();
+  const [filterText, setFilterText] = useState<TBlockchainNames>([]);
   const [filterCategoriesText, setFilterCategoriesText] =
     useState<TOnClickCategories | null>();
   const [categoryClick, setCategoryClick] = useState<TOnClickCategories | null>(
@@ -66,6 +79,9 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     (store) => store.videosStore.videos
   );
 
+  const { globalModalState, globalModaldispatch } =
+    useContext<TGlobalModalContext>(GlobalModalContext);
+
   const handleVideoIsUnlocked = useCallback(() => {
     setVideoUnlocked((prev) => !prev);
   }, [setVideoUnlocked]);
@@ -84,12 +100,30 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     window.scrollTo(0, 0);
   };
 
-  const clearFilter = () => {
+  const clearFilter = useCallback(() => {
     setBlockchain(undefined);
     setCategoryClick(null);
     setBlockchainClick(null);
     setIsShow(false);
+    setClick(null);
     dispatch(getCurrentPageEnd());
+  }, [dispatch]);
+
+  const clearSelected = (selectedItemText) => {
+    if (globalModalState.selectedBchItems) {
+      const sortedBchItems = globalModalState.selectedBchItems.filter(
+        (bchItem) => bchItem.name !== selectedItemText
+      );
+      globalModalState.onFilterApply(sortedBchItems);
+      globalModaldispatch({
+        type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
+        payload: {
+          selectedBchItems: sortedBchItems
+        }
+      });
+
+      setFilterText(filterText.filter((item) => item !== selectedItemText));
+    }
   };
 
   const clearCategoriesFilter = () => {
@@ -99,6 +133,20 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     setIsShowCategories(false);
     dispatch(getCurrentPageEnd());
   };
+
+  useEffect(() => {
+    globalModaldispatch({
+      type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
+      payload: {
+        setBlockchain,
+        setCategory,
+        primaryColor,
+        clearFilter,
+        setFilterText,
+        setIsShow
+      }
+    });
+  }, [globalModaldispatch, setBlockchain, primaryColor, clearFilter]);
 
   useEffect(() => {
     if (blockchain || category) {
@@ -212,6 +260,8 @@ const SearchPanel: React.FC<ISearchPanel> = ({
               className="fas fa-search fa-lg fas-custom"
               aria-hidden="true"></i>
             <FilteringBlock
+              click={click}
+              setIsClick={setClick}
               isFilterShow={true}
               textColor={textColor}
               primaryColor={primaryColor}
@@ -233,13 +283,18 @@ const SearchPanel: React.FC<ISearchPanel> = ({
         <TabPanel>
           <div className="clear-filter-wrapper">
             {isShow ? (
-              <button
-                className={`clear-filter ${
-                  primaryColor === 'rhyno' ? 'rhyno' : ''
-                }`}
-                onClick={() => clearFilter()}>
-                {filterText}
-              </button>
+              filterText.map((filterItemText) => {
+                return (
+                  <button
+                    key={Math.random() * 1_000_000}
+                    className={`clear-filter ${
+                      primaryColor === 'rhyno' ? 'rhyno' : ''
+                    }`}
+                    onClick={() => clearSelected(filterItemText)}>
+                    {filterItemText}
+                  </button>
+                );
+              })
             ) : (
               <></>
             )}

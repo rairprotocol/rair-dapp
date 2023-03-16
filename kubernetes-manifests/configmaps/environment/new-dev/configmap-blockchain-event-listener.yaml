@@ -53,3 +53,5 @@ data:
   BINANCE_TESTNET_RPC: https://data-seed-prebsc-1-s1.binance.org:8545/
   ETHEREUM_MAINNET_RPC: https://mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b
   ETHEREUM_TESTNET_GOERLI_RPC: https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b
+  REDIS_HOST: rair-redis
+  REDIS_PORT: "6379"
