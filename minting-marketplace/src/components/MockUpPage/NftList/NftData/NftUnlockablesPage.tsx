@@ -46,7 +46,7 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   }, []);
 
   useEffect(() => {
-    if (tokenData && tokenData.length > 0) {
+    if (tokenData && Object.keys(tokenData).length > 0) {
       setIsDiamond(tokenData[0].offer.diamond);
     }
   }, [tokenData]);
@@ -67,7 +67,7 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
           selectedData={tokenData && tokenData[selectedToken]?.metadata}
           title={collectionName}
           someUsersData={someUsersData}
-          userName={tokenData[selectedToken]?.owner}
+          userName={tokenData[selectedToken]?.ownerAddress}
         />
       )}
       <div style={{ marginBottom: 108 }}>

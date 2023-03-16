@@ -150,8 +150,13 @@ const NftDataExternalLink = ({ loginDone }) => {
         );
 
         const { success, result } = responseAllProduct.data;
+        const tokenMapping = {};
+
         if (success) {
-          dispatch(setTokenData(result.tokens));
+          result.tokens.forEach((item) => {
+            tokenMapping[item.token] = item;
+          });
+          dispatch(setTokenData(tokenMapping));
           setTotalCount(result.totalCount);
         }
       }

@@ -1,6 +1,6 @@
 export interface IAlertMetamask {
   selectedChain: string;
-  selectedChainId: string;
+  selectedChainId: BlockchainType;
   realNameChain: string;
   setShowAlert: (value: boolean) => void;
 }

@@ -38,7 +38,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const [isBack /*setIsBack*/] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(true);
 
-  const tokenData = useSelector<RootState, TTokenData[]>(
+  const tokenData = useSelector<RootState, { [index: string]: TTokenData }>(
     (state) => state.nftDataStore.tokenData
   );
   const dispatch = useDispatch();
@@ -60,8 +60,13 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
       const responseAllProduct = await axios.get<TNftItemResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${indexes[0]}&toToken=${indexes[1]}&limit=${limit}`
       );
-      const { result } = responseAllProduct.data;
-      dispatch(setTokenData(result.tokens));
+      const tokenMapping = {};
+      if (responseAllProduct.data.success) {
+        responseAllProduct.data.result.tokens.forEach((item) => {
+          tokenMapping[item.token] = item;
+        });
+        dispatch(setTokenData(tokenMapping));
+      }
       setSelectedToken(selectedToken);
       onClickItem(selectedToken);
       handleIsOpen();

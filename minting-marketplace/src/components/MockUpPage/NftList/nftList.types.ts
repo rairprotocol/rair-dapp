@@ -12,7 +12,7 @@ import {
   TTokenData
 } from './../../../axios.responseTypes';
 export interface IAuthenticityBlock {
-  tokenData: TTokenData[];
+  tokenData: { [index: string]: TTokenData };
   title: boolean;
   collectionToken: string;
   selectedToken?: string | undefined;
@@ -79,10 +79,10 @@ export interface INftCollectionPageComponent {
   embeddedParams: TEmbeddedParams | undefined;
   blockchain: BlockchainType | undefined;
   selectedData: TMetadataType | undefined;
-  tokenData: TTokenData[] | null;
+  tokenData: { [index: string]: TTokenData } | null;
   totalCount: number | undefined;
   offerPrice: string[] | undefined;
-  getAllProduct: (fromToken: number, toToken: number) => Promise<void>;
+  getAllProduct: (fromToken: string, toToken: string) => Promise<void>;
   showToken: number;
   setShowToken: (token: number) => void;
   isLoading: boolean;
@@ -100,7 +100,7 @@ export interface INftUnlockablesPage {
   productsFromOffer: TFileType[];
   primaryColor: ColorChoice;
   selectedToken: string | undefined;
-  tokenData: TTokenData[] | null;
+  tokenData: { [index: string]: TTokenData } | null;
   someUsersData: UserType | null | undefined;
   collectionName: string | undefined;
   setTokenDataFiltered: (filteredData: any) => void;

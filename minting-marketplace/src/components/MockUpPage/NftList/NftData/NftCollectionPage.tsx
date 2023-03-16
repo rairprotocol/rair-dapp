@@ -42,11 +42,11 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const dispatch = useDispatch();
   const myRef = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState<boolean>(true);
-  const [playing, setPlaying] = useState<null | number>(null);
+  const [playing, setPlaying] = useState<null | string>(null);
 
   const loadToken = useCallback(() => {
     setShowToken(showToken * 2);
-    getAllProduct(0, showToken);
+    getAllProduct('0', showToken.toString());
   }, [getAllProduct, setShowToken, showToken]);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
 
   return (
     <>
-      {tokenData.length > 0 || tokenDataFiltered.length > 0 ? (
+      {Object.keys(tokenData).length > 0 || tokenDataFiltered.length > 0 ? (
         <div
           className="wrapper-collection"
           style={{
@@ -130,7 +130,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                           blockchain={blockchain}
                           selectedData={selectedData}
                           index={token.token}
-                          indexId={index}
+                          indexId={index.toString()}
                           offerData={offerDataCol}
                           offer={
                             token.offer.diamond
@@ -148,8 +148,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                       return null;
                     }
                   })
-                : tokenData.length > 0
-                ? tokenData.map((token, index) => {
+                : Object.keys(tokenData).length > 0
+                ? Object.keys(tokenData).map((index) => {
+                    const token = tokenData[index];
                     if (
                       token.metadata.image &&
                       token.metadata.image !== 'undefined'
@@ -177,7 +178,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                           }
                           someUsersData={someUsersData}
                           userName={offerAllData?.owner}
-                          tokenDataLength={tokenData.length}
+                          tokenDataLength={Object.keys(tokenData).length}
                           setPlaying={setPlaying}
                           playing={playing}
                           diamond={token.offer.diamond}

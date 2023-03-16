@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 
 import { NftCollectionPage } from './NftCollectionPage';
 import NftDataPageMain from './NftDataPageMain';
@@ -62,9 +62,10 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const tokenData = useSelector<RootState, TTokenData[] | null>(
-    (state) => state.nftDataStore.tokenData
-  );
+  const tokenData = useSelector<
+    RootState,
+    { [index: string]: TTokenData } | null
+  >((state) => state.nftDataStore.tokenData);
 
   const navigate = useNavigate();
   const params = useParams<TParamsNftDataCommonLink>();
@@ -86,32 +87,27 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   }, [currentUserAddress]);
 
   const getAllProduct = useCallback(
-    async (fromToken: number, toToken: number) => {
-      let responseAllProduct;
+    async (fromToken: string, toToken: string) => {
       setIsLoading(true);
-      // if (Number(tokenId) > 15) {
-      //   responseAllProduct = await axios.get(
-      //     `/api/nft/network/${blockchain}/${contract}/${product}`
-      //   );
-      // } else {
-      if (tokenId) {
-        responseAllProduct = await axios.get<TNftItemResponse>(
-          `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`
-        );
+      const responseAllProduct = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`
+      );
+
+      const tokenMapping = {};
+
+      if (responseAllProduct.data.success && responseAllProduct.data.result) {
+        responseAllProduct.data.result.tokens.forEach((item) => {
+          tokenMapping[item.token] = item;
+        });
       }
 
-      // }
-      dispatch(setTokenData(responseAllProduct.data.result.tokens));
+      dispatch(setTokenData(tokenMapping));
       setTotalCount(responseAllProduct.data.result.totalCount);
       setIsLoading(false);
 
-      if (tokenId && responseAllProduct.data.result.tokens.length >= tokenId) {
-        if (tokenId) {
-          setSelectedData(
-            responseAllProduct.data.result?.tokens[tokenId]?.metadata
-          );
-          setIsLoading(false);
-        }
+      if (tokenId && tokenMapping[tokenId]) {
+        setSelectedData(tokenMapping[tokenId]?.metadata);
+        setIsLoading(false);
       }
 
       setSelectedToken(tokenId);
@@ -127,8 +123,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         `/api/nft/network/${blockchain}/${contract}/${product}/files`,
         {
           headers: {
-            Accept: 'application/json',
-            'X-rair-token': userToken
+            Accept: 'application/json'
           }
         }
       );
@@ -244,7 +239,11 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       navigate(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
     }
 
-    if (tokenData && tokenId && tokenData.length >= Number(tokenId)) {
+    if (
+      tokenData &&
+      tokenId &&
+      Object.keys(tokenData).length >= Number(tokenId)
+    ) {
       setSelectedData(tokenData && tokenData[tokenId].metadata);
     }
 
@@ -264,8 +263,17 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   }, [checkUserConnect]);
 
   useEffect(() => {
-    getAllProduct(0, showToken);
-  }, [getAllProduct, showToken]);
+    let tokenStart = BigNumber.from(0);
+    let tokenEnd = BigNumber.from(15);
+    if (tokenId) {
+      tokenStart = BigNumber.from(tokenId).sub(10);
+      if (tokenStart.lt(0)) {
+        tokenStart = BigNumber.from(0);
+      }
+      tokenEnd = tokenStart.add(20);
+    }
+    getAllProduct(tokenStart.toString(), tokenEnd.toString());
+  }, [getAllProduct, showToken, tokenId]);
 
   useEffect(() => {
     getParticularOffer();
