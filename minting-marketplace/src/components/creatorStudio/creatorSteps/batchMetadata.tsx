@@ -111,7 +111,10 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   }, [address, collectionIndex, contractData.blockchain]);
 
   useEffect(() => {
-    const sendMetadata = async (updateMeta: boolean) => {
+    const sendMetadata = async (
+      updateMeta: boolean,
+      forceOverwrite = false
+    ) => {
       const formData = new FormData();
       if (!collectionIndex) {
         return;
@@ -120,6 +123,9 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
       formData.append('contract', contractData._id);
       formData.append('updateMeta', String(updateMeta));
       formData.append('csv', csvFile as Blob, 'metadata.csv');
+      if (forceOverwrite) {
+        formData.append('forceOverwrite', 'true');
+      }
       const response = await rFetch('/api/nft', {
         method: 'POST',
         body: formData,
@@ -129,7 +135,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         Swal.fire(
           'Success',
           `${updateMeta ? 'Updated' : 'Generated'} ${
-            response.result.length
+            response.updatedDocuments
           } metadata entries!`,
           'success'
         );
@@ -149,7 +155,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
       ]);
       return;
     } else {
-      setButtons([
+      const buttons = [
         {
           label: changeFile ? 'Send' : 'There is already a csv file uploaded',
           action: changeFile ? () => sendMetadata(metadataExists) : null,
@@ -159,10 +165,18 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
           label: 'Continue',
           action: gotoNextStep
         }
-      ]);
+      ];
+      if (!simpleMode && changeFile) {
+        buttons.splice(0, 0, {
+          label: 'Overwrite all token metadata',
+          action: () => sendMetadata(metadataExists, true)
+        });
+      }
+      setButtons(buttons);
       return;
     }
   }, [
+    simpleMode,
     metadata,
     changeFile,
     gotoNextStep,
