@@ -23,3 +23,5 @@ data:
   VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: "f537dd61-bd49-e564-9b16-d718d8f37060"
   VAULT_MEDIA_SERVICE_use_x509_cert_auth: "false"
   SERVICE_HOST: new-ms.rair.tech
+  REDIS_HOST: rair-redis
+  REDIS_PORT: "6379"
