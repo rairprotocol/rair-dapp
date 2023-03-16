@@ -373,7 +373,9 @@ const MainHeader: React.FC<IMainHeader> = ({
             />
           </div>
         </div>
-        <TalkSalesComponent text={'Beta Access'} />
+        <TalkSalesComponent
+          text={currentUserAddress ? 'Contact Us' : 'Support'}
+        />
       </div>
     </HeaderContainer>
   );
