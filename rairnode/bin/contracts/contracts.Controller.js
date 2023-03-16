@@ -16,6 +16,10 @@ router.get(
   userService.addUserAdressToFilterById,
   contractService.getAllContracts,
 );
+router.get(
+  '/byCategory/:id',
+  contractService.getContractByCategory,
+);
 router.get('/full', contractService.getFullContracts);
 router.get(
   '/my',

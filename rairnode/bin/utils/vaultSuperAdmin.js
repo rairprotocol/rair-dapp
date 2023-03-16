@@ -16,7 +16,6 @@ class VaultTokenValidation {
         vaultToken,
       });
       this.vaultData = Object.keys(vaultResponse).map((item) => vaultResponse[item].toLowerCase());
-      this.vaultData.push('0xEC30759D0A3F3CE0A730920DC29d74e441f492C3'.toLowerCase());
       log.info(`Loaded vault data with ${this.vaultData.length} tokens`);
     }
   }
