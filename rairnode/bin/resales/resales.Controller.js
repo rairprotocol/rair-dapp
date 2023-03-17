@@ -1,14 +1,37 @@
 const express = require('express');
 const resalesService = require('./resales.Service');
+const { validation } = require('../middleware');
 
 const router = express.Router();
 
 // Use this to filter by contract (query string)
-router.get('/', resalesService.getAllResales);
-router.get('/customRoyalties', resalesService.getAllCustomRoyalties);
-router.get('/:id', resalesService.getResaleById);
+router.get(
+    '/',
+    validation('pagination', 'query'),
+    validation('dbResales', 'query'),
+    resalesService.getAllResales,
+);
+router.get(
+    '/customRoyalties',
+    validation('pagination', 'query'),
+    validation('dbRoyalties', 'query'),
+    resalesService.getAllCustomRoyalties,
+);
+router.get(
+    '/:id',
+    validation('dbId', 'params'),
+    resalesService.getResaleById,
+);
 // Naming note: custom split === custom royalty
-router.get('/byProduct/:productId', resalesService.getResaleByExternalId);
-router.get('/byOffer/:offerId', resalesService.getResaleByExternalId);
+router.get(
+    '/byProduct/:productId',
+    validation('productId', 'params'),
+    resalesService.getResaleByExternalId,
+);
+router.get(
+    '/byOffer/:offerId',
+    validation('offerId', 'params'),
+    resalesService.getResaleByExternalId,
+);
 
 module.exports = router;

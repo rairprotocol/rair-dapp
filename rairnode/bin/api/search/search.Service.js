@@ -1,4 +1,4 @@
-const AppError = require('../utils/errors/AppError');
+const AppError = require('../../utils/errors/AppError');
 
 exports.globalSearch = (models, allFlag) => async (req, res, next) => {
   try {

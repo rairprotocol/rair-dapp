@@ -86,7 +86,8 @@ async function main() {
     session({
       store: new RedisStorage({
         client,
-        // config.session.ttl was removed from here and used for maxAge, because when maxAge used it will have no effect.
+        // config.session.ttl was removed from here and used
+        //    for maxAge, because when maxAge used it will have no effect.
       }),
       secret: config.session.secret,
       saveUninitialized: true,

@@ -364,7 +364,7 @@
 }
 
 div#swal2-html-container.swal2-html-container {
-  margin-top: 70px;
+  margin-top: 30px;
 }
 
 .swal2-title.text-simdogs {
@@ -540,7 +540,7 @@ div#swal2-html-container.swal2-html-container {
   /* warning modal */
 
   div#swal2-html-container.swal2-html-container {
-    margin-top: 40px;
+    margin-top: 25px;
   }
 
   .swal2-title.text-simdogs {

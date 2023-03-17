@@ -35,7 +35,11 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
 
   const openInquiriesPage = () => {
     reactSwal.fire({
-      title: <h1 style={{ color: 'var(--bubblegum)' }}>Inquiries</h1>,
+      title: (
+        <h2 style={{ color: 'var(--bubblegum)' }}>
+          {currentUserAddress ? 'Contact Us' : 'Support'}
+        </h2>
+      ),
       html: (
         <Provider store={store}>
           <InquiriesPage />

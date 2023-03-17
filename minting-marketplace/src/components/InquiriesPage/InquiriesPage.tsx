@@ -8,6 +8,7 @@ import {
   InquireField,
   InquireInput,
   InquireLabel,
+  InquireTextarea,
   InquireWrapper
 } from './InquiriesItems';
 
@@ -17,6 +18,12 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 const InquiriesPage = () => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
+  );
+
+  const { currentUserAddress } = useSelector((store) => store.contractStore);
+
+  const { userRd } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
   );
 
   const onReset = () => {
@@ -35,79 +42,186 @@ const InquiriesPage = () => {
           acceptCharset="UTF-8"
           encType="multipart/form-data"
           id="form">
-          <InquireField>
-            <InquireLabel primaryColor={primaryColor}>First name</InquireLabel>{' '}
-            <InquireInput
-              name="Name_Last"
-              required
-              placeholder="Type in your First name"
-            />
-          </InquireField>
-          <InquireField>
-            <InquireLabel primaryColor={primaryColor}>Last name</InquireLabel>{' '}
-            <InquireInput
-              name="Name_First"
-              required
-              placeholder="Type in your Last name"
-            />
-          </InquireField>
-          <InquireField>
-            <InquireLabel primaryColor={primaryColor}>Email</InquireLabel>{' '}
-            <InquireInput
-              name="Email"
-              required
-              type={'email'}
-              placeholder="Type in your email"
-            />
-          </InquireField>
-          <InquireField>
-            <InquireLabel primaryColor={primaryColor}>
-              Company name
-            </InquireLabel>{' '}
-            <InquireInput
-              name="SingleLine"
-              placeholder="Type in your company name"
-            />
-          </InquireField>
-          <InquireField>
-            <InquireLabel primaryColor={primaryColor}>
-              Ethereum Address
-            </InquireLabel>{' '}
-            <InquireInput
-              name="SingleLine"
-              placeholder="Type in your wallet address"
-            />
-          </InquireField>
-          <InquireField>
-            <InquireLabel primaryColor={primaryColor}>Website</InquireLabel>{' '}
-            <InquireInput
-              name="SingleLine1"
-              placeholder="Link to the website"
-            />
-          </InquireField>
-          <InquireField>
-            <InquireLabel primaryColor={primaryColor}>Message</InquireLabel>{' '}
-            <InquireInput
-              required
-              name="MultiLine"
-              placeholder="Type in your message"
-            />
-          </InquireField>
-          {/* <InquireField>
-            <InquireLabel primaryColor={primaryColor}>Captcha</InquireLabel>{' '}
-          </InquireField> */}
-          <InquireField primaryColor={primaryColor}>
-            <div className="btn-hidden"></div>
-            <div className="btn-box-inquire">
-              <InquireButton
-                primaryColor={primaryColor}
-                onClick={onReset}
-                type="button">
-                Reset
-              </InquireButton>
-              <InquireButton type="submit">Submit</InquireButton>
-            </div>
-          </InquireField>
+          <>
+            {currentUserAddress ? (
+              <>
+                {userRd && !userRd.email && (
+                  <>
+                    <InquireField>
+                      <InquireLabel primaryColor={primaryColor}>
+                        First name
+                      </InquireLabel>{' '}
+                      <InquireInput
+                        name="Name_Last"
+                        required
+                        placeholder="Type in your First name"
+                      />
+                    </InquireField>
+                    <InquireField>
+                      <InquireLabel primaryColor={primaryColor}>
+                        Last name
+                      </InquireLabel>{' '}
+                      <InquireInput
+                        name="Name_First"
+                        required
+                        placeholder="Type in your Last name"
+                      />
+                    </InquireField>
+                    <InquireField>
+                      <InquireLabel primaryColor={primaryColor}>
+                        Email
+                      </InquireLabel>{' '}
+                      <InquireInput
+                        name="Email"
+                        required
+                        type={'email'}
+                        placeholder="Type in your email"
+                      />
+                    </InquireField>
+                  </>
+                )}
+                <InquireInput
+                  style={{
+                    display: 'none'
+                  }}
+                  value={' '}
+                  name="Name_Last"
+                  placeholder="Type in your First name"
+                />
+                <InquireInput
+                  style={{
+                    display: 'none'
+                  }}
+                  value={userRd.nickName ? userRd.nickName : ''}
+                  name="Name_First"
+                  placeholder="Type in your First name"
+                />
+                <InquireInput
+                  style={{
+                    display: 'none'
+                  }}
+                  value={userRd.email ? userRd.email : ''}
+                  name="Email"
+                  placeholder="Type in your First name"
+                />
+                <InquireField
+                  className={`${
+                    userRd.email ? 'block-user-inquire-message' : ''
+                  }`}>
+                  <InquireLabel
+                    className={`${
+                      userRd.email ? 'label-user-inquire-message' : ''
+                    }`}
+                    primaryColor={primaryColor}>
+                    Message
+                  </InquireLabel>{' '}
+                  <InquireTextarea
+                    className="imquire-message-input"
+                    required
+                    name="MultiLine"
+                    placeholder="Type in your message"
+                  />
+                </InquireField>
+                <InquireField
+                  className={`${
+                    userRd.email ? 'block-user-inquire-message' : ''
+                  }`}
+                  primaryColor={primaryColor}>
+                  <div className="btn-hidden"></div>
+                  <div className="btn-box-inquire">
+                    <InquireButton
+                      primaryColor={primaryColor}
+                      onClick={onReset}
+                      type="button">
+                      Reset
+                    </InquireButton>
+                    <InquireButton type="submit">Submit</InquireButton>
+                  </div>
+                </InquireField>
+              </>
+            ) : (
+              <>
+                <InquireField>
+                  <InquireLabel primaryColor={primaryColor}>
+                    First name
+                  </InquireLabel>{' '}
+                  <InquireInput
+                    name="Name_Last"
+                    required
+                    placeholder="Type in your First name"
+                  />
+                </InquireField>
+                <InquireField>
+                  <InquireLabel primaryColor={primaryColor}>
+                    Last name
+                  </InquireLabel>{' '}
+                  <InquireInput
+                    name="Name_First"
+                    required
+                    placeholder="Type in your Last name"
+                  />
+                </InquireField>
+                <InquireField>
+                  <InquireLabel primaryColor={primaryColor}>Email</InquireLabel>{' '}
+                  <InquireInput
+                    name="Email"
+                    required
+                    type={'email'}
+                    placeholder="Type in your email"
+                  />
+                </InquireField>
+                <InquireField>
+                  <InquireLabel primaryColor={primaryColor}>
+                    Company name
+                  </InquireLabel>{' '}
+                  <InquireInput
+                    name="SingleLine"
+                    placeholder="Type in your company name"
+                  />
+                </InquireField>
+                <InquireField>
+                  <InquireLabel primaryColor={primaryColor}>
+                    Ethereum Address
+                  </InquireLabel>{' '}
+                  <InquireInput
+                    name="SingleLine"
+                    placeholder="Type in your wallet address"
+                  />
+                </InquireField>
+                <InquireField>
+                  <InquireLabel primaryColor={primaryColor}>
+                    Website
+                  </InquireLabel>{' '}
+                  <InquireInput
+                    name="SingleLine1"
+                    placeholder="Link to the website"
+                  />
+                </InquireField>
+                <InquireField>
+                  <InquireLabel primaryColor={primaryColor}>
+                    Message
+                  </InquireLabel>{' '}
+                  <InquireInput
+                    required
+                    name="MultiLine"
+                    placeholder="Type in your message"
+                  />
+                </InquireField>
+                <InquireField primaryColor={primaryColor}>
+                  <div className="btn-hidden"></div>
+                  <div className="btn-box-inquire">
+                    <InquireButton
+                      primaryColor={primaryColor}
+                      onClick={onReset}
+                      type="button">
+                      Reset
+                    </InquireButton>
+                    <InquireButton type="submit">Submit</InquireButton>
+                  </div>
+                </InquireField>
+              </>
+            )}
+          </>
         </form>
       </InquireContainer>
     </InquireWrapper>

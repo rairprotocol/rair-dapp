@@ -1,6 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 const csv = require('csv-parser');
+const { constants } = require('ethers');
 const AppError = require('../utils/errors/AppError');
 const {
   OfferPool,
@@ -67,10 +68,8 @@ const prepareTokens = async (
   options.isMinted = false;
 
   const foundTokens = await MintedToken.find(options);
-  foundTokens.map((token) => {
-    token.isURIStoredToBlockchain = false;
-    token.metadata = metadata;
-    tokens.push({ ...token });
+  foundTokens.forEach((token) => {
+    tokens.push({ ...token, isURIStoredToBlockchain: false, metadata });
   });
 };
 
@@ -81,7 +80,7 @@ exports.getTokenNumbers = async (req, res, next) => {
     // getOfferIndexesByContractAndProduct, -> req.offers = offers (diamondRangeIndex)
     // getOfferPoolByContractAndProduct, -> req.offerPool = offerPool
     // create options \|/
-    const { contract, offerPool, offers } = req;
+    const { contract, offerPool, offers } = req.query;
     const options = offerPool
       ? {
           contract: contract._id,
@@ -236,6 +235,7 @@ exports.updateTokenCommonMetadata = async (req, res, next) => {
             );
           } catch (err) {
             log.error(`for product ${foundProduct.collectionIndexInContract} ${err.message}`);
+            return undefined;
           }
         }),
       );
@@ -489,7 +489,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
 
 exports.pinMetadataToPinata = async (req, res, next) => {
   try {
-    const { contract, offers, offerPool } = req;
+    const { contract, offers, offerPool } = req.query;
     const { token } = req.params;
     const { user } = req;
     // eslint-disable-next-line
@@ -551,11 +551,11 @@ exports.pinMetadataToPinata = async (req, res, next) => {
 
 exports.createTokensViaCSV = async (req, res, next) => {
   try {
-    const { contract, product, updateMeta = 'false' } = req.body;
+    const { contract, product, updateMeta = 'false', forceOverwrite = 'false' } = req.body;
     const { user } = req;
     const prod = product;
     const defaultFields = ['nftid', 'name', 'description', 'artist'];
-    const optionalFields = ['image', 'animation_url', 'publicaddress'];
+    const optionalFields = ['image', 'animation_url', 'publicaddress', 'base_external_url'];
     const reg =
       /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gm;
     const records = [];
@@ -565,16 +565,12 @@ exports.createTokensViaCSV = async (req, res, next) => {
 
     const foundContract = await Contract.findById(contract);
 
-    if (_.isEmpty(foundContract)) {
-      return res
-        .status(404)
-        .send({ success: false, message: 'Contract not found.' });
+    if (foundContract === null) {
+      return next(new AppError('Contract not found.', 404));
     }
 
     if (user.publicAddress !== foundContract.user) {
-      return res
-        .status(403)
-        .send({ success: false, message: 'This contract not belong to you.' });
+      return next(new AppError('User is not owner of contract', 403));
     }
 
     const offerPool = await OfferPool.findOne({
@@ -586,26 +582,21 @@ exports.createTokensViaCSV = async (req, res, next) => {
       product: prod,
     });
 
-    if (_.isEmpty(offers)) {
+    if (offers.length === 0) {
       await cleanStorage(req.file);
-      return res
-        .status(404)
-        .send({ success: false, message: 'Offers not found.' });
+      return next(new AppError('Offers not found.', 404));
     }
 
     const offerIndexes = offers.map((v) =>
-      foundContract.diamond ? v.diamondRangeIndex : v.offerIndex,
-    );
+      (foundContract.diamond ? v.diamondRangeIndex : v.offerIndex));
     const foundProduct = await Product.findOne({
       contract,
       collectionIndexInContract: product,
     });
 
-    if (_.isEmpty(foundProduct)) {
+    if (foundProduct === null) {
       await cleanStorage(req.file);
-      return res
-        .status(404)
-        .send({ success: false, message: 'Product not found.' });
+      return next(new AppError('Product not found.', 404));
     }
 
     if (foundContract.diamond) {
@@ -614,11 +605,9 @@ exports.createTokensViaCSV = async (req, res, next) => {
         offer: { $in: offerIndexes },
       });
     } else {
-      if (_.isEmpty(offerPool)) {
+      if (offerPool === null) {
         await cleanStorage(req.file);
-        return res
-          .status(404)
-          .send({ success: false, message: 'OfferPools not found.' });
+        return next(new AppError('Offer Pool not found.', 404));
       }
 
       foundTokens = await MintedToken.find({
@@ -626,6 +615,7 @@ exports.createTokensViaCSV = async (req, res, next) => {
         offerPool: offerPool.marketplaceCatalogIndex,
       });
     }
+
     // Processing file input
     await new Promise((resolve, reject) =>
       // eslint-disable-next-line no-promise-executor-return
@@ -638,8 +628,8 @@ exports.createTokensViaCSV = async (req, res, next) => {
               h = h.replace(/\s/g, '');
 
               if (
-                _.includes(defaultFields, h) ||
-                _.includes(optionalFields, h)
+                defaultFields.includes(h) ||
+                optionalFields.includes(h)
               ) {
                 return h;
               }
@@ -653,14 +643,14 @@ exports.createTokensViaCSV = async (req, res, next) => {
           let isValid = true;
           let isCoverPresent = false;
 
-          _.forEach(defaultFields, (field) => {
-            if (!_.includes(foundFields, field)) {
+          defaultFields.forEach((field) => {
+            if (!foundFields.includes(field)) {
               isValid = false;
             }
           });
 
-          _.forEach(optionalFields, (field) => {
-            if (_.includes(foundFields, field)) {
+          optionalFields.forEach((field) => {
+            if (foundFields.includes(field)) {
               isCoverPresent = true;
             }
           });
@@ -668,8 +658,8 @@ exports.createTokensViaCSV = async (req, res, next) => {
           if (isValid && isCoverPresent) records.push(data);
         })
         .on('end', () => {
-          _.forEach(offers, (offer) => {
-            _.forEach(records, (record) => {
+          offers.forEach((offer) => {
+            records.forEach((record) => {
               const token = record.nftid;
 
               if (
@@ -678,7 +668,7 @@ exports.createTokensViaCSV = async (req, res, next) => {
               ) {
                 const address = record.publicaddress
                   ? record.publicaddress
-                  : `0xooooooooooooooooooooooooooooooooooo${token}`;
+                  : constants.AddressZero;
                 const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
                   .assign({})
@@ -713,11 +703,12 @@ exports.createTokensViaCSV = async (req, res, next) => {
                   `https://${process.env.SERVICE_HOST}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`,
                 );
 
-                if (
+                const validReasonsToUpdateAToken =
                   updateMeta === 'true' &&
                   foundToken &&
-                  !foundToken.isMinted
-                ) {
+                  !foundToken.isMinted;
+
+                if (forceOverwrite === 'true' || validReasonsToUpdateAToken) {
                   forUpdate.push({
                     updateOne: {
                       filter: mainFields,
@@ -748,30 +739,21 @@ exports.createTokensViaCSV = async (req, res, next) => {
 
           if (_.isEmpty(offers)) resolve();
         })
-        .on('error', reject),
-    );
+        .on('error', reject));
 
     await cleanStorage(req.file);
-    if (!_.isEmpty(forUpdate)) {
+    let updatedDocuments = 0;
+    if (forUpdate.length > 0) {
       try {
-        await MintedToken.bulkWrite(forUpdate, { ordered: false });
+        const bulkWriteResult = await MintedToken.bulkWrite(forUpdate, { ordered: false });
+        if (bulkWriteResult.ok) {
+          updatedDocuments = bulkWriteResult.nModified;
+        }
       } catch (err) {
         log.error(err);
       }
     }
-    const resultOptions = _.assign(
-      {
-        contract,
-        token: { $in: tokens },
-        isMinted: false,
-      },
-      foundContract.diamond
-        ? { offer: { $in: offerIndexes } }
-        : { offerPool: offerPool.marketplaceCatalogIndex },
-    );
-    const result = await MintedToken.find(resultOptions);
-
-    return res.json({ success: true, result });
+    return res.json({ success: true, updatedDocuments });
   } catch (err) {
     return next(err);
   }

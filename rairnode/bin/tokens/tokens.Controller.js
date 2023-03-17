@@ -27,7 +27,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(getSpecificContracts, getAllTokens)
+  .get(
+    validation('specificContracts', 'query'),
+    validation('pagination', 'query'),
+    validation('dbTokens', 'query'),
+    getSpecificContracts,
+    getAllTokens,
+  )
   .patch(
     requireUserSession,
     isAdmin,
@@ -36,11 +42,13 @@ router
     validation('updateCommonTokenMetadata'),
     updateTokenCommonMetadata,
   );
+
 router.post(
   '/viaCSV',
   requireUserSession,
   isAdmin,
   upload.single('csv'),
+  validation('csvFileUpload', 'body'),
   createTokensViaCSV,
 );
 router.get(
@@ -50,26 +58,40 @@ router.get(
     req.query.ownerAddress = req.user.publicAddress;
     next();
   },
+  validation('pagination', 'query'),
+  validation('dbTokens', 'query'),
   getAllTokens,
 );
 router.use(
   validation('withProductV2', 'query'),
+  validation('specificContracts', 'query'),
   getSpecificContracts,
   getOfferIndexesByContractAndProduct,
   getOfferPoolByContractAndProduct,
 );
-router.get('/tokenNumbers', requireUserSession, getTokenNumbers);
+
+router.get(
+  '/tokenNumbers',
+  requireUserSession,
+  validation('getTokenNumbers', 'query'),
+  getTokenNumbers,
+);
+
 router
-  .route('/:token')
-  .get((req, res, next) => {
-    const { contract, offers, offerPool } = req;
+  .route('/:token', validation('tokenNumber', 'params'))
+  .get(
+    validation('getTokenNumbers', 'query'),
+    (req, res, next) => {
+      const { contract, offers, offerPool } = req.query;
 
-    req.specificFilterOptions = contract.diamond
-      ? { offer: { $in: offers } }
-      : { offerPool: offerPool.marketplaceCatalogIndex };
+      req.specificFilterOptions = contract.diamond
+        ? { offer: { $in: offers } }
+        : { offerPool: offerPool.marketplaceCatalogIndex };
 
-    return next();
-  }, getSingleToken)
+      return next();
+    },
+    getSingleToken,
+  )
   .patch(
     requireUserSession,
     upload.array('files', 2),
@@ -79,6 +101,7 @@ router
   )
   .post(
     requireUserSession,
+    validation('getTokenNumbers', 'query'),
     pinMetadataToPinata,
   );
 

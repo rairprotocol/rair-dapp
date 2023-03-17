@@ -15,14 +15,12 @@ module.exports = {
     const { session, redisService } = req;
     // If the upload token already exists, keep using it
     if (session.uploadToken) {
-      console.log('Reusing');
       const userDataOnRedis = await redisService.get(session.uploadToken);
       if (userDataOnRedis.publicAddress === session.userData.publicAddress) {
         return res.json({ success: true, secret: session.uploadToken });
       }
     }
     if (session.userData) {
-      console.log('creating');
       const secret = nanoid();
       // Tell redis about it
       redisService.set(secret, session.userData);

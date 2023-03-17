@@ -33,6 +33,39 @@ const getLocksByProduct = require('./getLocksByProduct');
 const getFilesByProduct = require('./getFilesByProduct');
 const importContract = require('./importContract');
 const { analyticsParams, analyticsQuery } = require('./analytics');
+// V2 validations
+const {
+  dbContracts,
+  dbProducts,
+  dbTokens,
+  dbOffers,
+  dbResales,
+  dbRoyalties,
+} = require('./databaseSchemas');
+const textSearch = require('./textSearch');
+const {
+  validateMediaData,
+  addFileFromMediaService,
+} = require('./v2MediaFileSchemas');
+const { v2Unlock } = require('./v2AuthSchemas');
+const {
+  csvFileUpload,
+  getTokenNumbers,
+  tokenNumber,
+} = require('./v2TokenSchemas');
+const {
+  pagination,
+  dbId,
+  productId,
+  offerId,
+  userId,
+  userAddress,
+} = require('./commonApiSchemas');
+const {
+  fullContracts,
+  importExternalContracts,
+  specificContracts,
+} = require('./v2ContractSchemas');
 
 module.exports = {
   admin,
@@ -61,8 +94,8 @@ module.exports = {
   analyticsQuery,
 
   // V2
-
   metaValidate,
+  textSearch,
 
   // Import contract logic
   importContract,
@@ -90,5 +123,36 @@ module.exports = {
 
   // favorites
   createFavoriteToken,
+
+  // V2 Validation
+  // Database schemas (using the Entity helper)
+  dbContracts,
+  dbProducts,
+  dbTokens,
+  dbOffers,
+  dbResales,
+  dbRoyalties,
+  // Media schemas
+  validateMediaData,
+  addFileFromMediaService,
+  // Auth schemas
+  v2Unlock,
+  // Token Schemas
+  csvFileUpload,
+  getTokenNumbers,
+  tokenNumber,
+
+  // Common schemas
+  pagination,
+  dbId,
+  productId,
+  offerId,
+  userId,
+  userAddress,
+
+  // Contract schemas
+  fullContracts,
+  importExternalContracts,
+  specificContracts,
 
 };

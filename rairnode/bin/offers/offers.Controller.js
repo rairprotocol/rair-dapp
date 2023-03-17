@@ -5,7 +5,13 @@ const { validation } = require('../middleware');
 
 const router = express.Router();
 
-router.get('/', offerService.getAllOffers);
+router.get(
+  '/',
+  validation('pagination', 'query'),
+  validation('dbOffers', 'query'),
+  offerService.getAllOffers,
+);
+
 router.get(
   '/byAddressAndProduct/',
   validation('withProductV2', 'query'),
@@ -23,5 +29,10 @@ router.get(
   },
   offerService.getAllOffers,
 );
-router.get('/:id', offerService.getOfferById);
+
+router.get(
+  '/:id',
+  validation('dbId', 'params'),
+  offerService.getOfferById,
+);
 module.exports = router;
