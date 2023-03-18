@@ -50,4 +50,4 @@ data:
   VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
   UPLOAD_PROGRESS_HOST: http://rairnode:5000
   BASE_BCN_URL: http://blockchain-event-listener:5001
-  SUPER_ADMIN_NFT: dcokn456s9dOANDF9345lkvs84SpsGEfn345
+  SUPER_ADMIN_VAULT_STORE: dcokn456s9dOANDF9345lkvs84SpsGEfn345
