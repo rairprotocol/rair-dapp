@@ -5,7 +5,7 @@ module.exports = {
   requireUserSession: async (req, res, next) => {
     try {
       if (!req?.session?.userData) {
-        return next(new AppError('Authentication failed, please login again'), 403);
+        return req.session.destroy(() => next(new AppError('Authentication failed, please login again'), 403));
       }
       // Sanity check
       if (await User.findById(req.session.userData._id)) {

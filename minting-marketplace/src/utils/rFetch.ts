@@ -179,9 +179,12 @@ const rFetch = async (
     const parsing = await request.json();
     if (!parsing.success) {
       if (
-        ['jwt malformed', 'jwt expired', 'invalid signature'].includes(
-          parsing.message
-        ) &&
+        [
+          'jwt malformed',
+          'jwt expired',
+          'invalid signature',
+          'Authentication failed, please login again'
+        ].includes(parsing.message) &&
         (window.ethereum || retryOptions?.provider)
       ) {
         localStorage.removeItem('token');
