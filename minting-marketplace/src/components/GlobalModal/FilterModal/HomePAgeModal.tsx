@@ -40,6 +40,7 @@ export const HomePageModalFilter = styled.div`
    border: 1px solid #4e4d4d;
    transition: 0.5s
    padding: 24px 16px 16px 16px;
+   padding: 24px 16px 16px 16px;
    background-color: var(--${bgc});
   `
       : `
