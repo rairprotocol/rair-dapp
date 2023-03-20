@@ -12,6 +12,11 @@ const setAdminRights = (adminRights: boolean | undefined) =>
     type: types.SET_ADMIN_RIGHTS,
     adminRights
   } as const);
+const setSuperAdmin = (superAdmin: boolean | undefined) =>
+  ({
+    type: types.SET_SUPER_ADMIN,
+    superAdmin
+  } as const);
 const getUserComplete = (userRd: UserType | null) =>
   ({
     type: types.GET_USER_COMPLETE,
@@ -23,4 +28,10 @@ const getUserError = (error: string) =>
     error
   } as const);
 
-export { getUserComplete, getUserError, getUserStart, setAdminRights };
+export {
+  getUserComplete,
+  getUserError,
+  getUserStart,
+  setAdminRights,
+  setSuperAdmin
+};

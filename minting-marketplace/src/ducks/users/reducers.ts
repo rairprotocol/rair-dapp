@@ -4,7 +4,8 @@ import { TUsersInitialState, UserReducerActionTypes } from './users.types';
 const InitialState: TUsersInitialState = {
   userRd: null,
   error: null,
-  adminRights: undefined
+  adminRights: undefined,
+  superAdmin: undefined
 };
 
 export default function userStore(
@@ -21,6 +22,11 @@ export default function userStore(
       return {
         ...state,
         adminRights: action.adminRights
+      };
+    case types.SET_SUPER_ADMIN:
+      return {
+        ...state,
+        superAdmin: action.superAdmin
       };
     case types.GET_USER_COMPLETE:
       return {

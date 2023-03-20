@@ -63,9 +63,11 @@ const MainHeader: React.FC<IMainHeader> = ({
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
     (store) => store.allInformationFromSearch
   );
-  const { adminRights } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { adminRights, superAdmin } = useSelector<
+    RootState,
+    TUsersInitialState
+  >((store) => store.userStore);
+
   const { currentUserAddress, programmaticProvider } = useSelector<
     RootState,
     ContractsInitialType
@@ -329,7 +331,7 @@ const MainHeader: React.FC<IMainHeader> = ({
           {adminRights && currentUserAddress && (
             <div
               onClick={() => setAdminPanel((prev) => !prev)}
-              className="admin-panel-btn">
+              className={`admin-panel-btn ${superAdmin ? 'super' : ''}`}>
               <i className="fa fa-user-secret" aria-hidden="true" />
             </div>
           )}

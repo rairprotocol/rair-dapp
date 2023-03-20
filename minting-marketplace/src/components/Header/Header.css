@@ -107,6 +107,15 @@
   border: 1px solid #000;
 }
 
+.header-master .admin-panel-btn.super {
+  background: #ffd700;
+  color: #000;
+}
+
+.header-master .admin-panel-btn.super:hover {
+  color: #756300;
+}
+
 .header-master .admin-panel-btn:hover {
   color: grey;
 }

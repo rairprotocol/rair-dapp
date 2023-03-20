@@ -2,13 +2,15 @@ import {
   getUserComplete,
   getUserError,
   getUserStart,
-  setAdminRights
+  setAdminRights,
+  setSuperAdmin
 } from './actions';
 
 export type TUsersInitialState = {
   userRd: UserType | null;
   error: string | null;
   adminRights: boolean | undefined;
+  superAdmin: boolean | undefined;
 };
 
 export type UserType = {
@@ -32,11 +34,13 @@ export type UserResponseType = {
 
 export type GetUsersType = ReturnType<typeof getUserStart>;
 export type SetAdminRights = ReturnType<typeof setAdminRights>;
+export type SetSuperAdmin = ReturnType<typeof setSuperAdmin>;
 export type GetUserComplete = ReturnType<typeof getUserComplete>;
 export type GetUserError = ReturnType<typeof getUserError>;
 
 export type UserReducerActionTypes =
   | GetUsersType
   | SetAdminRights
+  | SetSuperAdmin
   | GetUserComplete
   | GetUserError;

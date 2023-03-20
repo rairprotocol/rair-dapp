@@ -9,7 +9,11 @@ import { TUserResponse } from '../axios.responseTypes';
 import { OnboardingButton } from '../components/common/OnboardingButton/OnboardingButton';
 import { getTokenStart } from '../ducks/auth/actions';
 import { setChainId, setUserAddress } from '../ducks/contracts/actions';
-import { getUserComplete, setAdminRights } from '../ducks/users/actions';
+import {
+  getUserComplete,
+  setAdminRights,
+  setSuperAdmin
+} from '../ducks/users/actions';
 import { getJWT, isTokenValid, rFetch } from '../utils/rFetch';
 
 const rSwal = withReactContent(Swal);
@@ -102,6 +106,7 @@ const useConnectUser = () => {
           dispatchStack.push(setUserAddress(currentUser));
           dispatchStack.push(getUserComplete(loginResponse.user));
           dispatchStack.push(setAdminRights(loginResponse.user.adminRights));
+          dispatchStack.push(setSuperAdmin(loginResponse.user.superAdmin));
           dispatchStack.forEach((dispatchItem) => {
             dispatch(dispatchItem);
           });
@@ -128,6 +133,7 @@ const useConnectUser = () => {
         dispatch(setUserAddress(user.publicAddress));
         dispatch(getUserComplete(user));
         dispatch(setAdminRights(user.adminRights));
+        dispatch(setSuperAdmin(user.superAdmin));
         setLoginDone(true);
         setStartedLogin(false);
       }
