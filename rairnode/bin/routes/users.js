@@ -111,6 +111,11 @@ module.exports = (context) => {
         { new: true, projection: { nonce: 0 } },
       );
 
+      req.session.userData = {
+        ...req.session.userData,
+        ...fieldsForUpdate,
+      };
+
       return res.json({ success: true, user: updatedUser });
     } catch (e) {
       return next(e);
