@@ -41,6 +41,9 @@ const ImportExternalContract = () => {
   useEffect(() => {
     const sessionId = Math.random().toString(36).substr(2, 9);
     setSessionId(sessionId);
+    /*
+    Disabled until sessions are implemented
+
     const so = io(`/`, {
       transports: ['websocket'],
       protocols: ['http'],
@@ -61,6 +64,7 @@ const ImportExternalContract = () => {
       so.removeListener('importReport');
       so.emit('end', sessionId);
     };
+    */
   }, []);
 
   const callImport = async () => {
@@ -70,7 +74,7 @@ const ImportExternalContract = () => {
     setSendingData(true);
     Swal.fire('Importing contract', 'Please wait', 'info');
 
-    const { success, message } = await rFetch(`/api/contracts/import/`, {
+    const { success, result } = await rFetch(`/api/contracts/import/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -85,7 +89,9 @@ const ImportExternalContract = () => {
     });
     setSendingData(false);
     if (success) {
-      Swal.fire('Success', message, 'success');
+      setResultData(
+        `Imported ${result.numberOfTokensAdded} tokens from ${result.contract.title}`
+      );
     }
   };
 
@@ -172,7 +178,7 @@ const ImportExternalContract = () => {
         {sendingData ? 'Please wait...' : 'Import Contract!'}
       </button>
       <hr />
-      {resultData}
+      <h5 className="text-center">{resultData}</h5>
       <br />
       {totalTokens && <progress value={currentTokens} max={totalTokens} />}
       <br />

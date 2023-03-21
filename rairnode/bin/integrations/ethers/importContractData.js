@@ -51,7 +51,16 @@ const insertToken = async (token, contractId) => {
     if (!metadata.description) {
       metadata.description = 'No description available';
     }
-    if (typeof metadata?.attributes?.at(0) === 'string') {
+    if (
+      typeof metadata?.attributes === 'object' &&
+      Object.keys(metadata?.attributes).length === 2 &&
+      metadata?.attributes?.value &&
+      metadata?.attributes?.trait_type
+    ) {
+      // Special case where there's only one attribute in the metadata
+      metadata.attributes = [metadata.attributes];
+    }
+    if (metadata?.attributes && (typeof metadata?.attributes?.at(0)) === 'string') {
       metadata.attributes = metadata.attributes.map((item) => ({
         trait_type: '',
         value: item,
@@ -110,6 +119,9 @@ module.exports = {
 
     const contractMetadata = await alchemy.nft.getContractMetadata(contractAddress);
 
+    if (!contractMetadata.totalSupply) {
+      return { success: false, result: undefined, message: 'Error fetching total supply of tokens' };
+    }
     if (contractMetadata.tokenType !== 'ERC721') {
       return { success: false, result: undefined, message: `Only ERC721 is supported, tried to process a ${contractMetadata.tokenType} contract` };
     }

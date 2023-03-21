@@ -11,4 +11,5 @@ module.exports = Joi.object({
     .required(),
   contractCreator: Joi.string()
     .required(),
+  socketSessionId: Joi.string(),
 });
