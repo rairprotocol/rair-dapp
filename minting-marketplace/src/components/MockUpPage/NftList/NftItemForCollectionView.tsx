@@ -7,6 +7,7 @@ import { SvgKey } from './SvgKey';
 
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import chainData from '../../../utils/blockchainData';
+import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 import {
@@ -177,7 +178,7 @@ const NftItemForCollectionViewComponent: React.FC<
                   <ReactPlayer
                     onClick={() => toggleVideoPlay()}
                     alt="metadata?.name === 'none' ? 'NFT token' : metadata?.name"
-                    url={`${metadata?.animation_url}`}
+                    url={`${checkIPFSanimation(metadata?.animation_url)}`}
                     light={metadata?.image ? metadata?.image : pict}
                     style={{
                       position: 'absolute',

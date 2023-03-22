@@ -15,6 +15,7 @@ import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
+import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
 import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
@@ -213,7 +214,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                       controls
                       playing={playing}
                       onReady={handlePlaying}
-                      url={selectedData?.animation_url}
+                      url={checkIPFSanimation(selectedData?.animation_url)}
                       light={
                         selectedData.image
                           ? selectedData?.image
