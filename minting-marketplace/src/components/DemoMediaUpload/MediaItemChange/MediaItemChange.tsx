@@ -21,7 +21,8 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
   mediaId,
   getMediaList,
   editTitleVideo,
-  setEditTitleVideo
+  setEditTitleVideo,
+  newUserStatus
 }) => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -107,14 +108,25 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                     item.title.substr(item.title.length - 10, 10)
                   : item.title}
               </p>
-              <button
-                disabled={uploadSuccess === false}
-                className={`btn btn-success rounded-rairo mx-3 ${
-                  primaryColor === 'rhyno' ? 'rhyno' : ''
-                }`}
-                onClick={toggleTitleVideo}>
-                <i className="fas fa-pencil-alt"></i>
-              </button>
+              {newUserStatus ? (
+                <button
+                  disabled={!newUserStatus}
+                  className={`btn btn-success rounded-rairo mx-3 ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}
+                  onClick={toggleTitleVideo}>
+                  <i className="fas fa-pencil-alt"></i>
+                </button>
+              ) : (
+                <button
+                  disabled={uploadSuccess === false}
+                  className={`btn btn-success rounded-rairo mx-3 ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}
+                  onClick={toggleTitleVideo}>
+                  <i className="fas fa-pencil-alt"></i>
+                </button>
+              )}
             </>
           ) : (
             <form onSubmit={changeTitleMediaItem}>

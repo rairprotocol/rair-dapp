@@ -13,11 +13,13 @@ export interface IMediaItemChange {
   getMediaList: (() => void) | undefined;
   editTitleVideo: boolean;
   setEditTitleVideo: any;
+  newUserStatus?: boolean;
 }
 
 export interface IMediaListBox {
   item: TMediaType;
   index: number;
+  newUserStatus: boolean;
   mediaList: TMediaType[];
   setMediaList: (arg: TMediaType[]) => void;
   uploadSuccess: boolean | null;
@@ -52,4 +54,5 @@ export interface IAnalyticsPopUp {
   selectCommonInfo?: any;
   fileData?: any;
   setMediaUploadedList?: (arg: any) => void;
+  newUserStatus?: boolean;
 }
