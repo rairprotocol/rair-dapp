@@ -5,7 +5,7 @@ module.exports = {
     csvFileUpload: Joi.object({
         contract: mongoId,
         product: Joi.string(),
-        updateMeta: Joi.boolean(),
+        forceOverwrite: Joi.boolean(),
     }),
     getTokenNumbers: Joi.object({
         contract: mongoId,
