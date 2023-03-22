@@ -58,6 +58,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
   const [thisSessionId, setThisSessionId] = useState<string>('');
   const [socketMessage, setSocketMessage] = useState<string | undefined>();
+  const [newUserStatus, setNewUserStatus] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<
     boolean | number | undefined
   >(undefined);
@@ -166,6 +167,25 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     // eslint-disable-next-line
   }, [currentUserAddress]);
 
+  const handleNewUserStatus = useCallback(async () => {
+    const requestContract = await rFetch('/api/contracts/full?itemsPerPage=5');
+    const { success, contracts } = await rFetch(
+      `/api/contracts/full?itemsPerPage=${requestContract.totalNumber}`
+    );
+
+    if (success) {
+      const contractsFiltered = contracts.filter(
+        (el) => el.user === currentUserAddress
+      );
+
+      if (contractsFiltered.length === 0) {
+        setNewUserStatus(true);
+      } else {
+        setNewUserStatus(false);
+      }
+    }
+  }, [currentUserAddress]);
+
   const uploadVideoDemo = async (item, storage) => {
     dispatch(uploadVideoStart());
     setCurrentTitleVideo(item.title);
@@ -184,6 +204,10 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
         formData.append('demo', String(item.offer[0].value === '-1'));
         formData.append('offer', JSON.stringify(['0']));
       }
+    } else {
+      formData.append('contract', '0x571acc173f57c095f1f63b28f823f0f33128a6c4');
+      formData.append('product', '0');
+      formData.append('offer', JSON.stringify(['0']));
     }
     if (selectedCategory) {
       formData.append('category', selectedCategory);
@@ -196,7 +220,12 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
         return;
       }
       const request = await rFetch(
-        `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
+        `/ms/api/v1/media/upload${
+          newUserStatus ? '/demo' : ''
+        }?socketSessionId=${thisSessionId}`,
+        // `${process.env.REACT_APP_UPLOAD_PROGRESS_HOST}/ms/api/v1/media/upload${
+        //   newUserStatus ? '/demo' : ''
+        // }?socketSessionId=${thisSessionId}`,
         {
           method: 'POST',
           headers: {
@@ -321,6 +350,10 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    handleNewUserStatus();
+  }, [handleNewUserStatus]);
+
   return (
     <div className="demo-media-wrapper">
       <h3 className="fw-bold">Video demo</h3>
@@ -402,6 +435,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
               deleter={deleter}
               currentTitleVideo={currentTitleVideo}
               socketMessage={socketMessage}
+              newUserStatus={newUserStatus}
             />
           );
         })}

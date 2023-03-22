@@ -24,7 +24,8 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   deleter,
   currentTitleVideo,
   socketMessage,
-  setUploadSuccess
+  setUploadSuccess,
+  newUserStatus
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -96,6 +97,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           getMediaList={undefined}
           setEditTitleVideo={setEditTitleVideo}
           editTitleVideo={editTitleVideo}
+          newUserStatus={newUserStatus}
         />
         {uploadProgress && currentTitleVideo === item.title ? (
           <button
@@ -105,6 +107,27 @@ const MediaListBox: React.FC<IMediaListBox> = ({
             }}
             className={`btn-stimorol btn rounded-rair white`}>
             <LinearProgressWithLabel value={uploadProgress} />
+          </button>
+        ) : newUserStatus ? (
+          <button
+            onClick={() => alertChoiceCloud()}
+            disabled={!newUserStatus}
+            className="btn-stimorol btn rounded-rair white">
+            <>
+              {(uploading && currentTitleVideo === item.title) ||
+              (uploadSuccess === false && currentTitleVideo === item.title) ? (
+                <>
+                  {socketMessage === 'uploading to Cloud'
+                    ? 'uploading to Cloud'
+                    : '... Loading'}
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-upload" />
+                  {''} Upload
+                </>
+              )}
+            </>
           </button>
         ) : (
           <button
@@ -134,15 +157,27 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           mediaList={mediaList}
           index={index}
           setUploadSuccess={setUploadSuccess}
+          newUserStatus={newUserStatus}
         />
-        <button
-          disabled={uploading || uploadSuccess === false}
-          onClick={() => deleter(index)}
-          className={`btn btn-danger rounded-rairo ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
-          }`}>
-          <i className="far fa-trash"></i>
-        </button>
+        {newUserStatus ? (
+          <button
+            disabled={!newUserStatus}
+            onClick={() => deleter(index)}
+            className={`btn btn-danger rounded-rairo ${
+              primaryColor === 'rhyno' ? 'rhyno' : ''
+            }`}>
+            <i className="far fa-trash"></i>
+          </button>
+        ) : (
+          <button
+            disabled={uploading || uploadSuccess === false}
+            onClick={() => deleter(index)}
+            className={`btn btn-danger rounded-rairo ${
+              primaryColor === 'rhyno' ? 'rhyno' : ''
+            }`}>
+            <i className="far fa-trash"></i>
+          </button>
+        )}
       </div>
     </div>
   );

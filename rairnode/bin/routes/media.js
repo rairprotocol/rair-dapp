@@ -98,12 +98,16 @@ module.exports = () => {
       try {
         const { mediaId } = req.params;
 
+        // eslint-disable-next-line no-unused-vars
+        const { _id, ...cleanBody } = req.body;
+
         if (!req.user.adminRights) {
-          const { contract, offer, product, demo, bodyForNonAdmins } = req.body;
+          // eslint-disable-next-line no-unused-vars
+          const { contract, offer, product, demo, bodyForNonAdmins } = cleanBody;
           req.body = bodyForNonAdmins;
         }
 
-        const updateRes = await File.updateOne({ _id: mediaId }, req.body);
+        const updateRes = await File.updateOne({ _id: mediaId }, cleanBody);
 
         if (!updateRes.ok) {
           return res.json({ success: false, message: 'An error has ocurred' });
@@ -114,7 +118,7 @@ module.exports = () => {
         log.info(`File with ID: ${mediaId}, was updated on DB.`);
         return res.json({ success: true });
       } catch (err) {
-        next(err);
+        return next(err);
       }
     },
   );

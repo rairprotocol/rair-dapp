@@ -21,7 +21,8 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   setUploadSuccess,
   titleOfContract,
   fileData,
-  setMediaUploadedList
+  setMediaUploadedList,
+  newUserStatus
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [contract, setContract] = useState('null');
@@ -202,12 +203,20 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
         `/api/contracts/full?itemsPerPage=${request.totalNumber}`
       );
 
-      const contractsFiltered = contracts.filter(
+      let contractsFiltered = contracts.filter(
         (el) => el.user === currentUserAddress
       );
+
       if (success) {
         const mapping = {};
         const options = [];
+        if (contractsFiltered.length === 0) {
+          contractsFiltered = contracts.filter(
+            (el) =>
+              el.contractAddress ===
+              '0x571acc173f57c095f1f63b28f823f0f33128a6c4'
+          );
+        }
         contractsFiltered.forEach((item) => {
           const offerMapping = {};
           item.products.offers.forEach((offer) => {
@@ -275,14 +284,23 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           )
         : [];
 
-    setOffersOptions(
-      [
+    if (contract === '63bc60fe1f591bd493923c29') {
+      setOffersOptions([
         {
           label: 'Unlocked(demo)',
           value: '-1'
         }
-      ].concat(arrOfferOption)
-    );
+      ]);
+    } else {
+      setOffersOptions(
+        [
+          {
+            label: 'Unlocked(demo)',
+            value: '-1'
+          }
+        ].concat(arrOfferOption)
+      );
+    }
   }, [contract, contractData, product]);
 
   useEffect(() => {
@@ -321,30 +339,59 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
 
   return (
     <>
-      <div onClick={openModal} className="border-stimorol rounded-rair col-12">
-        <div
-          style={{
-            ...selectCommonInfoNFT,
-            backgroundColor: `var(--${primaryColor}-80)`,
-            marginTop: 0,
-            cursor: 'pointer'
-          }}
-          className="form-control input-select-custom-style">
+      {newUserStatus ? (
+        <div className="border-stimorol rounded-rair col-12">
           <div
             style={{
               ...selectCommonInfoNFT,
-              color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`,
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}>
-            {titleOfContract
-              ? titleOfContract.title
-              : choiceAllOptions !== null
-              ? choiceAllOptions.offer[0].label
-              : 'Select a Contract'}
+              backgroundColor: `var(--${primaryColor}-80)`,
+              marginTop: 0,
+              cursor: 'unset'
+            }}
+            className="form-control input-select-custom-style">
+            <div
+              style={{
+                ...selectCommonInfoNFT,
+                color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`,
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}>
+              {titleOfContract
+                ? titleOfContract.title
+                : choiceAllOptions !== null
+                ? choiceAllOptions.offer[0].label
+                : 'Unlocked(demo)'}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div
+          onClick={openModal}
+          className="border-stimorol rounded-rair col-12">
+          <div
+            style={{
+              ...selectCommonInfoNFT,
+              backgroundColor: `var(--${primaryColor}-80)`,
+              marginTop: 0,
+              cursor: 'pointer'
+            }}
+            className="form-control input-select-custom-style">
+            <div
+              style={{
+                ...selectCommonInfoNFT,
+                color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`,
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}>
+              {titleOfContract
+                ? titleOfContract.title
+                : choiceAllOptions !== null
+                ? choiceAllOptions.offer[0].label
+                : 'Select a Contract'}
+            </div>
+          </div>
+        </div>
+      )}
 
       <Modal
         isOpen={modalIsOpen}
