@@ -12,7 +12,7 @@ const {
 } = require('../../integrations/ethers/importContractData');
 const log = require('../../utils/logger')(module);
 const contractRoutes = require('./contract');
-const { Contract, User } = require('../../models');
+const { Contract, User, File } = require('../../models');
 
 const getContractsByUser = async (user, res, next) => {
   try {
@@ -65,6 +65,8 @@ module.exports = (context) => {
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
         const blockchainArr = blockchain.split(',');
 
+        const options = [];
+
         const lookupProduct = {
           $lookup: {
             from: 'Product',
@@ -87,21 +89,25 @@ module.exports = (context) => {
             as: 'products',
           },
         };
+        options.push(lookupProduct, { $unwind: '$products' });
 
-        const foundCategory = await context.db.Category.findOne({
-          name: category,
-        });
+        if (category !== '') {
+          const matchingContractsForCategory = (await File.find({
+            category,
+          }, {
+            contract: 1,
+          })).map((item) => item.contract);
 
-        if (foundCategory) {
-          _.set(lookupProduct, '$lookup.let.categoryF', foundCategory._id);
-          _.set(lookupProduct, '$lookup.pipeline[0].$match.$expr.$and[1]', {
-            $eq: ['$category', '$$categoryF'],
-          });
+          if (matchingContractsForCategory.length > 0) {
+            options.push({
+              $match: {
+                _id: { $in: matchingContractsForCategory },
+              },
+            });
+          }
         }
 
-        const options = [
-          lookupProduct,
-          { $unwind: '$products' },
+        options.push(
           {
             $lookup: {
               from: 'OfferPool',
@@ -172,7 +178,7 @@ module.exports = (context) => {
               ],
             },
           },
-        ];
+        );
 
         const foundBlockchain = await context.db.Blockchain.find({
           hash: [...blockchainArr],
