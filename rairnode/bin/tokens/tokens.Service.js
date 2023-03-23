@@ -551,7 +551,7 @@ exports.pinMetadataToPinata = async (req, res, next) => {
 
 exports.createTokensViaCSV = async (req, res, next) => {
   try {
-    const { contract, product, updateMeta = 'false', forceOverwrite = 'false' } = req.body;
+    const { contract, product, forceOverwrite = 'false' } = req.body;
     const { user } = req;
     const prod = product;
     const defaultFields = ['nftid', 'name', 'description', 'artist'];
@@ -686,9 +686,12 @@ exports.createTokensViaCSV = async (req, res, next) => {
                         ? offer.diamondRangeIndex
                         : offer.offerIndex) && t.token === token,
                 );
+                if (!foundToken) {
+                  log.error(`Cannot find token ${token} in offer ${offer.offerName} in contract ${contract}`);
+                  return;
+                }
                 const mainFields = {
-                  contract,
-                  token,
+                  _id: foundToken._id,
                 };
 
                 if (!foundContract.diamond) {
@@ -704,7 +707,6 @@ exports.createTokensViaCSV = async (req, res, next) => {
                 );
 
                 const validReasonsToUpdateAToken =
-                  updateMeta === 'true' &&
                   foundToken &&
                   !foundToken.isMinted;
 

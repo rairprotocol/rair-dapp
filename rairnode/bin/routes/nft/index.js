@@ -1,268 +1,33 @@
 /* eslint-disable no-promise-executor-return */
 const express = require('express');
 const fs = require('fs');
-const csv = require('csv-parser');
 const _ = require('lodash');
 const path = require('path');
 const { nanoid } = require('nanoid');
-const { constants } = require('ethers');
 const AppError = require('../../utils/errors/AppError');
 const { validation, isAdmin, requireUserSession } = require('../../middleware');
 const log = require('../../utils/logger')(module);
 const upload = require('../../Multer/Config');
-const { execPromise } = require('../../utils/helpers');
 const contractRoutes = require('./contract');
 const { Contract, Product, OfferPool, Offer, MintedToken } = require('../../models');
-const { textPurify } = require('../../utils/helpers');
 const { addPin, addFolder, addMetadata } = require('../../integrations/ipfsService')();
 const config = require('../../config');
+const { createTokensViaCSV } = require('../../tokens/tokens.Service');
 
 const fsPromises = fs.promises;
-
-const removeTempFile = async (roadToFile) => {
-  const command = `rm ${roadToFile}`;
-  await execPromise(command);
-};
 
 module.exports = (context) => {
   const router = express.Router();
 
   // Create batch of lazy minted tokens from csv file
-  router.post('/', requireUserSession, isAdmin, upload.single('csv'), async (req, res, next) => {
-    try {
-      const { contract, product, updateMeta = 'false' } = req.body;
-      const { user } = req;
-      const prod = product;
-      const defaultFields = ['nftid', 'name', 'description', 'artist'];
-      const optionalFields = ['image', 'animation_url', 'publicaddress', 'base_external_url'];
-      const roadToFile = `${req.file.destination}${req.file.filename}`;
-      const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
-      const records = [];
-      const forSave = [];
-      const forUpdate = [];
-      const tokens = [];
-      let foundTokens = [];
-
-      const foundContract = await Contract.findById(contract);
-
-      if (_.isEmpty(foundContract)) {
-        return next(new AppError('Contract not found.', 404));
-      }
-
-      if (user.publicAddress !== foundContract.user) {
-        return next(new AppError('This contract not belong to you.', 403));
-      }
-
-      const offerPool = await OfferPool.findOne({
-        contract: foundContract._id,
-        product: prod,
-      });
-      const offers = await Offer.find({ contract: foundContract._id, product: prod });
-
-      if (_.isEmpty(offers)) {
-        await removeTempFile(roadToFile);
-        return next(new AppError('Offers not found.', 404));
-      }
-
-      const offerIndexes = offers.map((v) => (
-        foundContract.diamond ? v.diamondRangeIndex : v.offerIndex
-      ));
-      const foundProduct = await Product.findOne({
-        contract,
-        collectionIndexInContract: product,
-      });
-
-      if (_.isEmpty(foundProduct)) {
-        await removeTempFile(roadToFile);
-        return next(new AppError('Product not found.', 404));
-      }
-
-      if (foundContract.diamond) {
-        foundTokens = await MintedToken.find({
-          contract,
-          offer: { $in: offerIndexes },
-        });
-      } else {
-        if (_.isEmpty(offerPool)) {
-          await removeTempFile(roadToFile);
-          return next(new AppError('OfferPools not found.', 404));
-        }
-
-        foundTokens = await MintedToken.find({
-          contract,
-          offerPool: offerPool.marketplaceCatalogIndex,
-        });
-      }
-
-      await new Promise((resolve, reject) => fs.createReadStream(`${req.file.destination}${req.file.filename}`)
-        .pipe(csv({
-          mapHeaders: ({ header }) => {
-            let h = header.toLowerCase();
-            h = h.replace(/\s/g, '');
-
-            if (_.includes(defaultFields, h) || _.includes(optionalFields, h)) {
-              return h;
-            }
-
-            return header;
-          },
-        }))
-        .on('data', (data) => {
-          const foundFields = _.keys(data);
-          let isValid = true;
-          let isCoverPresent = false;
-
-          _.forEach(defaultFields, (field) => {
-            if (!_.includes(foundFields, field)) {
-              isValid = false;
-            }
-          });
-
-          _.forEach(optionalFields, (field) => {
-            if (_.includes(foundFields, field)) {
-              isCoverPresent = true;
-            }
-          });
-
-          if (isValid && isCoverPresent) records.push(data);
-        })
-        .on('end', () => {
-          offers.forEach((offer) => {
-            records.forEach((record) => {
-              const token = record.nftid;
-
-              if (BigInt(token) >= BigInt(offer.range[0]) &&
-                    BigInt(token) <= BigInt(offer.range[1])) {
-                const address = record.publicaddress ? record.publicaddress
-                                                      : constants.AddressZero;
-                const sanitizedOwnerAddress = address.toLowerCase();
-                const attributes = _.chain(record)
-                  .assign({})
-                  .omit(defaultFields.concat(optionalFields))
-                  .reduce((re, v, k) => {
-                    re.push({ trait_type: k, value: v });
-                    return re;
-                  }, [])
-                  .value();
-                const foundToken = foundTokens.find(
-                  (t) => t.offer === (foundContract.diamond ? offer.diamondRangeIndex
-                    : offer.offerIndex) && t.token === token
-                );
-                const mainFields = {
-                  contract,
-                  token,
-                };
-
-                if (!foundContract.diamond) {
-                  mainFields.offerPool = offerPool.marketplaceCatalogIndex;
-                }
-
-                const offerIndex = foundContract.diamond
-                  ? offer.diamondRangeIndex
-                  : offer.offerIndex;
-
-                // External URL will combine the base URL (if it exists) or use the env variable
-                const baseExternalURL = record?.base_external_url !== '' ? record.base_external_url
-                                                                        : process.env.SERVICE_HOST;
-                const externalURL = encodeURI(`https://${baseExternalURL}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`);
-
-                // If ipfs:// exists, replace with a browser readable gateway
-                record.image = record.image.replace(
-                  'ipfs://',
-                  'https://ipfs.io/ipfs/',
-                );
-
-                if (!foundToken) {
-                  forSave.push({
-                    ...mainFields,
-                    ownerAddress: sanitizedOwnerAddress,
-                    offer: offerIndex,
-                    uniqueIndexInContract: (
-                      BigInt(foundProduct.firstTokenIndex) + BigInt(token)
-                    ).toString(),
-                    isMinted: false,
-                    metadata: {
-                      name: textPurify.sanitize(record.name),
-                      description: textPurify.sanitize(record.description),
-                      artist: textPurify.sanitize(record.artist),
-                      external_url: externalURL,
-                      image: record.image || '',
-                      animation_url: record.animation_url || '',
-                      attributes,
-                    },
-                  });
-
-                  tokens.push(token);
-                }
-
-                if (updateMeta === 'true' && foundToken && !foundToken.isMinted) {
-                  forUpdate.push({
-                    updateOne: {
-                      filter: mainFields,
-                      update: {
-                        ownerAddress: sanitizedOwnerAddress,
-                        isURIStoredToBlockchain: false,
-                        metadata: {
-                          name: textPurify.sanitize(record.name),
-                          description: textPurify.sanitize(record.description),
-                          artist: textPurify.sanitize(record.artist),
-                          external_url: externalURL,
-                          image: record.image || '',
-                          animation_url: record.animation_url || '',
-                          // Set to false because THIS new metadata is not pinned.
-                          isMetadataPinned: false,
-                          attributes,
-                        },
-                      },
-                    },
-                  });
-
-                  tokens.push(token);
-                }
-              }
-            });
-
-            return resolve(records);
-          });
-
-          if (_.isEmpty(offers)) return resolve();
-        })
-        .on('error', reject));
-
-      await removeTempFile(roadToFile);
-
-      if (_.isEmpty(forSave) && _.isEmpty(forUpdate)) {
-        return next(new AppError('Don\'t have tokens for creation / update.', 400));
-      }
-
-      if (!_.isEmpty(forSave)) {
-        try {
-          await MintedToken.insertMany(forSave, { ordered: false });
-        } catch (err) { log.error(err); }
-      }
-
-      if (!_.isEmpty(forUpdate)) {
-        try {
-          await MintedToken.bulkWrite(forUpdate, { ordered: false });
-        } catch (err) { log.error(err); }
-      }
-
-      const resultOptions = _.assign({
-        contract,
-        token: { $in: tokens },
-        isMinted: false,
-      }, foundContract.diamond
-        ? { offer: { $in: offerIndexes } }
-        : { offerPool: offerPool.marketplaceCatalogIndex });
-
-      const result = await MintedToken.find(resultOptions);
-
-      res.json({ success: true, result });
-    } catch (err) {
-      await removeTempFile(`${req.file.destination}${req.file.filename}`);
-      return next(err);
-    }
-  });
+  router.post(
+    '/',
+    requireUserSession,
+    isAdmin,
+    upload.single('csv'),
+    validation('csvFileUpload', 'body'),
+    createTokensViaCSV,
+  );
 
   // Get all tokens which belongs to current user
   router.get('/', requireUserSession, async (req, res, next) => {

@@ -89,6 +89,11 @@ const ImportExternalContract = () => {
     });
     setSendingData(false);
     if (success) {
+      Swal.fire(
+        'Success',
+        `Imported ${result.numberOfTokensAdded} tokens from ${result.contract.title}`,
+        'success'
+      );
       setResultData(
         `Imported ${result.numberOfTokensAdded} tokens from ${result.contract.title}`
       );

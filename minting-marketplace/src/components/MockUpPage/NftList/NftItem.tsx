@@ -27,6 +27,7 @@ import {
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
 import chainData from '../../../utils/blockchainData';
+import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png';
@@ -240,7 +241,9 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                   <ReactPlayer
                     onClick={() => toggleVideoPlay()}
                     alt={collectionName}
-                    url={`${metaDataProducts.metadata?.animation_url}`}
+                    url={`${checkIPFSanimation(
+                      metaDataProducts.metadata?.animation_url
+                    )}`}
                     light={
                       metaDataProducts.metadata?.image
                         ? metaDataProducts.metadata?.image
