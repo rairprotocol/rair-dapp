@@ -14,7 +14,7 @@ export function* setNftDataContract({ params }: TParamsNftDataProps) {
       axios.get,
       `/api/v2/contracts/full?itemsPerPage=${params.itemsPerPage}&pageNum=${params.currentPage}` +
         `${params.blockchain ? '&blockchain=' + params.blockchain : ''}` +
-        `${params.category ? '&category=' + params.category : ''}`
+        `${params.category ? '&category[]=' + params.category : ''}`
     );
 
     if (data.success) {

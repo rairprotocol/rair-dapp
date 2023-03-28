@@ -59,7 +59,7 @@ module.exports = (context) => {
           pageNum = '1',
           itemsPerPage = '20',
           blockchain = '',
-          category = '',
+          category = [],
         } = req.query;
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
@@ -91,20 +91,18 @@ module.exports = (context) => {
         };
         options.push(lookupProduct, { $unwind: '$products' });
 
-        if (category !== '') {
+        if (category.length > 0) {
           const matchingContractsForCategory = (await File.find({
-            category,
+            category: { $in: category },
           }, {
             contract: 1,
           })).map((item) => item.contract);
 
-          if (matchingContractsForCategory.length > 0) {
-            options.push({
-              $match: {
-                _id: { $in: matchingContractsForCategory },
-              },
-            });
-          }
+          options.push({
+            $match: {
+              _id: { $in: matchingContractsForCategory },
+            },
+          });
         }
 
         options.push(
