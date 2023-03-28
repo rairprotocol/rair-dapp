@@ -30,6 +30,7 @@ import styled from 'styled-components';
 // });
 
 export const HomePageModalFilter = styled.div`
+  padding: 24px 16px 16px 16px;
   ${(props) => {
     const bgc = props?.primaryColor?.includes('charcoal')
       ? 'charcoal-90'

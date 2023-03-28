@@ -12,7 +12,7 @@ export function* setNftDataContract({ params }: TParamsNftDataProps) {
   try {
     const { data }: AxiosResponse<TGetFullContracts> = yield call(
       axios.get,
-      `/api/v2/contracts/full?itemsPerPage=${params.itemsPerPage}&pageNum=${params.currentPage}` +
+      `/api/contracts/full?itemsPerPage=${params.itemsPerPage}&pageNum=${params.currentPage}` +
         `${params.blockchain ? '&blockchain=' + params.blockchain : ''}` +
         `${params.category ? '&category[]=' + params.category : ''}`
     );
