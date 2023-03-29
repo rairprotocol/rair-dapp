@@ -26,6 +26,7 @@ import {
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
 import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
+import { rFetch } from '../../../utils/rFetch';
 import CustomAccordion from '../../Accordion/Accordion';
 import AccordionItem from '../../Accordion/AccordionItem/AccordionItem';
 import { TOption } from '../../Dropdown';
@@ -83,28 +84,34 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       optionId: 6
     }
   ];
-  const categories = [
-    {
-      name: 'Music',
-      clicked: false,
-      optionId: 7
-    },
-    {
-      name: 'Art',
-      clicked: false,
-      optionId: 8
-    },
-    {
-      name: 'Conference',
-      clicked: false,
-      optionId: 9
-    },
-    {
-      name: 'Science',
-      clicked: false,
-      optionId: 10
-    }
-  ];
+  // const categories = [
+  //   {
+  //     name: 'Music',
+  //     clicked: false,
+  //     optionId: 7,
+  //     categoryId: '62b459f9a64260001c1e205e'
+  //   },
+  //   {
+  //     name: 'Art',
+  //     clicked: false,
+  //     optionId: 8,
+  //     categoryId: '62b459f9a64260001c1e205f'
+  //   },
+  //   {
+  //     name: 'Conference',
+  //     clicked: false,
+  //     optionId: 9,
+  //     categoryId: '62b459f9a64260001c1e2060'
+  //   },
+  //   {
+  //     name: 'Science',
+  //     clicked: false,
+  //     optionId: 10,
+  //     categoryId: '62b459f9a64260001c1e2061'
+  //   }
+  // ];
+
+  const [categories, setCategories] = useState([]);
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
   const [isBlockchainOpen, setIsBlockchainOpen] = useState<boolean>(false);
@@ -237,12 +244,14 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
         });
         return setSelectedBlockchainItems(selectedCatItems);
       } else {
+        let catArray;
         setSelectedBlockchainItems((prevCatArray) => {
-          globalModaldispatch({
-            type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-            payload: { selectedCatItems: [...prevCatArray, selectedOption] }
-          });
+          catArray = [...prevCatArray];
           return [...prevCatArray, selectedOption];
+        });
+        globalModaldispatch({
+          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
+          payload: { selectedCatItems: [catArray, selectedOption] }
         });
       }
     }
@@ -295,7 +304,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
         setBlockchain(allSelectedChains);
       }
       if (selectedCategories) {
-        const selectedCatItem = selectedCategories[0]?.name || '';
+        const selectedCatItem = selectedCategories[1]?.categoryId || '';
         setCategory(selectedCatItem);
       }
       onCloseBtn();
@@ -336,10 +345,31 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
     globalModaldispatch({
       type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
       payload: {
-        selectedBchItems: []
+        selectedBchItems: [],
+        selectedCatItems: []
       }
     });
   };
+
+  const getCategories = useCallback(async () => {
+    const res = await rFetch(`/api/categories`);
+
+    if (res.success) {
+      const categ = res.categories.map((el, index) => {
+        return {
+          name: el.name,
+          clicked: false,
+          optionId: index + 7,
+          categoryId: el._id
+        };
+      });
+      setCategories(categ);
+    }
+  }, [setCategories]);
+
+  useEffect(() => {
+    getCategories();
+  }, [getCategories]);
   return (
     <HomePageModalFilter
       id="home-page-modal-filter"
@@ -377,7 +407,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
             isMobileDesign={isMobileDesign && isMobileDesign}
           />
         </AccordionItem>
-        {/* <AccordionItem
+        <AccordionItem
           id={'category'}
           title="Category"
           isOpen={isCategoryOpen}
@@ -390,26 +420,28 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
               className={`${isMobileDesign ? 'accordion-icon' : ''}`}
             />
           }>
-          <Dropdown
-            isMobileDesign={isMobileDesign && isMobileDesign}
-            onDropdownChange={onOptionChange}
-            options={categories}
-            key={Math.random() * 1_000_000}
-            selectedOptions={selectedCatItems && selectedCatItems}
-            dropdownIMG={
-              <StyledCategoryItemIcon
-                primaryColor={primaryColor}
-                className={`dropdownn-chain-icons ${
-                  isMobileDesign ? 'mobile-cat-icon' : ''
-                }`}
-              />
-            }
-          />
-        </AccordionItem> */}
+          {categories && (
+            <Dropdown
+              isMobileDesign={isMobileDesign && isMobileDesign}
+              onDropdownChange={onOptionChange}
+              options={categories}
+              key={Math.random() * 1_000_000}
+              selectedOptions={selectedCatItems && selectedCatItems}
+              dropdownIMG={
+                <StyledCategoryItemIcon
+                  primaryColor={primaryColor}
+                  className={`dropdownn-chain-icons ${
+                    isMobileDesign ? 'mobile-cat-icon' : ''
+                  }`}
+                />
+              }
+            />
+          )}
+        </AccordionItem>
       </CustomAccordion>
       <div className="filter-modal-btn-container ">
         <StyledClearButton
-          disabled={!selectedBchItems || selectedBchItems.length === 0}
+          disabled={!selectedBchItems && !selectedCatItems}
           primaryColor={primaryColor}
           onClick={handleCleanFilter}
           className={`modal-filtering-button clear-btn ${
@@ -418,7 +450,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
           Clear all
         </StyledClearButton>
         <button
-          disabled={!selectedBchItems || selectedBchItems.length === 0}
+          disabled={!selectedBchItems && !selectedCatItems}
           className={`modal-filtering-button apply-btn ${
             isMobileDesign ? 'mobile-filter-apply-btn' : ''
           }`}
