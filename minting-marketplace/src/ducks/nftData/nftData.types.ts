@@ -50,7 +50,7 @@ export type TParamsNftData = {
   itemsPerPage: number;
   currentPage: number;
   blockchain?: string;
-  category?: string;
+  category?: string[];
   type?: string;
 };
 
