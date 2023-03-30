@@ -9,12 +9,13 @@ import { TContract, TGetFullContracts } from '../../axios.responseTypes';
 
 export function* setNftDataContract({ params }: TParamsNftDataProps) {
   getNftListTotalClear();
+
   try {
     const { data }: AxiosResponse<TGetFullContracts> = yield call(
       axios.get,
       `/api/contracts/full?itemsPerPage=${params.itemsPerPage}&pageNum=${params.currentPage}` +
         `${params.blockchain ? '&blockchain=' + params.blockchain : ''}` +
-        `${params.category ? '&category[]=' + params.category : ''}`
+        `${params.category ? params.category : ''}`
     );
 
     if (data.success) {

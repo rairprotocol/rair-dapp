@@ -242,16 +242,27 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
           type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
           payload: { selectedCatItems }
         });
-        return setSelectedBlockchainItems(selectedCatItems);
+        return setSelectedCategories(selectedCatItems);
       } else {
-        let catArray;
-        setSelectedBlockchainItems((prevCatArray) => {
-          catArray = [...prevCatArray];
-          return [...prevCatArray, selectedOption];
+        // let catArray;
+        if (selectedCatItems) {
+          setSelectedCategories([...selectedCategoriesItems, selectedOption]);
+          globalModaldispatch({
+            type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
+            payload: {
+              selectedCatItems: [...selectedCategoriesItems, selectedOption]
+            }
+          });
+          return;
+        }
+        setSelectedCategories((prevArray) => {
+          return [...prevArray, selectedOption];
         });
         globalModaldispatch({
           type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-          payload: { selectedCatItems: [catArray, selectedOption] }
+          payload: {
+            selectedCatItems: [...selectedCategoriesItems, selectedOption]
+          }
         });
       }
     }
@@ -304,8 +315,35 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
         setBlockchain(allSelectedChains);
       }
       if (selectedCategories) {
-        const selectedCatItem = selectedCategories[1]?.categoryId || '';
-        setCategory(selectedCatItem);
+        let allSelectedCategories = '';
+        selectedCategories.forEach((selectedCategItem, idx) => {
+          if (selectedCategories.length > 1 && selectedCategItem?.categoryId) {
+            if (selectedCategories.length - 1 === idx) {
+              allSelectedCategories = allSelectedCategories.concat(
+                selectedCategItem?.categoryId
+              );
+              return;
+            }
+            allSelectedCategories = allSelectedCategories.concat(
+              selectedCategItem?.categoryId,
+              ','
+            );
+            return;
+          }
+          if (selectedCategItem?.categoryId) {
+            allSelectedCategories = allSelectedCategories.concat(
+              selectedCategItem?.categoryId
+            );
+            return;
+          }
+        });
+        const catArray = allSelectedCategories
+          .split(',')
+          .map((el) => {
+            return `&category[]=${el}`;
+          })
+          .join('');
+        setCategory(catArray);
       }
       onCloseBtn();
       closeModal();
