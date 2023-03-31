@@ -57,8 +57,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
   const [, /*offersIndex,*/ setOffersIndex] = useState([]);
   const [, /*networkId*/ setNetworkId] = useState('');
 
-  const currentToken = localStorage.getItem('token');
-
   const [categoryArray, setCategoryArray] = useState([]);
   const getCategories = useCallback(async () => {
     const { success, categories } = await rFetch('/api/categories');
@@ -442,7 +440,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
             if (uploading) {
               return;
             }
-            if (video && title && currentToken) {
+            if (video && title) {
               setVPV(URL.createObjectURL(video));
               const formData = new FormData();
               formData.append('video', video);
