@@ -31,6 +31,7 @@ export interface IMediaListBox {
   currentTitleVideo: string;
   socketMessage: string | undefined;
   setUploadSuccess: (arg: boolean | null) => void;
+  setSocketMessage: (arg: string | undefined) => void;
 }
 
 export interface IUploadedListBox {
