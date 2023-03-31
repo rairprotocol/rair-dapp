@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Pagination } from '@mui/material';
+
+import { PaginationBoxStyled } from './PaginationBoxStyled';
 
 import { RootState } from '../../../ducks';
 import { IPaginationBox } from '../mockupPage.types';
@@ -74,7 +75,8 @@ const PaginationBox: React.FC<IPaginationBox> = ({
           totalPageForPagination &&
           totalPageForPagination > 0 &&
           pagesArray.length > 0 && (
-            <Pagination
+            <PaginationBoxStyled
+              primaryColor={primaryColor}
               className={
                 primaryColor === 'rhyno'
                   ? 'pagination-white'
