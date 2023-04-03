@@ -212,6 +212,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     if (selectedCategory) {
       formData.append('category', selectedCategory);
     }
+    setSocketMessage('');
     setUploading(true);
     try {
       const tokenRequest = await rFetch('/api/v2/upload/token');
@@ -240,6 +241,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
         setUploading(false);
         setUploadProgress(false);
         setUploadSuccess(null);
+        setSocketMessage('');
       }
 
       setUploading(false);
@@ -247,6 +249,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     } catch (e) {
       console.error(e);
       setUploading(false);
+      setSocketMessage('');
     }
   };
 
@@ -435,6 +438,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
               deleter={deleter}
               currentTitleVideo={currentTitleVideo}
               socketMessage={socketMessage}
+              setSocketMessage={setSocketMessage}
               newUserStatus={newUserStatus}
             />
           );

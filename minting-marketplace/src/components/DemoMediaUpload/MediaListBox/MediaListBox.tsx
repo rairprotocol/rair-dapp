@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 import { TMediaType } from '../../creatorStudio/creatorStudio.types';
 import LinearProgressWithLabel from '../LinearProgressWithLabel/LinearProgressWithLabel';
 import MediaItemChange from '../MediaItemChange/MediaItemChange';
@@ -25,10 +27,15 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   currentTitleVideo,
   socketMessage,
   setUploadSuccess,
-  newUserStatus
+  newUserStatus,
+  setSocketMessage
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
+  );
+
+  const { userRd } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
   );
 
   const [editTitleVideo, setEditTitleVideo] = useState<boolean>(false);
@@ -45,6 +52,22 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   useEffect(() => {
     setUploadSuccess(false);
   }, [setUploadSuccess]);
+
+  useEffect(() => {
+    if (userRd && userRd.email === null) {
+      setSocketMessage(undefined);
+      Swal.fire({
+        imageWidth: 70,
+        imageHeight: 'auto',
+        imageAlt: 'Custom image',
+        imageUrl:
+          'https://new-dev.rair.tech/static/media/RAIR-Tech-Logo-POWERED-BY-BLACK-2021.abf50c70.webp',
+        title: 'Oops...',
+        text: `Uploading a video with RAIR requires an email registered with our profile settings. 
+        Please use the user profile menu in the upper right corner to add your email address to your profile.`
+      });
+    }
+  }, [userRd]);
 
   const alertChoiceCloud = useCallback(() => {
     reactSwal.fire({

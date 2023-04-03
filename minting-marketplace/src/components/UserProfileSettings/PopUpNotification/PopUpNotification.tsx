@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { reactSwal } from '../../../utils/reactSwal';
@@ -23,6 +24,9 @@ const PopUpNotification = () =>
     >((store) => store.colorStore);
     const { uploadVideo } = useSelector<RootState, any>(
       (store) => store.videoDemoStore
+    );
+    const { userRd } = useSelector<RootState, TUsersInitialState>(
+      (store) => store.userStore
     );
 
     const onCloseNext = useCallback(() => {
@@ -50,7 +54,7 @@ const PopUpNotification = () =>
           className="social-bell-icon"
           marginRight={'17px'}
           notification={true}>
-          {uploadVideo && <span></span>}
+          {uploadVideo && userRd?.email && <span></span>}
           <BellIcon primaryColor={primaryColor} />
         </SocialBox>
         <Popup
@@ -60,7 +64,7 @@ const PopUpNotification = () =>
           onClose={() => {
             setOpenModal(false);
           }}>
-          {openModal && (
+          {openModal && userRd?.email && (
             <div
               className="pop-up-notification"
               style={{
