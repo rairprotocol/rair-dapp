@@ -30,6 +30,12 @@ import styled from 'styled-components';
 // });
 
 export const HomePageModalFilter = styled.div`
+  @media screen and (min-width: 1100px) {
+    &.filter-modal-wrapper.unlockables-tab {
+      width: 384px;
+    }
+  }
+
   padding: 24px 16px 16px 16px;
   ${(props) => {
     const bgc = props?.primaryColor?.includes('charcoal')

@@ -102,12 +102,20 @@ const SearchPanel: React.FC<ISearchPanel> = ({
 
   const clearFilter = useCallback(() => {
     setBlockchain(undefined);
+    setCategory(undefined);
     setCategoryClick(null);
     setBlockchainClick(null);
     setIsShow(false);
     setClick(null);
     dispatch(getCurrentPageEnd());
-  }, [dispatch]);
+    globalModaldispatch({
+      type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
+      payload: {
+        selectedBchItems: [],
+        selectedCatItems: []
+      }
+    });
+  }, [dispatch, globalModaldispatch]);
 
   const clearSelected = (selectedItemText) => {
     if (globalModalState.selectedBchItems) {
@@ -132,6 +140,13 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     setBlockchainClick(null);
     setIsShowCategories(false);
     dispatch(getCurrentPageEnd());
+    globalModaldispatch({
+      type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
+      payload: {
+        selectedBchItems: [],
+        selectedCatItems: []
+      }
+    });
   };
 
   useEffect(() => {
@@ -166,9 +181,11 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     () => ({
       itemsPerPage: itemsPerPage,
       pageNum: currentPageForVideo,
-      xTok: _locTok
+      xTok: _locTok,
+      category: category,
+      blockchain: blockchain
     }),
-    [itemsPerPage, currentPageForVideo, _locTok]
+    [itemsPerPage, currentPageForVideo, _locTok, category, blockchain]
   );
 
   useEffect(() => {
@@ -282,22 +299,18 @@ const SearchPanel: React.FC<ISearchPanel> = ({
         </div>
         <TabPanel>
           <div className="clear-filter-wrapper">
-            {isShow ? (
-              filterText.map((filterItemText) => {
-                return (
-                  <button
-                    key={Math.random() * 1_000_000}
-                    className={`clear-filter ${
-                      primaryColor === 'rhyno' ? 'rhyno' : ''
-                    }`}
-                    onClick={() => clearSelected(filterItemText)}>
-                    {filterItemText}
-                  </button>
-                );
-              })
-            ) : (
-              <></>
-            )}
+            {filterText.map((filterItemText) => {
+              return (
+                <button
+                  key={Math.random() * 1_000_000}
+                  className={`clear-filter ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}
+                  onClick={() => clearSelected(filterItemText)}>
+                  {filterItemText}
+                </button>
+              );
+            })}
             {isShowCategories ? (
               <button
                 className={`clear-filter filter-category ${
@@ -324,6 +337,20 @@ const SearchPanel: React.FC<ISearchPanel> = ({
           />
         </TabPanel>
         <TabPanel>
+          <div className="clear-filter-wrapper">
+            {filterText.map((filterItemText) => {
+              return (
+                <button
+                  key={Math.random() * 1_000_000}
+                  className={`clear-filter ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}
+                  onClick={() => clearSelected(filterItemText)}>
+                  {filterItemText}
+                </button>
+              );
+            })}
+          </div>
           <VideoList
             videos={videos}
             titleSearch={titleSearch}

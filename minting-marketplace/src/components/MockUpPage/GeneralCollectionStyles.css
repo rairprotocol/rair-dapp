@@ -978,6 +978,15 @@ p.general-title {
   margin-right: 0px;
 }
 
+/* .tree-tab-unlocks .unlockable-video:nth-child(1n + 1) {
+  margin-left: 0px;
+} */
+
+.tree-tab-unlocks.with-modal .unlockable-video:nth-child(3n + 3) {
+  margin: 0px 24px 24px 0;
+  transition: all 0.3s ease;
+}
+
 @media screen and (max-width: 1260px) {
   .tree-tab-unlocks .unlockable-video:nth-child(3n + 3) {
     margin: 0px 24px 24px 0;
@@ -1269,7 +1278,7 @@ p.general-title {
 }
 
 #filter-modal-parent {
-  padding-bottom: 25px;
+  padding-bottom: 0px;
 }
 .nft-item-collection.with-modal:nth-child(4n + 4) {
   margin: 0px 24px 24px 0px;

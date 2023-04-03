@@ -4,7 +4,8 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import {
   getListVideosError,
   getVideoListComplete,
-  getVideoListTotal
+  getVideoListTotal,
+  setLoading
 } from './actions';
 import * as types from './types';
 import { TUpdataVideoParams } from './videosDucks.types';
@@ -18,10 +19,13 @@ export type TParamsVideosSaga = {
 
 export function* getVideos({ params }: TParamsVideosSaga) {
   try {
+    yield put(setLoading(true));
     const videos: AxiosResponse<TMediaList> = yield call(
       axios.get,
       `/api/media/list?itemsPerPage=${params.itemsPerPage}` +
-        `${params.pageNum ? '&pageNum=' + params.pageNum : ''}`,
+        `${params.pageNum ? '&pageNum=' + params.pageNum : ''}` +
+        `${params.blockchain ? '&blockchain=' + params.blockchain : ''}` +
+        `${params.category ? params.category : ''}`,
       {
         headers: {
           'x-rair-token': params.xTok
@@ -32,9 +36,12 @@ export function* getVideos({ params }: TParamsVideosSaga) {
     if (videos !== undefined && videos.status === 200) {
       yield put(getVideoListComplete(videos.data.list));
       yield put(getVideoListTotal(videos.data.totalNumber));
+      yield put(setLoading(false));
     }
   } catch (error) {
     const errors = error as AxiosError;
+    yield put(setLoading(false));
+
     if (errors.response !== undefined) {
       if (errors.response.status === 404) {
         const errorDirec = 'This address does not exist';
