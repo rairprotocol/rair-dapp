@@ -51,6 +51,10 @@ const PaginationBox: React.FC<IPaginationBox> = ({
     }
   }, [setTotalPages, totalPageForPagination, itemsPerPage, whatPage]);
 
+  if (totalPageForPagination === 0) {
+    return null;
+  }
+
   return (
     <div className="pagination__wrapper">
       {/* {pagesArray && pagesArray.length > 0 ? (

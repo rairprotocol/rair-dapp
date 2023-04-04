@@ -1,9 +1,18 @@
+import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 
 import { IVideoList } from './video.types';
 import VideoItem from './videoItem';
 
 import { RootState } from '../../ducks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import {
+  GlobalModalContext,
+  TGlobalModalContext
+} from '../../providers/ModalProvider';
+import LoadingComponent from '../common/LoadingComponent';
+import HomePageFilterModal from '../GlobalModal/FilterModal/FilterModal';
+import GlobalModal from '../GlobalModal/GlobalModal';
 
 const VideoList: React.FC<IVideoList> = ({
   videos,
@@ -13,12 +22,27 @@ const VideoList: React.FC<IVideoList> = ({
   const loading = useSelector<RootState, boolean>(
     (state) => state.videosStore.loading
   );
+  const { width } = useWindowDimensions();
+  const isMobileDesign = width < 1100;
+  const modalParentNode = width > 1100 ? 'filter-modal-parent' : 'App';
+  const { globalModalState } =
+    useContext<TGlobalModalContext>(GlobalModalContext);
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
 
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        transition: 'all .2s ease'
+      }}>
       {/* <div className="input-search-wrapper list-button-wrapper"></div> */}
       <div
-        className="list-button-wrapper unlockables-wrapper tree-tab-unlocks"
+        className={`list-button-wrapper unlockables-wrapper tree-tab-unlocks ${
+          globalModalState?.isOpen ? 'with-modal' : ''
+        }`}
         style={{
           verticalAlign: 'top',
           width: '100%',
@@ -43,13 +67,24 @@ const VideoList: React.FC<IVideoList> = ({
                 );
               })
           ) : (
-            <h5 className="w-100 text-center">No files found</h5>
+            <h3 className="w-100 text-center">No videos found</h3>
           )
         ) : (
           'Searching...'
         )}
       </div>
-    </>
+      <div id="filter-modal-parent">
+        <GlobalModal
+          parentContainerId={modalParentNode}
+          renderModalContent={(globalModalState) => (
+            <HomePageFilterModal
+              className="unlockables-tab"
+              isMobileDesign={isMobileDesign}
+            />
+          )}
+        />
+      </div>
+    </div>
   );
 };
 

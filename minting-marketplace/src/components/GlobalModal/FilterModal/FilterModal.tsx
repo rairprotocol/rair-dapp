@@ -36,9 +36,11 @@ import { closeModal, openModal } from '../helpers/OnOpenModal';
 import './styles.css';
 export type THomePageFilterModalProps = {
   isMobileDesign?: boolean;
+  className?: stirng;
 };
 const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
-  isMobileDesign
+  isMobileDesign,
+  className
 }) => {
   const blockchains = [
     {
@@ -183,6 +185,16 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       setIsShow(true);
     }
   }, [selectedBchItems]);
+  useEffect(() => {
+    if (selectedCatItems) {
+      setSelectedCategories(selectedCatItems);
+      const selectedFiltersItemsText = selectedCatItems.map(
+        (selectedCatItem) => selectedCatItem.name
+      );
+      // setFilterText(selectedFiltersItemsText);
+      setIsShow(true);
+    }
+  }, [selectedCatItems]);
   const onOptionChange = (ev: React.SyntheticEvent<HTMLInputElement>) => {
     const target = ev.target as HTMLInputElement;
     const selectedItemDataTitle = target.getAttribute('data-title');
@@ -246,11 +258,11 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       } else {
         // let catArray;
         if (selectedCatItems) {
-          setSelectedCategories([...selectedCategoriesItems, selectedOption]);
+          setSelectedCategories([...selectedCatItems, selectedOption]);
           globalModaldispatch({
             type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
             payload: {
-              selectedCatItems: [...selectedCategoriesItems, selectedOption]
+              selectedCatItems: [...selectedCatItems, selectedOption]
             }
           });
           return;
@@ -343,7 +355,11 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
             return `&category[]=${el}`;
           })
           .join('');
-        setCategory(catArray);
+        if (catArray === '&category[]=') {
+          setCategory(undefined);
+        } else {
+          setCategory(catArray);
+        }
       }
       onCloseBtn();
       closeModal();
@@ -380,6 +396,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
     );
   const handleCleanFilter = () => {
     clearFilter();
+    setSelectedCategories([]);
     globalModaldispatch({
       type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
       payload: {
@@ -411,7 +428,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   return (
     <HomePageModalFilter
       id="home-page-modal-filter"
-      className="filter-modal-wrapper"
+      className={`filter-modal-wrapper ${className ? className : ''}`}
       isMobileDesign={isMobileDesign}
       primaryColor={primaryColor}>
       {isMobileDesign && (
