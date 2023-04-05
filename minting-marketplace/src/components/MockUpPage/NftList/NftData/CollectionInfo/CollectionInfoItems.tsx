@@ -18,6 +18,6 @@ export const CollectionInfoBody = styled.div<TCollectionInfoBody>`
 
   .block-item-collection:nth-child(odd) {
     background: ${(props) =>
-      props.primaryColor === 'rhyno' ? '#b1b1b1' : '#2D2B2C'};
+      props.primaryColor === 'rhyno' ? 'rgb(248, 248, 248)' : '#2D2B2C'};
   }
 `;

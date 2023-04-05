@@ -6,10 +6,26 @@
   width: 100%;
 }
 
+.wrapper-collection-info.mint {
+  margin: 0;
+}
+
 .contianer-collection-info {
   max-width: 85vw;
   border-radius: 16px;
   overflow: hidden;
+  background: #383637;
+}
+
+.wrapper-collection-info.rhyno .contianer-collection-info {
+  color: #2d2d2d;
+  background: var(--rhyno-40);
+}
+
+.wrapper-collection-info.mint
+  .contianer-collection-info
+  .collection-info-title {
+  justify-content: flex-start;
 }
 
 .contianer-collection-info .collection-info-title {
@@ -32,6 +48,12 @@
 
 .collection-info-title .collection-part-text:nth-child(2) {
   width: 245px;
+}
+
+.wrapper-collection-info.mint
+  .collection-info-title
+  .collection-part-text:nth-child(3) {
+  text-align: center;
 }
 
 .collection-info-title .collection-part-text:nth-child(3) {
@@ -89,6 +111,21 @@
 .collection-info-body .block-item-collection .item-price {
   width: 290px;
   text-align: left;
+}
+
+.wrapper-collection-info.mint .collection-mint-button button {
+  background: var(--stimorol);
+  border-radius: 12px;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 15px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.wrapper-collection-info.mint .collection-mint-button button:hover {
+  background: var(--stimorol-hover);
 }
 
 @media screen and (max-width: 1000px) {

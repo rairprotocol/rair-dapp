@@ -151,6 +151,8 @@ export interface ITitleCollection {
   someUsersData: UserType | undefined | null;
   selectedData: TMetadataType | undefined;
   currentUser?: UserType;
+  offerDataCol?: TOfferType[] | undefined;
+  connectUserData?: any;
 }
 export interface ICusmonShareButton {
   title: string;

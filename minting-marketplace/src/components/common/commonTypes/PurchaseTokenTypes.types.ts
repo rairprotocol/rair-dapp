@@ -12,6 +12,8 @@ export interface IAgreementsPropsType {
     | undefined;
   blockchainOnly?: boolean;
   databaseOnly?: boolean;
+  collection?: boolean | undefined;
+  setPurchaseStatus?: any;
 }
 
 export interface IPurchaseTokenButtonProps {
@@ -32,6 +34,8 @@ export interface IPurchaseTokenButtonProps {
   blockchainOnly?: boolean;
   databaseOnly?: boolean;
   handleClick?: () => void;
+  collection?: boolean;
+  setPurchaseStatus?: any | undefined;
 }
 
 export interface IRangeDataType {

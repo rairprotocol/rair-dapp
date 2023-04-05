@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
+import Popup from 'reactjs-popup';
 
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
@@ -12,8 +13,10 @@ import {
   ITitleCollection,
   TParamsTitleCollection
 } from '../../../mockupPage.types';
+import CustomButton from '../../../utils/button/CustomButton';
 import CustomShareButton from '../CustomShareButton';
 
+import MintPopUpCollection from './MintPopUpCollection/MintPopUpCollection';
 import SharePopUp from './SharePopUp/SharePopUp';
 
 import './TitleCollection.css';
@@ -22,12 +25,16 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   title,
   userName,
   someUsersData,
-  selectedData
+  selectedData,
+  offerDataCol,
+  connectUserData
 }) => {
   const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
   const primaryColor = useSelector<RootState, ColorChoice>(
     (state) => state.colorStore.primaryColor
   );
+  const [mintPopUp, setMintPopUp] = useState<boolean>(false);
+  const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
 
   const location = useLocation();
 
@@ -99,11 +106,55 @@ const TitleCollection: React.FC<ITitleCollection> = ({
           </div>
         </div>
         <div
+          style={{
+            width: '400px'
+          }}
           className={
             isCollectionPathExist
               ? 'collection-authenticity-link-share'
               : 'tokens-share'
           }>
+          {isCollectionPathExist && (
+            <>
+              <CustomButton
+                onClick={() => {
+                  if (purchaseStatus) {
+                    return;
+                  } else {
+                    setMintPopUp(true);
+                  }
+                }}
+                width="161px"
+                height="48px"
+                // margin="20px 0 0 0"
+                text="Mint!"
+                background={`${
+                  purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
+                }`}
+                hoverBackground={`${purchaseStatus ? 'rgb(74, 74, 74)' : ''}`}
+              />
+              <Popup
+                // className="popup-settings-block"
+                open={mintPopUp}
+                // position="right center"
+                closeOnDocumentClick
+                onClose={() => {
+                  setMintPopUp(false);
+                }}>
+                {offerDataCol && (
+                  <MintPopUpCollection
+                    blockchain={blockchain}
+                    offerDataCol={offerDataCol}
+                    primaryColor={primaryColor}
+                    connectUserData={connectUserData}
+                    someUsersData={someUsersData}
+                    contractAddress={contract}
+                    setPurchaseStatus={setPurchaseStatus}
+                  />
+                )}
+              </Popup>
+            </>
+          )}
           {isCollectionPathExist && (
             <a
               href={`${

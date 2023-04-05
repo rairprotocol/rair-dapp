@@ -35,7 +35,8 @@ import {
 const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   embeddedParams,
   userData,
-  loginDone
+  loginDone,
+  connectUserData
 }) => {
   const [collectionName, setCollectionName] = useState<string>();
   const [tokenDataFiltered, setTokenDataFiltered] = useState<TTokenData[]>([]);
@@ -303,6 +304,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         offerDataCol={offerDataInfo}
         offerAllData={ownerInfo}
         collectionName={collectionName}
+        connectUserData={connectUserData}
       />
     );
   } else if (mode === 'unlockables') {

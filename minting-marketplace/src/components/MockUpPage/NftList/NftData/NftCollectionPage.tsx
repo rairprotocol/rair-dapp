@@ -36,7 +36,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   someUsersData,
   offerDataCol,
   offerAllData,
-  collectionName
+  collectionName,
+  connectUserData
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -88,6 +89,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             someUsersData={someUsersData}
             userName={offerAllData?.owner}
             currentUser={userData}
+            offerDataCol={offerDataCol}
+            connectUserData={connectUserData}
           />
           {tokenDataFiltered.length > 0 ? (
             <div className="filter__btn__wrapper">

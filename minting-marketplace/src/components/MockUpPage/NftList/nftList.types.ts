@@ -62,6 +62,7 @@ export interface INftDataCommonLinkComponent {
   userData: UserType;
   embeddedParams: TEmbeddedParams | undefined;
   loginDone: boolean;
+  connectUserData: () => void;
 }
 
 export type TParamsNftDataCommonLink = {
@@ -93,6 +94,7 @@ export interface INftCollectionPageComponent {
   offerDataCol: TOfferType[] | undefined;
   offerAllData: TProducts | undefined;
   collectionName: string | undefined;
+  connectUserData: () => void;
 }
 
 export interface INftUnlockablesPage {
@@ -142,6 +144,10 @@ export interface ICollectionInfo {
   offerData: TOfferType[] | undefined;
   openTitle: boolean;
   someUsersData: UserType | null | undefined;
+  mintToken?: boolean;
+  connectUserData?: () => void;
+  contractAddress?: string;
+  setPurchaseStatus?: any;
 }
 
 export type TCollectionInfoBody = {

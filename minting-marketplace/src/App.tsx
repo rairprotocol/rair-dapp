@@ -698,7 +698,11 @@ function App() {
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true',
-                    props: { userData, loginDone }
+                    props: {
+                      userData,
+                      loginDone,
+                      connectUserData
+                    }
                   },
                   {
                     path: '/unlockables/:blockchain/:contract/:product/:tokenId',

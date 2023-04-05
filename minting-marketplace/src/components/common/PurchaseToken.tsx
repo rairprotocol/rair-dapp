@@ -149,7 +149,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   diamond,
   customSuccessAction,
   blockchainOnly,
-  databaseOnly
+  databaseOnly,
+  collection,
+  setPurchaseStatus
 }) => {
   const [privacyPolicy, setPrivacyPolicy] = useState<boolean>(false);
   const [termsOfUse, setTermsOfUse] = useState<boolean>(false);
@@ -171,61 +173,68 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 
   return (
     <div className={`text-${textColor}`}>
-      <div className={'py-4 w-100 row'}>
+      <div
+        className={`${
+          collection === false || collection === undefined
+            ? 'py-4 w-100 row'
+            : ''
+        }`}>
         <div className="col-12 col-sm-1 d-none d-md-inline" />
         <div className="col-12 col-sm-10 pe-2 pe-md-5">
-          {[
-            {
-              label: 'I agree to the',
-              link: 'Privacy Policy',
-              linkTarget: '/privacy',
-              getter: privacyPolicy,
-              setter: setPrivacyPolicy
-            },
-            {
-              label: 'I accept the',
-              link: 'Terms of Use',
-              linkTarget: '/terms-use',
-              getter: termsOfUse,
-              setter: setTermsOfUse
-            }
-          ].map((item, index) => {
-            const id = getRandomValues();
-            return (
-              <div key={index} className="my-2 w-100 px-0 mx-0 row">
-                <label
-                  className="h5 col-10 col-md-11 col-lg-10 col-xl-9 ps-md-5"
-                  htmlFor={String(id)}>
-                  {item.label} <wbr />
-                  {item.link && (
-                    <h4
-                      className="d-inline"
-                      onClick={() => window.open(item.linkTarget, '_blank')}
-                      style={{ color: 'var(--bubblegum)' }}>
-                      {item.link}
-                    </h4>
-                  )}
-                </label>
-                {item.setter && (
-                  <div className="col-2 col-xl-3 col-sm-1 text-end text-md-center text-xl-start p-0">
-                    <button
-                      className={`btn btn-${
-                        item.getter ? 'royal-ice' : 'secondary'
-                      } rounded-rair`}
-                      id={String(id)}
-                      onClick={() => item.setter(!item.getter)}>
-                      <i
-                        className={'fas fa-check'}
-                        style={{
-                          color: item.getter ? 'inherit' : 'transparent'
-                        }}
-                      />
-                    </button>
+          {collection === false || collection === undefined
+            ? [
+                {
+                  label: 'I agree to the',
+                  link: 'Privacy Policy',
+                  linkTarget: '/privacy',
+                  getter: privacyPolicy,
+                  setter: setPrivacyPolicy
+                },
+                {
+                  label: 'I accept the',
+                  link: 'Terms of Use',
+                  linkTarget: '/terms-use',
+                  getter: termsOfUse,
+                  setter: setTermsOfUse
+                }
+              ].map((item, index) => {
+                const id = getRandomValues();
+                return (
+                  <div key={index} className="my-2 w-100 px-0 mx-0 row">
+                    <label
+                      className="h5 col-10 col-md-11 col-lg-10 col-xl-9 ps-md-5"
+                      htmlFor={String(id)}>
+                      {item.label} <wbr />
+                      {item.link && (
+                        <h4
+                          className="d-inline"
+                          onClick={() => window.open(item.linkTarget, '_blank')}
+                          style={{ color: 'var(--bubblegum)' }}>
+                          {item.link}
+                        </h4>
+                      )}
+                    </label>
+                    {item.setter && (
+                      <div className="col-2 col-xl-3 col-sm-1 text-end text-md-center text-xl-start p-0">
+                        <button
+                          className={`btn btn-${
+                            item.getter ? 'royal-ice' : 'secondary'
+                          } rounded-rair`}
+                          id={String(id)}
+                          onClick={() => item.setter(!item.getter)}>
+                          <i
+                            className={'fas fa-check'}
+                            style={{
+                              color: item.getter ? 'inherit' : 'transparent'
+                            }}
+                          />
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
+                );
+              })
+            : ''}
         </div>
         <div className="col-12 col-sm-1 d-none d-md-inline" />
       </div>
@@ -234,15 +243,25 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
         <button
           disabled={
             buyingToken ||
-            Boolean(currentUserAddress && (!privacyPolicy || !termsOfUse))
+            Boolean(
+              currentUserAddress &&
+                !collection &&
+                (!privacyPolicy || !termsOfUse)
+            )
           }
           className="btn my-4 btn-stimorol rounded-rair col-12 col-sm-8 col-md-4"
           onClick={async () => {
             setBuyingToken(true);
+            if (setPurchaseStatus) {
+              setPurchaseStatus(true);
+            }
             // If currentUserAddress isn't set then the user hasn't connected their wallet
             if (!currentUserAddress) {
               await connectUserData?.();
               setBuyingToken(false);
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
               return;
             }
 
@@ -250,6 +269,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             if (currentChain !== requiredBlockchain) {
               await web3Switch(requiredBlockchain);
               setBuyingToken(false);
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
               return;
             }
 
@@ -284,6 +306,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 
             if (!rangeData) {
               Swal.fire('Error', 'An error has ocurred.', 'error');
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
               return;
             }
 
@@ -303,6 +328,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
                 await contractInstance?.provider.getBalance(currentUserAddress)
               )?.lt(price)
             ) {
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
               Swal.fire('Error', 'Insufficient funds!', 'error');
               return;
             }
@@ -320,6 +348,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               customSuccessAction(nextToken);
             }
             setBuyingToken(false);
+            if (setPurchaseStatus) {
+              setPurchaseStatus(false);
+            }
           }}>
           <img
             style={{ maxHeight: '7vh' }}
@@ -357,7 +388,9 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   diamond,
   customSuccessAction,
   blockchainOnly,
-  databaseOnly
+  databaseOnly,
+  collection,
+  setPurchaseStatus
 }) => {
   const store = useStore();
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
@@ -365,32 +398,62 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   );
 
   const fireAgreementModal = () => {
-    reactSwal.fire({
-      title: <h1 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h1>,
-      html: (
-        <Provider store={store}>
-          <Agreements
-            {...{
-              contractAddress,
-              requiredBlockchain,
-              connectUserData,
-              diamond,
-              offerIndex,
-              presaleMessage,
-              customSuccessAction,
-              blockchainOnly,
-              databaseOnly
-            }}
-          />
-        </Provider>
-      ),
-      showConfirmButton: false,
-      width: '90vw',
-      customClass: {
-        popup: `bg-${primaryColor} rounded-rair`,
-        title: `text-${textColor}`
-      }
-    });
+    if (collection === true) {
+      reactSwal.fire({
+        html: (
+          <Provider store={store}>
+            <Agreements
+              {...{
+                contractAddress,
+                requiredBlockchain,
+                connectUserData,
+                diamond,
+                offerIndex,
+                presaleMessage,
+                customSuccessAction,
+                blockchainOnly,
+                databaseOnly,
+                collection,
+                setPurchaseStatus
+              }}
+            />
+          </Provider>
+        ),
+        showConfirmButton: false,
+        width: '85vw',
+        customClass: {
+          popup: `bg-${primaryColor} rounded-rair`,
+          title: `text-${textColor}`
+        }
+      });
+    } else {
+      reactSwal.fire({
+        title: <h1 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h1>,
+        html: (
+          <Provider store={store}>
+            <Agreements
+              {...{
+                contractAddress,
+                requiredBlockchain,
+                connectUserData,
+                diamond,
+                offerIndex,
+                presaleMessage,
+                customSuccessAction,
+                blockchainOnly,
+                databaseOnly
+              }}
+            />
+          </Provider>
+        ),
+        showConfirmButton: false,
+        width: '90vw',
+        customClass: {
+          popup: `bg-${primaryColor} rounded-rair`,
+          title: `text-${textColor}`
+        }
+      });
+    }
   };
 
   if (altButtonFormat) {
