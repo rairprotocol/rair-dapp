@@ -318,7 +318,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 primaryColor={primaryColor}
               />
             </div>
-            <div className="more-unlockables-button-container">
+            {/* <div className="more-unlockables-button-container">
               <div className="share-button-linear-border more-unlock">
                 <CustomShareButton
                   title="More Unlockables"
@@ -328,7 +328,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                   moreUnlockablesClassName={'share-button-more-unlock'}
                 />
               </div>
-            </div>
+            </div> */}
           </>
         ) : (
           <div className="description-text">{`This nft doesn't have any unlockable videos`}</div>
