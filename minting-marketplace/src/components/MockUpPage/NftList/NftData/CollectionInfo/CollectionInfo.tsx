@@ -1,12 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router';
 import { utils } from 'ethers';
+import { BigNumber } from 'ethers';
+import Swal from 'sweetalert2';
 
 import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
 
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import PurchaseTokenButton from '../../../../common/PurchaseToken';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
+import { TParamsNftItemForCollectionView } from '../../../mockupPage.types';
 import { ICollectionInfo } from '../../nftList.types';
 
 import chainData from './../../../../../utils/blockchainData';
@@ -17,25 +22,31 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   blockchain,
   offerData,
   openTitle,
-  someUsersData
+  someUsersData,
+  mintToken,
+  connectUserData,
+  contractAddress,
+  setPurchaseStatus
 }) => {
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
+  const params = useParams<TParamsNftItemForCollectionView>();
+  const navigate = useNavigate();
+
   const defaultPhoto =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
   return (
-    <div className="wrapper-collection-info">
+    <div
+      className={`wrapper-collection-info ${mintToken ? 'mint' : ''} ${
+        primaryColor === 'rhyno' ? 'rhyno' : ''
+      }`}>
       {openTitle && <div className="collection-info-head">Collection Info</div>}
-      <div
-        className="contianer-collection-info"
-        style={{
-          background: `${primaryColor === 'rhyno' ? '#bdbdbd' : '#383637'}`
-        }}>
+      <div className="contianer-collection-info">
         <div className="collection-info-title">
           <div className="collection-part-text">Item name</div>
-          <div className="collection-part-text">Rank</div>
+          {!mintToken && <div className="collection-part-text">Rank</div>}
           <div className="collection-part-text">Availability</div>
           <div className="collection-part-text">Floor Price</div>
         </div>
@@ -66,57 +77,59 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                       />
                       <div className="item-name-text">{token.offerName}</div>
                     </div>
-                    <div className="item-rank">
-                      {token.diamond ? (
-                        <>
-                          {index.toString() === '0' && (
-                            <i
-                              style={{ color: 'red' }}
-                              className="fas fa-key"
-                            />
-                          )}
-                          {index.toString() === '1' && '🔑'}
-                          {index.toString() >= '2' && (
-                            <i
-                              style={{ color: 'silver' }}
-                              className="fas fa-key"
-                            />
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          {token.offerIndex === '0' && (
-                            <i
-                              style={{ color: 'red' }}
-                              className="fas fa-key"
-                            />
-                          )}
-                          {token.offerIndex === '1' && '🔑'}
-                          {token.offerIndex >= '2' && (
-                            <i
-                              style={{ color: 'silver' }}
-                              className="fas fa-key"
-                            />
-                          )}
-                        </>
-                      )}{' '}
-                      &nbsp;
-                      {token.diamond ? (
-                        <>
-                          {index.toString() === '0' && 'Ultra Rair'}
-                          {index.toString() === '1' && 'Rair'}
-                          {index.toString() &&
-                            index.toString() >= '2' &&
-                            'Common'}
-                        </>
-                      ) : (
-                        <>
-                          {token.offerIndex === '0' && 'Ultra Rair'}
-                          {token.offerIndex === '1' && 'Rair'}
-                          {token.offerIndex >= '2' && 'Common'}
-                        </>
-                      )}
-                    </div>
+                    {!mintToken && (
+                      <div className="item-rank">
+                        {token.diamond ? (
+                          <>
+                            {index.toString() === '0' && (
+                              <i
+                                style={{ color: 'red' }}
+                                className="fas fa-key"
+                              />
+                            )}
+                            {index.toString() === '1' && '🔑'}
+                            {index.toString() >= '2' && (
+                              <i
+                                style={{ color: 'silver' }}
+                                className="fas fa-key"
+                              />
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {token.offerIndex === '0' && (
+                              <i
+                                style={{ color: 'red' }}
+                                className="fas fa-key"
+                              />
+                            )}
+                            {token.offerIndex === '1' && '🔑'}
+                            {token.offerIndex >= '2' && (
+                              <i
+                                style={{ color: 'silver' }}
+                                className="fas fa-key"
+                              />
+                            )}
+                          </>
+                        )}{' '}
+                        &nbsp;
+                        {token.diamond ? (
+                          <>
+                            {index.toString() === '0' && 'Ultra Rair'}
+                            {index.toString() === '1' && 'Rair'}
+                            {index.toString() &&
+                              index.toString() >= '2' &&
+                              'Common'}
+                          </>
+                        ) : (
+                          <>
+                            {token.offerIndex === '0' && 'Ultra Rair'}
+                            {token.offerIndex === '1' && 'Rair'}
+                            {token.offerIndex >= '2' && 'Common'}
+                          </>
+                        )}
+                      </div>
+                    )}
                     <div className="item-availa">
                       <p>
                         {token.copies - token.soldCopies} / {token.copies}
@@ -135,8 +148,34 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                         )
                         .toString()}{' '}
                       {blockchain && chainData[blockchain]?.symbol}
-                      {/* {token.price} */}
                     </div>
+                    {mintToken && (
+                      <div className="collection-mint-button">
+                        <PurchaseTokenButton
+                          connectUserData={connectUserData}
+                          contractAddress={contractAddress}
+                          requiredBlockchain={blockchain}
+                          collection={true}
+                          offerIndex={[token.offerIndex]}
+                          buttonLabel="Buy"
+                          diamond={token.diamond}
+                          setPurchaseStatus={setPurchaseStatus}
+                          customSuccessAction={(nextToken) => {
+                            Swal.fire(
+                              'Success',
+                              `You own token #${nextToken}!`,
+                              'success'
+                            ).then((result) => {
+                              if (result.isConfirmed || result.isDismissed) {
+                                navigate(
+                                  `/tokens/${blockchain}/${params.contract}/${params.product}/${nextToken}`
+                                );
+                              }
+                            });
+                          }}
+                        />
+                      </div>
+                    )}
                   </BlockItemCollection>
                 );
               })}

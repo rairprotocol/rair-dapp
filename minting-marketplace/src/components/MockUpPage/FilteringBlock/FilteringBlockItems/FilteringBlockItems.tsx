@@ -72,7 +72,7 @@ export const SelectSortPopUp = styled.div`
     width: 20px;
     height: 20px;
     background-color: var(
-      --${(props) => (props.primaryColor.includes('charcoal') ? 'charcoal-90' : 'rhyno-40')}
+      --${(props) => (props.primaryColor.includes('charcoal') ? 'charcoal' : 'rhyno')}
     );
     position: absolute;
     transform: rotate(45deg);

@@ -7,7 +7,6 @@ export function checkIPFSanimation(
 
   if (val && val[0] === 'ipfs://') {
     const arr = link.split('//').filter((el) => el !== 'ipfs:');
-    console.info('https://ipfs.io/ipfs/' + arr[0], '123');
     return 'https://ipfs.io/ipfs/' + arr[0];
   } else {
     return link;
