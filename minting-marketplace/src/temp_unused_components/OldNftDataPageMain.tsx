@@ -697,7 +697,7 @@ const NftDataPageMain = ({
                   selectedToken={selectedToken}
                   primaryColor={primaryColor}
                 />
-                {productsFromOffer && productsFromOffer.length !== 0 ? (
+                {/* {productsFromOffer && productsFromOffer.length !== 0 ? (
                   <CustomButton
                     onClick={() =>
                       navigate(
@@ -711,7 +711,7 @@ const NftDataPageMain = ({
                     primaryColor={primaryColor}
                     margin={'0 auto'}
                   />
-                ) : null}
+                ) : null} */}
               </AccordionItemPanel>
             </AccordionItem>
 
