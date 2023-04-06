@@ -7,7 +7,6 @@ import {
   TAuthGetChallengeResponse,
   TUserResponse
 } from '../axios.responseTypes';
-// import { useSelector } from 'react-redux'
 
 const signIn = async (provider: ethers.providers.StaticJsonRpcProvider) => {
   let currentUser = provider?.getSigner()._address;
@@ -138,8 +137,7 @@ const getJWT = async (
 //  return async (route, options, retryOptions = undefined) => {
 //      const request = await fetch(route, {
 //          headers: {
-//              ...options?.headers,
-//              'X-rair-token': token
+//              ...options?.headers
 //          },
 //          ...options
 //      });

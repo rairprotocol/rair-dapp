@@ -21,6 +21,7 @@ import {
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import {
   setTokenData,
   setTokenDataStart
@@ -53,12 +54,11 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [someUsersData, setSomeUsersData] = useState<UserType | null>();
   const [dataForUser, setDataForUser] = useState<TProducts>();
-  const [userToken, setUserToken] = useState<string | null>();
   const [tokenBought, setTokenBought] = useState<boolean>(false);
 
   const dispatch = useDispatch();
-  const currentUserAddress = useSelector<RootState, string | undefined>(
-    (store) => store.contractStore.currentUserAddress
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
   );
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -79,13 +79,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const { contract, product, tokenId, blockchain } = embeddedParams
     ? embeddedParams
     : params;
-
-  //unused-snippet
-  const checkUserConnect = useCallback(() => {
-    if (currentUserAddress) {
-      setUserToken(localStorage.getItem('token'));
-    }
-  }, [currentUserAddress]);
 
   const getAllProduct = useCallback(
     async (fromToken: string, toToken: string) => {
@@ -119,7 +112,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const getProductsFromOffer = useCallback(async () => {
     setIsLoading(true);
-    if (userToken) {
+    if (currentUserAddress) {
       const responseIfUserConnect = await axios.get<TNftFilesResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}/files`,
         {
@@ -158,7 +151,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         }
       }
     }
-  }, [blockchain, contract, product, tokenId, userToken, tokenData]);
+  }, [blockchain, contract, product, tokenId, tokenData, currentUserAddress]);
 
   const getParticularOffer = useCallback(async () => {
     try {
@@ -190,14 +183,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       }
     } catch (err) {
       const error = err as AxiosError;
-      if (
-        error?.message === 'jwt expired' ||
-        error?.message === 'jwt malformed'
-      ) {
-        localStorage.removeItem('token');
-      } else {
-        console.error(error?.message);
-      }
+      console.error(error?.message);
     }
   }, [product, contract, selectedOfferIndex, blockchain]);
 
@@ -258,10 +244,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   useEffect(() => {
     dispatch(setRealChain(blockchain));
   }, [blockchain, dispatch]);
-
-  useEffect(() => {
-    checkUserConnect();
-  }, [checkUserConnect]);
 
   useEffect(() => {
     let tokenStart = BigNumber.from(0);

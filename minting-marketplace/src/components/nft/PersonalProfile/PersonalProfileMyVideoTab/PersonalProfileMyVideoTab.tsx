@@ -13,7 +13,6 @@ const PersonalProfileMyVideoTabComponent = ({ titleSearch }) => {
     (store) => store.videosStore
   );
   const myVideo = {};
-  const _locTok: string = localStorage.token;
 
   const updateVideo = useCallback(
     (params) => {
@@ -24,12 +23,11 @@ const PersonalProfileMyVideoTabComponent = ({ titleSearch }) => {
 
   useEffect(() => {
     const params = {
-      itemsPerPage: '10000000',
+      itemsPerPage: '10000000'
       // pageNum: '1',
-      xTok: _locTok
     };
     updateVideo(params);
-  }, [_locTok, updateVideo]);
+  }, [updateVideo]);
 
   const findMyVideo = (obj: object, subField: string, value: boolean) => {
     if (obj !== null) {

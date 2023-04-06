@@ -1,11 +1,11 @@
 const express = require('express');
 const axios = require('axios');
-const { loadUserSession } = require('../middleware');
+const { requireUserSession } = require('../middleware');
 // eslint-disable-next-line no-unused-vars
 module.exports = (context) => {
   const router = express.Router();
 
-  router.post('/:network/:hash', loadUserSession, async (req, res, next) => {
+  router.post('/:network/:hash', requireUserSession, async (req, res, next) => {
     try {
       const { network, hash } = req.params;
       const redisMessage = {

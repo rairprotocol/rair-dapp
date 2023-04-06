@@ -1,7 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 const csv = require('csv-parser');
-const { constants } = require('ethers');
+const { ZeroAddress } = require('ethers');
 const AppError = require('../utils/errors/AppError');
 const {
   OfferPool,
@@ -668,7 +668,7 @@ exports.createTokensViaCSV = async (req, res, next) => {
               ) {
                 const address = record.publicaddress
                   ? record.publicaddress
-                  : constants.AddressZero;
+                  : ZeroAddress;
                 const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
                   .assign({})

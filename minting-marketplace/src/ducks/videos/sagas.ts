@@ -25,12 +25,7 @@ export function* getVideos({ params }: TParamsVideosSaga) {
       `/api/media/list?itemsPerPage=${params.itemsPerPage}` +
         `${params.pageNum ? '&pageNum=' + params.pageNum : ''}` +
         `${params.blockchain ? '&blockchain=' + params.blockchain : ''}` +
-        `${params.category ? params.category : ''}`,
-      {
-        headers: {
-          'x-rair-token': params.xTok
-        }
-      }
+        `${params.category ? params.category : ''}`
     );
 
     if (videos !== undefined && videos.status === 200) {

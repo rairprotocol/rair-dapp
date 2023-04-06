@@ -54,10 +54,7 @@ export let nftdatacommonlink;
 //   let response = await (
 //     await fetch(`/api/contracts/${contract}/products/offers`, {
 //     // await fetch(`/api/nft/${contract}/${product}/offers`, {
-//       method: "GET",
-//       headers: {
-//         "x-rair-token": localStorage.token,
-//       },
+//       method: "GET"
 //     })
 //   ).json();
 
@@ -91,9 +88,6 @@ export let nftdatacommonlink;
 //   //     await fetch(`/api/contracts/${contract}/products/offers`, {
 //   //     // await fetch(`/api/nft/${contract}/${product}/offers`, {
 //   //       method: "GET",
-//   //       headers: {
-//   //         "x-rair-token": localStorage.token,
-//   //       },
 //   //     })
 //   //   ).json();
 

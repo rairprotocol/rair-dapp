@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useReducer } from 'react';
+import { useSelector } from 'react-redux';
 import { CircularProgress, Tooltip } from '@mui/material';
 import axios from 'axios';
 
 import { TAxiosFavoriteData } from '../../../../axios.responseTypes';
+import { RootState } from '../../../../ducks';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { ILikeButton } from '../../mockupPage.types';
 
 import {
@@ -29,20 +32,22 @@ const LikeButton: React.FC<ILikeButton> = ({
     favoritesReducer,
     initialFavoritesState
   );
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
   const addFavorite = async (tokenBody: string | undefined) => {
     const token = {
       token: tokenBody
     };
 
-    if (localStorage.token) {
+    if (currentUserAddress) {
       dispatch(addItemFavoriteStart());
       try {
         await axios
           .post<TAxiosFavoriteData>('/api/v2/favorites', token, {
             headers: {
-              'Content-Type': 'application/json',
-              'x-rair-token': localStorage.token
+              'Content-Type': 'application/json'
             }
           })
           .then((res) => {
@@ -57,15 +62,14 @@ const LikeButton: React.FC<ILikeButton> = ({
   };
 
   const removeFavotite = useCallback(async () => {
-    if (localStorage.token) {
+    if (currentUserAddress) {
       if (currentLikeToken) {
         try {
           dispatch(addItemFavoriteStart());
           await axios
             .delete(`/api/v2/favorites/${currentLikeToken[0]?._id}`, {
               headers: {
-                'Content-Type': 'application/json',
-                'x-rair-token': localStorage.token
+                'Content-Type': 'application/json'
               }
             })
             .then((res) => {
@@ -78,7 +82,7 @@ const LikeButton: React.FC<ILikeButton> = ({
         }
       }
     }
-  }, [currentLikeToken]);
+  }, [currentLikeToken, currentUserAddress]);
 
   const getFavotiteData = useCallback(async () => {
     try {
@@ -86,8 +90,7 @@ const LikeButton: React.FC<ILikeButton> = ({
         data: { data }
       } = await axios.get('/api/v2/favorites', {
         headers: {
-          'Content-Type': 'application/json',
-          'x-rair-token': localStorage.token
+          'Content-Type': 'application/json'
         }
       });
 

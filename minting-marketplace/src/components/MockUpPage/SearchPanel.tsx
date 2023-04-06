@@ -86,8 +86,6 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     setVideoUnlocked((prev) => !prev);
   }, [setVideoUnlocked]);
 
-  const _locTok: string = localStorage.token;
-
   const clearPagesForVideo = () => {
     dispatch(getCurrentPageNull());
   };
@@ -181,18 +179,16 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     () => ({
       itemsPerPage: itemsPerPage,
       pageNum: currentPageForVideo,
-      xTok: _locTok,
       category: category,
       blockchain: blockchain
     }),
-    [itemsPerPage, currentPageForVideo, _locTok, category, blockchain]
+    [itemsPerPage, currentPageForVideo, category, blockchain]
   );
 
   useEffect(() => {
     // const params = {
     //   itemsPerPage: itemsPerPage,
     //   pageNum: currentPageForVideo,
-    //   xTok: _locTok
     // };
     updateVideo(globalParams);
   }, [updateVideo, globalParams]);

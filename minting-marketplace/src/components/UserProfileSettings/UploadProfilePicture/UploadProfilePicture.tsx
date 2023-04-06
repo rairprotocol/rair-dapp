@@ -42,8 +42,7 @@ const UploadProfilePicture = ({
         formData,
         {
           headers: {
-            Accept: 'multipart/form-data',
-            'X-rair-token': localStorage.token
+            Accept: 'multipart/form-data'
           }
         }
       );
@@ -77,7 +76,6 @@ const UploadProfilePicture = ({
   //       method: "PUT",
   //       headers: {
   //         "Content-Type": "application/json",
-  //         "x-rair-token": localStorage.token,
   //       },
   //       body: JSON.stringify({
   //         nickName: name,

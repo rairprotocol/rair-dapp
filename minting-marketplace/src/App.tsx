@@ -151,7 +151,6 @@ function App() {
           dispatch(getTokenComplete(null));
           dispatch(setUserAddress(undefined));
           dispatch(setAdminRights(false));
-          localStorage.removeItem('token');
           setLoginDone(false);
           navigate('/');
         }
@@ -191,19 +190,6 @@ function App() {
         setCarousel(carousel_match.matches)
       );
   }, [carousel_match.matches]);
-
-  useEffect(() => {
-    if (localStorage.token && isTokenValid(localStorage.token)) {
-      if (window.ethereum) {
-        //connectUserData();
-        dispatch(getTokenStart());
-        dispatch(getTokenComplete(token));
-      } else {
-        // If the token exists but Metamask is not enabled, delete the JWT so the user has to sign in again
-        localStorage.removeItem('token');
-      }
-    }
-  }, [connectUserData, dispatch, token]);
 
   useEffect(() => {
     if (primaryColor === 'charcoal') {

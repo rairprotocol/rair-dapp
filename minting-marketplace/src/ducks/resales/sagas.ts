@@ -9,15 +9,11 @@ import {
 } from './actions';
 import * as types from './types';
 
-export function* getResales({ params }) {
+export function* getResales() {
   try {
     const resales: AxiosResponse<any> = yield call<
       (url: string, config: AxiosRequestHeaders) => any
-    >(axios.get, `/api/v2/resales/`, {
-      headers: {
-        'x-rair-token': params.xTok
-      }
-    });
+    >(axios.get, `/api/v2/resales/`);
     if (resales !== undefined && resales.status === 200) {
       yield put(getResalesListComplete(resales.data.data.doc));
       yield put(getResalesListTotal(resales.data.data.doc.length));

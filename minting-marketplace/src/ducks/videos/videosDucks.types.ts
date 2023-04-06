@@ -19,7 +19,6 @@ export type TVideosInitialState = {
 export type TUpdataVideoParams = {
   itemsPerPage: number;
   pageNum: number;
-  xTok: string;
   category: string;
   blockchain: string;
 };
