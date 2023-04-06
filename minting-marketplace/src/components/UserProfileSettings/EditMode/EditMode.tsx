@@ -56,8 +56,7 @@ const EditMode = ({
         formData,
         {
           headers: {
-            Accept: 'multipart/form-data',
-            'X-rair-token': localStorage.token
+            Accept: 'multipart/form-data'
           }
         }
       );

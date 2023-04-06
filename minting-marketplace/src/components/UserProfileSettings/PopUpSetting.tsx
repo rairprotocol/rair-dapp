@@ -81,7 +81,6 @@ const PopUpSettings = ({
       dispatch(getTokenComplete(null));
       dispatch(setUserAddress(undefined));
       dispatch(setAdminRights(false));
-      localStorage.removeItem('token');
       setLoginDone(false);
       navigate('/');
     }

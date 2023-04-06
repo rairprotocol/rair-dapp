@@ -14,7 +14,7 @@ import {
   setAdminRights,
   setSuperAdmin
 } from '../ducks/users/actions';
-import { getJWT, isTokenValid, rFetch } from '../utils/rFetch';
+import { getJWT, rFetch } from '../utils/rFetch';
 
 const rSwal = withReactContent(Swal);
 
@@ -25,6 +25,10 @@ const useConnectUser = () => {
   const [loginDone, setLoginDone] = useState<boolean>(false);
   const { programmaticProvider } = useSelector((store) => store.contractStore);
   const { adminRights } = useSelector((store) => store.userStore);
+
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
   const connectUserData = useCallback(async () => {
     setStartedLogin(true);
@@ -91,8 +95,7 @@ const useConnectUser = () => {
       if (
         adminRights === null ||
         adminRights === undefined ||
-        !localStorage.token ||
-        !isTokenValid(localStorage.token)
+        !currentUserAddress
       ) {
         dispatchStack.push(getTokenStart());
         const loginResponse = await getJWT(programmaticProvider, currentUser);
@@ -118,7 +121,7 @@ const useConnectUser = () => {
       console.error('Error', err);
       setStartedLogin(false);
     }
-  }, [programmaticProvider, adminRights, dispatch]);
+  }, [programmaticProvider, adminRights, currentUserAddress, dispatch]);
 
   useEffect(() => {
     (async () => {

@@ -6,36 +6,25 @@ import { TSplashDataType, TUseGetProductsReturn } from './splashPage.types';
 
 import { TFileType, TNftFilesResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
 export const useGetProducts = (
   splashData: TSplashDataType
 ): TUseGetProductsReturn => {
   const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
   const [selectVideo, setSelectVideo] = useState<TFileType>();
-  const [userToken, setUserToken] = useState<string | null>();
 
-  const currentUserAddress = useSelector<RootState, string | null | undefined>(
-    (state) => state.contractStore.currentUserAddress
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
   );
 
-  const checkUserConnect = useCallback(() => {
-    if (currentUserAddress) {
-      setUserToken(localStorage.getItem('token'));
-    }
-  }, [currentUserAddress]);
-
-  useEffect(() => {
-    checkUserConnect();
-  }, [checkUserConnect]);
-
   const getProductsFromOffer = useCallback(async () => {
-    if (userToken) {
+    if (currentUserAddress) {
       const responseIfUserConnect = await axios.get<TNftFilesResponse>(
         `/api/nft/network/${splashData.videoPlayerParams?.blockchain}/${splashData.videoPlayerParams?.contract}/${splashData.videoPlayerParams?.product}/files`,
         {
           headers: {
-            Accept: 'application/json',
-            'X-rair-token': userToken
+            Accept: 'application/json'
           }
         }
       );
@@ -50,7 +39,7 @@ export const useGetProducts = (
     splashData.videoPlayerParams?.blockchain,
     splashData.videoPlayerParams?.contract,
     splashData.videoPlayerParams?.product,
-    userToken
+    currentUserAddress
   ]);
 
   useEffect(() => {

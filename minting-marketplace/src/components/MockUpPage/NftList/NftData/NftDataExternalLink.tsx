@@ -1,6 +1,5 @@
 //@ts-nocheck
-
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
@@ -54,7 +53,6 @@ const NftDataExternalLink = ({ loginDone }) => {
   >();
   const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
   const [someUsersData, setSomeUsersData] = useState<UserType | null>(null);
-  const [userToken, setUserToken] = useState<string | null>();
   const [typeOfContract, setTypeOfContract] = useState();
   const [neededContract, setNeededContract] = useState();
   const [neededTokenOffer, setNeededTokenOffer] = useState();
@@ -192,14 +190,8 @@ const NftDataExternalLink = ({ loginDone }) => {
     }
   }, [neededBlockchain, contractOfProduct, neededTokenOffer]);
 
-  const checkUserConnect = useCallback(() => {
-    if (currentUserAddress) {
-      setUserToken(localStorage.getItem('token'));
-    }
-  }, [currentUserAddress]);
-
   const getListOfTokens = useCallback(async () => {
-    if (userToken) {
+    if (currentUserAddress) {
       const response = await axios.get(`/api/v2/tokens/tokenNumbers`, {
         params: {
           product: neededProduct,
@@ -208,8 +200,7 @@ const NftDataExternalLink = ({ loginDone }) => {
           contract: neededContract
         },
         headers: {
-          Accept: 'application/json',
-          'X-rair-token': userToken
+          Accept: 'application/json'
         }
       });
       const { success, tokens } = response.data;
@@ -226,7 +217,7 @@ const NftDataExternalLink = ({ loginDone }) => {
     neededBlockchain,
     neededContract,
     neededProduct,
-    userToken
+    currentUserAddress
   ]);
 
   const handleTokenBoughtButton = () => {
@@ -249,10 +240,6 @@ const NftDataExternalLink = ({ loginDone }) => {
       setSomeUsersData(result.user);
     }
   }, [dataForUser]);
-
-  useEffect(() => {
-    checkUserConnect();
-  }, [checkUserConnect]);
 
   useEffect(() => {
     dispatch(setTokenDataStart());

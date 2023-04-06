@@ -114,7 +114,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
       dispatch(getTokenComplete(null));
       dispatch(setUserAddress(undefined));
       navigate('/');
-      localStorage.removeItem('token');
       setLoginDone(false);
       toggleMenu();
     }

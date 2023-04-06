@@ -1,7 +1,5 @@
 const headers = () => {
-  return {
-    'X-rair-token': `${localStorage.token}`
-  };
+  return {};
 };
 const paramsVideo = (params) => {
   return {

@@ -18,21 +18,11 @@ const PersonalProfileMyCreatedComponent = ({
   const [load, setLoad] = useState(true);
 
   const getMyContracts = useCallback(async () => {
-    const response = await axios.get('/api/contracts', {
-      method: 'GET',
-      headers: {
-        'x-rair-token': localStorage.token
-      }
-    });
+    const response = await axios.get('/api/contracts');
 
     if (response.data.success) {
       setLoad(false);
       setMyContracts(response.data.contracts);
-    } else if (
-      response?.message === 'jwt expired' ||
-      response?.message === 'jwt malformed'
-    ) {
-      localStorage.removeItem('token');
     } else {
       console.info(response?.message);
     }

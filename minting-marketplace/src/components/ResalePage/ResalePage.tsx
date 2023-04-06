@@ -18,8 +18,6 @@ const ResalePage: React.FC = () => {
   const { resales } = useSelector((store) => store.resalesStore);
   const { primaryColor } = useSelector((store) => store.colorStore);
 
-  const _locTok: string = localStorage.token;
-
   const clearFilter = () => {
     setBlockchain(null);
     setClick(null);
@@ -41,10 +39,7 @@ const ResalePage: React.FC = () => {
   }, [blockchain, category, dispatch]);
 
   useEffect(() => {
-    const params = {
-      xTok: _locTok
-    };
-
+    const params = {};
     dispatch({ type: 'GET_RESALES_LIST_START', params: params });
   }, [_locTok, dispatch]);
 

@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { IPersonalProfileFavoritesTab } from './myFavorites.types';
 
 import { TDocData } from '../../../../axios.responseTypes';
+import { RootState } from '../../../../ducks';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import LoadingComponent from '../../../common/LoadingComponent';
 
 import MyfavoriteItem from './MyfavoriteItem/MyfavoriteItem';
@@ -14,14 +17,17 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
   const [myFavoriteItems, setMyFavoriteItems] = useState<TDocData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+
   const getFavotiteData = useCallback(async () => {
     setLoading(true);
     try {
       await axios
         .get('/api/v2/favorites', {
           headers: {
-            'Content-Type': 'application/json',
-            'x-rair-token': localStorage.token
+            'Content-Type': 'application/json'
           }
         })
         .then(({ data }) => {
@@ -35,14 +41,13 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
   }, []);
 
   const removeFavotite = async (currentLikeToken) => {
-    if (localStorage.token) {
+    if (currentUserAddress) {
       if (currentLikeToken) {
         try {
           await axios
             .delete(`/api/v2/favorites/${currentLikeToken}`, {
               headers: {
-                'Content-Type': 'application/json',
-                'x-rair-token': localStorage.token
+                'Content-Type': 'application/json'
               }
             })
             .then((res) => {
