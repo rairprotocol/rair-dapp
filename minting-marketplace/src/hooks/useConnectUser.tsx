@@ -133,6 +133,7 @@ const useConnectUser = () => {
       );
       if (success && user) {
         setUserData(user);
+        dispatch(setChainId(window.ethereum.chainId?.toLowerCase()));
         dispatch(setUserAddress(user.publicAddress));
         dispatch(getUserComplete(user));
         dispatch(setAdminRights(user.adminRights));
