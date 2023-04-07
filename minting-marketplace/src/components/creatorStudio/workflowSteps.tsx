@@ -92,7 +92,8 @@ const WorkflowSteps: React.FC = () => {
         classic: true,
         diamond: true,
         shortName: 'Ranges',
-        hasAdvancedFeatures: true
+        hasAdvancedFeatures: true,
+        external: false
       },
       {
         path: 'locks',
@@ -102,7 +103,8 @@ const WorkflowSteps: React.FC = () => {
         classic: true,
         diamond: false,
         shortName: 'Locks',
-        hasAdvancedFeatures: true
+        hasAdvancedFeatures: true,
+        external: false
       },
       {
         path: 'customizeFees',
@@ -112,7 +114,8 @@ const WorkflowSteps: React.FC = () => {
         classic: true,
         diamond: false,
         shortName: 'Custom Fees',
-        hasAdvancedFeatures: true
+        hasAdvancedFeatures: true,
+        external: false
       },
       {
         path: 'minterMarketplace',
@@ -122,7 +125,8 @@ const WorkflowSteps: React.FC = () => {
         classic: false,
         diamond: true,
         shortName: 'Offers',
-        hasAdvancedFeatures: true
+        hasAdvancedFeatures: true,
+        external: false
       },
       {
         path: 'resaleMarketplace',
@@ -132,7 +136,8 @@ const WorkflowSteps: React.FC = () => {
         classic: true,
         diamond: true,
         shortName: 'Resale Setup',
-        hasAdvancedFeatures: true
+        hasAdvancedFeatures: true,
+        external: false
       },
       {
         path: 'metadata/batch',
@@ -142,7 +147,8 @@ const WorkflowSteps: React.FC = () => {
         classic: true,
         diamond: true,
         shortName: 'Batch Metadata',
-        hasAdvancedFeatures: true
+        hasAdvancedFeatures: true,
+        external: false
       },
       {
         path: 'metadata/single',
@@ -152,7 +158,8 @@ const WorkflowSteps: React.FC = () => {
         classic: true,
         diamond: true,
         shortName: 'Single Metadata',
-        hasAdvancedFeatures: true
+        hasAdvancedFeatures: true,
+        external: false
       },
       {
         path: 'media',
@@ -162,9 +169,13 @@ const WorkflowSteps: React.FC = () => {
         classic: true,
         diamond: true,
         shortName: 'Media Files',
-        hasAdvancedFeatures: false
+        hasAdvancedFeatures: false,
+        external: true
       }
     ];
+    if (contractData.external) {
+      filteredSteps = filteredSteps.filter((step) => step.external);
+    }
     if (simpleMode) {
       filteredSteps = filteredSteps.filter((step) => step.simple);
     }
@@ -182,6 +193,12 @@ const WorkflowSteps: React.FC = () => {
     simpleMode,
     blockchain
   ]);
+
+  useEffect(() => {
+    if (contractData?.external && steps.length) {
+      navigate(steps[0].path);
+    }
+  }, [contractData, steps, navigate]);
 
   const onMyChain =
     contractData &&
@@ -319,6 +336,7 @@ const WorkflowSteps: React.FC = () => {
     if (
       contractData &&
       contractData.instance &&
+      !contractData.external &&
       currentChain === contractData.blockchain
     ) {
       (async () => {
@@ -443,50 +461,55 @@ const WorkflowSteps: React.FC = () => {
                     </div>
                   )}
                   <h4>{contractData?.title}</h4>
-                  <small>{contractData?.product?.name}</small>
+                  {!contractData?.external && (
+                    <small>{contractData?.product?.name}</small>
+                  )}
                   <div className="w-75 mx-auto px-auto text-center mb-5">
-                    {steps.map((item, index) => {
-                      return (
-                        <NavLink
-                          to={item.populatedPath}
-                          key={index}
-                          className="d-inline-block"
-                          style={{
-                            width: `${
-                              (100 / steps.length) * (index === 0 ? 0.09 : 1)
-                            }%`,
-                            height: '3px',
-                            position: 'relative',
-                            textAlign: 'right',
-                            backgroundColor: `var(--${
-                              currentStep >= index ? 'bubblegum' : `charcoal-80`
-                            })`
-                          }}>
-                          <div
+                    {steps.length > 1 &&
+                      steps.map((item, index) => {
+                        return (
+                          <NavLink
+                            to={item.populatedPath}
+                            key={index}
+                            className="d-inline-block"
                             style={{
-                              position: 'absolute',
-                              right: 0,
-                              top: '-10px',
-                              borderRadius: '50%',
-                              background: `var(--${
+                              width: `${
+                                (100 / steps.length) * (index === 0 ? 0.09 : 1)
+                              }%`,
+                              height: '3px',
+                              position: 'relative',
+                              textAlign: 'right',
+                              backgroundColor: `var(--${
                                 currentStep >= index
                                   ? 'bubblegum'
-                                  : primaryColor
-                              })`,
-                              height: '1.7rem',
-                              width: '1.7rem',
-                              margin: 'auto',
-                              border: 'solid 1px var(--charcoal-60)',
-                              textAlign: 'center',
-                              color: currentStep >= index ? undefined : 'gray'
+                                  : `charcoal-80`
+                              })`
                             }}>
-                            <div className="rair-abbr" id={item.shortName}>
-                              {index + 1}
+                            <div
+                              style={{
+                                position: 'absolute',
+                                right: 0,
+                                top: '-10px',
+                                borderRadius: '50%',
+                                background: `var(--${
+                                  currentStep >= index
+                                    ? 'bubblegum'
+                                    : primaryColor
+                                })`,
+                                height: '1.7rem',
+                                width: '1.7rem',
+                                margin: 'auto',
+                                border: 'solid 1px var(--charcoal-60)',
+                                textAlign: 'center',
+                                color: currentStep >= index ? undefined : 'gray'
+                              }}>
+                              <div className="rair-abbr" id={item.shortName}>
+                                {index + 1}
+                              </div>
                             </div>
-                          </div>
-                        </NavLink>
-                      );
-                    })}
+                          </NavLink>
+                        );
+                      })}
                   </div>
                   {steps?.at(currentStep)?.hasAdvancedFeatures && (
                     <div
