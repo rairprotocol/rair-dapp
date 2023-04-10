@@ -213,7 +213,7 @@ module.exports = () => {
           pageNum = '1',
           itemsPerPage = '20',
           blockchain = '',
-          category = '',
+          category = [],
           userAddress = '',
           contractAddress = '',
         } = req.query;
@@ -226,9 +226,11 @@ module.exports = () => {
           searchQuery.authorPublicAddress = userAddress;
         }
 
-        const foundCategory = await Category.findOne({ name: category });
-        if (foundCategory) {
-          searchQuery.category = foundCategory._id;
+        if (category.length) {
+          const foundCategory = await Category.find({ _id: { $in: category } });
+          if (foundCategory) {
+            searchQuery.category = { $in: category };
+          }
         }
 
         const foundBlockchain = await Blockchain.findOne({ hash: blockchain });

@@ -218,6 +218,7 @@ export type TSteps = {
   populatedPath: string;
   shortName: string;
   simple: boolean;
+  external: boolean;
 };
 
 export type TMediaType = {

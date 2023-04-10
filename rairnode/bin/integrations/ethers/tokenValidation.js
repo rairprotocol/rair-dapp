@@ -1,16 +1,15 @@
-const { JsonRpcProvider, Network } = require('ethers');
-const ethers = require('ethers');
+const { JsonRpcProvider, Network, Contract } = require('ethers');
 const log = require('../../utils/logger')(module);
-const RAIR_ERC721Abi = require('./contracts/RAIR_ERC721.json').abi;
+const rair721Abi = require('./contracts/RAIR_ERC721.json').abi;
 
 const config = require('../../config');
 
-let maticTestnet = new Network('Matic Testnet', 0x13881);
-let maticMainnet = new Network('Matic Mainnet', 0x89);
-let binanceTestnet = new Network('Binance Testnet', 0x61);
-let binanceMainnet = new Network('Binance Mainnet', 0x38);
-let ethereumGoerli = new Network('Ethereum Goerli', 0x5);
-let ethereumMainnet = new Network('Ethereum Mainnet', 0x1);
+const maticTestnet = new Network('Matic Testnet', 0x13881);
+const maticMainnet = new Network('Matic Mainnet', 0x89);
+const binanceTestnet = new Network('Binance Testnet', 0x61);
+const binanceMainnet = new Network('Binance Mainnet', 0x38);
+const ethereumGoerli = new Network('Ethereum Goerli', 0x5);
+const ethereumMainnet = new Network('Ethereum Mainnet', 0x1);
 
 const v6Networks = {
   '0x13881': maticTestnet,
@@ -25,7 +24,7 @@ const v6Networks = {
   ethereum: ethereumMainnet,
   '0x5': ethereumGoerli,
   goerli: ethereumGoerli,
-}
+};
 
 const endpoints = {
   '0x13881': process.env.MATIC_TESTNET_RPC,
@@ -50,7 +49,7 @@ const endpoints = {
  * @param  {string} productId           Product ID within the contract
  * @param  {string} offerRangeStart     Start of the range to look for
  * @param  {string} offerRangeEnd       End of the range to look for
- * @return {boolean}               			Returns true if the account has at least one of the given token
+ * @return {boolean}                    Returns true if the account has at least one token
  */
 async function checkBalanceProduct(
   accountAddress,
@@ -58,31 +57,30 @@ async function checkBalanceProduct(
   contractAddress,
   productId,
   offerRangeStart,
-  offerRangeEnd
+  offerRangeEnd,
 ) {
   // Static RPC Providers are used because the chain ID *WILL NOT* change,
-  //		doing this we save calls to the blockchain to verify Chain ID
+  //    doing this we save calls to the blockchain to verify Chain ID
   try {
-    let provider = new ethers.providers.StaticJsonRpcProvider(
-      endpoints[blockchain]
+    const provider = new JsonRpcProvider(
+      endpoints[blockchain],
     );
-    const tokenInstance = new ethers.Contract(
+    const tokenInstance = new Contract(
       contractAddress,
-      RAIR_ERC721Abi,
-      provider
+      rair721Abi,
+      provider,
     );
     const result = await tokenInstance.hasTokenInProduct(
       accountAddress,
       productId,
       offerRangeStart,
-      offerRangeEnd
+      offerRangeEnd,
     );
-    delete provider;
     return result;
   } catch (error) {
     log.error(
       'Error querying a range of NFTs on RPC: ',
-      endpoints[blockchain]
+      endpoints[blockchain],
     );
     log.error(error);
   }
@@ -94,33 +92,32 @@ async function checkBalanceProduct(
  * @param  {string} accountAddress      Account to check balance of
  * @param  {string} blockchain          Endpoint where Infura gets connected
  * @param  {string} contractAddress     Address of RAIR ERC721 contract
- * @param  {string} tokenId 			      Token to look for
- * @return {boolean}                		Returns true if the account owns the token
+ * @param  {string} tokenId             Token to look for
+ * @return {boolean}                    Returns true if the account owns the token
  */
 async function checkBalanceSingle(
   accountAddress,
   blockchain,
   contractAddress,
-  tokenId
+  tokenId,
 ) {
   // Static RPC Providers are used because the chain ID *WILL NOT* change,
-  //		doing this we save calls to the blockchain to verify Chain ID
+  //   doing this we save calls to the blockchain to verify Chain ID
   try {
-    let provider = new ethers.providers.StaticJsonRpcProvider(
-      endpoints[blockchain]
+    const provider = new JsonRpcProvider(
+      endpoints[blockchain],
     );
-    const tokenInstance = new ethers.Contract(
+    const tokenInstance = new Contract(
       contractAddress,
-      RAIR_ERC721Abi,
-      provider
+      rair721Abi,
+      provider,
     );
     const result = await tokenInstance.ownerOf(tokenId);
-    delete provider;
     return result.toLowerCase() === accountAddress;
   } catch (error) {
     console.error(
       'Error querying a single NFT on RPC: ',
-      endpoints[blockchain]
+      endpoints[blockchain],
     );
     log.error(error);
   }
@@ -129,15 +126,14 @@ async function checkBalanceSingle(
 
 const checkBalanceAny = async (userAddress, chain, contractAddress) => {
   try {
-    let provider = new JsonRpcProvider(
+    const provider = new JsonRpcProvider(
       endpoints[chain], v6Networks[chain], {
-        staticNetwork: v6Networks[chain]
-      }
-    );
-    const tokenInstance = new ethers.Contract(
+        staticNetwork: v6Networks[chain],
+      });
+    const tokenInstance = new Contract(
       contractAddress,
-      RAIR_ERC721Abi,
-      provider
+      rair721Abi,
+      provider,
     );
     const result = await tokenInstance.balanceOf(userAddress);
     return result > 0;
@@ -146,15 +142,15 @@ const checkBalanceAny = async (userAddress, chain, contractAddress) => {
     log.error(err);
     return false;
   }
-}
+};
 
 async function checkAdminTokenOwns(accountAddress) {
-  return await checkBalanceAny(accountAddress, config.admin.network, config.admin.contract);
+  return checkBalanceAny(accountAddress, config.admin.network, config.admin.contract);
 }
 
 module.exports = {
   checkBalanceProduct,
   checkBalanceSingle,
   checkAdminTokenOwns,
-  checkBalanceAny
+  checkBalanceAny,
 };
