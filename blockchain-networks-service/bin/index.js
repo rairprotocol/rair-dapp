@@ -5,28 +5,34 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const log = require('./utils/logger')(module);
 const redis = require('redis');
 const morgan = require('morgan');
 const _ = require('lodash');
 const { MongoClient } = require('mongodb');
+const log = require('./utils/logger')(module);
 require('dotenv').config();
 const { getMongoConnectionStringURI } = require('./shared_backend_code_generated/mongo/mongoUtils');
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
 const {
   appSecretManager,
-  vaultAppRoleTokenManager
+  vaultAppRoleTokenManager,
 } = require('./vault');
 
 const config = require('./config');
 const redisService = require('./services/redis');
 
 async function main() {
-  const connectionString = await getMongoConnectionStringURI({appSecretManager});
+  const connectionString = await getMongoConnectionStringURI({ appSecretManager });
 
   console.log('mongo connection string index', connectionString);
 
-  const _mongoose = await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
+  const _mongoose = await mongoose.connect(
+    connectionString,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+  )
     .then((c) => {
       if (process.env.PRODUCTION === 'true') {
         log.info('DB Connected!');
@@ -37,7 +43,7 @@ async function main() {
     })
     .catch((e) => {
       log.error('DB Not Connected!');
-      log.error(`Reason: ${ e.message }`);
+      log.error(`Reason: ${e.message}`);
     });
 
   const app = express();
@@ -69,7 +75,7 @@ async function main() {
       Transaction: _mongoose.model('Transaction', require('./models/transaction.js'), 'Transaction'),
       PastAddress: _mongoose.model('PastAddress', require('./models/pastAddress.js'), 'PastAddress'),
       ResaleTokenOffer: _mongoose.model('ResaleTokenOffer', require('./models/resaleTokenOffer.js'), 'ResaleTokenOffer'),
-      CustomRoyaltiesSet: _mongoose.model('CustomRoyaltiesSet', require('./models/customRoyaltiesSet.js'), 'CustomRoyaltiesSet')
+      CustomRoyaltiesSet: _mongoose.model('CustomRoyaltiesSet', require('./models/customRoyaltiesSet.js'), 'CustomRoyaltiesSet'),
     },
     mongo: _db,
     config,
@@ -100,12 +106,11 @@ async function main() {
   });
 
   app.listen(port, () => {
-    log.info(`Blockchain networks service listening at http://localhost:${ port }`);
+    log.info(`Blockchain networks service listening at http://localhost:${port}`);
   });
 }
 
 (async () => {
-
   // Login with vault app role creds first
   await vaultAppRoleTokenManager.initialLogin();
 
@@ -113,12 +118,12 @@ async function main() {
   await appSecretManager.getAppSecrets({
     vaultToken: vaultAppRoleTokenManager.getToken(),
     listOfSecretsToFetch: [
-      mongoConfig.VAULT_MONGO_x509_SECRET_KEY
-    ]
+      mongoConfig.VAULT_MONGO_x509_SECRET_KEY,
+    ],
   });
 
   await main();
-})().catch(e => {
+})().catch((e) => {
   log.error(e);
   process.exit();
 });

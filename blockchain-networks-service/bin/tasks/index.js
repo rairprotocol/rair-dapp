@@ -2,14 +2,15 @@ const Agenda = require('agenda');
 const moment = require('moment-timezone');
 const log = require('../utils/logger')(module);
 const { AgendaTaskEnum } = require('../enums/agenda-task');
+const { Task, Versioning } = require('../models');
 
 module.exports = async (context) => {
   const db = context.mongo;
 
   // remove all old sync and sync-contracts tasks
-  await context.db.Task.deleteMany();
+  await Task.deleteMany();
   // Mark all sync task as Not Running
-  await context.db.Versioning.updateMany({}, { $set: { running: false } });
+  await Versioning.updateMany({}, { $set: { running: false } });
 
   // Start a new instance of agenda
   const agenda = new Agenda({
@@ -33,7 +34,13 @@ module.exports = async (context) => {
       await agenda
         .create('system remove processed tasks')
         .repeatEvery('1 days')
-        .schedule(moment().utc().add(1, 'days').startOf('day').toDate())
+        .schedule(
+          moment()
+            .utc()
+            .add(1, 'days')
+            .startOf('day')
+            .toDate(),
+        )
         .save();
     }
 
