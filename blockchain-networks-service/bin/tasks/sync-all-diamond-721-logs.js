@@ -1,13 +1,15 @@
-const Moralis = require('moralis/node');
+/* eslint-disable no-continue */
+/* eslint-disable no-restricted-syntax */
+const { BigNumber } = require('ethers');
 const log = require('../utils/logger')(module);
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { AgendaTaskEnum } = require('../enums/agenda-task');
 const {
-  processLog,
   wasteTime,
   getTransactionHistory,
-} = require('../utils/logUtils.js');
-const { BigNumber } = require('ethers');
+  getLatestBlock,
+} = require('../utils/logUtils');
+const { Contract, Versioning, Transaction } = require('../models');
 
 const lockLifetime = 1000 * 60 * 5;
 
@@ -29,7 +31,7 @@ module.exports = (context) => {
         const { network } = task.attrs.data;
 
         // Find all diamond contracts from this blockchain
-        let contractsToQuery = await context.db.Contract.find({
+        const contractsToQuery = await Contract.find({
           blockchain: network,
           diamond: true,
           external: { $ne: true },
@@ -43,32 +45,17 @@ module.exports = (context) => {
           return done();
         }
 
-        // Get network data using the task's blockchain hash
-        // This includes minter address and factory address
-        const networkData = context.config.blockchain.networks[network];
-
         // TODO Implement blacklisted contracts
         // Find contracts that shouldn't be synced
-        //let forbiddenContracts = await context.db.SyncRestriction.find({blockchain: network});
-        //forbiddenContracts = forbiddenContracts.map(contract => contract.contractAddress.toLowerCase());
-
-        // Fetch Moralis auth data
-        const { serverUrl, appId, masterKey } =
-          context.config.blockchain.moralis[
-            networkData.testnet ? 'testnet' : 'mainnet'
-          ];
-
-        // Initialize moralis instances
-        Moralis.start({ serverUrl, appId, masterKey });
 
         // Get last block parsed from the Versioning collection
-        let version = await context.db.Versioning.findOne({
+        let version = await Versioning.findOne({
           name: AgendaTaskEnum.SyncAllDiamond721Events,
           network,
         });
 
         if (version === null) {
-          version = await new context.db.Versioning({
+          version = await new Versioning({
             name: AgendaTaskEnum.SyncAllDiamond721Events,
             network,
             number: 0,
@@ -76,49 +63,55 @@ module.exports = (context) => {
         }
 
         /*
-				Collection Name 	Description
-				------------------------------------------------
-				'Contract',			Already synced before this
-				'File', 			No need to sync
-				'User', 			No need to sync
-				'Product', 			Sync from Diamond ERC721 (This file)
-				'OfferPool', 		Does not exist in diamonds
-				'Offer', 			Sync from Diamond ERC721 (This file)
-				'MintedToken', 		Sync from Minter Marketplace
-				'LockedTokens', 	Sync from Diamond ERC721 (This file)
-				'Versioning',		No need to Sync
-				'Task',				No need to Sync
-				'SyncRestriction',	No need to Sync
-				'Transaction'		Syncs on every file
-			*/
+        Collection Name   Description
+        ------------------------------------------------
+        'Contract',         Already synced before this
+        'File',             No need to sync
+        'User',             No need to sync
+        'Product',          Sync from Diamond ERC721 (This file)
+        'OfferPool',        Does not exist in diamonds
+        'Offer',            Sync from Diamond ERC721 (This file)
+        'MintedToken',      Sync from Minter Marketplace
+        'LockedTokens',     Sync from Diamond ERC721 (This file)
+        'Versioning',       No need to Sync
+        'Task',             No need to Sync
+        'SyncRestriction',  No need to Sync
+        'Transaction'       Syncs on every file
+        */
 
         // Keep track of the latest block number processed
-        let lastSuccessfullBlock = version.number;
-        let transactionArray = [];
+        const lastSuccessfullBlock = version.number;
+        const transactionArray = [];
 
-        let insertions = {};
+        const latestBlock = await getLatestBlock(network);
 
-        for await (let contract of contractsToQuery) {
-          // To avoid rate limiting errors on Moralis I wait X seconds to parse data
+        const insertions = {};
+
+        for await (const contract of contractsToQuery) {
+          // To avoid rate limiting errors on Alchemy I wait X seconds to parse data
           await wasteTime(7000);
 
           if (!contract.lastSyncedBlock) {
             contract.lastSyncedBlock = 0;
           }
+          if (latestBlock < contract.lastSyncedBlock) {
+            log.error(`ERROR: Contract ${contract.contractAddress}'s latest block is ${contract.lastSyncedBlock} but the last mined block from ${network} is ${latestBlock}, the contract's last synced block will be reset to 0, expect a lot of duplicate transaction messages!`);
+            contract.lastSyncedBlock = 0;
+          }
 
           let lastSuccessfullBlock = contract.lastSyncedBlock;
 
-          let processedResult = await getTransactionHistory(
+          const processedResult = await getTransactionHistory(
             contract.contractAddress,
             network,
             contract.lastSyncedBlock,
           );
 
-          for await (let [event] of processedResult) {
+          for await (const [event] of processedResult) {
             if (!event) {
               continue;
             }
-            let filteredTransaction = await context.db.Transaction.findOne({
+            const filteredTransaction = await Transaction.findOne({
               _id: event.transactionHash,
               blockchainId: network,
               processed: true,
@@ -132,62 +125,61 @@ module.exports = (context) => {
               log.info(
                 `Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${contract}`,
               );
-            } else {
-              if (event && event.operation) {
-                // If the log is already on DB, update the address list
-                if (filteredTransaction) {
-                  filteredTransaction.toAddress.push(contract);
-                  await filteredTransaction.save();
-                } else if (!transactionArray.includes(event.transactionHash)) {
-                  // Otherwise, push it into the insertion list
-                  transactionArray.push(event.transactionHash);
-                  // And create a DB entry right away
-                  try {
-                    await new context.db.Transaction({
-                      _id: event.transactionHash,
-                      toAddress: contract.contractAddress,
-                      processed: true,
-                      blockchainId: network,
-                    }).save();
-                  } catch (error) {
-                    log.error(
-                      `There was an issue saving transaction ${event.transactionHash} for contract ${contract.contractAddress}: ${error}`,
-                    );
-                    continue;
-                  }
-                }
-
-                // Try to do the insertions
+            } else if (event && event.operation) {
+              // If the log is already on DB, update the address list
+              if (filteredTransaction) {
+                filteredTransaction.toAddress.push(contract);
+                await filteredTransaction.save();
+              } else if (!transactionArray.includes(event.transactionHash)) {
+                // Otherwise, push it into the insertion list
+                transactionArray.push(event.transactionHash);
+                // And create a DB entry right away
                 try {
-                  let documentToInsert = await event.operation(
-                    context.db,
-                    network,
-                    // Make up a transaction data, the logs don't include it
-                    {
-                      transactionHash: event.transactionHash,
-                      to: contract.contractAddress,
-                      blockNumber: event.blockNumber,
-                    },
-                    true,
-                    ...event.arguments,
+                  await new Transaction({
+                    _id: event.transactionHash,
+                    toAddress: contract.contractAddress,
+                    processed: true,
+                    blockchainId: network,
+                  }).save();
+                } catch (error) {
+                  log.error(
+                    `There was an issue saving transaction ${event.transactionHash} for contract ${contract.contractAddress}: ${error}`,
                   );
-                  // This used to be for an optimized batch insertion, now it's just for logging
-                  if (insertions[event.eventSignature] === undefined) {
-                    insertions[event.eventSignature] = [];
-                  }
-                  insertions[event.eventSignature].push(documentToInsert);
-                } catch (err) {
-                  console.error('An error has ocurred!', event, err);
                   continue;
                 }
               }
+
+              // Try to do the insertions
+              try {
+                const documentToInsert = await event.operation(
+                  context.db,
+                  network,
+                  // Make up a transaction data, the logs don't include it
+                  {
+                    transactionHash: event.transactionHash,
+                    to: contract.contractAddress,
+                    blockNumber: event.blockNumber,
+                  },
+                  true,
+                  ...event.arguments,
+                );
+                  // This used to be for an optimized batch insertion, now it's just for logging
+                if (insertions[event.eventSignature] === undefined) {
+                  insertions[event.eventSignature] = [];
+                }
+                insertions[event.eventSignature].push(documentToInsert);
+              } catch (err) {
+                console.error('An error has ocurred!', event, err);
+                continue;
+              }
             }
+
             // Update the latest successfull block
             if (lastSuccessfullBlock <= event.blockNumber) {
               lastSuccessfullBlock = event.blockNumber;
             }
           }
-          // Add 1 to the last successful block so the next query to Moralis excludes it
+          // Add 1 to the last successful block so the next query to Alchemy excludes it
           // Because the last successfull block was already processed here
           // But validate that the last parsed block is different from the current one,
           // Otherwise it will keep increasing and could ignore events
@@ -197,7 +189,7 @@ module.exports = (context) => {
             await contract.save();
           }
         }
-        for await (let sig of Object.keys(insertions)) {
+        for await (const sig of Object.keys(insertions)) {
           if (insertions[sig]?.length > 0) {
             log.info(
               `[${network}] Inserted ${insertions[sig]?.length} documents for ${sig}`,

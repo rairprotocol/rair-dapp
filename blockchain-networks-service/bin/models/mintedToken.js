@@ -52,7 +52,25 @@ const MintedToken = new Schema(
 );
 MintedToken.statics = {
   async textSearch(searchQuery, projection, limit, page) {
-    return this.find(searchQuery, projection)
+    return this.aggregate([
+      { $match: searchQuery },
+      // Filter hidden contracts
+      {
+        $lookup: {
+          from: 'Contract',
+          localField: 'contract',
+          foreignField: '_id',
+          as: 'contractData',
+        },
+      },
+      { $unwind: { path: '$contractData' } },
+      {
+        $match: {
+          'contractData.blockView': false,
+        },
+      },
+      { $project: projection },
+    ])
       .limit(limit)
       .skip(limit * (page - 1));
   },

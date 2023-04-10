@@ -1,15 +1,17 @@
 const {
   PRODUCTION,
-  TEST_BSCSCAN_GATEWAY,
+  // TEST_BSCSCAN_GATEWAY,
   TEST_POLYGONSCAN_GATEWAY,
   TEST_ETHERSCAN_GATEWAY,
-  BSCSCAN_GATEWAY,
+  // BSCSCAN_GATEWAY,
   POLYGONSCAN_GATEWAY,
   ETHERSCAN_GATEWAY,
+  /*
   BINANCE_TESTNET_FACTORY_ADDRESS,
   BINANCE_TESTNET_MINTER_ADDRESS,
   BINANCE_MAINNET_FACTORY_ADDRESS,
   BINANCE_MAINNET_MINTER_ADDRESS,
+  */
   GOERLI_FACTORY_ADDRESS,
   GOERLI_MINTER_ADDRESS,
   MATIC_MUMBAI_FACTORY_ADDRESS,
@@ -18,10 +20,12 @@ const {
   MATIC_MAINNET_MINTER_ADDRESS,
   ETHEREUM_MAINNET_FACTORY_ADDRESS,
   ETHEREUM_MAINNET_MINTER_ADDRESS,
+  /*
   BINANCE_TESTNET_DIAMOND_FACTORY_ADDRESS,
   BINANCE_TESTNET_DIAMOND_MARKETPLACE_ADDRESS,
   BINANCE_MAINNET_DIAMOND_FACTORY_ADDRESS,
   BINANCE_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
+  */
   ETHEREUM_DIAMOND_FACTORY_ADDRESS,
   ETHEREUM_DIAMOND_MARKETPLACE_ADDRESS,
   GOERLI_DIAMOND_FACTORY_ADDRESS,
@@ -31,12 +35,6 @@ const {
   MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
   MATIC_MUMBAI_DIAMOND_FACTORY_ADDRESS,
   MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS,
-  MORALIS_SERVER_TEST,
-  MORALIS_SERVER_MAIN,
-  MORALIS_API_KEY_TEST,
-  MORALIS_API_KEY_MAIN,
-  MORALIS_MASTER_KEY_TEST,
-  MORALIS_MASTER_KEY_MAIN,
   SENTRY_DSN,
   BASE_RAIRNODE_URL,
   LOG_LEVEL,
@@ -64,6 +62,8 @@ module.exports = {
         name: 'Matic Mumbai Testnet',
         testnet: true,
       },
+      // Removed when Alchemy was implemented, they do not support Binance
+      /*
       '0x38': {
         authenticityHost: BSCSCAN_GATEWAY,
         factoryAddress: BINANCE_MAINNET_FACTORY_ADDRESS,
@@ -94,6 +94,7 @@ module.exports = {
         name: 'Binance Testnet',
         testnet: true,
       },
+      */
       '0x1': {
         authenticityHost: ETHERSCAN_GATEWAY,
         factoryAddress: ETHEREUM_MAINNET_FACTORY_ADDRESS,
@@ -138,18 +139,6 @@ module.exports = {
         network: '0x89',
         name: 'Matic Mainnet',
         testnet: false,
-      },
-    },
-    moralis: {
-      mainnet: {
-        serverUrl: MORALIS_SERVER_MAIN,
-        appId: MORALIS_API_KEY_MAIN,
-        masterKey: MORALIS_MASTER_KEY_MAIN,
-      },
-      testnet: {
-        serverUrl: MORALIS_SERVER_TEST,
-        appId: MORALIS_API_KEY_TEST,
-        masterKey: MORALIS_MASTER_KEY_TEST,
       },
     },
   },

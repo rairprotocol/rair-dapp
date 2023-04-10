@@ -46,10 +46,6 @@ services:
       VAULT_URL: ${VAULT_URL}
       VAULT_RAIRNODE_APP_ROLE_ID: ${VAULT_RAIRNODE_APP_ROLE_ID}
       VAULT_RAIRNODE_APP_ROLE_SECRET_ID: ${VAULT_RAIRNODE_APP_ROLE_SECRET_ID}
-      MORALIS_SERVER_TEST: ${moralis_server_test}
-      MORALIS_SERVER_MAIN: ${moralis_server_main}
-      MORALIS_API_KEY_TEST: ${moralis_api_key_test}
-      MORALIS_API_KEY_MAIN: ${moralis_api_key_main}
       REDIS_HOST: ${redisthhost}
       REDIS_PORT: ${redisport}
       SESSION_SECRET: ${session_secret}
@@ -59,6 +55,7 @@ services:
       ZOOM_API_KEY: ${zoom_api_key}
       ZOOM_API_SECRET: ${zoom_api_secret}
       KOHLER_MEETING_ID: ${kohler_meeting_id}
+      ALCHEMY_API_KEY: ${alchemy_api_key}
     ports:
       - 3000:3000
       - 5000:5000
@@ -125,15 +122,10 @@ services:
       POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
       ETHERSCAN_GATEWAY: ${etherscan_gateway}
       BSCSCAN_GATEWAY: ${bscscan_gateway}
-      MORALIS_SERVER_TEST: ${moralis_server_test}
-      MORALIS_SERVER_MAIN: ${moralis_server_main}
-      MORALIS_API_KEY_TEST: ${moralis_api_key_test}
-      MORALIS_API_KEY_MAIN: ${moralis_api_key_main}
-      MORALIS_MASTER_KEY_TEST: ${moralis_master_key_test}
-      MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
       SENTRY_DSN: ${sentry_dsn}
       REDIS_HOST: ${redisthhost}
       REDIS_PORT: ${redisport}
+      ALCHEMY_API_KEY: ${alchemy_api_key}
     ports:
       - 5001:5001
     depends_on:

@@ -1,17 +1,11 @@
 /* eslint-disable no-param-reassign */
 const ethers = require('ethers');
-const Moralis = require('moralis/node');
-const endpoints = require('../../config/blockchainEndpoints');
+const { Transaction } = require('../../models');
+const { getAlchemy } = require('../../utils/alchemySdk');
 const log = require('../../utils/logger')(module);
 const { masterMapping, insertionMapping } = require('../../utils/eventCatcherMapping');
 
 const { providersMapping } = require('../../utils/speedyNodeProviders');
-
-// Move this to a config file
-Moralis.start({
-  serverUrl: process.env.MORALIS_SERVER_TEST,
-  appId: process.env.MORALIS_API_KEY_TEST,
-});
 
 const getTransaction = async (
   network,
@@ -21,7 +15,7 @@ const getTransaction = async (
 ) => {
   try {
     // Validate that the processed transaction doesn't exist already in the database
-    const existingTransaction = await dbModels.Transaction.findOne({
+    const existingTransaction = await Transaction.findOne({
       _id: transactionHash,
     });
     if (existingTransaction !== null) {
@@ -36,40 +30,33 @@ const getTransaction = async (
     }).save();
 
     log.info(
-      `Querying hash ${transactionHash} on ${network} using ${endpoints[network]}`,
+      `Querying hash ${transactionHash} on ${network} using Alchemy!`,
     );
 
     // Default values in case the Moralis SDK query works
     let transactionReceipt;
-    let fromAddressLabel = 'from_address';
-    let toAddressLabel = 'to_address';
+    const fromAddressLabel = 'from';
+    const toAddressLabel = 'to';
     // let logIndexLabel = 'log_index';
-    let transactionHashLabel = 'hash';
+    const transactionHashLabel = 'transactionHash';
 
-    // Retreive data from Moralis SDK (Cheaper than speedy nodes (Feb 2022))
-    const options = {
-      chain: network,
-      transaction_hash: transactionHash,
-    };
     try {
       // Catch any error if the SDK fails
-      transactionReceipt = await Moralis.Web3API.native.getTransaction(options);
+      const AlchemySDK = getAlchemy(network);
+      transactionReceipt = await AlchemySDK.core.getTransactionReceipt(transactionHash);
     } catch (err) {
       log.error(err);
     }
 
     if (!transactionReceipt) {
       log.error(
-        `Validation failed for tx ${transactionHash}, couldn't get a response from Moralis`,
+        `Validation failed for tx ${transactionHash}, couldn't get a response from Alchemy`,
       );
       transactionReceipt = await providersMapping[
         network
       ].provider.getTransactionReceipt(transactionHash);
       // Values to get the data in the ethers.js format
-      fromAddressLabel = 'from';
-      toAddressLabel = 'to';
       // logIndexLabel = 'logIndex';
-      transactionHashLabel = 'transactionHash';
     }
 
     // Check if the Transaction comes from the same user that sent the request

@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const log = require('../utils/logger')(module);
 const moment = require('moment-timezone');
+const log = require('../utils/logger')(module);
 const { AgendaTaskEnum } = require('../enums/agenda-task');
 
 const { SYNC_CONTRACT_REPEAT_EVERY, SYNC_CONTRACT_TASK_INTERVAL } = process.env;
@@ -12,19 +12,17 @@ module.exports = (context) => {
     try {
       await Promise.all(_.chain(context.config.blockchain.networks)
         .values()
-        .filter(i => {
+        .filter((i) => {
           if (process.env.PRODUCTION === 'true') return !i.testnet;
           return true;
         })
-        .forEach((networkData, i) =>
-          context.agenda.create(AgendaTaskEnum.SyncContracts, _.pick(networkData, ['network', 'name']))
-            .repeatEvery(`${ SYNC_CONTRACT_REPEAT_EVERY } minutes`)
-            .schedule(moment()
-              .utc()
-              .add(Number(SYNC_CONTRACT_TASK_INTERVAL) * i, 'minutes')
-              .toDate())
-            .save()
-        )
+        .forEach((networkData, i) => context.agenda.create(AgendaTaskEnum.SyncContracts, _.pick(networkData, ['network', 'name']))
+          .repeatEvery(`${SYNC_CONTRACT_REPEAT_EVERY} minutes`)
+          .schedule(moment()
+            .utc()
+            .add(Number(SYNC_CONTRACT_TASK_INTERVAL) * i, 'minutes')
+            .toDate())
+          .save())
         .value());
 
       return done();

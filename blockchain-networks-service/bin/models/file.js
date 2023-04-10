@@ -11,6 +11,8 @@ const File = new Schema(
     authorPublicAddress: { type: String, required: true },
     title: { type: String, required: true, trim: true },
     description: { type: String },
+    // For Zoom integration
+    meetingId: { type: String },
     // Encryption data
     encryptionType: { type: String, required: true },
     mainManifest: { type: String, required: true },
@@ -30,6 +32,14 @@ const File = new Schema(
     demo: { type: Boolean, default: false },
 
     creationDate: { type: Date, default: Date.now },
+
+    // Analytics
+    views: { type: Number, default: 0, required: false },
+    totalEncryptedFiles: { type: Number, default: 1, required: false },
+
+    // Help for delete functions
+    storage: { type: String, required: false },
+    storagePath: { type: String, required: false },
   },
   { versionKey: false },
 );
@@ -64,7 +74,9 @@ File.statics = {
 
   async search(filter, options = { sortBy: 'title', direction: 1 }) {
     return this.searchFull(filter, options).then((data) => {
-      if (!data.length || data.length === 0) return this.searchPartial(filter, options);
+      if (!data.length || data.length === 0) {
+        return this.searchPartial(filter, options);
+      }
       return data;
     });
   },
