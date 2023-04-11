@@ -55,3 +55,4 @@ data:
   ETHEREUM_TESTNET_GOERLI_RPC: https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b
   REDIS_HOST: rair-redis
   REDIS_PORT: "6379"
+  ALCHEMY_API_KEY: 3YEVFJlp5RIVO3sMttd508xkjP_Faacl
