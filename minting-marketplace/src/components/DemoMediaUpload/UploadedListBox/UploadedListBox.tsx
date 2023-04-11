@@ -178,6 +178,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           getMediaList={getMediaList}
           setEditTitleVideo={setEditTitleVideo}
           editTitleVideo={editTitleVideo}
+          setUploadSuccess={setUploadSuccess}
         />
         {currentContract && (
           <button

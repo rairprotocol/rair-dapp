@@ -121,6 +121,8 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           setEditTitleVideo={setEditTitleVideo}
           editTitleVideo={editTitleVideo}
           newUserStatus={newUserStatus}
+          setUploadSuccess={setUploadSuccess}
+          beforeUpload={true}
         />
         {uploadProgress && currentTitleVideo === item.title ? (
           <button

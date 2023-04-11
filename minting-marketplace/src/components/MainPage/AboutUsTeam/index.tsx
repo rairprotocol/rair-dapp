@@ -54,13 +54,13 @@ export const teamMainPage: TTeamArrayItemType[] = [
       }
     ]
   },
-  {
-    nameTeammate: 'Carston Harbor | SVP Business Development',
-    imageUrl: Carston,
-    aboutTeammate: [
-      `Creating the future of web3 by leveraging extensive knowledge in all sectors of business framework. Experienced background with an emphasis on consumer psychology and product design. Founded multiple successful ventures that have focused heavily on blockchain infrastructure integration into traditional businesses.`
-    ]
-  },
+  // {
+  //   nameTeammate: 'Carston Harbor | SVP Business Development',
+  //   imageUrl: Carston,
+  //   aboutTeammate: [
+  //     `Creating the future of web3 by leveraging extensive knowledge in all sectors of business framework. Experienced background with an emphasis on consumer psychology and product design. Founded multiple successful ventures that have focused heavily on blockchain infrastructure integration into traditional businesses.`
+  //   ]
+  // },
   {
     nameTeammate: 'Martin Casado | Chief Design Officer',
     imageUrl: Martin,
