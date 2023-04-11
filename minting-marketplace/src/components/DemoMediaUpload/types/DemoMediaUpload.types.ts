@@ -65,4 +65,8 @@ export interface IPopUpChangeVideo {
   closeModal: () => void;
   item: any;
   setUploadSuccess: (arg: boolean | null) => void;
+  beforeUpload: boolean | undefined;
+  setMediaList: (arg: TMediaType[]) => void;
+  mediaList: TMediaType[];
+  index: number;
 }
