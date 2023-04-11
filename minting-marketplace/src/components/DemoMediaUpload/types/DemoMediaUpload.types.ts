@@ -14,6 +14,8 @@ export interface IMediaItemChange {
   editTitleVideo: boolean;
   setEditTitleVideo: any;
   newUserStatus?: boolean;
+  setUploadSuccess?: (arg: boolean | null) => void;
+  beforeUpload?: boolean;
 }
 
 export interface IMediaListBox {
@@ -56,4 +58,11 @@ export interface IAnalyticsPopUp {
   fileData?: any;
   setMediaUploadedList?: (arg: any) => void;
   newUserStatus?: boolean;
+}
+
+export interface IPopUpChangeVideo {
+  modalIsOpen: boolean;
+  closeModal: () => void;
+  item: any;
+  setUploadSuccess: (arg: boolean | null) => void;
 }

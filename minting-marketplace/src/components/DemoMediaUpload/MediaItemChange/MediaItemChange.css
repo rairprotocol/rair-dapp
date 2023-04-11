@@ -23,6 +23,11 @@
   background-color: #198754;
 }
 
+.media-item-title .btn.btn-success.rounded-rairo.mx-3.modal-open,
+.mediaItem-group-btn .btn.btn-success.rounded-rairo.modal-open {
+  background-color: #198754;
+}
+
 .media-item-title input {
   width: 15rem;
 }

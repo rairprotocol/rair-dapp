@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
-import { isArray } from 'jquery';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
@@ -326,16 +325,6 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   useEffect(() => {
     closeModal();
   }, [closeModal]);
-
-  // useEffect(() => {
-  //   if (contract) {
-  //     console.info(
-  //       Object.values(mediaList).filter((el) => el.contract === contract),
-  //       'mediaList[contract]'
-  //     );
-  //   }
-  // }, [mediaList, contract]);
-  // console.info(contract, 'contract');
 
   return (
     <>

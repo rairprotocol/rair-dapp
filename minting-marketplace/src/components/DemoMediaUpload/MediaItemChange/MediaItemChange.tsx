@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { MediaItemContainer } from './MediaItem.styled';
@@ -6,6 +6,7 @@ import { MediaItemContainer } from './MediaItem.styled';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { rFetch } from '../../../utils/rFetch';
+import PopUpChangeVideo from '../PopUpChangeVideo/PopUpChangeVideo';
 import { IMediaItemChange } from '../types/DemoMediaUpload.types';
 
 import './MediaItemChange.css';
@@ -22,11 +23,22 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
   getMediaList,
   editTitleVideo,
   setEditTitleVideo,
-  newUserStatus
+  newUserStatus,
+  setUploadSuccess,
+  beforeUpload
 }) => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+
+  const openModal = useCallback(() => {
+    setModalIsOpen(true);
+  }, [setModalIsOpen]);
+
+  const closeModal = useCallback(() => {
+    setModalIsOpen(false);
+  }, [setModalIsOpen]);
 
   const [titleValue, setTitleValue] = useState<string>(item.title);
   const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
@@ -113,17 +125,23 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                   disabled={!newUserStatus}
                   className={`btn btn-success rounded-rairo mx-3 ${
                     primaryColor === 'rhyno' ? 'rhyno' : ''
-                  }`}
+                  } ${modalIsOpen ? 'modal-open' : ''}`}
                   onClick={toggleTitleVideo}>
                   <i className="fas fa-pencil-alt"></i>
                 </button>
               ) : (
                 <button
-                  disabled={uploadSuccess === false}
+                  disabled={uploadSuccess === false && beforeUpload}
                   className={`btn btn-success rounded-rairo mx-3 ${
                     primaryColor === 'rhyno' ? 'rhyno' : ''
-                  }`}
-                  onClick={toggleTitleVideo}>
+                  } ${modalIsOpen ? 'modal-open' : ''}`}
+                  onClick={() => {
+                    if (beforeUpload) {
+                      toggleTitleVideo();
+                    } else {
+                      openModal();
+                    }
+                  }}>
                   <i className="fas fa-pencil-alt"></i>
                 </button>
               )}
@@ -157,6 +175,14 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
             </form>
           )}
         </div>
+      )}
+      {setUploadSuccess && (
+        <PopUpChangeVideo
+          modalIsOpen={modalIsOpen}
+          item={item}
+          closeModal={closeModal}
+          setUploadSuccess={setUploadSuccess}
+        />
       )}
     </MediaItemContainer>
   );
