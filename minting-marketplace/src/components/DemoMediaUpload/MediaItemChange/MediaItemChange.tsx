@@ -58,7 +58,12 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
 
   const changeTitleMediaItem = async (e) => {
     e.preventDefault();
-    if (uploadVideo) {
+    if (beforeUpload) {
+      const newMediaList = mediaList;
+      newMediaList[index].title = titleValue;
+      setMediaList(newMediaList);
+      toggleTitleVideo();
+    } else {
       setDisabledBtn(true);
       Object.keys(mediaList).map((item) => {
         const fileData = mediaList[item];
@@ -87,11 +92,6 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
         toggleTitleVideo();
         setDisabledBtn(false);
       }
-    } else {
-      const newMediaList = mediaList;
-      newMediaList[index].title = titleValue;
-      setMediaList(newMediaList);
-      toggleTitleVideo();
     }
   };
 
@@ -126,7 +126,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                   className={`btn btn-success rounded-rairo mx-3 ${
                     primaryColor === 'rhyno' ? 'rhyno' : ''
                   } ${modalIsOpen ? 'modal-open' : ''}`}
-                  onClick={toggleTitleVideo}>
+                  onClick={openModal}>
                   <i className="fas fa-pencil-alt"></i>
                 </button>
               ) : (
@@ -136,11 +136,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                     primaryColor === 'rhyno' ? 'rhyno' : ''
                   } ${modalIsOpen ? 'modal-open' : ''}`}
                   onClick={() => {
-                    if (beforeUpload) {
-                      toggleTitleVideo();
-                    } else {
-                      openModal();
-                    }
+                    openModal();
                   }}>
                   <i className="fas fa-pencil-alt"></i>
                 </button>
@@ -182,6 +178,10 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
           item={item}
           closeModal={closeModal}
           setUploadSuccess={setUploadSuccess}
+          beforeUpload={beforeUpload}
+          mediaList={mediaList}
+          setMediaList={setMediaList}
+          index={index}
         />
       )}
     </MediaItemContainer>

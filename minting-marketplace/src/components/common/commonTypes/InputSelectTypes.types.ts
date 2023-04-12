@@ -2,6 +2,7 @@ export type OptionsType = {
   label: string;
   value?: string;
   disabled?: boolean;
+  id?: string;
 };
 
 export interface InputSelectProps<T = any> {

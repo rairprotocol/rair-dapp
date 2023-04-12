@@ -8,6 +8,7 @@ import { PopUpVideoChangeBox } from './PopUpChangeVideoStyled';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { rFetch } from '../../../utils/rFetch';
+import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 import { IPopUpChangeVideo } from '../types/DemoMediaUpload.types';
@@ -16,7 +17,11 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
   modalIsOpen,
   closeModal,
   item,
-  setUploadSuccess
+  setUploadSuccess,
+  beforeUpload,
+  setMediaList,
+  mediaList,
+  index
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -24,7 +29,9 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
 
   const [desc, setDesc] = useState(item.description);
   const [title, setTitle] = useState(item.title);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<OptionsType[] | undefined>(
+    undefined
+  );
   const [itemCategory, setItemCategory] = useState(item.category);
 
   const getCategory = useCallback(async () => {
@@ -45,46 +52,64 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
   }, [setCategories]);
 
   const updateVideoData = async () => {
-    const choiceCategory: any = categories.find(
-      (item: any) => item.value === itemCategory
-    );
+    if (beforeUpload && categories) {
+      const choiceCategory: any =
+        categories &&
+        categories.find((item: any) => item.value === itemCategory);
+      const newMediaList = mediaList;
 
-    setUploadSuccess(true);
+      newMediaList[index].description = desc;
+      newMediaList[index].title = title;
 
-    const updatedVideo = {
-      description: desc,
-      title: title,
-      category: choiceCategory.id
-    };
-
-    try {
-      const request = await rFetch(`/api/media/update/${item._id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedVideo)
-      });
-
-      if (request.success) {
-        Swal.fire('Successfully!', 'Video has been updated.', 'success');
-        closeModal();
-        setUploadSuccess(null);
+      if (choiceCategory && choiceCategory.id) {
+        newMediaList[index].category = choiceCategory.id;
+      } else {
+        newMediaList[index].category = 'DEMO';
       }
 
-      if (request.error) {
+      setMediaList(newMediaList);
+      closeModal();
+    } else {
+      const choiceCategory: any =
+        categories &&
+        categories.find((item: any) => item.value === itemCategory);
+
+      setUploadSuccess(true);
+
+      const updatedVideo = {
+        description: desc,
+        title: title,
+        category: choiceCategory.id
+      };
+      try {
+        const request = await rFetch(`/api/media/update/${item._id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedVideo)
+        });
+
+        if (request.success) {
+          Swal.fire('Successfully!', 'Video has been updated.', 'success');
+          closeModal();
+          setUploadSuccess(null);
+        }
+
+        if (request.error) {
+          closeModal();
+          setDesc(item.description);
+          setTitle(item.title);
+          setItemCategory(item.category);
+          setUploadSuccess(null);
+        }
+      } catch (e) {
         closeModal();
         setDesc(item.description);
         setTitle(item.title);
         setItemCategory(item.category);
         setUploadSuccess(null);
       }
-    } catch (e) {
-      closeModal();
-      setDesc(item.description);
-      setTitle(item.title);
-      setItemCategory(item.category);
-      setUploadSuccess(null);
     }
   };
 
@@ -139,10 +164,9 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
       setDesc(item.description);
       setTitle(item.title);
 
-      if (categories.length > 0) {
-        const defaultCategory: any = categories.find(
-          (el: any) => el.id === item.category
-        );
+      if (categories && categories.length > 0) {
+        const defaultCategory: any =
+          categories && categories.find((el: any) => el.id === item.category);
 
         if (defaultCategory) {
           setItemCategory(defaultCategory.value);
