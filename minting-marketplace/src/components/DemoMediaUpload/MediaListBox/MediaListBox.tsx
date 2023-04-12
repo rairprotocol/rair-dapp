@@ -67,6 +67,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
         Please use the user profile menu in the upper right corner to add your email address to your profile.`
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userRd]);
 
   const alertChoiceCloud = useCallback(() => {

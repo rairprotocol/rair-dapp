@@ -184,7 +184,8 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       setFilterText(selectedFiltersItemsText);
       setIsShow(true);
     }
-  }, [selectedBchItems]);
+  }, [selectedBchItems, setFilterText, setIsShow]);
+
   useEffect(() => {
     if (selectedCatItems) {
       setSelectedCategories(selectedCatItems);
@@ -194,7 +195,9 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       // setFilterText(selectedFiltersItemsText);
       setIsShow(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCatItems]);
+
   const onOptionChange = (ev: React.SyntheticEvent<HTMLInputElement>) => {
     const target = ev.target as HTMLInputElement;
     const selectedItemDataTitle = target.getAttribute('data-title');

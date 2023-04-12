@@ -159,6 +159,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
       setChoiceAllOptions(null);
       setUploadSuccess(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     contract,
     index,
@@ -261,6 +262,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
         );
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getOffers = useCallback(async () => {
@@ -283,23 +285,23 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           )
         : [];
 
-    if (contract === '63bc60fe1f591bd493923c29') {
-      setOffersOptions([
+    // if (contract === '63bc60fe1f591bd493923c29') {
+    //   setOffersOptions([
+    //     {
+    //       label: 'Unlocked(demo)',
+    //       value: '-1'
+    //     }
+    //   ]);
+    // } else {
+    setOffersOptions(
+      [
         {
           label: 'Unlocked(demo)',
           value: '-1'
         }
-      ]);
-    } else {
-      setOffersOptions(
-        [
-          {
-            label: 'Unlocked(demo)',
-            value: '-1'
-          }
-        ].concat(arrOfferOption)
-      );
-    }
+      ].concat(arrOfferOption)
+    );
+    // }
   }, [contract, contractData, product]);
 
   useEffect(() => {

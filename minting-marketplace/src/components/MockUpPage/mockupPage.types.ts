@@ -57,7 +57,6 @@ export type TWhatPage = 'nft' | 'video';
 export interface IPaginationBox {
   changePage: (currentPage: number) => void;
   currentPage: number;
-  primaryColor: ColorChoice;
   totalPageForPagination: number | undefined;
   whatPage: TWhatPage;
 }
