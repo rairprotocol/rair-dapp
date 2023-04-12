@@ -95,6 +95,7 @@ export interface INftCollectionPageComponent {
   offerAllData: TProducts | undefined;
   collectionName: string | undefined;
   connectUserData: () => void;
+  showTokensRef: any;
 }
 
 export interface INftUnlockablesPage {
