@@ -18,7 +18,6 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
   mediaList,
   uploadSuccess,
   textFlag,
-  uploadVideo,
   mediaId,
   getMediaList,
   editTitleVideo,

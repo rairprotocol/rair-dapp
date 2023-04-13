@@ -16,11 +16,8 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import videoIcon from '../../images/videoIcon.svg';
 import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
-import {
-  IMediaUpload,
-  TChoiceAllOptions,
-  TMediaType
-} from '../creatorStudio/creatorStudio.types';
+import LoadingComponent from '../common/LoadingComponent';
+import { IMediaUpload, TMediaType } from '../creatorStudio/creatorStudio.types';
 
 import MediaListBox from './MediaListBox/MediaListBox';
 import UploadedListBox from './UploadedListBox/UploadedListBox';
@@ -52,7 +49,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
 
   const [mediaList, setMediaList] = useState<TMediaType[]>([]);
   const [mediaUploadedList, setMediaUploadedList] = useState<any>([]);
-  const [categories, setCategories] = useState<OptionsType[]>([]);
+  const [, /*categories*/ setCategories] = useState<OptionsType[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
@@ -66,6 +63,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   const [selectedCategory, setSelectedCategory] = useState<
     string | undefined
   >();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const rerenderFC = () => {
     setRerender(!rerender);
@@ -139,11 +137,19 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
 
   const getMediaList = async () => {
     if (currentUserAddress !== undefined) {
-      const { success, list } = await rFetch(
+      setLoading(true);
+      const { success, list, error } = await rFetch(
         `/api/media/list?userAddress=${currentUserAddress}`
       );
 
-      if (success) setMediaUploadedList(list);
+      if (success) {
+        setMediaUploadedList(list);
+        setLoading(false);
+      }
+
+      if (error) {
+        setLoading(false);
+      }
     }
   };
 
@@ -297,6 +303,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     } else {
       return Number(newStr.join(''));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onMediaDrop = (media) => {
@@ -332,11 +339,11 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     navigator.clipboard.writeText(iframe);
   };
 
-  const updateMediaCategory = (array, index, value: string) => {
-    array[index].category = value;
-    setMediaList(array);
-    rerenderFC();
-  };
+  // const updateMediaCategory = (array, index, value: string) => {
+  //   array[index].category = value;
+  //   setMediaList(array);
+  //   rerenderFC();
+  // };
 
   useEffect(() => {
     if (width <= 1000) {
@@ -402,25 +409,29 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
             )}
           </Dropzone>
         </div>
-        {Object.keys(mediaUploadedList)
-          .sort()
-          .map((item, index) => {
-            const fileData = mediaUploadedList[item];
-            return (
-              <UploadedListBox
-                key={fileData.title + index}
-                fileData={fileData}
-                index={index}
-                setMediaList={setMediaList}
-                mediaList={mediaUploadedList}
-                uploadSuccess={uploadSuccess}
-                copyEmbebed={copyEmbebed}
-                getMediaList={getMediaList}
-                setUploadSuccess={setUploadSuccess}
-                setMediaUploadedList={setMediaUploadedList}
-              />
-            );
-          })}
+        {loading ? (
+          <LoadingComponent />
+        ) : (
+          Object.keys(mediaUploadedList)
+            .sort()
+            .map((item, index) => {
+              const fileData = mediaUploadedList[item];
+              return (
+                <UploadedListBox
+                  key={fileData.title + index}
+                  fileData={fileData}
+                  index={index}
+                  setMediaList={setMediaList}
+                  mediaList={mediaUploadedList}
+                  uploadSuccess={uploadSuccess}
+                  copyEmbebed={copyEmbebed}
+                  getMediaList={getMediaList}
+                  setUploadSuccess={setUploadSuccess}
+                  setMediaUploadedList={setMediaUploadedList}
+                />
+              );
+            })
+        )}
         {mediaList.map((item, index) => {
           return (
             <MediaListBox

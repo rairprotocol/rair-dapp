@@ -173,7 +173,6 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           mediaList={mediaList}
           uploadSuccess={uploadSuccess}
           textFlag={false}
-          uploadVideo={true}
           mediaId={fileData._id}
           getMediaList={getMediaList}
           setEditTitleVideo={setEditTitleVideo}

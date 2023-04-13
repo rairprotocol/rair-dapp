@@ -327,7 +327,6 @@ const SearchPanel: React.FC<ISearchPanel> = ({
           <PaginationBox
             totalPageForPagination={nftListTotal}
             whatPage={'nft'}
-            primaryColor={primaryColor}
             changePage={changePage}
             currentPage={currentPage}
           />

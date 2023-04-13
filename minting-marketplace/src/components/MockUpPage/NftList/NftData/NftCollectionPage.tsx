@@ -37,7 +37,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   offerDataCol,
   offerAllData,
   collectionName,
-  connectUserData
+  connectUserData,
+  showTokensRef
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -46,9 +47,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [playing, setPlaying] = useState<null | string>(null);
 
   const loadToken = useCallback(() => {
-    setShowToken(showToken * 2);
-    getAllProduct('0', showToken.toString());
-  }, [getAllProduct, setShowToken, showToken]);
+    showTokensRef.current = showTokensRef.current * 2;
+    getAllProduct('0', showTokensRef.current.toString());
+  }, [getAllProduct, showTokensRef]);
 
   useEffect(() => {
     setDocumentTitle('Collection');
@@ -219,7 +220,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             {tokenDataFiltered.length
               ? null
               : totalCount &&
-                showToken <= totalCount && (
+                showTokensRef.current <= totalCount && (
                   <CustomButton
                     onClick={loadToken}
                     width="232px"

@@ -57,26 +57,6 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({
   );
 };
 
-const counterUniqueWallets = (arr) => {
-  if (arr && arr.length > 0) {
-    const obj = {};
-
-    for (let i = 0; i < arr.length; i++) {
-      const item = arr[i].userAddress;
-
-      if (obj[item] !== undefined) {
-        obj[item]++;
-      } else {
-        obj[item] = 0;
-      }
-    }
-
-    return Object.keys(obj).length;
-  } else {
-    return 0;
-  }
-};
-
 const PopUpContainer = (videoId) => {
   const [analyticsVideo, setAnalyticsVideo] = useState<any>(null);
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);

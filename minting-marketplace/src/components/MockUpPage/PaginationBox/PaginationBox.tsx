@@ -4,17 +4,21 @@ import { useSelector } from 'react-redux';
 import { PaginationBoxStyled } from './PaginationBoxStyled';
 
 import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { IPaginationBox } from '../mockupPage.types';
 
 const PaginationBox: React.FC<IPaginationBox> = ({
   changePage,
   currentPage,
-  primaryColor,
   totalPageForPagination,
   whatPage
 }) => {
   const itemsPerPage = useSelector<RootState, number>(
     (store) => store.nftDataStore.itemsPerPage
+  );
+
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
   );
 
   const [page, setPage] = useState<number>(currentPage);
@@ -80,7 +84,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
           totalPageForPagination > 0 &&
           pagesArray.length > 0 && (
             <PaginationBoxStyled
-              primaryColor={primaryColor}
+              primarycolor={primaryColor}
               className={
                 primaryColor === 'rhyno'
                   ? 'pagination-white'

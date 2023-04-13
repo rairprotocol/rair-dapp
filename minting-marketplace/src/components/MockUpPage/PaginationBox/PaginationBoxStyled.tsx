@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 interface IPaginationBoxStyled {
-  primaryColor: ColorChoice;
+  primarycolor: ColorChoice;
 }
 
 export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
@@ -14,10 +14,10 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
         -webkit-transition: all 0.2s ease;
         transition: all 0.2s ease;
         color: ${(props) =>
-          props.primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'};
+          props.primarycolor === 'rhyno' ? '#2d2d2d' : '#fff'};
         border-radius: 9.5px;
         border: 1px solid
-          ${(props) => (props.primaryColor === 'rhyno' ? '#2d2d2d' : '#fff')};
+          ${(props) => (props.primarycolor === 'rhyno' ? '#2d2d2d' : '#fff')};
 
         &.Mui-selected {
           background: var(--stimorol);

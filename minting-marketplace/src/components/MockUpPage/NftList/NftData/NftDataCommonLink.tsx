@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
@@ -55,6 +55,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const [someUsersData, setSomeUsersData] = useState<UserType | null>();
   const [dataForUser, setDataForUser] = useState<TProducts>();
   const [tokenBought, setTokenBought] = useState<boolean>(false);
+  const showTokensRef = useRef<number>(20);
 
   const dispatch = useDispatch();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
@@ -256,7 +257,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       tokenEnd = tokenStart.add(20);
     }
     getAllProduct(tokenStart.toString(), tokenEnd.toString());
-  }, [getAllProduct, showToken, tokenId]);
+  }, [getAllProduct, showTokensRef, tokenId]);
 
   useEffect(() => {
     getParticularOffer();
@@ -265,6 +266,10 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   useEffect(() => {
     getProductsFromOffer();
   }, [getProductsFromOffer]);
+
+  useEffect(() => {
+    showTokensRef.current = 20;
+  }, []);
 
   if (mode === 'collection') {
     return (
@@ -287,6 +292,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         offerAllData={ownerInfo}
         collectionName={collectionName}
         connectUserData={connectUserData}
+        showTokensRef={showTokensRef}
       />
     );
   } else if (mode === 'unlockables') {

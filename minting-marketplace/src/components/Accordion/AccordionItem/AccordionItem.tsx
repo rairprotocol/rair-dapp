@@ -4,7 +4,6 @@ import '../styles.css';
 const AccordionItem = ({
   title,
   children,
-  isOpen,
   setIsOpen,
   itemImg,
   itemBtn,
