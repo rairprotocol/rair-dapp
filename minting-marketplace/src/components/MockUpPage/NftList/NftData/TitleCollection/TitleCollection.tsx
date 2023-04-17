@@ -5,6 +5,7 @@ import Popup from 'reactjs-popup';
 
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import chainData from '../../../../../utils/blockchainData';
 import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
@@ -42,6 +43,8 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   const [open, setOpen] = useState<boolean>(false);
   const [isCollectionPathExist, setIsCollectionPathExist] =
     useState<boolean>(false);
+
+  const { width } = useWindowDimensions();
 
   const handleClose = (value: number) => {
     setOpen(false);
@@ -81,7 +84,8 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   });
 
   return (
-    <div className="title-collection-container">
+    <div
+      className={`title-collection-container ${offerDataCol ? 'minted' : ''}`}>
       <div className="title-collection-wrapper">
         <div className="container-title-collection">
           <div className="block-title-share">
@@ -116,23 +120,43 @@ const TitleCollection: React.FC<ITitleCollection> = ({
           }>
           {isCollectionPathExist && (
             <>
-              <CustomButton
-                onClick={() => {
-                  if (purchaseStatus) {
-                    return;
-                  } else {
-                    setMintPopUp(true);
-                  }
-                }}
-                width="161px"
-                height="48px"
-                // margin="20px 0 0 0"
-                text="Mint!"
-                background={`${
-                  purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
-                }`}
-                hoverBackground={`${purchaseStatus ? 'rgb(74, 74, 74)' : ''}`}
-              />
+              {width >= 500 ? (
+                <CustomButton
+                  onClick={() => {
+                    if (purchaseStatus) {
+                      return;
+                    } else {
+                      setMintPopUp(true);
+                    }
+                  }}
+                  width="161px"
+                  height="48px"
+                  // margin="20px 0 0 0"
+                  text="Mint!"
+                  background={`${
+                    purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
+                  }`}
+                  hoverBackground={`${purchaseStatus ? 'rgb(74, 74, 74)' : ''}`}
+                />
+              ) : (
+                <CustomButton
+                  onClick={() => {
+                    if (purchaseStatus) {
+                      return;
+                    } else {
+                      setMintPopUp(true);
+                    }
+                  }}
+                  width="120px"
+                  height="40px"
+                  // margin="20px 0 0 0"
+                  text="Mint!"
+                  background={`${
+                    purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
+                  }`}
+                  hoverBackground={`${purchaseStatus ? 'rgb(74, 74, 74)' : ''}`}
+                />
+              )}
               <Popup
                 // className="popup-settings-block"
                 open={mintPopUp}

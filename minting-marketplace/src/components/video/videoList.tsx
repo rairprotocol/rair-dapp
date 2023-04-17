@@ -59,7 +59,7 @@ const VideoList: React.FC<IVideoList> = ({
               .map((item, index) => {
                 return (
                   <VideoItem
-                    key={index}
+                    key={item}
                     mediaList={videos}
                     item={item}
                     handleVideoIsUnlocked={handleVideoIsUnlocked}

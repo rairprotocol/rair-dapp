@@ -33,7 +33,6 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
     embeddedParams
       ? embeddedParams.setMode('collection')
       : navigate(`/collection/${blockchain}/${contract}/${product}/0`);
-    console.info('You clicked a breadcrumb.');
   }
   function goToSingleView(event: MouseEvent) {
     event.preventDefault();

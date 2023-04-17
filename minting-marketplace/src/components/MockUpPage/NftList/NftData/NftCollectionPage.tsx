@@ -6,6 +6,7 @@ import Skeleton from '@mui/material/Skeleton';
 
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { setTokenData } from '../../../../ducks/nftData/action';
+import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
 import CustomButton from '../../utils/button/CustomButton';
@@ -45,6 +46,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const myRef = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState<boolean>(true);
   const [playing, setPlaying] = useState<null | string>(null);
+  const { width } = useWindowDimensions();
 
   const loadToken = useCallback(() => {
     showTokensRef.current = showTokensRef.current * 2;
@@ -230,12 +232,14 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                   />
                 )}
           </div>
-          <CollectionInfo
-            blockchain={blockchain}
-            offerData={offerDataCol}
-            openTitle={true}
-            someUsersData={someUsersData}
-          />
+          {width > 730 && (
+            <CollectionInfo
+              blockchain={blockchain}
+              offerData={offerDataCol}
+              openTitle={true}
+              someUsersData={someUsersData}
+            />
+          )}
           <AuthenticityBlock
             collectionToken={tokenData[0]?.authenticityLink}
             title={true}

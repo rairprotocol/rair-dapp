@@ -922,7 +922,7 @@ video {
   }
 }
 
-@media screen and (max-width: 844px) {
+@media screen and (max-width: 950px) {
   .main-block-app {
     margin-top: 0;
   }
@@ -1367,6 +1367,10 @@ video {
     width: 85vw;
     padding: 16px 30px 108px !important;
     margin: 0px;
+  }
+
+  .pagination__wrapper .MuiPagination-ul.css-wjh20t-MuiPagination-ul li {
+    margin: 3px;
   }
 }
 

@@ -13,13 +13,13 @@ export const ShowMoreContainer = styled.div<TShowMoreContainer>`
   color: ${(props) => props.textColor};
   margin: ${(props) => props.margin};
   background: ${(props) => props.background};
-  pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
+  pointer-events: ${(props) => (props.loading === 'true' ? 'none' : 'auto')};
   @media screen and (max-width: 659px) and (min-width: 410px) {
     margin: 0.5rem;
   }
-  @media screen and (max-width: 409px) and (min-width: 250px) {
-    width: -webkit-fill-available;
-  }
+  // @media screen and (max-width: 409px) and (min-width: 250px) {
+  //   width: -webkit-fill-available;
+  // }
 `;
 
 export const ShowMoreItem = styled.div<TShowMoreItem>`
@@ -39,9 +39,9 @@ export const ShowMoreItem = styled.div<TShowMoreItem>`
     transition-duration: 0.5s;
     background: ${(props) => props.hoverBackground};
   }
-  @media screen and (max-width: 409px) and (min-width: 250px) {
-    width: -webkit-fill-available;
-  }
+  // @media screen and (max-width: 409px) and (min-width: 250px) {
+  //   width: -webkit-fill-available;
+  // }
   @media screen and (max-width: 659px) and (min-width: 410px) {
     width: -webkit-fill-available;
   }

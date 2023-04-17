@@ -21,7 +21,7 @@ const CustomButton: React.FC<ICustomButton> = ({
   background,
   hoverBackground,
   padding,
-  loading
+  loading = false
 }) => {
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
@@ -30,7 +30,7 @@ const CustomButton: React.FC<ICustomButton> = ({
   return (
     <ShowMoreContainer
       className={cl.nftDataPageShowMoreWrapper}
-      loading={loading}
+      loading={loading.toString()}
       width={width}
       height={height}
       textColor={textColor}
