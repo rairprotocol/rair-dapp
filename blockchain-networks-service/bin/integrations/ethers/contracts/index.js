@@ -7,6 +7,7 @@ const DiamondFactory = require('./diamondFactoryABI.json');
 const ClassicDeprecatedEvents = require('./classicDeprecatedEvents.json');
 const DiamondDeprecatedEvents = require('./diamondDeprecatedEvents.json');
 const ResaleMarketplaceEvents = require('./Resale_Marketplace.json');
+const CreditHandlerEvents = require('./CreditHandlerABI.json');
 
 module.exports = {
   erc721Abi: ERC721Token.abi,
@@ -17,5 +18,6 @@ module.exports = {
   diamondFactoryAbi: DiamondFactory.abi,
   classicDeprecatedEvents: ClassicDeprecatedEvents.abi,
   diamondDeprecatedEvents: DiamondDeprecatedEvents.abi,
-  resaleMarketplaceEvents: ResaleMarketplaceEvents.abi
+  resaleMarketplaceEvents: ResaleMarketplaceEvents.abi,
+  creditHandlerEvents: CreditHandlerEvents.abi,
 };

@@ -68,6 +68,7 @@ services:
       ZOOM_API_SECRET: ${zoom_api_secret}
       KOHLER_MEETING_ID: ${kohler_meeting_id}
       ALCHEMY_API_KEY: ${alchemy_api_key}
+      WITHDRAWER_PRIVATE_KEY: ${withdrawer_private_key}
     ports:
       - 3000:3000
       - 5000:5000

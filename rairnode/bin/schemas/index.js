@@ -33,6 +33,7 @@ const getLocksByProduct = require('./getLocksByProduct');
 const getFilesByProduct = require('./getFilesByProduct');
 const importContract = require('./importContract');
 const { analyticsParams, analyticsQuery } = require('./analytics');
+const { tokenCreditQuery, tokenCreditWithdraw } = require('./credits');
 // V2 validations
 const {
   dbContracts,
@@ -154,5 +155,9 @@ module.exports = {
   fullContracts,
   importExternalContracts,
   specificContracts,
+
+  // Credit system
+  tokenCreditQuery,
+  tokenCreditWithdraw,
 
 };

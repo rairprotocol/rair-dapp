@@ -15,6 +15,8 @@ const metadataForContract = require('./metadataForContract');
 const handleResaleOffer = require('./handleResaleOffer');
 const updateResaleOffer = require('./updateResaleOffer');
 const registerCustomSplits = require('./registerCustomSplits');
+const depositCredits = require('./depositCredits');
+const withdrawCredits = require('./witdrawCredits');
 
 module.exports = {
   updateDiamondRange,
@@ -34,4 +36,6 @@ module.exports = {
   handleResaleOffer,
   updateResaleOffer,
   registerCustomSplits,
+  depositCredits,
+  withdrawCredits,
 };

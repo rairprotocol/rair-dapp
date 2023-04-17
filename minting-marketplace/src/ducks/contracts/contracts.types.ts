@@ -33,6 +33,7 @@ export type ContractsInitialType = {
   diamondFactoryInstance: ethers.Contract | undefined;
   diamondMarketplaceInstance: ethers.Contract | undefined;
   tokenPurchaserInstance: ethers.Contract | undefined;
+  creditHandlerInstance: ethers.Contract | undefined;
   currentChain: BlockchainType | undefined;
   currentUserAddress: string | undefined;
   programmaticProvider: ethers.Wallet | undefined;
@@ -54,6 +55,7 @@ export type ContractContents = {
   diamondMarketplace: string | undefined;
   resaleMarketplace: string | undefined;
   tokenPurchaser: string | undefined;
+  creditHandler: string | undefined;
 };
 
 export type ContractAddressesType = {

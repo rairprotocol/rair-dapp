@@ -20,8 +20,13 @@ const handleError = (
 
   if (errorMessage.cancelled) {
     cleanError = 'The transaction has been cancelled!';
+  } else if (
+    errorMessage.transaction.blockNumber === null &&
+    errorMessage.receipt.status === 0
+  ) {
+    cleanError = 'The transaction has failed on the blockchain';
   } else if (errorMessage.receipt) {
-    //console.log('Repriced');
+    //console.info('Repriced');
     handleReceipt(errorMessage.receipt);
     return true;
   }
@@ -90,7 +95,7 @@ const metamaskCall = async (
     } catch (errorMessage) {
       return handleError(errorMessage, fallbackFailureMessage);
     }
-    if (transactionReceipt) {
+    if (transactionReceipt && transactionReceipt.blockNumber) {
       handleReceipt(transactionReceipt, gotoNextStep);
     }
     return true;

@@ -1,10 +1,10 @@
 const { expect } = require("chai");
-
+const { time } = require("@nomicfoundation/hardhat-network-helpers");
 const FacetCutAction_ADD = 0;
 const FacetCutAction_REPLACE = 1;
 const FacetCutAction_REMOVE = 2;
 
-const initialRAIR777Supply = 1000;
+const initialRAIR777Supply = 10000;
 const priceToDeploy = 150;
 
 const firstDeploymentAddress = '0x0cE7946e65c3682c55D7Fb2c4D1e3851b8139a64';
@@ -12,6 +12,7 @@ const secondDeploymentAddress = '0xD77E4804680e04361692F58B033884D74f5f528D';
 
 let usedSelectorsForFactory = {};
 let usedSelectorsForMarketplace = {};
+let usedSelectorsForCredit = {};
 
 // get function selectors from ABI
 function getSelectors (contract, usedSelectors) {
@@ -97,6 +98,15 @@ describe("Diamonds", function () {
 	let FeesFacetFactory, feesFacetInstance;
 
 	let ReceiveEthAttackerFactory, receiveEthAttackerInstance;
+
+	let CreditFactory, creditInstance;
+	let CreditDepositFactory, creditDepositInstance;
+	let CreditQueryFactory, creditQueryInstance;
+	let CreditWithdrawFactory, creditWithdrawInstance;
+
+	beforeEach(async () => {
+		//console.log(ethers.utils.formatEther(await ethers.provider.getBalance(owner.address)));
+	})
 	
 	before(async () => {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
@@ -1573,14 +1583,12 @@ describe("Diamonds", function () {
 
 			it ("Shouldn't mint if there isn't enough ETH sent", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
-				let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
 				await expect(mintingOffersFacet.buyMintingOffer(0, 0, {value: 3749}))
 					.to.be.revertedWith("Minter Marketplace: Insufficient funds!");
 			});
 
 			it ("Shouldn't mint tokens out of the range's boundaries", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
-				let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
 				await expect(mintingOffersFacet.buyMintingOffer(0, 11, {value: 4500}))
 					.to.be.revertedWith("RAIR ERC721: Invalid token index");
 			});
@@ -1852,6 +1860,241 @@ describe("Diamonds", function () {
 				});
 				console.log(names);
 			});*/
+	});
+
+	describe("Token Consumer", () => {
+		it("Should deploy the main contract", async () => {
+			CreditFactory = await ethers.getContractFactory("CreditHandler");
+			creditInstance = await CreditFactory.deploy(diamondCutFacetInstance.address);
+		});
+
+		it("Should deploy the facets", async () => {
+			CreditDepositFactory = await ethers.getContractFactory("CreditDeposit");
+			CreditQueryFactory = await ethers.getContractFactory("CreditQuery");
+			CreditWithdrawFactory = await ethers.getContractFactory("CreditWithdraw");
+			creditDepositInstance = await CreditDepositFactory.deploy();
+			creditQueryInstance = await CreditQueryFactory.deploy();
+			creditWithdrawInstance = await CreditWithdrawFactory.deploy();
+		});
+
+		it("Should connect all facets", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', creditInstance.address);
+			let receiverFacetItem = {
+				facetAddress: creditDepositInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(creditDepositInstance, usedSelectorsForCredit)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+			
+			receiverFacetItem = {
+				facetAddress: creditQueryInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(creditQueryInstance, usedSelectorsForCredit)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+			
+			receiverFacetItem = {
+				facetAddress: creditWithdrawInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(creditWithdrawInstance, usedSelectorsForCredit)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+		});
+
+		it("Should have roles set up", async () => {
+			await expect(await creditInstance.hasRole(await creditInstance.ADMINISTRATOR(), owner.address))
+				.to.equal(true);
+			await expect(await creditInstance.grantRole(await creditInstance.ALLOWED_ERC777(), erc777Instance.address))
+				.to.emit(creditInstance, "RoleGranted");
+		});
+
+		it("Should accept tokens from allowed contracts", async () => {
+			const creditInstanceWithDeposit = await ethers.getContractAt('CreditDeposit', creditInstance.address);
+			await erc777Instance.send(addr1.address, 2000, ethers.utils.toUtf8Bytes(''));
+			await expect(await erc777Instance.send(creditInstance.address, 200, ethers.utils.toUtf8Bytes('')))
+				.to.emit(creditInstanceWithDeposit, "ReceivedTokens");
+			await expect(
+				await (await erc777Instance.connect(addr1))
+					.send(creditInstance.address, 2000, ethers.utils.toUtf8Bytes('')))
+				.to.emit(creditInstanceWithDeposit, "ReceivedTokens");
+		});
+		
+		it("Should reject tokens from other contracts", async () => {
+			await expect(extraERC777Instance.send(creditInstance.address, 200, ethers.utils.toUtf8Bytes('')))
+				.to.be.revertedWith(`AccessControl: account ${extraERC777Instance.address.toLowerCase()} is missing role ${await creditDepositInstance.ALLOWED_ERC777()}`);
+		});
+
+		it("Should display token balances", async () => {
+			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
+			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, owner.address))
+				.to.equal(200);
+			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address))
+				.to.equal(2000);
+			await expect(await creditInstanceWithQuery.getUserCredits(extraERC777Instance.address, owner.address))
+				.to.equal(0);
+		});
+			
+		it("Should display overall balances", async () => {
+			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
+			await expect(await creditInstanceWithQuery.getTotalUserCredits(owner.address))
+				.to.equal(200);
+			await expect(await creditInstanceWithQuery.getTotalUserCredits(addr1.address))
+				.to.equal(2000);
+			await expect(await creditInstanceWithQuery.getTotalUserCredits(addr2.address))
+				.to.equal(0);
+		});
+
+		it ("Should setup the time limit", async () => {
+			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			// 1 minute leeway
+			await creditInstanceWithWithdraw.setWithdrawTimeLimit(60);
+		});
+
+		it ("Shouldn't generate a signed message if amount is greater than balance", async () => {
+			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const withdrawValue = [
+				erc777Instance.address, // ERC777 
+				10000,					// Amount
+			];
+			await expect(creditInstanceWithWithdraw.getWithdrawHash(
+				addr1.address,
+				...withdrawValue
+			)).to.be.revertedWith("CreditHandler: Invalid withdraw amount");
+		});
+
+		it ("Should withdraw with signed messages", async () => {
+			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const withdrawValue = [
+				erc777Instance.address, // ERC777 
+				1000,					// Amount
+			];
+			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+				addr1.address,
+				...withdrawValue
+			);
+			await time.increase(60);
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(withdrawMessage));
+			await expect(
+				await (await creditInstanceWithWithdraw.connect(addr1))
+					.withdraw(...withdrawValue, signedMessageOwner)
+			)
+				.to.emit(erc777Instance, "Sent")
+				.to.emit(creditInstanceWithWithdraw, "WithdrewCredit")
+				.withArgs(addr1.address, erc777Instance.address, 1000);
+			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
+			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address))
+				.to.equal(1000);
+			await expect(await erc777Instance.balanceOf(addr1.address)).to.equal(1000);
+		});
+
+		it ("Shouldn't withdraw with signed message twice", async () => {
+			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const withdrawValue = [
+				erc777Instance.address, // ERC777 
+				10,						// Amount
+			];
+			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+				addr1.address,
+				...withdrawValue
+			);
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(withdrawMessage));
+			await expect(
+				await (await creditInstanceWithWithdraw.connect(addr1))
+					.withdraw(...withdrawValue, signedMessageOwner)
+			)
+				.to.emit(erc777Instance, "Sent")
+				.to.emit(creditInstanceWithWithdraw, "WithdrewCredit")
+				.withArgs(addr1.address, erc777Instance.address, 10);
+			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
+			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address))
+				.to.equal(990);
+			await expect(await erc777Instance.balanceOf(addr1.address)).to.equal(1010);
+			await expect(
+				creditInstanceWithWithdraw.connect(addr1)
+					.withdraw(...withdrawValue, signedMessageOwner)
+			).to.be.revertedWith("CreditHandler: Invalid withdraw request");
+		});
+
+		it ("Shouldn't withdraw with signed messages if it took too long", async () => {
+			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const withdrawValue = [
+				erc777Instance.address, // ERC777 
+				900,					// Amount
+			];
+			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+				addr1.address,
+				...withdrawValue
+			);
+			// 2 minutes
+			await time.increase(120);
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(withdrawMessage));
+			await expect(
+				creditInstanceWithWithdraw.connect(addr1).withdraw(...withdrawValue, signedMessageOwner)
+			).to.be.revertedWith("CreditHandler: Invalid withdraw request");
+		});
+
+		it ("Shouldn't withdraw without signed messages", async () => {
+			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const withdrawValue = [
+				erc777Instance.address,
+				600,
+			];
+			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+				addr1.address,
+				...withdrawValue
+			);
+			const signedMessageAddr1 = await addr1.signMessage(ethers.utils.arrayify(withdrawMessage));
+			await expect(
+				(creditInstanceWithWithdraw.connect(addr1))
+					.withdraw(...withdrawValue, signedMessageAddr1)
+			).to.be.revertedWith("CreditHandler: Invalid withdraw request");
+		});
+
+		it ("Shouldn't withdraw without signed messages", async () => {
+			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const withdrawValue = [
+				erc777Instance.address,
+				600,
+			];
+			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+				addr1.address,
+				...withdrawValue
+			);
+			const signedMessageAddr1 = await addr1.signMessage(ethers.utils.arrayify(withdrawMessage));
+			await expect(
+				(creditInstanceWithWithdraw.connect(addr1))
+					.withdraw(...withdrawValue, signedMessageAddr1)
+			).to.be.revertedWith("CreditHandler: Invalid withdraw request");
+		});
+
+		it ("Should withdraw all credits", async () => {
+			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
+			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const currentUserBalance = await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address);
+			const withdrawValue = [
+				erc777Instance.address, 																// ERC777 
+				currentUserBalance,	// Amount
+			];
+			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+				addr1.address,
+				...withdrawValue
+			);
+			await time.increase(50);
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(withdrawMessage));
+			await expect(
+				await (await creditInstanceWithWithdraw.connect(addr1))
+					.withdraw(...withdrawValue, signedMessageOwner)
+			)
+				.to.emit(erc777Instance, "Sent")
+				.to.emit(creditInstanceWithWithdraw, "WithdrewCredit")
+				.withArgs(addr1.address, erc777Instance.address, currentUserBalance);
+			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address))
+				.to.equal(0);
+			await expect(await erc777Instance.balanceOf(addr1.address)).to.equal(2000);
+		});
 	});
 
 	describe("Loupe Facet", () => {

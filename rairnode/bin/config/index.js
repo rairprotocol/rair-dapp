@@ -20,7 +20,9 @@ const {
   SUPER_ADMIN_VAULT_STORE,
   ZOOMSECRET,
   ZOOMCLIENTID,
+  ALCHEMY_API_KEY,
 } = process.env;
+const { Network } = require('alchemy-sdk');
 
 const binanceTestnetData = {
   name: 'Binance Testnet',
@@ -120,5 +122,14 @@ module.exports = {
     dsn: SENTRY_DSN || '',
     serverName: 'rairnode',
     logLevels: ['error'],
+  },
+  alchemy: {
+    apiKey: ALCHEMY_API_KEY,
+    networkMapping: {
+      '0x1': Network.ETH_MAINNET,
+      '0x5': Network.ETH_GOERLI,
+      '0x89': Network.MATIC_MAINNET,
+      '0x13881': Network.MATIC_MUMBAI,
+    },
   },
 };

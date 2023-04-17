@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
 import Swal from 'sweetalert2';
 
+import CreditManager from './CreditManager';
 import NavigatorFactory from './NavigatorFactory';
 
 import { RootState } from '../../ducks';
@@ -125,36 +126,12 @@ const Factory = () => {
   return (
     <div className="row my-5 px-0 mx-0">
       <NavigatorFactory>
-        <div className="col-3 p-2">
-          <input
-            type="radio"
-            name="test"
-            id="Simple"
-            className={`stimorol-radio bg-${primaryColor}`}
-          />{' '}
-          <label htmlFor="Simple" style={{ fontSize: 'smaller' }}>
-            {' '}
-            Simple{' '}
-          </label>
-        </div>
-        <div className="col-3 p-2">
-          <input
-            type="radio"
-            name="test"
-            id="Simple"
-            className={`stimorol-radio bg-${primaryColor}`}
-          />{' '}
-          <label htmlFor="Advanced" style={{ fontSize: 'smaller' }}>
-            {' '}
-            Advanced{' '}
-          </label>
-        </div>
         <div className="col-12 p-2">
           <InputField
             getter={contractName}
             setter={setContractName}
             placeholder="Name your contract"
-            label="New Contract's name"
+            label="Contract name"
             customClass="rounded-rair form-control"
             customCSS={{
               backgroundColor: `var(--${primaryColor})`,
@@ -220,8 +197,8 @@ const Factory = () => {
                 setContractName('');
               }
             }}>
-            Deploy using {utils.formatEther(deploymentPrice).toString()}{' '}
-            {tokenSymbol} Tokens
+            Deploy a classic contract for{' '}
+            {utils.formatEther(deploymentPrice).toString()} {tokenSymbol} Tokens
           </button>
           {diamondFactoryInstance && (
             <>
@@ -263,17 +240,18 @@ const Factory = () => {
                     setContractName('');
                   }
                 }}>
-                <i className="fas fa-gem" /> Spend{' '}
-                {utils.formatEther(deploymentPriceDiamond).toString()}{' '}
-                {tokenSymbol} tokens to deploy with <b>Diamonds</b>{' '}
-                <i className="fas fa-gem" />
+                <i className="fas fa-gem" /> Deploy a <b>diamond</b> contract
+                for {utils.formatEther(deploymentPriceDiamond).toString()}{' '}
+                {tokenSymbol} Tokens <i className="fas fa-gem" />
               </button>
               <br />
             </>
           )}
           <hr />
-          Your balance: {utils.formatEther(userBalance).toString()}{' '}
-          {tokenSymbol} Tokens
+          <h5>Your balance:</h5>
+          <h2>
+            {utils.formatEther(userBalance).toString()} {tokenSymbol} Tokens
+          </h2>
         </div>
         {tokenPurchaserInstance &&
           Object.keys(exchangeData).map((ethPrice, index) => {
@@ -312,21 +290,7 @@ const Factory = () => {
               </button>
             );
           })}
-        <div
-          className="col-12 p-3 mt-5 rounded-rair"
-          style={{ border: '1.3px dashed var(--charcoal-80)' }}>
-          Terms of contract deployment: <br />
-          <ul
-            className="col-12 mt-3 px-4 text-start"
-            style={{ listStyleType: 'disc' }}>
-            <li className="row">
-              <div className="col-6 text-start">Admin NFT owner</div>
-              <span className="col-6 text-end">
-                {adminRights ? 'Done' : 'Purchase'}
-              </span>
-            </li>
-          </ul>
-        </div>
+        <CreditManager tokenSymbol={tokenSymbol} updateUserBalance={getPrice} />
       </NavigatorFactory>
     </div>
   );
