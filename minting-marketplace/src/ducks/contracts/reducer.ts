@@ -8,6 +8,7 @@ import {
 import * as types from './types';
 
 import {
+  creditHandlerAbi,
   diamondFactoryAbi,
   diamondMarketplaceAbi,
   erc777Abi,
@@ -28,7 +29,8 @@ const contractAddresses: ContractAddressesType = {
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0x92FBe344513e108B581170E73CFA352B729E47EA') as string,
     resaleMarketplace: undefined,
-    tokenPurchaser: undefined
+    tokenPurchaser: undefined,
+    creditHandler: undefined
   },
   '0x61': {
     // Binance Testnet
@@ -40,7 +42,8 @@ const contractAddresses: ContractAddressesType = {
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0xaCb13B4c527eD6237f7DB6E95Ef71929d1e13DD6') as string,
     resaleMarketplace: '0x166eD118F380dDFe1F4FD3ccc7D2C5CaeCf0AE96',
-    tokenPurchaser: undefined
+    tokenPurchaser: undefined,
+    creditHandler: undefined
   },
   '0x5': {
     // Ethereum Goerli
@@ -52,7 +55,8 @@ const contractAddresses: ContractAddressesType = {
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0x6B3c06b39Aa1ADe73c625b184326d4837c7a2b64') as string,
     resaleMarketplace: '0x73eDc2F5Fc3F895Dfc6aE8a580a5969640260b79',
-    tokenPurchaser: '0x9dCbe7021803eBb3153412Ed719A2d0B887afB8e' as string
+    tokenPurchaser: '0x9dCbe7021803eBb3153412Ed719A2d0B887afB8e' as string,
+    creditHandler: '0xad78463579Ff43bdC917674c64749c35c7E325f5' as string
   },
   '0x13881': {
     // Matic Mumbai
@@ -64,7 +68,8 @@ const contractAddresses: ContractAddressesType = {
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0') as string,
     resaleMarketplace: '0x0F08c99070fbebDa7E324596d95635d30D414070',
-    tokenPurchaser: undefined
+    tokenPurchaser: undefined,
+    creditHandler: undefined
   },
   '0x89': {
     // Matic Mainnet
@@ -76,7 +81,8 @@ const contractAddresses: ContractAddressesType = {
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1') as string,
     resaleMarketplace: undefined,
-    tokenPurchaser: undefined
+    tokenPurchaser: undefined,
+    creditHandler: undefined
   },
   '0x1': {
     // Ethereum Mainnet
@@ -86,7 +92,8 @@ const contractAddresses: ContractAddressesType = {
     diamondFactory: undefined,
     diamondMarketplace: '0x5c31677c7E73F97020213690F736A8a2Ff922EBC',
     resaleMarketplace: undefined,
-    tokenPurchaser: undefined
+    tokenPurchaser: undefined,
+    creditHandler: undefined
   }
 };
 
@@ -98,6 +105,7 @@ const InitialState: ContractsInitialType = {
   diamondFactoryInstance: undefined,
   diamondMarketplaceInstance: undefined,
   tokenPurchaserInstance: undefined,
+  creditHandlerInstance: undefined,
   currentChain: undefined,
   currentUserAddress: undefined,
   programmaticProvider: undefined,
@@ -210,6 +218,10 @@ export default function userStore(
           tokenPurchaserInstance: contractCreator(
             contractAddresses[action.currentChain].tokenPurchaser,
             tokenPurchaserAbi
+          ),
+          creditHandlerInstance: contractCreator(
+            contractAddresses[action.currentChain].creditHandler,
+            creditHandlerAbi
           ),
           contractCreator: contractCreator
         };

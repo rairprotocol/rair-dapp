@@ -1,55 +1,66 @@
 import { useState, useEffect, useCallback } from 'react';
 import './App.css';
-import * as ethers from 'ethers';
+import { BrowserProvider } from 'ethers';
 import DiamondFacetsGroup from './components/DiamondFacetsGroup.jsx';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadProvider, loadSigner, loadChainId } from './store/web3Slice';
 
-const standardFacetNames = [
-	'DiamondCutFacet', // Standard Diamond Functions
-	'DiamondLoupeFacet',
-	'OwnershipFacet'
-]
-
-// Import order is important, don't rearrange!
-const factoryFacetNames = [
-	'FactoryDiamond', // Main Factory Diamond
-	'ERC777ReceiverFacet', // Factory Facets
-	'creatorFacet',
-	'TokensFacet',
-	'ERC721Facet', // Deployed Token Facets
-	'RAIRMetadataFacet',
-	'RAIRProductFacet',
-	'RAIRRangesFacet'
-]
-
-// Import order is important, don't rearrange!
-const marketplaceFacetNames = [
-	'MarketplaceDiamond', // Main Marketplace Diamond
-	'MintingOffersFacet', // Minting Facets
-	'FeesFacet'
-]
+const diamondContracts = {
+	Factory: {
+		mainDiamondContract: 'FactoryDiamond',
+		// Import order is important, don't rearrange!
+		facetContracts: [
+			'ERC777ReceiverFacet', // Factory Facets
+			'creatorFacet',
+			'TokensFacet',
+			'ERC721Facet', // Deployed Token Facets
+			'RAIRMetadataFacet',
+			'RAIRProductFacet',
+			'RAIRRangesFacet'
+		]
+	},
+	Marketplace: {
+		mainDiamondContract: 'MarketplaceDiamond',
+		// Import order is important, don't rearrange!
+		facetContracts: [
+			'MintingOffersFacet',
+			'FeesFacet'
+		]
+	},
+	Credit: {
+		mainDiamondContract: 'CreditHandler',
+		// Import order is important, don't rearrange!
+		facetContracts: [
+			'CreditDeposit',
+			'CreditQuery',
+			'CreditWithdraw',
+		]
+	}
+}
 
 const App = () => {
-	const [provider, setProvider] = useState();
-	const [signer, setSigner] = useState();
-	const [factoryFacetsArray, setFactoryFacetsArray] = useState([]);
-	const [marketplaceFacetsArray, setMarketplaceFacetsArray] = useState([]);
-	const [standardFacetsArray, setStandardFacetsArray] = useState([]);
+	const [selectedDiamond, setSelectedDiamond] = useState('null');
 
+	const { signer } = useSelector(store => store.web3);
+	const dispatch = useDispatch();
 	const connectProvider = useCallback(() => {
 		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum)
-			setProvider(provider);
-			setSigner(provider.getSigner(0));
+			(async () => {
+				let provider = new BrowserProvider(window.ethereum)
+				dispatch(loadProvider(provider));
+				dispatch(loadSigner(await provider.getSigner(0)));
+				dispatch(loadChainId(window.ethereum.chainId));
+			})();
 		}
-	}, [setProvider, setSigner]);
-
+	}, [dispatch]);
+	/*
 	useEffect(() => {
 		const queryFacetABIData = async (chainId) => {
 			try {
 				let data = [];
 				for await (let facetName of factoryFacetNames) {
 					console.log('importing', facetName)
-					let facetData = await import(`./contractAbis/${chainId}/${facetName}.json`);
+					let facetData = await import(`./deployments/${chainId}/${facetName}.json`);
 					facetData.facetName = facetName;
 					data.push(facetData);
 				}
@@ -85,11 +96,7 @@ const App = () => {
 			}
 		}
 
-		window.ethereum.on('chainChanged', (chainId) => {
-			console.log('ChainID changed!');
-			queryFacetABIData(chainId);
-			connectProvider();
-		});
+		
 
 		window.ethereum.on('connect', async (connectionInfo) => {
 			console.log('Metamask connected!');
@@ -97,6 +104,21 @@ const App = () => {
 			connectProvider();
 		});
 	}, [connectProvider]);
+	*/
+
+	useEffect(() => {
+		window.ethereum.on('chainChanged', (chainId) => {
+			console.log('ChainID changed!');
+			dispatch(loadChainId(chainId));
+			connectProvider();
+		});
+
+		window.ethereum.on('connect', async (connectionInfo) => {
+			console.log('Metamask connected!');
+			dispatch(loadChainId(connectionInfo.chainId));
+			connectProvider();
+		});
+	}, [connectProvider, dispatch])
 
 	useEffect(() => {
 		connectProvider();
@@ -106,21 +128,24 @@ const App = () => {
 		<div className='h1'>
 			Rair Diamond Manager
 		</div>
+		<div className='h5'>
+			{signer && `Connected with ${signer?.address}`}
+		</div>
 		<hr />
-		{standardFacetsArray.length > 0 && [
-			factoryFacetsArray.concat(standardFacetsArray),
-			marketplaceFacetsArray.concat(standardFacetsArray)
-		].map((facets, colIndex) => {
-			return <DiamondFacetsGroup
-				key={colIndex}
-				{...{
-					standardFacetsArray,
-					facets,
-					signer,
-					provider
-				}}
+		<select className='form-control mb-3' value={selectedDiamond} onChange={e => setSelectedDiamond(e.target.value)}>
+			<option disabled value='null'> Select a smart contract </option>
+			{Object.keys(diamondContracts).map((contract, index) => {
+				return <option key={index} value={contract}>
+					{contract}
+				</option>
+			})}
+		</select>
+		<hr />
+		{selectedDiamond !== 'null' && 
+			<DiamondFacetsGroup
+				{...diamondContracts[selectedDiamond]}
 			/>
-		})}
+		}
 	</div>
 }
 

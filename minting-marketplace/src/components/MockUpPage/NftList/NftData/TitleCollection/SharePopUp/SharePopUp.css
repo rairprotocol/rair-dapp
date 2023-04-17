@@ -155,3 +155,42 @@
   background-color: grey !important;
   border-radius: 16px !important;
 }
+
+@media screen and (max-width: 500px) {
+  .share-button-linear-border,
+  .share-button {
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    background: linear-gradient(
+      #725bdb 0%,
+      #805fda 10.31%,
+      #8c63da 20.62%,
+      #9867d9 30.94%,
+      #a46bd9 41.25%,
+      #af6fd8 51.56%,
+      #af6fd8 51.56%,
+      #bb73d7 61.25%,
+      #c776d7 70.94%,
+      #d27ad6 80.62%,
+      #dd7ed6 90.31%,
+      #e882d5 100%
+    );
+    padding: 1px; */
+    border-radius: 8px;
+  }
+
+  .share-button-linear-border {
+    height: 40px;
+  }
+
+  .share-button {
+    height: 37px;
+    font-size: 16px;
+  }
+
+  .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+    border-radius: 8px !important;
+  }
+}

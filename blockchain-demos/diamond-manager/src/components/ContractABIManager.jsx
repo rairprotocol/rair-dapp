@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import * as ethers from 'ethers';
+import { ZeroAddress, Contract, toUtf8Bytes } from 'ethers';
 
 const FacetCutAction_ADD = 0;
 const FacetCutAction_REPLACE = 1;
@@ -9,12 +9,8 @@ const ContractABIManager = ({
 	connectMainDiamondFactory,
 	FacetData,
 	mainDiamond,
-	setMainDiamond,
 	signer,
-	provider,
 	usedSelectors,
-	setUsedSelectors,
-	setQueriedFacets,
 	queriedFacets,
 	queryingFacets
 }) => {
@@ -23,7 +19,7 @@ const ContractABIManager = ({
 	const [functions, setFunctions] = useState();
 
 	useEffect(() => {
-		let facetInstance = new ethers.Contract(address, abi, signer);
+		let facetInstance = new Contract(address, abi, signer);
 		let [facetData] = queriedFacets.filter(item => item.facetAddress === address);
 		setSelectorsInDiamond(facetData);
 		setFunctions(Object.keys(facetInstance.functions)
@@ -51,13 +47,13 @@ const ContractABIManager = ({
 
 	const callItemCuts = async (FacetCutAction) => {
 		const cutItem = {
-			facetAddress: FacetCutAction === FacetCutAction_REMOVE ? ethers.constants.AddressZero : address,
+			facetAddress: FacetCutAction === FacetCutAction_REMOVE ? ZeroAddress : address,
 			action: FacetCutAction,
 			functionSelectors: functions.filter(item => item.selected).map(item => item.hashed)
 			//getSelectors(facetInstance, aux).filter(item => !usedSelectors.includes(item))
 		}
 		await mainDiamond.diamondCut(
-			[cutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')
+			[cutItem], ZeroAddress, toUtf8Bytes('')
 		);
 	}
 

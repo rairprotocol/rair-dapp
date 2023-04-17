@@ -379,17 +379,25 @@ img.single-token-block-img {
   }
 }
 
-@media screen and (min-width: 700px) and (max-width: 1109px) {
+@media screen and (min-width: 700px) and (max-width: 1124px) {
   .wrapper-collection .list-button-wrapper {
     width: 600px;
   }
 
-  .wrapper-collection .nft-item-collection:nth-child(2n + 2) {
+  .wrapper-collection .nft-item-collection:nth-child(1n + 1),
+  .wrapper-collection .nft-item-collection:nth-child(2n + 2),
+  .wrapper-collection .nft-item-collection:nth-child(3n + 3),
+  .wrapper-collection .nft-item-collection:nth-child(4n + 4) {
     margin-right: 0px;
+    margin-left: 0px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(2n + 2) {
+    margin-left: 24px;
   }
 }
 
-@media screen and (min-width: 1261px) and (max-width: 1415px) {
+@media screen and (min-width: 1261px) and (max-width: 1430px) {
   .wrapper-collection .list-button-wrapper {
     width: 900px;
   }
@@ -399,7 +407,7 @@ img.single-token-block-img {
   }
 }
 
-@media screen and (min-width: 1415px) and (max-width: 1725px) {
+@media screen and (min-width: 1431px) and (max-width: 1725px) {
   .wrapper-collection .list-button-wrapper {
     width: 1200px;
   }
@@ -495,6 +503,14 @@ img.single-token-block-img {
   }
   .general-title {
     max-width: 894px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(3n + 3) {
+    margin-right: 0px;
+  }
+
+  .wrapper-collection .nft-item-collection:nth-child(4n + 4) {
+    margin-right: none;
   }
 }
 
@@ -1208,6 +1224,18 @@ p.general-title {
   .nft-form-control-icon {
     align-items: baseline;
   }
+
+  .wrapper-collection .list-button-wrapper {
+    justify-content: center !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .nft-item-collection {
+    height: 150px;
+    width: 150px;
+    margin: 7px !important;
+  }
 }
 
 @media screen and (max-width: 1400px) {
@@ -1311,5 +1339,11 @@ p.general-title {
   }
   .video-module-play-button {
     transform: scale(0.5);
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .list-button-wrapper {
+    width: 330px;
   }
 }

@@ -54,3 +54,9 @@
   width: inherit;
   /* padding: 0 10px; */
 }
+
+@media screen and (max-with: 500px) {
+  .nftDataPageShowMore {
+    border-radius: 8px;
+  }
+}

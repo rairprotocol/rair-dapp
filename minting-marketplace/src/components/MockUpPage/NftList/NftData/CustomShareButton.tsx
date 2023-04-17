@@ -1,5 +1,6 @@
 import React from 'react';
 
+import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { ICusmonShareButton } from '../../mockupPage.types';
 
 const CustomShareButton: React.FC<ICusmonShareButton> = ({
@@ -9,6 +10,7 @@ const CustomShareButton: React.FC<ICusmonShareButton> = ({
   isCollectionPathExist,
   moreUnlockablesClassName
 }) => {
+  const { width } = useWindowDimensions();
   return (
     <button
       onClick={handleClick}
@@ -20,7 +22,7 @@ const CustomShareButton: React.FC<ICusmonShareButton> = ({
           primaryColor === 'rhyno' ? '#F5F5F5' : 'var(--charcoal)'
         }`,
         color: `${primaryColor === 'rhyno' ? 'var(--charcoal)' : '#FFFFFF'}`,
-        minWidth: `${isCollectionPathExist ? '161px' : '124px'}`
+        minWidth: `${width >= 500 ? '161px' : '124px'}`
       }}>
       {title}
     </button>

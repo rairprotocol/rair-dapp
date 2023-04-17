@@ -14,6 +14,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  max-width: 40vw;
 }
 
 .container-title-collection .block-title-share {
@@ -38,7 +39,7 @@
 }
 
 .block-user-creator h5 {
-  word-break: break-all;
+  word-break: keep-all;
 }
 
 .container-title-collection .block-user-creator img {
@@ -145,56 +146,56 @@
   );
 }
 
-/* @media screen and (max-width: 1000px) {
+@media screen and (max-width: 1250px) {
+  .title-collection-container.minted .title-collection-wrapper {
+    width: 78vw;
+  }
+
+  .container-title-collection {
+    max-width: 30vw;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .title-collection-container.minted .title-collection-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .title-collection-container.minted .title-collection-wrapper {
+    width: 90vw;
+  }
+
+  .title-collection-container.minted
+    .title-collection-wrapper
+    .collection-authenticity-link-share {
+    margin-top: 20px;
+  }
+
+  .title-collection-container.minted
+    .title-collection-wrapper
+    .collection-authenticity-link-share
+    div {
+    margin: 0;
+  }
+
   .container-title-collection {
     max-width: 100%;
   }
 }
 
-@media screen and (max-width: 900px) {
-  .container-title-collection .block-title-share {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .container-title-collection .block-title-share .block-btn-share {
-    margin: 10px;
-  }
-}
-
-@media screen and (max-width: 720px) {
-  .container-title-collection .block-title-share {
-    align-items: flex-start;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  .container-title-collection .block-title-share button.block-btn-share {
-    font-size: 16px;
-  }
-
-  .container-title-collection .block-title-share h2 {
-    font-size: 32px;
-  }
-} */
-
-/* @media screen and (max-width: 550px) {
-  .container-title-collection .block-user-creator {
-    flex-wrap: wrap;
+@media screen and (max-width: 450px) {
+  .title-collection-container.minted
+    .title-collection-wrapper
+    .collection-authenticity-link-share {
     justify-content: center;
+    align-items: center;
   }
 
-  .container-title-collection .block-user-creator h5 {
-    margin-top: 10px;
+  .title-collection-container.minted
+    .title-collection-wrapper
+    .collection-authenticity-link-share
+    a {
+    margin: 0px 15px;
   }
 }
-
-@media screen and (max-width: 440px) {
-  .container-title-collection .block-user-creator h5 {
-    width: 100%;
-  }
-
-  .container-title-collection .block-title-share button.block-btn-share {
-    margin: 10px 0;
-  }
-} */

@@ -177,7 +177,7 @@ export type TShowMoreContainer = {
   textColor: string | undefined;
   margin: string | undefined;
   background?: string | undefined;
-  loading?: boolean;
+  loading?: string;
 };
 
 export type TShowMoreItem = {

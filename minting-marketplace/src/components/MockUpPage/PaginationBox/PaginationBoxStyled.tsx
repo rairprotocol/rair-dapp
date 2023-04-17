@@ -32,6 +32,16 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
           color: #fff;
         }
       }
+      div {
+        color: ${(props) =>
+          props.primarycolor === 'rhyno' ? '#2d2d2d' : '#fff'};
+      }
+    }
+  }
+
+  @media screen and (max-width: 540px) {
+    ul li {
+      margin: 3px !important;
     }
   }
 `;

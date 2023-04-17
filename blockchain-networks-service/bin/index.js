@@ -76,6 +76,7 @@ async function main() {
       PastAddress: _mongoose.model('PastAddress', require('./models/pastAddress.js'), 'PastAddress'),
       ResaleTokenOffer: _mongoose.model('ResaleTokenOffer', require('./models/resaleTokenOffer.js'), 'ResaleTokenOffer'),
       CustomRoyaltiesSet: _mongoose.model('CustomRoyaltiesSet', require('./models/customRoyaltiesSet.js'), 'CustomRoyaltiesSet'),
+      UserCredit: _mongoose.model('UserCredit', require('./models/userCredit.js'), 'UserCredit'),
     },
     mongo: _db,
     config,

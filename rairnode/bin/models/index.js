@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const Contract = require('./contract');
 const File = require('./file');
 const User = require('./user');
@@ -16,6 +17,7 @@ const CustomRoyaltiesSet = require('./customRoyaltiesSet');
 const ResaleTokenOffer = require('./resaleTokenOffer');
 const FavoriteTokens = require('./favoriteTokens');
 const MediaViewLog = require('./mediaViewLog');
+const UserCredit = require('./userCredit');
 
 module.exports = {
   Contract: mongoose.model('Contract', Contract, 'Contract'),
@@ -35,4 +37,5 @@ module.exports = {
   ResaleTokenOffer: mongoose.model('ResaleTokenOffer', ResaleTokenOffer, 'ResaleTokenOffer'),
   FavoriteTokens: mongoose.model('FavoriteTokens', FavoriteTokens, 'FavoriteTokens'),
   MediaViewLog: mongoose.model('MediaViewLog', MediaViewLog, 'MediaViewLog'),
+  UserCredit: mongoose.model('UserCredit', UserCredit, 'UserCredit'),
 };

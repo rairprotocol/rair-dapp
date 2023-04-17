@@ -1,8 +1,7 @@
 const { JsonRpcProvider, Network, Contract } = require('ethers');
 const log = require('../../utils/logger')(module);
-const rair721Abi = require('./contracts/RAIR_ERC721.json').abi;
-
 const config = require('../../config');
+const { classicRAIR721Abi } = require('../smartContracts');
 
 const maticTestnet = new Network('Matic Testnet', 0x13881);
 const maticMainnet = new Network('Matic Mainnet', 0x89);
@@ -67,7 +66,7 @@ async function checkBalanceProduct(
     );
     const tokenInstance = new Contract(
       contractAddress,
-      rair721Abi,
+      classicRAIR721Abi,
       provider,
     );
     const result = await tokenInstance.hasTokenInProduct(
@@ -109,15 +108,14 @@ async function checkBalanceSingle(
     );
     const tokenInstance = new Contract(
       contractAddress,
-      rair721Abi,
+      classicRAIR721Abi,
       provider,
     );
     const result = await tokenInstance.ownerOf(tokenId);
     return result.toLowerCase() === accountAddress;
   } catch (error) {
-    console.error(
-      'Error querying a single NFT on RPC: ',
-      endpoints[blockchain],
+    log.error(
+      `Error querying a single NFT on RPC: ${endpoints[blockchain]}`,
     );
     log.error(error);
   }
@@ -126,13 +124,12 @@ async function checkBalanceSingle(
 
 const checkBalanceAny = async (userAddress, chain, contractAddress) => {
   try {
-    const provider = new JsonRpcProvider(
-      endpoints[chain], v6Networks[chain], {
+    const provider = new JsonRpcProvider(endpoints[chain], v6Networks[chain], {
         staticNetwork: v6Networks[chain],
       });
     const tokenInstance = new Contract(
       contractAddress,
-      rair721Abi,
+      classicRAIR721Abi,
       provider,
     );
     const result = await tokenInstance.balanceOf(userAddress);

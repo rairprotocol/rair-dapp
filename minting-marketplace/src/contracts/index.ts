@@ -1,4 +1,5 @@
 //@ts-nocheck
+import * as CreditHandler from './CreditHandlerABI.json';
 import * as DiamondFactory from './diamondFactoryABI.json';
 import * as DiamondMarketplace from './diamondMarketplaceABI.json';
 import * as MinterMarketplace from './Minter_Marketplace.json';
@@ -16,3 +17,4 @@ export const resaleAbi = ResaleMarketplace.default.abi;
 export const factoryAbi = Factory.default.abi;
 export const erc777Abi = ERC777.default.abi;
 export const tokenPurchaserAbi = TokenPurchaser.default.abi;
+export const creditHandlerAbi = CreditHandler.default.abi;

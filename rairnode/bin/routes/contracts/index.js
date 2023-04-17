@@ -241,6 +241,8 @@ router.get('byUser/:userId', loadUserSession, async (req, res, next) => {
           contractAddress: 1,
           title: 1,
           blockchain: 1,
+          external: 1,
+          diamond: 1,
         },
       );
 

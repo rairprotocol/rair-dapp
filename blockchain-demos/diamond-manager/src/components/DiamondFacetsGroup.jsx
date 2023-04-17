@@ -1,65 +1,117 @@
 import { useState, useCallback } from 'react';
-import * as ethers from 'ethers';
-import ContractABIManager from './ContractABIManager.jsx';
-import {getSelectors} from '../utils/selectorUtils.js';
+import { Contract } from 'ethers';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import FacetManager from './FacetManager.jsx';
 
-const DiamondFacetsGroup = ({signer, provider, facets, standardFacetsArray}) => {
-	const [mainDiamond, setMainDiamond] = useState();
-	const [usedSelectors, setUsedSelectors] = useState([]);
-	const [queriedFacets, setQueriedFacets] = useState([]);
-	const [combinedAbiData, setCombinedAbiData] = useState();
-	const [queryingFacets, setQueryingFacets] = useState(false);
-	
-	const connectMainDiamondFactory = useCallback(async (address, abi) => {
-		setUsedSelectors([]);
-		setQueriedFacets([]);
-		setMainDiamond();
-		setQueryingFacets(true);
-		await window.ethereum.request({ method: 'eth_requestAccounts' });
-		const diamondCutData = {...standardFacetsArray[0]};
-		const diamondLouper = {...standardFacetsArray[1]};
+const standardFacetNames = [
+	'DiamondCutFacet', // Standard Diamond Functions
+	'DiamondLoupeFacet',
+	'OwnershipFacet'
+];
 
-		let instance = new ethers.Contract(address, abi, signer);
-		let aux = [...usedSelectors];
-		getSelectors(instance, aux);
+const DiamondFacetsGroup = ({ facetContracts, mainDiamondContract }) => {
+	const [blockchainFacets, setBlockchainFacets] = useState([]);
+	const [loadedFacets, setLoadedFacets] = useState([]);
+	const [mainInstance, setMainInstance] = useState();
 
-		try {
-			instance = new ethers.Contract(address, diamondLouper.abi, signer);
-			let facets = await instance.facets();
-			let selectors = []
-			facets.forEach((item, index) => {
-				selectors = selectors.concat([...item.functionSelectors]);
-			});
-			setUsedSelectors(selectors);
-			setQueriedFacets(facets);
-			getSelectors(instance, aux);
-		} catch (e) {
-			console.error(e);
+	const { signer, chainId } = useSelector(store => store.web3);
+
+	const loadFacetData = useCallback(async (facetName) => {
+		if (!chainId) {
+			return undefined;
 		}
+		try {
+			console.log(`Loading ${chainId}/${facetName}`);
+			let facetData = await import(`../deployments/${chainId}/${facetName}.json`);
+			facetData.facetName = facetName;
+			return facetData;
+		} catch (err) {
+			console.error("Error importing facets for Diamond Factory", err);
+		}
+	}, [chainId]);
+	
+	const connectMainDiamondFactory = useCallback(async () => {
+		// Reset all data
+		setLoadedFacets([])
+		setMainInstance()
+		setBlockchainFacets([])
 
-		instance = new ethers.Contract(address, diamondCutData.abi, signer);
-		setMainDiamond(instance);
-		setQueryingFacets(false);
-	}, [signer, provider, setMainDiamond, standardFacetsArray, usedSelectors]);
+		// Wait for metamask to connect
+		await window.ethereum.request({ method: 'eth_requestAccounts' });
 
+		// Load standard diamond data
+		const facetData = [];
+		for await (const standardFacet of standardFacetNames) {
+			facetData.push(await loadFacetData(standardFacet))
+		}
+		for await (const contract of facetContracts) {
+			facetData.push(await loadFacetData(contract))
+		}
+		let combinedAbi = facetData.reduce((prev, current) => {
+			return prev.concat(current.abi);
+		}, [])
+		const mainDiamondData = await loadFacetData(mainDiamondContract);
+		setLoadedFacets(facetData);
+
+		const mainDiamondInstance = new Contract(mainDiamondData.address, combinedAbi, signer);
+		setMainInstance(mainDiamondInstance);
+		const contractsConnected = await mainDiamondInstance.facets();
+		const blockchainFacets = contractsConnected.reduce((prev, contract) => {
+			const aux = {...prev};
+			contract.functionSelectors.forEach(selector => {
+				aux[selector] = contract.facetAddress;
+			})
+			return aux;
+		}, {})
+		setBlockchainFacets(blockchainFacets);
+	}, [loadFacetData, mainDiamondContract, signer, facetContracts]);
+
+	useEffect(() => {
+		connectMainDiamondFactory();
+	}, [connectMainDiamondFactory])
+
+	const combineAbi = useCallback(() => {
+		const combinedFacets = {
+			address: mainInstance.target,
+			abi: loadedFacets.reduce((result, current) => {
+				const loadedFunctions = result.map(foo => {
+					return foo.name;
+				});
+				const filteredAbi = current.abi.filter(foo => {
+					return !loadedFunctions.includes(foo.name)
+				});
+				console.log(loadedFunctions, filteredAbi);
+				return [...result, ...filteredAbi]
+			}, [])
+		}
+		const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(combinedFacets));
+		const downloadAnchorNode = document.createElement('a');
+		downloadAnchorNode.setAttribute("href",     dataStr);
+		downloadAnchorNode.setAttribute("download", "export.json");
+		document.body.appendChild(downloadAnchorNode);
+		downloadAnchorNode.click();
+		downloadAnchorNode.remove();
+	}, [mainInstance, loadedFacets]);
+
+	return <>
+		<br />
+		<div className='col-12 row px-0 mx-0'>
+			<div className='col-12'>
+				{loadedFacets.map((facet, index) => {
+					return <FacetManager key={index} {
+						...{facet, mainInstance, blockchainFacets, connectMainDiamondFactory}
+					} />
+				})}
+			</div>
+		</div>
+		<button onClick={combineAbi} className='btn btn-primary'>
+			Combine ABI
+		</button>
+	</>
+}
+/*
 	return <div className='col-12 col-md-6'>
-		{facets.length > 0 && facets
-			.map((contract, index) => {
-				return <ContractABIManager
-					key={index}
-					FacetData={contract}
-					{...{
-						queryingFacets,
-						signer,
-						provider,
-						mainDiamond: index === 0 ? undefined : mainDiamond,
-						usedSelectors,
-						setUsedSelectors,
-						queriedFacets,
-						setQueriedFacets,
-						connectMainDiamondFactory: index === 0 ? connectMainDiamondFactory : undefined
-					}} />
-			})}
 		<hr />
 		<button onClick={async () => {
 			let usedFunctions = [];
@@ -87,5 +139,5 @@ const DiamondFacetsGroup = ({signer, provider, facets, standardFacetsArray}) => 
 		</a>}
 	</div>
 }
-
+*/
 export default DiamondFacetsGroup;

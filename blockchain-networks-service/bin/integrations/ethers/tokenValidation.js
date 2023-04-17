@@ -1,13 +1,14 @@
-const ethers = require("ethers");
-const RAIR_ERC721Abi = require("./contracts/RAIR_ERC721.json").abi;
-const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID;
+const ethers = require('ethers');
+const { erc721Abi } = require('./contracts');
+
+const { INFURA_PROJECT_ID } = process.env;
 
 // Left are names that can be modified, right are the names of the endpoints on Infura
 const endpoints = {
-  mumbai: "polygon-mumbai",
-  polygon: "polygon-mainnet",
-  ethereum: "mainnet",
-  goerli: "goerli",
+  mumbai: 'polygon-mumbai',
+  polygon: 'polygon-mainnet',
+  ethereum: 'mainnet',
+  goerli: 'goerli',
 };
 
 /**
@@ -26,21 +27,21 @@ async function checkBalanceProduct(
   contractAddress,
   productId,
   offerRangeStart,
-  offerRangeEnd
+  offerRangeEnd,
 ) {
   const provider = new ethers.providers.JsonRpcProvider(
-    `https://${endpoints[blockchain]}.infura.io/v3/${INFURA_PROJECT_ID}`
+    `https://${endpoints[blockchain]}.infura.io/v3/${INFURA_PROJECT_ID}`,
   );
   const tokenInstance = new ethers.Contract(
     contractAddress,
-    RAIR_ERC721Abi,
-    provider
+    erc721Abi,
+    provider,
   );
   const result = await tokenInstance.hasTokenInProduct(
     accountAddress,
     productId,
     offerRangeStart,
-    offerRangeEnd
+    offerRangeEnd,
   );
   return result;
 }
@@ -57,18 +58,17 @@ async function checkBalanceSingle(
   accountAddress,
   blockchain,
   contractAddress,
-  tokenId
+  tokenId,
 ) {
   const provider = new ethers.providers.JsonRpcProvider(
-    `https://${endpoints[blockchain]}.infura.io/v3/${INFURA_PROJECT_ID}`
+    `https://${endpoints[blockchain]}.infura.io/v3/${INFURA_PROJECT_ID}`,
   );
   const tokenInstance = new ethers.Contract(
     contractAddress,
-    RAIR_ERC721Abi,
-    provider
+    erc721Abi,
+    provider,
   );
   const result = await tokenInstance.ownerOf(tokenId);
-  console.log(result);
   return result.toLowerCase() === accountAddress;
 }
 
