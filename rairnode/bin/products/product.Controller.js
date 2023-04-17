@@ -6,20 +6,19 @@ const router = express.Router();
 
 router.get(
     '/',
-    validation('pagination', 'query'),
-    validation('dbProducts', 'query'),
+    validation(['pagination', 'dbProducts'], 'query'),
     productService.getAllProducts,
 );
 
 router.get(
     '/user/:userAddress',
-    validation('getProductsByUserAddress', 'params'),
+    validation(['getProductsByUserAddress'], 'params'),
     productService.getProductsByUser,
 );
 
 router.get(
     '/:id',
-    validation('dbId', 'params'),
+    validation(['dbId'], 'params'),
     productService.getProductById,
 );
 

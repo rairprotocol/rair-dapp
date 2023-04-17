@@ -1,7 +1,8 @@
 const Joi = require('joi');
+const { mongoId } = require('./reusableCustomTypes');
 
-module.exports = Joi.object({
-  contractId: Joi.string().required(),
+module.exports = () => ({
+  contractId: mongoId.required(),
   product: Joi.number(),
   overwritePin: Joi.string(),
 });

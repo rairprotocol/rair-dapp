@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-module.exports = Joi.object({
+module.exports = () => ({
   title: Joi.string().min(1).max(30),
   description: Joi.string().min(1).max(300),
   contract: Joi.string(),

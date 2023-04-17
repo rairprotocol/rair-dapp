@@ -1,10 +1,8 @@
 const Joi = require('joi');
-const config = require('../config');
+const { blockchainNetworks } = require('./reusableCustomTypes');
 
-module.exports = Joi.object({
-  networkId: Joi.any()
-    .valid(...(Object.keys(config.blockchain.networks)))
-    .required(),
+module.exports = () => ({
+  networkId: blockchainNetworks.required(),
   contractAddress: Joi.string()
     .required(),
   limit: Joi.number()

@@ -66,7 +66,7 @@ module.exports = () => {
    */
   router.post(
     '/add/:mediaId',
-    validation('addMedia', 'params'),
+    validation(['addMedia'], 'params'),
     async (req, res, next) => {
       const key = req.body.length > 0 ? req.body : undefined;
       const { mediaId } = req.params;
@@ -91,8 +91,8 @@ module.exports = () => {
   router.patch(
     '/update/:mediaId',
     requireUserSession,
-    validation('removeMedia', 'params'),
-    validation('updateMedia', 'body'),
+    validation(['removeMedia'], 'params'),
+    validation(['updateMedia'], 'body'),
     isOwner(File),
     async (req, res, next) => {
       try {
@@ -144,7 +144,7 @@ module.exports = () => {
   router.delete(
     '/remove/:mediaId',
     requireUserSession,
-    validation('removeMedia', 'params'),
+    validation(['removeMedia'], 'params'),
     isOwner(File),
     async (req, res, next) => {
       try {
@@ -205,7 +205,7 @@ module.exports = () => {
    */
   router.get(
     '/list',
-    validation('filterAndSort', 'query'),
+    validation(['filterAndSort'], 'query'),
     loadUserSession,
     async (req, res, next) => {
       try {
@@ -278,9 +278,9 @@ module.exports = () => {
     requireUserSession,
     isAdmin,
     upload.single('video'),
-    validation('uploadVideoFile', 'file'),
+    validation(['uploadVideoFile'], 'file'),
     formDataHandler,
-    validation('uploadVideo'),
+    validation(['uploadVideo']),
     async (req, res, next) => {
       // Get video information from the request's body
       const {

@@ -1,5 +1,5 @@
 const Joi = require('joi');
 
-module.exports = Joi.object({
+module.exports = () => ({
   product: Joi.string().required(),
 });

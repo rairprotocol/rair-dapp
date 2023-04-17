@@ -4,6 +4,6 @@ const { validation } = require('../middleware');
 
 const router = express.Router();
 
-router.get('/', validation('getLocksByProduct', 'query'), getLocks);
+router.get('/', validation(['getLocksByProduct'], 'query'), getLocks);
 
 module.exports = router;

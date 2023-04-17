@@ -2,14 +2,14 @@ const Joi = require('joi');
 const { ethAddress, mongoId } = require('./reusableCustomTypes');
 
 module.exports = {
-    validateMediaData: Joi.object({
+    validateMediaData: () => ({
         contract: mongoId,
         product: Joi.string(),
         offer: Joi.array().items(Joi.string()).max(2),
         category: Joi.string(),
         demo: Joi.boolean(),
     }),
-    addFileFromMediaService: Joi.object({
+    addFileFromMediaService: () => ({
         cid: Joi.string(),
         meta: Joi.object({
             mainManifest: Joi.string().required(),

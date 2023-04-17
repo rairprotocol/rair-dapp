@@ -12,7 +12,7 @@ module.exports = (context) => {
   // Get minted tokens from a product
   router.get(
     '/',
-    validation('getTokensByContractProduct', 'query'),
+    validation(['getTokensByContractProduct'], 'query'),
     async (req, res, next) => {
       try {
         const { contract, product } = req;

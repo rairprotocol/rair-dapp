@@ -2,20 +2,20 @@ const fs = require('fs');
 const _ = require('lodash');
 const csv = require('csv-parser');
 const { ZeroAddress } = require('ethers');
-const AppError = require('../utils/errors/AppError');
+const AppError = require('../../utils/errors/AppError');
 const {
   OfferPool,
   Offer,
   MintedToken,
   Contract,
   Product,
-} = require('../models');
-const config = require('../config');
+} = require('../../models');
+const config = require('../../config');
 const { addPin, addFile, addMetadata, removePin } =
-  require('../integrations/ipfsService')();
-const log = require('../utils/logger')(module);
-const { textPurify, cleanStorage } = require('../utils/helpers');
-const eFactory = require('../utils/entityFactory');
+  require('../../integrations/ipfsService')();
+const log = require('../../utils/logger')(module);
+const { textPurify, cleanStorage } = require('../../utils/helpers');
+const eFactory = require('../../utils/entityFactory');
 
 const { pinata } = config;
 

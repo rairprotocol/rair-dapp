@@ -27,7 +27,7 @@ module.exports = (context) => {
   // Get all minted tokens from a product
   router.use(
     '/:product',
-    validation('nftProduct', 'params'),
+    validation(['nftProduct'], 'params'),
     (req, res, next) => {
       req.product = req.params.product;
       return next();

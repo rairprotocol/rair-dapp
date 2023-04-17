@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { blockchainNetworks, ethAddress, mongoId } = require('./reusableCustomTypes');
 
 module.exports = {
-    fullContracts: Joi.object({
+    fullContracts: () => ({
         pageNum: Joi.number(),
         itemsPerPage: Joi.number(),
         blockchain: blockchainNetworks,
@@ -11,12 +11,12 @@ module.exports = {
         addOffers: Joi.boolean(),
         addLocks: Joi.boolean(),
     }),
-    importExternalContracts: Joi.object({
+    importExternalContracts: () => ({
         networkId: blockchainNetworks,
         contractAddress: ethAddress,
         limit: Joi.number(),
     }),
-    specificContracts: Joi.object({
+    specificContracts: () => ({
         contractAddress: ethAddress,
         networkId: blockchainNetworks,
         contract: mongoId,

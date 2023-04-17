@@ -1,10 +1,16 @@
+const Joi = require('joi');
 const schemas = require('../schemas');
 const log = require('../utils/logger')(module);
 const AppError = require('../utils/errors/AppError');
 
-module.exports = (schemaName, destination = 'body') => (req, res, next) => {
+module.exports = (schemasArray, destination = 'body') => (req, res, next) => {
   try {
-    const schema = schemas[schemaName];
+    const finalSchema = schemasArray.reduce((result, item) => ({
+      ...result,
+      ...schemas[item](),
+    }), {});
+
+    const schema = Joi.object(finalSchema);
     const { error } = schema.validate(req[destination]);
 
     if (!error) {

@@ -1,14 +1,13 @@
 const Joi = require('joi');
+const { blockchainNetworks } = require('./reusableCustomTypes');
 
-module.exports = Joi.object({
+module.exports = () => ({
   searchString: Joi.string()
     .min(1)
     .required(),
   searchBy: Joi.any()
     .valid('users', 'products', 'files'),
-  blockchain: Joi.string()
-    .pattern(/^0x\w*/)
-    .messages({ 'string.pattern.base': 'Invalid blockchain hash' }),
+  blockchain: blockchainNetworks,
   category: Joi.string()
     .min(1),
 });

@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-module.exports = Joi.object({
+module.exports = () => ({
   contract: Joi.string().required(),
   commonMetadataFor: Joi.any()
     .valid('contract', 'product')

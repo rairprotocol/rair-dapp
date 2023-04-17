@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { ethAddress, blockchainNetworks, ethTransaction, mongoId } = require('./reusableCustomTypes');
 
 module.exports = {
-    dbContracts: Joi.object({
+    dbContracts: () => ({
         title: Joi.string(),
         user: ethAddress,
         blockchain: blockchainNetworks,
@@ -18,7 +18,7 @@ module.exports = {
         blockSync: Joi.boolean(),
         blockView: Joi.boolean(),
     }),
-    dbProducts: Joi.object({
+    dbProducts: () => ({
         name: Joi.string(),
         collectionIndexInContract: Joi.string(),
         contract: mongoId,
@@ -34,7 +34,7 @@ module.exports = {
         singleMetadata: Joi.boolean(),
         metadataURI: Joi.string(),
     }),
-    dbTokens: {
+    dbTokens: () => ({
         token: Joi.string(),
         uniqueIndexInContract: Joi.string(),
         ownerAddress: Joi.string(),
@@ -48,8 +48,8 @@ module.exports = {
         isURIStoredToBlockchain: Joi.boolean(),
         creationDate: Joi.date(),
         product: Joi.string(),
-    },
-    dbOffers: Joi.object({
+    }),
+    dbOffers: () => ({
         offerIndex: Joi.string(),
         contract: mongoId,
         product: Joi.string(),
@@ -65,7 +65,7 @@ module.exports = {
         diamondRangeIndex: Joi.string(),
         transactionHash: ethTransaction,
     }),
-    dbResales: Joi.object({
+    dbResales: () => ({
         operator: ethAddress,
         contract: mongoId,
         tokenId: Joi.boolean(),
@@ -73,7 +73,7 @@ module.exports = {
         status: Joi.boolean(),
         tradeid: Joi.string(),
     }),
-    dbRoyalties: Joi.object({
+    dbRoyalties: () => ({
         contract: mongoId,
         recipients: Joi.number(),
         remainderForSeller: Joi.number(),

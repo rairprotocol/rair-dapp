@@ -5,10 +5,10 @@ const upload = require('../Multer/Config');
 
 const router = express.Router();
 
-router.post('/', validation('createUser'), usersService.createUser);
+router.post('/', validation(['createUser']), usersService.createUser);
 
 // Common for the group of routes below validation
-router.use('/:publicAddress', validation('singleUser', 'params'));
+router.use('/:publicAddress', validation(['singleUser'], 'params'));
 
 router
   .route('/:publicAddress')
@@ -17,7 +17,7 @@ router
   .patch(
     requireUserSession,
     upload.array('files', 2),
-    validation('updateUser'),
+    validation(['updateUser']),
     usersService.updateUserByUserAddress,
   );
 

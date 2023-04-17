@@ -12,7 +12,7 @@ const contractRoutes = require('./contract');
 const { Contract, Product, OfferPool, Offer, MintedToken } = require('../../models');
 const { addPin, addFolder, addMetadata } = require('../../integrations/ipfsService')();
 const config = require('../../config');
-const { createTokensViaCSV } = require('../../tokens/tokens.Service');
+const { createTokensViaCSV } = require('../../api/tokens/tokens.Service');
 
 const fsPromises = fs.promises;
 
@@ -25,7 +25,7 @@ module.exports = (context) => {
     requireUserSession,
     isAdmin,
     upload.single('csv'),
-    validation('csvFileUpload', 'body'),
+    validation(['csvFileUpload'], 'body'),
     createTokensViaCSV,
   );
 
@@ -53,7 +53,7 @@ module.exports = (context) => {
   });
 
   // Pin batch of metadata to pinata cloud
-  router.post('/pinningMultiple', requireUserSession, validation('pinningMultiple'), async (req, res, next) => {
+  router.post('/pinningMultiple', requireUserSession, validation(['pinningMultiple']), async (req, res, next) => {
     const { contractId, product, overwritePin = 'false' } = req.body;
     const { user } = req;
     const folderName = `${Date.now()}-${nanoid()}`;
@@ -230,7 +230,7 @@ module.exports = (context) => {
     }
   });
 
-  router.use('/network/:networkId/:contract', validation('nftContract', 'params'), async (req, res, next) => {
+  router.use('/network/:networkId/:contract', validation(['nftContract'], 'params'), async (req, res, next) => {
     try {
       const contract = await Contract.findOne({
         contractAddress: req.params.contract.toLowerCase(),

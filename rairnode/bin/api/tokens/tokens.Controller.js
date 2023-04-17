@@ -8,29 +8,27 @@ const {
   getTokenNumbers,
   updateTokenCommonMetadata,
 } = require('./tokens.Service');
-const { getSpecificContracts } = require('../contracts/contracts.Service');
+const { getSpecificContracts } = require('../../contracts/contracts.Service');
 const {
   getOfferIndexesByContractAndProduct,
-} = require('../offers/offers.Service');
+} = require('../../offers/offers.Service');
 const {
   getOfferPoolByContractAndProduct,
-} = require('../offerPools/offerPools.Service');
-const upload = require('../Multer/Config');
+} = require('../../offerPools/offerPools.Service');
+const upload = require('../../Multer/Config');
 const {
   dataTransform,
   validation,
   isAdmin,
   requireUserSession,
-} = require('../middleware');
+} = require('../../middleware');
 
 const router = express.Router();
 
 router
   .route('/')
   .get(
-    validation('specificContracts', 'query'),
-    validation('pagination', 'query'),
-    validation('dbTokens', 'query'),
+    validation(['specificContracts', 'pagination', 'dbTokens'], 'query'),
     getSpecificContracts,
     getAllTokens,
   )
@@ -39,7 +37,7 @@ router
     isAdmin,
     upload.array('files', 2),
     dataTransform(['attributes']),
-    validation('updateCommonTokenMetadata'),
+    validation(['updateCommonTokenMetadata']),
     updateTokenCommonMetadata,
   );
 
@@ -48,7 +46,7 @@ router.post(
   requireUserSession,
   isAdmin,
   upload.single('csv'),
-  validation('csvFileUpload', 'body'),
+  validation(['csvFileUpload'], 'body'),
   createTokensViaCSV,
 );
 router.get(
@@ -58,13 +56,11 @@ router.get(
     req.query.ownerAddress = req.user.publicAddress;
     next();
   },
-  validation('pagination', 'query'),
-  validation('dbTokens', 'query'),
+  validation(['dbTokens', 'pagination'], 'query'),
   getAllTokens,
 );
 router.use(
-  validation('withProductV2', 'query'),
-  validation('specificContracts', 'query'),
+  validation(['withProductV2', 'specificContracts'], 'query'),
   getSpecificContracts,
   getOfferIndexesByContractAndProduct,
   getOfferPoolByContractAndProduct,
@@ -73,14 +69,14 @@ router.use(
 router.get(
   '/tokenNumbers',
   requireUserSession,
-  validation('getTokenNumbers', 'query'),
+  validation(['getTokenNumbers'], 'query'),
   getTokenNumbers,
 );
 
 router
-  .route('/:token', validation('tokenNumber', 'params'))
+  .route('/:token', validation(['tokenNumber'], 'params'))
   .get(
-    validation('getTokenNumbers', 'query'),
+    validation(['getTokenNumbers'], 'query'),
     (req, res, next) => {
       const { contract, offers, offerPool } = req.query;
 
@@ -96,12 +92,12 @@ router
     requireUserSession,
     upload.array('files', 2),
     dataTransform(['attributes']),
-    validation('updateTokenMetadata'),
+    validation(['updateTokenMetadata']),
     updateSingleTokenMetadata,
   )
   .post(
     requireUserSession,
-    validation('getTokenNumbers', 'query'),
+    validation(['getTokenNumbers'], 'query'),
     pinMetadataToPinata,
   );
 

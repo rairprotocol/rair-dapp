@@ -10,7 +10,7 @@ module.exports = (context) => {
   const router = express.Router();
 
   // Create new user
-  router.post('/', validation('createUser'), async (req, res, next) => {
+  router.post('/', validation(['createUser']), async (req, res, next) => {
     try {
       let { publicAddress } = req.body;
 
@@ -27,7 +27,7 @@ module.exports = (context) => {
   });
 
   // Get specific user info
-  router.get('/:publicAddress', validation('singleUser', 'params'), async (req, res, next) => {
+  router.get('/:publicAddress', validation(['singleUser'], 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
       const user = await context.db.User.findOne({ publicAddress }, { nonce: 0 });
@@ -39,7 +39,7 @@ module.exports = (context) => {
   });
 
   // Update specific user fields
-  router.post('/:publicAddress', requireUserSession, upload.array('files', 2), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
+  router.post('/:publicAddress', requireUserSession, upload.array('files', 2), validation(['updateUser']), validation(['singleUser'], 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
       const foundUser = await context.db.User.findOne({ publicAddress });

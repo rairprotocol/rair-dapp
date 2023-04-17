@@ -2,23 +2,23 @@ const Joi = require('joi');
 const { ethAddress, mongoId } = require('./reusableCustomTypes');
 
 module.exports = {
-    pagination: Joi.object({
+    pagination: () => ({
         pageNum: Joi.number(),
         itemsPerPage: Joi.number(),
     }),
-    dbId: Joi.object({
+    dbId: () => ({
         id: mongoId,
     }),
-    productId: Joi.object({
+    productId: () => ({
         productId: mongoId,
     }),
-    offerId: Joi.object({
+    offerId: () => ({
         offerId: mongoId,
     }),
-    userId: Joi.object({
+    userId: () => ({
         userId: mongoId,
     }),
-    userAddress: Joi.object({
+    userAddress: () => ({
         userAddress: ethAddress,
     }),
 };

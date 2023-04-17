@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-module.exports = Joi.object({
+module.exports = () => ({
   blockSync: Joi.boolean(),
   blockView: Joi.boolean(),
 });

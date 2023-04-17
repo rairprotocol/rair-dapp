@@ -12,36 +12,33 @@ const router = express.Router();
 
 router.get(
   '/',
-  validation('pagination', 'query'),
-  validation('dbContracts', 'query'),
+  validation(['pagination', 'dbContracts'], 'query'),
   contractService.getAllContracts,
 );
 router.get(
   '/byUser/:userId',
-  validation('dbContracts', 'query'),
-  validation('userId', 'params'),
+  validation(['dbContracts'], 'query'),
+  validation(['userId'], 'params'),
   userService.addUserAdressToFilterById,
   contractService.getAllContracts,
 );
 router.get(
   '/full',
-  validation('fullContracts', 'query'),
+  validation(['fullContracts'], 'query'),
   contractService.getFullContracts,
 );
 
 router.get(
   '/byCategory/:id',
-  validation('dbId', 'params'),
-  validation('pagination', 'query'),
+  validation(['dbId'], 'params'),
+  validation(['pagination'], 'query'),
   contractService.getContractByCategory,
 );
 
 router.get(
   '/my',
   requireUserSession,
-  validation('pagination', 'query'),
-  validation('dbContracts', 'query'),
-  validation('userAddress', 'query'),
+  validation(['pagination', 'dbContracts', 'userAddress'], 'query'),
   contractService.queryMyContracts,
   contractService.getAllContracts,
 );
@@ -49,7 +46,7 @@ router.post(
   '/import',
   requireUserSession,
   isAdmin,
-  validation('importExternalContract', 'body'),
+  validation(['importExternalContract'], 'body'),
   contractService.importContractsMoralis,
 );
 // Overload is implemented on service level
@@ -58,12 +55,12 @@ router.get(
   requireUserSession,
   isAdmin,
   verifySuperAdmin,
-  validation('fullContracts', 'query'),
+  validation(['fullContracts'], 'query'),
   contractService.getFullContracts,
 );
 router.get(
   '/:id',
-  validation('dbId', 'params'),
+  validation(['dbId'], 'params'),
   contractService.getContractById,
 );
 
@@ -73,8 +70,8 @@ router.patch(
   requireUserSession,
   isAdmin,
   verifySuperAdmin,
-  validation('dbId', 'params'),
-  validation('manageContract'),
+  validation(['dbId'], 'params'),
+  validation(['manageContract']),
   contractService.updateContract,
 );
 
