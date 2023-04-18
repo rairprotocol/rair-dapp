@@ -232,7 +232,9 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       tokenId &&
       Object.keys(tokenData).length >= Number(tokenId)
     ) {
-      setSelectedData(tokenData && tokenData[tokenId].metadata);
+      setSelectedData(
+        tokenData && tokenData[tokenId] && tokenData[tokenId].metadata
+      );
     }
 
     setSelectedToken(tokenId);

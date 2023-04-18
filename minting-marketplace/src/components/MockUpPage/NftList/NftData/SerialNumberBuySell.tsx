@@ -119,9 +119,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [offerData]);
 
   const checkOwner = useCallback(() => {
-    const price = formatEther(
-      BigNumber.from(offerData?.price ? offerData?.price : 0)
-    );
+    const rawPrice = BigNumber.from(offerData?.price ? offerData?.price : 0);
+    const price = rawPrice.lte(100000) ? '0.000+' : formatEther(rawPrice);
     const handleBuyButton = () => {
       return realChainProtected === blockchain
         ? buyContract
@@ -135,11 +134,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         handleClick={handleBuyButton()}
         disabled={disableBuyBtn()}
         isColorPurple={true}
-        title={`Buy ${(price && +price !== Infinity && price !== undefined
-          ? price
-          : 0
-        ).toString()}
-            ${blockchain && chainData[blockchain]?.symbol}`}
+        title={`Buy ${price} ${blockchain && chainData[blockchain]?.symbol}`}
       />
     ) : (
       <p></p>
