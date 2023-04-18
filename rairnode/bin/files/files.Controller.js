@@ -10,23 +10,23 @@ const router = express.Router();
 router.get(
     '/',
     loadUserSession,
-    validation('getFilesByProduct', 'query'),
+    validation(['getFilesByProduct'], 'query'),
     getFiles,
 );
 router.get(
     '/byID/:id',
-    validation('dbId', 'params'),
+    validation(['dbId'], 'params'),
     getFile,
 );
 router.get(
     '/byCategory/:id',
-    validation('dbId', 'params'),
-    validation('pagination', 'query'),
+    validation(['dbId'], 'params'),
+    validation(['pagination'], 'query'),
     getFilesByCategory,
 );
 router.get(
     '/:token',
-    validation('filesForTokenId', 'params'),
+    validation(['filesForTokenId'], 'params'),
     getSpecificContracts,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,

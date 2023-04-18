@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-module.exports = Joi.object({
+module.exports = () => ({
   fromToken: Joi.string(),
   toToken: Joi.string(),
   limit: Joi.number(),

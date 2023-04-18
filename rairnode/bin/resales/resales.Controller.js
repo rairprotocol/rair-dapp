@@ -7,30 +7,28 @@ const router = express.Router();
 // Use this to filter by contract (query string)
 router.get(
     '/',
-    validation('pagination', 'query'),
-    validation('dbResales', 'query'),
+    validation(['pagination', 'dbResales'], 'query'),
     resalesService.getAllResales,
 );
 router.get(
     '/customRoyalties',
-    validation('pagination', 'query'),
-    validation('dbRoyalties', 'query'),
+    validation(['pagination', 'dbRoyalties'], 'query'),
     resalesService.getAllCustomRoyalties,
 );
 router.get(
     '/:id',
-    validation('dbId', 'params'),
+    validation(['dbId'], 'params'),
     resalesService.getResaleById,
 );
 // Naming note: custom split === custom royalty
 router.get(
     '/byProduct/:productId',
-    validation('productId', 'params'),
+    validation(['productId'], 'params'),
     resalesService.getResaleByExternalId,
 );
 router.get(
     '/byOffer/:offerId',
-    validation('offerId', 'params'),
+    validation(['offerId'], 'params'),
     resalesService.getResaleByExternalId,
 );
 

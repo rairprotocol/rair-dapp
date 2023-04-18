@@ -47,7 +47,7 @@ module.exports = (context) => {
     requireUserSession,
     upload.array('files', 2),
     dataTransform(['attributes']),
-    validation('updateTokenMetadata'),
+    validation(['updateTokenMetadata']),
     async (req, res, next) => {
       try {
         const { contract, offers, offerPool, token } = req;

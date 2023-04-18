@@ -52,7 +52,7 @@ module.exports = (context) => {
   // Get list of contracts with all products and offers
   router.get(
     '/full',
-    validation('filterAndSort', 'query'),
+    validation(['filterAndSort'], 'query'),
     async (req, res, next) => {
       try {
         const {
@@ -256,7 +256,7 @@ router.get('byUser/:userId', loadUserSession, async (req, res, next) => {
     '/import/',
     requireUserSession,
     isAdmin,
-    validation('importContract', 'body'),
+    validation(['importContract'], 'body'),
     async (req, res, next) => {
       try {
         if (!req.user.adminRights) {
@@ -285,7 +285,7 @@ router.get('byUser/:userId', loadUserSession, async (req, res, next) => {
 
   router.use(
     '/network/:networkId/:contractAddress',
-    validation('singleContract', 'params'),
+    validation(['singleContract'], 'params'),
     async (req, res, next) => {
       const contract = await Contract.findOne({
         contractAddress: req.params.contractAddress.toLowerCase(),

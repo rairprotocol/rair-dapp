@@ -8,8 +8,8 @@ const router = express.Router();
 router.get(
     '/:mediaId',
     requireUserSession,
-    validation('analyticsParams', 'params'),
-    validation('analyticsQuery', 'query'),
+    validation(['analyticsParams'], 'params'),
+    validation(['analyticsQuery'], 'query'),
     async (req, res, next) => {
         try {
             const { mediaId } = req.params;

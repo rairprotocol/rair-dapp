@@ -11,7 +11,7 @@ const { validation } = require('../middleware');
 
 const router = express.Router();
 
-router.post('/login/', validation('metaValidate', 'body'), validateChallengeV2, loginFromSignature);
+router.post('/login/', validation(['metaValidate'], 'body'), validateChallengeV2, loginFromSignature);
 router.get('/logout/', logoutWithSession);
 
 router.get('/me/', identifyCurrentLoggedUser);
@@ -19,7 +19,7 @@ router.get('/me/', identifyCurrentLoggedUser);
 router.post('/zoomjwt', authToZoom);
 router.post(
     '/unlock/',
-    validation('v2Unlock', 'body'),
+    validation(['v2Unlock'], 'body'),
     unlockMediaWithSession,
 );
 

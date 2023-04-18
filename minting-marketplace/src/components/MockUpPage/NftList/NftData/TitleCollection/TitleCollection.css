@@ -108,6 +108,14 @@
   width: 225px;
 }
 
+.collection-authenticity-link-share.external .etherscan-icon {
+  margin-right: 10px;
+}
+
+.collection-authenticity-link-share.external {
+  justify-content: flex-end;
+}
+
 .tokens-share {
   display: flex;
   justify-content: flex-end;
@@ -181,6 +189,14 @@
 
   .container-title-collection {
     max-width: 100%;
+  }
+
+  .collection-authenticity-link-share.external {
+    justify-content: center;
+  }
+
+  .collection-authenticity-link-share.external a {
+    margin-right: 10px;
   }
 }
 

@@ -1,9 +1,5 @@
-const Joi = require('joi');
-const { customValidator } = require('./helpers');
+const { ethAddress } = require('./reusableCustomTypes');
 
-module.exports = Joi.object({
-  publicAddress: Joi.string()
-    .pattern(/^0x\w{40}$/)
-    .messages({ 'string.pattern.base': 'Invalid user address' })
-    .required(),
+module.exports = () => ({
+  publicAddress: ethAddress.required(),
 });

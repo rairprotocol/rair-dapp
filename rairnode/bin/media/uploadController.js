@@ -6,12 +6,12 @@ const router = express.Router();
 
 router.get(
     '/validate',
-    validation('validateMediaData', 'query'),
+    validation(['validateMediaData'], 'query'),
     validateData,
 );
 router.post(
     '/file',
-    validation('addFileFromMediaService', 'body'),
+    validation(['addFileFromMediaService'], 'body'),
     addFile,
 );
 router.get('/token', getUploadToken);

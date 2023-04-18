@@ -57,7 +57,7 @@ module.exports = (context) => {
   router.use(
     '/:mediaId',
     streamVerification,
-    validation('stream', 'params'),
+    validation(['stream'], 'params'),
     updateVideoAnalytics,
     context.hls.middleware,
   );

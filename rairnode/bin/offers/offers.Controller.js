@@ -7,14 +7,13 @@ const router = express.Router();
 
 router.get(
   '/',
-  validation('pagination', 'query'),
-  validation('dbOffers', 'query'),
+  validation(['pagination', 'dbOffers'], 'query'),
   offerService.getAllOffers,
 );
 
 router.get(
   '/byAddressAndProduct/',
-  validation('withProductV2', 'query'),
+  validation(['withProductV2'], 'query'),
   async (req, res, next) => {
     if (!req.query.contract) {
       await getSpecificContracts(req, res, next);
@@ -32,7 +31,7 @@ router.get(
 
 router.get(
   '/:id',
-  validation('dbId', 'params'),
+  validation(['dbId'], 'params'),
   offerService.getOfferById,
 );
 module.exports = router;

@@ -58,16 +58,16 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     dispatch(setShowSidebarTrue());
   }, [dispatch]);
 
+  const goBack = () => {
+    navigate('/');
+  };
+
   useEffect(() => {
     if (!embeddedParams) {
       window.scroll(0, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const goBack = () => {
-    navigate('/');
-  };
 
   if (!tokenData) {
     return <LoadingComponent />;

@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-module.exports = Joi.object({
+module.exports = () => ({
   nickName: Joi.string(),
   avatar: Joi.string(),
   background: Joi.string(),

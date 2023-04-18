@@ -72,7 +72,7 @@ module.exports = (context) => {
   const router = express.Router();
   router.post(
     '/get_challenge',
-    validation('getChallengeV2'),
+    validation(['getChallengeV2']),
     async (req, res, next) => {
       const messages = {
         login: 'Login to RAIR. This sign request securely logs you in to RAIR.',
@@ -132,7 +132,7 @@ module.exports = (context) => {
    */
   router.get(
     '/get_challenge/:MetaAddress',
-    validation('getChallenge', 'params'),
+    validation(['getChallenge'], 'params'),
     generateChallenge('Login to RAIR. This sign request securely logs you in to RAIR.'),
     (req, res) => {
       res.send({ success: true, response: req.metaAuth.challenge });
@@ -174,7 +174,7 @@ module.exports = (context) => {
    */
   router.get(
     '/get_token/:MetaMessage/:MetaSignature/:mediaId',
-    validation('getToken', 'params'),
+    validation(['getToken'], 'params'),
     validateChallenge,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
@@ -262,7 +262,7 @@ module.exports = (context) => {
 
   router.post(
     '/validate/',
-    validation('metaValidate', 'body'),
+    validation(['metaValidate'], 'body'),
     validateChallengeV2,
     async (req, res, next) => {
       const { mediaId, zoomId } = req.body;
@@ -411,7 +411,7 @@ module.exports = (context) => {
   // Verify with a Metamask challenge if the user holds the current Administrator token
   router.get(
     '/admin/:MetaMessage/:MetaSignature/',
-    validation('admin', 'params'),
+    validation(['admin'], 'params'),
     validateChallenge,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
@@ -447,7 +447,7 @@ module.exports = (context) => {
 
   router.get(
     '/authentication/:MetaMessage/:MetaSignature/',
-    validation('authentication', 'params'),
+    validation(['authentication'], 'params'),
     validateChallenge,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;

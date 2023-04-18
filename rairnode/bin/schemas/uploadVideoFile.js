@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-module.exports = Joi.object({
+module.exports = () => ({
   type: Joi.any()
     .valid('video', 'audio')
     .required(),

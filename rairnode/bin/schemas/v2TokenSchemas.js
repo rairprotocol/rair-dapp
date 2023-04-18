@@ -2,17 +2,18 @@ const Joi = require('joi');
 const { mongoId } = require('./reusableCustomTypes');
 
 module.exports = {
-    csvFileUpload: Joi.object({
+    csvFileUpload: () => ({
         contract: mongoId,
         product: Joi.string(),
         forceOverwrite: Joi.boolean(),
     }),
-    getTokenNumbers: Joi.object({
+    getTokenNumbers: () => ({
         contract: mongoId,
+        product: Joi.string(),
         offerPool: Joi.string(),
         offers: Joi.string(),
     }),
-    tokenNumber: Joi.object({
+    tokenNumber: () => ({
         token: Joi.string(),
     }),
 };

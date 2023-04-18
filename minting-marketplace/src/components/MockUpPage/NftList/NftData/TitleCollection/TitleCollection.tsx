@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 import Popup from 'reactjs-popup';
@@ -7,6 +7,7 @@ import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import chainData from '../../../../../utils/blockchainData';
+import { rFetch } from '../../../../../utils/rFetch';
 import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
@@ -40,6 +41,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   const location = useLocation();
 
   const [selectedValue, setSelectedValue] = useState<number>(0);
+  const [external, setExternal] = useState<boolean | undefined>(undefined);
   const [open, setOpen] = useState<boolean>(false);
   const [isCollectionPathExist, setIsCollectionPathExist] =
     useState<boolean>(false);
@@ -79,6 +81,22 @@ const TitleCollection: React.FC<ITitleCollection> = ({
     }
   };
 
+  const getContractInfo = useCallback(async () => {
+    if (blockchain && contract) {
+      const response = await rFetch(
+        `/api/contracts/network/${blockchain}/${contract}`
+      );
+
+      if (response.success) {
+        setExternal(response.contract.external);
+      }
+    }
+  }, [blockchain, contract]);
+
+  useEffect(() => {
+    getContractInfo();
+  }, [getContractInfo]);
+
   useEffect(() => {
     findCollectionPathExist();
   });
@@ -115,47 +133,57 @@ const TitleCollection: React.FC<ITitleCollection> = ({
           }}
           className={
             isCollectionPathExist
-              ? 'collection-authenticity-link-share'
+              ? `collection-authenticity-link-share ${
+                  external ? 'external' : ''
+                }`
               : 'tokens-share'
           }>
           {isCollectionPathExist && (
             <>
-              {width >= 500 ? (
-                <CustomButton
-                  onClick={() => {
-                    if (purchaseStatus) {
-                      return;
-                    } else {
-                      setMintPopUp(true);
-                    }
-                  }}
-                  width="161px"
-                  height="48px"
-                  // margin="20px 0 0 0"
-                  text="Mint!"
-                  background={`${
-                    purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
-                  }`}
-                  hoverBackground={`${purchaseStatus ? 'rgb(74, 74, 74)' : ''}`}
-                />
-              ) : (
-                <CustomButton
-                  onClick={() => {
-                    if (purchaseStatus) {
-                      return;
-                    } else {
-                      setMintPopUp(true);
-                    }
-                  }}
-                  width="120px"
-                  height="40px"
-                  // margin="20px 0 0 0"
-                  text="Mint!"
-                  background={`${
-                    purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
-                  }`}
-                  hoverBackground={`${purchaseStatus ? 'rgb(74, 74, 74)' : ''}`}
-                />
+              {external === false && (
+                <>
+                  {width >= 500 ? (
+                    <CustomButton
+                      onClick={() => {
+                        if (purchaseStatus) {
+                          return;
+                        } else {
+                          setMintPopUp(true);
+                        }
+                      }}
+                      width="161px"
+                      height="48px"
+                      // margin="20px 0 0 0"
+                      text="Mint!"
+                      background={`${
+                        purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
+                      }`}
+                      hoverBackground={`${
+                        purchaseStatus ? 'rgb(74, 74, 74)' : ''
+                      }`}
+                    />
+                  ) : (
+                    <CustomButton
+                      onClick={() => {
+                        if (purchaseStatus) {
+                          return;
+                        } else {
+                          setMintPopUp(true);
+                        }
+                      }}
+                      width="120px"
+                      height="40px"
+                      // margin="20px 0 0 0"
+                      text="Mint!"
+                      background={`${
+                        purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
+                      }`}
+                      hoverBackground={`${
+                        purchaseStatus ? 'rgb(74, 74, 74)' : ''
+                      }`}
+                    />
+                  )}
+                </>
               )}
               <Popup
                 // className="popup-settings-block"
