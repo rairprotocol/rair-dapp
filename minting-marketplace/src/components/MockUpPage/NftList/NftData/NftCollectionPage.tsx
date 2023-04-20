@@ -47,11 +47,18 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [show, setShow] = useState<boolean>(true);
   const [playing, setPlaying] = useState<null | string>(null);
   const { width } = useWindowDimensions();
+  const loader = useRef(null);
 
-  const loadToken = useCallback(() => {
-    showTokensRef.current = showTokensRef.current * 2;
-    getAllProduct('0', showTokensRef.current.toString());
-  }, [getAllProduct, showTokensRef]);
+  const loadToken = useCallback(
+    (entries) => {
+      const target = entries[0];
+      if (target.isIntersecting) {
+        showTokensRef.current = showTokensRef.current * 2;
+        getAllProduct('0', showTokensRef.current.toString());
+      }
+    },
+    [getAllProduct, showTokensRef]
+  );
 
   useEffect(() => {
     setDocumentTitle('Collection');
@@ -68,6 +75,16 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const option = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 0
+    };
+    const observer = new IntersectionObserver(loadToken, option);
+    if (loader.current) observer.observe(loader.current);
+  }, [loadToken, loader, isLoading]);
 
   if (!tokenData) {
     return <LoadingComponent />;
@@ -208,7 +225,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                   })}
             </div>
           </div>
-          <div className="collection-btn-more">
+          {/* <div className="collection-btn-more">
             {isLoading && (
               <div className="progress-token">
                 <CircularProgress
@@ -231,7 +248,23 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                     text="Show more"
                   />
                 )}
-          </div>
+          </div> */}
+          {isLoading && (
+            <div className="progress-token">
+              <CircularProgress
+                style={{
+                  width: '70px',
+                  height: '70px'
+                }}
+              />
+            </div>
+          )}
+          {tokenDataFiltered.length
+            ? null
+            : totalCount &&
+              showTokensRef.current <= totalCount && (
+                <div ref={loader} className="ref"></div>
+              )}
           {width > 730 && (
             <CollectionInfo
               blockchain={blockchain}
