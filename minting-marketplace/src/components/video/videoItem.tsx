@@ -16,6 +16,7 @@ import { UserType } from '../../ducks/users/users.types';
 import chainData from '../../utils/blockchainData';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
+import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
@@ -311,10 +312,12 @@ const VideoItem: React.FC<IVideoItem> = ({
               <div className="modal-content-video">
                 {mediaList[item]?.isUnlocked === false && !owned ? (
                   <>
-                    <i
-                      data-title="You need to buy NFT"
-                      className="fa fa-lock modal-content-video-lock"
-                    />
+                    <TooltipBox enterDelay={200} title="You need to buy NFT">
+                      <i
+                        data-title="You need to buy NFT"
+                        className="fa fa-lock modal-content-video-lock"
+                      />
+                    </TooltipBox>
                   </>
                 ) : openVideoplayer ? (
                   <NftVideoplayer selectVideo={mediaList[item]} />

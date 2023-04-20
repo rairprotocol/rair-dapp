@@ -8,6 +8,7 @@ import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import chainData from '../../../../../utils/blockchainData';
 import { rFetch } from '../../../../../utils/rFetch';
+import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
 import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
@@ -216,7 +217,9 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               target="_blank"
               rel="noreferrer">
               <div className="etherscan-icon">
-                <EtherScanCollectionLogo className="etherscan-collection-icon" />
+                <TooltipBox title=" Link to contract review">
+                  <EtherScanCollectionLogo className="etherscan-collection-icon" />
+                </TooltipBox>
               </div>
             </a>
           )}

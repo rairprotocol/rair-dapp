@@ -19,6 +19,7 @@ import { DiscordIcon, TwitterIcon } from '../../images';
 import { headerLogoBlack, headerLogoWhite } from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
+import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import MainLogo from '../GroupLogos/MainLogo';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
 
@@ -329,11 +330,13 @@ const MainHeader: React.FC<IMainHeader> = ({
         )}
         <div className="box-connect-btn">
           {adminRights && currentUserAddress && (
-            <div
-              onClick={() => setAdminPanel((prev) => !prev)}
-              className={`admin-panel-btn ${superAdmin ? 'super' : ''}`}>
-              <i className="fa fa-user-secret" aria-hidden="true" />
-            </div>
+            <TooltipBox title="Admin panel">
+              <div
+                onClick={() => setAdminPanel((prev) => !prev)}
+                className={`admin-panel-btn ${superAdmin ? 'super' : ''}`}>
+                <i className="fa fa-user-secret" aria-hidden="true" />
+              </div>
+            </TooltipBox>
           )}
           <UserProfileSettings
             userData={userData}

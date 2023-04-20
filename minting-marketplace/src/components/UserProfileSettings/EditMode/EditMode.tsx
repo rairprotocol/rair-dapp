@@ -5,6 +5,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { getUserStart } from '../../../ducks/users/actions';
+import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import { SvgUserIcon } from '../SettingsIcons/SettingsIcons';
 
 const EditMode = ({
@@ -110,21 +111,23 @@ const EditMode = ({
           {imagePreviewUrl ? (
             <>
               {editMode ? (
-                <div
-                  className={`change-profile-img ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  }`}>
-                  <label>
-                    <div className="change-profile-photo-block">
-                      <img alt="User Avatar" src={userAvatar} />
-                    </div>
-                    <input
-                      style={{ display: 'none' }}
-                      type="file"
-                      onChange={onChangeAvatar}
-                    />
-                  </label>
-                </div>
+                <TooltipBox title="Click to change your avatar">
+                  <div
+                    className={`change-profile-img ${
+                      primaryColor === 'rhyno' ? 'rhyno' : ''
+                    }`}>
+                    <label>
+                      <div className="change-profile-photo-block">
+                        <img alt="User Avatar" src={userAvatar} />
+                      </div>
+                      <input
+                        style={{ display: 'none' }}
+                        type="file"
+                        onChange={onChangeAvatar}
+                      />
+                    </label>
+                  </div>
+                </TooltipBox>
               ) : (
                 <div className="user-avatar">
                   <img

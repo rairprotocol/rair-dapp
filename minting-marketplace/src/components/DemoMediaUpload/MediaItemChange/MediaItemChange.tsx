@@ -6,6 +6,7 @@ import { MediaItemContainer } from './MediaItem.styled';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { rFetch } from '../../../utils/rFetch';
+import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import PopUpChangeVideo from '../PopUpChangeVideo/PopUpChangeVideo';
 import { IMediaItemChange } from '../types/DemoMediaUpload.types';
 
@@ -129,16 +130,18 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                   <i className="fas fa-pencil-alt"></i>
                 </button>
               ) : (
-                <button
-                  disabled={uploadSuccess === false && beforeUpload}
-                  className={`btn btn-success rounded-rairo mx-3 ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  } ${modalIsOpen ? 'modal-open' : ''}`}
-                  onClick={() => {
-                    openModal();
-                  }}>
-                  <i className="fas fa-pencil-alt"></i>
-                </button>
+                <TooltipBox title="Click to change video details">
+                  <button
+                    disabled={uploadSuccess === false && beforeUpload}
+                    className={`btn btn-success rounded-rairo mx-3 ${
+                      primaryColor === 'rhyno' ? 'rhyno' : ''
+                    } ${modalIsOpen ? 'modal-open' : ''}`}
+                    onClick={() => {
+                      openModal();
+                    }}>
+                    <i className="fas fa-pencil-alt"></i>
+                  </button>
+                </TooltipBox>
               )}
             </>
           ) : (
