@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Moment from 'react-moment';
 
 import { rFetch } from '../../../../utils/rFetch';
+import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 
 import { reactSwal } from './../../../../utils/reactSwal';
 
@@ -37,22 +38,24 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({
 
   return (
     <>
-      <button
-        onClick={() => {
-          reactSwal.fire({
-            html: <PopUpContainer videoId={videoId} />,
-            showConfirmButton: false,
-            width: '70vw',
-            customClass: {
-              popup: `bg-analytics`
-            },
-            showCloseButton: true
-          });
-        }}
-        title="Click to watch analytics page"
-        className="btn-video-views">
-        {CounterDisplay(watchCounter)}
-      </button>
+      <TooltipBox title="Views">
+        <button
+          onClick={() => {
+            reactSwal.fire({
+              html: <PopUpContainer videoId={videoId} />,
+              showConfirmButton: false,
+              width: '70vw',
+              customClass: {
+                popup: `bg-analytics`
+              },
+              showCloseButton: true
+            });
+          }}
+          title="Click to watch analytics page"
+          className="btn-video-views">
+          {CounterDisplay(watchCounter)}
+        </button>
+      </TooltipBox>
     </>
   );
 };

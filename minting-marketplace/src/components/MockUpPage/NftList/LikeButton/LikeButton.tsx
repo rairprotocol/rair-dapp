@@ -6,6 +6,7 @@ import axios from 'axios';
 import { TAxiosFavoriteData } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 import { ILikeButton } from '../../mockupPage.types';
 
 import {
@@ -117,25 +118,28 @@ const LikeButton: React.FC<ILikeButton> = ({
       {loading ? (
         <CircularProgress sx={{ color: '#E882D5' }} size={40} thickness={4} />
       ) : (
-        <Tooltip arrow title={`${liked ? 'Unfavorite' : 'Favorite'}`}>
-          {liked ? (
-            <div
-              className={likeButtonStyle}
-              onClick={() => {
-                removeFavotite();
-              }}>
-              <i className="fas fa-heart like-button" />
-            </div>
-          ) : (
-            <div
-              className={likeButtonStyle}
-              onClick={() => {
-                addFavorite(tokenId);
-              }}>
-              <i className="far fa-heart like-button" />
-            </div>
-          )}
-        </Tooltip>
+        <>
+          <TooltipBox
+            title={`${liked ? 'Remove from Favorite' : 'Add to Favorite'}`}>
+            {liked ? (
+              <div
+                className={likeButtonStyle}
+                onClick={() => {
+                  removeFavotite();
+                }}>
+                <i className="fas fa-heart like-button" />
+              </div>
+            ) : (
+              <div
+                className={likeButtonStyle}
+                onClick={() => {
+                  addFavorite(tokenId);
+                }}>
+                <i className="far fa-heart like-button" />
+              </div>
+            )}
+          </TooltipBox>
+        </>
       )}
     </>
   );

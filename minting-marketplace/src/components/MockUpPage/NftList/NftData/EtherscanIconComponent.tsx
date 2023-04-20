@@ -6,6 +6,7 @@ import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import chainData from '../../../../utils/blockchainData';
+import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 import { ReactComponent as EtherscanDark } from '../../assets/EtherscanDark.svg';
 import { ReactComponent as EtherscanLight } from '../../assets/EtherscanLight.svg';
 import { IEtherscanIconComponent } from '../../mockupPage.types';
@@ -35,17 +36,17 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
             target="_blank"
             rel="noreferrer">
             {primaryColor === 'charcoal' ? (
-              <Tooltip placement="left" arrow title={'Token Address'}>
-                <div className="etherscan-icon-token-dark">
+              <div className="etherscan-icon-token-dark">
+                <TooltipBox position="top" title="Token Address">
                   <EtherscanDark className="nft-collection-icons-icon" />
-                </div>
-              </Tooltip>
+                </TooltipBox>
+              </div>
             ) : (
-              <Tooltip placement="left" arrow title={'Token Address'}>
-                <div className="etherscan-icon-token-light">
+              <div className="etherscan-icon-token-light">
+                <TooltipBox position="top" title="Token Address">
                   <EtherscanLight className="nft-collection-icons-icon" />
-                </div>
-              </Tooltip>
+                </TooltipBox>
+              </div>
             )}
           </a>
           {currentUserAddress && (

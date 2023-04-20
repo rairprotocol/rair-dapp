@@ -17,6 +17,7 @@ import videoIcon from '../../images/videoIcon.svg';
 import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import LoadingComponent from '../common/LoadingComponent';
+import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import { IMediaUpload, TMediaType } from '../creatorStudio/creatorStudio.types';
 
 import MediaListBox from './MediaListBox/MediaListBox';
@@ -385,15 +386,19 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
                   }}
                   className="w-100 h-100 rounded-rair col-6 text-center mb-3 p-5">
                   <input {...getInputProps()} />
-                  <img
-                    alt=""
-                    style={{
-                      filter:
-                        primaryColor === 'rhyno' ? 'brightness(40%)' : undefined
-                    }}
-                    src={videoIcon}
-                    className="mt-5 mb-3"
-                  />
+                  <TooltipBox title="Drag and drop images">
+                    <img
+                      alt=""
+                      style={{
+                        filter:
+                          primaryColor === 'rhyno'
+                            ? 'brightness(40%)'
+                            : undefined
+                      }}
+                      src={videoIcon}
+                      className="mt-5 mb-3"
+                    />
+                  </TooltipBox>
                   <br />
                   {isDragActive ? (
                     <>Drop the images here ...</>

@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { rFetch } from '../../../utils/rFetch';
+import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import NftVideoplayer from '../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import { ModalContentCloseBtn } from '../../MockUpPage/utils/button/ShowMoreItems';
 import { playImagesColored } from '../../SplashPage/images/greyMan/grayMan';
@@ -225,10 +226,12 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
             <div className="modal-content-video">
               {fileData.isUnlocked === false ? (
                 <>
-                  <i
-                    data-title="You need to buy NFT"
-                    className="fa fa-lock modal-content-video-lock"
-                  />
+                  <TooltipBox enterDelay={200} title="You need to buy NFT">
+                    <i
+                      data-title="You need to buy NFT"
+                      className="fa fa-lock modal-content-video-lock"
+                    />
+                  </TooltipBox>
                 </>
               ) : openVideoplayer ? (
                 <NftVideoplayer selectVideo={fileData} />

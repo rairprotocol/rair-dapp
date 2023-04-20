@@ -9,6 +9,7 @@ import { setColorScheme } from '../../ducks/colors/actions';
 import { getUserStart } from '../../ducks/users/actions';
 import { SunIcon } from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { TooltipBox } from '../common/Tooltip/TooltipBox';
 
 import PopUpNotification from './PopUpNotification/PopUpNotification';
 
@@ -54,17 +55,19 @@ const UserProfileSettings = ({
             isNotification={true}
           />
         )}
-        <SocialBox
-          className="social-sun-icon"
-          primaryColor={primaryColor}
-          marginRight={'17px'}
-          onClick={() => {
-            dispatch(
-              setColorScheme(primaryColor === 'rhyno' ? 'charcoal' : 'rhyno')
-            );
-          }}>
-          <SunIcon primaryColor={primaryColor} color={'#fff'} />
-        </SocialBox>
+        <TooltipBox position={'bottom'} title="Switch theme">
+          <SocialBox
+            className="social-sun-icon"
+            primaryColor={primaryColor}
+            marginRight={'17px'}
+            onClick={() => {
+              dispatch(
+                setColorScheme(primaryColor === 'rhyno' ? 'charcoal' : 'rhyno')
+              );
+            }}>
+            <SunIcon primaryColor={primaryColor} color={'#fff'} />
+          </SocialBox>
+        </TooltipBox>
         {loginDone && (
           <div
             style={{
