@@ -66,7 +66,7 @@ const Factory = () => {
     } else if (programmaticProvider) {
       setChainId(currentChain);
     }
-    if (factoryInstance && erc777Instance) {
+    if (factoryInstance && erc777Instance && currentUserAddress) {
       setDeploymentPrice(
         await factoryInstance.deploymentCostForERC777(erc777Instance.address)
       );

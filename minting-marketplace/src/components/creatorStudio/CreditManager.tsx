@@ -35,7 +35,10 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
       return;
     }
     const { success, credits } = await rFetch(
-      `/api/credits/${currentChain}/${erc777Instance.address}`
+      `/api/credits/${currentChain}/${erc777Instance.address}`,
+      undefined,
+      undefined,
+      false
     );
     if (success) {
       setUserCredits(formatEther(credits));
