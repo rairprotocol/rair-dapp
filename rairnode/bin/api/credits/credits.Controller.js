@@ -6,13 +6,13 @@ const validation = require('../../middleware/validation');
 const router = Router();
 router.get(
     '/:blockchain/:tokenAddress',
-    validation('tokenCreditQuery', 'params'),
+    validation(['tokenCreditQuery'], 'params'),
     requireUserSession,
     searchService.getUserCredits,
 );
 router.post(
     '/withdraw',
-    validation('tokenCreditWithdraw', 'body'),
+    validation(['tokenCreditWithdraw'], 'body'),
     requireUserSession,
     searchService.generateWithdrawRequest,
 );

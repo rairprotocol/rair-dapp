@@ -2,11 +2,11 @@ const Joi = require('joi');
 const { ethAddress, blockchainNetworks } = require('./reusableCustomTypes');
 
 module.exports = {
-  tokenCreditQuery: Joi.object({
+  tokenCreditQuery: () => ({
     blockchain: blockchainNetworks.required(),
     tokenAddress: ethAddress.required(),
   }),
-  tokenCreditWithdraw: Joi.object({
+  tokenCreditWithdraw: () => ({
     blockchain: blockchainNetworks.required(),
     tokenAddress: ethAddress.required(),
     amount: Joi.number().unsafe().required(),
