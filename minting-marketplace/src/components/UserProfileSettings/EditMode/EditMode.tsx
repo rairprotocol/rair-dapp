@@ -1,12 +1,15 @@
 //@ts-nocheck
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { getUserStart } from '../../../ducks/users/actions';
+import { reactSwal } from '../../../utils/reactSwal';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import { SvgUserIcon } from '../SettingsIcons/SettingsIcons';
+import { AgreementsPopUp } from '../TermsOfServicePopUp/TermsOfServicePopUp';
 
 const EditMode = ({
   handlePopUp,
@@ -21,7 +24,9 @@ const EditMode = ({
   mainName
 }) => {
   const dispatch = useDispatch();
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const store = useStore();
+
+  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
   const { currentUserAddress } = useSelector((store) => store.contractStore);
   const [userName, setUserName] = useState(mainName.replace(/@/g, ''));
   const [emailUser, setEmailUser] = useState(userEmail);
@@ -43,46 +48,74 @@ const EditMode = ({
 
   const onSubmitData = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('nickName', userName);
-    formData.append('email', emailUser);
-    if (filePhoto) {
-      formData.append('files', filePhoto);
-      formData.append('avatar', filePhoto.name);
-    }
-
-    try {
-      const profileUpdateResponse = await axios.post<TUserResponse>(
-        `/api/users/${currentUserAddress.toLowerCase()}`,
-        formData,
-        {
-          headers: {
-            Accept: 'multipart/form-data'
-          }
+    if (!userEmail) {
+      reactSwal.fire({
+        title: <h2 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h2>,
+        html: (
+          <Provider store={store}>
+            <AgreementsPopUp
+              userName={userName}
+              emailUser={emailUser}
+              filePhoto={filePhoto}
+              currentUserAddress={currentUserAddress}
+              setUserName={setUserName}
+              setMainEmail={setMainEmail}
+              setMainName={setMainName}
+              setUserAvatar={setUserAvatar}
+              setImagePreviewUrl={setImagePreviewUrl}
+              onChangeEditMode={onChangeEditMode}
+            />
+          </Provider>
+        ),
+        showConfirmButton: false,
+        width: '90vw',
+        customClass: {
+          popup: `bg-${primaryColor} rounded-rair`,
+          title: `text-${textColor}`
         }
-      );
-      const { user, success } = profileUpdateResponse.data;
-
-      if (user.nickName) {
-        setUserName(user.nickName.replace(/@/g, ''));
-        dispatch(getUserStart(currentUserAddress));
-      }
-      if (success) {
-        setMainName(user.nickName);
-        setMainEmail(user.email);
-
-        dispatch(getUserStart(currentUserAddress));
-      }
-      if (user?.avatar) {
-        setUserAvatar(user.avatar);
-        setImagePreviewUrl(user.avatar);
+      });
+    } else {
+      const formData = new FormData();
+      formData.append('nickName', userName);
+      formData.append('email', emailUser);
+      if (filePhoto) {
+        formData.append('files', filePhoto);
+        formData.append('avatar', filePhoto.name);
       }
 
-      onChangeEditMode();
-    } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const error = err as AxiosError;
-      Swal.fire('Info', `The name ${userName} already exists`, 'question');
+      try {
+        const profileUpdateResponse = await axios.post<TUserResponse>(
+          `/api/users/${currentUserAddress.toLowerCase()}`,
+          formData,
+          {
+            headers: {
+              Accept: 'multipart/form-data'
+            }
+          }
+        );
+        const { user, success } = profileUpdateResponse.data;
+
+        if (user.nickName) {
+          setUserName(user.nickName.replace(/@/g, ''));
+          dispatch(getUserStart(currentUserAddress));
+        }
+        if (success) {
+          setMainName(user.nickName);
+          setMainEmail(user.email);
+
+          dispatch(getUserStart(currentUserAddress));
+        }
+        if (user?.avatar) {
+          setUserAvatar(user.avatar);
+          setImagePreviewUrl(user.avatar);
+        }
+
+        onChangeEditMode();
+      } catch (err) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const error = err as AxiosError;
+        Swal.fire('Info', `The name ${userName} already exists`, 'question');
+      }
     }
   };
 
@@ -247,6 +280,7 @@ const EditMode = ({
                   }}>
                   Save
                 </button>
+                {/* <TermsOfServicePopUp /> */}
                 <span
                   className="profile-input-edit btn"
                   onClick={() => onChangeEditMode()}
