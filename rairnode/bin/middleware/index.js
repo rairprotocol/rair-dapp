@@ -6,6 +6,7 @@ const { requireUserSession, loadUserSession } = require('./verifyUserSession');
 const isAdmin = require('./isAdmin');
 const dataTransform = require('./dataTransform');
 const verifySuperAdmin = require('./verifySuperAdmin');
+const consumeTokenCredit = require('./consumeTokenCredit');
 
 module.exports = {
   validation,
@@ -17,4 +18,5 @@ module.exports = {
   isAdmin,
   dataTransform,
   verifySuperAdmin,
+  consumeTokenCredit,
 };

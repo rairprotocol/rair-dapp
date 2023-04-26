@@ -44,7 +44,7 @@ User.statics = {
   },
   async search(
     textParam,
-    projection = { _id: 1, avatar: 1, nickName: 1 },
+    projection = { _id: 1, avatar: 1, nickName: 1, publicAddress: 1 },
     limit = 4,
     page = 1,
   ) {

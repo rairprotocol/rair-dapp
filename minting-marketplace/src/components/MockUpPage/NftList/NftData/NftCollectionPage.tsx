@@ -225,30 +225,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                   })}
             </div>
           </div>
-          {/* <div className="collection-btn-more">
-            {isLoading && (
-              <div className="progress-token">
-                <CircularProgress
-                  style={{
-                    width: '50px',
-                    height: '50px'
-                  }}
-                />
-              </div>
-            )}
-            {tokenDataFiltered.length
-              ? null
-              : totalCount &&
-                showTokensRef.current <= totalCount && (
-                  <CustomButton
-                    onClick={loadToken}
-                    width="232px"
-                    height="48px"
-                    margin="20px 0 0 0"
-                    text="Show more"
-                  />
-                )}
-          </div> */}
           {isLoading && (
             <div className="progress-token">
               <CircularProgress
@@ -265,19 +241,25 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               showTokensRef.current <= totalCount && (
                 <div ref={loader} className="ref"></div>
               )}
-          {width > 730 && (
-            <CollectionInfo
-              blockchain={blockchain}
-              offerData={offerDataCol}
-              openTitle={true}
-              someUsersData={someUsersData}
-            />
-          )}
-          <AuthenticityBlock
-            collectionToken={tokenData[0]?.authenticityLink}
-            title={true}
-            tokenData={tokenData}
-          />
+          <>
+            {Object.keys(tokenData).length <= 5 && (
+              <>
+                {width > 730 && (
+                  <CollectionInfo
+                    blockchain={blockchain}
+                    offerData={offerDataCol}
+                    openTitle={true}
+                    someUsersData={someUsersData}
+                  />
+                )}
+                <AuthenticityBlock
+                  collectionToken={tokenData[0]?.authenticityLink}
+                  title={true}
+                  tokenData={tokenData}
+                />
+              </>
+            )}
+          </>
         </div>
       ) : (
         <div className="collection-no-products" ref={myRef}>
