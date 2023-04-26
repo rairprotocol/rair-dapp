@@ -12,7 +12,5 @@ module.exports = {
     toDate: Joi.date(),
     userAddress: ethAddress,
     onlyCount: Joi.boolean(),
-    itemsPerPage: Joi.number(),
-    pageNum: Joi.number(),
   }),
 };

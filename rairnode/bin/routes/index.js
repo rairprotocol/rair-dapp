@@ -2,7 +2,7 @@
 const express = require('express');
 const searchController = require('../api/search/search.Controller');
 const v2 = require('./v2.router');
-const analyticsRoutes = require('./analytics');
+const analyticsRoutes = require('../api/analytics/analytics.Controller');
 const creditController = require('../api/credits/credits.Controller');
 
 module.exports = (context) => {
