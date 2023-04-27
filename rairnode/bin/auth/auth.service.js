@@ -127,7 +127,7 @@ module.exports = {
       const viewData = new MediaViewLog({
         userAddress: userData.publicAddress,
         file: fileId,
-        timeWatched: 0,
+        decryptedFiles: 0,
       });
       if (type === 'file') {
         await viewData.save();
