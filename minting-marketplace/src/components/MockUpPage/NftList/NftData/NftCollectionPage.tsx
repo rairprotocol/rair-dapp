@@ -275,7 +275,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               <i className="fas fa-arrow-alt-circle-left"></i>
             </div>
           )}
-          <h1>{"Don't have product"}</h1>
+          <h2>{"Don't have product"}</h2>
         </div>
       )}
     </>

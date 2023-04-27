@@ -210,7 +210,7 @@ function App() {
             .join('');
 
           spans = p.children;
-        } else console.info('kik');
+        } else return;
 
         // function wheee() {
         //   for (var i = 0; i < len; i++) {
