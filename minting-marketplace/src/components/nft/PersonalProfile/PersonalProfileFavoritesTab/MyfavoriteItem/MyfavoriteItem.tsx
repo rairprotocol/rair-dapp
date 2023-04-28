@@ -1,10 +1,12 @@
 //@ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { FavoriteItem, UserFavoriteItemInfo } from './MyFavoriteStyledItems';
 
 import { TUserResponse } from '../../../../../axios.responseTypes';
+import { rFetch } from '../../../../../utils/rFetch';
 import { ImageLazy } from '../../../../MockUpPage/ImageLazy/ImageLazy';
 import BtnMyFavorite from '../BtnMyFavorite/BtnMyFavorite';
 import { IMyfavoriteItem } from '../myFavorites.types';
@@ -13,9 +15,11 @@ import defaultAvatar from './../../../../UserProfileSettings/images/defaultUserP
 
 const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
   item,
-  removeFavotite
+  removeFavotite,
+  userPage = false
 }) => {
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
   const getInfoFromUser = useCallback(async () => {
     // find user
@@ -30,12 +34,30 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
     }
   }, [item]);
 
+  const goToTokenLink = async (contract) => {
+    const contractData = await rFetch(
+      `/api/contracts/singleContract/${contract}`
+    );
+    if (contractData.success) {
+      navigate(
+        `/tokens/${contractData.contract.blockchain}/${contractData.contract.contractAddress}/0/${item.token.token}`
+      );
+    }
+  };
+
   useEffect(() => {
     getInfoFromUser();
   }, [getInfoFromUser]);
 
   return (
     <FavoriteItem
+      onClick={() => {
+        if (!userPage) {
+          return null;
+        } else {
+          goToTokenLink(item.token.contract);
+        }
+      }}
       className="col-2 my-item-element"
       image={item.token.metadata.image}>
       <ImageLazy
@@ -44,7 +66,9 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
         alt={`My favorite NFT ${item.token.metadata.name}`}
       />
       <div className="w-100 bg-my-items">
-        <BtnMyFavorite removeFavotite={() => removeFavotite(item._id)} />
+        {removeFavotite && (
+          <BtnMyFavorite removeFavotite={() => removeFavotite(item._id)} />
+        )}
         <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
           <div className="container-blue-description" style={{ color: '#fff' }}>
             <span className="description-title">

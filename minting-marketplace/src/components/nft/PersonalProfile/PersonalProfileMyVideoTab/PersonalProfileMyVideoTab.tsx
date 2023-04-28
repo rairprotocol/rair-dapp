@@ -3,10 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../../../ducks';
 import { TVideosInitialState } from '../../../../ducks/videos/videosDucks.types';
+import LoadingComponent from '../../../common/LoadingComponent';
 import VideoItem from '../../../video/videoItem';
 // import cl from './PersonalProfileMyVideoTab.module.css';
 
-const PersonalProfileMyVideoTabComponent = ({ titleSearch }) => {
+interface IPersonalProfileMyVideoTabComponent {
+  titleSearch: string;
+  publicAddress?: string;
+}
+
+const PersonalProfileMyVideoTabComponent: React.FC<
+  IPersonalProfileMyVideoTabComponent
+> = ({ titleSearch, publicAddress }) => {
   const dispatch = useDispatch();
 
   const { videos, loading } = useSelector<RootState, TVideosInitialState>(
@@ -23,18 +31,23 @@ const PersonalProfileMyVideoTabComponent = ({ titleSearch }) => {
 
   useEffect(() => {
     const params = {
-      itemsPerPage: '10000000'
+      itemsPerPage: '10000000',
+      publicAddress: publicAddress ? publicAddress : undefined
       // pageNum: '1',
     };
     updateVideo(params);
-  }, [updateVideo]);
+  }, [updateVideo, publicAddress]);
 
   const findMyVideo = (obj: object, subField: string, value: boolean) => {
     if (obj !== null) {
       for (const i in obj) {
         const video = obj[i];
-        if (video[subField] === value) {
+        if (publicAddress) {
           myVideo[i] = video;
+        } else {
+          if (video[subField] === value) {
+            myVideo[i] = video;
+          }
         }
       }
     }
@@ -44,17 +57,13 @@ const PersonalProfileMyVideoTabComponent = ({ titleSearch }) => {
   }
 
   if (loading) {
-    return (
-      <div className="loader-wrapper">
-        <div className="load" />
-      </div>
-    );
+    return <LoadingComponent />;
   }
   return (
     <div className="PersonalProfileMyVideoTab-wrapper">
       <div
         className="list-button-wrapper tree-tab-unlocks"
-        style={{ verticalAlign: 'top', width: '100%' }}>
+        style={{ verticalAlign: 'top' }}>
         {myVideo ? (
           Object.keys(myVideo).length > 0 ? (
             Object.keys(myVideo)

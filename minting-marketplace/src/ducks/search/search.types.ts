@@ -17,7 +17,10 @@ export type TSearchInitialState = {
   loading: boolean | null;
 };
 
-export type TSearchDataUser = Pick<UserType, 'avatar' | 'nickName' | '_id'>;
+export type TSearchDataUser = Pick<
+  UserType,
+  'avatar' | 'nickName' | '_id' | 'publicAddress'
+>;
 export type TSearchDataProduct = Pick<
   TProducts,
   'collectionIndexInContract' | 'contract' | '_id' | 'copies' | 'cover' | 'name'

@@ -61,7 +61,9 @@ module.exports = (context) => {
           .skip(skip)
           .limit(pageSize);
 
-        res.json({ success: true, result });
+        const nftTotal = await MintedToken.countDocuments({ ownerAddress: userAddress });
+
+        res.json({ success: true, result, totalCount: nftTotal });
       } catch (e) {
         next(e);
       }

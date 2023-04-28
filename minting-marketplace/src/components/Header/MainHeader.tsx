@@ -120,6 +120,11 @@ const MainHeader: React.FC<IMainHeader> = ({
     [dataAll, dispatch, navigate]
   );
 
+  const goToExactlyUser = (userAddress) => {
+    navigate(`/${userAddress}`);
+    setTextSearch('');
+  };
+
   const Highlight = (props) => {
     const { filter, str } = props;
     if (!filter) return str;
@@ -272,7 +277,10 @@ const MainHeader: React.FC<IMainHeader> = ({
                           (item: TSearchDataUser, index: number) => (
                             <div
                               key={Number(index) + Math.random()}
-                              className="data-find">
+                              className="data-find"
+                              onClick={() =>
+                                goToExactlyUser(item.publicAddress)
+                              }>
                               <img
                                 className="data-find-img"
                                 src={item.avatar ? item.avatar : ''}
