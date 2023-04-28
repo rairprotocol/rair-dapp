@@ -30,16 +30,43 @@ module.exports = (context) => {
   );
 
   // Get all tokens which belongs to current user
-  router.get('/', requireUserSession, async (req, res, next) => {
-    try {
-      const { publicAddress: ownerAddress } = req.user;
-      const result = await MintedToken.find({ ownerAddress });
+  router.get(
+    '/',
+    requireUserSession,
+    async (req, res, next) => {
+      try {
+        const { publicAddress: ownerAddress } = req.user;
+        const result = await MintedToken.find({ ownerAddress });
 
-      res.json({ success: true, result });
-    } catch (e) {
-      next(e);
-    }
-  });
+        res.json({ success: true, result });
+      } catch (e) {
+        next(e);
+      }
+    },
+  );
+
+  router.get(
+    '/:userAddress',
+    validation(['pagination'], 'query'),
+    validation(['userAddress'], 'params'),
+    async (req, res, next) => {
+      try {
+        const { userAddress } = req.params;
+
+        const { itemsPerPage = 10, pageNum = 1 } = req.query;
+        const pageSize = parseInt(itemsPerPage, 10);
+        const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+
+        const result = await MintedToken.find({ ownerAddress: userAddress })
+          .skip(skip)
+          .limit(pageSize);
+
+        res.json({ success: true, result });
+      } catch (e) {
+        next(e);
+      }
+    },
+  );
 
   // Get CSV sample file
   router.get('/csv/sample', async (req, res, next) => {

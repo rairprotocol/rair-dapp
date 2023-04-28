@@ -379,7 +379,7 @@ module.exports = (context) => {
         const viewData = new MediaViewLog({
           userAddress: ethAddress,
           file: mediaId,
-          timeWatched: 0,
+          decryptedFiles: 0,
         });
         if (mediaId) {
           viewData.save();

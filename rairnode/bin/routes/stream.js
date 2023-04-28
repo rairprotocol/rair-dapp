@@ -2,6 +2,7 @@ const express = require('express');
 const url = require('url');
 const { validation, streamVerification } = require('../middleware');
 const { MediaViewLog } = require('../models');
+const log = require('../utils/logger')(module);
 
 const updateVideoAnalytics = async (req, res, next) => {
   if (req.session) {
@@ -9,13 +10,13 @@ const updateVideoAnalytics = async (req, res, next) => {
     const viewData = await MediaViewLog.findById(viewLogId);
     const requestedFile = url.parse(req.url).pathname;
     if (viewData && requestedFile.includes('.ts')) {
-      if (viewData.decryptedFiles) {
+      if (viewData.decryptedFiles >= 0) {
         viewData.decryptedFiles += 1;
         viewData.save();
       }
     }
   } else {
-    console.log(`Media file ${req.url} is being watched without a session`);
+    log.error(`Media file ${req.url} is being watched without a session`);
   }
   return next();
 };

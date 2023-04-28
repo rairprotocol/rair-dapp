@@ -186,7 +186,7 @@ const VideoItem: React.FC<IVideoItem> = ({
   const arrAllTokens = () => {
     if (contractData) {
       availableToken = contractData?.tokens
-        .filter((availableToken) => availableToken.isMinted === false)
+        ?.filter((availableToken) => availableToken.isMinted === false)
         .slice(0, 7);
       return availableToken;
     } else {
@@ -361,7 +361,7 @@ const VideoItem: React.FC<IVideoItem> = ({
                   {mediaList[item]?.isUnlocked === false && (
                     <div className="modal-content-block-buy">
                       <img
-                        src={contractData?.tokens[0]?.metadata?.image}
+                        src={contractData?.tokens?.at(0)?.metadata?.image}
                         alt="NFT token powered by Rair tech"
                       />
                       <CustomButton
