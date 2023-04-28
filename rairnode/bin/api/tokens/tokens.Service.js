@@ -487,6 +487,41 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
   }
 };
 
+exports.getFullTokenInfo = async (req, res, next) => {
+  const { id } = req.params;
+  const tokenData = await MintedToken.findById(id).lean();
+  if (!tokenData) {
+    return next(new AppError('No token information found'));
+  }
+  const contractData = await Contract.findById(tokenData.contract);
+  if (!contractData) {
+    return next(new AppError('No contract information found'));
+  }
+  tokenData.contract = contractData;
+  const rangeQuery = {
+    contract: tokenData.contract._id,
+  };
+  if (tokenData.contract.diamond) {
+    rangeQuery.diamondRangeIndex = tokenData.offer;
+  } else {
+    rangeQuery.offerIndex = tokenData.offer;
+  }
+  const rangeData = await Offer.findOne(rangeQuery);
+  if (!rangeData) {
+    return next(new AppError('No range information found'));
+  }
+  tokenData.range = rangeData;
+  const productData = await Product.findOne({
+    contract: tokenData.contract._id,
+    collectionIndexInContract: rangeData.product,
+  });
+  if (!productData) {
+    return next(new AppError('No product information found'));
+  }
+  tokenData.product = productData;
+  return res.json({ success: true, tokenData });
+};
+
 exports.pinMetadataToPinata = async (req, res, next) => {
   try {
     const { contract, offers, offerPool } = req.query;
