@@ -52,7 +52,8 @@ module.exports = (context) => {
   // Get list of contracts with all products and offers
   router.get(
     '/full',
-    validation(['filterAndSort'], 'query'),
+    loadUserSession,
+    validation(['filterAndSort', 'pagination'], 'query'),
     async (req, res, next) => {
       try {
         const {
@@ -60,6 +61,7 @@ module.exports = (context) => {
           itemsPerPage = '20',
           blockchain = '',
           category = [],
+          hidden = false,
         } = req.query;
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
@@ -188,6 +190,14 @@ module.exports = (context) => {
               blockchain: {
                 $in: [...blockchainArr],
               },
+            },
+          });
+        }
+
+        if (!hidden) {
+          options.unshift({
+            $match: {
+              blockView: false,
             },
           });
         }
