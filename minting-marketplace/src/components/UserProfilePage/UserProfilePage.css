@@ -1,0 +1,125 @@
+.user-page-background.charcoal {
+  background: var(--stimorol);
+  height: 18.75rem;
+  width: 100%;
+  width: calc(302px * 4 + 10px);
+
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 0.3s all ease;
+}
+
+.user-page-background.rhyno {
+  background: var(--royal-ice);
+  height: 18.75rem;
+  width: 100%;
+  width: calc(302px * 4 + 10px);
+
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 0.3s all ease;
+}
+
+.user-page-background img {
+  width: auto;
+  height: 50px;
+}
+
+.bar-wrapper {
+  display: flex;
+  position: relative;
+}
+
+.personal-profile-box {
+  width: auto;
+  height: 8.625rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.personal-profile-box .profile-avatar-block {
+  width: 8.625rem;
+  height: 8.625rem;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  margin-top: -4.3rem;
+  margin-left: 5.875rem;
+  border-radius: 1rem;
+}
+
+.personal-profile-box .profile-avatar-block img {
+  width: 8.625rem;
+  height: 8.625rem;
+  border-radius: 1rem;
+  transition: 0.3s all ease;
+  object-fit: cover;
+}
+.personal-profile-box .profile-avatar-block img:hover {
+  transform: scale(1.2);
+}
+
+.personal-profile-box .profile-avatar-block .personal-default-avatar {
+  width: 8.625rem;
+  height: 8.625rem;
+  border-radius: 1rem;
+  transition: 0.3s all ease;
+  background: var(--royal-ice);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.personal-profile-box .profile-avatar-block .personal-default-avatar svg {
+  width: 50px;
+  height: 50px;
+}
+
+.personal-profile-box .profile-avatar-block .personal-default-avatar:hover {
+  transform: scale(1.2);
+}
+
+.profileName {
+  margin-left: 1.625rem;
+  margin-top: 1.4rem;
+  width: auto;
+  height: 2.5rem;
+  word-break: break-all;
+
+  font-family: 'Plus Jakarta Sans' sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2.188rem;
+  line-height: 2.5rem;
+  display: flex;
+  align-items: flex-start;
+  color: #ffffff;
+}
+
+.profileName.black {
+  color: #2d2d2d;
+}
+
+.user-page-favorite-container {
+  padding: 0 0 3rem 0;
+}
+
+.user-page-main-tab-block {
+  min-height: 302px;
+  margin-bottom: 3rem;
+}

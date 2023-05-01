@@ -1,17 +1,51 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
+import { CircularProgress } from '@mui/material';
 
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 
 import './PersonalProfileMyNftTab.css';
 
-const PersonalProfileMyNftTabComponent = ({
+interface IPersonalProfileMyNftTabComponent {
+  filteredData: any;
+  openModal?: any;
+  setSelectedData?: any;
+  defaultImg: string;
+  chainData: any;
+  textColor: any;
+  totalCount?: number | undefined;
+  showTokensRef?: any;
+  loader?: any;
+  isLoading?: boolean;
+  loadToken?: any;
+}
+
+const PersonalProfileMyNftTabComponent: React.FC<
+  IPersonalProfileMyNftTabComponent
+> = ({
   filteredData,
   openModal,
   setSelectedData,
   defaultImg,
   chainData,
-  textColor
+  textColor,
+  totalCount,
+  showTokensRef,
+  isLoading,
+  loader,
+  loadToken
 }) => {
+  useEffect(() => {
+    if (loadToken) {
+      const option = {
+        root: null,
+        rootMargin: '20px',
+        threshold: 0
+      };
+      const observer = new IntersectionObserver(loadToken, option);
+      if (loader.current) observer.observe(loader.current);
+    }
+  }, [loadToken, loader, isLoading]);
+
   return (
     <div className="gen">
       <div className="my-items-product-wrapper row">
@@ -20,8 +54,10 @@ const PersonalProfileMyNftTabComponent = ({
             return (
               <div
                 onClick={() => {
-                  openModal();
-                  setSelectedData(item);
+                  if (openModal && setSelectedData) {
+                    openModal();
+                    setSelectedData(item);
+                  }
                 }}
                 key={index}
                 className="col-2 my-item-element">
@@ -75,6 +111,25 @@ const PersonalProfileMyNftTabComponent = ({
           </p>
         )}
       </div>
+      {loader && (
+        <>
+          {isLoading && (
+            <div className="progress-token">
+              <CircularProgress
+                style={{
+                  width: '70px',
+                  height: '70px'
+                }}
+              />
+            </div>
+          )}
+          {filteredData.length &&
+            totalCount &&
+            showTokensRef.current <= totalCount && (
+              <div ref={loader} className="ref" />
+            )}
+        </>
+      )}
     </div>
   );
 };

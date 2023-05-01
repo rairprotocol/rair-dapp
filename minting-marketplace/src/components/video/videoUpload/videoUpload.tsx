@@ -81,7 +81,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     const request = await rFetch('/api/contracts/full?itemsPerPage=5');
     if (request.success) {
       const { success, contracts } = await rFetch(
-        `/api/contracts/full?itemsPerPage=${request.totalNumber}`
+        `/api/contracts/full?itemsPerPage=${request.totalNumber}&hidden=true`
       );
       if (success) {
         const mapping = {};

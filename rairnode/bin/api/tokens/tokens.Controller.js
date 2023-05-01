@@ -7,6 +7,7 @@ const {
   getAllTokens,
   getTokenNumbers,
   updateTokenCommonMetadata,
+  getFullTokenInfo,
 } = require('./tokens.Service');
 const { getSpecificContracts } = require('../../contracts/contracts.Service');
 const {
@@ -40,6 +41,12 @@ router
     validation(['updateCommonTokenMetadata']),
     updateTokenCommonMetadata,
   );
+
+router.get(
+  '/:id',
+  validation(['dbId'], 'params'),
+  getFullTokenInfo,
+);
 
 router.post(
   '/viaCSV',

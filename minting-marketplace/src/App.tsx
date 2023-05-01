@@ -63,6 +63,7 @@ import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/Vapor
 import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80sclub/wallstreet80sclub';
 import ThankYouPage from './components/ThankYouPage';
 import UserProfile from './components/UserProfile/UserProfile';
+import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
@@ -625,6 +626,17 @@ function App() {
                       setTabIndexItems,
                       tabIndexItems
                     }
+                  },
+                  {
+                    path: '/:userAddress',
+                    content: UserProfilePage
+                    // props: {
+                    //   goHome,
+                    //   userData,
+                    //   setIsSplashPage,
+                    //   setTabIndexItems,
+                    //   tabIndexItems
+                    // }
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',

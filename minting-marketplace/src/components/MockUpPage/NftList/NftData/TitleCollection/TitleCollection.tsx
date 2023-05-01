@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
@@ -113,20 +114,25 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               {title === 'none' ? `#${tokenId}` : handleTitleColor()}
             </h2>
           </div>
-          <div className="block-user-creator">
-            <span>by:</span>
-            <ImageLazy
-              src={someUsersData?.avatar ? someUsersData.avatar : defaultImage}
-              alt="User Avatar"
-            />
-            <h5>
-              {someUsersData && someUsersData.nickName
-                ? someUsersData.nickName
-                : userName && userName.length > 25
-                ? `${userName.substring(0, 25)}...`
-                : userName}
-            </h5>
-          </div>
+          <NavLink
+            to={`/${someUsersData ? someUsersData.publicAddress : userName}`}>
+            <div className="block-user-creator">
+              <span>by:</span>
+              <ImageLazy
+                src={
+                  someUsersData?.avatar ? someUsersData.avatar : defaultImage
+                }
+                alt="User Avatar"
+              />
+              <h5>
+                {someUsersData && someUsersData.nickName
+                  ? someUsersData.nickName
+                  : userName && userName.length > 25
+                  ? `${userName.substring(0, 25)}...`
+                  : userName}
+              </h5>
+            </div>
+          </NavLink>
         </div>
         <div
           style={{

@@ -9,12 +9,23 @@ import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { getUserStart } from '../../../../ducks/users/actions';
-import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import {
+  TUsersInitialState,
+  UserType
+} from '../../../../ducks/users/users.types';
 import { defaultAvatar } from '../../../../images';
 
 import cl from './PersonalProfileIcon.module.css';
 
-const PersonalProfileIconComponent = ({ userData }) => {
+interface IPersonalProfileIconComponent {
+  userData: any;
+  isPage?: boolean;
+}
+
+const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
+  userData,
+  isPage
+}) => {
   const dispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
   const { userRd } = useSelector<RootState, TUsersInitialState>(
@@ -339,19 +350,37 @@ const PersonalProfileIconComponent = ({ userData }) => {
           </div>
         ) : (
           <>
-            <span className={cl['profileName' + textColor]}>
-              {/* {userName ? `@${userName}` : userData.publicAddress} */}
-              {userName && userName.length > 13
-                ? '@' +
-                  userName.slice(0, 5) +
-                  '...' +
-                  userName.slice(userName.length - 4)
-                : '@' + userName}
-            </span>
-            <i
-              onClick={() => setEditMode(true)}
-              className={`${cl.edit} ${textColor && cl[textColor]} fal fa-edit`}
-            />
+            {isPage ? (
+              <>
+                <span className={cl['profileName' + textColor]}>
+                  {/* {userName ? `@${userName}` : userData.publicAddress} */}
+                  {userName && userName.length > 20
+                    ? '@' +
+                      userName.slice(0, 5) +
+                      '...' +
+                      userName.slice(userName.length - 4)
+                    : '@' + userName}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className={cl['profileName' + textColor]}>
+                  {/* {userName ? `@${userName}` : userData.publicAddress} */}
+                  {userName && userName.length > 13
+                    ? '@' +
+                      userName.slice(0, 5) +
+                      '...' +
+                      userName.slice(userName.length - 4)
+                    : '@' + userName}
+                </span>
+                <i
+                  onClick={() => setEditMode(true)}
+                  className={`${cl.edit} ${
+                    textColor && cl[textColor]
+                  } fal fa-edit`}
+                />
+              </>
+            )}
           </>
         )}
       </div>
