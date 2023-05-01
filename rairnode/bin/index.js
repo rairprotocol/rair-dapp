@@ -31,7 +31,7 @@ const { mongoConnectionManager } = require('./mongooseConnect');
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
 
 async function main() {
-  const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
+  const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails', './bin/banners'];
 
   // Create Redis client
   const client = redis.createClient({

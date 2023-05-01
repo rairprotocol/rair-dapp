@@ -30,7 +30,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@google-cloud/storage": "^5.16.1",
     "@metamask/eth-sig-util": "^5.0.2",
-    "@pinata/sdk": "^1.1.23",
+    "@pinata/sdk": "^2.1.0",
     "@rair/eth-auth": "^0.2.0",
     "@rair/hls-server": "^0.2.1",
     "@sentry/node": "^7.5.0",

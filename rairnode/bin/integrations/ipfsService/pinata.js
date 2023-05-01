@@ -1,9 +1,9 @@
-const pinataSDK = require('@pinata/sdk');
+const PinataSDK = require('@pinata/sdk');
 const axios = require('axios');
 const _ = require('lodash');
 const AppError = require('../../utils/errors/AppError');
 
-const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET);
+const pinata = new PinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET);
 const log = require('../../utils/logger')(module);
 
 const retrieveMediaInfo = (CID) => axios.get(`${process.env.PINATA_GATEWAY}/${CID}/rair.json`);

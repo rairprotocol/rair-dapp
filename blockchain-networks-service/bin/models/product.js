@@ -20,6 +20,7 @@ const Product = new Schema(
     diamond: { type: Boolean, required: true, default: false },
     singleMetadata: { type: Boolean, default: false },
     metadataURI: { type: String, default: 'none' },
+    bannerImage: { type: String, required: false },
   },
   { versionKey: false },
 );
