@@ -23,6 +23,10 @@ const storage = multer.diskStorage({
       uploadPath = path.join(__dirname, '../file/');
     }
 
+    if (file.fieldname === 'banner') {
+      uploadPath = path.join(__dirname, '../banners/');
+    }
+
     if (!fs.existsSync(uploadPath)) {
       try {
         fs.mkdirSync(uploadPath);

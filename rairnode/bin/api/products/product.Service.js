@@ -1,8 +1,9 @@
-const AppError = require('../utils/errors/AppError');
-const APIFeatures = require('../utils/apiFeatures');
-const { Product: ProductModel, Contract } = require('../models');
+const AppError = require('../../utils/errors/AppError');
+const APIFeatures = require('../../utils/apiFeatures');
+const { Product: ProductModel, Contract } = require('../../models');
 
-const eFactory = require('../utils/entityFactory');
+const eFactory = require('../../utils/entityFactory');
+const { addFile } = require('../../integrations/ipfsService')();
 
 exports.getAllProducts = eFactory.getAll(ProductModel);
 exports.getProductById = async (req, res, next) => {
@@ -11,6 +12,28 @@ exports.getProductById = async (req, res, next) => {
     res.json({ success: true, product });
   } catch (e) {
     next(e);
+  }
+};
+
+exports.setProductBanner = async (req, res, next) => {
+  try {
+    if (!req.file || !req.file.mimetype.includes('image')) {
+      return next(new AppError('No image loaded'));
+    }
+    const { id } = req.params;
+    const foundProduct = await ProductModel.findById(id);
+    if (!foundProduct) {
+      return next(new AppError('Invalid Product ID'));
+    }
+    const ipfsHash = await addFile(req.file.destination, req.file.filename);
+    foundProduct.bannerImage = `https://ipfs.io/ipfs/${ipfsHash}/${req.file.filename}`;
+    foundProduct.save();
+    return res.json({
+      success: true,
+      bannerURL: foundProduct.bannerImage,
+    });
+  } catch (error) {
+    return next(new AppError(error));
   }
 };
 

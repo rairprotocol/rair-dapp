@@ -28,7 +28,6 @@ const updateCommonTokenMetadata = require('./updateCommonTokenMetadata');
 const createFavoriteToken = require('./createFavoriteToken');
 const withProductV2 = require('./withProductV2');
 const manageContract = require('./manageContract');
-const getProductsByUserAddress = require('./getProductsByUserAddress');
 const getLocksByProduct = require('./getLocksByProduct');
 const getFilesByProduct = require('./getFilesByProduct');
 const importContract = require('./importContract');
@@ -112,9 +111,6 @@ module.exports = {
   manageContract,
   getChallengeV2,
   withProductV2,
-
-  // product
-  getProductsByUserAddress,
 
   // files
   getFilesByProduct,
