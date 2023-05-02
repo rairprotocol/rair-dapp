@@ -173,7 +173,7 @@
   }
 
   .my-items-header-wrapper .category-wrapper {
-    width: 91.2vw;
+    width: 86.6vw;
     display: flex;
     justify-content: flex-start;
   }
@@ -212,9 +212,11 @@
   }
   .my-item-element {
     width: 250px !important;
+    height: 250px !important;
   }
   .my-items-product-wrapper {
     max-width: calc(270px * 2);
+    justify-content: center;
   }
   .my-items-search {
     max-height: 40px;

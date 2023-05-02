@@ -3,6 +3,8 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
+import useWindowDimensions from '../../../../hooks/useWindowDimensions';
+
 const PersonalProfileMyCreatedComponent = ({
   openModal,
   setSelectedData,
@@ -16,6 +18,7 @@ const PersonalProfileMyCreatedComponent = ({
   const [myContracts, setMyContracts] = useState();
   const [myProducts, setMyProducts] = useStateIfMounted();
   const [load, setLoad] = useState(true);
+  const { width } = useWindowDimensions();
 
   const getMyContracts = useCallback(async () => {
     const response = await axios.get('/api/contracts');
@@ -68,7 +71,10 @@ const PersonalProfileMyCreatedComponent = ({
   return (
     <div className="wrapper">
       <div className="gen">
-        <div className="my-items-product-wrapper row">
+        <div
+          className={`my-items-product-wrapper ${
+            width >= 1250 && width <= 1400 && 'row'
+          }`}>
           {myProducts && myProducts.length > 0 ? (
             myProducts.map((item, index) => {
               return Object.values(item).map((op) => {

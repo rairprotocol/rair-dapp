@@ -483,7 +483,8 @@ img.single-token-block-img {
     width: 894px;
   }
   .container-search,
-  .my-items-bar-wrapper {
+  .my-items-bar-wrapper,
+  .bar-wrapper {
     width: 894px;
   }
   .list-button-wrapper {
@@ -1339,6 +1340,10 @@ p.general-title {
   }
   .video-module-play-button {
     transform: scale(0.5);
+  }
+
+  .unlockable-video {
+    margin-bottom: 20px !important;
   }
 }
 

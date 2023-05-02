@@ -12,6 +12,7 @@ import { IMyItems, TDiamondTokensType } from './nft.types';
 import { RootState } from '../../ducks';
 import { getTokenError } from '../../ducks/auth/actions';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { TUsersInitialState } from '../../ducks/users/users.types';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
@@ -40,6 +41,9 @@ const MyItems: React.FC<IMyItems> = ({
   const dispatch = useDispatch();
   const defaultImg =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
+  const { userRd } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (state) => state.colorStore
@@ -54,29 +58,33 @@ const MyItems: React.FC<IMyItems> = ({
   // const [tabIndex, setTabIndex] = useState(0);
 
   const getMyNft = useCallback(async () => {
-    const response = await rFetch('/api/nft');
+    if (userRd) {
+      const response = await rFetch(
+        `/api/nft/${userRd?.publicAddress}?itemsPerPage=${20}&pageNum=${1}`
+      );
 
-    if (response.success) {
-      const tokenData: TDiamondTokensType[] = [];
-      for await (const token of response.result) {
-        if (!token.contract) {
-          return;
+      if (response.success) {
+        const tokenData: TDiamondTokensType[] = [];
+        for await (const token of response.result) {
+          if (!token.contract) {
+            return;
+          }
+          const contractData = await rFetch(
+            `/api/contracts/singleContract/${token.contract}`
+          );
+          tokenData.push({
+            ...token,
+            ...contractData.contract
+          });
         }
-        const contractData = await rFetch(
-          `/api/contracts/singleContract/${token.contract}`
-        );
-        tokenData.push({
-          ...token,
-          ...contractData.contract
-        });
+        setTokens(tokenData);
       }
-      setTokens(tokenData);
-    }
 
-    if (response.error && response.message) {
-      dispatch(getTokenError(response.error));
+      if (response.error && response.message) {
+        dispatch(getTokenError(response.error));
+      }
     }
-  }, [dispatch]);
+  }, [dispatch, userRd]);
 
   const openModal = () => {
     setIsOpenBlockchain(true);
@@ -257,6 +265,7 @@ const MyItems: React.FC<IMyItems> = ({
                 defaultImg={defaultImg}
                 chainData={chainData}
                 textColor={textColor}
+                profile={true}
               />
             </TabPanel>
             <TabPanel>

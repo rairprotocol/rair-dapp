@@ -121,10 +121,10 @@ const UserProfilePage: React.FC = () => {
 
   const getUserData = useCallback(async () => {
     if (userAddress) {
+      const userAddressChanged = userAddress.toLowerCase();
       setTabIndexItems(0);
       setUserData(undefined);
-      const response = await rFetch(`/api/users/${userAddress}`);
-      //   const response2 = await rFetch(`/api/nft/`);
+      const response = await rFetch(`/api/users/${userAddressChanged}`);
 
       if (response.success) {
         setUserData(response.user);
@@ -203,7 +203,7 @@ const UserProfilePage: React.FC = () => {
               <img src={headerLogo} alt="background-logo-default" />
             )}
           </div>
-          <div className="my-items-header-wrapper">
+          <div className="my-items-header-wrapper user">
             <div className="personal-profile-box">
               <div className="profile-avatar-block">
                 {userData.avatar ? (
@@ -270,7 +270,7 @@ const UserProfilePage: React.FC = () => {
                       primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
                     }`
                   }}
-                  className="category-button-nft category-button">
+                  className="category-button-videos category-button">
                   Created
                 </Tab>
                 <Tab
@@ -285,7 +285,7 @@ const UserProfilePage: React.FC = () => {
                       primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
                     }`
                   }}
-                  className="category-button-nft category-button">
+                  className="category-button-videos category-button">
                   Favorited
                 </Tab>
                 <Tab
@@ -300,7 +300,7 @@ const UserProfilePage: React.FC = () => {
                       primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
                     }`
                   }}
-                  className="category-button-nft category-button">
+                  className="category-button-videos category-button">
                   Videos
                 </Tab>
               </TabList>

@@ -1,6 +1,7 @@
 import { memo, useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 
+import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 
 import './PersonalProfileMyNftTab.css';
@@ -17,6 +18,7 @@ interface IPersonalProfileMyNftTabComponent {
   loader?: any;
   isLoading?: boolean;
   loadToken?: any;
+  profile?: boolean;
 }
 
 const PersonalProfileMyNftTabComponent: React.FC<
@@ -32,8 +34,11 @@ const PersonalProfileMyNftTabComponent: React.FC<
   showTokensRef,
   isLoading,
   loader,
-  loadToken
+  loadToken,
+  profile
 }) => {
+  const { width } = useWindowDimensions();
+
   useEffect(() => {
     if (loadToken) {
       const option = {
@@ -48,7 +53,11 @@ const PersonalProfileMyNftTabComponent: React.FC<
 
   return (
     <div className="gen">
-      <div className="my-items-product-wrapper row">
+      <div
+        className={`my-items-product-wrapper ${
+          (profile && 'row profile') ||
+          (width >= 1250 && width <= 1400 && 'row')
+        }`}>
         {filteredData.length > 0 ? (
           filteredData.map((item, index) => {
             return (
@@ -62,7 +71,9 @@ const PersonalProfileMyNftTabComponent: React.FC<
                 key={index}
                 className="col-2 my-item-element">
                 <ImageLazy
-                  className="my-items-pict zoom-event"
+                  className={`my-items-pict ${
+                    profile && 'row profile'
+                  } zoom-event`}
                   src={`${item.metadata.image || defaultImg}`}
                   alt={`My favorite NFT ${item.metadata.name}`}
                 />
