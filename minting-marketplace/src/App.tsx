@@ -616,7 +616,7 @@ function App() {
                     }
                   },
                   {
-                    path: '/my-items',
+                    path: '/profile/my-items',
                     content: MyItems,
                     requirement: loginDone,
                     props: {
@@ -671,6 +671,17 @@ function App() {
                     props: {
                       userData
                     }
+                  },
+                  {
+                    path: '/:userAddress',
+                    content: UserProfilePage
+                    // props: {
+                    //   goHome,
+                    //   userData,
+                    //   setIsSplashPage,
+                    //   setTabIndexItems,
+                    //   tabIndexItems
+                    // }
                   },
                   {
                     path: '/thankyou',

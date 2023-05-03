@@ -205,7 +205,7 @@ module.exports = () => {
    */
   router.get(
     '/list',
-    validation(['filterAndSort'], 'query'),
+    validation(['filterAndSort', 'pagination'], 'query'),
     loadUserSession,
     async (req, res, next) => {
       try {

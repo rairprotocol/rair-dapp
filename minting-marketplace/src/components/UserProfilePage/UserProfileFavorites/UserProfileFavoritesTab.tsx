@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { TDocData } from '../../../axios.responseTypes';
+import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { rFetch } from '../../../utils/rFetch';
 import LoadingComponent from '../../common/LoadingComponent';
 import MyfavoriteItem from '../../nft/PersonalProfile/PersonalProfileFavoritesTab/MyfavoriteItem/MyfavoriteItem';
@@ -18,11 +19,14 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
     TDocData | null | undefined
   >(undefined);
 
+  const { width } = useWindowDimensions();
+
   const getFavotiteData = useCallback(async () => {
     if (userAddress) {
+      const userAddressChanged = userAddress.toLowerCase();
       try {
         const response = await rFetch(
-          `/api/v2/favorites/${userAddress}`,
+          `/api/v2/favorites/${userAddressChanged}`,
           undefined,
           undefined,
           false
@@ -48,7 +52,10 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
 
   return (
     <div className="user-page-favorite-container">
-      <div className="my-items-product-wrapper row favorite">
+      <div
+        className={`my-items-product-wrapper ${
+          width >= 1250 && width <= 1400 && 'row'
+        } favorite`}>
         {userFavotites ? (
           userFavotites.doc &&
           userFavotites.doc

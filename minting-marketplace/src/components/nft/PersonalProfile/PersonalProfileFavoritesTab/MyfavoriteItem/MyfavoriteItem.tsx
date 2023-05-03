@@ -61,7 +61,7 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
       className="col-2 my-item-element"
       image={item.token.metadata.image}>
       <ImageLazy
-        className="my-items-pict zoom-event"
+        className={`my-items-pict ${!userPage && 'row'} zoom-event`}
         src={item.token.metadata.image}
         alt={`My favorite NFT ${item.token.metadata.name}`}
       />
