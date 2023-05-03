@@ -33,6 +33,13 @@ resource "cloudflare_record" "rair_market__nipsey" {
   type    = local.record_type.A
 }
 
+resource "cloudflare_record" "rair_market__hotdrops" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "Hotdrops"
+  value   = "34.111.211.234"
+  type    = local.record_type.A
+}
+
 resource "cloudflare_record" "rair_market_txt_1" {
   zone_id = cloudflare_zone.rair_market.id
   name    = "@"
