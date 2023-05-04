@@ -38,9 +38,10 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const [isBack /*setIsBack*/] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(true);
 
-  const tokenData = useSelector<RootState, { [index: string]: TTokenData }>(
-    (state) => state.nftDataStore.tokenData
-  );
+  const tokenData = useSelector<
+    RootState,
+    { [index: string]: TTokenData } | undefined
+  >((state) => state.nftDataStore.tokenData);
   const dispatch = useDispatch();
 
   const getNumberFromStr = (str: string) => {
@@ -186,18 +187,22 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
         </div>
       </div>
     ) : (
-      <CurrentTokens
-        primaryColor={primaryColor}
-        items={currentTokenData(tokenData)}
-        isOpen={isOpen}
-        isBack={isBack}
-        selectedToken={selectedToken}
-        setIsOpen={setIsOpen}
-        setIsOpens={setIsOpens}
-        numberRef={numberRef}
-        handleIsOpen={handleIsOpen}
-        onClickItem={onClickItem}
-      />
+      <>
+        {tokenData !== undefined && (
+          <CurrentTokens
+            primaryColor={primaryColor}
+            items={currentTokenData(tokenData)}
+            isOpen={isOpen}
+            isBack={isBack}
+            selectedToken={selectedToken}
+            setIsOpen={setIsOpen}
+            setIsOpens={setIsOpens}
+            numberRef={numberRef}
+            handleIsOpen={handleIsOpen}
+            onClickItem={onClickItem}
+          />
+        )}
+      </>
     )
   ) : (
     <div

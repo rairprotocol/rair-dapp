@@ -86,7 +86,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     if (loader.current) observer.observe(loader.current);
   }, [loadToken, loader, isLoading]);
 
-  if (!tokenData) {
+  if (tokenData === undefined || !tokenData) {
     return <LoadingComponent />;
   }
 
