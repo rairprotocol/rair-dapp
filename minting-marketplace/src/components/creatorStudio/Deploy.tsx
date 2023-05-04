@@ -66,21 +66,31 @@ const Factory = () => {
     } else if (programmaticProvider) {
       setChainId(currentChain);
     }
-    if (factoryInstance && erc777Instance && currentUserAddress) {
+    if (!currentUserAddress) {
+      return;
+    }
+    if (erc777Instance) {
+      const userBalance = await metamaskCall(
+        erc777Instance.balanceOf(currentUserAddress)
+      );
+      if (userBalance) {
+        getExchangeData();
+        setUserBalance(userBalance);
+      }
+      setTokenSymbol(await metamaskCall(erc777Instance.symbol()));
+    }
+    if (factoryInstance && erc777Instance) {
       setDeploymentPrice(
         await factoryInstance.deploymentCostForERC777(erc777Instance.address)
       );
-      const userBalance = await erc777Instance.balanceOf(currentUserAddress);
-      if (userBalance) {
-        getExchangeData();
-      }
-      setUserBalance(userBalance);
-      setTokenSymbol(await erc777Instance.symbol());
     }
     if (diamondFactoryInstance && erc777Instance) {
-      setDeploymentPriceDiamond(
-        await diamondFactoryInstance.getDeploymentCost(erc777Instance.address)
+      const deploymentPriceForDiamond = await metamaskCall(
+        diamondFactoryInstance.getDeploymentCost(erc777Instance.address)
       );
+      if (deploymentPriceForDiamond) {
+        setDeploymentPriceDiamond(deploymentPriceForDiamond);
+      }
     }
   }, [
     getExchangeData,
@@ -123,6 +133,10 @@ const Factory = () => {
     setTitle('Rair Factory');
   }, []);
 
+  if (!erc777Instance) {
+    return <>Missing RAIR token deployment</>;
+  }
+
   return (
     <div className="row my-5 px-0 mx-0">
       <NavigatorFactory>
@@ -161,48 +175,50 @@ const Factory = () => {
           />
         </div>
         <div className="col-12 p-2">
-          <button
-            disabled={
-              contractName === '' ||
-              chainId === undefined ||
-              adminRights === false ||
-              deploymentPrice === BigNumber.from(0) ||
-              userBalance === BigNumber.from(0) ||
-              deploying
-            }
-            className="btn btn-stimorol col-12 rounded-rair"
-            onClick={async () => {
-              setDeploying(true);
-              Swal.fire({
-                title: 'Deploying contract!',
-                html: 'Please wait...',
-                icon: 'info',
-                showConfirmButton: false
-              });
-              const success = await metamaskCall(
-                erc777Instance?.send(
-                  factoryInstance?.address,
-                  deploymentPrice,
-                  utils.toUtf8Bytes(contractName)
-                )
-              );
-              setDeploying(false);
-              if (success) {
-                Swal.fire({
-                  title: 'Success',
-                  html: 'Contract deployed',
-                  icon: 'success',
-                  showConfirmButton: true
-                });
-                setContractName('');
+          {factoryInstance && (
+            <button
+              disabled={
+                contractName === '' ||
+                chainId === undefined ||
+                adminRights === false ||
+                deploymentPrice === BigNumber.from(0) ||
+                userBalance === BigNumber.from(0) ||
+                deploying
               }
-            }}>
-            Deploy a classic contract for{' '}
-            {utils.formatEther(deploymentPrice).toString()} {tokenSymbol} Tokens
-          </button>
-          {diamondFactoryInstance && (
+              className="btn btn-stimorol col-12 rounded-rair"
+              onClick={async () => {
+                setDeploying(true);
+                Swal.fire({
+                  title: 'Deploying contract!',
+                  html: 'Please wait...',
+                  icon: 'info',
+                  showConfirmButton: false
+                });
+                const success = await metamaskCall(
+                  erc777Instance?.send(
+                    factoryInstance?.address,
+                    deploymentPrice,
+                    utils.toUtf8Bytes(contractName)
+                  )
+                );
+                setDeploying(false);
+                if (success) {
+                  Swal.fire({
+                    title: 'Success',
+                    html: 'Contract deployed',
+                    icon: 'success',
+                    showConfirmButton: true
+                  });
+                  setContractName('');
+                }
+              }}>
+              Deploy a classic contract for{' '}
+              {utils.formatEther(deploymentPrice).toString()} {tokenSymbol}{' '}
+              Tokens
+            </button>
+          )}
+          {diamondFactoryInstance && deploymentPriceDiamond.gt(0) && (
             <>
-              <div className="col-12">or</div>
               <button
                 disabled={
                   contractName === '' ||
@@ -247,13 +263,18 @@ const Factory = () => {
               <br />
             </>
           )}
-          <hr />
-          <h5>Your balance:</h5>
-          <h2>
-            {utils.formatEther(userBalance).toString()} {tokenSymbol} Tokens
-          </h2>
+          {userBalance && (
+            <>
+              <hr />
+              <h5>Your balance:</h5>
+              <h2>
+                {utils.formatEther(userBalance).toString()} {tokenSymbol} Tokens
+              </h2>
+            </>
+          )}
         </div>
         {tokenPurchaserInstance &&
+          userBalance.gt(0) &&
           Object.keys(exchangeData).map((ethPrice, index) => {
             return (
               <button
@@ -290,7 +311,12 @@ const Factory = () => {
               </button>
             );
           })}
-        <CreditManager tokenSymbol={tokenSymbol} updateUserBalance={getPrice} />
+        {userBalance?.gt(0) && (
+          <CreditManager
+            tokenSymbol={tokenSymbol}
+            updateUserBalance={getPrice}
+          />
+        )}
       </NavigatorFactory>
     </div>
   );

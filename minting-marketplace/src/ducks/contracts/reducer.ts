@@ -94,6 +94,17 @@ const contractAddresses: ContractAddressesType = {
     resaleMarketplace: undefined,
     tokenPurchaser: undefined,
     creditHandler: undefined
+  },
+  '0x250': {
+    // Ethereum Mainnet
+    factory: undefined,
+    erc777: '0x762BbcF6E6486fbee13a5CeE291F7aEE14f1CA77',
+    minterMarketplace: undefined,
+    diamondFactory: '0x92FBe344513e108B581170E73CFA352B729E47EA',
+    diamondMarketplace: '0x2b1FE33Cb7264dBa6331F54012f04133395fDe44',
+    resaleMarketplace: undefined,
+    tokenPurchaser: undefined,
+    creditHandler: '0x6C9Ca38fFb93756a52f0072B72eA3C6769f87892'
   }
 };
 

@@ -3,12 +3,21 @@ const log = require('../../utils/logger')(module);
 const config = require('../../config');
 const { classicRAIR721Abi } = require('../smartContracts');
 
+const astarMainnet = new Network('Astar Mainnet', 0x250);
 const maticTestnet = new Network('Matic Testnet', 0x13881);
 const maticMainnet = new Network('Matic Mainnet', 0x89);
 const binanceTestnet = new Network('Binance Testnet', 0x61);
 const binanceMainnet = new Network('Binance Mainnet', 0x38);
 const ethereumGoerli = new Network('Ethereum Goerli', 0x5);
 const ethereumMainnet = new Network('Ethereum Mainnet', 0x1);
+
+// Astar's gas limit is lower than other blockchains
+// Without specifying the gas limit basic calls will fail
+const specificOptions = {
+  '0x250': {
+    gasLimit: 4500000,
+  },
+};
 
 const v6Networks = {
   '0x13881': maticTestnet,
@@ -23,6 +32,8 @@ const v6Networks = {
   ethereum: ethereumMainnet,
   '0x5': ethereumGoerli,
   goerli: ethereumGoerli,
+  astar: astarMainnet,
+  '0x250': astarMainnet,
 };
 
 const endpoints = {
@@ -38,6 +49,23 @@ const endpoints = {
   ethereum: process.env.ETHEREUM_MAINNET_RPC,
   '0x5': process.env.ETHEREUM_TESTNET_GOERLI_RPC,
   goerli: process.env.ETHEREUM_TESTNET_GOERLI_RPC,
+  astar: process.env.ASTAR_MAINNET_RPC,
+  '0x250': process.env.ASTAR_MAINNET_RPC,
+};
+
+const getInstance = async (blockchain, contractAddress) => {
+  const provider = new JsonRpcProvider(endpoints[blockchain], v6Networks[blockchain], {
+    staticNetwork: v6Networks[blockchain],
+  });
+  if (!endpoints[blockchain]) {
+    throw Error(`Invalid blockchain requested: ${blockchain}`);
+  }
+  const tokenInstance = new Contract(
+    contractAddress,
+    classicRAIR721Abi,
+    provider,
+  );
+  return tokenInstance;
 };
 
 /**
@@ -61,25 +89,21 @@ async function checkBalanceProduct(
   // Static RPC Providers are used because the chain ID *WILL NOT* change,
   //    doing this we save calls to the blockchain to verify Chain ID
   try {
-    const provider = new JsonRpcProvider(
-      endpoints[blockchain],
-    );
-    const tokenInstance = new Contract(
-      contractAddress,
-      classicRAIR721Abi,
-      provider,
-    );
-    const result = await tokenInstance.hasTokenInProduct(
+    const tokenInstance = await getInstance(blockchain, contractAddress);
+    const args = [
       accountAddress,
       productId,
       offerRangeStart,
       offerRangeEnd,
-    );
+    ];
+    if (specificOptions[blockchain]) {
+      args.push(specificOptions[blockchain]);
+    }
+    const result = await tokenInstance.hasTokenInProduct(...args);
     return result;
   } catch (error) {
     log.error(
-      'Error querying a range of NFTs on RPC: ',
-      endpoints[blockchain],
+      `Error querying a range of NFTs on RPC for ${blockchain}: ${endpoints[blockchain]}`,
     );
     log.error(error);
   }
@@ -103,15 +127,12 @@ async function checkBalanceSingle(
   // Static RPC Providers are used because the chain ID *WILL NOT* change,
   //   doing this we save calls to the blockchain to verify Chain ID
   try {
-    const provider = new JsonRpcProvider(
-      endpoints[blockchain],
-    );
-    const tokenInstance = new Contract(
-      contractAddress,
-      classicRAIR721Abi,
-      provider,
-    );
-    const result = await tokenInstance.ownerOf(tokenId);
+    const tokenInstance = await getInstance(blockchain, contractAddress);
+    const args = [tokenId];
+    if (specificOptions[blockchain]) {
+      args.push(specificOptions[blockchain]);
+    }
+    const result = await tokenInstance.ownerOf(...args);
     return result.toLowerCase() === accountAddress;
   } catch (error) {
     log.error(
@@ -122,17 +143,14 @@ async function checkBalanceSingle(
   return false;
 }
 
-const checkBalanceAny = async (userAddress, chain, contractAddress) => {
+const checkBalanceAny = async (userAddress, blockchain, contractAddress) => {
   try {
-    const provider = new JsonRpcProvider(endpoints[chain], v6Networks[chain], {
-        staticNetwork: v6Networks[chain],
-      });
-    const tokenInstance = new Contract(
-      contractAddress,
-      classicRAIR721Abi,
-      provider,
-    );
-    const result = await tokenInstance.balanceOf(userAddress);
+    const tokenInstance = await getInstance(blockchain, contractAddress);
+    const args = [userAddress];
+    if (specificOptions[blockchain]) {
+      args.push(specificOptions[blockchain]);
+    }
+    const result = await tokenInstance.balanceOf(...args);
     return result > 0;
   } catch (err) {
     log.error(`Error querying tokens for user ${userAddress} from admin Contract.`);

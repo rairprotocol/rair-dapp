@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.11; 
+pragma solidity ^0.8.19; 
 
 /// @title  IERC2981 interface contract
 /// @notice This contracts contains all th logic and function for

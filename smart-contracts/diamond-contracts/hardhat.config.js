@@ -34,26 +34,14 @@ module.exports = {
 			url: process.env.MATIC_RPC,
 			accounts: [process.env.ADDRESS_PRIVATE_KEY],
 		},
-		"0x61": {
-			url: process.env.BSC_TEST_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+		"0x250": {
+			url: process.env.ASTAR_RPC,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY],
 		},
-		"0x38": {
-			url: process.env.BSC_MAIN_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY]
-		}
 	},
 	solidity: {
 		compilers: [{
-			version: "0.8.11",
-			settings: {
-				optimizer: {
-					enabled: true,
-					runs: 200
-				}
-			}
-		},{
-			version: "0.8.17",
+			version: "0.8.19",
 			settings: {
 				optimizer: {
 					enabled: true,
@@ -92,6 +80,18 @@ module.exports = {
 
 			bsc: process.env.BSCSCAN_API_KEY,
 			bscTestnet: process.env.BSCSCAN_API_KEY,
-		}
+
+			astar: "according to the documentation any value is valid here",
+		},
+		customChains: [
+			{
+				network: "astar",
+				chainId: 592,
+				urls: {
+					apiURL: "https://blockscout.com/astar/api",
+					browserURL: "https://blockscout.com/astar"
+				}
+			}
+		],
 	}
 };

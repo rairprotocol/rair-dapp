@@ -18,15 +18,16 @@ const getTransaction = async (
     const existingTransaction = await Transaction.findOne({
       _id: transactionHash,
     });
-    if (existingTransaction !== null) {
+    if (existingTransaction !== null && existingTransaction.processed === true) {
       throw Error(
         `Transaction Verification failed for tx: ${transactionHash}, the transaction is already processed`,
       );
     }
     // Store on DB that the transaction is being processed
-    let newTransaction = await new dbModels.Transaction({
+    let newTransaction = await new Transaction({
       _id: transactionHash,
       blockchainId: network,
+      processed: false,
     }).save();
 
     log.info(
@@ -61,9 +62,10 @@ const getTransaction = async (
 
     // Check if the Transaction comes from the same user that sent the request
     if (transactionReceipt[fromAddressLabel].toLowerCase() !== userAddress) {
+      // Mark it as processed so the transaction can't be sent again
       newTransaction.processed = true;
       await newTransaction.save();
-      await dbModels.Transaction.deleteOne({ _id: newTransaction._id });
+      await Transaction.deleteOne({ _id: newTransaction._id });
       throw Error(
         `Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userAddress}`,
       );
@@ -140,9 +142,7 @@ const getTransaction = async (
         try {
           await insertion.operation(...insertion.params);
         } catch (err) {
-          log.error('Error storing information of event');
-          console.log(insertion.eventData);
-          log.error(err);
+          log.error(`Error storing information of event ${insertion.eventData}: ${err}`);
         }
       }
       // Set transaction as fully processed ONLY if there was something to insert, otherwise ignore

@@ -1,0 +1,397 @@
+{
+  "address": "0x5C40A8674F66C64796Ec7b15b1e9AC3d195f4438",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "totalTokensDeposited",
+          "type": "uint256"
+        }
+      ],
+      "name": "ReceivedTokens",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "ADMINISTRATOR",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "ALLOWED_ERC777",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_ADMIN_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRoleMember",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleMemberCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "userData",
+          "type": "bytes"
+        },
+        {
+          "internalType": "bytes",
+          "name": "operatorData",
+          "type": "bytes"
+        }
+      ],
+      "name": "tokensReceived",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x3cd2e5d7450356ebe9370d0b757222251b4fecdea6e5874a84d948b5220d78cc",
+  "receipt": {
+    "to": null,
+    "from": "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+    "contractAddress": "0xC0e4bB83Da12Dc18a0172b8b48b60bFa18Cf8984",
+    "transactionIndex": 67,
+    "gasUsed": "774534",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xf1ebca02c0f5d871a2df9472f09e471936d32a7884f725957e1bc7017fa8f952",
+    "transactionHash": "0x3cd2e5d7450356ebe9370d0b757222251b4fecdea6e5874a84d948b5220d78cc",
+    "logs": [],
+    "blockNumber": 8704258,
+    "cumulativeGasUsed": "14786279",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "397cc6ee0ea798d89b27054303431364",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"userAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalTokensDeposited\",\"type\":\"uint256\"}],\"name\":\"ReceivedTokens\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADMINISTRATOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ALLOWED_ERC777\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"userData\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"operatorData\",\"type\":\"bytes\"}],\"name\":\"tokensReceived\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"events\":{\"ReceivedTokens(address,address,uint256,uint256)\":{\"params\":{\"amount\":\"Amount of tokens transferred to this contract\",\"tokenAddress\":\"Address of the ERC777 contract used\",\"totalTokensDeposited\":\"Total amount of tokens deposited by the user\",\"userAddress\":\"Public address of the user depositing\"}}},\"kind\":\"dev\",\"methods\":{\"tokensReceived(address,address,address,uint256,bytes,bytes)\":{\"details\":\"This is our deposit mechanism\",\"params\":{\"amount\":\"The number of tokens sent\",\"from\":\"The owner of the tokens\",\"operator\":\"The ERC777 operator calling the send() function\",\"operatorData\":\"bytes sent from the operator\",\"to\":\"The recipient of the tokens\",\"userData\":\"bytes sent from the send call\"}}},\"title\":\"Deposit logic for the credit system\",\"version\":1},\"userdoc\":{\"events\":{\"ReceivedTokens(address,address,uint256,uint256)\":{\"notice\":\"This event stores the user that deposited tokens into the contract\"}},\"kind\":\"user\",\"methods\":{\"tokensReceived(address,address,address,uint256,bytes,bytes)\":{\"notice\":\"Function called by an ERC777 when they send tokens\"}},\"notice\":\"Uses the ERC777 receiver hook to trigger additional logic\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Credits/Facets/DepositLogic.sol\":\"CreditDeposit\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC777/IERC777.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC777/IERC777.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC777Token standard as defined in the EIP.\\n *\\n * This contract uses the\\n * https://eips.ethereum.org/EIPS/eip-1820[ERC1820 registry standard] to let\\n * token holders and recipients react to token movements by using setting implementers\\n * for the associated interfaces in said registry. See {IERC1820Registry} and\\n * {ERC1820Implementer}.\\n */\\ninterface IERC777 {\\n    /**\\n     * @dev Emitted when `amount` tokens are created by `operator` and assigned to `to`.\\n     *\\n     * Note that some additional user `data` and `operatorData` can be logged in the event.\\n     */\\n    event Minted(address indexed operator, address indexed to, uint256 amount, bytes data, bytes operatorData);\\n\\n    /**\\n     * @dev Emitted when `operator` destroys `amount` tokens from `account`.\\n     *\\n     * Note that some additional user `data` and `operatorData` can be logged in the event.\\n     */\\n    event Burned(address indexed operator, address indexed from, uint256 amount, bytes data, bytes operatorData);\\n\\n    /**\\n     * @dev Emitted when `operator` is made operator for `tokenHolder`\\n     */\\n    event AuthorizedOperator(address indexed operator, address indexed tokenHolder);\\n\\n    /**\\n     * @dev Emitted when `operator` is revoked its operator status for `tokenHolder`\\n     */\\n    event RevokedOperator(address indexed operator, address indexed tokenHolder);\\n\\n    /**\\n     * @dev Returns the name of the token.\\n     */\\n    function name() external view returns (string memory);\\n\\n    /**\\n     * @dev Returns the symbol of the token, usually a shorter version of the\\n     * name.\\n     */\\n    function symbol() external view returns (string memory);\\n\\n    /**\\n     * @dev Returns the smallest part of the token that is not divisible. This\\n     * means all token operations (creation, movement and destruction) must have\\n     * amounts that are a multiple of this number.\\n     *\\n     * For most token contracts, this value will equal 1.\\n     */\\n    function granularity() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by an account (`owner`).\\n     */\\n    function balanceOf(address owner) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `recipient`.\\n     *\\n     * If send or receive hooks are registered for the caller and `recipient`,\\n     * the corresponding functions will be called with `data` and empty\\n     * `operatorData`. See {IERC777Sender} and {IERC777Recipient}.\\n     *\\n     * Emits a {Sent} event.\\n     *\\n     * Requirements\\n     *\\n     * - the caller must have at least `amount` tokens.\\n     * - `recipient` cannot be the zero address.\\n     * - if `recipient` is a contract, it must implement the {IERC777Recipient}\\n     * interface.\\n     */\\n    function send(\\n        address recipient,\\n        uint256 amount,\\n        bytes calldata data\\n    ) external;\\n\\n    /**\\n     * @dev Destroys `amount` tokens from the caller's account, reducing the\\n     * total supply.\\n     *\\n     * If a send hook is registered for the caller, the corresponding function\\n     * will be called with `data` and empty `operatorData`. See {IERC777Sender}.\\n     *\\n     * Emits a {Burned} event.\\n     *\\n     * Requirements\\n     *\\n     * - the caller must have at least `amount` tokens.\\n     */\\n    function burn(uint256 amount, bytes calldata data) external;\\n\\n    /**\\n     * @dev Returns true if an account is an operator of `tokenHolder`.\\n     * Operators can send and burn tokens on behalf of their owners. All\\n     * accounts are their own operator.\\n     *\\n     * See {operatorSend} and {operatorBurn}.\\n     */\\n    function isOperatorFor(address operator, address tokenHolder) external view returns (bool);\\n\\n    /**\\n     * @dev Make an account an operator of the caller.\\n     *\\n     * See {isOperatorFor}.\\n     *\\n     * Emits an {AuthorizedOperator} event.\\n     *\\n     * Requirements\\n     *\\n     * - `operator` cannot be calling address.\\n     */\\n    function authorizeOperator(address operator) external;\\n\\n    /**\\n     * @dev Revoke an account's operator status for the caller.\\n     *\\n     * See {isOperatorFor} and {defaultOperators}.\\n     *\\n     * Emits a {RevokedOperator} event.\\n     *\\n     * Requirements\\n     *\\n     * - `operator` cannot be calling address.\\n     */\\n    function revokeOperator(address operator) external;\\n\\n    /**\\n     * @dev Returns the list of default operators. These accounts are operators\\n     * for all token holders, even if {authorizeOperator} was never called on\\n     * them.\\n     *\\n     * This list is immutable, but individual holders may revoke these via\\n     * {revokeOperator}, in which case {isOperatorFor} will return false.\\n     */\\n    function defaultOperators() external view returns (address[] memory);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `sender` to `recipient`. The caller must\\n     * be an operator of `sender`.\\n     *\\n     * If send or receive hooks are registered for `sender` and `recipient`,\\n     * the corresponding functions will be called with `data` and\\n     * `operatorData`. See {IERC777Sender} and {IERC777Recipient}.\\n     *\\n     * Emits a {Sent} event.\\n     *\\n     * Requirements\\n     *\\n     * - `sender` cannot be the zero address.\\n     * - `sender` must have at least `amount` tokens.\\n     * - the caller must be an operator for `sender`.\\n     * - `recipient` cannot be the zero address.\\n     * - if `recipient` is a contract, it must implement the {IERC777Recipient}\\n     * interface.\\n     */\\n    function operatorSend(\\n        address sender,\\n        address recipient,\\n        uint256 amount,\\n        bytes calldata data,\\n        bytes calldata operatorData\\n    ) external;\\n\\n    /**\\n     * @dev Destroys `amount` tokens from `account`, reducing the total supply.\\n     * The caller must be an operator of `account`.\\n     *\\n     * If a send hook is registered for `account`, the corresponding function\\n     * will be called with `data` and `operatorData`. See {IERC777Sender}.\\n     *\\n     * Emits a {Burned} event.\\n     *\\n     * Requirements\\n     *\\n     * - `account` cannot be the zero address.\\n     * - `account` must have at least `amount` tokens.\\n     * - the caller must be an operator for `account`.\\n     */\\n    function operatorBurn(\\n        address account,\\n        uint256 amount,\\n        bytes calldata data,\\n        bytes calldata operatorData\\n    ) external;\\n\\n    event Sent(\\n        address indexed operator,\\n        address indexed from,\\n        address indexed to,\\n        uint256 amount,\\n        bytes data,\\n        bytes operatorData\\n    );\\n}\\n\",\"keccak256\":\"0x093eaf9a4b05adf2bd3730b753f9e1725ed34b80ea4b5f08477ff2f46a188586\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (token/ERC777/IERC777Recipient.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC777TokensRecipient standard as defined in the EIP.\\n *\\n * Accounts can be notified of {IERC777} tokens being sent to them by having a\\n * contract implement this interface (contract holders can be their own\\n * implementer) and registering it on the\\n * https://eips.ethereum.org/EIPS/eip-1820[ERC1820 global registry].\\n *\\n * See {IERC1820Registry} and {ERC1820Implementer}.\\n */\\ninterface IERC777Recipient {\\n    /**\\n     * @dev Called by an {IERC777} token contract whenever tokens are being\\n     * moved or created into a registered account (`to`). The type of operation\\n     * is conveyed by `from` being the zero address or not.\\n     *\\n     * This call occurs _after_ the token contract's state is updated, so\\n     * {IERC777-balanceOf}, etc., can be used to query the post-operation state.\\n     *\\n     * This function may revert to prevent the operation from being executed.\\n     */\\n    function tokensReceived(\\n        address operator,\\n        address from,\\n        address to,\\n        uint256 amount,\\n        bytes calldata userData,\\n        bytes calldata operatorData\\n    ) external;\\n}\\n\",\"keccak256\":\"0x1a5d61db2733202ba361e6d6741cd2e662380e22b80e987eacfc91973f2267dc\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Strings.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.7.0) (utils/Strings.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev String operations.\\n */\\nlibrary Strings {\\n    bytes16 private constant _HEX_SYMBOLS = \\\"0123456789abcdef\\\";\\n    uint8 private constant _ADDRESS_LENGTH = 20;\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` decimal representation.\\n     */\\n    function toString(uint256 value) internal pure returns (string memory) {\\n        // Inspired by OraclizeAPI's implementation - MIT licence\\n        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol\\n\\n        if (value == 0) {\\n            return \\\"0\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 digits;\\n        while (temp != 0) {\\n            digits++;\\n            temp /= 10;\\n        }\\n        bytes memory buffer = new bytes(digits);\\n        while (value != 0) {\\n            digits -= 1;\\n            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));\\n            value /= 10;\\n        }\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return \\\"0x00\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 length = 0;\\n        while (temp != 0) {\\n            length++;\\n            temp >>= 8;\\n        }\\n        return toHexString(value, length);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.\\n     */\\n    function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {\\n        bytes memory buffer = new bytes(2 * length + 2);\\n        buffer[0] = \\\"0\\\";\\n        buffer[1] = \\\"x\\\";\\n        for (uint256 i = 2 * length + 1; i > 1; --i) {\\n            buffer[i] = _HEX_SYMBOLS[value & 0xf];\\n            value >>= 4;\\n        }\\n        require(value == 0, \\\"Strings: hex length insufficient\\\");\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts an `address` with fixed length of 20 bytes to its not checksummed ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(address addr) internal pure returns (string memory) {\\n        return toHexString(uint256(uint160(addr)), _ADDRESS_LENGTH);\\n    }\\n}\\n\",\"keccak256\":\"0xaf159a8b1923ad2a26d516089bceca9bdeaeacd04be50983ea00ba63070f08a3\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.7.0) (utils/structs/EnumerableSet.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Library for managing\\n * https://en.wikipedia.org/wiki/Set_(abstract_data_type)[sets] of primitive\\n * types.\\n *\\n * Sets have the following properties:\\n *\\n * - Elements are added, removed, and checked for existence in constant time\\n * (O(1)).\\n * - Elements are enumerated in O(n). No guarantees are made on the ordering.\\n *\\n * ```\\n * contract Example {\\n *     // Add the library methods\\n *     using EnumerableSet for EnumerableSet.AddressSet;\\n *\\n *     // Declare a set state variable\\n *     EnumerableSet.AddressSet private mySet;\\n * }\\n * ```\\n *\\n * As of v3.3.0, sets of type `bytes32` (`Bytes32Set`), `address` (`AddressSet`)\\n * and `uint256` (`UintSet`) are supported.\\n *\\n * [WARNING]\\n * ====\\n *  Trying to delete such a structure from storage will likely result in data corruption, rendering the structure unusable.\\n *  See https://github.com/ethereum/solidity/pull/11843[ethereum/solidity#11843] for more info.\\n *\\n *  In order to clean an EnumerableSet, you can either remove all elements one by one or create a fresh instance using an array of EnumerableSet.\\n * ====\\n */\\nlibrary EnumerableSet {\\n    // To implement this library for multiple types with as little code\\n    // repetition as possible, we write it in terms of a generic Set type with\\n    // bytes32 values.\\n    // The Set implementation uses private functions, and user-facing\\n    // implementations (such as AddressSet) are just wrappers around the\\n    // underlying Set.\\n    // This means that we can only create new EnumerableSets for types that fit\\n    // in bytes32.\\n\\n    struct Set {\\n        // Storage of set values\\n        bytes32[] _values;\\n        // Position of the value in the `values` array, plus 1 because index 0\\n        // means a value is not in the set.\\n        mapping(bytes32 => uint256) _indexes;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function _add(Set storage set, bytes32 value) private returns (bool) {\\n        if (!_contains(set, value)) {\\n            set._values.push(value);\\n            // The value is stored at length-1, but we add 1 to all indexes\\n            // and use 0 as a sentinel value\\n            set._indexes[value] = set._values.length;\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function _remove(Set storage set, bytes32 value) private returns (bool) {\\n        // We read and store the value's index to prevent multiple reads from the same storage slot\\n        uint256 valueIndex = set._indexes[value];\\n\\n        if (valueIndex != 0) {\\n            // Equivalent to contains(set, value)\\n            // To delete an element from the _values array in O(1), we swap the element to delete with the last one in\\n            // the array, and then remove the last element (sometimes called as 'swap and pop').\\n            // This modifies the order of the array, as noted in {at}.\\n\\n            uint256 toDeleteIndex = valueIndex - 1;\\n            uint256 lastIndex = set._values.length - 1;\\n\\n            if (lastIndex != toDeleteIndex) {\\n                bytes32 lastValue = set._values[lastIndex];\\n\\n                // Move the last value to the index where the value to delete is\\n                set._values[toDeleteIndex] = lastValue;\\n                // Update the index for the moved value\\n                set._indexes[lastValue] = valueIndex; // Replace lastValue's index to valueIndex\\n            }\\n\\n            // Delete the slot where the moved value was stored\\n            set._values.pop();\\n\\n            // Delete the index for the deleted slot\\n            delete set._indexes[value];\\n\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function _contains(Set storage set, bytes32 value) private view returns (bool) {\\n        return set._indexes[value] != 0;\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function _length(Set storage set) private view returns (uint256) {\\n        return set._values.length;\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function _at(Set storage set, uint256 index) private view returns (bytes32) {\\n        return set._values[index];\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function _values(Set storage set) private view returns (bytes32[] memory) {\\n        return set._values;\\n    }\\n\\n    // Bytes32Set\\n\\n    struct Bytes32Set {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _add(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _remove(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(Bytes32Set storage set, bytes32 value) internal view returns (bool) {\\n        return _contains(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(Bytes32Set storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(Bytes32Set storage set, uint256 index) internal view returns (bytes32) {\\n        return _at(set._inner, index);\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(Bytes32Set storage set) internal view returns (bytes32[] memory) {\\n        return _values(set._inner);\\n    }\\n\\n    // AddressSet\\n\\n    struct AddressSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(AddressSet storage set, address value) internal returns (bool) {\\n        return _add(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(AddressSet storage set, address value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(AddressSet storage set, address value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(AddressSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(AddressSet storage set, uint256 index) internal view returns (address) {\\n        return address(uint160(uint256(_at(set._inner, index))));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(AddressSet storage set) internal view returns (address[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        address[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n\\n    // UintSet\\n\\n    struct UintSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _add(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(UintSet storage set, uint256 value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function length(UintSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(UintSet storage set, uint256 index) internal view returns (uint256) {\\n        return uint256(_at(set._inner, index));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(UintSet storage set) internal view returns (uint256[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        uint256[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n}\\n\",\"keccak256\":\"0x5050943b32b6a8f282573d166b2e9d87ab7eb4dbba4ab6acf36ecb54fe6995e4\",\"license\":\"MIT\"},\"contracts/Credits/AccessControlRoles.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.19; \\n\\nabstract contract CreditHandlerRoles {\\n\\tbytes32 public constant ADMINISTRATOR = keccak256(\\\"rair.creditConsumer.administrator\\\");\\n\\tbytes32 public constant ALLOWED_ERC777 = keccak256(\\\"rair.creditConsumer.allowedTokens\\\");\\n\\tbytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;\\n}\",\"keccak256\":\"0x6eeade98373cfb8e62fb16b65cfbfc75e87678d9fcb4a89fef500972b520f570\",\"license\":\"GPL-3.0\"},\"contracts/Credits/Facets/DepositLogic.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.19;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC777/IERC777.sol\\\";\\nimport \\\"@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol\\\";\\n\\nimport { AccessControlEnumerable } from '../../common/DiamondStorage/AccessControlEnumerable.sol';\\nimport { CreditHandlerRoles } from '../AccessControlRoles.sol';\\nimport { CreditHandlerStorage } from '../Storage/CreditHandlerStorage.sol';\\n\\n/// @title \\tDeposit logic for the credit system\\n/// @notice Uses the ERC777 receiver hook to trigger additional logic\\ncontract CreditDeposit is AccessControlEnumerable, CreditHandlerRoles {\\n    /// @notice This event stores the user that deposited tokens into the contract\\n    /// @param\\tuserAddress             Public address of the user depositing\\n    /// @param \\ttokenAddress            Address of the ERC777 contract used\\n    /// @param \\tamount                  Amount of tokens transferred to this contract\\n\\t/// @param \\ttotalTokensDeposited    Total amount of tokens deposited by the user\\n\\tevent ReceivedTokens(address userAddress, address tokenAddress, uint amount, uint totalTokensDeposited);\\n\\n\\t/// @notice Function called by an ERC777 when they send tokens\\n\\t/// @dev   \\tThis is our deposit mechanism\\n\\t/// @param \\toperator The ERC777 operator calling the send() function\\n\\t/// @param \\tfrom The owner of the tokens\\n\\t/// @param \\tto The recipient of the tokens\\n\\t/// @param \\tamount The number of tokens sent\\n\\t/// @param \\tuserData bytes sent from the send call\\n\\t/// @param \\toperatorData bytes sent from the operator\\n    function tokensReceived(\\n        address operator,\\n        address from,\\n        address to,\\n        uint256 amount,\\n        bytes calldata userData,\\n        bytes calldata operatorData\\n    ) external onlyRole(ALLOWED_ERC777) {\\n        require(to == address(this), \\\"CreditConsumer: Invalid destination\\\");\\n        CreditHandlerStorage.Layout storage storageData = CreditHandlerStorage.layout();\\n\\t\\tstorageData.userCreditBalance[msg.sender][from] += amount;\\n\\t\\tstorageData.overallUserCreditBalance[from] += amount;\\n\\t\\temit ReceivedTokens(\\n            from,\\n            msg.sender,\\n            amount,\\n            storageData.userCreditBalance[msg.sender][from]\\n        );\\n\\t}\\n}\",\"keccak256\":\"0x3ee543cac205296b32578d5d682de740cd295d7d5dd7c8549395a8bb8e9eeb91\",\"license\":\"GPL-3.0\"},\"contracts/Credits/Storage/CreditHandlerStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.19;\\n\\nlibrary CreditHandlerStorage {\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('rair.contracts.storage.CreditConsumer');\\n\\n    struct Layout {\\n        mapping(address => mapping(address => uint)) userCreditBalance;\\n        mapping(address => uint) overallUserCreditBalance;\\n    }\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\",\"keccak256\":\"0x7435bda15458633c648daea9ba3b55374e08e7246b0def28463ea6d30dfb5d24\",\"license\":\"MIT\"},\"contracts/common/DiamondStorage/AccessControlEnumerable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.19;\\n\\nimport { Context } from \\\"@openzeppelin/contracts/utils/Context.sol\\\";\\nimport { Strings } from \\\"@openzeppelin/contracts/utils/Strings.sol\\\";\\nimport { EnumerableSet } from \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\nimport { AccessControlEnumerableStorage } from \\\"./AccessControlEnumerableStorage.sol\\\";\\n\\nabstract contract AccessControlEnumerable is Context {\\n    using EnumerableSet for EnumerableSet.AddressSet;\\n    \\n    event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\tevent RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    modifier onlyRole(bytes32 role) {\\n        _checkRole(role, _msgSender());\\n        _;\\n    }\\n\\n    function renounceRole(bytes32 role, address account) public {\\n        require(account == _msgSender(), \\\"AccessControl: can only renounce roles for self\\\");\\n        _revokeRole(role, account);\\n    }\\n\\n    function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _grantRole(role, account);\\n    }\\n\\n    function revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _revokeRole(role, account);\\n    }\\n\\n    function _checkRole(bytes32 role, address account) internal view {\\n        if (!hasRole(role, account)) {\\n            revert(\\n                string(\\n                    abi.encodePacked(\\n                        \\\"AccessControl: account \\\",\\n                        Strings.toHexString(uint160(account), 20),\\n                        \\\" is missing role \\\",\\n                        Strings.toHexString(uint256(role), 32)\\n                    )\\n                )\\n            );\\n        }\\n    }\\n\\n\\tfunction hasRole(bytes32 role, address account) public view returns (bool) {\\n\\t\\treturn AccessControlEnumerableStorage.layout()._roles[role].members[account];\\n\\t}\\n\\n\\tfunction getRoleAdmin(bytes32 role) public view returns (bytes32) {\\n\\t\\treturn AccessControlEnumerableStorage.layout()._roles[role].adminRole;\\n\\t}\\n\\n\\tfunction getRoleMember(bytes32 role, uint256 index) public view returns (address) {\\n\\t\\treturn AccessControlEnumerableStorage.layout()._roleMembers[role].at(index);\\n\\t}\\n\\t\\n\\tfunction getRoleMemberCount(bytes32 role) public view returns (uint256) {\\n\\t\\treturn AccessControlEnumerableStorage.layout()._roleMembers[role].length();\\n\\t}\\n\\n\\tfunction _setRoleAdmin(bytes32 role, bytes32 adminRole) internal {\\n\\t\\tbytes32 previousAdminRole = getRoleAdmin(role);\\n\\t\\tAccessControlEnumerableStorage.layout()._roles[role].adminRole = adminRole;\\n\\t\\temit RoleAdminChanged(role, previousAdminRole, adminRole);\\n\\t}\\n\\n\\tfunction _grantRole(bytes32 role, address account) internal {\\n\\t\\tif (!hasRole(role, account)) {\\n\\t\\t\\tAccessControlEnumerableStorage.layout()._roles[role].members[account] = true;\\n\\t\\t\\temit RoleGranted(role, account, _msgSender());\\n\\t\\t\\tAccessControlEnumerableStorage.layout()._roleMembers[role].add(account);\\n\\t\\t}\\n\\t}\\n\\n\\tfunction _revokeRole(bytes32 role, address account) internal {\\n\\t\\tif (hasRole(role, account)) {\\n\\t\\t\\tAccessControlEnumerableStorage.layout()._roles[role].members[account] = false;\\n\\t\\t\\temit RoleRevoked(role, account, _msgSender());\\n\\t\\t\\tAccessControlEnumerableStorage.layout()._roleMembers[role].remove(account);\\n\\t\\t}\\n\\t}\\n}\",\"keccak256\":\"0xbcc3e86b1c9f6af4d6138697f70486a95c090e64ec8baae93017b62a92deea02\",\"license\":\"MIT\"},\"contracts/common/DiamondStorage/AccessControlEnumerableStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.19;\\n\\nimport { EnumerableSet } from \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\n\\nlibrary AccessControlEnumerableStorage {\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('rair.contracts.storage.AccessControlEnumerable');\\n\\n    struct RoleData {\\n        mapping(address => bool) members;\\n        bytes32 adminRole;\\n    }\\n\\n    struct Layout {\\n        mapping(bytes32 => RoleData) _roles;\\n        mapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;\\n    }\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\",\"keccak256\":\"0x39c12205374ca7b5c48dc674915d7ce24ee0238b73a3320cc92402a0e86f2f09\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610d0d806100206000396000f3fe608060405234801561001057600080fd5b50600436106100a85760003560e01c80639010d07c116100715780639010d07c1461013557806391d1485414610160578063a217fddf14610183578063ca15c8731461018b578063d547741f1461019e578063d7ccbefe146101b157600080fd5b806223de29146100ad578063248a9ca3146100c25780632f2ff15d146100e857806336568abe146100fb57806359fe72791461010e575b600080fd5b6100c06100bb366004610a0d565b6101d8565b005b6100d56100d0366004610ab8565b610367565b6040519081526020015b60405180910390f35b6100c06100f6366004610ad1565b610389565b6100c0610109366004610ad1565b6103ab565b6100d57f5feb4fc8353744df88c070fec2ce0b260201a0f48c15e9c30b74c6772f05987e81565b610148610143366004610afd565b610429565b6040516001600160a01b0390911681526020016100df565b61017361016e366004610ad1565b610457565b60405190151581526020016100df565b6100d5600081565b6100d5610199366004610ab8565b61048f565b6100c06101ac366004610ad1565b6104b3565b6100d57f632cf005d591a00d863083f41da4ebaf8627023b95d6248039a4445218150dc281565b7f632cf005d591a00d863083f41da4ebaf8627023b95d6248039a4445218150dc261020381336104d0565b6001600160a01b038716301461026c5760405162461bcd60e51b815260206004820152602360248201527f437265646974436f6e73756d65723a20496e76616c69642064657374696e617460448201526234b7b760e91b60648201526084015b60405180910390fd5b3360009081527f4450215f052c8f729ef154acb1b5bb971dcf3a8c302f328f6a0a91077b170fb5602081815260408084206001600160a01b038d16855290915282208054919289926102bf908490610b35565b90915550506001600160a01b0389166000908152600182016020526040812080548992906102ee908490610b35565b9091555050336000818152602083815260408083206001600160a01b038e1680855290835292819020548151938452918301939093528183018a9052606082015290517fee70738e4859e9b5eaba108c07f5f97459880f7d99f4af4bbbb400a529ed3db29181900360800190a150505050505050505050565b6000908152600080516020610c98833981519152602052604090206001015490565b61039282610367565b61039c81336104d0565b6103a68383610534565b505050565b6001600160a01b038116331461041b5760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152608401610263565b61042582826105cb565b5050565b6000828152600080516020610cb88339815191526020526040812061044e9083610660565b90505b92915050565b6000918252600080516020610c98833981519152602090815260408084206001600160a01b0393909316845291905290205460ff1690565b6000818152600080516020610cb8833981519152602052604081206104519061066c565b6104bc82610367565b6104c681336104d0565b6103a683836105cb565b6104da8282610457565b610425576104f2816001600160a01b03166014610676565b6104fd836020610676565b60405160200161050e929190610b6c565b60408051601f198184030181529082905262461bcd60e51b825261026391600401610be1565b61053e8282610457565b610425576000828152600080516020610c98833981519152602090815260408083206001600160a01b0385168085529252808320805460ff1916600117905551339285917f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d9190a46000828152600080516020610cb8833981519152602052604090206103a69082610812565b6105d58282610457565b15610425576000828152600080516020610c98833981519152602090815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a46000828152600080516020610cb8833981519152602052604090206103a69082610827565b600061044e838361083c565b6000610451825490565b60606000610685836002610c14565b610690906002610b35565b67ffffffffffffffff8111156106a8576106a8610c2b565b6040519080825280601f01601f1916602001820160405280156106d2576020820181803683370190505b509050600360fc1b816000815181106106ed576106ed610c41565b60200101906001600160f81b031916908160001a905350600f60fb1b8160018151811061071c5761071c610c41565b60200101906001600160f81b031916908160001a9053506000610740846002610c14565b61074b906001610b35565b90505b60018111156107c3576f181899199a1a9b1b9c1cb0b131b232b360811b85600f166010811061077f5761077f610c41565b1a60f81b82828151811061079557610795610c41565b60200101906001600160f81b031916908160001a90535060049490941c936107bc81610c57565b905061074e565b50831561044e5760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610263565b600061044e836001600160a01b038416610866565b600061044e836001600160a01b0384166108b5565b600082600001828154811061085357610853610c41565b9060005260206000200154905092915050565b60008181526001830160205260408120546108ad57508154600181810184556000848152602080822090930184905584548482528286019093526040902091909155610451565b506000610451565b6000818152600183016020526040812054801561099e5760006108d9600183610c6e565b85549091506000906108ed90600190610c6e565b905081811461095257600086600001828154811061090d5761090d610c41565b906000526020600020015490508087600001848154811061093057610930610c41565b6000918252602080832090910192909255918252600188019052604090208390555b855486908061096357610963610c81565b600190038181906000526020600020016000905590558560010160008681526020019081526020016000206000905560019350505050610451565b6000915050610451565b80356001600160a01b03811681146109bf57600080fd5b919050565b60008083601f8401126109d657600080fd5b50813567ffffffffffffffff8111156109ee57600080fd5b602083019150836020828501011115610a0657600080fd5b9250929050565b60008060008060008060008060c0898b031215610a2957600080fd5b610a32896109a8565b9750610a4060208a016109a8565b9650610a4e60408a016109a8565b955060608901359450608089013567ffffffffffffffff80821115610a7257600080fd5b610a7e8c838d016109c4565b909650945060a08b0135915080821115610a9757600080fd5b50610aa48b828c016109c4565b999c989b5096995094979396929594505050565b600060208284031215610aca57600080fd5b5035919050565b60008060408385031215610ae457600080fd5b82359150610af4602084016109a8565b90509250929050565b60008060408385031215610b1057600080fd5b50508035926020909101359150565b634e487b7160e01b600052601160045260246000fd5b8082018082111561045157610451610b1f565b60005b83811015610b63578181015183820152602001610b4b565b50506000910152565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351610ba4816017850160208801610b48565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351610bd5816028840160208801610b48565b01602801949350505050565b6020815260008251806020840152610c00816040850160208701610b48565b601f01601f19169190910160400192915050565b808202811582820484141761045157610451610b1f565b634e487b7160e01b600052604160045260246000fd5b634e487b7160e01b600052603260045260246000fd5b600081610c6657610c66610b1f565b506000190190565b8181038181111561045157610451610b1f565b634e487b7160e01b600052603160045260246000fdfe4f4f658137f4e10317e1a22624c2b114af7563a20fb2e3444ae2ac2342d457d04f4f658137f4e10317e1a22624c2b114af7563a20fb2e3444ae2ac2342d457d1a2646970667358221220922bd7570b9966c8e868b07a89a84096f27097f6795660e075b8d44f8bfbee0e64736f6c63430008130033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100a85760003560e01c80639010d07c116100715780639010d07c1461013557806391d1485414610160578063a217fddf14610183578063ca15c8731461018b578063d547741f1461019e578063d7ccbefe146101b157600080fd5b806223de29146100ad578063248a9ca3146100c25780632f2ff15d146100e857806336568abe146100fb57806359fe72791461010e575b600080fd5b6100c06100bb366004610a0d565b6101d8565b005b6100d56100d0366004610ab8565b610367565b6040519081526020015b60405180910390f35b6100c06100f6366004610ad1565b610389565b6100c0610109366004610ad1565b6103ab565b6100d57f5feb4fc8353744df88c070fec2ce0b260201a0f48c15e9c30b74c6772f05987e81565b610148610143366004610afd565b610429565b6040516001600160a01b0390911681526020016100df565b61017361016e366004610ad1565b610457565b60405190151581526020016100df565b6100d5600081565b6100d5610199366004610ab8565b61048f565b6100c06101ac366004610ad1565b6104b3565b6100d57f632cf005d591a00d863083f41da4ebaf8627023b95d6248039a4445218150dc281565b7f632cf005d591a00d863083f41da4ebaf8627023b95d6248039a4445218150dc261020381336104d0565b6001600160a01b038716301461026c5760405162461bcd60e51b815260206004820152602360248201527f437265646974436f6e73756d65723a20496e76616c69642064657374696e617460448201526234b7b760e91b60648201526084015b60405180910390fd5b3360009081527f4450215f052c8f729ef154acb1b5bb971dcf3a8c302f328f6a0a91077b170fb5602081815260408084206001600160a01b038d16855290915282208054919289926102bf908490610b35565b90915550506001600160a01b0389166000908152600182016020526040812080548992906102ee908490610b35565b9091555050336000818152602083815260408083206001600160a01b038e1680855290835292819020548151938452918301939093528183018a9052606082015290517fee70738e4859e9b5eaba108c07f5f97459880f7d99f4af4bbbb400a529ed3db29181900360800190a150505050505050505050565b6000908152600080516020610c98833981519152602052604090206001015490565b61039282610367565b61039c81336104d0565b6103a68383610534565b505050565b6001600160a01b038116331461041b5760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152608401610263565b61042582826105cb565b5050565b6000828152600080516020610cb88339815191526020526040812061044e9083610660565b90505b92915050565b6000918252600080516020610c98833981519152602090815260408084206001600160a01b0393909316845291905290205460ff1690565b6000818152600080516020610cb8833981519152602052604081206104519061066c565b6104bc82610367565b6104c681336104d0565b6103a683836105cb565b6104da8282610457565b610425576104f2816001600160a01b03166014610676565b6104fd836020610676565b60405160200161050e929190610b6c565b60408051601f198184030181529082905262461bcd60e51b825261026391600401610be1565b61053e8282610457565b610425576000828152600080516020610c98833981519152602090815260408083206001600160a01b0385168085529252808320805460ff1916600117905551339285917f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d9190a46000828152600080516020610cb8833981519152602052604090206103a69082610812565b6105d58282610457565b15610425576000828152600080516020610c98833981519152602090815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a46000828152600080516020610cb8833981519152602052604090206103a69082610827565b600061044e838361083c565b6000610451825490565b60606000610685836002610c14565b610690906002610b35565b67ffffffffffffffff8111156106a8576106a8610c2b565b6040519080825280601f01601f1916602001820160405280156106d2576020820181803683370190505b509050600360fc1b816000815181106106ed576106ed610c41565b60200101906001600160f81b031916908160001a905350600f60fb1b8160018151811061071c5761071c610c41565b60200101906001600160f81b031916908160001a9053506000610740846002610c14565b61074b906001610b35565b90505b60018111156107c3576f181899199a1a9b1b9c1cb0b131b232b360811b85600f166010811061077f5761077f610c41565b1a60f81b82828151811061079557610795610c41565b60200101906001600160f81b031916908160001a90535060049490941c936107bc81610c57565b905061074e565b50831561044e5760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610263565b600061044e836001600160a01b038416610866565b600061044e836001600160a01b0384166108b5565b600082600001828154811061085357610853610c41565b9060005260206000200154905092915050565b60008181526001830160205260408120546108ad57508154600181810184556000848152602080822090930184905584548482528286019093526040902091909155610451565b506000610451565b6000818152600183016020526040812054801561099e5760006108d9600183610c6e565b85549091506000906108ed90600190610c6e565b905081811461095257600086600001828154811061090d5761090d610c41565b906000526020600020015490508087600001848154811061093057610930610c41565b6000918252602080832090910192909255918252600188019052604090208390555b855486908061096357610963610c81565b600190038181906000526020600020016000905590558560010160008681526020019081526020016000206000905560019350505050610451565b6000915050610451565b80356001600160a01b03811681146109bf57600080fd5b919050565b60008083601f8401126109d657600080fd5b50813567ffffffffffffffff8111156109ee57600080fd5b602083019150836020828501011115610a0657600080fd5b9250929050565b60008060008060008060008060c0898b031215610a2957600080fd5b610a32896109a8565b9750610a4060208a016109a8565b9650610a4e60408a016109a8565b955060608901359450608089013567ffffffffffffffff80821115610a7257600080fd5b610a7e8c838d016109c4565b909650945060a08b0135915080821115610a9757600080fd5b50610aa48b828c016109c4565b999c989b5096995094979396929594505050565b600060208284031215610aca57600080fd5b5035919050565b60008060408385031215610ae457600080fd5b82359150610af4602084016109a8565b90509250929050565b60008060408385031215610b1057600080fd5b50508035926020909101359150565b634e487b7160e01b600052601160045260246000fd5b8082018082111561045157610451610b1f565b60005b83811015610b63578181015183820152602001610b4b565b50506000910152565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351610ba4816017850160208801610b48565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351610bd5816028840160208801610b48565b01602801949350505050565b6020815260008251806020840152610c00816040850160208701610b48565b601f01601f19169190910160400192915050565b808202811582820484141761045157610451610b1f565b634e487b7160e01b600052604160045260246000fd5b634e487b7160e01b600052603260045260246000fd5b600081610c6657610c66610b1f565b506000190190565b8181038181111561045157610451610b1f565b634e487b7160e01b600052603160045260246000fdfe4f4f658137f4e10317e1a22624c2b114af7563a20fb2e3444ae2ac2342d457d04f4f658137f4e10317e1a22624c2b114af7563a20fb2e3444ae2ac2342d457d1a2646970667358221220922bd7570b9966c8e868b07a89a84096f27097f6795660e075b8d44f8bfbee0e64736f6c63430008130033",
+  "devdoc": {
+    "events": {
+      "ReceivedTokens(address,address,uint256,uint256)": {
+        "params": {
+          "amount": "Amount of tokens transferred to this contract",
+          "tokenAddress": "Address of the ERC777 contract used",
+          "totalTokensDeposited": "Total amount of tokens deposited by the user",
+          "userAddress": "Public address of the user depositing"
+        }
+      }
+    },
+    "kind": "dev",
+    "methods": {
+      "tokensReceived(address,address,address,uint256,bytes,bytes)": {
+        "details": "This is our deposit mechanism",
+        "params": {
+          "amount": "The number of tokens sent",
+          "from": "The owner of the tokens",
+          "operator": "The ERC777 operator calling the send() function",
+          "operatorData": "bytes sent from the operator",
+          "to": "The recipient of the tokens",
+          "userData": "bytes sent from the send call"
+        }
+      }
+    },
+    "title": "Deposit logic for the credit system",
+    "version": 1
+  },
+  "userdoc": {
+    "events": {
+      "ReceivedTokens(address,address,uint256,uint256)": {
+        "notice": "This event stores the user that deposited tokens into the contract"
+      }
+    },
+    "kind": "user",
+    "methods": {
+      "tokensReceived(address,address,address,uint256,bytes,bytes)": {
+        "notice": "Function called by an ERC777 when they send tokens"
+      }
+    },
+    "notice": "Uses the ERC777 receiver hook to trigger additional logic",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

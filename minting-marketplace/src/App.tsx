@@ -67,7 +67,7 @@ import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
-import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
+import { getTokenComplete } from './ducks/auth/actions';
 import { setChainId, setUserAddress } from './ducks/contracts/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setAdminRights } from './ducks/users/actions';
@@ -79,7 +79,7 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
-import { isTokenValid, rFetch } from './utils/rFetch';
+import { rFetch } from './utils/rFetch';
 // views
 import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
 
@@ -121,7 +121,6 @@ function App() {
   } = useSelector((store) => store.contractStore);
   const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
     useSelector((store) => store.colorStore);
-  const { token } = useSelector((store) => store.accessStore);
   const { adminRights } = useSelector((store) => store.userStore);
 
   const { startedLogin, userData, loginDone, connectUserData, setLoginDone } =

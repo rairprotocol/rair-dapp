@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { formatEther } from 'ethers/lib/utils';
 import Swal from 'sweetalert2';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
@@ -110,7 +111,9 @@ const VideoItem: React.FC<IVideoItem> = ({
         selectedToken // Internal Token Index
       ];
     }
-    marketplaceArguments.push({ value: price });
+    marketplaceArguments.push({
+      value: price
+    });
     if (
       await metamaskCall(
         marketplaceCall(...marketplaceArguments),
@@ -420,7 +423,7 @@ const VideoItem: React.FC<IVideoItem> = ({
                             <CustomButton
                               loading={loading}
                               text={
-                                token.offer.price +
+                                formatEther(token.offer.price) +
                                 ' ' +
                                 chainData[contractData?.blockchain]?.symbol
                               }

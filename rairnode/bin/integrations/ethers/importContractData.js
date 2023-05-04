@@ -1,8 +1,9 @@
 /* eslint-disable no-restricted-syntax */
-const { Network, Alchemy } = require('alchemy-sdk');
+const { Alchemy } = require('alchemy-sdk');
 const fetch = require('node-fetch');
 const log = require('../../utils/logger')(module);
 const { Contract, Product, Offer, OfferPool, MintedToken } = require('../../models');
+const { alchemy } = require('../../config');
 
 // Contract ABIs
 // The RAIR721 contract is still an ERC721 compliant contract,
@@ -86,13 +87,6 @@ const insertToken = async (token, contractId) => {
   return true;
 };
 
-const alchemyMapping = {
-  '0x1': Network.ETH_MAINNET,
-  '0x5': Network.ETH_GOERLI,
-  '0x89': Network.MATIC_MAINNET,
-  '0x13881': Network.MATIC_MUMBAI,
-};
-
 module.exports = {
   importContractData: async (networkId, contractAddress, limit, contractCreator, importerUser) => {
     let contract;
@@ -100,12 +94,12 @@ module.exports = {
     // Optional Config object, but defaults to demo api-key and eth-mainnet.
     const settings = {
       apiKey: process.env.ALCHEMY_API_KEY, // ''
-      network: alchemyMapping[networkId], // Replace with your network.
+      network: alchemy.networkMapping[networkId], // Replace with your network.
     };
     if (!settings.network) {
       return { success: false, result: undefined, message: 'Invalid blockchain' };
     }
-    const alchemy = new Alchemy(settings);
+    const alchemySDK = new Alchemy(settings);
 
     contract = await Contract.findOne({
       contractAddress,
@@ -117,7 +111,7 @@ module.exports = {
       return { success: false, result: undefined, message: 'NFTs already imported' };
     }
 
-    const contractMetadata = await alchemy.nft.getContractMetadata(contractAddress);
+    const contractMetadata = await alchemySDK.nft.getContractMetadata(contractAddress);
 
     if (!contractMetadata.totalSupply) {
       return { success: false, result: undefined, message: 'Error fetching total supply of tokens' };
@@ -170,13 +164,13 @@ module.exports = {
     }));
 
     // Can't be used, it doesn't say which NFT they own
-    // console.log(await alchemy.nft.getOwnersForContract(contractAddress));
+    // console.log(await alchemySDK.nft.getOwnersForContract(contractAddress));
 
     let numberOfTokensAdded = 0;
-    for await (const nft of alchemy.nft.getNftsForContractIterator(contractAddress, {
+    for await (const nft of alchemySDK.nft.getNftsForContractIterator(contractAddress, {
       omitMetadata: false,
     })) {
-      const ownerResponse = await alchemy.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
+      const ownerResponse = await alchemySDK.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
       [nft.owner] = ownerResponse.owners;
       if (insertToken(nft, contract._id)) {
         numberOfTokensAdded += 1;

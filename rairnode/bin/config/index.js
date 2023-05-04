@@ -60,6 +60,12 @@ const polygonTestnetData = {
   testnet: true,
   rpc: process.env.MATIC_TESTNET_RPC,
 };
+const astarMainnetData = {
+  name: 'Astar Mainnet',
+  blockchainId: '0x250',
+  testnet: true,
+  rpc: process.env.ASTAR_MAINNET_RPC,
+};
 
 module.exports = {
   production: !!(PRODUCTION && PRODUCTION === 'true'),
@@ -78,6 +84,9 @@ module.exports = {
   },
   blockchain: {
     networks: {
+      '0x250': astarMainnetData,
+      astar: astarMainnetData,
+
       '0x13881': polygonTestnetData,
       mumbai: polygonTestnetData,
 
@@ -130,6 +139,7 @@ module.exports = {
       '0x5': Network.ETH_GOERLI,
       '0x89': Network.MATIC_MAINNET,
       '0x13881': Network.MATIC_MUMBAI,
+      '0x250': Network.ASTAR_MAINNET,
     },
   },
 };

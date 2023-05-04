@@ -1,17 +1,10 @@
-const {deployments, ethers} = require('hardhat');
+const { deployAndVerify } = require('../utilities/deployAndVerify');
 
-module.exports = async ({accounts, getUnnamedAccounts}) => {
-	const {deploy} = deployments;
+module.exports = async ({ getUnnamedAccounts }) => {
 	const [deployerAddress] = await getUnnamedAccounts();
 
-	let diamondCutFacetDeployment = await deploy('DiamondCutFacet', { from: deployerAddress });
-	console.log('DiamondCut Facet deployed at', diamondCutFacetDeployment.receipt.contractAddress);
-
-	let diamondFactoryDeployment = await deploy('FactoryDiamond', {
-		from: deployerAddress,
-		args: [diamondCutFacetDeployment.receipt.contractAddress],
-	})
-	console.log('Diamond Factory deployed at', diamondFactoryDeployment.receipt.contractAddress);
+	const diamondCutData = await deployAndVerify('DiamondCutFacet', [], deployerAddress);
+	await deployAndVerify('FactoryDiamond', [diamondCutData.receipt.contractAddress], deployerAddress);
 };
 
 module.exports.tags = ['DiamondTokenFactory'];
