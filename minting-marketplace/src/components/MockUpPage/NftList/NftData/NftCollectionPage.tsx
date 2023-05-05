@@ -1,18 +1,24 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
 
+import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { setTokenData } from '../../../../ducks/nftData/action';
+import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
+import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
+import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import CustomButton from '../../utils/button/CustomButton';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
 import { NftItemForCollectionView } from '../NftItemForCollectionView';
 import { INftCollectionPageComponent } from '../nftList.types';
+import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
 import CollectionInfo from './CollectionInfo/CollectionInfo';
@@ -39,15 +45,21 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   offerAllData,
   collectionName,
   connectUserData,
-  showTokensRef
+  showTokensRef,
+  setRenderOffers
 }) => {
+  const { userRd } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const myRef = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState<boolean>(true);
   const [playing, setPlaying] = useState<null | string>(null);
+  const [loadingBg, setLoadingBg] = useState(false);
   const { width } = useWindowDimensions();
   const loader = useRef(null);
+  const [fileUpload, setFileUpload] = useState<any>();
 
   const loadToken = useCallback(
     (entries) => {
@@ -69,6 +81,59 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     navigate('/');
   };
 
+  const photoUpload = useCallback(
+    (e) => {
+      e.preventDefault();
+      const reader = new FileReader();
+      const fileF = e.target.files[0];
+      reader.onloadend = () => {
+        if (fileF.type !== 'video/mp4') {
+          setFileUpload(fileF);
+        }
+      };
+      if (fileF) {
+        reader.readAsDataURL(fileF);
+      }
+    },
+    [setFileUpload]
+  );
+
+  const editBackground = useCallback(async () => {
+    if (userRd && offerAllData && userRd.publicAddress === offerAllData.owner) {
+      const formData = new FormData();
+      if (fileUpload) {
+        setLoadingBg(true);
+        formData.append('banner', fileUpload);
+
+        const response = await rFetch(`/api/v2/products/${offerAllData?._id}`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.success) {
+          // setBackgroundUser(user.background);
+          // setFileUpload(null);
+          setLoadingBg(false);
+          setRenderOffers((prev) => !prev);
+        }
+      } else {
+        //   const profileEditResponse = await axios.get<TUserResponse>(
+        //     `/api/users/${currentUserAddress.toLowerCase()}`,
+        //     {
+        //       headers: {
+        //         Accept: 'multipart/form-data'
+        //       }
+        //     }
+        //   );
+        //   const { user, success } = profileEditResponse.data;
+        //   if (success && user) {
+        //     setBackgroundUser(user.background);
+        //   }
+        // }
+      }
+    }
+  }, [fileUpload]);
+
   useEffect(() => {
     if (!embeddedParams) {
       window.scroll(0, 0);
@@ -85,6 +150,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     const observer = new IntersectionObserver(loadToken, option);
     if (loader.current) observer.observe(loader.current);
   }, [loadToken, loader, isLoading]);
+
+  useEffect(() => {
+    editBackground();
+  }, [editBackground]);
 
   if (tokenData === undefined || !tokenData) {
     return <LoadingComponent />;
@@ -103,6 +172,46 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             marginBottom: '66px'
           }}>
           <BreadcrumbsView />
+          <div className={`collection-background`}>
+            {loadingBg ? (
+              <div className="loadingProfile">
+                <div className="loader-wrapper">
+                  <div className="load" />
+                </div>
+              </div>
+            ) : (
+              <ImageLazy
+                className="picture-banner"
+                alt="Collection Banner"
+                src={
+                  offerAllData && offerAllData?.bannerImage
+                    ? `${changeIPFSLink(offerAllData?.bannerImage)}`
+                    : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg'
+                }
+              />
+            )}
+            {userRd &&
+              offerAllData &&
+              userRd.publicAddress === offerAllData.owner && (
+                <div
+                  className={'blockAddBack'}
+                  style={{
+                    position: 'absolute',
+                    top: '0',
+                    right: '0'
+                  }}>
+                  <label className={'inputFile'}>
+                    <AddIcon className={'plus'} />
+                    <input
+                      disabled={loadingBg ? true : false}
+                      type="file"
+                      onChange={photoUpload}
+                    />
+                  </label>
+                </div>
+              )}
+          </div>
+
           <TitleCollection
             selectedData={tokenData[0]?.metadata}
             title={collectionName}

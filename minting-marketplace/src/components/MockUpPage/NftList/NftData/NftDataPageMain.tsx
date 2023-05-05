@@ -22,6 +22,7 @@ import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { INftDataPageMain, TOffersIndexesData } from '../../mockupPage.types';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
+import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import TitleCollection from './TitleCollection/TitleCollection';
 
@@ -148,6 +149,17 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   return (
     <main ref={myRef} id="nft-data-page-wrapper">
       <BreadcrumbsView embeddedParams={embeddedParams} />
+      <div className={`collection-background single-token`}>
+        <ImageLazy
+          className="picture-banner"
+          alt="Collection Banner"
+          src={
+            ownerInfo && ownerInfo?.bannerImage
+              ? `${changeIPFSLink(ownerInfo?.bannerImage)}`
+              : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg'
+          }
+        />
+      </div>
       <div>
         <TitleCollection
           selectedData={selectedData}

@@ -159,6 +159,7 @@ export type TProducts = {
   soldCopies: number;
   transactionHash: string;
   _id: string;
+  bannerImage?: string;
   // offerPool?: OfferPoolType;
 };
 

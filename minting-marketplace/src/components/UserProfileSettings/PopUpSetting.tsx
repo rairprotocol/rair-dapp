@@ -7,7 +7,7 @@ import { Popup } from 'reactjs-popup';
 // React Redux types
 import { getTokenComplete } from '../../ducks/auth/actions';
 import { setUserAddress } from '../../ducks/contracts/actions';
-import { setAdminRights } from '../../ducks/users/actions';
+import { getUserLogout, setAdminRights } from '../../ducks/users/actions';
 import { rFetch } from '../../utils/rFetch';
 
 import EditMode from './EditMode/EditMode';
@@ -80,6 +80,7 @@ const PopUpSettings = ({
     if (success) {
       dispatch(getTokenComplete(null));
       dispatch(setUserAddress(undefined));
+      dispatch(getUserLogout());
       dispatch(setAdminRights(false));
       setLoginDone(false);
       navigate('/');

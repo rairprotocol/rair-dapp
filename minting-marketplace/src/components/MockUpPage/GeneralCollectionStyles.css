@@ -59,6 +59,77 @@
   position: relative;
 }
 
+.collection-background {
+  height: 18.75rem;
+  max-width: 85vw;
+  border-radius: 1rem;
+  /* background: var(--bubblegum-hover); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 0.3s all ease;
+  position: relative;
+
+  margin-bottom: 26px;
+}
+
+.collection-background img {
+  height: 18.75rem;
+  width: 85vw;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+.blockAddBack {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 0px;
+  background: #ffffff;
+  border-radius: 1rem;
+  margin: 1rem 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s all ease;
+  cursor: pointer;
+}
+.blockAddBack:hover {
+  background: var(--charcoal-40);
+}
+
+.inputFile {
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputFile input {
+  display: none;
+}
+
+.plus {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #19a7f6;
+}
+
+.loadingProfile {
+  width: 100%;
+  text-align: center;
+  height: 18.75rem;
+  margin: auto;
+  font-size: 30px;
+  padding-top: 6rem;
+}
+
 .single-token-img-video-wrapper {
   display: flex;
   justify-content: center;
@@ -1036,6 +1107,19 @@ p.general-title {
     width: 384px;
     height: 215px;
   }
+
+  .collection-background {
+    max-width: 90vw;
+  }
+
+  .collection-background img {
+    width: 90vw;
+  }
+
+  .collection-background.single-token img,
+  .collection-background.single-token {
+    width: 85vw !important;
+  }
 }
 
 @media screen and (max-width: 700px) {
@@ -1191,6 +1275,17 @@ p.general-title {
   }
 }
 
+@media screen and (max-width: 640px) {
+  .collection-background {
+    height: 15.75rem;
+    margin: 20px 0;
+  }
+
+  .collection-background img {
+    height: 15.75rem;
+  }
+}
+
 @media screen and (max-width: 540px) {
   .category-wrapper {
     width: 340px;
@@ -1200,6 +1295,11 @@ p.general-title {
   }
   .container-search {
     width: 340px;
+  }
+
+  .collection-background,
+  .collection-background img {
+    height: 13.75rem;
   }
 }
 

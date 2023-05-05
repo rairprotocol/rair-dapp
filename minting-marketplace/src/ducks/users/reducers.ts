@@ -33,6 +33,14 @@ export default function userStore(
         ...state,
         userRd: action.userRd
       };
+    case types.USER_LOGOUT:
+      return {
+        ...state,
+        userRd: null,
+        error: null,
+        adminRights: undefined,
+        superAdmin: undefined
+      };
     case types.GET_USER_ERROR:
       return {
         ...state,
