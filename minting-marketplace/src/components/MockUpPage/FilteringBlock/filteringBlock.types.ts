@@ -88,9 +88,10 @@ export type TBlockchainNames =
   | 'Matic Mainnet'
   | 'Matic Testnet'
   | 'Goerli Testnet'
-  | 'Binance Testnet'
-  | 'Binance Mainnet'
-  | 'Ethereum Mainnet';
+  //| 'Binance Testnet'
+  //| 'Binance Mainnet'
+  | 'Ethereum Mainnet'
+  | 'Astar Mainnet';
 
 export type TBlockchainCategory = {
   name: TBlockchainNames;

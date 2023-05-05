@@ -1,40 +1,39 @@
 const {
   PRODUCTION,
-  // TEST_BSCSCAN_GATEWAY,
-  TEST_POLYGONSCAN_GATEWAY,
-  TEST_ETHERSCAN_GATEWAY,
-  // BSCSCAN_GATEWAY,
-  POLYGONSCAN_GATEWAY,
+  // Ethereum Mainnet
   ETHERSCAN_GATEWAY,
-  /*
-  BINANCE_TESTNET_FACTORY_ADDRESS,
-  BINANCE_TESTNET_MINTER_ADDRESS,
-  BINANCE_MAINNET_FACTORY_ADDRESS,
-  BINANCE_MAINNET_MINTER_ADDRESS,
-  */
-  GOERLI_FACTORY_ADDRESS,
-  GOERLI_MINTER_ADDRESS,
-  MATIC_MUMBAI_FACTORY_ADDRESS,
-  MATIC_MUMBAI_MINTER_ADDRESS,
-  MATIC_MAINNET_FACTORY_ADDRESS,
-  MATIC_MAINNET_MINTER_ADDRESS,
   ETHEREUM_MAINNET_FACTORY_ADDRESS,
   ETHEREUM_MAINNET_MINTER_ADDRESS,
-  /*
-  BINANCE_TESTNET_DIAMOND_FACTORY_ADDRESS,
-  BINANCE_TESTNET_DIAMOND_MARKETPLACE_ADDRESS,
-  BINANCE_MAINNET_DIAMOND_FACTORY_ADDRESS,
-  BINANCE_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
-  */
   ETHEREUM_DIAMOND_FACTORY_ADDRESS,
   ETHEREUM_DIAMOND_MARKETPLACE_ADDRESS,
+
+  // Ethereum Goerli
+  TEST_ETHERSCAN_GATEWAY,
+  GOERLI_FACTORY_ADDRESS,
+  GOERLI_MINTER_ADDRESS,
   GOERLI_DIAMOND_FACTORY_ADDRESS,
   GOERLI_DIAMOND_MARKETPLACE_ADDRESS,
   GOERLI_RESALE_ADDRESS,
+
+  // Polygon Mainnet
+  POLYGONSCAN_GATEWAY,
+  MATIC_MAINNET_FACTORY_ADDRESS,
+  MATIC_MAINNET_MINTER_ADDRESS,
   MATIC_MAINNET_DIAMOND_FACTORY_ADDRESS,
   MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
+
+  // Polygon Mumbai
+  TEST_POLYGONSCAN_GATEWAY,
+  MATIC_MUMBAI_FACTORY_ADDRESS,
+  MATIC_MUMBAI_MINTER_ADDRESS,
   MATIC_MUMBAI_DIAMOND_FACTORY_ADDRESS,
   MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS,
+
+  // Astar Mainnet
+  ASTAR_MAINNET_GATEWAY,
+  ASTAR_MAINNET_DIAMOND_FACTORY_ADDRESS,
+  ASTAR_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
+
   SENTRY_DSN,
   BASE_RAIRNODE_URL,
   LOG_LEVEL,
@@ -47,6 +46,19 @@ module.exports = {
   logLevel: LOG_LEVEL || 'info',
   blockchain: {
     networks: {
+      '0x250': {
+        authenticityHost: ASTAR_MAINNET_GATEWAY,
+        factoryAddress: undefined,
+        minterAddress: undefined,
+        diamondFactoryAddress: ASTAR_MAINNET_DIAMOND_FACTORY_ADDRESS,
+        diamondMarketplaceAddress: ASTAR_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
+        resaleMarketplace: undefined,
+        chainId: 592,
+        symbol: 'ASTR',
+        network: '0x250',
+        name: 'Astar Mainnet',
+        testnet: false,
+      },
       '0x13881': {
         authenticityHost: TEST_POLYGONSCAN_GATEWAY,
         factoryAddress: MATIC_MUMBAI_FACTORY_ADDRESS,
@@ -56,8 +68,6 @@ module.exports = {
         resaleMarketplace: undefined,
         chainId: 80001,
         symbol: 'tMATIC',
-        watchFunction: 'watchPolygonAddress',
-        watchCollection: 'watchedPolygonAddress',
         network: '0x13881',
         name: 'Matic Mumbai Testnet',
         testnet: true,
@@ -73,8 +83,6 @@ module.exports = {
         resaleMarketplace: undefined,
         chainId: 56,
         symbol: 'BNB',
-        watchFunction: 'watchBscAddress',
-        watchCollection: 'watchedBscAddress',
         network: '0x38',
         name: 'Binance Mainnet',
         testnet: false,
@@ -88,8 +96,6 @@ module.exports = {
         resaleMarketplace: undefined,
         chainId: 97,
         symbol: 'TBNB',
-        watchFunction: 'watchBscAddress',
-        watchCollection: 'watchedBscAddress',
         network: '0x61',
         name: 'Binance Testnet',
         testnet: true,
@@ -104,8 +110,6 @@ module.exports = {
         resaleMarketplace: undefined,
         chainId: 1,
         symbol: 'ETH',
-        watchFunction: 'watchEthAddress',
-        watchCollection: 'watchedEthAddress',
         network: '0x1',
         name: 'Ethereum Mainnet',
         testnet: false,
@@ -119,8 +123,6 @@ module.exports = {
         resaleMarketplaceAddress: GOERLI_RESALE_ADDRESS,
         chainId: 5,
         symbol: 'ETH',
-        watchFunction: 'watchEthAddress',
-        watchCollection: 'watchedEthAddress',
         network: '0x5',
         name: 'Goerli Testnet',
         testnet: true,
@@ -134,8 +136,6 @@ module.exports = {
         resaleMarketplace: undefined,
         chainId: 137,
         symbol: 'MATIC',
-        watchFunction: 'watchPolygonAddress',
-        watchCollection: 'watchedPolygonAddress',
         network: '0x89',
         name: 'Matic Mainnet',
         testnet: false,

@@ -1,44 +1,8 @@
 import React, { useState } from 'react';
 
-import {
-  IModalBlockchain,
-  TBlockchainCategory,
-  TBlockchainNames
-} from '../../filteringBlock.types';
+import blockchainData from '../../../../../utils/blockchainData';
+import { IModalBlockchain, TBlockchainNames } from '../../filteringBlock.types';
 import Modal from '../../modal';
-
-const blockchains: TBlockchainCategory[] = [
-  {
-    name: 'Matic Mainnet',
-    chainId: '0x89',
-    clicked: false
-  },
-  {
-    name: 'Matic Testnet',
-    chainId: '0x13881',
-    clicked: false
-  },
-  {
-    name: 'Goerli Testnet',
-    chainId: '0x5',
-    clicked: false
-  },
-  {
-    name: 'Binance Testnet',
-    chainId: '0x61',
-    clicked: false
-  },
-  {
-    name: 'Binance Mainnet',
-    chainId: '0x38',
-    clicked: false
-  },
-  {
-    name: 'Ethereum Mainnet',
-    chainId: '0x1',
-    clicked: false
-  }
-];
 
 const ModalBlockchain: React.FC<IModalBlockchain> = ({
   setBlockchain,
@@ -49,7 +13,15 @@ const ModalBlockchain: React.FC<IModalBlockchain> = ({
   click,
   setClick
 }) => {
-  const [arrBlockchains /*setArrBlockchains*/] = useState(blockchains);
+  const [arrBlockchains /*setArrBlockchains*/] = useState(
+    Object.keys(blockchainData).map((chain) => {
+      return {
+        name: blockchainData[chain].name,
+        chainId: chain as BlockchainType,
+        clicked: false
+      };
+    })
+  );
   const [, /*clearAll*/ setClearAll] = useState<boolean>(false);
 
   const onChangeClicked = (name: TBlockchainNames) => {
@@ -126,7 +98,7 @@ const ModalBlockchain: React.FC<IModalBlockchain> = ({
                     onClick={() => {
                       onClickButton(blockchainFromArray);
                     }}>
-                    {blockchainFromArray.name}
+                    {blockchainFromArray.name} aa
                   </button>
                 );
               })}

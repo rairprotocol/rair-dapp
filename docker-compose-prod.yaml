@@ -41,6 +41,7 @@ services:
       BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
       ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
       ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
+      ASTAR_MAINNET_RPC: ${astar_mainnet_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
       VAULT_URL: ${VAULT_URL}
@@ -107,6 +108,8 @@ services:
       BINANCE_RESALE_ADDRESS: ${binance_resale_address}
       GOERLI_RESALE_ADDRESS: ${goerli_resale_address}
       MATIC_MUMBAI_RESALE_ADDRESS: ${matic_mumbai_resale_address}
+      ASTAR_DIAMOND_FACTORY_ADDRESS: ${astar_diamond_factory_address}
+      ASTAR_DIAMOND_MARKETPLACE_ADDRESS: ${astar_diamond_marketplace_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
       IPFS_SERVICE: ${ipfs_service}
@@ -123,6 +126,9 @@ services:
       POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
       ETHERSCAN_GATEWAY: ${etherscan_gateway}
       BSCSCAN_GATEWAY: ${bscscan_gateway}
+      ASTAR_MAINNET_GATEWAY: ${astar_gateway}
+      ASTAR_MAINNET_DIAMOND_FACTORY_ADDRESS: ${astar_diamond_factory_address}
+      ASTAR_MAINNET_DIAMOND_MARKETPLACE_ADDRESS: ${astar_diamond_marketplace_address}
       SENTRY_DSN: ${sentry_dsn}
       REDIS_HOST: ${redisthhost}
       REDIS_PORT: ${redisport}

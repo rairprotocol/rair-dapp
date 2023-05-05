@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { utils } from 'ethers';
 import { isAddress } from 'ethers/lib/utils';
-import { io } from 'socket.io-client';
 import Swal from 'sweetalert2';
 
 import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import blockchainData from '../../utils/blockchainData';
+import chainData from '../../utils/blockchainData';
 import { metamaskCall, validateInteger } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
@@ -26,9 +25,9 @@ const ImportExternalContract = () => {
   const [totalTokens, setTotalTokens] = useState<number>();
   const [sessionId, setSessionId] = useState('');
 
-  const blockchainOptions = Object.keys(blockchainData).map((blockchainId) => {
+  const blockchainOptions = Object.keys(chainData).map((blockchainId) => {
     return {
-      label: blockchainData[blockchainId].name,
+      label: chainData[blockchainId].name,
       value: blockchainId
     };
   });

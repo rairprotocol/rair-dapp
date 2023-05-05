@@ -80,7 +80,7 @@ export interface INftCollectionPageComponent {
   embeddedParams: TEmbeddedParams | undefined;
   blockchain: BlockchainType | undefined;
   selectedData: TMetadataType | undefined;
-  tokenData: { [index: string]: TTokenData } | null;
+  tokenData: { [index: string]: TTokenData } | null | undefined;
   totalCount: number | undefined;
   offerPrice: string[] | undefined;
   getAllProduct: (fromToken: string, toToken: string) => Promise<void>;
@@ -103,7 +103,7 @@ export interface INftUnlockablesPage {
   productsFromOffer: TFileType[];
   primaryColor: ColorChoice;
   selectedToken: string | undefined;
-  tokenData: { [index: string]: TTokenData } | null;
+  tokenData: { [index: string]: TTokenData } | null | undefined;
   someUsersData: UserType | null | undefined;
   collectionName: string | undefined;
   setTokenDataFiltered: (filteredData: any) => void;

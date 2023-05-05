@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.16;
+pragma solidity ^0.8.19;
 
 import './AppStorage.sol';
 /// @title  This is contract to manage the Rair token ranges facet

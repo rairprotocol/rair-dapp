@@ -56,6 +56,7 @@ services:
       BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
       ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
       ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
+      ASTAR_MAINNET_RPC: ${astar_mainnet_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
       REDIS_HOST: ${redisthhost}

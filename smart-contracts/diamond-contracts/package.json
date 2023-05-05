@@ -1,16 +1,16 @@
 {
   "dependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.2.2",
-    "@nomiclabs/hardhat-etherscan": "^3.1.7",
-    "@nomiclabs/hardhat-waffle": "^2.0.5",
-    "@openzeppelin/contracts": "^4.7.3",
-    "chai": "^4.3.7",
-    "dotenv": "^16.0.3",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "@openzeppelin/contracts": "^4.8.2",
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.2",
     "ethers": "^5.7.0",
-    "hardhat": "^2.13.0",
-    "hardhat-contract-sizer": "^2.8.0",
-    "hardhat-deploy": "^0.11.25",
-    "hardhat-gas-reporter": "^1.0.9"
+    "hardhat": "^2.13.1",
+    "hardhat-contract-sizer": "^2.6.1",
+    "hardhat-deploy": "^0.11.26",
+    "hardhat-gas-reporter": "^1.0.7"
   },
   "name": "diamond-smart-contracts",
   "version": "1.0.0",
@@ -21,14 +21,10 @@
     "test": "npx hardhat test",
     "deploy-goerli": "npx hardhat --network 0x5 deploy",
     "deploy-mumbai": "npx hardhat --network 0x13881 deploy",
-    "deploy-binance": "npx hardhat --network 0x61 deploy",
+    "PAYABLE-deploy-astar": "npx hardhat --network 0x250 deploy",
     "PAYABLE-deploy-matic": "npx hardhat --network 0x89 deploy",
-    "PAYABLE-deploy-binance": "npx hardhat --network 0x38 deploy",
     "PAYABLE-deploy-ethereum": "npx hardhat --network 0x1 deploy"
   },
   "author": "Juan Miguel Sanchez Mola",
-  "license": "ISC",
-  "devDependencies": {
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.8"
-  }
+  "license": "ISC"
 }

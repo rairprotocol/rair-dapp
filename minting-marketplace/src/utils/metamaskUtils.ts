@@ -21,8 +21,8 @@ const handleError = (
   if (errorMessage.cancelled) {
     cleanError = 'The transaction has been cancelled!';
   } else if (
-    errorMessage.transaction.blockNumber === null &&
-    errorMessage.receipt.status === 0
+    errorMessage?.transaction?.blockNumber === null &&
+    errorMessage?.receipt?.status === 0
   ) {
     cleanError = 'The transaction has failed on the blockchain';
   } else if (errorMessage.receipt) {

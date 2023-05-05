@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ethers from 'ethers';
 import Swal from 'sweetalert2';
@@ -15,83 +15,23 @@ import {
   setProgrammaticProvider
 } from '../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import chainData from '../../utils/blockchainData';
 import InputField from '../common/InputField';
 
-const binanceTestnetData: ChainDataType = {
-  chainId: '0x61',
-  chainName: 'Binance Testnet',
-  nativeCurrency: {
-    name: 'BNB',
-    symbol: 'BNB',
-    decimals: 18
-  },
-  rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-  blockExplorerUrls: ['https://testnet.bscscan.com']
+const bootstrapColorMapping = {
+  '0x1': 'light',
+  '0x5': 'light',
+  '0x250': 'primary',
+  '0x89': 'stimorol',
+  '0x13881': 'stimorol'
 };
 
-const binanceMainnetData: ChainDataType = {
-  chainId: '0x38',
-  chainName: 'Binance Mainnet',
-  nativeCurrency: {
-    name: 'BNB',
-    symbol: 'BNB',
-    decimals: 18
-  },
-  rpcUrls: ['https://bsc-dataseed.binance.org/'],
-  blockExplorerUrls: ['https://bscscan.com']
-};
-
-const klaytnBaobabData: ChainDataType = {
-  chainId: '0x3e9',
-  chainName: 'Klaytn Baobab',
-  nativeCurrency: {
-    name: 'KLAY',
-    symbol: 'KLAY',
-    decimals: 18
-  },
-  rpcUrls: ['https://api.baobab.klaytn.net:8651/'],
-  blockExplorerUrls: ['https://baobab.scope.klaytn.com/']
-};
-
-const polygonMumbaiData: ChainDataType = {
-  chainId: '0x13881',
-  chainName: 'Matic Testnet Mumbai',
-  nativeCurrency: {
-    name: 'Matic token',
-    symbol: 'tMATIC',
-    decimals: 18
-  },
-  rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
-  blockExplorerUrls: ['https://matic.network/']
-};
-
-const maticMainnetData: ChainDataType = {
-  chainId: '0x89', // 0x89
-  chainName: 'Matic(Polygon) Mainnet',
-  nativeCurrency: {
-    name: 'Matic Token',
-    symbol: 'MATIC',
-    decimals: 18
-  },
-  rpcUrls: ['https://polygon-rpc.com/'],
-  blockExplorerUrls: ['https://polygonscan.com']
-};
-
-const blockchains: BlockchainInfo[] = [
-  { chainData: binanceTestnetData, bootstrapColor: 'warning' },
-  { chainData: binanceMainnetData, bootstrapColor: 'warning' },
-  { chainData: klaytnBaobabData, bootstrapColor: 'light' },
-  {
-    chainData: { chainId: '0x1', chainName: 'Ethereum Mainnet' },
-    bootstrapColor: 'primary'
-  },
-  {
-    chainData: { chainId: '0x5', chainName: 'Goerli (Ethereum)' },
-    bootstrapColor: 'secondary'
-  },
-  { chainData: polygonMumbaiData, bootstrapColor: 'danger' },
-  { chainData: maticMainnetData, bootstrapColor: 'stimorol' }
-];
+const blockchains: BlockchainInfo[] = Object.keys(chainData).map((chain) => {
+  return {
+    chainData: chainData[chain].addChainData,
+    bootstrapColor: bootstrapColorMapping[chain]
+  };
+});
 
 const BlockChainSwitcher = () => {
   const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');

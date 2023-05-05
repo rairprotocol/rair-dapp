@@ -1,15 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Contract, ZeroAddress, toUtf8Bytes } from 'ethers';
+import { Contract, ZeroAddress, toUtf8Bytes, ContractFactory } from 'ethers';
 import { useSelector } from 'react-redux';
 
 const FacetCutAction_ADD = 0;
 const FacetCutAction_REPLACE = 1;
 const FacetCutAction_REMOVE = 2;
 
-const FacetManager = ({facet, mainInstance, blockchainFacets, connectMainDiamondFactory}) => {
+const FacetManager = ({
+    facet,
+    mainInstance,
+    blockchainFacets,
+    connectMainDiamondFactory,
+    deploymentMode
+}) => {
 
     const [facetFunctions, setFacetFunctions] = useState([]);
-    const { signer } = useSelector(store => store.web3);
+    const { signer, chainId } = useSelector(store => store.web3);
 
 	useEffect(() => {
         setFacetFunctions([]);
@@ -48,9 +54,9 @@ const FacetManager = ({facet, mainInstance, blockchainFacets, connectMainDiamond
 			action: FacetCutAction,
 			functionSelectors: facetFunctions.filter(facet => facet.selected === true).map(facet => facet.selector)
 		}
-		await mainInstance.diamondCut(
+		await (await mainInstance.diamondCut(
 			[cutItem], ZeroAddress, toUtf8Bytes('')
-		);
+		)).wait(2);
         connectMainDiamondFactory();
 	}, [mainInstance, facetFunctions, facet, connectMainDiamondFactory])
 
@@ -64,29 +70,48 @@ const FacetManager = ({facet, mainInstance, blockchainFacets, connectMainDiamond
         }));
     }
 
+    const deploymentProcess = async () => {
+        let Factory = await new ContractFactory(facet.abi, facet.bytecode, signer);
+        let deploymentReceipt = await Factory.deploy();
+        console.log(deploymentReceipt);
+        await (await deploymentReceipt).waitForDeployment();
+        console.log(deploymentReceipt.receipt);
+    }
+
     return <div className='col-12'>
         <div className='row col-12'>
             <div className='col-6 py-2' >
-                <b>{facet.facetName}</b> - <small>{facet.address}</small>
+                <b>{facet?.facetName}</b>{!(deploymentMode && facet?.blockchainDeployed !== chainId) && <>- <small>{facet?.address}</small></>}
             </div>
-            <button
-                disabled={facetFunctions.length === 0}
-                onClick={() => diamondCut(FacetCutAction_ADD)}
-                className='col-2 btn btn-success'>
-                Add
-            </button>
-            <button
-                disabled={facetFunctions.length === 0}
-                onClick={() => diamondCut(FacetCutAction_REPLACE)}
-                className='col-2 btn btn-warning'>
-                Replace
-            </button>
-            <button
-                disabled={facetFunctions.length === 0}
-                onClick={() => diamondCut(FacetCutAction_REMOVE)}
-                className='col-2 btn btn-danger'>
-                Remove
-            </button>
+            {deploymentMode && facet?.blockchainDeployed !== chainId ? 
+                <button
+                    className='btn-light btn col-6'
+                    onClick={deploymentProcess}
+                >
+                    Deploy on {chainId}
+                </button>
+            :
+                <>
+                    <button
+                        disabled={facetFunctions.length === 0}
+                        onClick={() => diamondCut(FacetCutAction_ADD)}
+                        className='col-2 btn btn-success'>
+                        Add
+                    </button>
+                    <button
+                        disabled={facetFunctions.length === 0}
+                        onClick={() => diamondCut(FacetCutAction_REPLACE)}
+                        className='col-2 btn btn-warning'>
+                        Replace
+                    </button>
+                    <button
+                        disabled={facetFunctions.length === 0}
+                        onClick={() => diamondCut(FacetCutAction_REMOVE)}
+                        className='col-2 btn btn-danger'>
+                        Remove
+                    </button>
+                </> 
+            }
         </div>
         <br />
         {facetFunctions

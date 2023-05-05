@@ -41,7 +41,7 @@ const ResalePage: React.FC = () => {
   useEffect(() => {
     const params = {};
     dispatch({ type: 'GET_RESALES_LIST_START', params: params });
-  }, [_locTok, dispatch]);
+  }, [dispatch]);
 
   return (
     <div className="not-found-page">

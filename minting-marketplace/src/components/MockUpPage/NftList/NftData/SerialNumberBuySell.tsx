@@ -88,7 +88,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         selectedToken // Internal Token Index
       ];
     }
-    marketplaceArguments.push({ value: offerData.price });
+    marketplaceArguments.push({
+      value: offerData.price
+    });
     if (
       await metamaskCall(
         marketplaceCall(...marketplaceArguments),

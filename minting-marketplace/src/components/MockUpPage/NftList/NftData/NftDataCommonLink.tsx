@@ -66,7 +66,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   );
   const tokenData = useSelector<
     RootState,
-    { [index: string]: TTokenData } | null
+    { [index: string]: TTokenData } | null | undefined
   >((state) => state.nftDataStore.tokenData);
 
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.11; 
+pragma solidity ^0.8.19; 
 import "@openzeppelin/contracts/token/ERC777/ERC777.sol";
 
 /// @title  RAIR 777 for testing

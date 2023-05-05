@@ -10,7 +10,7 @@ const InitialState: InitialNftDataStateType = {
   nftListTotal: undefined,
   itemsPerPage: 20,
   errorMessage: '',
-  tokenData: {}
+  tokenData: undefined
 };
 
 export default function nftDataStore(
@@ -57,7 +57,7 @@ export default function nftDataStore(
       return {
         ...state,
         loading: true,
-        tokenData: {}
+        tokenData: undefined
       };
     }
 

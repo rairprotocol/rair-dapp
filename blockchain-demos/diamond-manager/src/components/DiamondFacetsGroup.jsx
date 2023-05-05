@@ -14,22 +14,29 @@ const DiamondFacetsGroup = ({ facetContracts, mainDiamondContract }) => {
 	const [blockchainFacets, setBlockchainFacets] = useState([]);
 	const [loadedFacets, setLoadedFacets] = useState([]);
 	const [mainInstance, setMainInstance] = useState();
+	const [deploymentMode, setDeploymentMode] = useState(false);
+	const [mainDiamondDataForDeployment, setMainDiamondDataForDeployment] = useState();
 
 	const { signer, chainId } = useSelector(store => store.web3);
 
-	const loadFacetData = useCallback(async (facetName) => {
-		if (!chainId) {
+	const loadFacetData = useCallback(async (facetName, blockchain) => {
+		if (!blockchain) {
 			return undefined;
 		}
 		try {
-			console.log(`Loading ${chainId}/${facetName}`);
-			let facetData = await import(`../deployments/${chainId}/${facetName}.json`);
+			console.log(`Loading ${blockchain}/${facetName}`);
+			let facetData = await import(`../deployments/${blockchain}/${facetName}.json`);
 			facetData.facetName = facetName;
+			facetData.blockchainDeployed = blockchain;
 			return facetData;
 		} catch (err) {
-			console.error("Error importing facets for Diamond Factory", err);
+			if (blockchain !== '0x5' && deploymentMode) {
+				return await loadFacetData(facetName, '0x5');
+			} else {
+				console.error("Error importing facets for Diamond Factory", err);
+			}
 		}
-	}, [chainId]);
+	}, [deploymentMode]);
 	
 	const connectMainDiamondFactory = useCallback(async () => {
 		// Reset all data
@@ -43,15 +50,16 @@ const DiamondFacetsGroup = ({ facetContracts, mainDiamondContract }) => {
 		// Load standard diamond data
 		const facetData = [];
 		for await (const standardFacet of standardFacetNames) {
-			facetData.push(await loadFacetData(standardFacet))
+			facetData.push(await loadFacetData(standardFacet, chainId))
 		}
 		for await (const contract of facetContracts) {
-			facetData.push(await loadFacetData(contract))
+			facetData.push(await loadFacetData(contract, chainId))
 		}
 		let combinedAbi = facetData.reduce((prev, current) => {
 			return prev.concat(current.abi);
 		}, [])
-		const mainDiamondData = await loadFacetData(mainDiamondContract);
+		const mainDiamondData = await loadFacetData(mainDiamondContract, chainId);
+		setMainDiamondDataForDeployment(mainDiamondData);
 		setLoadedFacets(facetData);
 
 		const mainDiamondInstance = new Contract(mainDiamondData.address, combinedAbi, signer);
@@ -65,7 +73,7 @@ const DiamondFacetsGroup = ({ facetContracts, mainDiamondContract }) => {
 			return aux;
 		}, {})
 		setBlockchainFacets(blockchainFacets);
-	}, [loadFacetData, mainDiamondContract, signer, facetContracts]);
+	}, [loadFacetData, mainDiamondContract, signer, facetContracts, chainId]);
 
 	useEffect(() => {
 		connectMainDiamondFactory();
@@ -96,11 +104,26 @@ const DiamondFacetsGroup = ({ facetContracts, mainDiamondContract }) => {
 
 	return <>
 		<br />
+		<button
+			onClick={() => setDeploymentMode(!deploymentMode)}
+			className={`btn btn-${deploymentMode ? 'primary' : 'secondary'}`}
+		>
+			Deployment Mode
+		</button>
 		<div className='col-12 row px-0 mx-0'>
 			<div className='col-12'>
+				{deploymentMode && mainDiamondDataForDeployment && <FacetManager 
+					{...{
+						facet: mainDiamondDataForDeployment,
+						mainInstance,
+						blockchainFacets,
+						connectMainDiamondFactory,
+						deploymentMode
+					}}
+				/>}
 				{loadedFacets.map((facet, index) => {
 					return <FacetManager key={index} {
-						...{facet, mainInstance, blockchainFacets, connectMainDiamondFactory}
+						...{facet, mainInstance, blockchainFacets, connectMainDiamondFactory, deploymentMode}
 					} />
 				})}
 			</div>

@@ -133,7 +133,9 @@ const purchaseFunction = async (
     args.push(offerIndex?.[1]);
   }
   args.push(nextToken);
-  args.push({ value: price });
+  args.push({
+    value: price
+  });
   return await metamaskCall(
     minterInstance[diamond ? 'buyMintingOffer' : 'buyToken'](...args),
     'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
