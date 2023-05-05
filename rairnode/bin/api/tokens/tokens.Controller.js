@@ -12,7 +12,7 @@ const {
 const { getSpecificContracts } = require('../../contracts/contracts.Service');
 const {
   getOfferIndexesByContractAndProduct,
-} = require('../../offers/offers.Service');
+} = require('../offers/offers.Service');
 const {
   getOfferPoolByContractAndProduct,
 } = require('../../offerPools/offerPools.Service');

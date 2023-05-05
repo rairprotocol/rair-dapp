@@ -275,7 +275,7 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
               }}
             />
           </div>
-          {validateInteger(+individualPrice) && (
+          {validateInteger(individualPrice) && (
             <small>
               {utils
                 .formatEther(!individualPrice ? 0 : individualPrice.toString())

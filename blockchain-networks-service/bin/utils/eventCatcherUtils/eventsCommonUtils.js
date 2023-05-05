@@ -2,16 +2,17 @@
 /* eslint-disable no-param-reassign */
 
 const fetch = require('node-fetch');
-const { constants, BigNumber } = require("ethers");
+const { constants, BigNumber } = require('ethers');
 const _ = require('lodash');
 const { addMetadata, addPin } = require('../../integrations/ipfsService')();
 const log = require('../logger')(module);
+const { Contract, Product, MintedToken } = require('../../models');
 
 const fetchJson = async (URL) => {
   try {
     const metadata = await (await fetch(URL)).json();
     if (
-        !metadata.description ||
+      !metadata.description ||
         metadata.description !== '' ||
         !metadata.name ||
         metadata.name !== ''
@@ -19,7 +20,7 @@ const fetchJson = async (URL) => {
       return metadata;
     }
     log.error(
-        `Metadata from ${URL} is missing required fields! (Description or name)`,
+      `Metadata from ${URL} is missing required fields! (Description or name)`,
     );
   } catch (err) {
     log.error(`Couldn't load metadata from ${URL}, skipping!`);
@@ -35,17 +36,16 @@ const handleDuplicateKey = (err) => {
   }
 };
 
-
 const handleMetadataForToken = async (
-    dbModels,
-    contractId,
-    collectionIndex,
-    tokenIndex,
-    tokenInstance,
+  dbModels,
+  contractId,
+  collectionIndex,
+  tokenIndex,
+  tokenInstance,
 ) => {
   // !1.- Direct metadata on the token
   if (
-      tokenInstance.isMetadataPinned &&
+    tokenInstance.isMetadataPinned &&
       tokenInstance.metadataURI !== 'none'
   ) {
     // regex check for valid URI -> tokenInstance.metadataURI
@@ -58,19 +58,19 @@ const handleMetadataForToken = async (
   }
 
   // 2.- Product wide metadata
-  const foundProduct = await dbModels.Product.findOne({
+  const foundProduct = await Product.findOne({
     contract: contractId,
     collectionIndexInContract: collectionIndex,
   });
   let foundMetadataURI = foundProduct.metadataURI;
   if (foundMetadataURI === 'none' || foundProduct.singleMetadata === false) {
     // 3.- Contract wide metadata
-    const foundContract = await dbModels.Contract.findOne({
+    const foundContract = await Contract.findOne({
       _id: contractId,
     });
     foundMetadataURI = foundContract.singleMetadata
-        ? foundContract.metadataURI
-        : 'none';
+      ? foundContract.metadataURI
+      : 'none';
   }
   // According to agreed logic this step won't have pin in it
   // in such cases meta should be already preset and pined to pinata
@@ -81,21 +81,21 @@ const handleMetadataForToken = async (
     tokenInstance.metadata = fetchedMetadata;
     tokenInstance.isMetadataPinned = true;
   } else if (
-      tokenInstance?.metadata?.name !== 'none' &&
+    tokenInstance?.metadata?.name !== 'none' &&
       tokenInstance.metadataURI === 'none' &&
       tokenInstance.isMetadataPinned === false
   ) {
     // If metadata from the blockchain doesn't exist
     // but the database has metadata, pin it and set it.
     const CID = await addMetadata(
-        tokenInstance.metadata,
-        tokenInstance.metadata.name,
+      tokenInstance.metadata,
+      tokenInstance.metadata.name,
     );
     await addPin(CID, `metadata_${tokenInstance.metadata.name}`);
     tokenInstance.metadataURI = `${process.env.PINATA_GATEWAY}/${CID}`;
     tokenInstance.isMetadataPinned = true;
     log.info(
-        `New token has Metadata from the database! Pinned with CID: ${CID}`,
+      `New token has Metadata from the database! Pinned with CID: ${CID}`,
     );
   } else {
     log.info(`Minted token ${contractId}:${tokenIndex} has no metadata!`);
@@ -105,25 +105,25 @@ const handleMetadataForToken = async (
 };
 
 const findContractFromAddress = async (
-    address,
-    network,
-    transactionReceipt,
-    dbModels,
+  address,
+  network,
+  transactionReceipt,
+  dbModels,
 ) => {
-  const contract = await dbModels.Contract.findOne({
+  const contract = await Contract.findOne({
     contractAddress: address.toLowerCase(),
     blockchain: network,
   });
   if (contract === null) {
     // MB:TODO: throw error?
     log.error(
-        `[${network}] Error parsing tx ${transactionReceipt.transactionHash}, couldn't find a contract entry for address ${address}`,
+      `[${network}] Error parsing tx ${transactionReceipt.transactionHash}, couldn't find a contract entry for address ${address}`,
     );
     return;
   }
   if (contract.blockSync) {
     log.info(
-        `Caught event for contract ${address} - skipping as sync is blocked`,
+      `Caught event for contract ${address} - skipping as sync is blocked`,
     );
     return undefined;
   }
@@ -131,11 +131,11 @@ const findContractFromAddress = async (
 };
 
 const updateMetadataForTokens = async (
-    tokens,
-    appendTokenIndexFlag,
-    newURI,
-    collectionWideFlag,
-    metadataExtension = ''
+  tokens,
+  appendTokenIndexFlag,
+  newURI,
+  collectionWideFlag,
+  metadataExtension = '',
 ) => {
   let tokensToUpdate = [];
   if (newURI !== '') {
@@ -147,7 +147,7 @@ const updateMetadataForTokens = async (
     }
   } else {
     log.info(
-        'Updating metadata with a blank string (This means the metadata got unset)',
+      'Updating metadata with a blank string (This means the metadata got unset)',
     );
   }
   if (tokens.length > 0) {
@@ -156,11 +156,9 @@ const updateMetadataForTokens = async (
       for await (const token of tokens) {
         let fetchedMetadata = {};
         if (newURI !== '') {
-          fetchedMetadata = await fetchJson(collectionWideFlag ?
-              `${newURI}${token.token}${metadataExtension}`
-              :
-              `${newURI}${token.uniqueIndexInContract}${metadataExtension}`
-          );
+          fetchedMetadata = await fetchJson(collectionWideFlag
+            ? `${newURI}${token.token}${metadataExtension}`
+            : `${newURI}${token.uniqueIndexInContract}${metadataExtension}`);
         }
         if (!fetchedMetadata) {
           // eslint-disable-next-line no-continue
@@ -188,7 +186,7 @@ const updateMetadataForTokens = async (
       const tokensSaveStatus = await Promise.allSettled(tokensToUpdate);
       if (tokensSaveStatus.find((el) => el === 'rejected')) {
         log.error(
-            'Was unable to save some of the tokens during batch meta update',
+          'Was unable to save some of the tokens during batch meta update',
         );
       } else {
         log.info('Batch tokens update successful');
@@ -200,20 +198,23 @@ const updateMetadataForTokens = async (
 };
 
 const generateTokensCollectionByRange = async (contract, offer, dbModels) => {
-  const [ start, end ] = offer.range;
-  let array = [];
+  const [start, end] = offer.range;
+  const array = [];
 
-  let { firstTokenIndex } = await dbModels.Product.findOne({contract: offer.contract, collectionIndexInContract: offer.product});
+  const { firstTokenIndex } = await Product.findOne({
+    contract: offer.contract,
+    collectionIndexInContract: offer.product,
+  });
 
   for (let i = BigNumber.from(start); i.lte(end); i = i.add(1)) {
-    array.push(new dbModels.MintedToken({
+    array.push(new MintedToken({
       token: i.toString(),
       uniqueIndexInContract: BigNumber.from(firstTokenIndex).add(i).toString(),
       ownerAddress: constants.AddressZero,
       contract: contract._id,
       offer: offer.diamondRangeIndex,
       offerPool: offer.offerIndex,
-      isMinted: false
+      isMinted: false,
     }));
   }
 
