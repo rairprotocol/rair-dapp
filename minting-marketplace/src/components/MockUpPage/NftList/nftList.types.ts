@@ -96,6 +96,7 @@ export interface INftCollectionPageComponent {
   collectionName: string | undefined;
   connectUserData: () => void;
   showTokensRef: any;
+  setRenderOffers: any;
 }
 
 export interface INftUnlockablesPage {

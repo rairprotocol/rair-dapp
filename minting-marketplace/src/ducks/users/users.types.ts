@@ -1,6 +1,7 @@
 import {
   getUserComplete,
   getUserError,
+  getUserLogout,
   getUserStart,
   setAdminRights,
   setSuperAdmin
@@ -37,10 +38,12 @@ export type SetAdminRights = ReturnType<typeof setAdminRights>;
 export type SetSuperAdmin = ReturnType<typeof setSuperAdmin>;
 export type GetUserComplete = ReturnType<typeof getUserComplete>;
 export type GetUserError = ReturnType<typeof getUserError>;
+export type GetUserLogout = ReturnType<typeof getUserLogout>;
 
 export type UserReducerActionTypes =
   | GetUsersType
   | SetAdminRights
   | SetSuperAdmin
   | GetUserComplete
-  | GetUserError;
+  | GetUserError
+  | GetUserLogout;

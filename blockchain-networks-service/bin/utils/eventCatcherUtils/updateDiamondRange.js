@@ -3,6 +3,8 @@ const {
   findContractFromAddress,
 } = require('./eventsCommonUtils');
 
+const { Offer, LockedTokens } = require('../../models');
+
 module.exports = async (
   dbModels,
   chainId,
@@ -27,7 +29,7 @@ module.exports = async (
     return;
   }
 
-  const foundOffer = await dbModels.Offer.findOne({
+  const foundOffer = await Offer.findOne({
     contract: contract._id,
     diamond: diamondEvent,
     offerPool: undefined,
@@ -43,14 +45,14 @@ module.exports = async (
   // MB:CHECK: Probably we need to return updated/new here.
   const updatedOffer = await foundOffer.save().catch(handleDuplicateKey);
 
-  const foundLock = await dbModels.LockedTokens.findOne({
+  const foundLock = await LockedTokens.findOne({
     contract: contract._id,
     lockIndex: rangeIndex,
     product: updatedOffer.product,
   });
 
   if (foundLock) {
-    foundLock.range[1] = lockedTokens.add(foundLock.range[0]);
+    foundLock.lockedTokens = lockedTokens;
     await foundLock.save().catch(handleDuplicateKey);
   }
 

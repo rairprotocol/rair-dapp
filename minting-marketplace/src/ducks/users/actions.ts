@@ -28,9 +28,15 @@ const getUserError = (error: string) =>
     error
   } as const);
 
+const getUserLogout = () =>
+  ({
+    type: types.USER_LOGOUT
+  } as const);
+
 export {
   getUserComplete,
   getUserError,
+  getUserLogout,
   getUserStart,
   setAdminRights,
   setSuperAdmin

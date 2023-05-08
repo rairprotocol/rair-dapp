@@ -56,6 +56,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const [dataForUser, setDataForUser] = useState<TProducts>();
   const [tokenBought, setTokenBought] = useState<boolean>(false);
   const showTokensRef = useRef<number>(20);
+  const [renderOffers, setRenderOffers] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
@@ -263,7 +264,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   useEffect(() => {
     getParticularOffer();
-  }, [getParticularOffer]);
+  }, [getParticularOffer, renderOffers]);
 
   useEffect(() => {
     getProductsFromOffer();
@@ -295,6 +296,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         collectionName={collectionName}
         connectUserData={connectUserData}
         showTokensRef={showTokensRef}
+        setRenderOffers={setRenderOffers}
       />
     );
   } else if (mode === 'unlockables') {

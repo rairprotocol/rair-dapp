@@ -231,53 +231,56 @@ const WorkflowSteps: React.FC = () => {
     if (!address) {
       return;
     }
-    const response2 = await rFetch(
+    const contractDataResponse = await rFetch(
       `/api/contracts/network/${blockchain}/${address}`
     );
-    const response3 = await rFetch(
+    const productDataResponse = await rFetch(
       `/api/contracts/network/${blockchain}/${address}/products`
     );
-    if (response3.success) {
-      response2.contract.products = response3.products;
+    if (productDataResponse.success) {
+      contractDataResponse.contract.products = productDataResponse.products;
     }
+    const offersAndLocksResponse = await rFetch(
+      `/api/v2/offers/locks?contract=${contractDataResponse.contract._id}&product=${collectionIndex}`
+    );
     const response4 = await rFetch(
       `/api/contracts/network/${blockchain}/${address}/products/offers`
     );
-    // Special case where a product exists but it has no offers
     if (response4.success) {
       response4.products.forEach((item) => {
-        response2.contract.products.forEach((existingItem) => {
+        contractDataResponse.contract.products.forEach((existingItem) => {
           if (item._id.toString() === existingItem._id.toString()) {
             existingItem.offers = item.offers;
-            existingItem.tokenLock = item.tokenLock;
           }
         });
       });
     }
-    if (response2.contract) {
-      response2.contract.product = (response2?.contract?.products?.filter(
-        (i) => i?.collectionIndexInContract === collectionIndex
-      ))[0];
-      delete response2.contract.products;
-      if (response2.contract.blockchain === currentChain) {
-        response2.contract.instance = contractCreator?.(
+    if (contractDataResponse.contract) {
+      contractDataResponse.contract.product =
+        (contractDataResponse?.contract?.products?.filter(
+          (i) => i?.collectionIndexInContract === collectionIndex
+        ))[0];
+      delete contractDataResponse.contract.products;
+      if (offersAndLocksResponse.success) {
+        contractDataResponse.contract.product.offers =
+          offersAndLocksResponse.offers;
+      }
+      if (contractDataResponse.contract.blockchain === currentChain) {
+        contractDataResponse.contract.instance = contractCreator?.(
           address,
-          response2.contract.diamond ? diamondFactoryAbi : erc721Abi
+          contractDataResponse.contract.diamond ? diamondFactoryAbi : erc721Abi
         );
       }
-      if (response2.contract.diamond && response2.contract.product.offers) {
-        for await (const offer of response2.contract.product.offers) {
-          if (
-            response2.contract.product.tokenLock.lockIndex ===
-            offer.diamondRangeIndex
-          ) {
-            offer.lockedTokens =
-              response2.contract.product.tokenLock.lockedTokens;
-          }
+      if (
+        contractDataResponse.contract.diamond &&
+        contractDataResponse.contract.product.offers
+      ) {
+        for await (const offer of contractDataResponse.contract.product
+          .offers) {
           if (
             offer.offerIndex &&
             diamondMarketplaceInstance &&
-            currentChain === response2.contract.blockchain
+            currentChain === contractDataResponse.contract.blockchain
           ) {
             const aux = await diamondMarketplaceInstance.getOfferInfo(
               offer.offerIndex
@@ -307,21 +310,15 @@ const WorkflowSteps: React.FC = () => {
           }
         }
       }
-      if (response2?.contract?.product?.offers) {
-        response2.contract.product.offers =
-          response2.contract.product.offers.sort((a, b) => {
-            return a.diamondRangeIndex < b.diamondRangeIndex ? -1 : 1;
-          });
-      }
-      if (response2?.contract?.product?.offers) {
-        response2.contract.nfts = await getNFTMetadata(
-          response2.contract.blockchain,
+      if (contractDataResponse?.contract?.product?.offers) {
+        contractDataResponse.contract.nfts = await getNFTMetadata(
+          contractDataResponse.contract.blockchain,
           address,
           collectionIndex
         );
       }
     }
-    setContractData(response2.contract);
+    setContractData(contractDataResponse.contract);
   }, [
     currentChain,
     address,
