@@ -12,7 +12,7 @@ const {
 } = require('../../integrations/ethers/importContractData');
 const log = require('../../utils/logger')(module);
 const contractRoutes = require('./contract');
-const { Contract, User, File } = require('../../models');
+const { Contract, User, File, Blockchain } = require('../../models');
 
 const getContractsByUser = async (user, res, next) => {
   try {
@@ -180,7 +180,7 @@ module.exports = (context) => {
           },
         );
 
-        const foundBlockchain = await context.db.Blockchain.find({
+        const foundBlockchain = await Blockchain.find({
           hash: [...blockchainArr],
         });
 
@@ -192,6 +192,8 @@ module.exports = (context) => {
               },
             },
           });
+        } else if (blockchain.length >= 1) {
+          return next(new AppError('Invalid blockchain.', 404));
         }
 
         if (!hidden) {
@@ -214,9 +216,9 @@ module.exports = (context) => {
           .skip(skip)
           .limit(pageSize);
 
-        res.json({ success: true, contracts, totalNumber });
+        return res.json({ success: true, contracts, totalNumber });
       } catch (e) {
-        next(e);
+        return next(e);
       }
     },
   );
