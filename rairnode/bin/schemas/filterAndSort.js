@@ -1,8 +1,8 @@
 const Joi = require('joi');
-const { mongoId, blockchainNetworks, ethAddress } = require('./reusableCustomTypes');
+const { mongoId, ethAddress } = require('./reusableCustomTypes');
 
 module.exports = () => ({
-  blockchain: blockchainNetworks,
+  blockchain: Joi.string(),
   category: Joi.array().items(mongoId),
   userAddress: ethAddress,
   contractAddress: ethAddress,
