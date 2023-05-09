@@ -108,3 +108,20 @@
 .hidden-block-wrapper .add_contact:active {
   background: var(--stimorol-click);
 }
+
+.hidden-block-wrapper .hidden-contracts-table {
+  height: 600px !important;
+  overflow: auto;
+}
+
+.hidden-block-wrapper
+  .hidden-options-wrapper
+  button.hidden-options-button:disabled {
+  background: rgb(168, 50, 50);
+}
+
+.hidden-block-wrapper
+  .hidden-options-wrapper
+  button.hidden-table-button:disabled {
+  background: rgb(27, 94, 32);
+}
