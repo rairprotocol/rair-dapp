@@ -1840,6 +1840,10 @@ button.metamask-on-boarding:focus {
   color: #c07cff;
 }
 
+.search-contracts-factory {
+  margin: 0.25rem 0;
+}
+
 /* video player styles ends  */
 
 @media screen and (max-width: 900px) and (min-width: 500px) {

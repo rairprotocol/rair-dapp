@@ -15,6 +15,7 @@ const AdminView = ({
 
   const [disabledOptions, setDisabledOptions] = useState<any>();
   const [hiddenContracts, setHiddenContracts] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const showHiddenContracts = useCallback((listContract) => {
     setHiddenContracts(
@@ -26,6 +27,7 @@ const AdminView = ({
 
   const offOrOnContract = useCallback(
     async (contract: string, option: string) => {
+      setLoading(true);
       switch (option) {
         case 'off':
           await axios.patch(
@@ -41,7 +43,7 @@ const AdminView = ({
             }
           );
           getFullContractData();
-
+          setLoading(false);
           break;
         case 'on':
           await axios.patch(
@@ -57,7 +59,7 @@ const AdminView = ({
             }
           );
           getFullContractData();
-
+          setLoading(false);
           break;
       }
     },
@@ -90,28 +92,30 @@ const AdminView = ({
 
   return (
     <div className="hidden-block-wrapper">
-      <table>
-        <tr>
-          <th className="hidden-table-col-one">Hidden</th>
-          <th className="hidden-table-col-two">Show</th>
-        </tr>
-        {hiddenContracts &&
-          hiddenContracts.map((o) => (
-            <tr key={v1()}>
-              <td className="hidden-table-title">{o.label}</td>
-              <td>
-                <button
-                  className="hidden-table-button"
-                  onClick={() => {
-                    offOrOnContract(o.value, 'on');
-                    getFullContractData();
-                  }}>
-                  Show
-                </button>
-              </td>
-            </tr>
-          ))}
-      </table>
+      <div className="hidden-contracts-table">
+        <table>
+          <tr>
+            <th className="hidden-table-col-one">Hidden</th>
+            <th className="hidden-table-col-two">Show</th>
+          </tr>
+          {hiddenContracts &&
+            hiddenContracts.map((o) => (
+              <tr key={v1()}>
+                <td className="hidden-table-title">{o.label}</td>
+                <td>
+                  <button
+                    className="hidden-table-button"
+                    onClick={() => {
+                      offOrOnContract(o.value, 'on');
+                      getFullContractData();
+                    }}>
+                    Show
+                  </button>
+                </td>
+              </tr>
+            ))}
+        </table>
+      </div>
       <div>
         {selectedContracts.map((item: string, index: number) => {
           return (
@@ -129,12 +133,14 @@ const AdminView = ({
               <div className="hidden-options-wrapper">
                 <button
                   className="hidden-options-button"
-                  onClick={() => offOrOnContract(item, 'off')}>
+                  onClick={() => offOrOnContract(item, 'off')}
+                  disabled={loading === true ? true : false}>
                   Hide
                 </button>
                 <button
                   className="hidden-table-button"
-                  onClick={() => offOrOnContract(item, 'on')}>
+                  onClick={() => offOrOnContract(item, 'on')}
+                  disabled={loading === true ? true : false}>
                   Show
                 </button>
               </div>
