@@ -55,9 +55,9 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           <li onClick={() => setMessageAlert('profileEdit')}>
             Personal Profile <i className="fal fa-edit" />
           </li>
-          {/* <li onClick={() => goToMyItems(2)}>
-            <NavLink to="/my-items">My favorites</NavLink>
-          </li> */}
+          <li onClick={() => toggleMenu()}>
+            <NavLink to={`/${currentUserAddress}`}>View Profile</NavLink>
+          </li>
           {/* <li onClick={() => goToMyItems(0)}>
             <NavLink to="/my-items">My items</NavLink>
           </li> */}

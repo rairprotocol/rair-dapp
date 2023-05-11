@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   background-position: center center;
   background-size: cover;
@@ -25,6 +26,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   background-position: center center;
   background-size: cover;
@@ -48,6 +50,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  position: relative;
 }
 
 .personal-profile-box .profile-avatar-block {
@@ -172,6 +175,10 @@
   .my-items-header-wrapper.user {
     max-width: calc(302px * 3 + 10px);
   }
+
+  .my-items-header-wrapper.user.edit {
+    max-width: 100%;
+  }
 }
 
 @media screen and (max-width: 700px) {
@@ -196,6 +203,10 @@
 
   .list-button-wrapper.tree-tab-unlocks {
     justify-content: center;
+  }
+
+  .user-page-background img {
+    height: 30px;
   }
 }
 

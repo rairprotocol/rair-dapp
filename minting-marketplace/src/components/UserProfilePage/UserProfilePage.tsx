@@ -2,13 +2,18 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Stack } from '@mui/material';
 import { Breadcrumbs, Typography } from '@mui/material';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
+import { TUserResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
@@ -22,6 +27,7 @@ import { PersonalProfileMyVideoTab } from '../nft/PersonalProfile/PersonalProfil
 import { TSortChoice } from '../ResalePage/listOffers.types';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
+import { PersonalProfileIcon } from './../nft/PersonalProfile/PersonalProfileIcon/PersonalProfileIcon';
 import UserProfileFavoritesTab from './UserProfileFavorites/UserProfileFavoritesTab';
 
 import './UserProfilePage.css';
@@ -33,6 +39,9 @@ const UserProfilePage: React.FC = () => {
   >((store) => store.colorStore);
   const navigate = useNavigate();
   const { userAddress } = useParams();
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
   const [userData, setUserData] = useState<UserType | null | undefined>(
     undefined
   );
@@ -40,6 +49,8 @@ const UserProfilePage: React.FC = () => {
   const [collectedTokens, setCollectedTokens] = useState<TDiamondTokensType[]>(
     []
   );
+  const [fileUpload, setFileUpload] = useState<File | null>(null);
+  const [loadingBg, setLoadingBg] = useState(false);
   const [sortItem, setSortItem] = useState<TSortChoice>();
   const [titleSearch, setTitleSearch] = useState('');
   const [tabIndexItems, setTabIndexItems] = useState(0);
@@ -134,6 +145,34 @@ const UserProfilePage: React.FC = () => {
     }
   }, [userAddress]);
 
+  const editBackground = useCallback(async () => {
+    if (currentUserAddress) {
+      const formData = new FormData();
+      if (fileUpload) {
+        setLoadingBg(true);
+        formData.append('files', fileUpload);
+        formData.append('background', fileUpload.name);
+
+        const profileEditResponse = await axios.post<TUserResponse>(
+          `/api/users/${currentUserAddress.toLowerCase()}`,
+          formData,
+          {
+            headers: {
+              Accept: 'multipart/form-data'
+            }
+          }
+        );
+
+        const { user, success } = profileEditResponse.data;
+        if (success && user) {
+          setFileUpload(null);
+          setLoadingBg(false);
+          getUserData();
+        }
+      }
+    }
+  }, [currentUserAddress, fileUpload, getUserData]);
+
   const breadcrumbs = [
     <NavLink key="1" to="/">
       <HomeIcon
@@ -156,6 +195,26 @@ const UserProfilePage: React.FC = () => {
           userAddress.slice(0, 4) + '....' + userAddress.slice(38))}
     </Typography>
   ];
+
+  const photoUpload = useCallback((e) => {
+    e.preventDefault();
+    const reader = new FileReader();
+    const fileF = e.target.files[0];
+    reader.onloadend = () => {
+      if (fileF.type !== 'video/mp4') {
+        setFileUpload(fileF);
+      } else {
+        Swal.fire('Info', `You cannot upload video to background!`, 'warning');
+      }
+    };
+    if (fileF) {
+      reader.readAsDataURL(fileF);
+    }
+  }, []);
+
+  useEffect(() => {
+    editBackground();
+  }, [editBackground]);
 
   useEffect(() => {
     getMyNft(showTokensRef.current);
@@ -202,40 +261,67 @@ const UserProfilePage: React.FC = () => {
             {userData && !userData.background && (
               <img src={headerLogo} alt="background-logo-default" />
             )}
+            {currentUserAddress &&
+              currentUserAddress &&
+              currentUserAddress === userAddress && (
+                <div
+                  className={'blockAddBack'}
+                  style={{
+                    position: 'absolute',
+                    top: '0',
+                    right: '0'
+                  }}>
+                  <label className={'inputFile'}>
+                    <AddIcon className={'plus'} />
+                    <input
+                      disabled={loadingBg ? true : false}
+                      type="file"
+                      onChange={photoUpload}
+                    />
+                  </label>
+                </div>
+              )}
           </div>
-          <div className="my-items-header-wrapper user">
-            <div className="personal-profile-box">
-              <div className="profile-avatar-block">
-                {userData.avatar ? (
-                  <ImageLazy
-                    className="profile-avatar-img"
-                    alt="User Avatar"
-                    src={userData.avatar ? userData.avatar : ''}
-                  />
-                ) : (
-                  <div className="personal-default-avatar">
-                    <SvgUserIcon />
-                  </div>
-                )}
-              </div>
-              <div className="profile-name-box">
-                <>
-                  <span className={`profileName ${textColor}`}>
-                    {(userData &&
-                    userData.nickName &&
-                    userData.nickName.length > 20
-                      ? userData.nickName.slice(0, 5) +
-                        '....' +
-                        userData.nickName.slice(38)
-                      : userData.nickName) ||
-                      (userAddress &&
-                        userAddress.slice(0, 4) +
+          <div
+            className={`my-items-header-wrapper user ${
+              currentUserAddress === userAddress && 'edit'
+            }`}>
+            {currentUserAddress === userAddress ? (
+              <PersonalProfileIcon userData={userData} />
+            ) : (
+              <div className="personal-profile-box">
+                <div className="profile-avatar-block">
+                  {userData.avatar ? (
+                    <ImageLazy
+                      className="profile-avatar-img"
+                      alt="User Avatar"
+                      src={userData.avatar ? userData.avatar : ''}
+                    />
+                  ) : (
+                    <div className="personal-default-avatar">
+                      <SvgUserIcon />
+                    </div>
+                  )}
+                </div>
+                <div className="profile-name-box">
+                  <>
+                    <span className={`profileName ${textColor}`}>
+                      {(userData &&
+                      userData.nickName &&
+                      userData.nickName.length > 20
+                        ? userData.nickName.slice(0, 5) +
                           '....' +
-                          userAddress.slice(38))}
-                  </span>
-                </>
+                          userData.nickName.slice(38)
+                        : userData.nickName) ||
+                        (userAddress &&
+                          userAddress.slice(0, 4) +
+                            '....' +
+                            userAddress.slice(38))}
+                    </span>
+                  </>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="tabs-section">
