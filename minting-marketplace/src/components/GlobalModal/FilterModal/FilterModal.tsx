@@ -26,7 +26,6 @@ import {
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
 import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
-import blockchainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
 import CustomAccordion from '../../Accordion/Accordion';
 import AccordionItem from '../../Accordion/AccordionItem/AccordionItem';
@@ -43,15 +42,53 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   isMobileDesign,
   className
 }) => {
-  const blockchains = Object.keys(blockchainData).map((chain, index) => {
-    return {
-      name: blockchainData[chain].name,
-      chainId: chain,
+  const blockchains = [
+    {
+      name: 'Matic Mainnet',
+      chainId: '0x89',
       clicked: false,
       dropDownImg: true,
-      optionId: index + 1
-    };
-  });
+      optionId: 1
+    },
+    {
+      name: 'Matic Testnet',
+      chainId: '0x13881',
+      clicked: false,
+      dropDownImg: true,
+      optionId: 2
+    },
+    {
+      name: 'Goerli Testnet',
+      chainId: '0x5',
+      clicked: false,
+      dropDownImg: true,
+      optionId: 3
+    },
+    {
+      name: 'Ethereum Mainnet',
+      chainId: '0x1',
+      clicked: false,
+      dropDownImg: true,
+      optionId: 6
+    }
+  ];
+
+  //part of array above, removing mention of binance
+  // {
+  //   name: 'Binance Testnet',
+  //   chainId: '0x61',
+  //   clicked: false,
+  //   dropDownImg: true,
+  //   optionId: 4
+  // },
+  // {
+  //   name: 'Binance Mainnet',
+  //   chainId: '0x38',
+  //   clicked: false,
+  //   dropDownImg: true,
+  //   optionId: 5
+  // },
+
   // const categories = [
   //   {
   //     name: 'Music',
@@ -155,9 +192,9 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   useEffect(() => {
     if (selectedCatItems) {
       setSelectedCategories(selectedCatItems);
-      /*const selectedFiltersItemsText = selectedCatItems.map(
+      const selectedFiltersItemsText = selectedCatItems.map(
         (selectedCatItem) => selectedCatItem.name
-      );*/
+      );
       // setFilterText(selectedFiltersItemsText);
       setIsShow(true);
     }

@@ -66,7 +66,7 @@ const PlatformAbout = () => {
             <ul>
               <li>Ethereum</li>
               <li>MATIC</li>
-              <li>Binance Smart Chain</li>
+              {/* <li>Binance Smart Chain</li> */}
               <li>EIP2535 Diamonds</li>
             </ul>
           </div>
@@ -127,7 +127,7 @@ const PlatformAbout = () => {
               <ul>
                 <li>Ethereum</li>
                 <li>MATIC</li>
-                <li>Binance Smart Chain</li>
+                {/* <li>Binance Smart Chain</li> */}
                 <li>EIP2535 Diamonds</li>
               </ul>
             </div>

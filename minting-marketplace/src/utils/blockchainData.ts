@@ -8,42 +8,6 @@ import {
 } from '../images';
 
 const chainData: TChainData = {
-  // Dropped support for Binance when we migrated to Alchemy
-  /*'0x38': {
-    image: BinanceDiamond,
-    name: 'Binance Mainnet',
-    chainId: '0x38',
-    symbol: 'BNB',
-    addChainData: {
-      chainId: '0x38',
-      chainName: 'Binance Smart Chain Mainnet',
-      nativeCurrency: {
-        name: 'BNB',
-        symbol: 'BNB',
-        decimals: 18
-      },
-      rpcUrls: ['https://bsc-dataseed1.binance.org'],
-      blockExplorerUrls: ['https://www.bscscan.com/']
-    }
-  },
-  '0x61': {
-    testnet: true,
-    image: BinanceDiamond,
-    name: 'Binance Testnet',
-    chainId: '0x61',
-    symbol: 'BNB',
-    addChainData: {
-      chainId: '0x61',
-      chainName: 'Binance Testnet',
-      nativeCurrency: {
-        name: 'BNB',
-        symbol: 'BNB',
-        decimals: 18
-      },
-      rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-      blockExplorerUrls: ['https://testnet.bscscan.com/']
-    }
-  },*/
   '0x250': {
     testnet: false,
     image: AstarLogo,
