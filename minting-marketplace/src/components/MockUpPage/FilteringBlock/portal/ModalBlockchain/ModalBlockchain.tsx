@@ -1,8 +1,35 @@
 import React, { useState } from 'react';
 
 import blockchainData from '../../../../../utils/blockchainData';
-import { IModalBlockchain, TBlockchainNames } from '../../filteringBlock.types';
+import {
+  IModalBlockchain,
+  TBlockchainCategory,
+  TBlockchainNames
+} from '../../filteringBlock.types';
 import Modal from '../../modal';
+
+const blockchains: TBlockchainCategory[] = [
+  {
+    name: 'Matic Mainnet',
+    chainId: '0x89',
+    clicked: false
+  },
+  {
+    name: 'Matic Testnet',
+    chainId: '0x13881',
+    clicked: false
+  },
+  {
+    name: 'Goerli Testnet',
+    chainId: '0x5',
+    clicked: false
+  },
+  {
+    name: 'Ethereum Mainnet',
+    chainId: '0x1',
+    clicked: false
+  }
+];
 
 const ModalBlockchain: React.FC<IModalBlockchain> = ({
   setBlockchain,

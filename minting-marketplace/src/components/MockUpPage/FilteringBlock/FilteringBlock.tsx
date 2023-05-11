@@ -1,5 +1,6 @@
 //@ts-nocheck
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import {
@@ -43,6 +44,7 @@ const FilteringBlock = ({
   const [filterPopUp, setFilterPopUp] = useState(false);
   const [, /*filterItem*/ setFilterItem] = useState('Filters');
   const filterRef = useRef();
+  const [filterCloseText, setFilterClose] = useState(false);
 
   const [sortPopUp, setSortPopUp] = useState(false);
   const sortRef = useRef();
@@ -61,6 +63,7 @@ const FilteringBlock = ({
 
   const onChangeFilterPopUp = () => {
     // setFilterPopUp((prev) => !prev);
+    setFilterClose((prev) => !prev);
     globalModaldispatch({
       type: GLOBAL_MODAL_ACTIONS.TOGLE_IS_MODAL_OPEN,
       payload: null
@@ -100,12 +103,22 @@ const FilteringBlock = ({
       document.removeEventListener('mousedown', handleClickOutSideSort);
   });
   useEffect(() => {
-    globalModaldispatch({
-      type: GLOBAL_MODAL_ACTIONS.CREATE_MODAL,
-      payload: {
-        isOpen: false
-      }
-    });
+    if (width < 1101) {
+      globalModaldispatch({
+        type: GLOBAL_MODAL_ACTIONS.CREATE_MODAL,
+        payload: {
+          isOpen: false
+        }
+      });
+    } else {
+      globalModaldispatch({
+        type: GLOBAL_MODAL_ACTIONS.CREATE_MODAL,
+        payload: {
+          isOpen: true
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalModaldispatch]);
 
   return (
@@ -202,9 +215,22 @@ const FilteringBlock = ({
             textColor={textColor}
             primaryColor={primaryColor}>
             <div className="select-filters-title">
-              <StyledFilterIcon
-                // className="fas fa-sliders-h"
-                filterPopUp={filterPopUp}></StyledFilterIcon>
+              {width > 1101 ? (
+                <>
+                  {filterCloseText ? (
+                    <StyledFilterIcon
+                      filterPopUp={filterPopUp}></StyledFilterIcon>
+                  ) : (
+                    <CloseIcon
+                      style={{
+                        marginRight: '5px'
+                      }}
+                    />
+                  )}
+                </>
+              ) : (
+                <StyledFilterIcon filterPopUp={filterPopUp}></StyledFilterIcon>
+              )}
               {width > 700 && <span>Filters</span>}
             </div>
           </SelectFiltersItem>

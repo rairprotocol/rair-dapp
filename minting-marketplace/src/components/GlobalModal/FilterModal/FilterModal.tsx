@@ -26,7 +26,6 @@ import {
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
 import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
-import blockchainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
 import CustomAccordion from '../../Accordion/Accordion';
 import AccordionItem from '../../Accordion/AccordionItem/AccordionItem';
@@ -43,15 +42,53 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   isMobileDesign,
   className
 }) => {
-  const blockchains = Object.keys(blockchainData).map((chain, index) => {
-    return {
-      name: blockchainData[chain].name,
-      chainId: chain,
+  const blockchains = [
+    {
+      name: 'Matic Mainnet',
+      chainId: '0x89',
       clicked: false,
       dropDownImg: true,
-      optionId: index + 1
-    };
-  });
+      optionId: 1
+    },
+    {
+      name: 'Matic Testnet',
+      chainId: '0x13881',
+      clicked: false,
+      dropDownImg: true,
+      optionId: 2
+    },
+    {
+      name: 'Goerli Testnet',
+      chainId: '0x5',
+      clicked: false,
+      dropDownImg: true,
+      optionId: 3
+    },
+    {
+      name: 'Ethereum Mainnet',
+      chainId: '0x1',
+      clicked: false,
+      dropDownImg: true,
+      optionId: 6
+    }
+  ];
+
+  //part of array above, removing mention of binance
+  // {
+  //   name: 'Binance Testnet',
+  //   chainId: '0x61',
+  //   clicked: false,
+  //   dropDownImg: true,
+  //   optionId: 4
+  // },
+  // {
+  //   name: 'Binance Mainnet',
+  //   chainId: '0x38',
+  //   clicked: false,
+  //   dropDownImg: true,
+  //   optionId: 5
+  // },
+
   // const categories = [
   //   {
   //     name: 'Music',
@@ -155,9 +192,9 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   useEffect(() => {
     if (selectedCatItems) {
       setSelectedCategories(selectedCatItems);
-      /*const selectedFiltersItemsText = selectedCatItems.map(
+      const selectedFiltersItemsText = selectedCatItems.map(
         (selectedCatItem) => selectedCatItem.name
-      );*/
+      );
       // setFilterText(selectedFiltersItemsText);
       setIsShow(true);
     }
@@ -271,6 +308,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       selectedCategories: [TOption | undefined] | undefined = undefined
     ) => {
       if (selectedBch) {
+        sessionStorage.setItem('BlockchainItems', JSON.stringify(selectedBch));
         let allSelectedChains = '';
         selectedBch.forEach((selectedBchItem, idx) => {
           if (selectedBch.length > 1 && selectedBchItem?.chainId) {
@@ -296,6 +334,10 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
         setBlockchain(allSelectedChains);
       }
       if (selectedCategories) {
+        sessionStorage.setItem(
+          'CategoryItems',
+          JSON.stringify(selectedCategories)
+        );
         let allSelectedCategories = '';
         selectedCategories.forEach((selectedCategItem, idx) => {
           if (selectedCategories.length > 1 && selectedCategItem?.categoryId) {
@@ -318,6 +360,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
             return;
           }
         });
+
         const catArray = allSelectedCategories
           .split(',')
           .map((el) => {
@@ -336,6 +379,92 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
     },
     [onCloseBtn, setBlockchain, setCategory]
   );
+
+  const returnOption = useCallback(() => {
+    if (sessionStorage.getItem('CategoryItems')) {
+      const arr = JSON.parse(sessionStorage.getItem('CategoryItems'));
+
+      if (arr.length > 0) {
+        globalModaldispatch({
+          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
+          payload: {
+            selectedCatItems: arr
+          }
+        });
+        let allSelectedCategories = '';
+        arr.forEach((selectedCategItem, idx) => {
+          if (arr.length > 1 && selectedCategItem?.categoryId) {
+            if (arr.length - 1 === idx) {
+              allSelectedCategories = allSelectedCategories.concat(
+                selectedCategItem?.categoryId
+              );
+              return;
+            }
+            allSelectedCategories = allSelectedCategories.concat(
+              selectedCategItem?.categoryId,
+              ','
+            );
+            return;
+          }
+          if (selectedCategItem?.categoryId) {
+            allSelectedCategories = allSelectedCategories.concat(
+              selectedCategItem?.categoryId
+            );
+            return;
+          }
+        });
+
+        const catArray = allSelectedCategories
+          .split(',')
+          .map((el) => {
+            return `&category[]=${el}`;
+          })
+          .join('');
+        if (catArray === '&category[]=') {
+          setCategory(undefined);
+        } else {
+          setCategory(catArray);
+        }
+        setSelectedCategories(arr);
+      }
+    }
+    if (sessionStorage.getItem('BlockchainItems')) {
+      const arr = JSON.parse(sessionStorage.getItem('BlockchainItems'));
+      if (arr.length > 0) {
+        globalModaldispatch({
+          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
+          payload: {
+            selectedBchItems: arr
+          }
+        });
+        setSelectedBlockchainItems(arr);
+        let allSelectedChains = '';
+        arr.forEach((selectedBchItem, idx) => {
+          if (arr.length > 1 && selectedBchItem?.chainId) {
+            if (arr.length - 1 === idx) {
+              allSelectedChains = allSelectedChains.concat(
+                selectedBchItem?.chainId
+              );
+              return;
+            }
+            allSelectedChains = allSelectedChains.concat(
+              selectedBchItem?.chainId,
+              ','
+            );
+            return;
+          }
+          if (selectedBchItem?.chainId) {
+            allSelectedChains = allSelectedChains.concat(
+              selectedBchItem?.chainId
+            );
+            return;
+          }
+        });
+        setBlockchain(allSelectedChains);
+      }
+    }
+  }, [globalModaldispatch, setBlockchain, setCategory]);
+
   useEffect(() => {
     if (isOpen && isMobileDesign) {
       openModal();
@@ -366,6 +495,8 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   const handleCleanFilter = () => {
     clearFilter();
     setSelectedCategories([]);
+    sessionStorage.removeItem('CategoryItems');
+    sessionStorage.removeItem('BlockchainItems');
     globalModaldispatch({
       type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
       payload: {
@@ -392,6 +523,10 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   }, [setCategories]);
 
   useEffect(() => {
+    returnOption();
+  }, [returnOption]);
+
+  useEffect(() => {
     getCategories();
   }, [getCategories]);
   return (
@@ -409,28 +544,6 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
         </MobileHeaderBlock>
       )}
       <CustomAccordion>
-        <AccordionItem
-          isMobileDesign={isMobileDesign}
-          id={'blockchain'}
-          title="Blockchain"
-          isOpen={isBlockchainOpen}
-          itemBtn={AccordionItemBtn(isBlockchainOpen)}
-          setIsOpen={setIsBChOpen}
-          isStayExpand={isBlockchainExpand}
-          itemImg={
-            <StyledBlockchainIcon
-              className={`${isMobileDesign ? 'accordion-icon' : ''}`}
-              primaryColor={primaryColor}
-            />
-          }>
-          <Dropdown
-            onDropdownChange={onOptionChange}
-            options={blockchains}
-            selectedOptions={selectedBchItems && selectedBchItems}
-            key={Math.random() * 1_000_000}
-            isMobileDesign={isMobileDesign && isMobileDesign}
-          />
-        </AccordionItem>
         <AccordionItem
           id={'category'}
           title="Category"
@@ -461,6 +574,28 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
               }
             />
           )}
+        </AccordionItem>
+        <AccordionItem
+          isMobileDesign={isMobileDesign}
+          id={'blockchain'}
+          title="Blockchain"
+          isOpen={isBlockchainOpen}
+          itemBtn={AccordionItemBtn(isBlockchainOpen)}
+          setIsOpen={setIsBChOpen}
+          isStayExpand={isBlockchainExpand}
+          itemImg={
+            <StyledBlockchainIcon
+              className={`${isMobileDesign ? 'accordion-icon' : ''}`}
+              primaryColor={primaryColor}
+            />
+          }>
+          <Dropdown
+            onDropdownChange={onOptionChange}
+            options={blockchains}
+            selectedOptions={selectedBchItems && selectedBchItems}
+            key={Math.random() * 1_000_000}
+            isMobileDesign={isMobileDesign && isMobileDesign}
+          />
         </AccordionItem>
       </CustomAccordion>
       <div className="filter-modal-btn-container ">

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Provider, useStore } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -294,14 +295,17 @@ const EditMode = ({
               </div>
             ) : (
               <div className="profile-input">
-                <span
-                  className="profile-input-edit btn"
-                  onClick={() => onChangeEditMode()}
-                  style={{
-                    fontSize: '14px'
-                  }}>
-                  Edit
-                </span>
+                <NavLink to={`/${currentUserAddress}`}>
+                  <span
+                    className="profile-input-edit btn"
+                    // onClick={() => onChangeEditMode()}
+                    style={{
+                      color: '#fff',
+                      fontSize: '14px'
+                    }}>
+                    View profile
+                  </span>
+                </NavLink>
               </div>
             )}
           </div>

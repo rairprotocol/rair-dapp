@@ -130,6 +130,8 @@ function App() {
     navigate('/');
     setShowAlert(false);
     dispatch(getCurrentPageEnd());
+    sessionStorage.removeItem('CategoryItems');
+    sessionStorage.removeItem('BlockchainItems');
   };
 
   const btnCheck = useCallback(() => {

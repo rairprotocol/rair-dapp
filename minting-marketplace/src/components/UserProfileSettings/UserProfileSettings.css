@@ -384,6 +384,10 @@ span.profile-input-edit:hover {
   align-items: center;
 }
 
+.user-edit .profile-input span:hover {
+  background: var(--stimorol-hover);
+}
+
 .profile-input.edit-mode {
   width: 100%;
   display: flex;
