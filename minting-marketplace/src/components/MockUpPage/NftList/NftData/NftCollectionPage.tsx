@@ -155,6 +155,12 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     editBackground();
   }, [editBackground]);
 
+  useEffect(() => {
+    return () => {
+      showTokensRef.current = 40;
+    };
+  }, []);
+
   if (tokenData === undefined || !tokenData) {
     return <LoadingComponent />;
   }

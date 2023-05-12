@@ -749,6 +749,11 @@ function App() {
                     path: '*',
                     content: NotFound,
                     exact: false
+                  },
+                  {
+                    path: '/404',
+                    content: NotFound,
+                    exact: false
                   }
                 ].map((item, index) => {
                   // If the requirements for the route aren't met, it won't return anything
