@@ -24,6 +24,7 @@ import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 import { TDiamondTokensType } from '../nft/nft.types';
 import { PersonalProfileMyNftTab } from '../nft/PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab';
 import { PersonalProfileMyVideoTab } from '../nft/PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';
+import NotFound from '../NotFound/NotFound';
 import { TSortChoice } from '../ResalePage/listOffers.types';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -224,11 +225,12 @@ const UserProfilePage: React.FC = () => {
     getUserData();
   }, [getUserData]);
 
-  useEffect(() => {
-    if (userData === null) {
-      navigate('*');
-    }
-  }, [userData, navigate]);
+  // useEffect(() => {
+  if (userData === null) {
+    // navigate('/404');
+    return <NotFound />;
+  }
+  // }, [userData, navigate]);
 
   if (userData === undefined) {
     return <LoadingComponent />;
