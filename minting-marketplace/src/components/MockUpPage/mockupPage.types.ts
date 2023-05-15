@@ -27,6 +27,7 @@ export interface INftItemForCollectionView {
   tokenDataLength?: number;
   playing: string | null;
   indexId: string;
+  offerItemData?: any;
   setPlaying: (arg: null | string) => void;
   diamond: boolean;
   offerData: TOfferType[] | undefined;
@@ -87,7 +88,7 @@ export interface ISharePopUp {
   selectedValue: number;
   open: boolean;
   primaryColor: ColorChoice;
-  selectedData: TMetadataType | undefined;
+  selectedData?: TMetadataType | undefined;
 }
 
 export interface INftVideoplayer {

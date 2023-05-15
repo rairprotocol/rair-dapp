@@ -21,6 +21,8 @@ import InputField from '../common/InputField';
 import LoadingComponent from '../common/LoadingComponent';
 import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
 import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
+import CustomShareButton from '../MockUpPage/NftList/NftData/CustomShareButton';
+import SharePopUp from '../MockUpPage/NftList/NftData/TitleCollection/SharePopUp/SharePopUp';
 import { TDiamondTokensType } from '../nft/nft.types';
 import { PersonalProfileMyNftTab } from '../nft/PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab';
 import { PersonalProfileMyVideoTab } from '../nft/PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';
@@ -58,7 +60,19 @@ const UserProfilePage: React.FC = () => {
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const showTokensRef = useRef<number>(20);
+  const [selectedValue, setSelectedValue] = useState<number>(0);
+  const [open, setOpen] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState(false);
   const loader = useRef(null);
+
+  const handleClose = (value: number) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   const getMyNft = useCallback(
     async (number) => {
@@ -238,6 +252,14 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className="container">
+      <div>
+        <SharePopUp
+          primaryColor={primaryColor}
+          selectedValue={selectedValue}
+          open={open}
+          onClose={handleClose}
+        />
+      </div>
       {userData ? (
         <>
           <div className="breadcrumbs">
@@ -289,7 +311,12 @@ const UserProfilePage: React.FC = () => {
               currentUserAddress === userAddress && 'edit'
             }`}>
             {currentUserAddress === userAddress ? (
-              <PersonalProfileIcon userData={userData} />
+              <>
+                <PersonalProfileIcon
+                  userData={userData}
+                  setEditModeUpper={setEditMode}
+                />
+              </>
             ) : (
               <div className="personal-profile-box">
                 <div className="profile-avatar-block">
@@ -324,8 +351,14 @@ const UserProfilePage: React.FC = () => {
                 </div>
               </div>
             )}
+            {!editMode && (
+              <CustomShareButton
+                title="Share"
+                handleClick={handleClickOpen}
+                primaryColor={primaryColor}
+              />
+            )}
           </div>
-
           <div className="tabs-section">
             <Tabs
               selectedIndex={tabIndexItems}

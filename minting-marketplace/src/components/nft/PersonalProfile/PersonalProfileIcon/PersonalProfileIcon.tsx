@@ -20,11 +20,13 @@ import cl from './PersonalProfileIcon.module.css';
 interface IPersonalProfileIconComponent {
   userData: any;
   isPage?: boolean;
+  setEditModeUpper?: (arg: boolean) => void;
 }
 
 const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
   userData,
-  isPage
+  isPage,
+  setEditModeUpper
 }) => {
   const dispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
@@ -53,6 +55,9 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
 
   const resetAllStatesOnCancel = useCallback((userData) => {
     setEditMode(false);
+    if (setEditModeUpper) {
+      setEditModeUpper(false);
+    }
     setIsPhotoUpdate(false);
 
     setEmailUserNew(userData.email);
@@ -116,6 +121,9 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
 
   const onChangeEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
+    if (setEditModeUpper) {
+      setEditModeUpper(!editMode);
+    }
     setIsPhotoUpdate(false);
   }, [setEditMode]);
 
@@ -374,7 +382,12 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
                     : '@' + userName}
                 </span>
                 <i
-                  onClick={() => setEditMode(true)}
+                  onClick={() => {
+                    setEditMode(true);
+                    if (setEditModeUpper) {
+                      setEditModeUpper(true);
+                    }
+                  }}
                   className={`${cl.edit} ${
                     textColor && cl[textColor]
                   } fal fa-edit`}

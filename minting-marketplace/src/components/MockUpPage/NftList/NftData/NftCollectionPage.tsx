@@ -309,6 +309,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                           index={String(index)}
                           offerData={offerDataCol}
                           indexId={index}
+                          offerItemData={token.offer}
                           offer={
                             token.offer.diamond
                               ? token.offer.diamondRangeIndex
