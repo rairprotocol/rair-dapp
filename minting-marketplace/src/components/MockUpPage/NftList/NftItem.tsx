@@ -184,7 +184,14 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
         }`}>
         <div
           onClick={() => {
-            if (!metaDataProducts?.metadata?.animation_url) RedirectToMockUp();
+            if (
+              !metaDataProducts?.metadata?.animation_url ||
+              isFileUrl === 'gif' ||
+              isFileUrl === 'png' ||
+              isFileUrl === 'jpeg' ||
+              isFileUrl === 'webp'
+            )
+              RedirectToMockUp();
           }}
           className="col-12 rounded font-size"
           style={{
@@ -195,7 +202,10 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             cursor: 'pointer'
           }}>
           {metaDataProducts?.metadata?.animation_url &&
-            (isFileUrl === 'gif' ? (
+            (isFileUrl === 'gif' ||
+            isFileUrl === 'png' ||
+            isFileUrl === 'jpeg' ||
+            isFileUrl === 'webp' ? (
               <></>
             ) : playing === index ? (
               <div
@@ -219,15 +229,18 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               </div>
             ))}
           {metaDataProducts?.metadata?.animation_url ? (
-            isFileUrl === 'gif' ? (
+            isFileUrl === 'gif' ||
+            isFileUrl === 'png' ||
+            isFileUrl === 'jpeg' ||
+            isFileUrl === 'webp' ? (
               <ImageLazy
                 className="col-12 h-100 w-100 zoom-event"
                 width={'282px'}
                 height={'282px'}
                 alt={collectionName}
                 src={
-                  metaDataProducts?.metadata?.animation_url
-                    ? metaDataProducts?.metadata?.animation_url
+                  metaDataProducts?.metadata?.image
+                    ? metaDataProducts?.metadata?.image
                     : pict
                 }
               />

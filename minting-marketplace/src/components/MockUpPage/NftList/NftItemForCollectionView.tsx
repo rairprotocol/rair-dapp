@@ -138,7 +138,14 @@ const NftItemForCollectionViewComponent: React.FC<
         <div className={className}>
           <div
             onClick={() => {
-              if (!metadata?.animation_url) RedirectToMockUp();
+              if (
+                !metadata?.animation_url ||
+                isFileUrl === 'gif' ||
+                isFileUrl === 'png' ||
+                isFileUrl === 'jpeg' ||
+                isFileUrl === 'webp'
+              )
+                RedirectToMockUp();
             }}
             className="col-12 rounded"
             style={{
@@ -148,7 +155,10 @@ const NftItemForCollectionViewComponent: React.FC<
               cursor: 'pointer'
             }}>
             {metadata?.animation_url &&
-              (isFileUrl === 'gif' ? (
+              (isFileUrl === 'gif' ||
+              isFileUrl === 'png' ||
+              isFileUrl === 'jpeg' ||
+              isFileUrl === 'webp' ? (
                 <></>
               ) : playing === indexId ? (
                 <div
@@ -172,13 +182,16 @@ const NftItemForCollectionViewComponent: React.FC<
                 </div>
               ))}
             {metadata?.animation_url ? (
-              isFileUrl === 'gif' ? (
+              isFileUrl === 'gif' ||
+              isFileUrl === 'png' ||
+              isFileUrl === 'jpeg' ||
+              isFileUrl === 'webp' ? (
                 <ImageLazy
                   className="col-12 h-100 w-100 zoom-event"
                   width={'282px'}
                   height={'282px'}
                   alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
-                  src={metadata?.animation_url ? metadata?.animation_url : pict}
+                  src={metadata?.image ? metadata?.image : pict}
                 />
               ) : (
                 <div
