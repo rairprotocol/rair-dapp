@@ -120,7 +120,7 @@ const LikeButton: React.FC<ILikeButton> = ({
       ) : (
         <>
           <TooltipBox
-            title={`${liked ? 'Remove from Favorite' : 'Add to Favorite'}`}>
+            title={`${liked ? 'Remove from Favorites' : 'Add to Favorites'}`}>
             {liked ? (
               <div
                 className={likeButtonStyle}

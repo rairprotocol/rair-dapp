@@ -226,9 +226,9 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
             <div className="modal-content-video">
               {fileData.isUnlocked === false ? (
                 <>
-                  <TooltipBox enterDelay={200} title="You need to buy NFT">
+                  <TooltipBox enterDelay={200} title="You need to buy an NFT.">
                     <i
-                      data-title="You need to buy NFT"
+                      data-title="You need to buy an NFT."
                       className="fa fa-lock modal-content-video-lock"
                     />
                   </TooltipBox>

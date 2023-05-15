@@ -386,7 +386,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
                   }}
                   className="w-100 h-100 rounded-rair col-6 text-center mb-3 p-5">
                   <input {...getInputProps()} />
-                  <TooltipBox title="Drag and drop images">
+                  <TooltipBox title="Drag and Drop Images">
                     <img
                       alt=""
                       style={{

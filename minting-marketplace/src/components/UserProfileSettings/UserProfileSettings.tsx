@@ -55,7 +55,7 @@ const UserProfileSettings = ({
             isNotification={true}
           />
         )}
-        <TooltipBox position={'bottom'} title="Switch theme">
+        <TooltipBox position={'bottom'} title="Switch Theme">
           <SocialBox
             className="social-sun-icon"
             primaryColor={primaryColor}
