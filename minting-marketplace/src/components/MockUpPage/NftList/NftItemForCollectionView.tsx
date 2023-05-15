@@ -2,6 +2,7 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 
 import { SvgKey } from './SvgKey';
 
@@ -35,7 +36,8 @@ const NftItemForCollectionViewComponent: React.FC<
   setPlaying,
   playing,
   diamond,
-  offerData
+  offerData,
+  offerItemData
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
@@ -103,11 +105,20 @@ const NftItemForCollectionViewComponent: React.FC<
     if (offerPrice && offerPrice.length > 0) {
       const { maxPrice, minPrice } = gettingPrice(offerPrice);
 
-      if (maxPrice && minPrice) {
-        return `${minPrice} – ${maxPrice} ${
-          blockchain && chainData[blockchain]?.symbol
-        }`;
+      if (offerItemData) {
+        const rawPrice = BigNumber.from(
+          offerItemData.price ? offerItemData.price : 0
+        );
+        const price = rawPrice.lte(100000) ? '0.000+' : formatEther(rawPrice);
+
+        return price;
       }
+
+      // if (maxPrice && minPrice) {
+      //   return `${minPrice} – ${maxPrice} ${
+      //     blockchain && chainData[blockchain]?.symbol
+      //   }`;
+      // }
     }
   }
 
@@ -317,7 +328,8 @@ const NftItemForCollectionViewComponent: React.FC<
                         src={blockchain && chainData[blockchain]?.image}
                         alt="Blockchain network"
                       />
-                      {checkPrice()}
+                      {/* {checkPrice()} */}
+                      {fullPrice()}
                     </div>
                   </div>
                 </div>

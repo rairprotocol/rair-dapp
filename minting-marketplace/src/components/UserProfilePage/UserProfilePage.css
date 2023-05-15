@@ -131,6 +131,16 @@
   max-width: calc(302px * 2 + 10px);
 }
 
+.my-items-header-wrapper .share-button {
+  border: 1px solid var(--bubblegum);
+  margin-top: 1.4rem;
+}
+
+.my-items-header-wrapper.user {
+  display: flex;
+  justify-content: space-between;
+}
+
 @media screen and (max-width: 1280px) {
   .user-page-background.rhyno,
   .user-page-background.charcoal {
@@ -181,6 +191,18 @@
   }
 }
 
+@media screen and (max-width: 767px) {
+  .my-items-header-wrapper.user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .my-items-header-wrapper .share-button {
+    margin: 0 0 1.4rem 0;
+  }
+}
+
 @media screen and (max-width: 700px) {
   .personal-profile-box .profile-avatar-block {
     margin-left: calc(15rem - 1vw);
@@ -213,6 +235,12 @@
 @media screen and (max-width: 600px) {
   .tabs-section .category-button {
     font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .my-items-header-wrapper .share-button {
+    width: 124px !important;
   }
 }
 
