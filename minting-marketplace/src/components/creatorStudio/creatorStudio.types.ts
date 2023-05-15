@@ -479,6 +479,7 @@ export type TProductDataLocal = {
   collectionIndexInContract: number;
   name: string;
   diamond: boolean;
+  bannerImage?: string;
 };
 
 export type TSetDataUseState = {
@@ -499,6 +500,7 @@ export interface INavigatorContract {
   contractAddress: string;
   contractName: string;
   contractBlockchain: BlockchainType | undefined;
+  contractProducts?: any;
 }
 
 export interface INavigatorFactory {

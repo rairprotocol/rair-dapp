@@ -130,6 +130,25 @@
   padding-top: 6rem;
 }
 
+.banner-collection .loadingProfile {
+  width: 1rem;
+  text-align: center;
+  height: 1rem;
+  margin: auto;
+  font-size: 14px;
+  padding-top: 0px;
+}
+
+.banner-collection .loadingProfile .load {
+  width: 10px;
+  height: 10px;
+}
+
+.banner-collection .loadingProfile .loader-wrapper {
+  width: 1rem;
+  height: 1rem;
+}
+
 .single-token-img-video-wrapper {
   display: flex;
   justify-content: center;
