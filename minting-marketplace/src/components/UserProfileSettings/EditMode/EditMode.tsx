@@ -145,7 +145,7 @@ const EditMode = ({
           {imagePreviewUrl ? (
             <>
               {editMode ? (
-                <TooltipBox title="Click to change your avatar">
+                <TooltipBox title="Click to change your avatar!">
                   <div
                     className={`change-profile-img ${
                       primaryColor === 'rhyno' ? 'rhyno' : ''

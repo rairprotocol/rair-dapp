@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
+import { BannerCollection } from './BannerCollection';
 import {
   TContractsNetworkContract,
   TContractsNetworkOffersResponse,
@@ -103,25 +104,30 @@ const ListCollections = () => {
           {data.products.map(
             (item: TProducts | TProductDataLocal, index: number) => {
               return (
-                <NavLink
-                  to={`/creator/contract/${blockchain}/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`}
-                  key={index}
-                  style={{
-                    position: 'relative',
-                    backgroundColor: `var(--${primaryColor}-80)`
-                  }}
-                  className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
-                  {item.diamond && <i className="fas fa-gem" />} {item.name}
-                  <i
-                    className="fas fa-arrow-right"
-                    style={{
-                      position: 'absolute',
-                      right: '10px',
-                      top: '10px',
-                      color: 'var(--bubblegum)'
-                    }}
+                <div key={index} className="col-12 row collection-item-banner">
+                  <BannerCollection
+                    item={item}
+                    getContractData={getContractData}
                   />
-                </NavLink>
+                  <NavLink
+                    to={`/creator/contract/${blockchain}/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`}
+                    style={{
+                      position: 'relative',
+                      backgroundColor: `var(--${primaryColor}-80)`
+                    }}
+                    className={`col-10 btn btn-${primaryColor} text-start rounded-rair my-1`}>
+                    {item.diamond && <i className="fas fa-gem" />} {item.name}
+                    <i
+                      className="fas fa-arrow-right"
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '10px',
+                        color: 'var(--bubblegum)'
+                      }}
+                    />
+                  </NavLink>
+                </div>
               );
             }
           )}

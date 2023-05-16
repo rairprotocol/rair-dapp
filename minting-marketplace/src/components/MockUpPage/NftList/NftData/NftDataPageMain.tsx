@@ -208,13 +208,16 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 }
               />
               {selectedData?.animation_url ? (
-                isFileUrl === 'gif' ? (
+                isFileUrl === 'gif' ||
+                isFileUrl === 'png' ||
+                isFileUrl === 'jpeg' ||
+                isFileUrl === 'webp' ? (
                   <div
                     className="single-token-block-img"
                     style={{
                       backgroundImage: `url(${
-                        selectedData?.animation_url
-                          ? selectedData.animation_url
+                        selectedData?.image
+                          ? selectedData.image
                           : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
                       })`
                     }}></div>

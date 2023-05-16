@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
+import Swal from 'sweetalert2';
 
 import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
@@ -89,6 +90,12 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
       reader.onloadend = () => {
         if (fileF.type !== 'video/mp4') {
           setFileUpload(fileF);
+        } else {
+          Swal.fire(
+            'Info',
+            `You cannot upload video to background!`,
+            'warning'
+          );
         }
       };
       if (fileF) {
@@ -115,21 +122,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
           // setFileUpload(null);
           setLoadingBg(false);
           setRenderOffers((prev) => !prev);
+        } else {
+          setLoadingBg(false);
         }
-      } else {
-        //   const profileEditResponse = await axios.get<TUserResponse>(
-        //     `/api/users/${currentUserAddress.toLowerCase()}`,
-        //     {
-        //       headers: {
-        //         Accept: 'multipart/form-data'
-        //       }
-        //     }
-        //   );
-        //   const { user, success } = profileEditResponse.data;
-        //   if (success && user) {
-        //     setBackgroundUser(user.background);
-        //   }
-        // }
       }
     }
   }, [fileUpload]);

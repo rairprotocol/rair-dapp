@@ -738,6 +738,23 @@ a:hover {
   object-fit: cover;
 }
 
+.collection-item-banner .inputFile {
+  position: absolute;
+  height: 35px;
+}
+
+.collection-item-banner {
+  justify-content: space-between;
+  position: relative;
+}
+
+.collection-item-banner .banner-collection {
+  width: 6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* .description-wrapper-video {
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;

@@ -130,7 +130,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                   <i className="fas fa-pencil-alt"></i>
                 </button>
               ) : (
-                <TooltipBox title="Click to change video details">
+                <TooltipBox title="Click to change video details.">
                   <button
                     disabled={uploadSuccess === false && beforeUpload}
                     className={`btn btn-success rounded-rairo mx-3 ${

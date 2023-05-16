@@ -223,7 +223,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               target="_blank"
               rel="noreferrer">
               <div className="etherscan-icon">
-                <TooltipBox title=" Link to contract review">
+                <TooltipBox title="Link to Contract Review">
                   <EtherScanCollectionLogo className="etherscan-collection-icon" />
                 </TooltipBox>
               </div>

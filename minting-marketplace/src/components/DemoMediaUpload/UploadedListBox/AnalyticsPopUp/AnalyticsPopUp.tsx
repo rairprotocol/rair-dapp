@@ -51,7 +51,7 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({
               showCloseButton: true
             });
           }}
-          title="Click to watch analytics page"
+          title="Click to the watch analytics page."
           className="btn-video-views">
           {CounterDisplay(watchCounter)}
         </button>
