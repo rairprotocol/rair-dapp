@@ -1,6 +1,7 @@
 export interface ILazyImageItem {
   width?: string;
   height?: string;
+  cover?: boolean;
 }
 
 export interface IImageLazy {
@@ -9,4 +10,5 @@ export interface IImageLazy {
   width?: string;
   height?: string;
   className?: string;
+  cover?: boolean;
 }

@@ -238,6 +238,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 width={'282px'}
                 height={'282px'}
                 alt={collectionName}
+                cover={true}
                 src={
                   metaDataProducts?.metadata?.image
                     ? metaDataProducts?.metadata?.image
@@ -284,6 +285,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               height={'282px'}
               src={metaDataProducts?.metadata?.image ? ipfsLink : pict}
               alt={collectionName}
+              cover={true}
             />
           )}
           {

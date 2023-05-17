@@ -187,6 +187,7 @@ const NftItemForCollectionViewComponent: React.FC<
               isFileUrl === 'jpeg' ||
               isFileUrl === 'webp' ? (
                 <ImageLazy
+                  cover={true}
                   className="col-12 h-100 w-100 zoom-event"
                   width={'282px'}
                   height={'282px'}
@@ -223,6 +224,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 className="col-12 h-100 w-100 zoom-event"
                 width={'282px'}
                 height={'282px'}
+                cover={true}
                 alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
                 src={metadata?.image ? ipfsLink : pict}
               />
@@ -287,7 +289,11 @@ const NftItemForCollectionViewComponent: React.FC<
                     flexDirection: 'column',
                     alignItems: 'flex-start'
                   }}>
-                  {metadata?.name === 'none' ? '#' + index : metadata?.name}
+                  {metadata?.name === 'none' && '#' + index}
+                  {metadata?.name !== 'none' && metadata?.name.slice(0, 22)}
+                  {metadata?.name !== 'none' && metadata?.name.length > 22
+                    ? '...'
+                    : ''}
                   <div
                     className="brief-infor-nftItem"
                     style={{

@@ -10,7 +10,7 @@ export const Image = styled.img<ILazyImageItem>`
     position: absolute;
     bottom: 0;
     border-radius: 16px;
-    object-fit: contain;
+    object-fit: ${(props) => (props.cover ? 'cover' : 'contain')};
   }
   @keyframes loaded {
     0% {
