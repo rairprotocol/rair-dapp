@@ -94,16 +94,22 @@ const PersonalProfileMyNftTabComponent: React.FC<
                       </span>
                       <div className="container-blockchain-info">
                         <small className="description">
-                          {item.contract.slice(0, 5) +
-                            '....' +
-                            item.contract.slice(item.contract.length - 4)}
+                          {item.metadata && item.metadata.name.length > 16
+                            ? item.metadata.name.slice(0, 5) +
+                              '...' +
+                              item.metadata.name.slice(
+                                item.metadata.name.length - 4
+                              )
+                            : item.metadata.name}
                         </small>
                         <div className="description-small" style={{}}>
                           <img
                             className="my-items-blockchain-img"
                             src={
-                              item.blockchain
-                                ? `${chainData[item?.blockchain]?.image}`
+                              item.contract.blockchain
+                                ? `${
+                                    chainData[item.contract.blockchain]?.image
+                                  }`
                                 : ''
                             }
                             alt="Blockchain network"

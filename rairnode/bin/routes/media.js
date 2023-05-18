@@ -217,7 +217,9 @@ module.exports = () => {
           userAddress = '',
           contractAddress = '',
         } = req.query;
-        const searchQuery = {};
+        const searchQuery = {
+          'contractData.blockView': false,
+        };
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
@@ -234,6 +236,7 @@ module.exports = () => {
         }
 
         const foundBlockchain = await Blockchain.findOne({ hash: blockchain });
+        const contractQuery = {};
         if (foundBlockchain) {
           const query = {
             blockchain,
@@ -241,18 +244,45 @@ module.exports = () => {
           if (contractAddress) {
             query.contractAddress = contractAddress;
           }
-          const arrayOfContracts = await Contract.find(query).distinct(
-            '_id',
-          );
-          searchQuery.contract = { $in: arrayOfContracts };
         }
+        const arrayOfContracts = await Contract.find(contractQuery).distinct(
+          '_id',
+        );
+        searchQuery.contract = { $in: arrayOfContracts };
 
-        let data = await File.find(searchQuery, { key: 0, uri: 0 })
-          .sort({ title: 1 })
-          .skip(skip)
-          .limit(pageSize);
+        const pipeline = [
+          {
+            $lookup: {
+                from: 'Contract',
+                localField: 'contract',
+                foreignField: '_id',
+                as: 'contractData',
+            },
+          }, {
+              $unwind: {
+                  path: '$contractData',
+              },
+          }, {
+              $match: searchQuery,
+          }, {
+              $unset: 'contractData',
+          }, {
+            $project: {
+              key: 0, uri: 0,
+            },
+          }, {
+            $sort: {
+              title: 1,
+            },
+          }, {
+            $skip: skip,
+          }, {
+            $limit: pageSize,
+          },
+        ];
 
-        const totalNumber = await File.count(searchQuery);
+        let data = await File.aggregate(pipeline);
+        const { totalCount } = (await File.aggregate([...pipeline, { $count: 'totalCount' }]))[0];
 
         // verify the user have needed tokens for unlock the files
         data = await verifyAccessRightsToFile(data, req.user);
@@ -265,7 +295,7 @@ module.exports = () => {
           }, {})
           .value();
 
-        return res.json({ success: true, list, totalNumber });
+        return res.json({ success: true, list, totalNumber: totalCount });
       } catch (e) {
         log.error(e);
         return next(e.message);

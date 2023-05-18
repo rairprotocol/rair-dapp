@@ -87,16 +87,14 @@ const LikeButton: React.FC<ILikeButton> = ({
 
   const getFavotiteData = useCallback(async () => {
     try {
-      const {
-        data: { data }
-      } = await axios.get('/api/v2/favorites', {
+      const { data: result } = await axios.get('/api/v2/favorites', {
         headers: {
           'Content-Type': 'application/json'
         }
       });
 
-      if (data) {
-        const check = data.doc.filter((el) => el.token._id === tokenId);
+      if (result && result.result) {
+        const check = result.result.filter((el) => el.token._id === tokenId);
         if (check.length > 0) {
           dispatch(getCurrentItemSuccess(check));
         } else {

@@ -16,7 +16,13 @@ const { Contract, User, File, Blockchain } = require('../../models');
 
 const getContractsByUser = async (user, res, next) => {
   try {
-    const contracts = await Contract.find(user ? { user } : {}, {
+    const contractQuery = {
+      blockView: false,
+    };
+    if (user) {
+      contractQuery.user = user;
+    }
+    const contracts = await Contract.find(contractQuery, {
       _id: 1,
       contractAddress: 1,
       title: 1,

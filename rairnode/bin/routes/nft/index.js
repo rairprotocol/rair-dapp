@@ -57,13 +57,40 @@ module.exports = (context) => {
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
-        const result = await MintedToken.find({ ownerAddress: userAddress })
-          .skip(skip)
-          .limit(pageSize);
+        const pipeline = [{
+            $lookup: {
+                from: 'Contract',
+                localField: 'contract',
+                foreignField: '_id',
+                as: 'contract',
+            },
+        },
+        {
+            $unwind: {
+                path: '$contract',
+            },
+        },
+        {
+            $match: {
+                ownerAddress: userAddress,
+                'contract.blockView': false,
+            },
+        }];
 
-        const nftTotal = await MintedToken.countDocuments({ ownerAddress: userAddress });
+        const result = await MintedToken.aggregate([
+          ...pipeline,
+          { $skip: skip },
+          { $limit: pageSize },
+        ]);
 
-        res.json({ success: true, result, totalCount: nftTotal });
+        const count = await MintedToken.aggregate([
+          ...pipeline,
+          {
+            $count: 'totalCount',
+          },
+        ]);
+
+        res.json({ success: true, result, totalCount: count[0]?.totalCount });
       } catch (e) {
         next(e);
       }

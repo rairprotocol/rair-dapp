@@ -85,15 +85,15 @@ const UserProfilePage: React.FC = () => {
           setTotalCount(response.totalCount);
           const tokenData: TDiamondTokensType[] = [];
           for await (const token of response.result) {
-            if (!token.contract) {
+            if (!token.contract._id) {
               return;
             }
             const contractData = await rFetch(
-              `/api/contracts/singleContract/${token.contract}`
+              `/api/contracts/singleContract/${token.contract._id}`
             );
             tokenData.push({
               ...token,
-              ...contractData.contract
+              ...contractData.contract._id
             });
           }
           const newCollectedTokens = tokenData.filter(
