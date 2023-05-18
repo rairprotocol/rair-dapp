@@ -61,7 +61,7 @@ export type TFavotiteTokenData = {
 };
 
 export type TDocData = {
-  doc: TFavotiteTokenData[];
+  result: TFavotiteTokenData[];
 };
 
 export type TAxiosFavoriteData = {

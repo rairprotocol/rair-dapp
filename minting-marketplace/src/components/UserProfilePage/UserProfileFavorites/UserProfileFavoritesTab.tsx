@@ -32,7 +32,7 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
           false
         );
         if (response.success) {
-          setUserFavorites(response.data);
+          setUserFavorites(response);
         } else {
           setUserFavorites(null);
         }
@@ -56,9 +56,9 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
         className={`my-items-product-wrapper ${
           width >= 1250 && width <= 1400 && 'row'
         } favorite`}>
-        {userFavotites ? (
-          userFavotites.doc &&
-          userFavotites.doc
+        {userFavotites && userFavotites.result.length > 0 ? (
+          userFavotites.result &&
+          userFavotites.result
             .filter((el) =>
               el.token.metadata.name
                 .toLowerCase()

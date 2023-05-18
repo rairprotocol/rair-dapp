@@ -43,7 +43,8 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   ownerCollectionUser,
   index,
   playing,
-  setPlaying
+  setPlaying,
+  className
 }) => {
   const navigate = useNavigate();
   const [metaDataProducts, setMetaDataProducts] = useStateIfMounted<
@@ -179,8 +180,12 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   return (
     <>
       <div
-        className={`text-start video-wrapper nft-item-collection mobile-respinsove ${
-          globalModalState?.isOpen ? 'with-modal' : ''
+        className={`${
+          className
+            ? `${className} nft-item-collection`
+            : `text-start video-wrapper nft-item-collection mobile-respinsove ${
+                globalModalState?.isOpen ? 'with-modal' : ''
+              }`
         }`}>
         <div
           onClick={() => {

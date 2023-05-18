@@ -73,55 +73,37 @@ const NftListComponent: React.FC<INftListComponent> = ({
         className={`list-button-wrapper ${
           globalModalState?.isOpen ? 'with-modal' : ''
         }`}>
-        {
-          filteredData && filteredData.length > 0 ? (
-            filteredData.map((contractData, index) => {
-              if (contractData.cover !== 'none') {
-                return (
-                  <NftItem
-                    key={`${
-                      contractData.id + '-' + contractData.productId + index
-                    }`}
-                    pict={contractData.cover ? contractData.cover : defaultImg}
-                    contractName={contractData.contract}
-                    price={contractData.offerData.map((p) => String(p.price))}
-                    blockchain={contractData.blockchain}
-                    collectionName={contractData.name}
-                    ownerCollectionUser={contractData.user}
-                    index={index}
-                    playing={playing}
-                    setPlaying={setPlaying}
-                    collectionIndexInContract={
-                      contractData.collectionIndexInContract
-                    }
-                  />
-                );
-              } else {
-                return null;
-              }
-            })
-          ) : (
-            <div className="list-wrapper-empty">
-              <h2>No items to display</h2>
-            </div>
-          )
-          //unused-snippet
-          // Array.from(new Array(10)).map((item, index) => {
-          //   return (
-          //     <Skeleton
-          //       key={index}
-          //       className={"skeloton-product"}
-          //       variant="rectangular"
-          //       width={283}
-          //       height={280}
-          //       style={{ borderRadius: 20 }}
-          //     />
-          //   );
-          // })
-          // <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: "20px" }} className="preloader-product">
-          //     <CircularProgress size="70px" />
-          // </div>
-        }
+        {filteredData && filteredData.length > 0 ? (
+          filteredData.map((contractData, index) => {
+            if (contractData.cover !== 'none') {
+              return (
+                <NftItem
+                  key={`${
+                    contractData.id + '-' + contractData.productId + index
+                  }`}
+                  pict={contractData.cover ? contractData.cover : defaultImg}
+                  contractName={contractData.contract}
+                  price={contractData.offerData.map((p) => String(p.price))}
+                  blockchain={contractData.blockchain}
+                  collectionName={contractData.name}
+                  ownerCollectionUser={contractData.user}
+                  index={index}
+                  playing={playing}
+                  setPlaying={setPlaying}
+                  collectionIndexInContract={
+                    contractData.collectionIndexInContract
+                  }
+                />
+              );
+            } else {
+              return null;
+            }
+          })
+        ) : (
+          <div className="list-wrapper-empty">
+            <h2>No items to display</h2>
+          </div>
+        )}
       </div>
       <div id="filter-modal-parent">
         <GlobalModal

@@ -1,5 +1,4 @@
-import { memo, useEffect } from 'react';
-import { CircularProgress } from '@mui/material';
+import { memo } from 'react';
 
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
@@ -30,26 +29,9 @@ const PersonalProfileMyNftTabComponent: React.FC<
   defaultImg,
   chainData,
   textColor,
-  totalCount,
-  showTokensRef,
-  isLoading,
-  loader,
-  loadToken,
   profile
 }) => {
   const { width } = useWindowDimensions();
-
-  useEffect(() => {
-    if (loadToken) {
-      const option = {
-        root: null,
-        rootMargin: '20px',
-        threshold: 0
-      };
-      const observer = new IntersectionObserver(loadToken, option);
-      if (loader.current) observer.observe(loader.current);
-    }
-  }, [loadToken, loader, isLoading]);
 
   return (
     <div className="gen">
@@ -128,25 +110,6 @@ const PersonalProfileMyNftTabComponent: React.FC<
           </p>
         )}
       </div>
-      {loader && (
-        <>
-          {isLoading && (
-            <div className="progress-token">
-              <CircularProgress
-                style={{
-                  width: '70px',
-                  height: '70px'
-                }}
-              />
-            </div>
-          )}
-          {filteredData.length &&
-            totalCount &&
-            showTokensRef.current <= totalCount && (
-              <div ref={loader} className="ref" />
-            )}
-        </>
-      )}
     </div>
   );
 };
