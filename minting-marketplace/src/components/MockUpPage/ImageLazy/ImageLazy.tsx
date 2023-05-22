@@ -11,7 +11,8 @@ export const ImageLazy: React.FC<IImageLazy> = ({
   alt,
   height,
   width,
-  className
+  className,
+  cover
 }) => {
   const [imageSrc, setImageSrc] = useState<string | undefined>(placeHolder);
   const [imageRef, setImageRef] = useState<HTMLImageElement | null>();
@@ -61,6 +62,7 @@ export const ImageLazy: React.FC<IImageLazy> = ({
   }, [src, imageSrc, imageRef]);
   return (
     <Image
+      cover={cover}
       className={className}
       width={width}
       height={height}

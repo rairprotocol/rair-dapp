@@ -1,5 +1,4 @@
-import { memo, useEffect } from 'react';
-import { CircularProgress } from '@mui/material';
+import { memo } from 'react';
 
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
@@ -30,26 +29,9 @@ const PersonalProfileMyNftTabComponent: React.FC<
   defaultImg,
   chainData,
   textColor,
-  totalCount,
-  showTokensRef,
-  isLoading,
-  loader,
-  loadToken,
   profile
 }) => {
   const { width } = useWindowDimensions();
-
-  useEffect(() => {
-    if (loadToken) {
-      const option = {
-        root: null,
-        rootMargin: '20px',
-        threshold: 0
-      };
-      const observer = new IntersectionObserver(loadToken, option);
-      if (loader.current) observer.observe(loader.current);
-    }
-  }, [loadToken, loader, isLoading]);
 
   return (
     <div className="gen">
@@ -94,16 +76,22 @@ const PersonalProfileMyNftTabComponent: React.FC<
                       </span>
                       <div className="container-blockchain-info">
                         <small className="description">
-                          {item.contract.slice(0, 5) +
-                            '....' +
-                            item.contract.slice(item.contract.length - 4)}
+                          {item.metadata && item.metadata.name.length > 16
+                            ? item.metadata.name.slice(0, 5) +
+                              '...' +
+                              item.metadata.name.slice(
+                                item.metadata.name.length - 4
+                              )
+                            : item.metadata.name}
                         </small>
                         <div className="description-small" style={{}}>
                           <img
                             className="my-items-blockchain-img"
                             src={
-                              item.blockchain
-                                ? `${chainData[item?.blockchain]?.image}`
+                              item.contract.blockchain
+                                ? `${
+                                    chainData[item.contract.blockchain]?.image
+                                  }`
                                 : ''
                             }
                             alt="Blockchain network"
@@ -122,25 +110,6 @@ const PersonalProfileMyNftTabComponent: React.FC<
           </p>
         )}
       </div>
-      {loader && (
-        <>
-          {isLoading && (
-            <div className="progress-token">
-              <CircularProgress
-                style={{
-                  width: '70px',
-                  height: '70px'
-                }}
-              />
-            </div>
-          )}
-          {filteredData.length &&
-            totalCount &&
-            showTokensRef.current <= totalCount && (
-              <div ref={loader} className="ref" />
-            )}
-        </>
-      )}
     </div>
   );
 };

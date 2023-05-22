@@ -31,7 +31,7 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
           }
         })
         .then(({ data }) => {
-          setMyFavoriteItems(data.data);
+          setMyFavoriteItems(data);
           setLoading(false);
         });
     } catch (e) {
@@ -72,9 +72,9 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
         <LoadingComponent />
       ) : (
         <div className="my-items-product-wrapper row favorite">
-          {myFavoriteItems ? (
-            myFavoriteItems.doc &&
-            myFavoriteItems.doc
+          {myFavoriteItems && myFavoriteItems.result.length ? (
+            myFavoriteItems.result &&
+            myFavoriteItems.result
               .filter((el) =>
                 el.token.metadata.name
                   .toLowerCase()

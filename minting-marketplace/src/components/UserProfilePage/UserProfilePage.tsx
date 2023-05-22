@@ -10,7 +10,7 @@ import { Breadcrumbs, Typography } from '@mui/material';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import { TUserResponse } from '../../axios.responseTypes';
+import { TContract, TUserResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -31,6 +31,7 @@ import { TSortChoice } from '../ResalePage/listOffers.types';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import { PersonalProfileIcon } from './../nft/PersonalProfile/PersonalProfileIcon/PersonalProfileIcon';
+import UserProfileCreated from './UserProfileCreated/UserProfileCreated';
 import UserProfileFavoritesTab from './UserProfileFavorites/UserProfileFavoritesTab';
 
 import './UserProfilePage.css';
@@ -52,18 +53,16 @@ const UserProfilePage: React.FC = () => {
   const [collectedTokens, setCollectedTokens] = useState<TDiamondTokensType[]>(
     []
   );
+  const [createdContracts, setCreatedContracts] = useState([]);
   const [fileUpload, setFileUpload] = useState<File | null>(null);
   const [loadingBg, setLoadingBg] = useState(false);
   const [sortItem, setSortItem] = useState<TSortChoice>();
   const [titleSearch, setTitleSearch] = useState('');
   const [tabIndexItems, setTabIndexItems] = useState(0);
-  const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
   const showTokensRef = useRef<number>(20);
   const [selectedValue, setSelectedValue] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
-  const loader = useRef(null);
 
   const handleClose = (value: number) => {
     setOpen(false);
@@ -76,42 +75,72 @@ const UserProfilePage: React.FC = () => {
 
   const getMyNft = useCallback(
     async (number) => {
-      setIsLoading(true);
       if (userAddress) {
         const response = await rFetch(
           `/api/nft/${userAddress}?itemsPerPage=${number}&pageNum=${1}`
         );
         if (response.success) {
-          setTotalCount(response.totalCount);
           const tokenData: TDiamondTokensType[] = [];
           for await (const token of response.result) {
-            if (!token.contract) {
+            if (!token.contract._id) {
               return;
             }
             const contractData = await rFetch(
-              `/api/contracts/singleContract/${token.contract}`
+              `/api/contracts/singleContract/${token.contract._id}`
             );
             tokenData.push({
               ...token,
-              ...contractData.contract
+              ...contractData.contract._id
             });
           }
           const newCollectedTokens = tokenData.filter(
             (el) => el.isMinted === true
           );
-          setIsLoading(false);
           setTokens(tokenData);
           setCollectedTokens(newCollectedTokens);
         }
 
         if (response.error && response.message) {
-          setIsLoading(false);
           return;
         }
       }
     },
     [userAddress]
   );
+
+  const handleNewUserStatus = useCallback(async () => {
+    const requestContract = await rFetch('/api/contracts/full?itemsPerPage=5');
+    const { success, contracts } = await rFetch(
+      `/api/contracts/full?itemsPerPage=${requestContract.totalNumber}`
+    );
+
+    if (success) {
+      const contractsFiltered = contracts.filter(
+        (el) => el.user === userAddress
+      );
+
+      const covers = contractsFiltered.map((item: TContract) => ({
+        id: item._id,
+        productId: item.products?._id ?? 'wut',
+        blockchain: item.blockchain,
+        collectionIndexInContract: item.products.collectionIndexInContract,
+        contract: item.contractAddress,
+        cover: item.products.cover,
+        title: item.title,
+        name: item.products.name,
+        user: item.user,
+        copiesProduct: item.products.copies,
+        offerData: item.products.offers?.map((elem) => ({
+          price: elem.price,
+          offerName: elem.offerName,
+          offerIndex: elem.offerIndex,
+          productNumber: elem.product
+        }))
+      }));
+
+      setCreatedContracts(covers);
+    }
+  }, [userAddress]);
 
   const filteredData =
     tokens &&
@@ -238,6 +267,10 @@ const UserProfilePage: React.FC = () => {
   useEffect(() => {
     getUserData();
   }, [getUserData]);
+
+  useEffect(() => {
+    handleNewUserStatus();
+  }, [handleNewUserStatus]);
 
   // useEffect(() => {
   if (userData === null) {
@@ -466,18 +499,8 @@ const UserProfilePage: React.FC = () => {
                   />
                 </TabPanel>
                 <TabPanel>
-                  <PersonalProfileMyNftTab
-                    filteredData={filteredData && filteredData}
-                    defaultImg={
-                      'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
-                    }
-                    chainData={chainData}
-                    textColor={textColor}
-                    totalCount={totalCount}
-                    showTokensRef={showTokensRef}
-                    loader={loader}
-                    isLoading={isLoading}
-                    loadToken={loadToken}
+                  <UserProfileCreated
+                    contractData={createdContracts && createdContracts}
                   />
                 </TabPanel>
                 <TabPanel>
