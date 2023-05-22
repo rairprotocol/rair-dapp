@@ -235,11 +235,12 @@ const NftItemForCollectionViewComponent: React.FC<
                   <>
                     {BigNumber.from(indexId).gte(offerData[0].range[0]) &&
                       BigNumber.from(indexId).lte(offerData[0].range[1]) && (
-                        <SvgKey
-                          key={index}
-                          color={'#E4476D'}
-                          bgColor={'rgba(34, 32, 33, 0.5)'}
-                        />
+                        // <SvgKey
+                        //   key={index}
+                        //   color={'#E4476D'}
+                        //   bgColor={'rgba(34, 32, 33, 0.5)'}
+                        // />
+                        <></>
                       )}
                   </>
                 )}
@@ -247,10 +248,11 @@ const NftItemForCollectionViewComponent: React.FC<
                   <>
                     {BigNumber.from(indexId).gte(offerData[1].range[0]) &&
                       BigNumber.from(indexId).lte(offerData[1].range[1]) && (
-                        <SvgKey
-                          color={'#CCA541'}
-                          bgColor={'rgba(34, 32, 33, 0.5)'}
-                        />
+                        // <SvgKey
+                        //   color={'#CCA541'}
+                        //   bgColor={'rgba(34, 32, 33, 0.5)'}
+                        // />
+                        <></>
                       )}
                   </>
                 )}
@@ -260,23 +262,24 @@ const NftItemForCollectionViewComponent: React.FC<
                       BigNumber.from(indexId).gte(offerData[2].range[0]) &&
                       offerData[2] &&
                       BigNumber.from(indexId).lte(offerData[2].range[1]) && (
-                        <SvgKey
-                          color={'silver'}
-                          bgColor={'rgba(34, 32, 33, 0.5)'}
-                        />
+                        // <SvgKey
+                        //   color={'silver'}
+                        //   bgColor={'rgba(34, 32, 33, 0.5)'}
+                        // />
+                        <></>
                       )}
                   </>
                 )}
               </>
             ) : (
               <>
-                {offer.toString() === '0' ? (
+                {/* {offer.toString() === '0' ? (
                   <SvgKey color={'#E4476D'} bgColor={'rgba(34, 32, 33, 0.5)'} />
                 ) : offer.toString() === '1' ? (
                   <SvgKey color={'#CCA541'} bgColor={'rgba(34, 32, 33, 0.5)'} />
                 ) : (
                   <SvgKey color={'silver'} bgColor={'rgba(34, 32, 33, 0.5)'} />
-                )}
+                )} */}
               </>
             )}
             <div className="col description-wrapper pic-description-wrapper wrapper-for-collection-view">

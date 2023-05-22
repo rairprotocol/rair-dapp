@@ -631,13 +631,14 @@ a:hover {
   justify-content: flex-end;
   align-items: center;
   align-content: center;
+  z-index: 3;
 }
-.modal-content-video-lock::after {
-  /* pointer-events: none; 
+/* .modal-content-video-lock::after { */
+/* pointer-events: none; 
   opacity: 0;
   transition: ease opacity 0.3s;
   transition-delay: .0s;  */
-}
+/* } */
 
 /* .modal-content-video-lock:hover::after {
   content: attr(data-title);
@@ -660,6 +661,13 @@ a:hover {
   height: 428px;
   object-fit: cover;
 }
+
+img.video-locked-modal {
+  filter: blur(2px);
+  opacity: 0.75;
+  mix-blend-mode: overlay;
+}
+
 .modal-content-video-choice {
   display: flex;
   flex-direction: column;

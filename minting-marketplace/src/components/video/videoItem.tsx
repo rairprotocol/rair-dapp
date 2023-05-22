@@ -268,11 +268,7 @@ const VideoItem: React.FC<IVideoItem> = ({
           }}
           className="col-12  h-100 w-100"
         />
-        {mediaList[item]?.isUnlocked ? (
-          <SvgKey color={'#4E4D4D'} bgColor={'white'} />
-        ) : (
-          <SvgLock color={'white'} />
-        )}
+        {mediaList[item]?.isUnlocked ? null : <SvgLock color={'white'} />}
       </div>
       <div className="col description-wrapper-video">
         <span className="description-title">
@@ -315,9 +311,11 @@ const VideoItem: React.FC<IVideoItem> = ({
               <div className="modal-content-video">
                 {mediaList[item]?.isUnlocked === false && !owned ? (
                   <>
-                    <TooltipBox enterDelay={200} title="You need to buy NFT">
+                    <TooltipBox
+                      enterDelay={200}
+                      title="You Need to Buy This NFT!">
                       <i
-                        data-title="You need to buy NFT"
+                        data-title="You Need to Buy This NFT!"
                         className="fa fa-lock modal-content-video-lock"
                       />
                     </TooltipBox>
@@ -334,8 +332,14 @@ const VideoItem: React.FC<IVideoItem> = ({
                     />
                   </>
                 )}
-                {openVideoplayer ? (
-                  <></>
+
+                {openVideoplayer ? null : mediaList[item]?.isUnlocked ===
+                    false && !owned ? (
+                  <img
+                    alt="Modal content video thumbnail"
+                    src={`${mediaList[item].staticThumbnail}`}
+                    className="modal-content-video-thumbnail video-locked-modal"
+                  />
                 ) : (
                   <img
                     alt="Modal content video thumbnail"

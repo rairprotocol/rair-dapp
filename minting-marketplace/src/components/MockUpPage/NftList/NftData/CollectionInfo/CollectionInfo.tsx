@@ -81,7 +81,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                       <div className="item-rank">
                         {token.diamond ? (
                           <>
-                            {index.toString() === '0' && (
+                            {/* {index.toString() === '0' && (
                               <i
                                 style={{ color: 'red' }}
                                 className="fas fa-key"
@@ -93,11 +93,11 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                                 style={{ color: 'silver' }}
                                 className="fas fa-key"
                               />
-                            )}
+                            )} */}
                           </>
                         ) : (
                           <>
-                            {token.offerIndex === '0' && (
+                            {/* {token.offerIndex === '0' && (
                               <i
                                 style={{ color: 'red' }}
                                 className="fas fa-key"
@@ -109,7 +109,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                                 style={{ color: 'silver' }}
                                 className="fas fa-key"
                               />
-                            )}
+                            )} */}
                           </>
                         )}{' '}
                         &nbsp;

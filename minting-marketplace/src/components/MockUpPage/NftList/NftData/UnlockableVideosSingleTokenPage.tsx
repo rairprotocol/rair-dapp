@@ -100,7 +100,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
                           {!data.demo ? (
                             <>
                               <div className="video-lock-round">
-                                <LockWhite />
+                                {/* <LockWhite /> */}
                               </div>
                               <div className="video-lock-round-text">
                                 Locked
