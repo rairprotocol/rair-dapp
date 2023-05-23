@@ -282,7 +282,9 @@ module.exports = () => {
         ];
 
         let data = await File.aggregate(pipeline);
-        const { totalCount } = (await File.aggregate([...pipeline, { $count: 'totalCount' }]))[0];
+        const [countResult] = await File.aggregate([...pipeline, { $count: 'totalCount' }]);
+
+        const { totalCount } = countResult || 0;
 
         // verify the user have needed tokens for unlock the files
         data = await verifyAccessRightsToFile(data, req.user);
