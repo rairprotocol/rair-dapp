@@ -936,7 +936,7 @@ img.single-token-block-img {
     width: 350px;
   }
   .general-title {
-    width: 350px;
+    width: 450px;
   }
   .main .general-title {
     text-align: center;
@@ -1147,7 +1147,7 @@ p.general-title {
   }
 
   .nft-item-collection {
-    margin: 10px !important;
+    margin: 5px !important;
     height: 160px;
     width: 160px;
   }
@@ -1352,9 +1352,9 @@ p.general-title {
 
 @media screen and (max-width: 400px) {
   .nft-item-collection {
-    height: 150px;
-    width: 150px;
-    margin: 7px !important;
+    height: 250px;
+    width: 250px;
+    margin: 2px !important;
   }
 }
 
@@ -1374,9 +1374,6 @@ p.general-title {
 }
 
 @media screen and (max-width: 1260px) {
-  .list-button-wrapper {
-    justify-content: flex-start;
-  }
   .tree-tab-unlocks {
     justify-content: space-between;
   }
