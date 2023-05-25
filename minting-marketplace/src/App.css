@@ -754,6 +754,7 @@ img.video-locked-modal {
 .collection-item-banner {
   justify-content: space-between;
   position: relative;
+  padding-right: 0;
 }
 
 .collection-item-banner .banner-collection {
@@ -886,6 +887,11 @@ i.fas-custom {
   /* border: 1px solid #4e4d4d; */
   padding-left: 1rem;
   margin-top: 0.5rem;
+}
+
+select.form-control.rounded-rair:disabled {
+  background: rgb(127 127 127) !important;
+  color: #c4c4c4 !important;
 }
 
 .input-select-custom-style::-webkit-file-upload-button {

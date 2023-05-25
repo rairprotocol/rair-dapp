@@ -28,7 +28,9 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   socketMessage,
   setUploadSuccess,
   newUserStatus,
-  setSocketMessage
+  setSocketMessage,
+  collectionIndex,
+  address
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -184,6 +186,8 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           index={index}
           setUploadSuccess={setUploadSuccess}
           newUserStatus={newUserStatus}
+          collectionIndex={collectionIndex}
+          address={address}
         />
         {newUserStatus ? (
           <button

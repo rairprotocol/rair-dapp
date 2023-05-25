@@ -131,16 +131,18 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                 </button>
               ) : (
                 <TooltipBox title="Click to change video details.">
-                  <button
-                    disabled={uploadSuccess === false && beforeUpload}
-                    className={`btn btn-success rounded-rairo mx-3 ${
-                      primaryColor === 'rhyno' ? 'rhyno' : ''
-                    } ${modalIsOpen ? 'modal-open' : ''}`}
-                    onClick={() => {
-                      openModal();
-                    }}>
-                    <i className="fas fa-pencil-alt"></i>
-                  </button>
+                  <span>
+                    <button
+                      disabled={uploadSuccess === false && beforeUpload}
+                      className={`btn btn-success rounded-rairo mx-3 ${
+                        primaryColor === 'rhyno' ? 'rhyno' : ''
+                      } ${modalIsOpen ? 'modal-open' : ''}`}
+                      onClick={() => {
+                        openModal();
+                      }}>
+                      <i className="fas fa-pencil-alt"></i>
+                    </button>
+                  </span>
                 </TooltipBox>
               )}
             </>

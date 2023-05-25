@@ -39,22 +39,24 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({
   return (
     <>
       <TooltipBox title="Views">
-        <button
-          onClick={() => {
-            reactSwal.fire({
-              html: <PopUpContainer videoId={videoId} />,
-              showConfirmButton: false,
-              width: '70vw',
-              customClass: {
-                popup: `bg-analytics`
-              },
-              showCloseButton: true
-            });
-          }}
-          title="Click to the watch analytics page."
-          className="btn-video-views">
-          {CounterDisplay(watchCounter)}
-        </button>
+        <>
+          <button
+            onClick={() => {
+              reactSwal.fire({
+                html: <PopUpContainer videoId={videoId} />,
+                showConfirmButton: false,
+                width: '70vw',
+                customClass: {
+                  popup: `bg-analytics`
+                },
+                showCloseButton: true
+              });
+            }}
+            title="Click to the watch analytics page."
+            className="btn-video-views">
+            {CounterDisplay(watchCounter)}
+          </button>
+        </>
       </TooltipBox>
     </>
   );

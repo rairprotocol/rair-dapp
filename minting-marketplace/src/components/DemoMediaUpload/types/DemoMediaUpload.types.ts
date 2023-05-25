@@ -33,6 +33,8 @@ export interface IMediaListBox {
   socketMessage: string | undefined;
   setUploadSuccess: (arg: boolean | null) => void;
   setSocketMessage: (arg: string | undefined) => void;
+  collectionIndex?: string;
+  address?: string;
 }
 
 export interface IUploadedListBox {
@@ -41,10 +43,11 @@ export interface IUploadedListBox {
   setMediaList: (arg: TMediaType[]) => void;
   mediaList: TMediaType[];
   uploadSuccess: boolean | null;
-  copyEmbebed: (videoId: number, contract: string) => void;
   getMediaList: () => void;
   setUploadSuccess: (arg: boolean | null) => void;
   setMediaUploadedList: (arg: any) => void;
+  address?: string;
+  collectionIndex?: string;
 }
 
 export interface IAnalyticsPopUp {
@@ -57,6 +60,8 @@ export interface IAnalyticsPopUp {
   fileData?: any;
   setMediaUploadedList?: (arg: any) => void;
   newUserStatus?: boolean;
+  collectionIndex?: string;
+  address?: string;
 }
 
 export interface IPopUpChangeVideo {
