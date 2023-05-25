@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
+import axios from 'axios';
 import { utils } from 'ethers';
-import { BigNumber } from 'ethers';
 import Swal from 'sweetalert2';
 
 import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
 
+import {
+  TNftItemResponse,
+  TTokenData
+} from '../../../../../axios.responseTypes';
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import PurchaseTokenButton from '../../../../common/PurchaseToken';
@@ -22,7 +26,6 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   blockchain,
   offerData,
   openTitle,
-  someUsersData,
   mintToken,
   connectUserData,
   contractAddress,
@@ -33,9 +36,22 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   );
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
+  const [tokenData, setTokenData] = useState<TTokenData[] | null>(null);
 
   const defaultPhoto =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
+
+  const getTokens = async () => {
+    const { data } = await axios.get<TNftItemResponse>(
+      `/api/nft/network/${params.blockchain}/${params.contract}/${params.product}?fromToken=0&toToken=0`
+    );
+
+    setTokenData(data.result.tokens);
+  };
+
+  useEffect(() => {
+    getTokens();
+  }, []);
 
   return (
     <div
@@ -69,8 +85,8 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     <div className="item-name">
                       <ImageLazy
                         src={
-                          someUsersData?.avatar
-                            ? someUsersData?.avatar
+                          tokenData
+                            ? tokenData[token.range[0]].metadata.image
                             : defaultPhoto
                         }
                         alt="Created by user"

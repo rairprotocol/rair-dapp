@@ -146,7 +146,6 @@ export interface ICollectionInfo {
   blockchain: BlockchainType | undefined;
   offerData: TOfferType[] | undefined;
   openTitle: boolean;
-  someUsersData: UserType | null | undefined;
   mintToken?: boolean;
   connectUserData?: () => void;
   contractAddress?: string;

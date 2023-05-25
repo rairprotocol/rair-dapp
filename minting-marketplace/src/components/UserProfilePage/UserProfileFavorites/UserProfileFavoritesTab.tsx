@@ -42,6 +42,25 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
     }
   }, [userAddress]);
 
+  const removeFavotite = async (currentLikeToken) => {
+    if (userAddress) {
+      if (userAddress) {
+        try {
+          await rFetch(`/api/v2/favorites/${currentLikeToken}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then((res) => {
+            getFavotiteData();
+          });
+        } catch (e) {
+          // console.info(e);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     getFavotiteData();
   }, [getFavotiteData]);
@@ -66,7 +85,12 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
             )
             .map((item) => {
               return (
-                <MyfavoriteItem userPage={true} item={item} key={item._id} />
+                <MyfavoriteItem
+                  removeFavotite={removeFavotite}
+                  userPage={true}
+                  item={item}
+                  key={item._id}
+                />
               );
             })
         ) : (
