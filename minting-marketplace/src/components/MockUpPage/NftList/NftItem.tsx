@@ -293,13 +293,13 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               cover={true}
             />
           )}
-          {
+          {/* {
             <SvgKey
               color={'white'}
               bgColor={'rgba(34, 32, 33, 0.5)'}
               mobile={width > 700 ? false : true}
             />
-          }
+          } */}
           <div className="col description-wrapper pic-description-wrapper">
             <div className="description-title">
               <div
