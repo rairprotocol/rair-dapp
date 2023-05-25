@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
@@ -21,7 +22,9 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   titleOfContract,
   fileData,
   setMediaUploadedList,
-  newUserStatus
+  newUserStatus,
+  collectionIndex,
+  address
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [contract, setContract] = useState('null');
@@ -33,6 +36,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
   const [contractData, setContractData] = useState({});
   const [categories, setCategories] = useState<OptionsType[]>([]);
   const [productOptions, setProductOptions] = useState();
@@ -133,19 +137,36 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
             demo: false
           };
         }
-        const request = await rFetch(`/api/media/update/${fileData._id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
+        const request = await rFetch(
+          `/api/media/update/${fileData._id}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedVideo)
           },
-          body: JSON.stringify(updatedVideo)
-        });
+          undefined,
+          false
+        );
 
-        if (request.success) {
+        if (!request.success) {
           setMediaUploadedList({});
           setUploadSuccess(null);
           setModalIsOpen(false);
+          if (
+            request.message === 'Nothing to update' ||
+            request.message === `"offer[0]" must be a string`
+          ) {
+            Swal.fire('Error', 'Nothing to update', 'error');
+          } else {
+            Swal.fire('Error', request.message, 'error');
+          }
         }
+
+        setMediaUploadedList({});
+        setUploadSuccess(null);
+        setModalIsOpen(false);
       }
     } else {
       const newArray = [...mediaList];
@@ -192,8 +213,13 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           }
         ].concat(arrProduct)
       );
+
+      if (collectionIndex) {
+        setProductOptions(arrProduct);
+        setProduct(collectionIndex);
+      }
     }
-  }, [contract, contractData]);
+  }, [contract, contractData, collectionIndex]);
 
   const getFullContractData = useCallback(async () => {
     const request = await rFetch('/api/contracts/full?itemsPerPage=5');
@@ -206,6 +232,12 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
       let contractsFiltered = contracts.filter(
         (el) => el.user === currentUserAddress
       );
+
+      if (address) {
+        contractsFiltered = contractsFiltered.filter(
+          (item) => item.contractAddress === address
+        );
+      }
 
       if (success) {
         const mapping = {};
@@ -260,6 +292,11 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
             }
           ].concat(options)
         );
+
+        if (address) {
+          setCategories(options);
+          setContract(options[0].value);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -293,6 +330,15 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
     //     }
     //   ]);
     // } else {
+
+    if (address && collectionIndex && !Array.isArray(mediaList)) {
+      if (fileData.demo) {
+        setOffer(-1);
+      } else {
+        setOffer(fileData.offer[0]);
+      }
+    }
+
     setOffersOptions(
       [
         {
@@ -400,6 +446,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
               }}
               placeholder="Select a Contract"
               options={categories}
+              disabled={address ? true : false}
               {...selectCommonInfoNFT}
             />
 
@@ -413,6 +460,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
                 }}
                 placeholder="Select a Product"
                 options={productOptions}
+                disabled={collectionIndex ? true : false}
                 {...selectCommonInfoNFT}
               />
             )}

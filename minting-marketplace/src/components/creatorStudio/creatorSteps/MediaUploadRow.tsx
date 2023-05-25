@@ -10,6 +10,8 @@ import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 import { IMediaUploadRow } from '../creatorStudio.types';
 
+import './../../DemoMediaUpload/DemoMediaUpload.css';
+
 const MediaUploadRow: React.FC<IMediaUploadRow> = ({
   item,
   offerList,
@@ -95,15 +97,26 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
   return (
     <div
       style={{ backgroundColor: `var(--${primaryColor}-80)`, color: textColor }}
-      className="p-0 rounded-rair d-flex align-items-center my-3 col-12 row mx-0">
-      <div className="col-12 text-end">
+      // className="p-0 rounded-rair d-flex align-items-center my-3 col-12 row mx-0"
+      className="medialist-box">
+      <div className="mediaitem-block col-12">
+        <video className="w-100" src={item.preview} />
+        <button
+          onClick={() => deleter()}
+          className={`btn btn-danger rounded-rairo ${
+            primaryColor === 'rhyno' ? 'rhyno' : ''
+          }`}>
+          <i className="far fa-trash"></i>
+        </button>
+      </div>
+      {/* <div className="col-12 text-end">
         <button
           onClick={deleter}
           className="btn btn-danger rounded-rair text-center border-danger"
           style={{ color: textColor }}>
           <i className="fas fa-trash" />
         </button>
-      </div>
+      </div> */}
       <div
         className="col-12 m-0 p-0 col-md-5"
         style={{ ...cornerStyle, height: '100%', overflowY: 'hidden' }}>

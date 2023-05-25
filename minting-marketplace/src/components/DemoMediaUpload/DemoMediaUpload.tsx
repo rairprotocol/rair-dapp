@@ -333,19 +333,6 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
     setMediaList(aux);
   };
 
-  const copyEmbebed = (videoId, contract) => {
-    const iframe = `
-      <iframe id="${videoId}" src="${process.env.REACT_APP_SERVER_URL}/watch/${contract}/${videoId}/stream.m3u8" width="800px" height="800px"></iframe>
-    `;
-    navigator.clipboard.writeText(iframe);
-  };
-
-  // const updateMediaCategory = (array, index, value: string) => {
-  //   array[index].category = value;
-  //   setMediaList(array);
-  //   rerenderFC();
-  // };
-
   useEffect(() => {
     if (width <= 1000) {
       Swal.fire({
@@ -387,17 +374,19 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
                   className="w-100 h-100 rounded-rair col-6 text-center mb-3 p-5">
                   <input {...getInputProps()} />
                   <TooltipBox title="Drag and Drop Images">
-                    <img
-                      alt=""
-                      style={{
-                        filter:
-                          primaryColor === 'rhyno'
-                            ? 'brightness(40%)'
-                            : undefined
-                      }}
-                      src={videoIcon}
-                      className="mt-5 mb-3"
-                    />
+                    <>
+                      <img
+                        alt=""
+                        style={{
+                          filter:
+                            primaryColor === 'rhyno'
+                              ? 'brightness(40%)'
+                              : undefined
+                        }}
+                        src={videoIcon}
+                        className="mt-5 mb-3"
+                      />
+                    </>
                   </TooltipBox>
                   <br />
                   {isDragActive ? (
@@ -429,7 +418,6 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
                   setMediaList={setMediaList}
                   mediaList={mediaUploadedList}
                   uploadSuccess={uploadSuccess}
-                  copyEmbebed={copyEmbebed}
                   getMediaList={getMediaList}
                   setUploadSuccess={setUploadSuccess}
                   setMediaUploadedList={setMediaUploadedList}

@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { copyEmbebed } from '../../../utils/copyEmbed';
 import { rFetch } from '../../../utils/rFetch';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import NftVideoplayer from '../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
@@ -22,10 +23,11 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   setMediaList,
   mediaList,
   uploadSuccess,
-  copyEmbebed,
   getMediaList,
   setUploadSuccess,
-  setMediaUploadedList
+  setMediaUploadedList,
+  address,
+  collectionIndex
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -201,6 +203,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               setUploadSuccess={setUploadSuccess}
               titleOfContract={currentContract ? currentContract : 'null'}
               setMediaUploadedList={setMediaUploadedList}
+              address={address}
+              collectionIndex={collectionIndex}
             />
           )}
         </div>
@@ -227,10 +231,12 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               {fileData.isUnlocked === false ? (
                 <>
                   <TooltipBox enterDelay={200} title="You need to buy an NFT.">
-                    <i
-                      data-title="You need to buy an NFT."
-                      className="fa fa-lock modal-content-video-lock"
-                    />
+                    <>
+                      <i
+                        data-title="You need to buy an NFT."
+                        className="fa fa-lock modal-content-video-lock"
+                      />
+                    </>
                   </TooltipBox>
                 </>
               ) : openVideoplayer ? (
