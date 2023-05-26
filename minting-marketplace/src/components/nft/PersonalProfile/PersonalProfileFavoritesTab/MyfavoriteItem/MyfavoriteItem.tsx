@@ -51,13 +51,6 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
 
   return (
     <FavoriteItem
-      onClick={() => {
-        if (!userPage) {
-          return null;
-        } else {
-          goToTokenLink(item.token.contract);
-        }
-      }}
       className="col-2 my-item-element"
       image={item.token.metadata.image}>
       <ImageLazy
@@ -69,7 +62,15 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
         {removeFavotite && (
           <BtnMyFavorite removeFavotite={() => removeFavotite(item._id)} />
         )}
-        <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
+        <div
+          onClick={() => {
+            if (!userPage) {
+              return null;
+            } else {
+              goToTokenLink(item.token.contract);
+            }
+          }}
+          className="col my-items-description-wrapper my-items-pic-description-wrapper">
           <div className="container-blue-description" style={{ color: '#fff' }}>
             <span className="description-title">
               {item.token.metadata ? (

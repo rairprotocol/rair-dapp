@@ -360,7 +360,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                     blockchain={blockchain}
                     offerData={offerDataCol}
                     openTitle={true}
-                    someUsersData={someUsersData}
                   />
                 )}
                 <AuthenticityBlock

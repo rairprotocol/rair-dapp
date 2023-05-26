@@ -206,7 +206,6 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                     offerDataCol={offerDataCol}
                     primaryColor={primaryColor}
                     connectUserData={connectUserData}
-                    someUsersData={someUsersData}
                     contractAddress={contract}
                     setPurchaseStatus={setPurchaseStatus}
                   />

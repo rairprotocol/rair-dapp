@@ -7,7 +7,6 @@ import CollectionInfo from '../../CollectionInfo/CollectionInfo';
 const MintPopUpCollection = ({
   blockchain,
   offerDataCol,
-  someUsersData,
   primaryColor,
   connectUserData,
   contractAddress,
@@ -19,7 +18,6 @@ const MintPopUpCollection = ({
         blockchain={blockchain}
         offerData={offerDataCol}
         openTitle={false}
-        someUsersData={someUsersData}
         mintToken={true}
         connectUserData={connectUserData}
         contractAddress={contractAddress}
