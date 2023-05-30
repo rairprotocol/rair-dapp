@@ -222,7 +222,10 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         height: '2rem',
         paddingTop: '0.2rem',
         border: 'solid 1px #F63419',
-        borderRadius: '50%'
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
       <i className="fas fa-exclamation text-danger" />
     </div>

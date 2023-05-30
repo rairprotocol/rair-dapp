@@ -70,6 +70,11 @@ const AdminView = ({
     setSelectedContracts([...selectedContracts, 'null']);
   };
 
+  const removeInput = (id) => {
+    const array = selectedContracts.filter((item, index) => index !== id);
+    setSelectedContracts(array);
+  };
+
   const selectContract = (value, index) => {
     const tempArr = [...selectedContracts];
     tempArr[index] = value;
@@ -101,7 +106,9 @@ const AdminView = ({
           {hiddenContracts &&
             hiddenContracts.map((o) => (
               <tr key={v1()}>
-                <td className="hidden-table-title">{o.label}</td>
+                <td className={`hidden-table-title ${primaryColor}`}>
+                  {o.label}
+                </td>
                 <td>
                   <button
                     className="hidden-table-button"
@@ -123,7 +130,7 @@ const AdminView = ({
               <InputSelect
                 customClass="form-control input-select-custom-style"
                 customCSS={reusableStyle}
-                labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
+                // labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
                 label="Select contract that need to be hidden"
                 getter={item}
                 setter={(e) => selectContract(e, index)}
@@ -142,6 +149,11 @@ const AdminView = ({
                   onClick={() => offOrOnContract(item, 'on')}
                   disabled={loading === true ? true : false}>
                   Show
+                </button>
+                <button
+                  className="btn btn-danger rounded-rair"
+                  onClick={() => removeInput(index)}>
+                  <i className="fas fa-trash"></i>
                 </button>
               </div>
             </div>

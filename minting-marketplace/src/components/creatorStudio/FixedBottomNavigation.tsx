@@ -21,7 +21,10 @@ const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
   return (
     <>
       <div className="py-3" />
-      <div className={`w-100 bg-${primaryColor} py-4`}>
+      <div
+        className={`w-100 ${
+          primaryColor === 'rhyno' ? 'bg' : `bg-${primaryColor}`
+        } py-4`}>
         <div style={{ position: 'relative' }}>
           <div className="btn" style={{ color: `var(--${primaryColor})` }}>
             {

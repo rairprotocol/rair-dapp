@@ -178,7 +178,7 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
     <div className="col-12 row">
       <button
         disabled
-        className="col-12 col-md-1 btn btn-charcoal rounded-rair">
+        className={`col-12 col-md-1 btn btn-${primaryColor} rounded-rair`}>
         {/* <i style={{ color: `${randColor}` }} className="fas fa-key h1" /> */}
       </button>
       <div className="col-12 col-md-11 row">
