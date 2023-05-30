@@ -79,7 +79,6 @@ const VideoItem: React.FC<IVideoItem> = ({
   const [contractData, setContractData] =
     useStateIfMounted<TVideoItemContractData | null>(null);
   const [dataUser, setDataUser] = useStateIfMounted<UserType | null>(null);
-
   // primaryColor === 'rhyno' ? '#F2F2F2' : '#383637'
   const buy = async ({
     offerPool = undefined,
@@ -371,18 +370,22 @@ const VideoItem: React.FC<IVideoItem> = ({
                         src={contractData?.tokens?.at(0)?.metadata?.image}
                         alt="NFT token powered by Rair tech"
                       />
-                      <CustomButton
-                        text={'Buy now'}
-                        width={'232px'}
-                        height={'48px'}
-                        textColor={
-                          primaryColor === 'rhyno' ? '#222021' : 'white'
-                        }
-                        onClick={openHelp}
-                        margin={'0 45px 37px'}
-                        custom={true}
-                        loading={loading}
-                      />
+                      {contractData && contractData.external ? (
+                        <></>
+                      ) : (
+                        <CustomButton
+                          text={'Buy now'}
+                          width={'232px'}
+                          height={'48px'}
+                          textColor={
+                            primaryColor === 'rhyno' ? '#222021' : 'white'
+                          }
+                          onClick={openHelp}
+                          margin={'0 45px 37px'}
+                          custom={true}
+                          loading={loading}
+                        />
+                      )}
                     </div>
                   )}
                   <CustomButton
