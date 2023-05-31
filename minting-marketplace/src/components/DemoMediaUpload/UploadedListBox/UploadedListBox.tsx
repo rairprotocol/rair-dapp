@@ -164,11 +164,14 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
         marginTop: '20px'
       }}>
       <div className="mediaitem-block col-12">
-        <img
-          onClick={openModal}
-          className="w-100"
-          src={fileData.animatedThumbnail}
-        />
+        <div className="animated-block" onClick={openModal}>
+          <img
+            className="modal-content-play-image"
+            src={playImagesColored}
+            alt="Button play video"
+          />
+          <img className="w-100" src={fileData.animatedThumbnail} />
+        </div>
         <MediaItemChange
           setMediaList={setMediaList}
           item={fileData}

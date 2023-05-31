@@ -229,12 +229,16 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
         `/api/contracts/full?itemsPerPage=${request.totalNumber}`
       );
 
-      let contractsFiltered = contracts.filter(
-        (el) => el.user === currentUserAddress
-      );
+      let contractsFiltered = contracts.filter((el) => {
+        if (!el.importedBy) {
+          return el.user === currentUserAddress;
+        } else {
+          return el.importedBy === currentUserAddress;
+        }
+      });
 
       if (address) {
-        contractsFiltered = contractsFiltered.filter(
+        contractsFiltered = contracts.filter(
           (item) => item.contractAddress === address
         );
       }

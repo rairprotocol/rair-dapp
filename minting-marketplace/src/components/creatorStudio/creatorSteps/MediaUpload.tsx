@@ -5,8 +5,6 @@ import { useParams } from 'react-router-dom';
 import { utils } from 'ethers';
 import { io } from 'socket.io-client';
 
-import MediaUploadRow from './MediaUploadRow';
-
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
@@ -40,7 +38,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
     (store) => store.colorStore
   );
 
-  const { address, collectionIndex } = useParams<TParamsBatchMetadata>();
+  const { address, collectionIndex, blockchain } = useParams();
   const dispatch = useDispatch();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -264,25 +262,47 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   const getMediaList = async () => {
     if (currentUserAddress !== undefined) {
       setLoading(true);
-      const { success, list, error } = await rFetch(
-        `/api/media/list?userAddress=${currentUserAddress}`
-      );
+      if (contractData?.external) {
+        try {
+          const { success, files } = await rFetch(
+            `/api/nft/network/${blockchain}/${address}/${collectionIndex}/files`
+          );
+          if (success && contractData) {
+            const asArray = Object.entries(files);
 
-      if (success && contractData) {
-        const asArray = Object.entries(list);
+            const filtered: any = asArray.filter(
+              ([key, value]: any) =>
+                value?.contract === contractData?.product.contract &&
+                value?.product === collectionIndex
+            );
 
-        const filtered: any = asArray.filter(
-          ([key, value]: any) =>
-            value?.contract === contractData?.product.contract &&
-            value?.product === collectionIndex
+            setMediaUploadedList(Object.fromEntries(filtered));
+            setLoading(false);
+          }
+        } catch (e) {
+          setLoading(false);
+        }
+      } else {
+        const { success, list, error } = await rFetch(
+          `/api/media/list?userAddress=${currentUserAddress}`
         );
 
-        setMediaUploadedList(Object.fromEntries(filtered));
-        setLoading(false);
-      }
+        if (success && contractData) {
+          const asArray = Object.entries(list);
 
-      if (error) {
-        setLoading(false);
+          const filtered: any = asArray.filter(
+            ([key, value]: any) =>
+              value?.contract === contractData?.product.contract &&
+              value?.product === collectionIndex
+          );
+
+          setMediaUploadedList(Object.fromEntries(filtered));
+          setLoading(false);
+        }
+
+        if (error) {
+          setLoading(false);
+        }
       }
     }
   };
