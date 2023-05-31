@@ -241,7 +241,10 @@ const WorkflowSteps: React.FC = () => {
       contractDataResponse.contract.products = productDataResponse.products;
     }
     const offersAndLocksResponse = await rFetch(
-      `/api/v2/offers/locks?contract=${contractDataResponse.contract._id}&product=${collectionIndex}`
+      `/api/v2/offers/locks?contract=${contractDataResponse.contract._id}&product=${collectionIndex}`,
+      undefined,
+      undefined,
+      false
     );
     const response4 = await rFetch(
       `/api/contracts/network/${blockchain}/${address}/products/offers`
