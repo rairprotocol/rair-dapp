@@ -94,7 +94,7 @@ const OfferRow: React.FC<IOfferRow> = ({
     <>
       <tr>
         <th>
-          <button disabled className="btn btn-charcoal rounded-rair">
+          <button disabled className={`btn btn-${primaryColor} rounded-rair"`}>
             <i style={{ color: `${randColor}` }} className="fas fa-key" />
           </button>
         </th>

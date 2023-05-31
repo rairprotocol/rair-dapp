@@ -58,6 +58,7 @@ export type ContractType = {
   title: string;
   blockchain: BlockchainType;
   contractAddress: string;
+  external?: boolean;
 };
 
 export type ContractDataType = ContractInfo | ContractType | undefined;

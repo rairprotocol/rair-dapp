@@ -62,7 +62,7 @@ const LockRow: React.FC<ILockRow> = ({
   return (
     <tr>
       <th>
-        <button disabled className="btn btn-charcoal rounded-rair">
+        <button disabled className={`btn btn-${primaryColor} rounded-rair`}>
           <i style={{ color: `${randColor}` }} className="fas fa-key" />
         </button>
       </th>

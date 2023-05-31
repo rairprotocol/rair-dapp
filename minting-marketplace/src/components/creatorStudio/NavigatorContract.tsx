@@ -20,7 +20,9 @@ const NavigatorContract: React.FC<INavigatorContract> = ({
     <div className="row px-0 mx-0">
       <div className="col-xl-3 col-lg-1 col-md-1 d-none d-md-inline-block" />
       <div
-        className={`col bg-${primaryColor} rounded-lg py-5`}
+        className={`col ${
+          primaryColor === 'rhyno' ? 'bg' : `bg-${primaryColor}`
+        } rounded-lg py-5`}
         style={{
           color: `var(--charcoal${primaryColor === 'rhyno' ? '' : '-40'})`
         }}>

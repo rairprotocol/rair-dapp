@@ -1371,13 +1371,13 @@ table tr th {
 
 /* top-left border-radius */
 
-table tr:first-child th:first-child {
+table thead tr:first-child th:first-child {
   border-top-left-radius: 16px;
 }
 
 /* top-right border-radius */
 
-table tr:first-child th:last-child {
+table thead tr:first-child th:last-child {
   border-top-right-radius: 16px;
 }
 

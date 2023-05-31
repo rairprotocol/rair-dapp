@@ -229,7 +229,7 @@ const Factory = () => {
                   deploying ||
                   diamondFactoryInstance === undefined
                 }
-                className="btn btn-stimorol col-12 rounded-rair"
+                className="btn btn-stimorol col-12 rounded-rair mt-3"
                 onClick={async () => {
                   setDeploying(true);
                   Swal.fire({

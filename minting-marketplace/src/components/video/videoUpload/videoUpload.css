@@ -54,8 +54,13 @@
   color: rgb(46, 125, 50);
 }
 .hidden-table-title {
-  color: lemonchiffon;
+  color: var(--rhyno);
 }
+
+.hidden-table-title.rhyno {
+  color: var(--charcoal);
+}
+
 .hidden-table-button {
   background-color: rgb(46, 125, 50);
   border-radius: 12px;

@@ -64,7 +64,7 @@ body {
   display: block;
   padding: 5px;
   color: var(--rhyno);
-  background-color: var(--charcoal-80);
+  background-color: var(--charcoal-60);
   border-radius: 10px !important;
   content: attr(id);
   position: relative;
@@ -407,7 +407,7 @@ a:hover {
 }
 
 .bg-rhyno {
-  background-color: var(--rhyno) !important;
+  background-color: var(--rhyno-40) !important;
 }
 
 .bg-charcoal {
