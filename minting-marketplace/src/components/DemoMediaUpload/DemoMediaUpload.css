@@ -19,6 +19,16 @@
   cursor: pointer;
 }
 
+.medialist-box .mediaitem-block .animated-block {
+  position: relative;
+}
+
+.medialist-box .mediaitem-block .animated-block img.modal-content-play-image {
+  position: absolute;
+  width: 50px !important;
+  height: 50px;
+}
+
 .medialist-box {
   padding-right: 5rem;
   overflow: hidden;

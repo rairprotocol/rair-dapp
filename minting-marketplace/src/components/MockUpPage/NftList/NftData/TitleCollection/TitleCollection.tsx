@@ -9,6 +9,7 @@ import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import chainData from '../../../../../utils/blockchainData';
 import { rFetch } from '../../../../../utils/rFetch';
+import { ContractType } from '../../../../adminViews/adminView.types';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
 import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
@@ -39,6 +40,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   );
   const [mintPopUp, setMintPopUp] = useState<boolean>(false);
   const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
+  const [contractData, setContractData] = useState<ContractType>();
 
   const location = useLocation();
 
@@ -83,6 +85,18 @@ const TitleCollection: React.FC<ITitleCollection> = ({
     }
   };
 
+  const disableBuyBtn = useCallback(() => {
+    if (offerDataCol) {
+      if (!contractData || !offerDataCol[0]?.offerIndex) {
+        return true;
+      } else if (contractData.diamond) {
+        return !offerDataCol[0].diamondRangeIndex;
+      } else {
+        return !offerDataCol[0].offerPool;
+      }
+    }
+  }, [offerDataCol, contractData]);
+
   const getContractInfo = useCallback(async () => {
     if (blockchain && contract) {
       const response = await rFetch(
@@ -91,6 +105,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
 
       if (response.success) {
         setExternal(response.contract.external);
+        setContractData(response.contract);
       }
     }
   }, [blockchain, contract]);
@@ -141,13 +156,13 @@ const TitleCollection: React.FC<ITitleCollection> = ({
           className={
             isCollectionPathExist
               ? `collection-authenticity-link-share ${
-                  external ? 'external' : ''
+                  external || disableBuyBtn() === true ? 'external' : ''
                 }`
               : 'tokens-share'
           }>
           {isCollectionPathExist && (
             <>
-              {external === false && (
+              {disableBuyBtn() === false && external === false && (
                 <>
                   {width >= 500 ? (
                     <CustomButton
