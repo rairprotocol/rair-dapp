@@ -826,7 +826,7 @@ img.video-locked-modal {
   /* display: flex;
   flex-direction: column;
   align-items: center; */
-  padding: 3rem 6rem;
+  padding: 3rem 120px;
 }
 .list-button-wrapper {
   display: flex;

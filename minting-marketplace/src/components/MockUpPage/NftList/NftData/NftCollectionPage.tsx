@@ -242,7 +242,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               display: 'flex',
               justifyContent: 'center'
             }}>
-            <div className={'list-button-wrapper'}>
+            {/* <div className={'list-button-wrapper'}> */}
+            <div className={'list-button-wrapper-grid-template'}>
               {tokenDataFiltered.length > 0
                 ? tokenDataFiltered.map((token, index) => {
                     if (

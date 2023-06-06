@@ -4,8 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
-import { SvgKey } from './SvgKey';
-
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
@@ -135,7 +133,8 @@ const NftItemForCollectionViewComponent: React.FC<
   return (
     <>
       {offer && (
-        <div className={className}>
+        // <div className="nft-item-collection grid-item">
+        <div className="nft-item-collection grid-item">
           <div
             onClick={() => {
               if (
@@ -147,12 +146,14 @@ const NftItemForCollectionViewComponent: React.FC<
               )
                 RedirectToMockUp();
             }}
-            className="col-12 rounded"
+            className="rounded"
             style={{
               top: 0,
               position: 'relative',
               height: '100%',
-              cursor: 'pointer'
+              width: '100%',
+              cursor: 'pointer',
+              borderRadius: '16px'
             }}>
             {metadata?.animation_url &&
               (isFileUrl === 'gif' ||
@@ -188,9 +189,9 @@ const NftItemForCollectionViewComponent: React.FC<
               isFileUrl === 'webp' ? (
                 <ImageLazy
                   cover={true}
-                  className="col-12 h-100 w-100 zoom-event"
-                  width={'282px'}
-                  height={'282px'}
+                  className="col-12 h-100 w-100 zoom-event zoom-event"
+                  width={'100%'}
+                  height={'100%'}
                   alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
                   src={metadata?.image ? metadata?.image : pict}
                 />
@@ -198,7 +199,9 @@ const NftItemForCollectionViewComponent: React.FC<
                 <div
                   style={{
                     borderRadius: '16px',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    height: '100%',
+                    width: '100%'
                   }}>
                   <ReactPlayer
                     onClick={() => toggleVideoPlay()}
@@ -206,13 +209,14 @@ const NftItemForCollectionViewComponent: React.FC<
                     url={`${checkIPFSanimation(metadata?.animation_url)}`}
                     light={metadata?.image ? metadata?.image : pict}
                     style={{
-                      position: 'absolute',
+                      // position: 'absolute',
                       bottom: 0,
                       borderRadius: '16px',
                       overflow: 'hidden'
                     }}
+                    width={'100%'}
+                    height={'100%'}
                     autoPlay={true}
-                    className="col-12 h-100 w-100"
                     onReady={handlePlaying}
                     playing={playing === indexId}
                     onEnded={() => handlePlaying(null)}
@@ -222,9 +226,9 @@ const NftItemForCollectionViewComponent: React.FC<
             ) : (
               <ImageLazy
                 className="col-12 h-100 w-100 zoom-event"
-                width={'282px'}
-                height={'282px'}
                 cover={true}
+                width={'100%'}
+                height={'100%'}
                 alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
                 src={metadata?.image ? ipfsLink : pict}
               />
@@ -282,7 +286,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 )} */}
               </>
             )}
-            <div className="col description-wrapper pic-description-wrapper wrapper-for-collection-view">
+            <div className="description-wrapper pic-description-wrapper wrapper-for-collection-view">
               <div className="description-title">
                 <div
                   className="description-item-name"

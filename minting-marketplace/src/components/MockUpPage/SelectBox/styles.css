@@ -224,7 +224,7 @@
 .nft-collection {
   position: relative;
   border-radius: 16px;
-  width: 85vw;
+  width: 100%;
 }
 
 .nft-collection-wrapper {
@@ -242,6 +242,13 @@
   position: absolute;
   top: 19px;
   right: 16px;
+}
+
+.nft-collection-icons.expand {
+  left: 16px;
+  top: 23px;
+  z-index: 2;
+  display: none;
 }
 
 .nft-collection-video-etherscan {
@@ -334,7 +341,7 @@ video::-webkit-media-controls-panel {
 }
 
 .main-tab {
-  width: 85vw;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -776,7 +783,8 @@ video {
     padding-left: 4vw;
   }
 
-  #nft-data-page-wrapper {
+  #nft-data-page-wrapper,
+  .wrapper-collection {
     padding: 16px 20px 33px !important;
   }
 
@@ -875,7 +883,8 @@ video {
     height: 0vw !important;
   } */
 
-  #nft-data-page-wrapper {
+  #nft-data-page-wrapper,
+  .wrapper-collection {
     padding: 16px 45px 33px;
   }
 
@@ -1022,7 +1031,12 @@ video {
 }
 
 @media screen and (max-device-width: 725px) {
-  #nft-data-page-wrapper {
+  .nft-collection-icons.expand {
+    display: flex !important;
+  }
+
+  #nft-data-page-wrapper,
+  .wrapper-collection {
     padding: 16px 10px 33px;
     margin-bottom: 0px;
   }
@@ -1363,8 +1377,9 @@ video {
     font-size: 14px !important;
   }
 
-  #nft-data-page-wrapper {
-    width: 85vw;
+  #nft-data-page-wrapper,
+  .wrapper-collection {
+    width: 100%;
     padding: 16px 30px 108px !important;
     margin: 0px;
   }
@@ -1388,14 +1403,15 @@ video {
     margin-top: 0px !important;
   }
 
-  #nft-data-page-wrapper {
-    width: 85vw;
-    padding: 16px 25px 108px !important;
+  #nft-data-page-wrapper,
+  .wrapper-collection {
+    width: 100%;
+    padding: 16px 0.8rem 10px !important;
     margin: 0px;
   }
 
   .nft-data-content {
-    width: 85vw;
+    width: 100%;
   }
 
   .nft-collection-wrapper {
@@ -1560,12 +1576,13 @@ video {
 }
 
 @media screen and (max-device-width: 400px) {
-  #nft-data-page-wrapper {
+  #nft-data-page-wrapper,
+  .wrapper-collection {
     padding: 16px 20px 108px;
   }
 
   .nft-data-content {
-    width: 85vw;
+    width: 100%;
   }
   .nft-collection-wrapper {
     height: 320px;

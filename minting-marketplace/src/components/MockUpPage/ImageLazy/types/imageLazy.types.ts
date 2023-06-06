@@ -11,4 +11,5 @@ export interface IImageLazy {
   height?: string;
   className?: string;
   cover?: boolean;
+  id?: string;
 }

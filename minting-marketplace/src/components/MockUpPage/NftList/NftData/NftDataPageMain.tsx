@@ -15,6 +15,8 @@ import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
+import useWindowDimensions from '../../../../hooks/useWindowDimensions';
+import { ExpandImageIcon } from '../../../../images';
 import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
@@ -50,8 +52,10 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
     (state) => state.nftDataStore
   );
+  const { width } = useWindowDimensions();
   const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
+  const [verticalImage, setVerticalImage] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const navigate = useNavigate();
   const myRef = useRef(null);
@@ -78,6 +82,41 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
 
   const ipfsLink = useIPFSImageLink(selectedData?.image);
 
+  const imageSize = (url) => {
+    const img = document.createElement('img');
+
+    const promise = new Promise((resolve, reject) => {
+      img.onload = () => {
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+
+        resolve({ width, height });
+      };
+
+      img.onerror = reject;
+    });
+
+    img.src = url;
+
+    return promise;
+  };
+
+  const checkSizeImage = useCallback(async () => {
+    if (selectedData?.image) {
+      try {
+        const res: any = await imageSize(selectedData?.image);
+
+        if (res.width > res.height) {
+          setVerticalImage(true);
+        } else {
+          setVerticalImage(false);
+        }
+      } catch (e) {
+        setVerticalImage(false);
+      }
+    }
+  }, [selectedData]);
+
   useEffect(() => {
     checkUrl();
   }, [checkUrl]);
@@ -93,6 +132,10 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const handlePlayerClick = () => {
     setOpenVideoPlayer(true);
   };
+
+  useEffect(() => {
+    checkSizeImage();
+  }, [checkSizeImage]);
 
   useEffect(() => {
     if (!embeddedParams) {
@@ -175,6 +218,22 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
               }`
             }}>
+            {verticalImage && (
+              <div
+                onClick={() => {
+                  document
+                    .getElementById('image-lazy-single')
+                    ?.requestFullscreen();
+                }}
+                className="nft-collection-icons expand">
+                <div
+                  className={`etherscan-icon-token-${
+                    primaryColor === 'rhyno' ? 'light' : 'dark'
+                  } expand`}>
+                  <ExpandImageIcon primaryColor={primaryColor} />
+                </div>
+              </div>
+            )}
             <EtherscanIconComponent
               blockchain={blockchain}
               contract={contract}
@@ -192,7 +251,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               className={
                 selectedData?.animation_url && isFileUrl !== 'gif'
                   ? 'nft-videos-wrapper-container'
-                  : 'nft-images-gifs-wrapper'
+                  : `nft-images-gifs-wrapper ${verticalImage ? 'resize' : ''}`
               }>
               <EtherscanIconComponent
                 blockchain={blockchain}
@@ -245,6 +304,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 )
               ) : (
                 <ImageLazy
+                  id="image-lazy-single"
                   src={
                     selectedData?.image
                       ? ipfsLink
