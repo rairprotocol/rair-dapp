@@ -1,6 +1,6 @@
 /* eslint-disable no-promise-executor-return */
 const express = require('express');
-const fs = require('fs');
+const fs = require('graceful-fs');
 const _ = require('lodash');
 const path = require('path');
 const { nanoid } = require('nanoid');
@@ -199,15 +199,24 @@ module.exports = (context) => {
           await fsPromises.mkdir(`${pathTo}/${folderName}`);
         }
 
-        await Promise.all(_.map(foundTokens, async (item) => {
-          // If the IPFS gateway exists, replace with an universal prefix
-          // This will NOT affect the database, only the JSON files being generated
-          item.metadata.image = item.metadata.image.replace(
-            'https://ipfs.io/ipfs/',
-            'ipfs://',
-          );
-          await fsPromises.writeFile(`${pathTo}/${folderName}/${item.uniqueIndexInContract}.json`, JSON.stringify(item.metadata, null, 2));
-        }));
+        // eslint-disable-next-line no-restricted-syntax
+        for (const token of foundTokens) {
+          // console.info(`Writing file for token #${token.uniqueIndexInContract}`);
+          try {
+            // If the IPFS gateway exists, replace with an universal prefix
+            // This will NOT affect the database, only the JSON files being generated
+            token.metadata.image = token.metadata.image.replace(
+              'https://ipfs.io/ipfs/',
+              'ipfs://',
+            );
+            fs.writeFileSync(
+              `${pathTo}/${folderName}/${token.uniqueIndexInContract}.json`,
+              JSON.stringify(token.metadata, null, 2),
+            );
+          } catch (error) {
+            return next(new AppError(`Error writing file for NFT ${token.uniqueIndexInContract}`));
+          }
+        }
 
         // upload folder to cloud
         CID = await addFolder(`${pathTo}/${folderName}`, folderName);
@@ -267,6 +276,11 @@ module.exports = (context) => {
 
       // removed the temporary folder
       if (!singleMetadataFor) await fsPromises.rm(`${pathTo}/${folderName}`, { recursive: true });
+
+      if (typeof CID !== 'string') {
+        log.error(`Invalid CID detected: ${CID}`);
+        CID = '';
+      }
 
       return res.json(!singleMetadataFor ? {
         success: true,

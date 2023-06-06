@@ -50,6 +50,7 @@
     "express-session": "^1.17.3",
     "follow-redirects": "^1.15.2",
     "foreman": "^3.0.1",
+    "graceful-fs": "^4.2.11",
     "ipfs-http-client": "^49.0.4",
     "joi": "^17.9.2",
     "jsdom": "^19.0.0",
