@@ -7,6 +7,7 @@ const { creditHandlerAbi } = require('../../integrations/smartContracts');
 
 const addressMapping = {
   '0x5': '0xad78463579Ff43bdC917674c64749c35c7E325f5',
+  '0x250': '0x6C9Ca38fFb93756a52f0072B72eA3C6769f87892',
 };
 
 exports.getUserCredits = async (req, res, next) => {
@@ -18,11 +19,10 @@ exports.getUserCredits = async (req, res, next) => {
       erc777Address: tokenAddress,
     });
 
-    if (!foundCredit) {
-      return next(new AppError('No credit information'));
+    let balance = 0;
+    if (foundCredit) {
+      balance = BigInt(foundCredit.amountOnChain) - BigInt(foundCredit.amountConsumed);
     }
-
-    const balance = BigInt(foundCredit.amountOnChain) - BigInt(foundCredit.amountConsumed);
 
     return res.json({ success: true, credits: balance.toString() });
   } catch (err) {

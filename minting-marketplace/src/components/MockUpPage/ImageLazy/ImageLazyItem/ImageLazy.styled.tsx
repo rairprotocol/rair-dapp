@@ -7,7 +7,7 @@ export const Image = styled.img<ILazyImageItem>`
     display: block;
     height: ${(props) => props.height && props.height};
     width: ${(props) => props.width && props.width};
-    position: absolute;
+    // position: absolute;
     bottom: 0;
     border-radius: 16px;
     object-fit: ${(props) => (props.cover ? 'cover' : 'contain')};

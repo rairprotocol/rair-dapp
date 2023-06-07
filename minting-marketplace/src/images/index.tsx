@@ -289,3 +289,43 @@ export const CloseIconMobile = ({ primaryColor }) => {
     </svg>
   );
 };
+
+export const ExpandImageIcon = ({ primaryColor }) => {
+  return (
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M1 14V17C1 17.5304 1.21071 18.0391 1.58579 18.4142C1.96086 18.7893 2.46957 19 3 19H6"
+        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M1 6V3C1 2.46957 1.21071 1.96086 1.58579 1.58579C1.96086 1.21071 2.46957 0.999999 3 0.999999H6"
+        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M19 14V17C19 17.5304 18.7893 18.0391 18.4142 18.4142C18.0391 18.7893 17.5304 19 17 19H14"
+        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M19 6V3C19 2.46957 18.7893 1.96086 18.4142 1.58579C18.0391 1.21071 17.5304 0.999999 17 0.999999H14"
+        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};

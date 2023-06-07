@@ -4,8 +4,17 @@
 
 #nft-data-page-wrapper {
   margin-bottom: 3rem;
-  margin-left: 5vw;
+  /* margin-left: 5vw; */
   margin-top: 1rem;
+  padding: 0 110px;
+}
+
+.list-button-wrapper-grid-template {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  justify-content: space-between;
+  grid-gap: 1.5rem;
 }
 
 .nft-item-collection {
@@ -18,6 +27,29 @@
   transition: all 0.3s ease;
   border-radius: 16px;
 }
+
+.nft-item-collection.grid-item {
+  padding: 0;
+  margin: 0 !important;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  max-height: 100%;
+  min-height: 100%;
+  border: none;
+  background-color: transparent;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-radius: 16px !important;
+  aspect-ratio: 1;
+}
+
+.nft-item-collection.grid-item.vertical {
+  width: 18rem;
+  height: 18rem;
+}
+
 .zoom-event:hover {
   transform: scale(1.4);
   transition: all 0.3s ease;
@@ -54,14 +86,14 @@
 } */
 
 #nft-data-page-wrapper .nft-data-content {
-  max-width: 85vw;
+  width: 100%;
   border-radius: 16px;
   position: relative;
 }
 
 .collection-background {
   height: 18.75rem;
-  max-width: 85vw;
+  width: 100%;
   border-radius: 1rem;
   /* background: var(--bubblegum-hover); */
   display: flex;
@@ -78,9 +110,9 @@
 
 .collection-background img {
   height: 18.75rem;
-  width: 85vw;
   object-fit: cover;
   border-radius: 1rem;
+  width: 100%;
 }
 
 .blockAddBack {
@@ -544,6 +576,32 @@ img.single-token-block-img {
   }
 }
 
+@media screen and (min-width: 901px) {
+  .nft-images-gifs-wrapper.resize {
+    height: 406px;
+    max-width: 70vw;
+    width: 100%;
+    border-radius: 12px;
+  }
+}
+
+/* @media screen and (max-width: 1760px) {
+  .nft-item-collection.grid-item {
+    width: 16rem;
+    height: 16rem;
+  }
+  .list-button-wrapper-grid-template {
+    grid-template-columns: repeat(5, minmax(0px, 1fr));
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  .nft-item-collection.grid-item {
+    width: 14.5rem;
+    height: 14.5rem;
+  }
+} */
+
 @media screen and (max-width: 1500px) {
   .container-search,
   .category-wrapper,
@@ -554,6 +612,10 @@ img.single-token-block-img {
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     padding-inline-start: 0px;
+  }
+
+  .list-button-wrapper-grid-template {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -614,6 +676,16 @@ img.single-token-block-img {
 @media screen and (max-width: 400px) {
   .main-wrapper {
     padding: 40px 10px 0px 0px;
+  }
+}
+
+@media screen and (max-width: 1320px) {
+  #nft-data-page-wrapper {
+    padding: 0 5rem;
+  }
+
+  .wrapper-collection {
+    padding: 3rem 5rem;
   }
 }
 
@@ -714,6 +786,11 @@ img.single-token-block-img {
 
   .list-button-wrapper {
     margin-left: 0vw;
+  }
+
+  .list-button-wrapper-grid-template {
+    grid-template-columns: repeat(3, minmax(0px, 1fr));
+    grid-gap: 1rem;
   }
 }
 
@@ -824,6 +901,14 @@ img.single-token-block-img {
   }
 }
 
+@media screen and (max-width: 900px) and (min-width: 750px) {
+  .nft-images-gifs-wrapper.resize {
+    height: 380px;
+    max-width: 60vw;
+    width: 100%;
+  }
+}
+
 @media screen and (max-width: 900px) {
   .list-button-wrapper {
     margin-left: 0rem;
@@ -913,6 +998,15 @@ img.single-token-block-img {
 @media screen and (max-width: 750px) {
   .form-control.input-styled.my-items-search {
     border-top-right-radius: 0px;
+  }
+
+  .nft-images-gifs-wrapper.resize img,
+  img.single-token-block-img {
+    object-fit: cover;
+  }
+
+  .list-button-wrapper-grid-template {
+    grid-template-columns: repeat(2, minmax(0px, 1fr));
   }
 }
 
@@ -1128,16 +1222,16 @@ p.general-title {
   }
 
   .collection-background {
-    max-width: 90vw;
+    max-width: 100%;
   }
 
   .collection-background img {
-    width: 90vw;
+    width: 100%;
   }
 
   .collection-background.single-token img,
   .collection-background.single-token {
-    width: 85vw !important;
+    width: 100%;
   }
 }
 
@@ -1297,7 +1391,6 @@ p.general-title {
 @media screen and (max-width: 640px) {
   .collection-background {
     height: 15.75rem;
-    margin: 20px 0;
   }
 
   .collection-background img {
@@ -1347,6 +1440,10 @@ p.general-title {
 
   .wrapper-collection .list-button-wrapper {
     justify-content: center !important;
+  }
+
+  .list-button-wrapper-grid-template {
+    grid-gap: 0.8rem;
   }
 }
 

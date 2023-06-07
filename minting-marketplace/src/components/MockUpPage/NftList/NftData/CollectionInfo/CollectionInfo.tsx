@@ -85,7 +85,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     <div className="item-name">
                       <ImageLazy
                         src={
-                          tokenData
+                          tokenData && tokenData[0].metadata
                             ? tokenData[token.range[0]].metadata.image
                             : defaultPhoto
                         }

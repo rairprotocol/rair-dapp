@@ -7,7 +7,7 @@
 .title-collection-wrapper {
   display: flex;
   justify-content: space-between;
-  width: 85vw;
+  width: 100%;
 }
 
 .container-title-collection {
@@ -73,7 +73,7 @@
   line-height: 28px;
   text-align: start;
   word-break: break-word;
-  width: 85vw;
+  width: 100%;
 }
 
 .etherscan-icon:hover {
@@ -100,6 +100,16 @@
 .etherscan-icon-token-light:hover {
   background: var(--stimorol);
   transition: all 0.2s ease;
+}
+
+.etherscan-icon-token-light.expand,
+.etherscan-icon-token-dark.expand {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .etherscan-collection-icon {
@@ -161,7 +171,7 @@
 
 @media screen and (max-width: 1250px) {
   .title-collection-container.minted .title-collection-wrapper {
-    width: 78vw;
+    width: 100%;
   }
 
   .container-title-collection {
@@ -176,7 +186,7 @@
   }
 
   .title-collection-container.minted .title-collection-wrapper {
-    width: 90vw;
+    width: 100%;
   }
 
   .title-collection-container.minted

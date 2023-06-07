@@ -143,7 +143,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                 {someUsersData && someUsersData.nickName
                   ? someUsersData.nickName
                   : userName && userName.length > 25
-                  ? `${userName.substring(0, 25)}...`
+                  ? userName.slice(0, 5) + '....' + userName.slice(length - 4)
                   : userName}
               </h5>
             </div>
