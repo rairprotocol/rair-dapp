@@ -274,14 +274,20 @@ module.exports = () => {
             $sort: {
               title: 1,
             },
-          }, {
-            $skip: skip,
-          }, {
-            $limit: pageSize,
           },
         ];
 
-        let data = await File.aggregate(pipeline);
+        let data = await File.aggregate(
+          [
+            ...pipeline,
+            {
+              $skip: skip,
+            },
+            {
+              $limit: pageSize,
+            },
+          ],
+        );
         const [countResult] = await File.aggregate([...pipeline, { $count: 'totalCount' }]);
 
         const { totalCount } = countResult || 0;
@@ -549,6 +555,7 @@ module.exports = () => {
           }
 
           log.error('An error has occurred encoding the file', e);
+          return next(new AppError('There was an error encoding your file.', 500));
         }
       } else {
         return next(new AppError('File not provided.', 400));
