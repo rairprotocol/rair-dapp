@@ -189,9 +189,9 @@ a:hover {
   color: white;
 }
 
-.main-block-app {
-  /* margin-top: 40px; */
-}
+/* .main-block-app {
+  margin-top: 40px;
+} */
 
 .general-title {
   text-align: left;
@@ -604,11 +604,10 @@ a:hover {
 }
 
 .modal-content-wrapper-for-video {
-  width: 75rem;
-  height: 26.75rem;
   display: flex;
   justify-content: space-between;
 }
+
 .modal-content-play-image {
   position: absolute;
   top: 32%;
@@ -631,7 +630,7 @@ a:hover {
   justify-content: flex-end;
   align-items: center;
   align-content: center;
-  z-index: 3;
+  z-index: 5;
 }
 /* .modal-content-video-lock::after { */
 /* pointer-events: none; 
@@ -654,7 +653,9 @@ a:hover {
 .modal-content-video {
   width: 48rem;
   position: relative;
+  /* margin-right: 1rem;  */
 }
+
 .modal-content-video-thumbnail {
   border-radius: 1rem;
   width: inherit;
@@ -665,7 +666,6 @@ a:hover {
 img.video-locked-modal {
   filter: blur(2px);
   opacity: 0.75;
-  mix-blend-mode: overlay;
 }
 
 .modal-content-video-choice {
@@ -711,13 +711,14 @@ img.video-locked-modal {
   height: 7.5rem;
   margin-bottom: 2rem;
   border-radius: 1rem;
+  object-fit: cover;
 }
 .more-info-wrapper {
   width: 1200px;
 }
 .more-info-text {
   padding: 1rem 0;
-  color: white;
+  color: var(--charcoal-60);
   display: inline-block;
   font-size: larger;
 }
@@ -1187,10 +1188,10 @@ select.form-control.rounded-rair:disabled {
   border-radius: 16px;
 }
 
-.col-6.text-left.main {
-  /* margin-left: 11vw; */
-  /* margin-bottom: 24px; */
-}
+/* .col-6.text-left.main {
+  margin-left: 11vw;
+  margin-bottom: 24px;
+} */
 
 .main-wrapper {
   padding: 70px 120px 0 120px;
@@ -1464,6 +1465,7 @@ select.form-control.rounded-rair:disabled {
 .fa-lock::before {
   color: white;
 }
+
 /* Modal Item */
 
 .iDawfU.active .modal-content {
@@ -1488,6 +1490,13 @@ select.form-control.rounded-rair:disabled {
   line-height: 28px;
   letter-spacing: 0px;
   text-align: left;
+}
+
+.modal-content-close-btn-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding-bottom: 0.35rem;
 }
 
 .modal-item-token {
@@ -1567,10 +1576,6 @@ select.form-control.rounded-rair:disabled {
   margin-right: 15px;
   padding-left: 10px;
 }
-
-/* .modal-item-footer-wrapper:last-child{
-justify-content: flex-end;
-} */
 
 .modal-item-footer-view-token {
   box-sizing: border-box;
@@ -1902,21 +1907,18 @@ button.metamask-on-boarding:focus {
 }
 
 @media screen and (max-width: 1000px) and (min-width: 901px) {
-  .wrapper-collection {
-    /* margin-left: 3vw; */
+  /* .wrapper-collection {
+    margin-left: 3vw;
   }
+
   i.fas-custom {
-    /* left: 3vw !important; */
-  }
+    left: 3vw !important;
+  } */
 }
 
 @media screen and (max-width: 1077px) and (min-width: 1001px) {
-  /* #nft-data-page-wrapper, */
   .wrapper-collection {
     max-width: 100%;
-  }
-  i.fas-custom {
-    /* left: 3vw !important; */
   }
 }
 
@@ -1942,15 +1944,16 @@ button.metamask-on-boarding:focus {
 @media screen and (max-width: 1260px) and (min-width: 850px) {
   .ReactModal__Content--after-open {
     margin-right: auto !important;
-    height: 71%;
+    margin-top: 5rem;
+    height: fit-content;
     place-content: space-between !important;
     flex-wrap: nowrap !important;
   }
+
   .modal-content-wrapper-for-video {
-    width: auto;
     height: auto;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
     align-content: center;
@@ -1961,15 +1964,35 @@ button.metamask-on-boarding:focus {
     height: 432px;
   }
 
+  .modal-content-video-thumbnail {
+    margin-right: 0;
+  }
+
+  .modal-content-video {
+    margin-bottom: 1rem;
+  }
+
   .more-info-wrapper {
     width: 46.875rem;
   }
+
   .modal-content-block-btns {
-    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
   }
+
   .modal-content-close-btn-wrapper {
-    align-self: end;
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    padding-bottom: 0.05rem;
   }
+
+  .modal-content-video {
+    padding: 1rem 0 1rem 0;
+  }
+
   .modal-content-video-choice {
     display: flex;
     flex-direction: column;
@@ -1983,168 +2006,11 @@ button.metamask-on-boarding:focus {
     left: 38%;
     max-width: 100%;
     transform: scale(0.9);
-  }
-  .modal-content-play-image:hover {
-    transform: scale(1.1);
-  }
-}
-
-@media screen and (max-width: 849px) and (min-width: 660px) {
-  .ReactModal__Content--after-open {
-    margin-right: auto !important;
-    width: 90%;
-    height: 71%;
-    place-content: space-between !important;
-    flex-wrap: nowrap !important;
-  }
-  .modal-content-wrapper-for-video {
-    width: 95%;
-    height: auto;
-    display: flex;
-    flex-direction: column-reverse;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-content: center;
-    align-items: center;
-  }
-
-  .modal-content-wrapper-for-video .modal-content-video-thumbnail {
-    height: 315px;
-  }
-
-  .more-info-wrapper {
-    width: 33.875rem;
-  }
-  .modal-content-video {
-    width: 35rem;
-  }
-  .modal-content-block-btns {
-    margin-bottom: 2rem;
-  }
-  .modal-content-close-btn-wrapper {
-    align-self: end;
-  }
-  .modal-content-video-choice {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: stretch;
-    width: -webkit-fill-available;
-  }
-  .modal-content-video-lock {
-    transform: scale(4.5);
-  }
-  .modal-content-play-image {
-    position: absolute;
-    top: 20%;
-    left: 33%;
-    max-width: 100%;
-    transform: scale(0.7);
-  }
-  .modal-content-play-image:hover {
-    transform: scale(0.9);
-  }
-}
-@media screen and (max-width: 659px) and (min-width: 250px) {
-  .ReactModal__Content--after-open {
-    margin-right: auto !important;
-    width: 90%;
-    height: 71%;
-    place-content: space-between !important;
-    flex-wrap: nowrap !important;
-  }
-
-  .modal-content-wrapper-for-video .modal-content-video-thumbnail {
-    height: 198px;
-  }
-
-  .modal-content-wrapper-for-video {
-    width: 95%;
-    height: auto;
-    display: flex;
-    flex-direction: column-reverse;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-content: center;
-    align-items: center;
   }
   .modal-content-block-buy img {
-    margin-bottom: 1rem;
+    display: none;
   }
-  .modal-content-video-lock {
-    transform: scale(4);
-  }
-  .more-info-wrapper {
-    width: 21.875rem;
-  }
-  .modal-content-video {
-    width: 22rem;
-  }
-  .modal-content-block-btns {
-    margin-bottom: 1rem;
-  }
-  .modal-content-close-btn-wrapper {
-    align-self: end;
-  }
-  .modal-content-video-choice {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: stretch;
-    width: -webkit-fill-available;
-  }
-  .modal-content-play-image {
-    position: absolute;
-    top: 0;
-    left: 23%;
-    max-width: 100%;
-    transform: scale(0.5);
-  }
-  .modal-content-play-image:hover {
-    transform: scale(0.6);
-  }
-}
 
-@media screen and (max-width: 1260px) and (min-width: 850px) {
-  .ReactModal__Content--after-open {
-    margin-right: auto !important;
-    height: 71%;
-    place-content: space-between !important;
-    flex-wrap: nowrap !important;
-  }
-  .modal-content-wrapper-for-video {
-    width: auto;
-    height: auto;
-    display: flex;
-    flex-direction: column-reverse;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-content: center;
-    align-items: center;
-  }
-  .more-info-wrapper {
-    width: 46.875rem;
-  }
-  .modal-content-block-btns {
-    margin-bottom: 2rem;
-  }
-  .modal-content-close-btn-wrapper {
-    align-self: end;
-  }
-  .modal-content-video-choice {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: stretch;
-    width: -webkit-fill-available;
-  }
-  .modal-content-play-image {
-    position: absolute;
-    top: 28%;
-    left: 38%;
-    max-width: 100%;
-    transform: scale(0.9);
-  }
   .modal-content-play-image:hover {
     transform: scale(1.1);
   }
@@ -2153,33 +2019,49 @@ button.metamask-on-boarding:focus {
 @media screen and (max-width: 849px) and (min-width: 660px) {
   .ReactModal__Content--after-open {
     margin-right: auto !important;
-    width: 90%;
-    height: 71%;
+    margin-top: 4rem;
+    width: 95%;
+    /* height: 45%; */
     place-content: space-between !important;
     flex-wrap: nowrap !important;
   }
+
   .modal-content-wrapper-for-video {
-    width: 95%;
     height: auto;
     display: flex;
-    flex-direction: column-reverse;
     justify-content: center;
     flex-wrap: wrap;
     align-content: center;
     align-items: center;
+    flex-direction: column;
+    width: 95%;
+  }
+
+  .modal-content-block-buy img {
+    display: none;
   }
   .more-info-wrapper {
     width: 33.875rem;
   }
   .modal-content-video {
     width: 35rem;
+    margin-bottom: 1rem;
   }
+
   .modal-content-block-btns {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    justify-content: flex-end;
+    flex-direction: row;
   }
-  .modal-content-close-btn-wrapper {
-    align-self: end;
+
+  .more-info-wrapper {
+    width: 33.875rem;
   }
+
+  .modal-content-video {
+    width: 100%;
+  }
+
   .modal-content-video-choice {
     display: flex;
     flex-direction: column;
@@ -2187,9 +2069,11 @@ button.metamask-on-boarding:focus {
     align-items: stretch;
     width: -webkit-fill-available;
   }
+
   .modal-content-video-lock {
     transform: scale(4.5);
   }
+
   .modal-content-play-image {
     position: absolute;
     top: 20%;
@@ -2197,28 +2081,34 @@ button.metamask-on-boarding:focus {
     max-width: 100%;
     transform: scale(0.7);
   }
+
   .modal-content-play-image:hover {
     transform: scale(0.9);
   }
+
+  .modal-content-close-btn-wrapper {
+    padding-bottom: 0.75rem;
+  }
 }
+
 @media screen and (max-width: 659px) and (min-width: 410px) {
   .ReactModal__Content--after-open {
     margin-right: auto !important;
     width: 90%;
-    height: 71%;
     place-content: space-between !important;
     flex-wrap: nowrap !important;
   }
+
   .modal-content-wrapper-for-video {
     width: 95%;
     height: auto;
     display: flex;
-    flex-direction: column-reverse;
     justify-content: center;
     flex-wrap: wrap;
     align-content: center;
     align-items: center;
   }
+
   .modal-content-block-buy img {
     margin-bottom: 1rem;
   }
@@ -2233,9 +2123,6 @@ button.metamask-on-boarding:focus {
   }
   .modal-content-block-btns {
     margin-bottom: 1rem;
-  }
-  .modal-content-close-btn-wrapper {
-    align-self: end;
   }
   .modal-content-video-choice {
     display: flex;
@@ -2255,42 +2142,50 @@ button.metamask-on-boarding:focus {
     transform: scale(0.6);
   }
 }
-@media screen and (max-width: 409px) and (min-width: 250px) {
+
+@media screen and (max-width: 659px) and (min-width: 250px) {
   .ReactModal__Content--after-open {
     margin-right: auto !important;
     width: 90%;
-    height: 71%;
     place-content: space-between !important;
     flex-wrap: nowrap !important;
   }
+
+  .modal-content-wrapper-for-video .modal-content-video-thumbnail {
+    height: 450px;
+  }
+
   .modal-content-wrapper-for-video {
     width: 95%;
     height: auto;
     display: flex;
-    flex-direction: column-reverse;
     justify-content: center;
     flex-wrap: wrap;
     align-content: center;
     align-items: center;
   }
+
   .modal-content-block-buy img {
-    margin-bottom: 1rem;
+    display: none;
   }
+
   .modal-content-video-lock {
-    transform: scale(2);
+    transform: scale(4);
   }
+
   .more-info-wrapper {
-    width: 12.875rem;
+    width: 21.875rem;
   }
+
   .modal-content-video {
-    width: 13rem;
+    width: 22rem;
   }
+
   .modal-content-block-btns {
     margin-bottom: 1rem;
+    flex-direction: column;
   }
-  .modal-content-close-btn-wrapper {
-    align-self: end;
-  }
+
   .modal-content-video-choice {
     display: flex;
     flex-direction: column;
@@ -2298,22 +2193,79 @@ button.metamask-on-boarding:focus {
     align-items: stretch;
     width: -webkit-fill-available;
   }
+
   .modal-content-play-image {
     position: absolute;
-    top: -20px;
-    left: 13%;
+    top: 9px;
+    left: 29%;
     max-width: 100%;
     transform: scale(0.5);
   }
+
+  .modal-content-play-image:hover {
+    transform: scale(0.6);
+  }
+}
+
+@media screen and (max-width: 409px) and (min-width: 200px) {
+  .ReactModal__Content--after-open {
+    margin-right: auto !important;
+    width: 90%;
+    /* height: 55%; */
+    place-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+  .modal-content-wrapper-for-video {
+    width: 95%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+  }
+
+  .modal-content-video-lock {
+    transform: scale(2);
+  }
+  .more-info-wrapper {
+    width: 12.875rem;
+  }
+
+  .modal-content-video {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .modal-content-block-btns {
+    margin-bottom: 1rem;
+  }
+
+  .modal-content-video-choice {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: stretch;
+    width: -webkit-fill-available;
+  }
+
+  .modal-content-play-image {
+    position: absolute;
+    top: 8px;
+    left: 20%;
+    max-width: 100%;
+    transform: scale(0.5);
+  }
+
   .modal-content-play-image:hover {
     transform: scale(0.6);
   }
 }
 
 @media screen and (max-width: 1200px) and (min-width: 1078px) {
-  i.fas-custom {
-    /* left: 3vw !important; */
-  }
+  /* i.fas-custom {
+    left: 3vw !important;
+  } */
   /* #nft-data-page-wrapper {
     max-width: 100%;
     margin-left: 0px;
@@ -2321,9 +2273,9 @@ button.metamask-on-boarding:focus {
 }
 
 @media screen and (max-width: 1500px) and (min-width: 1201px) {
-  i.fas-custom {
-    /* left: 3vw !important; */
-  }
+  /* i.fas-custom {
+    left: 3vw !important;
+  } */
   /* #nft-data-page-wrapper {
     max-width: 1200;
   } */
@@ -2484,10 +2436,6 @@ body::-webkit-scrollbar-thumb:active {
     margin-left: 5vw;
   }
 
-  .col-6.text-left.main {
-    /* margin-left: 24vw; */
-  }
-
   .col-6.text-left.main h1 {
     text-align: center !important;
   }
@@ -2575,12 +2523,14 @@ body::-webkit-scrollbar-thumb:active {
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
+
 .vjs-tech {
   width: -webkit-fill-available !important;
 }
-.modal-content-video div {
-  /* width: auto !important; */
-}
+
+/* .modal-content-video div {
+  width: auto !important;
+} */
 
 .main {
   max-width: 1200px;

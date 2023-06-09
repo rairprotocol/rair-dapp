@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as ethers from 'ethers';
-import Swal from 'sweetalert2';
 
 import { IErc777Data, IERC777Manager } from './creatorMode.types';
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 
 const ERC777Manager: React.FC<IERC777Manager> = () => {
   const [erc777Data, setERC777Data] = useState<IErc777Data>();
@@ -19,6 +19,9 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const refreshData = useCallback(async () => {
     setRefetchingFlag(true);
@@ -78,17 +81,23 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
             <button
               disabled={targetValue <= 0 || targetAddress === ''}
               onClick={async () => {
-                Swal.fire('Sending tokens', 'Please wait', 'info');
+                if (!erc777Instance) {
+                  return;
+                }
+                reactSwal.fire({
+                  title: 'Sending tokens',
+                  html: 'Please wait',
+                  icon: 'info',
+                  showConfirmButton: true
+                });
                 if (
-                  await metamaskCall(
-                    erc777Instance?.send(
-                      targetAddress,
-                      targetValue,
-                      ethers.utils.toUtf8Bytes('')
-                    )
-                  )
+                  await web3TxHandler(erc777Instance, 'send', [
+                    targetAddress,
+                    targetValue,
+                    ethers.utils.toUtf8Bytes('')
+                  ])
                 ) {
-                  Swal.fire('Success', 'Tokens sent', 'success');
+                  reactSwal.fire('Success', 'Tokens sent', 'success');
                 }
               }}
               className="btn btn-royal-ice">
@@ -114,7 +123,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
                     }
                   })
                   .then((boolean) =>
-                    Swal.fire(
+                    reactSwal.fire(
                       boolean
                         ? 'ERC777 RAIR Token added'
                         : 'Failed to Add ERC777 RAIR Token'

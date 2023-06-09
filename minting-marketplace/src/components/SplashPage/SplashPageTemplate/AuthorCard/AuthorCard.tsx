@@ -68,7 +68,6 @@ const AuthorCard: React.FC<IAuthorCard> = ({
           ) : (
             <DefaultButtonBlock
               splashData={splashData}
-              connectUserData={connectUserData}
               whatSplashPage={whatSplashPage}
             />
           )}

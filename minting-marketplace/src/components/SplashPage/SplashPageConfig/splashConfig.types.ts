@@ -10,7 +10,6 @@ export type TSplashPageCardWrapper = TStyledSplashPageCardWrapper & {
 
 export interface ISplashPageWrapper {
   splashData?: TSplashDataType;
-  loginDone?: boolean;
   connectUserData?: () => Promise<void>;
   setIsSplashPage?: (isSplashPage: boolean) => void;
   children: React.ReactNode;

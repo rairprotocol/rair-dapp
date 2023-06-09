@@ -70,9 +70,11 @@ const NftListComponent: React.FC<INftListComponent> = ({
   return (
     <div className={'nft-items-wrapper'}>
       <div
-        className={`list-button-wrapper ${
-          globalModalState?.isOpen ? 'with-modal' : ''
-        }`}>
+        className={`${
+          width > 701
+            ? 'list-button-wrapper'
+            : 'list-button-wrapper-grid-template'
+        } ${globalModalState?.isOpen ? 'with-modal' : ''}`}>
         {filteredData && filteredData.length > 0 ? (
           filteredData.map((contractData, index) => {
             if (contractData.cover !== 'none') {

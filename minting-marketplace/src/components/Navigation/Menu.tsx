@@ -1,22 +1,19 @@
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { ethers, utils } from 'ethers';
 
 import { TUserResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
-import { getTokenComplete } from '../../ducks/auth/actions';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { setUserAddress } from '../../ducks/contracts/actions';
-import { UserType } from '../../ducks/users/users.types';
+import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
+import useConnectUser from '../../hooks/useConnectUser';
 import { BellIcon, CloseIconMobile, MenuIcon } from '../../images';
 import {
   SocialBox,
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { rFetch } from '../../utils/rFetch';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -33,10 +30,7 @@ import './Menu.css';
 
 interface IMenuNavigation {
   connectUserData: () => void;
-  startedLogin: boolean;
   renderBtnConnect: boolean;
-  loginDone: boolean;
-  setLoginDone: (arg: boolean) => void;
   currentUserAddress: string | undefined;
   programmaticProvider:
     | ethers.Wallet
@@ -49,11 +43,7 @@ interface IMenuNavigation {
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
-  connectUserData,
-  startedLogin,
   renderBtnConnect,
-  loginDone,
-  setLoginDone,
   currentUserAddress,
   programmaticProvider,
   showAlert,
@@ -64,12 +54,13 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [openProfile, setOpenProfile] = useState<boolean>(false);
+  const { connectUserData } = useConnectUser();
   // const [loading, setLoading] = useState<boolean>(false);
   const [activeSearch, setActiveSearch] = useState(false);
   const [messageAlert, setMessageAlert] = useState<string | null>(null);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -107,17 +98,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const toggleOpenProfile = useCallback(() => {
     setOpenProfile((prev) => !prev);
   }, [setOpenProfile]);
-
-  const logout = async () => {
-    const { success } = await rFetch('/api/v2/auth/logout');
-    if (success) {
-      dispatch(getTokenComplete(null));
-      dispatch(setUserAddress(undefined));
-      navigate('/');
-      setLoginDone(false);
-      toggleMenu();
-    }
-  };
 
   const getInfoFromUser = useCallback(async () => {
     // find user
@@ -179,7 +159,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
             primaryColor={primaryColor}
             click={click}
             toggleMenu={toggleMenu}
-            logout={logout}
             activeSearch={activeSearch}
             messageAlert={messageAlert}
             setMessageAlert={setMessageAlert}
@@ -189,18 +168,18 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
         )}
         <RightSideMenu>
           <div>
-            {!loginDone ? (
+            {!loggedIn ? (
               <div>
                 {renderBtnConnect ? (
                   <OnboardingButton />
                 ) : (
                   <button
                     disabled={
-                      !window.ethereum && !programmaticProvider && !startedLogin
+                      !window.ethereum && !programmaticProvider && !loginProcess
                     }
                     className={`btn btn-${primaryColor} btn-connect-wallet-mobile`}
-                    onClick={connectUserData}>
-                    {startedLogin ? 'Please wait...' : 'Connect'}
+                    onClick={() => connectUserData()}>
+                    {loginProcess ? 'Please wait...' : 'Connect'}
                   </button>
                 )}
               </div>

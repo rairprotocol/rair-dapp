@@ -31,8 +31,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   userName,
   someUsersData,
   selectedData,
-  offerDataCol,
-  connectUserData
+  offerDataCol
 }) => {
   const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
   const primaryColor = useSelector<RootState, ColorChoice>(
@@ -220,7 +219,6 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                     blockchain={blockchain}
                     offerDataCol={offerDataCol}
                     primaryColor={primaryColor}
-                    connectUserData={connectUserData}
                     contractAddress={contract}
                     setPurchaseStatus={setPurchaseStatus}
                   />

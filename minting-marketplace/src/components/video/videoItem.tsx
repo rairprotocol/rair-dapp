@@ -3,8 +3,8 @@ import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Contract } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import Swal from 'sweetalert2';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { IVideoItem, TVideoItemContractData } from './video.types';
@@ -14,12 +14,13 @@ import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
-import { SvgKey } from '../MockUpPage/NftList/SvgKey';
+// import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';
@@ -45,9 +46,12 @@ const VideoItem: React.FC<IVideoItem> = ({
     (store) => store.colorStore.primaryColor
   );
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const customStyles = {
     overlay: {
-      zIndex: '1'
+      zIndex: '4'
     },
     content: {
       background: primaryColor === 'rhyno' ? '#F2F2F2' : '#383637',
@@ -86,24 +90,28 @@ const VideoItem: React.FC<IVideoItem> = ({
     selectedToken,
     price
   }) => {
-    if (!contractData && !diamondMarketplaceInstance && !minterInstance) {
+    if (!contractData || !diamondMarketplaceInstance || !minterInstance) {
       return;
     }
-    Swal.fire({
+    reactSwal.fire({
       title: 'Buying token',
       html: 'Awaiting transaction completion',
       icon: 'info',
       showConfirmButton: false
     });
-    let marketplaceCall, marketplaceArguments;
+    let marketplaceContract: Contract,
+      marketplaceMethod: string,
+      marketplaceArguments: any[];
     if (contractData?.diamond) {
-      marketplaceCall = diamondMarketplaceInstance?.buyMintingOffer;
+      marketplaceContract = diamondMarketplaceInstance;
+      marketplaceMethod = 'buyMintingOffer';
       marketplaceArguments = [
         offerIndex, // Offer Index
         selectedToken // Token Index
       ];
     } else {
-      marketplaceCall = minterInstance?.buyToken;
+      marketplaceContract = minterInstance;
+      marketplaceMethod = 'buyToken';
       marketplaceArguments = [
         offerPool, // Catalog Index
         offerIndex, // Range Index
@@ -114,13 +122,22 @@ const VideoItem: React.FC<IVideoItem> = ({
       value: price
     });
     if (
-      await metamaskCall(
-        marketplaceCall(...marketplaceArguments),
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
-        handleVideoIsUnlocked
+      await web3TxHandler(
+        marketplaceContract,
+        marketplaceMethod,
+        marketplaceArguments,
+        {
+          failureMessage:
+            'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
+          callback: handleVideoIsUnlocked
+        }
       )
     ) {
-      Swal.fire('Success', 'Now, you are the owner of this token', 'success');
+      reactSwal.fire(
+        'Success',
+        'Now, you are the owner of this token',
+        'success'
+      );
     }
   };
 
@@ -306,7 +323,19 @@ const VideoItem: React.FC<IVideoItem> = ({
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="Video Modal">
-            <div className="modal-content-wrapper-for-video">
+            <div className="modal-content-close-btn-wrapper">
+              <ModalContentCloseBtn
+                primaryColor={primaryColor}
+                onClick={closeModal}>
+                <i className="fas fa-times" style={{ lineHeight: 'inherit' }} />
+              </ModalContentCloseBtn>
+            </div>
+            <div
+              className={
+                mediaList[item]?.isUnlocked === false && !owned
+                  ? 'modal-content-wrapper-for-video modal-content-wrapper-for-video-locked'
+                  : 'modal-content-wrapper-for-video modal-content-wrapper-for-video-unlocked'
+              }>
               <div className="modal-content-video">
                 {mediaList[item]?.isUnlocked === false && !owned ? (
                   <>
@@ -348,63 +377,43 @@ const VideoItem: React.FC<IVideoItem> = ({
                 )}
               </div>
               <div className="modal-content-video-choice">
-                <div className="modal-content-close-btn-wrapper">
-                  {/* <button
-                    className="modal-content-close-btn"
-                    onClick={closeModal}>
-                    <i className="fas fa-times"></i>
-                  </button> */}
-                  <ModalContentCloseBtn
-                    primaryColor={primaryColor}
-                    onClick={closeModal}>
-                    <i
-                      className="fas fa-times"
-                      style={{ lineHeight: 'inherit' }}
-                    />
-                  </ModalContentCloseBtn>
-                </div>
                 <div className="modal-content-block-btns">
-                  {mediaList[item]?.isUnlocked === false && (
-                    <div className="modal-content-block-buy">
-                      <img
-                        src={contractData?.tokens?.at(0)?.metadata?.image}
-                        alt="NFT token powered by Rair tech"
+                  <div className="modal-content-block-buy">
+                    <img
+                      src={contractData?.tokens?.at(0)?.metadata?.image}
+                      alt="NFT token powered by Rair tech"
+                    />
+                    {mediaList[item]?.isUnlocked === false && (
+                      <CustomButton
+                        text={'Upgrade'}
+                        width={'208px'}
+                        height={'48px'}
+                        textColor={
+                          primaryColor === 'rhyno' ? '#222021' : 'white'
+                        }
+                        onClick={openHelp}
+                        margin={'0px 0px 0.35rem 0.5rem'}
+                        custom={true}
+                        loading={loading}
+                        background={
+                          'linear-gradient(96.34deg,#725bdb,#805fda 10.31%,#8c63da 20.63%,#9867d9 30.94%,#a46bd9 41.25%,#af6fd8 51.56%,#af6fd8 0,#bb73d7 61.25%,#c776d7 70.94%,#d27ad6 80.62%,#dd7ed6 90.31%,#e882d5)'
+                        }
                       />
-                      {contractData && contractData.external ? (
-                        <></>
-                      ) : (
-                        <CustomButton
-                          text={'Buy now'}
-                          width={'232px'}
-                          height={'48px'}
-                          textColor={
-                            primaryColor === 'rhyno' ? '#222021' : 'white'
-                          }
-                          onClick={openHelp}
-                          margin={'0 45px 37px'}
-                          custom={true}
-                          loading={loading}
-                        />
-                      )}
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <CustomButton
-                    text={'View more NFTs'}
+                    text={'View Collection'}
                     width={'208px'}
                     height={'48px'}
                     textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
                     onClick={goToCollectionView}
-                    margin={'0 45px 18px'}
+                    margin={'0px 0px 0.35rem 0.5rem'}
                     custom={false}
-                  />
-                  <CustomButton
-                    text={'More unlockables'}
-                    width={'208px'}
-                    height={'48px'}
-                    textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
-                    onClick={goToUnlockView}
-                    margin={'0'}
-                    custom={false}
+                    background={`var(--${
+                      primaryColor === 'charcoal'
+                        ? 'charcoal-80'
+                        : 'charcoal-40'
+                    })`}
                   />
                 </div>
               </div>
@@ -412,9 +421,8 @@ const VideoItem: React.FC<IVideoItem> = ({
             {modalHelp && mediaList[item]?.isUnlocked === false && (
               <div className="more-info-wrapper">
                 <span className="more-info-text">
-                  These NFTs unlock this video
+                  These NFTs unlock this video:
                 </span>
-                {/* <button onClick={() => sortRevers()}>Reverse displaying</button> */}
                 <div className="more-info">
                   {availableToken.length > 0 ? (
                     availableToken.map((token) => {
@@ -437,6 +445,11 @@ const VideoItem: React.FC<IVideoItem> = ({
                               width={'auto'}
                               height={'45px'}
                               textColor={'white'}
+                              background={`var(--${
+                                primaryColor === 'charcoal'
+                                  ? 'charcoal-80'
+                                  : 'charcoal-40'
+                              })`}
                               onClick={() => {
                                 buy({
                                   offerIndex: token.offer.offerIndex,

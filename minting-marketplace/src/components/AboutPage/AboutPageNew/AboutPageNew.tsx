@@ -10,6 +10,7 @@ import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { InitialState } from '../../../ducks/seo/reducers';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import useConnectUser from '../../../hooks/useConnectUser';
 import { metaMaskIcon, RairLogoBlue } from '../../../images';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { rairAdvisorsTeam, teamAboutRair } from '../../MainPage/AboutUsTeam';
@@ -28,16 +29,15 @@ import StreamsAbout from './StreamsAbout/StreamsAbout';
 
 import './AboutPageNew.css';
 
-const AboutPageNew: React.FC<IAboutPageNew> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
+const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  const connectUserData = useConnectUser();
 
   useEffect(() => {
     dispatch(setInfoSEO(InitialState));
@@ -88,7 +88,6 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
         <MetaTags seoMetaTags={seo} />
         <div className="home-about--page">
           <MainBlock
-            connectUserData={connectUserData}
             RairLogo={RairLogoBlue}
             primaryColor={primaryColor}
             Metamask={metaMaskIcon}

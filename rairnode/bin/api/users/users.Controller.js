@@ -1,7 +1,7 @@
 const express = require('express');
-const { validation, requireUserSession } = require('../middleware');
+const { validation, requireUserSession } = require('../../middleware');
 const usersService = require('./users.Service');
-const upload = require('../Multer/Config');
+const upload = require('../../Multer/Config');
 
 const router = express.Router();
 

@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 //import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
+import { RootState } from '../../ducks';
+import { TUsersInitialState } from '../../ducks/users/users.types';
+import useConnectUser from '../../hooks/useConnectUser';
 //import { RootState } from '../../ducks';
 //import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
@@ -12,18 +16,20 @@ import './iframeStyles.css';
 import '../../App.css';
 
 const IframePage = ({
-  loginDone,
   setIsIframePage,
   renderBtnConnect,
-  programmaticProvider,
-  startedLogin,
-  connectUserData
+  programmaticProvider
 }) => {
   useEffect(() => {
     setIsIframePage(true);
   }, [setIsIframePage]);
 
+  const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
+
   const params = useParams<VideoPlayerParams>();
+  const { connectUserData } = useConnectUser();
 
   const { videoId } = params;
 
@@ -39,7 +45,7 @@ const IframePage = ({
     <div
       className="iframe-wrapper"
       style={{
-        backgroundImage: `${loginDone ? 'none' : `url(${previewImg})`}`,
+        backgroundImage: `${loggedIn ? 'none' : `url(${previewImg})`}`,
         backgroundRepeat: ' no-repeat',
         backgroundSize: 'cover'
       }}>
@@ -49,17 +55,17 @@ const IframePage = ({
         ) : (
           <button
             disabled={
-              !window.ethereum && !programmaticProvider && !startedLogin
+              !window.ethereum && !programmaticProvider && !loginProcess
             }
             className={`btn btn-${'charcoal'} btn-connect-wallet-mobile iframe-btn`}
-            onClick={connectUserData}>
-            {startedLogin
+            onClick={() => connectUserData()}>
+            {loginProcess
               ? 'Please wait...'
               : 'Connect and Sign (x2) to Unlock'}
           </button>
         )}
       </div>
-      {loginDone && <VideoPlayer />}
+      {loggedIn && <VideoPlayer />}
     </div>
   );
 };

@@ -69,6 +69,7 @@ const chainData: TChainData = {
     addChainData: {
       chainId: '0x1',
       chainName: 'Mainnet (Ethereum)',
+      rpcUrls: ['https://eth.llamarpc.com'],
       blockExplorerUrls: ['https://etherscan.io/']
     }
   },
@@ -81,6 +82,7 @@ const chainData: TChainData = {
     addChainData: {
       chainId: '0x5',
       chainName: 'Goerli (Ethereum)',
+      rpcUrls: ['https://ethereum-goerli.publicnode.com'],
       blockExplorerUrls: ['https://goerli.etherscan.io/']
     }
   }

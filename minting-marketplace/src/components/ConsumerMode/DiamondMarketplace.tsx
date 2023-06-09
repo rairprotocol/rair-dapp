@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { BigNumber, constants, utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import {
   IBatchTokenSelector,
@@ -14,9 +13,9 @@ import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import blockchainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import { reactSwal } from '../../utils/reactSwal';
 import InputField from '../common/InputField';
 import BuyTokenModalContent from '../marketplace/BuyTokenModalContent';
 
@@ -142,6 +141,8 @@ const DiamondMarketplace = () => {
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
     );
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const store = useStore();
 
@@ -189,27 +190,52 @@ const DiamondMarketplace = () => {
     nextToken: string,
     price: BigNumber
   ) => {
-    setTransactionInProgress(true);
-    Swal.fire({
+    //setTransactionInProgress(true);
+    reactSwal.fire({
       title: `Buying token #${nextToken}!`,
-      html: 'Please wait...',
+      html: 'Awaiting confirmation...',
       icon: 'info',
       showConfirmButton: false
     });
+    if (!diamondMarketplaceInstance) {
+      return;
+    }
+    const signedTransaction = await web3TxHandler(
+      diamondMarketplaceInstance,
+      'buyMintingOffer',
+      [offerIndex, nextToken, { value: price.toString() }]
+    );
+    if (!signedTransaction) {
+      return;
+    }
+    reactSwal.fire({
+      title: `Buying token #${nextToken}!`,
+      html: 'Sending transaction...',
+      icon: 'info',
+      showConfirmButton: false
+    });
+    console.info(signedTransaction);
+    /*
+    const response =
+      await diamondMarketplaceInstance.provider.waitForTransaction(
+        `0x${signedTransaction.split('==')[0]}`,
+        2
+      );
+    console.info(response);
     if (
-      await metamaskCall(
-        diamondMarketplaceInstance?.buyMintingOffer(offerIndex, nextToken, {
+      await web3TxHandler(
+        diamondMarketplaceInstance,'buyMintingOffer',[offerIndex, nextToken, {
           value: price
-        })
+        }]
       )
     ) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success',
         html: 'Token bought',
         icon: 'success',
         showConfirmButton: true
       });
-    }
+    }*/
     setTransactionInProgress(false);
   };
 
@@ -219,26 +245,27 @@ const DiamondMarketplace = () => {
     addresses: string[],
     price: BigNumber
   ) => {
+    if (!diamondMarketplaceInstance) {
+      return;
+    }
     setTransactionInProgress(true);
-    Swal.fire({
+    reactSwal.fire({
       title: `Buying ${tokens.length} tokens!`,
       html: 'Please wait...',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        diamondMarketplaceInstance?.buyMintingOfferBatch(
-          offerIndex,
-          tokens,
-          addresses,
-          {
-            value: price.mul(tokens.length)
-          }
-        )
-      )
+      await web3TxHandler(diamondMarketplaceInstance, 'buyMintingOfferBatch', [
+        offerIndex,
+        tokens,
+        addresses,
+        {
+          value: price.mul(tokens.length)
+        }
+      ])
     ) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success',
         html: `${addresses.length} tokens bought`,
         icon: 'success',
@@ -263,10 +290,13 @@ const DiamondMarketplace = () => {
         <button
           className="btn btn-stimorol"
           onClick={async () => {
-            await metamaskCall(
-              diamondMarketplaceInstance?.updateTreasuryAddress(
-                '0x3fD4268B03cce553f180E77dfC14fde00271F9B7'
-              )
+            if (!diamondMarketplaceInstance) {
+              return;
+            }
+            await web3TxHandler(
+              diamondMarketplaceInstance,
+              'updateTreasuryAddress',
+              ['0x3fD4268B03cce553f180E77dfC14fde00271F9B7']
             );
           }}>
           Set Treasury Address

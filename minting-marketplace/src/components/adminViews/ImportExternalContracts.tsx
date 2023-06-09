@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { utils } from 'ethers';
 import { isAddress } from 'ethers/lib/utils';
-import Swal from 'sweetalert2';
 
 import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../ducks/users/users.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
-import { metamaskCall, validateInteger } from '../../utils/metamaskUtils';
+import { validateInteger } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
 import InputField from '../common/InputField';
@@ -21,9 +23,12 @@ const ImportExternalContract = () => {
   const [owner, setOwner] = useState<string>('');
   const [sendingData, setSendingData] = useState<boolean>(false);
   const [limit, setLimit] = useState<number>(0);
-  const [currentTokens, setCurrentTokens] = useState<number>();
-  const [totalTokens, setTotalTokens] = useState<number>();
+  const [currentTokens /*, setCurrentTokens*/] = useState<number>();
+  const [totalTokens /*, setTotalTokens */] = useState<number>();
   const [sessionId, setSessionId] = useState('');
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const blockchainOptions = Object.keys(chainData).map((blockchainId) => {
     return {
@@ -31,6 +36,10 @@ const ImportExternalContract = () => {
       value: blockchainId
     };
   });
+
+  const { loginType } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const { contractCreator, currentChain } = useSelector<
     RootState,
@@ -71,7 +80,7 @@ const ImportExternalContract = () => {
       return;
     }
     setSendingData(true);
-    Swal.fire('Importing contract', 'Please wait', 'info');
+    reactSwal.fire('Importing contract', 'Please wait', 'info');
 
     const { success, result } = await rFetch(`/api/contracts/import/`, {
       method: 'POST',
@@ -88,7 +97,7 @@ const ImportExternalContract = () => {
     });
     setSendingData(false);
     if (success) {
-      Swal.fire(
+      reactSwal.fire(
         'Success',
         `Imported ${result.numberOfTokensAdded} tokens from ${result.contract.title}`,
         'success'
@@ -101,6 +110,14 @@ const ImportExternalContract = () => {
 
   const tryToGetCreator = async () => {
     if (currentChain !== selectedBlockchain) {
+      if (loginType === 'oreid') {
+        reactSwal.fire(
+          'Error',
+          `Please login to ${chainData[selectedBlockchain].name} using OreId`,
+          'error'
+        );
+        return;
+      }
       web3Switch(selectedBlockchain as BlockchainType);
       return;
     }
@@ -109,12 +126,12 @@ const ImportExternalContract = () => {
     }
     const instance = await contractCreator(selectedContract, diamondFactoryAbi);
     if (instance) {
-      const owner = await metamaskCall(
-        instance.owner(),
-        'Failed to get creator, the contract might not use Ownable standard'
-      );
+      const owner = await web3TxHandler(instance, 'owner', [], {
+        failureMessage:
+          'Failed to get creator, the contract might not use Ownable standard'
+      });
       if (owner) {
-        setOwner(owner);
+        setOwner(owner.toString());
       } else {
         setOwner('');
       }

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { ethers } from 'ethers';
-import Swal from 'sweetalert2';
 
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useConnectUser from '../../hooks/useConnectUser';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { metaMaskIcon } from '../../images';
 import blockchainData from '../../utils/blockchainData';
 import { getRandomValues } from '../../utils/getRandomValues';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import { reactSwal } from '../../utils/reactSwal';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
 
@@ -20,41 +20,6 @@ import {
   IPurchaseTokenButtonProps,
   IRangeDataType
 } from './commonTypes/PurchaseTokenTypes.types';
-
-const queryRangeDataFromBlockchain = async (
-  marketplaceInstance: ethers.Contract | undefined,
-  offerIndex: string[] | undefined,
-  diamond: boolean | undefined
-): Promise<undefined | IRangeDataType> => {
-  let minterOfferPool;
-  if (!diamond) {
-    minterOfferPool = await metamaskCall(
-      marketplaceInstance?.getOfferInfo(offerIndex?.[0])
-    );
-  }
-  const minterOffer = await metamaskCall(
-    marketplaceInstance?.[diamond ? 'getOfferInfo' : 'getOfferRangeInfo'](
-      ...(offerIndex || [])
-    )
-  );
-
-  if (minterOffer) {
-    return {
-      start: diamond
-        ? minterOffer.rangeData.rangeStart.toString()
-        : minterOffer.tokenStart.toString(),
-      end: diamond
-        ? minterOffer.rangeData.rangeEnd.toString()
-        : minterOffer.tokenEnd.toString(),
-      product: diamond
-        ? minterOffer.productIndex.toString()
-        : minterOfferPool.productIndex.toString(),
-      price: diamond
-        ? minterOffer.rangeData.rangePrice.toString()
-        : minterOffer.price.toString()
-    };
-  }
-};
 
 const queryRangeDataFromDatabase = async (
   contractInstance: ethers.Contract | undefined,
@@ -112,36 +77,6 @@ const findNextToken = async (
   return await contractInstance?.getNextSequentialIndex(product, start, end);
 };
 
-const purchaseFunction = async (
-  minterInstance: ethers.Contract | undefined,
-  contractAddress: ethers.Contract | undefined,
-  offerIndex: string[] | undefined,
-  nextToken: number,
-  price: string,
-  diamond = false
-) => {
-  if (!minterInstance) {
-    Swal.fire({
-      title: 'An error has ocurred',
-      html: 'Please try again later',
-      icon: 'info'
-    });
-    return;
-  }
-  const args: any[] = [offerIndex?.[0]];
-  if (!diamond) {
-    args.push(offerIndex?.[1]);
-  }
-  args.push(nextToken);
-  args.push({
-    value: price
-  });
-  return await metamaskCall(
-    minterInstance[diamond ? 'buyMintingOffer' : 'buyToken'](...args),
-    'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
-  );
-};
-
 const Agreements: React.FC<IAgreementsPropsType> = ({
   presaleMessage,
   contractAddress,
@@ -153,12 +88,15 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   blockchainOnly,
   databaseOnly,
   collection,
-  setPurchaseStatus
+  setPurchaseStatus,
+  web3TxHandler
 }) => {
   const [privacyPolicy, setPrivacyPolicy] = useState<boolean>(false);
   const [termsOfUse, setTermsOfUse] = useState<boolean>(false);
   const [buyingToken, setBuyingToken] = useState<boolean>(false);
   const [buttonMessage, setButtonMessage] = useState<string>('');
+
+  const reactSwal = useSwal();
 
   const {
     currentChain,
@@ -172,6 +110,81 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   const { textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  const queryRangeDataFromBlockchain = async (
+    marketplaceInstance: ethers.Contract | undefined,
+    offerIndex: string[] | undefined,
+    diamond: boolean | undefined
+  ): Promise<undefined | IRangeDataType> => {
+    let minterOfferPool;
+    if (!marketplaceInstance) {
+      return;
+    }
+    if (!diamond) {
+      minterOfferPool = await web3TxHandler(
+        marketplaceInstance,
+        'getOfferInfo',
+        [offerIndex?.[0]]
+      );
+    }
+    const minterOffer = await web3TxHandler(
+      marketplaceInstance,
+      diamond ? 'getOfferInfo' : 'getOfferRangeInfo',
+      offerIndex || []
+    );
+
+    if (minterOffer) {
+      return {
+        start: diamond
+          ? minterOffer.rangeData.rangeStart.toString()
+          : minterOffer.tokenStart.toString(),
+        end: diamond
+          ? minterOffer.rangeData.rangeEnd.toString()
+          : minterOffer.tokenEnd.toString(),
+        product: diamond
+          ? minterOffer.productIndex.toString()
+          : minterOfferPool.productIndex.toString(),
+        price: diamond
+          ? minterOffer.rangeData.rangePrice.toString()
+          : minterOffer.price.toString()
+      };
+    }
+  };
+
+  const purchaseFunction = async (
+    minterInstance: ethers.Contract | undefined,
+    contractAddress: ethers.Contract | undefined,
+    offerIndex: string[] | undefined,
+    nextToken: number,
+    price: string,
+    diamond = false
+  ) => {
+    if (!minterInstance) {
+      reactSwal.fire({
+        title: 'An error has ocurred',
+        html: 'Please try again later',
+        icon: 'info'
+      });
+      return;
+    }
+    const args: any[] = [offerIndex?.[0]];
+    if (!diamond) {
+      args.push(offerIndex?.[1]);
+    }
+    args.push(nextToken);
+    args.push({
+      value: price
+    });
+    return await web3TxHandler(
+      minterInstance,
+      diamond ? 'buyMintingOffer' : 'buyToken',
+      args,
+      {
+        failureMessage:
+          'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+      }
+    );
+  };
 
   return (
     <div className={`text-${textColor}`}>
@@ -307,7 +320,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             }
 
             if (!rangeData) {
-              Swal.fire('Error', 'An error has ocurred.', 'error');
+              reactSwal.fire('Error', 'An error has ocurred.', 'error');
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
@@ -333,7 +346,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
-              Swal.fire('Error', 'Insufficient funds!', 'error');
+              reactSwal.fire('Error', 'Insufficient funds!', 'error');
               return;
             }
 
@@ -385,7 +398,6 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   contractAddress,
   requiredBlockchain,
   offerIndex,
-  connectUserData,
   presaleMessage,
   diamond,
   customSuccessAction,
@@ -394,10 +406,14 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   collection,
   setPurchaseStatus
 }) => {
+  const { connectUserData } = useConnectUser();
   const store = useStore();
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  const { web3TxHandler } = useWeb3Tx();
+  const reactSwal = useSwal();
 
   const fireAgreementModal = () => {
     if (collection === true) {
@@ -416,7 +432,8 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
                 blockchainOnly,
                 databaseOnly,
                 collection,
-                setPurchaseStatus
+                setPurchaseStatus,
+                web3TxHandler
               }}
             />
           </Provider>
@@ -443,7 +460,8 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
                 presaleMessage,
                 customSuccessAction,
                 blockchainOnly,
-                databaseOnly
+                databaseOnly,
+                web3TxHandler
               }}
             />
           </Provider>

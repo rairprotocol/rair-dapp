@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
 import {
   TContractsNetworkContract,
@@ -17,8 +16,9 @@ import { diamondFactoryAbi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 
@@ -42,6 +42,8 @@ const ContractDetails = () => {
   const [data, setData] = useState<TContractsNetworkContract | TSetData>();
 
   const navigate = useNavigate();
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const getContractData = useCallback(async () => {
     if (!address) {
@@ -174,25 +176,27 @@ const ContractDetails = () => {
                         // Code for suresh goes here
                       }
                     } else {
-                      Swal.fire({
+                      const instance = await contractCreator?.(
+                        data?.contractAddress,
+                        isDiamond ? diamondFactoryAbi : erc721Abi
+                      );
+                      if (!instance) {
+                        return;
+                      }
+                      reactSwal.fire({
                         title: 'Creating collection!',
                         html: 'Please wait...',
                         icon: 'info',
                         showConfirmButton: false
                       });
                       setCreatingCollection(true);
-                      const instance = await contractCreator?.(
-                        data?.contractAddress,
-                        isDiamond ? diamondFactoryAbi : erc721Abi
-                      );
-                      const success = await metamaskCall(
-                        instance?.createProduct(
-                          collectionName,
-                          collectionLength
-                        )
+                      const success = await web3TxHandler(
+                        instance,
+                        'createProduct',
+                        [collectionName, collectionLength]
                       );
                       if (success) {
-                        Swal.fire({
+                        reactSwal.fire({
                           title: 'Success!',
                           html: 'Collection created',
                           icon: 'success',

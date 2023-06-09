@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
 import MarketplaceOfferConfig from './MarketplaceOfferConfig';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
-import { metamaskCall } from '../../../utils/metamaskUtils';
 import {
   TDiamondMinterMarketplace,
   TMarketplaceOfferConfigArrayItem
@@ -31,6 +31,8 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
     ContractsInitialType
   >((store) => store.contractStore);
   const navigate = useNavigate();
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const [offerData, setOfferData] = useState<
     TMarketplaceOfferConfigArrayItem[]
@@ -83,8 +85,11 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
   }, [setStepNumber, stepNumber]);
 
   const setCustomFees = async () => {
+    if (!diamondMarketplaceInstance) {
+      return;
+    }
     setSendingData(true);
-    Swal.fire({
+    reactSwal.fire({
       title: 'Publishing offers on the marketplace',
       html: 'Please wait...',
       icon: 'info',
@@ -92,19 +97,17 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
     });
     const filteredOffers = offerData?.filter((item) => item.selected);
     if (
-      await metamaskCall(
-        diamondMarketplaceInstance?.addMintingOfferBatch(
-          contractData?.contractAddress,
-          filteredOffers?.map((item) => item.diamondRangeIndex),
-          filteredOffers?.map((item) =>
-            item.customSplits?.filter((split) => split.editable)
-          ),
-          filteredOffers?.map((item) => item.marketData.visible),
-          process.env.REACT_APP_NODE_ADDRESS
-        )
-      )
+      await web3TxHandler(diamondMarketplaceInstance, 'addMintingOfferBatch', [
+        contractData?.contractAddress,
+        filteredOffers?.map((item) => item.diamondRangeIndex),
+        filteredOffers?.map((item) =>
+          item.customSplits?.filter((split) => split.editable)
+        ),
+        filteredOffers?.map((item) => item.marketData.visible),
+        process.env.REACT_APP_NODE_ADDRESS
+      ])
     ) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success',
         html: 'Offer(s) added to the marketplace',
         icon: 'success',
@@ -116,22 +119,23 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
   };
 
   const giveMinterRole = async () => {
+    if (!contractData?.instance) {
+      return;
+    }
     setSendingData(true);
-    Swal.fire({
+    reactSwal.fire({
       title: 'Granting minter role',
       html: 'Please wait...',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        contractData?.instance.grantRole(
-          await contractData.instance.MINTER(),
-          diamondMarketplaceInstance?.address
-        )
-      )
+      await web3TxHandler(contractData.instance, 'grantRole', [
+        await web3TxHandler(contractData.instance, 'MINTER', []),
+        diamondMarketplaceInstance?.address
+      ])
     ) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success',
         html: 'Now you can add offers into the marketplace',
         icon: 'success',

@@ -25,16 +25,21 @@ class MongoConnectionManager {
   }
 
   async connectToMongoose({
-    connectionString
+    connectionString,
   }) {
-    const mongooseConnection = await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then((c) => {
+    const mongooseConnection = await mongoose.connect(
+      connectionString,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+    ).then((connection) => {
       if (process.env.PRODUCTION === 'true') {
         log.info('DB Connected!');
       } else {
         log.info('Development DB Connected!');
       }
-      return c;
+      return connection;
     })
     .catch((e) => {
       log.error('DB Not Connected!');

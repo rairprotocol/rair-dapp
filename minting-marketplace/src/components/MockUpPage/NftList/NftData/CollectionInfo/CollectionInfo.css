@@ -11,7 +11,7 @@
 }
 
 .contianer-collection-info {
-  max-width: 85vw;
+  max-width: 100%;
   border-radius: 16px;
   overflow: hidden;
   background: #383637;
@@ -127,6 +127,18 @@
 
 .wrapper-collection-info.mint .collection-mint-button button:hover {
   background: var(--stimorol-hover);
+}
+
+@media screen and (max-width: 1024px) {
+  .wrapper-collection-info.mint .collection-mint-button button {
+    padding: 5px 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  .wrapper-collection-info.mint .collection-mint-button {
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 1000px) {

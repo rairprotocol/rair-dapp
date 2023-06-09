@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ethers, utils } from 'ethers';
-import Swal from 'sweetalert2';
+import { BigNumber, ethers, utils } from 'ethers';
 
 import BatchRow from './BatchRow';
 import {
@@ -12,8 +11,9 @@ import {
 import { minterAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import csvParser from '../../utils/csvParser';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import InputField from '../common/InputField';
 
 const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
@@ -42,6 +42,9 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
     (state) => state.contractStore
   );
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const rowsLimit = 100;
 
   useEffect(() => {
@@ -51,22 +54,23 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
   }, [minterAddress, contractCreator]);
 
   const batchMint = async (data: TBatchMintDataType) => {
+    if (!minterInstance) {
+      return;
+    }
     const addresses = data.map((i) => i['Public Address']);
     const tokens = data.map((i) => i['NFTID']);
     if (
-      await metamaskCall(
-        minterInstance?.buyTokenBatch(
-          offerIndex,
-          rangeIndex,
-          tokens,
-          addresses,
-          {
-            value: +price * tokens.length
-          }
-        )
-      )
+      await web3TxHandler(minterInstance, 'buyTokenBatch', [
+        offerIndex,
+        rangeIndex,
+        tokens,
+        addresses,
+        {
+          value: BigNumber.from(price).mul(tokens.length).toString()
+        }
+      ])
     ) {
-      Swal.close();
+      reactSwal.close();
     }
   };
 
@@ -150,17 +154,18 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                     price
                   );
                 } else {
-                  result = await metamaskCall(
-                    minterInstance?.buyToken(
-                      offerIndex,
-                      rangeIndex,
-                      tokenIndex,
-                      { value: price }
-                    )
-                  );
+                  if (!minterInstance) {
+                    return;
+                  }
+                  result = await web3TxHandler(minterInstance, 'buyToken', [
+                    offerIndex,
+                    rangeIndex,
+                    tokenIndex,
+                    { value: price }
+                  ]);
                 }
                 if (result === true) {
-                  Swal.close();
+                  reactSwal.close();
                 }
               }}
               className="btn btn-stimorol col-8">

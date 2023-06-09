@@ -27,6 +27,7 @@ import {
   setTokenDataStart
 } from '../../../../ducks/nftData/action';
 import { UserType } from '../../../../ducks/users/users.types';
+import useConnectUser from '../../../../hooks/useConnectUser';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 import {
   INftDataCommonLinkComponent,
@@ -34,10 +35,7 @@ import {
 } from '../nftList.types';
 
 const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
-  embeddedParams,
-  userData,
-  loginDone,
-  connectUserData
+  embeddedParams
 }) => {
   const [collectionName, setCollectionName] = useState<string>();
   const [tokenDataFiltered, setTokenDataFiltered] = useState<TTokenData[]>([]);
@@ -277,7 +275,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   if (mode === 'collection') {
     return (
       <NftCollectionPage
-        userData={userData}
         embeddedParams={embeddedParams}
         blockchain={blockchain}
         offerPrice={offerPrice}
@@ -294,7 +291,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         offerDataCol={offerDataInfo}
         offerAllData={ownerInfo}
         collectionName={collectionName}
-        connectUserData={connectUserData}
         showTokensRef={showTokensRef}
         setRenderOffers={setRenderOffers}
       />
@@ -315,7 +311,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   } else if (mode === 'tokens') {
     return (
       <NftDataPageMain
-        userData={userData}
         embeddedParams={embeddedParams}
         blockchain={blockchain}
         contract={contract}
@@ -334,7 +329,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         product={product}
         ownerInfo={ownerInfo}
         offerDataInfo={offerDataInfo}
-        loginDone={loginDone}
         handleTokenBoughtButton={handleTokenBoughtButton}
       />
     );

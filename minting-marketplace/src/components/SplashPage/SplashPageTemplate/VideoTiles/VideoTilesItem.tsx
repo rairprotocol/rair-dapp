@@ -5,8 +5,8 @@ import Swal from 'sweetalert2';
 
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import useSwal from '../../../../hooks/useSwal';
 import { metaMaskIcon } from '../../../../images';
-import { reactSwal } from '../../../../utils/reactSwal';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
@@ -49,6 +49,7 @@ const VideoTilesItem = ({
   backgroundImage
 }) => {
   const store = useStore();
+  const reactSwal = useSwal();
 
   const openRAIRvideo = () => {
     reactSwal.fire({

@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 
 import { teamGreymanArray } from './AboutUsTeam';
 
@@ -14,9 +13,11 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 /* importing images*/
 import { metaMaskIcon } from '../../../images';
-import { metamaskCall } from '../../../utils/metamaskUtils';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import PurchaseTokenButton from '../../common/PurchaseToken';
@@ -97,7 +98,6 @@ const customStylesForVideo = {
 Modal.setAppElement('#root');
 
 const GreymanSplashPage: React.FC<ISplashPageProps> = ({
-  loginDone,
   connectUserData,
   setIsSplashPage
 }) => {
@@ -108,6 +108,9 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   const [soldCopies, setSoldCopies] = useState<string>();
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [processDone, setProcessDone] = useState<boolean>(false);
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const [active, setActive] = useState<TSplashPageIsActive>({
     policy: false,
@@ -121,6 +124,10 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   );
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState<boolean>(false);
+
+  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   useEffect(() => {
     dispatch(
@@ -192,18 +199,20 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
       return;
     }
     if (!diamondMarketplaceInstance) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'An error has ocurred',
         html: 'Please try again later',
         icon: 'info'
       });
       return;
     }
-    const greymanOffer = await metamaskCall(
-      diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace)
+    const greymanOffer = await web3TxHandler(
+      diamondMarketplaceInstance,
+      'getOfferInfo',
+      [offerIndexInMarketplace]
     );
     if (!greymanOffer) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'An error has ocurred',
         html: 'Please try again later',
         icon: 'info'
@@ -215,40 +224,50 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
         GraymanSplashPageTESTNET,
         diamondFactoryAbi
       );
-      const nextToken = await metamaskCall(
-        instance?.getNextSequentialIndex(
+      if (!instance) {
+        return;
+      }
+      const nextToken = await web3TxHandler(
+        instance,
+        'getNextSequentialIndex',
+        [
           greymanOffer.productIndex,
           greymanOffer.rangeData.rangeStart,
           greymanOffer.rangeData.rangeEnd
-        )
+        ]
       );
       if (!nextToken) {
-        Swal.fire({
+        reactSwal.fire({
           title: 'An error has ocurred',
           html: 'Please try again later',
           icon: 'info'
         });
         return;
       }
-      Swal.fire({
+      reactSwal.fire({
         title: 'Please wait...',
         html: `Buying Greyman #${nextToken.toString()}`,
         icon: 'info',
         showConfirmButton: false
       });
       if (
-        await metamaskCall(
-          diamondMarketplaceInstance.buyMintingOffer(
+        await web3TxHandler(
+          diamondMarketplaceInstance,
+          'buyMintingOffer',
+          [
             offerIndexInMarketplace,
             nextToken,
             {
               value: greymanOffer.rangeData.rangePrice
             }
-          ),
-          'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+          ],
+          {
+            failureMessage:
+              'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+          }
         )
       ) {
-        Swal.fire({
+        reactSwal.fire({
           imageUrl: GreyMan,
           imageHeight: 'auto',
           imageWidth: '65%',
@@ -265,7 +284,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   };
 
   const showVideoToLogginedUsers = () => {
-    if (loginDone) {
+    if (loggedIn) {
       return (
         <>
           <ImageLazy
@@ -355,8 +374,10 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
         window.ethereum &&
         currentChain === GreymanChainId
       ) {
-        const responseAllProduct = await metamaskCall(
-          diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace)
+        const responseAllProduct = await web3TxHandler(
+          diamondMarketplaceInstance,
+          'getOfferInfo',
+          [offerIndexInMarketplace]
         );
         if (responseAllProduct) {
           const tokensInRange = responseAllProduct.rangeData.rangeEnd
@@ -484,7 +505,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                       ),
                       diamond: true,
                       customSuccessAction: (nextToken) => {
-                        Swal.fire({
+                        reactSwal.fire({
                           imageUrl: GreyMan,
                           imageHeight: 'auto',
                           imageWidth: '65%',

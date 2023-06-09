@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber } from 'ethers';
-//import InputSelect from '../../common/InputSelect';
-import Swal from 'sweetalert2';
 
+//import InputSelect from '../../common/InputSelect';
 // import { TTokenData } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { metamaskCall } from '../../../utils/metamaskUtils';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 //import { UsersContractsType } from '../../adminViews/adminView.types';
 import { rFetch } from '../../../utils/rFetch';
 import { web3Switch } from '../../../utils/switchBlockchain';
@@ -91,6 +91,9 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
     (store) => store.contractStore
   );
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const lastTokenInProduct = contractData?.product?.copies || 0;
   const [blockchainOperationInProgress, setBlockchainOperationInProgress] =
     useState<boolean>(false);
@@ -163,7 +166,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
   };
 
   const pinAll = async () => {
-    Swal.fire({
+    reactSwal.fire({
       title: `Pinning Metadata`,
       html: `Please wait...`,
       icon: 'info',
@@ -182,7 +185,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
       })
     });
 
-    Swal.fire(
+    reactSwal.fire(
       'Success',
       `${pinAllResponse?.totalCount} tokens pinned on CID ${pinAllResponse?.CID}`,
       'success'
@@ -221,7 +224,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
         showConfirmButton: false
       });
       if (
-        await metamaskCall(
+        await web3TxHandler(
           contractData.instance.setUniqueURIBatch(
             page.map((item) =>
               BigNumber.from(contractData.product.firstTokenIndex).add(
@@ -269,7 +272,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               if (!checkCurrentBlockchain()) {
                 return;
               }
-              Swal.fire({
+              reactSwal.fire({
                 title: 'Updating Contract Wide URI',
                 html: 'Updating the URI for all tokens on the range without unique metadata',
                 icon: 'info',
@@ -277,26 +280,27 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               });
               setBlockchainOperationInProgress(true);
 
-              let result = await metamaskCall(
-                contractData.instance.setBaseURI(
-                  contractWideMetadata,
-                  appendTokenForContract
-                )
+              let result = await web3TxHandler(
+                contractData.instance,
+                'setBaseURI',
+                [contractWideMetadata, appendTokenForContract]
               );
               if (!result) {
-                Swal.fire({
+                reactSwal.fire({
                   title: '(Legacy) Updating Contract Wide URI',
                   html: 'The token index will not be appended at the end of the URI',
                   icon: 'info',
                   showConfirmButton: false
                 });
-                result = await metamaskCall(
-                  contractData.instance.setBaseURI(contractWideMetadata)
+                result = await web3TxHandler(
+                  contractData.instance,
+                  'setBaseURI',
+                  [contractWideMetadata]
                 );
               }
 
               if (result) {
-                Swal.fire('Success', 'Contract URI updated', 'success');
+                reactSwal.fire('Success', 'Contract URI updated', 'success');
               }
               setBlockchainOperationInProgress(false);
             }}
@@ -337,7 +341,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               if (!checkCurrentBlockchain()) {
                 return;
               }
-              Swal.fire({
+              reactSwal.fire({
                 title: 'Updating Collection Wide URI',
                 html: 'Updating the URI for all tokens on the collection without unique or range metadata',
                 icon: 'info',
@@ -345,33 +349,29 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               });
               setBlockchainOperationInProgress(true);
               let result: any;
-              const operation =
-                contractData.instance[
-                  contractData.diamond ? 'setCollectionURI' : 'setProductURI'
-                ];
-              result = await metamaskCall(
-                operation(
-                  collectionIndex,
-                  collectionWideMetadata,
-                  appendTokenForCollection
-                )
-              );
+              const operation = contractData.diamond
+                ? 'setCollectionURI'
+                : 'setProductURI';
+              result = await web3TxHandler(contractData.instance, operation, [
+                collectionIndex,
+                collectionWideMetadata,
+                appendTokenForCollection
+              ]);
               if (!result && !contractData.diamond) {
-                Swal.fire({
+                reactSwal.fire({
                   title: '(Legacy) Updating Product Wide URI',
                   html: 'The token index will not be appended at the end of the URI',
                   icon: 'info',
                   showConfirmButton: false
                 });
-                result = await metamaskCall(
-                  contractData.instance.setProductURI(
-                    collectionIndex,
-                    collectionWideMetadata
-                  )
+                result = await web3TxHandler(
+                  contractData.instance,
+                  'setProductURI',
+                  [collectionIndex, collectionWideMetadata]
                 );
               }
               if (result) {
-                Swal.fire('Success', 'Collection URI updated', 'success');
+                reactSwal.fire('Success', 'Collection URI updated', 'success');
               }
               setBlockchainOperationInProgress(false);
             }}
@@ -428,7 +428,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               setBlockchainOperationInProgress(true);
 
               if (
-                await metamaskCall(
+                await web3TxHandler(
                   contractData.instance.setRangeURI(
                     selectedRange,
                     rangeWideMetadata,
@@ -468,7 +468,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
             if (!checkCurrentBlockchain()) {
               return;
             }
-            Swal.fire({
+            reactSwal.fire({
               title: 'Updating general metadata extension',
               html: 'This will affect every contract and collection wide metadata',
               icon: 'info',
@@ -477,12 +477,16 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
             setBlockchainOperationInProgress(true);
 
             if (
-              await metamaskCall(
-                contractData.instance.setMetadataExtension(metadataExtension),
-                'This feature might not be implemented yet!'
+              await web3TxHandler(
+                contractData.instance,
+                'setMetadataExtension',
+                [metadataExtension],
+                {
+                  failureMessage: 'This feature might not be implemented yet!'
+                }
               )
             ) {
-              Swal.fire('Success', 'General extension updated', 'success');
+              reactSwal.fire('Success', 'General extension updated', 'success');
             }
             setBlockchainOperationInProgress(false);
           }}
@@ -554,7 +558,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               if (!checkCurrentBlockchain() || uniqueURIArray.length <= 0) {
                 return;
               }
-              Swal.fire({
+              reactSwal.fire({
                 title: 'Updating URI',
                 html: `Updating the URI of ${uniqueURIArray.length} NFT(s)`,
                 icon: 'info',
@@ -563,19 +567,24 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               setBlockchainOperationInProgress(true);
 
               if (
-                await metamaskCall(
-                  contractData.instance.setUniqueURIBatch(
+                await web3TxHandler(
+                  contractData.instance,
+                  'setUniqueURIBatch',
+                  [
                     uniqueURIArray.map((item) =>
                       BigNumber.from(contractData.product.firstTokenIndex).add(
                         item.tokenId
                       )
                     ),
                     uniqueURIArray.map((item) => item.metadataURI)
-                  ),
-                  "Older versions of the RAIR contract don't have batch metadata update functionality!"
+                  ],
+                  {
+                    failureMessage:
+                      "Older versions of the RAIR contract don't have batch metadata update functionality!"
+                  }
                 )
               ) {
-                Swal.fire('Success', 'Token URIs updated', 'success');
+                reactSwal.fire('Success', 'Token URIs updated', 'success');
               }
               setBlockchainOperationInProgress(false);
             }}
@@ -608,7 +617,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                 if (!checkCurrentBlockchain()) {
                   return;
                 }
-                Swal.fire({
+                reactSwal.fire({
                   title: 'Updating Contract URI',
                   html: 'Updating the URI visible to OpenSea',
                   icon: 'info',
@@ -617,11 +626,11 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                 setBlockchainOperationInProgress(true);
 
                 if (
-                  await metamaskCall(
-                    contractData.instance.setContractURI(openSeaURI)
-                  )
+                  await web3TxHandler(contractData.instance, 'setContractURI', [
+                    openSeaURI
+                  ])
                 ) {
-                  Swal.fire('Success', 'Contract URI updated', 'success');
+                  reactSwal.fire('Success', 'Contract URI updated', 'success');
                 }
                 setBlockchainOperationInProgress(false);
               }}

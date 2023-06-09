@@ -1,14 +1,15 @@
 import React, { useState /*useCallback, useEffect*/ } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 
 import { diamondFactoryAbi } from '../../../../contracts/index';
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import useConnectUser from '../../../../hooks/useConnectUser';
+import useSwal from '../../../../hooks/useSwal';
+import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 // import { rFetch } from "../../../../utils/rFetch";
 // import { erc721Abi } from "../../../../contracts";
-import { metamaskCall } from '../../../../utils/metamaskUtils';
 import { web3Switch } from '../../../../utils/switchBlockchain';
 import { IMainBlock } from '../aboutPage.types';
 
@@ -40,7 +41,6 @@ const MainBlock: React.FC<IMainBlock> = ({
   Metamask,
   primaryColor,
   termsText,
-  connectUserData,
   purchaseButton
 }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -50,6 +50,11 @@ const MainBlock: React.FC<IMainBlock> = ({
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
     );
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
+  const { connectUserData } = useConnectUser();
 
   const switchToNetwork = '0x38';
   const aboutPageAddress =
@@ -84,18 +89,20 @@ const MainBlock: React.FC<IMainBlock> = ({
       return;
     }
     if (!diamondMarketplaceInstance) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'An error has ocurred',
         html: 'Please try again later',
         icon: 'info'
       });
       return;
     }
-    const watchTokenOffer: any = await metamaskCall(
-      diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace)
+    const watchTokenOffer: any = await web3TxHandler(
+      diamondMarketplaceInstance,
+      'getOfferInfo',
+      [offerIndexInMarketplace]
     );
     if (!watchTokenOffer) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'An error has ocurred',
         html: 'Please try again later',
         icon: 'info'
@@ -104,40 +111,50 @@ const MainBlock: React.FC<IMainBlock> = ({
     }
     if (watchTokenOffer) {
       const instance = contractCreator?.(aboutPageAddress, diamondFactoryAbi);
-      const nextToken = await metamaskCall(
-        instance?.getNextSequentialIndex(
+      if (!instance) {
+        return;
+      }
+      const nextToken = await web3TxHandler(
+        instance,
+        'getNextSequentialIndex',
+        [
           watchTokenOffer.productIndex,
           watchTokenOffer.rangeData.rangeStart,
           watchTokenOffer.rangeData.rangeEnd
-        )
+        ]
       );
       if (!nextToken) {
-        Swal.fire({
+        reactSwal.fire({
           title: 'An error has ocurred',
           html: 'Please try again later',
           icon: 'info'
         });
         return;
       }
-      Swal.fire({
+      reactSwal.fire({
         title: 'Please wait...',
         html: `Buying Watch Token #${nextToken.toString()}`,
         icon: 'info',
         showConfirmButton: false
       });
       if (
-        await metamaskCall(
-          diamondMarketplaceInstance.buyMintingOffer(
+        await web3TxHandler(
+          diamondMarketplaceInstance,
+          'buyMintingOffer',
+          [
             offerIndexInMarketplace,
             nextToken,
             {
               value: watchTokenOffer.rangeData.rangePrice
             }
-          ),
-          'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+          ],
+          {
+            failureMessage:
+              'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+          }
         )
       ) {
-        Swal.fire({
+        reactSwal.fire({
           // title : "Success",
           title: `You own #${nextToken}!`,
           icon: 'success'

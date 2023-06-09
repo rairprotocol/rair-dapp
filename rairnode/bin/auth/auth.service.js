@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 // const { vaultAppRoleTokenManager, vaultKeyManager } = require('../vault');
+const { OreId } = require('oreid-js');
 const log = require('../utils/logger')(module);
 const { File, User, Contract, Offer, MediaViewLog } = require('../models');
 const AppError = require('../utils/errors/AppError');
@@ -9,6 +10,30 @@ const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('.
 const { superAdminInstance } = require('../utils/vaultSuperAdmin');
 
 module.exports = {
+  oreIdIdentifier: async (req, res, next) => {
+    const { idToken } = req.body;
+    const oreId = new OreId({
+        appId: process.env.ORE_ID_APPID,
+        apiKey: process.env.ORE_ID_APIKEY,
+        appName: 'RAIR',
+    });
+    await oreId.init();
+    await oreId.auth.loginWithToken({
+        idToken,
+    });
+    await oreId.auth.user.getData();
+    const userAccount = oreId.auth.user.data.chainAccounts.find(
+      (account) => account.chainNetwork.includes('eth'),
+    );
+    if (!userAccount) {
+      next(new AppError('No accounts found'));
+    }
+    req.metaAuth = {
+      recovered: userAccount.chainAccount,
+      oreId: idToken,
+    };
+    return next();
+  },
   identifyCurrentLoggedUser: async (req, res, next) => {
     if (req.session && req.session.userData) {
       // eslint-disable-next-line no-unused-vars
@@ -36,6 +61,7 @@ module.exports = {
       userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
       userData.superAdmin = await superAdminInstance
         .hasSuperAdminRights(userData.publicAddress);
+      userData.oreId = req?.metaAuth?.oreId;
       req.session.userData = userData;
 
       // eslint-disable-next-line no-unused-vars

@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as ethers from 'ethers';
-import Swal from 'sweetalert2';
 
 import { erc721Abi } from '../../../../../contracts';
 import { RootState } from '../../../../../ducks';
 import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
+import useSwal from '../../../../../hooks/useSwal';
+import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
 import blockchainData from '../../../../../utils/blockchainData';
-import {
-  metamaskCall,
-  validateInteger
-} from '../../../../../utils/metamaskUtils';
+import { validateInteger } from '../../../../../utils/metamaskUtils';
 import { web3Switch } from '../../../../../utils/switchBlockchain';
 import InputField from '../../../../common/InputField';
 import { SvgKeyForModalItem } from '../../../NftList/SvgKeyForModalItem';
@@ -39,6 +37,9 @@ const ModalItem: React.FC<IModalItem> = ({
     currentChain === selectedData?.blockchain
   );
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   useEffect(() => {
     setOnMyChain(currentChain === selectedData?.blockchain);
   }, [currentChain, selectedData]);
@@ -55,26 +56,24 @@ const ModalItem: React.FC<IModalItem> = ({
 
   const createResaleOffer = async () => {
     if (onMyChain && isApproved) {
-      if (!validateInteger(price)) {
+      if (!validateInteger(price) || !resaleInstance) {
         return;
       }
-      Swal.fire({
+      reactSwal.fire({
         title: `Putting token #${selectedData?.uniqueIndexInContract} up for sale`,
         html: 'Please wait...',
         icon: 'info',
         showConfirmButton: false
       });
       if (
-        await metamaskCall(
-          resaleInstance?.createResaleOffer(
-            selectedData?.uniqueIndexInContract,
-            price,
-            selectedData?.contractAddress,
-            currentUserAddress
-          )
-        )
+        await web3TxHandler(resaleInstance, 'createResaleOffer', [
+          selectedData?.uniqueIndexInContract,
+          price,
+          selectedData?.contractAddress,
+          currentUserAddress
+        ])
       ) {
-        Swal.fire({
+        reactSwal.fire({
           title: 'Success',
           html: 'The offer has been created',
           icon: 'success'
@@ -84,22 +83,20 @@ const ModalItem: React.FC<IModalItem> = ({
   };
 
   const approveToken = async () => {
-    if (!isApproved) {
-      Swal.fire({
+    if (!isApproved && instance) {
+      reactSwal.fire({
         title: 'Approving token',
         html: 'Please wait...',
         icon: 'info',
         showConfirmButton: false
       });
       if (
-        await metamaskCall(
-          instance?.approve(
-            resaleInstance?.address,
-            selectedData?.uniqueIndexInContract
-          )
-        )
+        await web3TxHandler(instance, 'approve', [
+          resaleInstance?.address,
+          selectedData?.uniqueIndexInContract
+        ])
       ) {
-        Swal.fire({
+        reactSwal.fire({
           title: 'Success',
           html: 'The token has been approved for sale',
           icon: 'success'
@@ -112,15 +109,23 @@ const ModalItem: React.FC<IModalItem> = ({
   const checkStatusContract = useCallback(async () => {
     if (onMyChain && instance && resaleInstance) {
       const approved =
-        (await metamaskCall(
-          instance.getApproved(selectedData?.uniqueIndexInContract)
-        )) === resaleInstance.address ||
-        (await metamaskCall(
-          instance.isApprovedForAll(currentUserAddress, resaleInstance.address)
-        ));
+        (await web3TxHandler(instance, 'getApproved', [
+          selectedData?.uniqueIndexInContract
+        ])) === resaleInstance.address ||
+        (await web3TxHandler(instance, 'isApprovedForAll', [
+          currentUserAddress,
+          resaleInstance.address
+        ]));
       setIsApproved(approved);
     }
-  }, [onMyChain, instance, currentUserAddress, resaleInstance, selectedData]);
+  }, [
+    onMyChain,
+    instance,
+    currentUserAddress,
+    resaleInstance,
+    selectedData,
+    web3TxHandler
+  ]);
 
   useEffect(() => {
     checkStatusContract();

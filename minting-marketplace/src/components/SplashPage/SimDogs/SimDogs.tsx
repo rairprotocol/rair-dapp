@@ -10,10 +10,11 @@ import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico'
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import useConnectUser from '../../../hooks/useConnectUser';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import useSwal from '../../../hooks/useSwal';
 import {
   donationGridData,
   splashData
@@ -48,15 +49,10 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
+const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const reactSwal = useSwal();
   /* UTILITIES FOR NFT PURCHASE */
   /* UTILITIES FOR VIDEO PLAYER VIEW */
   const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
@@ -65,6 +61,8 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
     useOpenVideoPlayer();
 
   const mainChain = '0x1';
+
+  const { connectUserData } = useConnectUser();
 
   useEffect(() => {
     dispatch(
@@ -93,7 +91,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
     );
     setProductsFromOffer(response.data.files);
     setSelectVideo(response.data.files[0]);
-  }, [splashData]);
+  }, []);
 
   //an option for custom button arrangment
   const CustomButtonBlock: React.FC<ICustomButtonBlock> = ({ splashData }) => {
@@ -201,10 +199,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
             Need Help
           </button> */}
         </div>
-        <DonationGrid
-          donationGridArray={donationGridData}
-          connectUserData={connectUserData}
-        />
+        <DonationGrid donationGridArray={donationGridData} />
         {productsFromOffer && productsFromOffer.length > 0 && (
           <SplashVideoWrapper>
             <SplashVideoTextBlock>
@@ -214,7 +209,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
               />
               <SplashCardButton
                 className="need-help-kohler"
-                buttonAction={handleReactSwal}
+                buttonAction={handleReactSwal(reactSwal)}
                 buttonLabel={'Need Help'}
               />
             </SplashVideoTextBlock>

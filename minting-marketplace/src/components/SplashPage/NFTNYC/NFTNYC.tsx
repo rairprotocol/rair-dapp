@@ -9,8 +9,8 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import useSwal from '../../../hooks/useSwal';
 import { useNFTNYC } from '../../../utils/infoSplashData/nftnyc';
-import { reactSwal } from '../../../utils/reactSwal';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import CustomButton from '../../MockUpPage/utils/button/CustomButton';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -44,6 +44,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
     (store) => store.colorStore.primaryColor
   );
   const { splashData } = useNFTNYC(connectUserData);
+  const reactSwal = useSwal();
 
   useEffect(() => {
     dispatch(
@@ -166,7 +167,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
           <SplashVideoTextBlock>
             <SplashCardButton
               className="need-help-kohler"
-              buttonAction={handleReactSwal}
+              buttonAction={handleReactSwal(reactSwal)}
               buttonLabel={'Need Help'}
             />
           </SplashVideoTextBlock>

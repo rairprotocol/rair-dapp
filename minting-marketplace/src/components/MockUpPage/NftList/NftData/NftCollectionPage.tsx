@@ -35,17 +35,15 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   totalCount,
   offerPrice,
   getAllProduct,
-  showToken,
-  setShowToken,
+  // showToken,
+  // setShowToken,
   isLoading,
   tokenDataFiltered,
   setTokenDataFiltered,
-  userData,
   someUsersData,
   offerDataCol,
   offerAllData,
   collectionName,
-  connectUserData,
   showTokensRef,
   setRenderOffers
 }) => {
@@ -127,7 +125,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
         }
       }
     }
-  }, [fileUpload]);
+  }, [fileUpload, offerAllData, setRenderOffers, userRd]);
 
   useEffect(() => {
     if (!embeddedParams) {
@@ -218,9 +216,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             title={collectionName}
             someUsersData={someUsersData}
             userName={offerAllData?.owner}
-            currentUser={userData}
             offerDataCol={offerDataCol}
-            connectUserData={connectUserData}
           />
           {tokenDataFiltered.length > 0 ? (
             <div className="filter__btn__wrapper">

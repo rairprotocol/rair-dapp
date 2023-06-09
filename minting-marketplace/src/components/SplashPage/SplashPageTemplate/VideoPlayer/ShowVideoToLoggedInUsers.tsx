@@ -7,7 +7,7 @@ import VideoPlayerBySignature from './VideoPlayerBySignature ';
 
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { reactSwal } from '../../../../utils/reactSwal';
+import useSwal from '../../../../hooks/useSwal';
 import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import { playImagesColored } from '../../images/greyMan/grayMan';
@@ -64,6 +64,7 @@ const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
   }
 
   const store = useStore();
+  const reactSwal = useSwal();
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
-import { metamaskCall } from '../../../utils/metamaskUtils';
 import CustomFeeRow from '../common/customFeeRow';
 import {
   IMarketplaceOfferConfig,
@@ -30,6 +30,9 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     );
   const [marketValuesChanged, setMarketValuesChanged] =
     useState<boolean>(false);
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const [customPayments, setCustomPayments] = useState<TCustomPayments[]>([
     {
       message: 'Node address',
@@ -127,22 +130,27 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                 updateAvailable ? 'success' : 'stimorol'
               }`}
               onClick={async () => {
-                Swal.fire({
+                if (!diamondMarketplaceInstance) {
+                  return;
+                }
+                reactSwal.fire({
                   title: 'Updating offer',
                   html: 'Please wait...',
                   icon: 'info',
                   showConfirmButton: false
                 });
                 if (
-                  await metamaskCall(
-                    diamondMarketplaceInstance?.updateMintingOffer(
+                  await web3TxHandler(
+                    diamondMarketplaceInstance,
+                    'updateMintingOffer',
+                    [
                       item.offerIndex,
                       customPayments.filter((item) => item.editable),
                       array[index].marketData.visible
-                    )
+                    ]
                   )
                 ) {
-                  Swal.fire({
+                  reactSwal.fire({
                     title: 'Success',
                     html: 'The offer has been updated',
                     icon: 'success',

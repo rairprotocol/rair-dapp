@@ -2,7 +2,7 @@
 const express = require('express');
 const searchController = require('../api/search/search.Controller');
 const v2 = require('./v2.router');
-const analyticsRoutes = require('../api/analytics/analytics.Controller');
+const analyticsController = require('../api/analytics/analytics.Controller');
 const creditController = require('../api/credits/credits.Controller');
 
 module.exports = (context) => {
@@ -17,7 +17,7 @@ module.exports = (context) => {
   router.use('/blockchains', require('./blockchains')(context));
   router.use('/categories', require('./categories')(context));
   router.use('/transaction', require('./transactions')(context));
-  router.use('/analytics', analyticsRoutes);
+  router.use('/analytics', analyticsController);
   router.use('/credits', creditController);
 
   // Searches ->

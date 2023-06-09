@@ -13,6 +13,7 @@ import {
 } from '../../../../../axios.responseTypes';
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import PurchaseTokenButton from '../../../../common/PurchaseToken';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
 import { TParamsNftItemForCollectionView } from '../../../mockupPage.types';
@@ -27,7 +28,6 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   offerData,
   openTitle,
   mintToken,
-  connectUserData,
   contractAddress,
   setPurchaseStatus
 }) => {
@@ -37,6 +37,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
   const [tokenData, setTokenData] = useState<TTokenData[] | null>(null);
+  const { width } = useWindowDimensions();
 
   const defaultPhoto =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
@@ -60,15 +61,19 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
       }`}>
       {openTitle && <div className="collection-info-head">Collection Info</div>}
       <div className="contianer-collection-info">
-        <div className="collection-info-title">
-          <div className="collection-part-text">Item name</div>
-          {!mintToken && <div className="collection-part-text">Rank</div>}
-          <div className="collection-part-text">Availability</div>
-          <div className="collection-part-text">Floor Price</div>
-        </div>
+        {mintToken && width < 1025 ? (
+          <></>
+        ) : (
+          <div className="collection-info-title">
+            <div className="collection-part-text">Item name</div>
+            {!mintToken && <div className="collection-part-text">Rank</div>}
+            <div className="collection-part-text">Availability</div>
+            <div className="collection-part-text">Floor Price</div>
+          </div>
+        )}
         <CollectionInfoBody
           primaryColor={primaryColor}
-          className="collection-info-body">
+          className={`collection-info-body ${mintToken ? 'mint' : ''}`}>
           {offerData &&
             offerData
               ?.sort((a, b) => {
@@ -168,7 +173,6 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     {mintToken && (
                       <div className="collection-mint-button">
                         <PurchaseTokenButton
-                          connectUserData={connectUserData}
                           contractAddress={contractAddress}
                           requiredBlockchain={blockchain}
                           collection={true}

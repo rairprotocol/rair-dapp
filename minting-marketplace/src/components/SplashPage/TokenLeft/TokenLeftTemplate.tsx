@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { RootState } from '../../../ducks';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 import { ITokenLeftTemplate } from '../splashPage.types';
 
 import './TokenLeftTemplate.css';
@@ -11,7 +14,6 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
   soldCopies,
   counterData,
   ipftButton,
-  loginDone,
   nftTitle = 'NFTs minted',
   counterOverride
 }) => {
@@ -32,6 +34,10 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
 
   const wholeTokens = nftCount;
   const leftTokensNumber = soldCopies;
+
+  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   useEffect(() => {
     if (wholeTokens && leftTokensNumber <= wholeTokens) {
@@ -64,7 +70,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
 
   return (
     <div className="left-tokens left-tokens-response">
-      {(counterOverride || (soldCopies !== undefined && loginDone)) && (
+      {(counterOverride || (soldCopies !== undefined && loggedIn)) && (
         <div className="block-left-content-greyman">
           <div
             className="block-left-tokens"

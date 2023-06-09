@@ -6,7 +6,7 @@ const {
   verifySuperAdmin,
   requireUserSession,
 } = require('../middleware');
-const userService = require('../users/users.Service');
+const userService = require('../api/users/users.Service');
 
 const router = express.Router();
 

@@ -7,7 +7,7 @@ import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
-import { reactSwal } from '../../../../utils/reactSwal';
+import useSwal from '../../../../hooks/useSwal';
 import InquiriesPage from '../../../InquiriesPage/InquiriesPage';
 
 interface ITalkSalesComponent {
@@ -30,6 +30,8 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
+  const reactSwal = useSwal();
 
   const store = useStore();
 

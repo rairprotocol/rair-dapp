@@ -65,11 +65,11 @@ const signIn = async (provider: ethers.providers.StaticJsonRpcProvider) => {
     return;
   }
   const signer = provider.getSigner();
-  const loginResponse = await getJWT(signer, currentUser);
+  const loginResponse = await signWeb3Message(signer, currentUser);
   return loginResponse?.success;
 };
 
-const getJWT = async (
+const signWeb3Message = async (
   signer: ethers.providers.JsonRpcSigner,
   userAddress: string | undefined
 ) => {
@@ -221,4 +221,4 @@ const isTokenValid = (token: string | undefined) => {
   return false;
 };
 
-export { getJWT, isTokenValid, /* useRfetch */ rFetch, signIn };
+export { isTokenValid, /* useRfetch */ rFetch, signIn, signWeb3Message };

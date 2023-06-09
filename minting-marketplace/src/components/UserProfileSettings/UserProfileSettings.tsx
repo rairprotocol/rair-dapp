@@ -16,18 +16,16 @@ import PopUpNotification from './PopUpNotification/PopUpNotification';
 import './UserProfileSettings.css';
 
 const UserProfileSettings = ({
-  loginDone,
-  currentUserAddress,
   adminAccess,
-  setLoginDone,
-  userData,
   showAlert,
   selectedChain,
   setTabIndexItems,
   isSplashPage
 }) => {
   const dispatch = useDispatch();
+  const { loggedIn } = useSelector((store) => store.userStore);
   const { primaryColor } = useSelector((store) => store.colorStore);
+  const { currentUserAddress } = useSelector((store) => store.contractStore);
 
   useEffect(() => {
     if (currentUserAddress) {
@@ -49,7 +47,7 @@ const UserProfileSettings = ({
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-        {loginDone && (
+        {loggedIn && (
           <PopUpNotification
             primaryColor={primaryColor}
             isNotification={true}
@@ -68,7 +66,7 @@ const UserProfileSettings = ({
             <SunIcon primaryColor={primaryColor} color={'#fff'} />
           </SocialBox>
         </TooltipBox>
-        {loginDone && (
+        {loggedIn && (
           <div
             style={{
               marginRight: '12px',
@@ -79,11 +77,8 @@ const UserProfileSettings = ({
             }}
             className="user-block">
             <PopUpSettings
-              userData={userData}
               primaryColor={primaryColor}
-              setLoginDone={setLoginDone}
               adminAccess={adminAccess}
-              currentUserAddress={currentUserAddress}
               showAlert={showAlert}
               selectedChain={selectedChain}
               setTabIndexItems={setTabIndexItems}

@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
-import colors from '../../../utils/offerLockColors';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
+import { validateInteger } from '../../../utils/metamaskUtils';
+// import colors from '../../../utils/offerLockColors';
 import InputField from '../../common/InputField';
 import { IDiamondOfferRow } from '../creatorStudio.types';
 const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
@@ -40,7 +41,11 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
     lockedTokens || '0'
   );
   const [valuesChanged, setValuesChanged] = useState<boolean>(false);
-  const randColor = colors[index];
+  // const randColor = colors[index];
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const updater = useCallback(
     (
       fieldName: string,
@@ -141,31 +146,29 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
 
   const updateRange = async () => {
     if (instance === undefined) {
-      Swal.fire(
+      reactSwal.fire(
         'Error',
         "Couldn't connect to the contract, are you on the correct blockchain?",
         'error'
       );
       return;
     }
-    Swal.fire({
+    reactSwal.fire({
       title: 'Updating range...',
       html: 'Please wait...',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        instance.updateRange(
-          diamondRangeIndex,
-          itemName,
-          individualPrice,
-          allowedTokenCount,
-          lockedTokenCount
-        )
-      )
+      await web3TxHandler(instance, 'updateRange', [
+        diamondRangeIndex,
+        itemName,
+        individualPrice,
+        allowedTokenCount,
+        lockedTokenCount
+      ])
     ) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success!',
         html: 'The range has been updated!',
         icon: 'success',

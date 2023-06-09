@@ -52,7 +52,6 @@ module.exports = async (
     contractAddress.toLowerCase(),
     chainId,
     transactionReceipt,
-    dbModels,
   );
 
   if (!contract) {
@@ -124,12 +123,12 @@ module.exports = async (
   const totalSoldTokensOffer = (await dbModels.MintedToken.find({
     contract: contract._id,
     offer: foundOffer.offerIndex,
-    isMinted: true
-    })).length;
+    isMinted: true,
+  })).length;
   const totalSoldTokensProduct = (await dbModels.MintedToken.find({
     contract: contract._id,
     product: product.collectionIndexInContract,
-    isMinted: true
+    isMinted: true,
   })).length;
 
   foundOffer.soldCopies = totalSoldTokensOffer;

@@ -1,17 +1,27 @@
-//@ts-nocheck
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { ILayout } from './layout.types';
 
+import { RootState } from '../../ducks';
+import { TUsersInitialState } from '../../ducks/users/users.types';
+import useConnectUser from '../../hooks/useConnectUser';
 import { metaMaskIcon } from '../../images';
 import { headerLogoBlackMobile } from '../../images';
 
 import './Layout.css';
 
-const Layout: React.FC<ILayout> = (props) => {
-  const { userData, account, connectUserData, contractAddresses, chainId } =
-    props;
+const Layout: React.FC<ILayout> = ({
+  account,
+  contractAddresses,
+  chainId,
+  children
+}) => {
+  const { connectUserData } = useConnectUser();
+  const { userData } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
   const items = [
     { name: <i className="fas fa-search" />, route: '/search' },
     { name: <i className="fas fa-user" />, route: '/user' },
@@ -53,7 +63,7 @@ const Layout: React.FC<ILayout> = (props) => {
           />
         </div>
         {!userData && account ? (
-          <button className="btn btn-light" onClick={connectUserData}>
+          <button className="btn btn-light" onClick={() => connectUserData()}>
             Connect <img src={metaMaskIcon} alt="Metamask Logo" />
           </button>
         ) : (
@@ -82,7 +92,7 @@ const Layout: React.FC<ILayout> = (props) => {
           overflow: 'auto'
         }}
         className="children">
-        {props.children}
+        {children}
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ import { UserType } from '../../../../ducks/users/users.types';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 // import { TNftExternalLinkType } from '../nftList.types';
 
-const NftDataExternalLink = ({ loginDone }) => {
+const NftDataExternalLink = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
@@ -290,7 +290,6 @@ const NftDataExternalLink = ({ loginDone }) => {
       productsFromOffer={productsFromOffer}
       product={product}
       handleTokenBoughtButton={handleTokenBoughtButton}
-      loginDone={loginDone}
     />
   );
 };

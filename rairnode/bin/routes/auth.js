@@ -262,7 +262,7 @@ module.exports = (context) => {
 
   router.post(
     '/validate/',
-    validation(['metaValidate'], 'body'),
+    validation(['web3Validation'], 'body'),
     validateChallengeV2,
     async (req, res, next) => {
       const { mediaId, zoomId } = req.body;

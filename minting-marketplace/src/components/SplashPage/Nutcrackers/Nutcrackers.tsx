@@ -1,39 +1,38 @@
 //@ts-nocheck
 /* eslint-disable  */
-import React, { useState, useEffect } from 'react';
-import { NutsMain } from '../images/commingSoon/commingSoonImages';
-import { metaMaskIcon } from '../../../images';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 
+import { teamNutArray } from './AboutUsTeam';
+
+import { erc721Abi } from '../../../contracts/index';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { InitialState } from '../../../ducks/seo/reducers';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
+import { metaMaskIcon } from '../../../images';
+import { rFetch } from '../../../utils/rFetch';
+import { web3Switch } from '../../../utils/switchBlockchain';
+import PurchaseTokenButton from '../../common/PurchaseToken';
+import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
+import MetaTags from '../../SeoTags/MetaTags';
+import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
+import { NutsMain } from '../images/commingSoon/commingSoonImages';
 import {
-  NftImage,
+  Cracker,
   Nft_1,
   Nft_2,
   Nft_3,
   Nft_4,
-  Cracker
+  NftImage
 } from '../images/nutcrackers/nutcrackers';
-import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
+import { PoweredRair } from '../images/splashPageImages/splashPage';
 // import photoNut from '../images/block-nuts-photos.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
-
-import { PoweredRair } from '../images/splashPageImages/splashPage';
-
-import { erc721Abi } from '../../../contracts/index';
-import { metamaskCall } from '../../../utils/metamaskUtils';
-import { rFetch } from '../../../utils/rFetch';
-import { web3Switch } from '../../../utils/switchBlockchain';
-import Swal from 'sweetalert2';
-import PurchaseTokenButton from '../../common/PurchaseToken';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { InitialState } from '../../../ducks/seo/reducers';
-import MetaTags from '../../SeoTags/MetaTags';
-import { teamNutArray } from './AboutUsTeam';
 
 const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
   const dispatch = useDispatch();
@@ -45,6 +44,9 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
   const { currentUserAddress, minterInstance, contractCreator } = useSelector(
     (store) => store.contractStore
   );
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   useEffect(() => {
     dispatch(setInfoSEO(InitialState));
@@ -70,7 +72,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
     if (success) {
       const instance = contractCreator(nutcrackerAddress, erc721Abi);
       const nextToken = await instance.getNextSequentialIndex(0, 0, 50);
-      Swal.fire({
+      reactSwal.fire({
         title: 'Please wait...',
         html: `Buying Nutcracker #${nextToken.toString()}`,
         icon: 'info',
@@ -80,23 +82,28 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
         (item) => item.offerName === 'Nuts'
       );
       if (!nutsOffer) {
-        Swal.fire('Error', 'An error has ocurred', 'error');
+        reactSwal.fire('Error', 'An error has ocurred', 'error');
         return;
       }
       if (
-        await metamaskCall(
-          minterInstance.buyToken(
+        await web3TxHandler(
+          minterInstance,
+          'buyToken',
+          [
             products[0].offerPool.marketplaceCatalogIndex,
             nutsOffer.offerIndex,
             nextToken,
             {
               value: nutsOffer.price
             }
-          ),
-          'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+          ],
+          {
+            failureMessage:
+              'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+          }
         )
       ) {
-        Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
+        reactSwal.fire('Success', `Bought token #${nextToken}!`, 'success');
       }
     }
   };
@@ -157,7 +164,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
                   connectUserData,
                   buttonLabel: 'Mint with Matic',
                   customSuccessAction: (nextToken) => {
-                    Swal.fire(
+                    reactSwal.fire(
                       'Success',
                       `Bought token #${nextToken}!`,
                       'success'

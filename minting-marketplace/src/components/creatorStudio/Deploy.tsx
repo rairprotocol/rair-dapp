@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import CreditManager from './CreditManager';
 import NavigatorFactory from './NavigatorFactory';
@@ -10,8 +9,9 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../ducks/users/users.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import setTitle from '../../utils/setTitle';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
@@ -28,6 +28,9 @@ const Factory = () => {
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
   const [deploying, setDeploying] = useState<boolean>(false);
   const [exchangeData, setExchangeData] = useState({});
+
+  const { web3TxHandler } = useWeb3Tx();
+  const reactSwal = useSwal();
 
   const {
     currentUserAddress,
@@ -66,31 +69,21 @@ const Factory = () => {
     } else if (programmaticProvider) {
       setChainId(currentChain);
     }
-    if (!currentUserAddress) {
-      return;
-    }
-    if (erc777Instance) {
-      const userBalance = await metamaskCall(
-        erc777Instance.balanceOf(currentUserAddress)
-      );
-      if (userBalance) {
-        getExchangeData();
-        setUserBalance(userBalance);
-      }
-      setTokenSymbol(await metamaskCall(erc777Instance.symbol()));
-    }
-    if (factoryInstance && erc777Instance) {
+    if (factoryInstance && erc777Instance && currentUserAddress) {
       setDeploymentPrice(
         await factoryInstance.deploymentCostForERC777(erc777Instance.address)
       );
+      const userBalance = await erc777Instance.balanceOf(currentUserAddress);
+      if (userBalance) {
+        getExchangeData();
+      }
+      setUserBalance(userBalance);
+      setTokenSymbol(await erc777Instance.symbol());
     }
     if (diamondFactoryInstance && erc777Instance) {
-      const deploymentPriceForDiamond = await metamaskCall(
-        diamondFactoryInstance.getDeploymentCost(erc777Instance.address)
+      setDeploymentPriceDiamond(
+        await diamondFactoryInstance.getDeploymentCost(erc777Instance.address)
       );
-      if (deploymentPriceForDiamond) {
-        setDeploymentPriceDiamond(deploymentPriceForDiamond);
-      }
     }
   }, [
     getExchangeData,
@@ -117,7 +110,7 @@ const Factory = () => {
           params: [{ chainId: chainId }]
         });
       } else {
-        Swal.fire(
+        reactSwal.fire(
           'Blockchain Switch is disabled on Programmatic Connections!',
           'Switch to the proper chain manually!'
         );
@@ -127,15 +120,11 @@ const Factory = () => {
       setTokenSymbol('');
       setUserBalance(BigNumber.from(0));
     }
-  }, [chainId, currentChain]);
+  }, [chainId, currentChain, reactSwal]);
 
   useEffect(() => {
     setTitle('Rair Factory');
   }, []);
-
-  if (!erc777Instance) {
-    return <>Missing RAIR token deployment</>;
-  }
 
   return (
     <div className="row my-5 px-0 mx-0">
@@ -175,50 +164,50 @@ const Factory = () => {
           />
         </div>
         <div className="col-12 p-2">
-          {factoryInstance && (
-            <button
-              disabled={
-                contractName === '' ||
-                chainId === undefined ||
-                adminRights === false ||
-                deploymentPrice === BigNumber.from(0) ||
-                userBalance === BigNumber.from(0) ||
-                deploying
+          <button
+            disabled={
+              contractName === '' ||
+              chainId === undefined ||
+              adminRights === false ||
+              deploymentPrice === BigNumber.from(0) ||
+              userBalance === BigNumber.from(0) ||
+              deploying ||
+              !erc777Instance
+            }
+            className="btn btn-stimorol col-12 rounded-rair"
+            onClick={async () => {
+              if (!erc777Instance) {
+                return;
               }
-              className="btn btn-stimorol col-12 rounded-rair"
-              onClick={async () => {
-                setDeploying(true);
-                Swal.fire({
-                  title: 'Deploying contract!',
-                  html: 'Please wait...',
-                  icon: 'info',
-                  showConfirmButton: false
+              setDeploying(true);
+              reactSwal.fire({
+                title: 'Deploying contract!',
+                html: 'Please wait...',
+                icon: 'info',
+                showConfirmButton: false
+              });
+              const success = await web3TxHandler(erc777Instance, 'send', [
+                factoryInstance?.address,
+                deploymentPrice,
+                utils.toUtf8Bytes(contractName)
+              ]);
+              setDeploying(false);
+              if (success) {
+                reactSwal.fire({
+                  title: 'Success',
+                  html: 'Contract deployed',
+                  icon: 'success',
+                  showConfirmButton: true
                 });
-                const success = await metamaskCall(
-                  erc777Instance?.send(
-                    factoryInstance?.address,
-                    deploymentPrice,
-                    utils.toUtf8Bytes(contractName)
-                  )
-                );
-                setDeploying(false);
-                if (success) {
-                  Swal.fire({
-                    title: 'Success',
-                    html: 'Contract deployed',
-                    icon: 'success',
-                    showConfirmButton: true
-                  });
-                  setContractName('');
-                }
-              }}>
-              Deploy a classic contract for{' '}
-              {utils.formatEther(deploymentPrice).toString()} {tokenSymbol}{' '}
-              Tokens
-            </button>
-          )}
-          {diamondFactoryInstance && deploymentPriceDiamond.gt(0) && (
+                setContractName('');
+              }
+            }}>
+            Deploy a classic contract for{' '}
+            {utils.formatEther(deploymentPrice).toString()} {tokenSymbol} Tokens
+          </button>
+          {diamondFactoryInstance && (
             <>
+              <div className="col-12">or</div>
               <button
                 disabled={
                   contractName === '' ||
@@ -227,27 +216,29 @@ const Factory = () => {
                   deploymentPrice === BigNumber.from(0) ||
                   userBalance === BigNumber.from(0) ||
                   deploying ||
-                  diamondFactoryInstance === undefined
+                  diamondFactoryInstance === undefined ||
+                  !erc777Instance
                 }
                 className="btn btn-stimorol col-12 rounded-rair mt-3"
                 onClick={async () => {
+                  if (!erc777Instance) {
+                    return;
+                  }
                   setDeploying(true);
-                  Swal.fire({
+                  reactSwal.fire({
                     title: 'Deploying contract (with Diamonds)!',
                     html: 'Please wait...',
                     icon: 'info',
                     showConfirmButton: false
                   });
-                  const success = await metamaskCall(
-                    erc777Instance?.send(
-                      diamondFactoryInstance.address,
-                      deploymentPriceDiamond,
-                      utils.toUtf8Bytes(contractName)
-                    )
-                  );
+                  const success = await web3TxHandler(erc777Instance, 'send', [
+                    diamondFactoryInstance.address,
+                    deploymentPriceDiamond,
+                    utils.toUtf8Bytes(contractName)
+                  ]);
                   setDeploying(false);
                   if (success) {
-                    Swal.fire({
+                    reactSwal.fire({
                       title: 'Success',
                       html: 'Contract deployed with Diamonds!',
                       icon: 'success',
@@ -263,36 +254,33 @@ const Factory = () => {
               <br />
             </>
           )}
-          {userBalance && (
-            <>
-              <hr />
-              <h5>Your balance:</h5>
-              <h2>
-                {utils.formatEther(userBalance).toString()} {tokenSymbol} Tokens
-              </h2>
-            </>
-          )}
+          <hr />
+          <h5>Your balance:</h5>
+          <h2>
+            {utils.formatEther(userBalance).toString()} {tokenSymbol} Tokens
+          </h2>
         </div>
         {tokenPurchaserInstance &&
-          userBalance.gt(0) &&
           Object.keys(exchangeData).map((ethPrice, index) => {
             return (
               <button
                 className="btn btn-stimorol col-12 mt-3 rounded-rair"
                 key={index}
                 onClick={async () => {
-                  Swal.fire({
+                  reactSwal.fire({
                     title: 'Please wait',
                     text: 'Wating for user verification',
                     icon: 'info',
                     showConfirmButton: false
                   });
                   if (
-                    await metamaskCall(
-                      tokenPurchaserInstance.getRAIR({ value: ethPrice })
-                    )
+                    await web3TxHandler(tokenPurchaserInstance, 'getRAIR', [
+                      {
+                        value: ethPrice.toString()
+                      }
+                    ])
                   ) {
-                    Swal.fire({
+                    reactSwal.fire({
                       title: 'Success',
                       html: `${utils
                         .formatEther(exchangeData[ethPrice])
@@ -311,12 +299,7 @@ const Factory = () => {
               </button>
             );
           })}
-        {userBalance?.gt(0) && (
-          <CreditManager
-            tokenSymbol={tokenSymbol}
-            updateUserBalance={getPrice}
-          />
-        )}
+        <CreditManager tokenSymbol={tokenSymbol} updateUserBalance={getPrice} />
       </NavigatorFactory>
     </div>
   );

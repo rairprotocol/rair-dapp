@@ -7,6 +7,7 @@ import { rairAdvisorsTeam, teamMainPage } from './AboutUsTeam';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useConnectUser from '../../hooks/useConnectUser';
 /* image imports */
 import { metaMaskIcon } from '../../images/index';
 import {
@@ -58,13 +59,12 @@ const offerIndexInMarketplace = ['0', '221'];
 const iframeLink =
   'https://iframetester.com/?url=https://staging.rair.market/watch/0x48e89cb354a30d4ce0dafac77205792040ef485f/FaR4Z7kLDOZ87Rx1UU6CaLce_bip0X7vnrPjBu2t3APd9s/stream.m3u8';
 
-const MainPage: React.FC<IMainPage> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
+const MainPage: React.FC<IMainPage> = ({ setIsSplashPage }) => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  const { connectUserData } = useConnectUser();
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -4,7 +4,7 @@ const {
   handleDuplicateKey,
   findContractFromAddress,
   generateTokensCollectionByRange,
-  log
+  log,
 } = require('./eventsCommonUtils');
 
 module.exports = async (
@@ -27,7 +27,6 @@ module.exports = async (
       : transactionReceipt.to_address,
     chainId,
     transactionReceipt,
-    dbModels,
   );
   if (!contract) {
     return;
@@ -58,9 +57,10 @@ module.exports = async (
     await offer.save().catch(handleDuplicateKey);
 
     // tokens docs in DB
-    const tokenDocuments = await generateTokensCollectionByRange(contract, offer, dbModels);
+    const tokenDocuments = await generateTokensCollectionByRange(contract, offer);
     log.info(`Storing ${tokenDocuments.length} tokens from the new range: ${name}`);
-    for (const tokenDoc of tokenDocuments) {
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const tokenDoc of tokenDocuments) {
       await tokenDoc.save().catch(handleDuplicateKey);
     }
   }

@@ -110,7 +110,6 @@ export interface ISerialNumberBuySell {
   textColor: string | undefined;
   offerData: TOfferType | undefined;
   currentUser: string | undefined;
-  loginDone?: boolean;
   handleTokenBoughtButton: () => void;
 }
 export interface ISellButton {
@@ -191,11 +190,9 @@ export interface INftDataPageMain {
   offerData?: TOfferType | undefined;
   offerDataInfo: TOfferType[] | undefined;
   offerPrice?: string[];
-  userData?: UserType;
   someUsersData: UserType | null | undefined;
   ownerInfo?: TProducts | undefined;
   embeddedParams?: TEmbeddedParams | undefined;
-  loginDone?: boolean;
   handleTokenBoughtButton: () => void;
 }
 

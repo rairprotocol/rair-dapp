@@ -6,12 +6,24 @@ const {
     unlockMediaWithSession,
     logoutWithSession,
     identifyCurrentLoggedUser,
+    oreIdIdentifier,
 } = require('./auth.service');
 const { validation } = require('../middleware');
 
 const router = express.Router();
 
-router.post('/login/', validation(['metaValidate'], 'body'), validateChallengeV2, loginFromSignature);
+router.post(
+    '/login/',
+    validation(['web3Validation'], 'body'),
+    validateChallengeV2,
+    loginFromSignature,
+);
+router.post(
+    '/oreId/',
+    validation(['oreIdValidation'], 'body'),
+    oreIdIdentifier,
+    loginFromSignature,
+);
 router.get('/logout/', logoutWithSession);
 
 router.get('/me/', identifyCurrentLoggedUser);

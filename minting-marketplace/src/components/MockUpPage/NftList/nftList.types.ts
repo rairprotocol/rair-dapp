@@ -60,9 +60,7 @@ export type TAuthenticityStyled = {
 };
 
 export interface INftDataCommonLinkComponent {
-  userData: UserType;
   embeddedParams: TEmbeddedParams | undefined;
-  loginDone: boolean;
   connectUserData: () => void;
 }
 
@@ -90,12 +88,10 @@ export interface INftCollectionPageComponent {
   isLoading: boolean;
   tokenDataFiltered: TTokenData[];
   setTokenDataFiltered: (filteredTokens: any[]) => void;
-  userData: UserType;
   someUsersData: UserType | null | undefined;
   offerDataCol: TOfferType[] | undefined;
   offerAllData: TProducts | undefined;
   collectionName: string | undefined;
-  connectUserData: () => void;
   showTokensRef: any;
   setRenderOffers: any;
 }

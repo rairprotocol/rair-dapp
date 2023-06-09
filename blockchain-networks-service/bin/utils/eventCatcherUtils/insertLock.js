@@ -23,7 +23,6 @@ module.exports = async (
       : transactionReceipt.to_address,
     chainId,
     transactionReceipt,
-    dbModels,
   );
 
   if (!contract) {

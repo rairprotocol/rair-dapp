@@ -108,7 +108,6 @@ const findContractFromAddress = async (
   address,
   network,
   transactionReceipt,
-  dbModels,
 ) => {
   const contract = await Contract.findOne({
     contractAddress: address.toLowerCase(),
@@ -197,7 +196,7 @@ const updateMetadataForTokens = async (
   }
 };
 
-const generateTokensCollectionByRange = async (contract, offer, dbModels) => {
+const generateTokensCollectionByRange = async (contract, offer) => {
   const [start, end] = offer.range;
   const array = [];
 

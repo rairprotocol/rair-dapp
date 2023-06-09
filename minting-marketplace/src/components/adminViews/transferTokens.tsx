@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
-import Swal from 'sweetalert2';
 
 import {
   BlockchainInfoType,
@@ -14,8 +13,9 @@ import { TTokenData } from '../../axios.responseTypes';
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import blockchainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
@@ -52,6 +52,9 @@ const TransferTokens = () => {
     ethers.Contract | undefined
   >();
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const getUserContracts = useCallback(async () => {
     const response: ContractsResponseType = await rFetch('/api/contracts');
     if (response.success) {
@@ -82,10 +85,15 @@ const TransferTokens = () => {
     } catch (err) {
       console.error("Can't connect to address");
     }
-    const name = await metamaskCall(
-      instance.name(),
+    const name = await web3TxHandler(
+      instance,
+      'name',
+      [],
+      {
+        failureMessage:
+          'Unable to connect to the contract, please verify the address, blockchain and type of the contract'
+      }
       // name return string
-      'Unable to connect to the contract, please verify the address, blockchain and type of the contract'
     );
 
     if (name !== false && typeof name === 'string') {
@@ -166,18 +174,16 @@ const TransferTokens = () => {
   const hasTraderRole = useCallback(async () => {
     if (contractInstance) {
       // return boolean
-      const response = await metamaskCall(
-        contractInstance.hasRole(
-          await contractInstance.TRADER(),
-          currentUserAddress
-        )
-      );
+      const response = await web3TxHandler(contractInstance, 'hasRole', [
+        await contractInstance.TRADER(),
+        currentUserAddress
+      ]);
       // eslint-disable-next-line
       if (typeof (response === 'boolean')) {
         setTraderRole(response);
       }
     }
-  }, [contractInstance, currentUserAddress]);
+  }, [contractInstance, currentUserAddress, web3TxHandler]);
 
   useEffect(() => {
     hasTraderRole();
@@ -333,21 +339,19 @@ const TransferTokens = () => {
                 }
                 className="btn btn-royal-ice"
                 onClick={async () => {
-                  Swal.fire({
+                  reactSwal.fire({
                     title: 'Please wait',
                     html: 'Granting TRADER role',
                     icon: 'info',
                     showConfirmButton: false
                   });
                   if (
-                    await metamaskCall(
-                      contractInstance.grantRole(
-                        await contractInstance.TRADER(),
-                        currentUserAddress
-                      )
-                    )
+                    await web3TxHandler(contractInstance, 'grantRole', [
+                      await contractInstance.TRADER(),
+                      currentUserAddress
+                    ])
                   ) {
-                    Swal.fire({
+                    reactSwal.fire({
                       title: 'Success',
                       html: 'Role granted',
                       icon: 'success'
@@ -374,7 +378,7 @@ const TransferTokens = () => {
                 }
                 className="btn btn-royal-ice"
                 onClick={async () => {
-                  Swal.fire({
+                  reactSwal.fire({
                     title: 'Please wait',
                     html: `Transferring token to ${targetAddress}`,
                     icon: 'info',
@@ -382,13 +386,13 @@ const TransferTokens = () => {
                   });
 
                   if (
-                    await metamaskCall(
-                      contractInstance[
-                        'safeTransferFrom(address,address,uint256)'
-                      ](currentUserAddress, targetAddress, tokenId)
+                    await web3TxHandler(
+                      contractInstance,
+                      'safeTransferFrom(address,address,uint256)',
+                      [currentUserAddress, targetAddress, tokenId]
                     )
                   ) {
-                    Swal.fire({
+                    reactSwal.fire({
                       title: 'Success',
                       html: 'Token sent',
                       icon: 'success'

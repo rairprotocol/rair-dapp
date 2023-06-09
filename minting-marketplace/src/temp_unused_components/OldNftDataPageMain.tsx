@@ -11,7 +11,6 @@ import {
 import ReactPlayer from 'react-player';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { utils } from 'ethers';
 import Swal from 'sweetalert2';
 
@@ -23,10 +22,11 @@ import TitleCollection from '../components/MockUpPage/NftList/NftData/TitleColle
 import { gettingPrice } from '../components/MockUpPage/NftList/utils/gettingPrice';
 import ItemRank from '../components/MockUpPage/SelectBox/ItemRank';
 import SelectNumber from '../components/MockUpPage/SelectBox/SelectNumber/SelectNumber';
-import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
+// import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
 import { setShowSidebarTrue } from '../ducks/metadata/actions';
+import useSwal from '../hooks/useSwal';
+import useWeb3Tx from '../hooks/useWeb3Tx';
 import chainData from '../utils/blockchainData';
-import { metamaskCall } from '../utils/metamaskUtils';
 import setDocumentTitle from '../utils/setTitle';
 import { web3Switch } from '../utils/switchBlockchain';
 
@@ -55,11 +55,12 @@ const NftDataPageMain = ({
   ownerInfo,
   getAllProduct
 }) => {
-  const navigate = useNavigate();
-
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
   const [offersIndexesData, setOffersIndexesData] = useState();
+
+  const { web3TxHandler } = useWeb3Tx();
+  const reactSwal = useSwal();
 
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -174,26 +175,35 @@ const NftDataPageMain = ({
   // }
 
   const buyContract = async () => {
-    Swal.fire({
+    reactSwal.fire({
       title: 'Buying token',
       html: 'Awaiting transaction completion',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        minterInstance.buyToken(
+      await web3TxHandler(
+        minterInstance,
+        'buyToken',
+        [
           offerData.offerPool,
           offerData.offerIndex,
           selectedToken,
           {
             value: offerData.price
           }
-        ),
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+        ],
+        {
+          failureMessage:
+            'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+        }
       )
     ) {
-      Swal.fire('Success', 'Now, you are the owner of this token', 'success');
+      reactSwal.fire(
+        'Success',
+        'Now, you are the owner of this token',
+        'success'
+      );
     }
   };
 

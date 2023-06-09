@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import {
   IExistingLock,
@@ -12,7 +11,8 @@ import {
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 
 // 	const [start, setStart] = useState(array[index].startingToken);
 // 	const [end, setEnd] = useState(array[index].endingToken);
@@ -226,6 +226,9 @@ const ProductManager: React.FC<IProductManager> = ({
   const [forceSync, setForceSync] = useState<boolean>(false);
   const [offerIndex, setOfferIndex] = useState<string>('');
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const deleter = (index) => {
     const aux = [...ranges];
     aux.splice(index, 1);
@@ -244,23 +247,24 @@ const ProductManager: React.FC<IProductManager> = ({
     endingToken: number,
     lockedTokens: number
   ) => {
-    Swal.fire({
+    if (!tokenInstance) {
+      return;
+    }
+    reactSwal.fire({
       title: 'Locking tokens',
       html: 'Please wait',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        tokenInstance?.createRangeLock(
-          productIndex,
-          startingToken,
-          endingToken,
-          lockedTokens
-        )
-      )
+      await web3TxHandler(tokenInstance, 'createRangeLock', [
+        productIndex,
+        startingToken,
+        endingToken,
+        lockedTokens
+      ])
     ) {
-      Swal.fire('Success', 'Tokens locked', 'success');
+      reactSwal.fire('Success', 'Tokens locked', 'success');
     }
   };
 
@@ -348,25 +352,26 @@ const ProductManager: React.FC<IProductManager> = ({
       console.error('Update Rejected');
       return;
     }
-    Swal.fire({
+    if (!minterInstance) {
+      return;
+    }
+    reactSwal.fire({
       title: 'Updating',
       html: 'Please wait',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        minterInstance?.updateOfferRange(
-          offerIndex,
-          rangeIndex,
-          startToken,
-          endToken,
-          price,
-          name
-        )
-      )
+      await web3TxHandler(minterInstance, 'updateOfferRange', [
+        offerIndex,
+        rangeIndex,
+        startToken,
+        endToken,
+        price,
+        name
+      ])
     ) {
-      Swal.fire('Success', 'Offer updated', 'success');
+      reactSwal.fire('Success', 'Offer updated', 'success');
     }
   };
 
@@ -467,16 +472,21 @@ const ProductManager: React.FC<IProductManager> = ({
           <button
             onClick={async () => {
               try {
+                if (!minterInstance) {
+                  return;
+                }
                 if (ranges.length > 0 && ranges[0].disabled) {
-                  Swal.fire({
+                  reactSwal.fire({
                     title: 'Appending offers',
                     html: 'Please wait',
                     icon: 'info',
                     showConfirmButton: false
                   });
                   if (
-                    await metamaskCall(
-                      minterInstance?.appendOfferRangeBatch(
+                    await web3TxHandler(
+                      minterInstance,
+                      'appendOfferRangeBatch',
+                      [
                         await minterInstance?.contractToOfferRange(
                           tokenInstance?.address,
                           productIndex
@@ -497,13 +507,13 @@ const ProductManager: React.FC<IProductManager> = ({
                           .map((item) => item.endingToken),
                         ranges.filter(notDisabled).map((item) => item.price),
                         ranges.filter(notDisabled).map((item) => item.name)
-                      )
+                      ]
                     )
                   ) {
-                    Swal.fire('Success', 'Offers appended', 'success');
+                    reactSwal.fire('Success', 'Offers appended', 'success');
                   }
                 } else {
-                  Swal.fire({
+                  reactSwal.fire({
                     title: 'Creating offer',
                     html: 'Please wait',
                     icon: 'info',
@@ -524,13 +534,13 @@ const ProductManager: React.FC<IProductManager> = ({
                       '0x3fD4268B03cce553f180E77dfC14fde00271F9B7'
                     )
                   ) {
-                    Swal.fire('Success', 'Offer created', 'success');
+                    reactSwal.fire('Success', 'Offer created', 'success');
                   }
                 }
               } catch (err) {
                 const error = err as any;
                 console.error(err);
-                Swal.fire('Error', error?.data?.message, 'error');
+                reactSwal.fire('Error', error?.data?.message, 'error');
               }
             }}
             disabled={!ranges.filter((item) => !item.disabled).length}

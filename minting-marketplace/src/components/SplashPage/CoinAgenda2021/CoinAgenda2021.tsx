@@ -9,6 +9,7 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import useSwal from '../../../hooks/useSwal';
 import { splashData } from '../../../utils/infoSplashData/coicAgenda2021';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
@@ -38,6 +39,8 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
+
+  const reactSwal = useSwal();
 
   useEffect(() => {
     dispatch(
@@ -108,7 +111,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
             </div>
             <SplashCardButton
               className="need-help-kohler"
-              buttonAction={handleReactSwal}
+              buttonAction={handleReactSwal(reactSwal)}
               buttonLabel={'Need Help'}
             />
           </SplashVideoTextBlock>

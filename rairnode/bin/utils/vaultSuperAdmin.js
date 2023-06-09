@@ -15,6 +15,10 @@ class VaultTokenValidation {
         secretName: superAdminConfig.storageKey,
         vaultToken,
       });
+      if (!vaultResponse) {
+        log.error('Error querying Vault!');
+        return;
+      }
       this.vaultData = Object.keys(vaultResponse).map((item) => vaultResponse[item].toLowerCase());
       log.info(`Loaded vault data with ${this.vaultData.length} tokens`);
     }

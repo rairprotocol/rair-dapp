@@ -185,6 +185,10 @@
     align-items: center;
   }
 
+  .container-title-collection .block-title-share h2 {
+    text-align: center;
+  }
+
   .title-collection-container.minted .title-collection-wrapper {
     width: 100%;
   }

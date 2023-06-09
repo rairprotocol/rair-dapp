@@ -138,4 +138,4 @@ const validateInteger = (number: string | number) => {
   return true;
 };
 
-export { metamaskCall, validateInteger };
+export { handleReceipt, metamaskCall, validateInteger };

@@ -7,7 +7,9 @@ import Swal from 'sweetalert2';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { metamaskCall, validateInteger } from '../../utils/metamaskUtils';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
+import { validateInteger } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 
@@ -16,6 +18,9 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
     BigNumber.from('1000000000000000000')
   );
   const [userCredits, setUserCredits] = useState('-');
+
+  const { web3TxHandler } = useWeb3Tx();
+  const reactSwal = useSwal();
 
   const {
     erc777Instance,
@@ -57,13 +62,11 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        erc777Instance.send(
-          creditHandlerInstance?.address,
-          tokenAmount,
-          utils.toUtf8Bytes('RAIR Credit Deposit')
-        )
-      )
+      await web3TxHandler(erc777Instance, 'send', [
+        creditHandlerInstance?.address,
+        tokenAmount,
+        utils.toUtf8Bytes('RAIR Credit Deposit')
+      ])
     ) {
       Swal.fire(
         'Success',
@@ -81,7 +84,8 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
     erc777Instance,
     tokenSymbol,
     getCredits,
-    updateUserBalance
+    updateUserBalance,
+    web3TxHandler
   ]);
 
   const tryWithdraw = useCallback(async () => {
@@ -107,15 +111,13 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
         showConfirmButton: false
       });
       if (
-        await metamaskCall(
-          creditHandlerInstance.withdraw(
-            erc777Instance.address,
-            tokenAmount,
-            hash
-          )
-        )
+        await web3TxHandler(creditHandlerInstance, 'withdraw', [
+          erc777Instance.address,
+          tokenAmount,
+          hash
+        ])
       ) {
-        Swal.fire(
+        reactSwal.fire(
           'Success',
           `${formatEther(tokenAmount)} ${tokenSymbol} withdrawn`,
           'success'
@@ -133,7 +135,9 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
     tokenAmount,
     tokenSymbol,
     getCredits,
-    updateUserBalance
+    updateUserBalance,
+    web3TxHandler,
+    reactSwal
   ]);
 
   if (!creditHandlerInstance) {

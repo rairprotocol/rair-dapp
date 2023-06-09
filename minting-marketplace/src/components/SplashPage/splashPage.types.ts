@@ -9,7 +9,6 @@ export interface INumberedCircle {
 }
 
 export interface ISplashPageProps {
-  loginDone?: boolean;
   connectUserData: () => Promise<void>;
   setIsSplashPage?: (isSplashPage: boolean) => void;
 }
@@ -434,7 +433,6 @@ export interface ITokenLeftTemplate {
   soldCopies: number;
   counterData?: TCounterData;
   ipftButton?: any; //type is unclear
-  loginDone?: boolean;
   nftTitle?: string;
   counterOverride?: boolean;
 }
@@ -479,7 +477,6 @@ export type TDonationGridDataItem = {
 
 export interface IDonationGrid {
   donationGridArray: TDonationGridDataItem[];
-  connectUserData: (() => Promise<void>) | undefined;
 }
 
 export type TUseGetProductsReturn = [

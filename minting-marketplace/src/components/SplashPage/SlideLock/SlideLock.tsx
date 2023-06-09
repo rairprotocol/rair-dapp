@@ -9,6 +9,7 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { InitialState } from '../../../ducks/seo/reducers';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 import { splashData } from '../../../utils/infoSplashData/slideLock';
 import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
@@ -47,7 +48,6 @@ import './SlideLock.css';
 //ReactGA.initialize(TRACKING_ID);
 
 const SlideLock: React.FC<ISplashPageProps> = ({
-  loginDone,
   connectUserData,
   setIsSplashPage
 }) => {
@@ -55,6 +55,9 @@ const SlideLock: React.FC<ISplashPageProps> = ({
   const [soldCopies, setSoldCopies] = useState<number>(0);
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
+  );
+  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
   );
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const { currentChain, minterInstance } = useSelector<
@@ -80,7 +83,7 @@ const SlideLock: React.FC<ISplashPageProps> = ({
   }, [carousel_match.matches]);
 
   const getAllProduct = useCallback(async () => {
-    if (loginDone) {
+    if (loggedIn) {
       if (currentChain === splashData.purchaseButton?.requiredBlockchain) {
         setSoldCopies(
           (
@@ -93,7 +96,7 @@ const SlideLock: React.FC<ISplashPageProps> = ({
         setSoldCopies(0); /*it was empty but I put 0*/
       }
     }
-  }, [setSoldCopies, loginDone, currentChain, minterInstance]);
+  }, [setSoldCopies, loggedIn, currentChain, minterInstance]);
 
   useEffect(() => {
     getAllProduct();
@@ -122,7 +125,6 @@ const SlideLock: React.FC<ISplashPageProps> = ({
           counterData={splashData.counterData}
           soldCopies={soldCopies}
           primaryColor={primaryColor}
-          loginDone={loginDone}
           nftTitle={splashData.counterData?.nftTitle}
         />
         <div style={{ height: '108px' }} />

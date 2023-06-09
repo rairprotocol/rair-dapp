@@ -6,7 +6,6 @@ export type TUseGetProductsGeneralArguments = {
 };
 
 export interface IMainPage {
-  loginDone: boolean;
   setIsSplashPage: (arg: boolean) => void;
   connectUserData: () => void;
   seoInformation: Object;

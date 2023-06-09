@@ -1,4 +1,3 @@
-/* eslint-disable no-promise-executor-return */
 const express = require('express');
 const fs = require('graceful-fs');
 const _ = require('lodash');

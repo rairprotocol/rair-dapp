@@ -1,11 +1,25 @@
-import * as types from './types';
+import {
+  GET_USER_COMPLETE,
+  GET_USER_ERROR,
+  GET_USER_START,
+  LOGIN_PROCESS_UPDATE,
+  LOGIN_STATUS_UPDATE,
+  SET_ADMIN_RIGHTS,
+  SET_LOGIN_TYPE,
+  SET_SUPER_ADMIN,
+  SET_USER_DATA
+} from './types';
 import { TUsersInitialState, UserReducerActionTypes } from './users.types';
 
 const InitialState: TUsersInitialState = {
   userRd: null,
   error: null,
   adminRights: undefined,
-  superAdmin: undefined
+  superAdmin: undefined,
+  loginProcess: false,
+  loggedIn: false,
+  userData: undefined,
+  loginType: undefined
 };
 
 export default function userStore(
@@ -13,35 +27,47 @@ export default function userStore(
   action: UserReducerActionTypes
 ): TUsersInitialState {
   switch (action.type) {
-    case types.GET_USER_START:
+    case LOGIN_STATUS_UPDATE:
+      return {
+        ...state,
+        loggedIn: action.value
+      };
+    case LOGIN_PROCESS_UPDATE:
+      return {
+        ...state,
+        loginProcess: action.value
+      };
+    case SET_USER_DATA:
+      return {
+        ...state,
+        userData: action.userData
+      };
+    case SET_LOGIN_TYPE:
+      return {
+        ...state,
+        loginType: action.loginType
+      };
+    case GET_USER_START:
       return {
         ...state,
         userRd: null
       };
-    case types.SET_ADMIN_RIGHTS:
+    case SET_ADMIN_RIGHTS:
       return {
         ...state,
         adminRights: action.adminRights
       };
-    case types.SET_SUPER_ADMIN:
+    case SET_SUPER_ADMIN:
       return {
         ...state,
         superAdmin: action.superAdmin
       };
-    case types.GET_USER_COMPLETE:
+    case GET_USER_COMPLETE:
       return {
         ...state,
         userRd: action.userRd
       };
-    case types.USER_LOGOUT:
-      return {
-        ...state,
-        userRd: null,
-        error: null,
-        adminRights: undefined,
-        superAdmin: undefined
-      };
-    case types.GET_USER_ERROR:
+    case GET_USER_ERROR:
       return {
         ...state,
         userRd: null,

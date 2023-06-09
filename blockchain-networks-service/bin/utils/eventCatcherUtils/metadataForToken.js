@@ -3,7 +3,7 @@
 const {
   handleDuplicateKey,
   findContractFromAddress,
-  log
+  log,
 } = require('./eventsCommonUtils');
 
 module.exports = async (
@@ -20,7 +20,6 @@ module.exports = async (
       : transactionReceipt.to_address,
     chainId,
     transactionReceipt,
-    dbModels,
   );
 
   if (!contract) {
@@ -33,7 +32,7 @@ module.exports = async (
     try {
       fetchedMetadata = await (await fetch(newURI)).json();
     } catch (err) {
-      log.error(`Error fetching '${newURI}': ${err}`)
+      log.error(`Error fetching '${newURI}': ${err}`);
     }
   }
   const foundToken = await dbModels.MintedToken.findOne({

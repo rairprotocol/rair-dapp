@@ -7,9 +7,9 @@ import Swal from 'sweetalert2';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
+import useSwal from '../../../hooks/useSwal';
 import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { reactSwal } from '../../../utils/reactSwal';
 import NotificationPage from '../NotificationPage/NotificationPage';
 
 import NftImg from './images/image.png';
@@ -28,6 +28,7 @@ const PopUpNotification = () =>
     const { userRd } = useSelector<RootState, TUsersInitialState>(
       (store) => store.userStore
     );
+    const reactSwal = useSwal();
 
     const onCloseNext = useCallback(() => {
       if (!openModal) {

@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 
+const { Offer } = require('../../models');
 const {
   handleDuplicateKey,
   findContractFromAddress,
@@ -23,14 +24,13 @@ module.exports = async (
     contractAddress,
     chainId,
     transactionReceipt,
-    dbModels,
   );
 
   if (!contract) {
     return;
   }
 
-  const offer = new dbModels.Offer({
+  const offer = new Offer({
     offerIndex: rangeIndex,
     contract: contract._id,
     product: productIndex,
