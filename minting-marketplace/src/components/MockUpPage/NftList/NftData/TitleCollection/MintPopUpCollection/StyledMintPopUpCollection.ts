@@ -15,10 +15,10 @@ export const MintPopUpCollectionContainer = styled.div<IMintPopUpCollectionConta
 
   @media screen and (max-width: 1000px) {
     overflow: auto;
-    width: 90vw;
+    width: 100%;
 
     .wrapper-collection-info.mint {
-      width: 908px;
+      width: 100%;
     }
   }
 `;
