@@ -246,7 +246,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
               primaryColor === 'rhyno' ? 'default' : 'dark'
             }`}
             className="category-button-videos category-button">
-            Unlockables
+            Videos
           </Tab>
         </TabList>
         <div className="container-search">

@@ -1472,7 +1472,7 @@ p.general-title {
 
 @media screen and (max-width: 1260px) {
   .tree-tab-unlocks {
-    justify-content: space-between;
+    justify-content: space-evenly;
   }
   .tree-tab-unlocks .unlockable-video:nth-child(1n + 1) {
     margin-right: 0rem;

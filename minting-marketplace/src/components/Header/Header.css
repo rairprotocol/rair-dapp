@@ -6,7 +6,7 @@
   align-items: center;
   width: 100%;
   position: fixed;
-  z-index: 100;
+  z-index: 2;
 }
 
 .header-master .main-search {
@@ -175,16 +175,22 @@
 @media screen and (max-width: 1320px) {
   .col-12.header-master {
     padding: 20px 40px;
+    z-index: 2;
   }
 }
 
 @media screen and (max-width: 1100px) {
   .col-12.header-master {
     padding: 20px 20px;
+    z-index: 2;
   }
 }
 
 @media screen and (max-width: 1024px) {
+  .col-12.header-master {
+    z-index: 2;
+  }
+
   button.metamask-on-boarding {
     background: #bb73d7;
     display: flex;
@@ -199,6 +205,10 @@
 }
 
 @media screen and (max-width: 950px) {
+  .col-12.header-master {
+    z-index: 2;
+  }
+
   .header-master button.btn-connect-wallet {
     width: 150px;
     height: 35px;
@@ -218,6 +228,10 @@
 }
 
 @media screen and (max-width: 470px) {
+  .col-12.header-master {
+    z-index: 2;
+  }
+
   button.metamask-on-boarding {
     font-size: 12px;
     padding: 0;
