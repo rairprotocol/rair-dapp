@@ -15,7 +15,7 @@ module.exports = async (
   // eslint-disable-next-line no-unused-vars
   appendTokenIndex = false,
   // Assume events without this flag are old and don't append the token
-  metadataExtension = ""
+  metadataExtension = '',
   // Assume events without this field are old and don't have extension
 ) => {
   const contract = await findContractFromAddress(
@@ -24,7 +24,6 @@ module.exports = async (
       : transactionReceipt.to_address,
     chainId,
     transactionReceipt,
-    dbModels,
   );
   if (!contract) {
     // MB:TODO: can remove in case findContractFromAddress
@@ -54,6 +53,12 @@ module.exports = async (
     offerIndex: { $in: foundOffers },
     metadataURI: 'none',
   });
-  await updateMetadataForTokens(tokens, appendTokenIndex, newURI, appendTokenIndex, metadataExtension);
+  await updateMetadataForTokens(
+    tokens,
+    appendTokenIndex,
+    newURI,
+    appendTokenIndex,
+    metadataExtension,
+  );
   return product;
 };

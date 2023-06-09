@@ -14,7 +14,6 @@ module.exports = async (
     contractAddress,
     chainId,
     transactionReceipt,
-    dbModels,
   );
 
   const foundOffer = await dbModels.ResaleTokenOffer.findOne({

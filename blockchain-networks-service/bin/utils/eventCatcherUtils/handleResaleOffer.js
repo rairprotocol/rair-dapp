@@ -16,7 +16,6 @@ module.exports = async (
     tokenAddress,
     chainId,
     transactionReceipt,
-    dbModels,
   );
 
   if (!contract) {

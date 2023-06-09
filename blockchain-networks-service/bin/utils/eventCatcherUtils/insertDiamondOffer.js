@@ -19,7 +19,6 @@ module.exports = async (
     erc721Address,
     chainId,
     transactionReceipt,
-    dbModels,
   );
 
   if (!contract) {
