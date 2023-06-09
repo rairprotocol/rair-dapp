@@ -1186,7 +1186,7 @@ video {
 
   .block-user-creator {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     margin-right: 10px;
   }
@@ -1431,9 +1431,8 @@ video {
 
   .block-user-creator {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    margin-right: 10px;
   }
 
   .container-title-collection .block-title-share h2 {

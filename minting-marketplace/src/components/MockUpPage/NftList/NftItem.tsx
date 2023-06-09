@@ -183,7 +183,9 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
         className={`${
           className
             ? `${className} nft-item-collection`
-            : `text-start video-wrapper nft-item-collection mobile-respinsove ${
+            : `text-start video-wrapper nft-item-collection ${
+                width < 701 ? 'grid-item' : ''
+              } mobile-respinsove ${
                 globalModalState?.isOpen ? 'with-modal' : ''
               }`
         }`}>
