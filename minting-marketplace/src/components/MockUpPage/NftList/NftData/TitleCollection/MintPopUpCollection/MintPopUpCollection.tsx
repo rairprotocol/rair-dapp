@@ -8,7 +8,6 @@ const MintPopUpCollection = ({
   blockchain,
   offerDataCol,
   primaryColor,
-  connectUserData,
   contractAddress,
   setPurchaseStatus
 }) => {
@@ -19,7 +18,6 @@ const MintPopUpCollection = ({
         offerData={offerDataCol}
         openTitle={false}
         mintToken={true}
-        connectUserData={connectUserData}
         contractAddress={contractAddress}
         setPurchaseStatus={setPurchaseStatus}
       />

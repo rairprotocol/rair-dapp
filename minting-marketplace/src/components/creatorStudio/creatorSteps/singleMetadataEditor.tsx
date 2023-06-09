@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BigNumber } from 'ethers';
-import Swal from 'sweetalert2';
 
 import PropertyRow from './propertyRow';
 
@@ -17,9 +16,10 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import BinanceDiamond from '../../../images/binance-diamond.svg';
 import chainData from '../../../utils/blockchainData';
-import { metamaskCall } from '../../../utils/metamaskUtils';
 import { rFetch } from '../../../utils/rFetch';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import InputField from '../../common/InputField';
@@ -39,6 +39,9 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
 }) => {
   const [nftMapping, setNFTMapping] = useState<TNftMapping>({});
   const [nftCount, setNFTCount] = useState<number>(0);
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const [nftID, setNFTID] = useState<string>(
     BigNumber.from(contractData?.product?.firstTokenIndex).toString()
@@ -138,7 +141,10 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   }, []);
 
   const pinMetadata = async () => {
-    Swal.fire({
+    if (!contractData?.instance) {
+      return;
+    }
+    reactSwal.fire({
       title: 'Please wait...',
       html: 'Pinning metadata to IPFS',
       showConfirmButton: false,
@@ -154,7 +160,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     );
 
     if (response?.success) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Please wait...',
         html: `Sending URI to the blockchain`,
         showConfirmButton: false,
@@ -162,14 +168,12 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
       });
 
       if (
-        await metamaskCall(
-          contractData?.instance.setUniqueURI(
-            BigNumber.from(contractData.product.firstTokenIndex).add(nftID),
-            response.metadataURI
-          )
-        )
+        await web3TxHandler(contractData.instance, 'setUniqueURI', [
+          BigNumber.from(contractData.product.firstTokenIndex).add(nftID),
+          response.metadataURI
+        ])
       ) {
-        Swal.fire({
+        reactSwal.fire({
           title: 'Success',
           html: `Metadata pinned for #${nftID}`,
           icon: 'success'
@@ -185,7 +189,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
       contractData &&
       BigNumber.from(nftID).sub(contractData.product.firstTokenIndex);
 
-    Swal.fire({
+    reactSwal.fire({
       title: 'Please wait...',
       html: `Updating metadata for NFT #${nftID}`,
       showConfirmButton: false,
@@ -210,7 +214,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     );
 
     if (response?.success) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success',
         html: `Updated Metadata for NFT #${nftID}`,
         icon: 'success'
@@ -414,10 +418,10 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           <div className="col-12">
             <button
               onClick={async () => {
-                const URI = await metamaskCall(
-                  contractData.instance.tokenURI(
-                    contractData.product.firstTokenIndex + Number(nftID)
-                  )
+                const URI = await web3TxHandler(
+                  contractData.instance,
+                  'tokenURI',
+                  [contractData.product.firstTokenIndex + Number(nftID)]
                 );
                 if (URI) {
                   const data = await axios.get<TMetadataType>(URI);
@@ -446,22 +450,20 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           <div className="col-12 col-md-3 pt-4">
             <button
               onClick={async () => {
-                Swal.fire({
+                reactSwal.fire({
                   title: 'Sending metadata URI...',
                   html: 'Please wait...',
                   icon: 'info',
                   showConfirmButton: false
                 });
                 if (
-                  await metamaskCall(
-                    contractData.instance.setUniqueURI(
-                      Number(contractData.product.firstTokenIndex) +
-                        Number(nftID),
-                      metadataURI
-                    )
-                  )
+                  await web3TxHandler(contractData.instance, 'setUniqueURI', [
+                    Number(contractData.product.firstTokenIndex) +
+                      Number(nftID),
+                    metadataURI
+                  ])
                 ) {
-                  Swal.fire({
+                  reactSwal.fire({
                     title: 'Success!',
                     html: 'Metadata URI has been set for that specific token',
                     icon: 'success',

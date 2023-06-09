@@ -1,14 +1,11 @@
 //@ts-nocheck
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
 
 // React Redux types
-import { getTokenComplete } from '../../ducks/auth/actions';
-import { setUserAddress } from '../../ducks/contracts/actions';
-import { getUserLogout, setAdminRights } from '../../ducks/users/actions';
-import { rFetch } from '../../utils/rFetch';
+import useConnectUser from '../../hooks/useConnectUser';
 
 import EditMode from './EditMode/EditMode';
 import defaultPictures from './images/defaultUserPictures.png';
@@ -19,9 +16,6 @@ import {
 } from './SettingsIcons/SettingsIcons';
 
 const PopUpSettings = ({
-  currentUserAddress,
-  setLoginDone,
-  primaryColor,
   showAlert,
   selectedChain,
   setTabIndexItems,
@@ -29,33 +23,36 @@ const PopUpSettings = ({
 }) => {
   const settingBlockRef = useRef();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [next, setNext] = useState(false);
   const [, /*openModal*/ setOpenModal] = useState(false);
-  const [, /*userData*/ setUserData] = useState({});
   const [userName, setUserName] = useState();
   const [userEmail, setUserEmail] = useState();
   const [triggerState, setTriggerState] = useState();
   const [editMode, setEditMode] = useState(false);
 
-  const { adminRights, userRd } = useSelector((store) => store.userStore);
+  const { adminRights } = useSelector((store) => store.userStore);
+  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { currentUserAddress } = useSelector((store) => store.contractStore);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+
+  const { logoutUser } = useConnectUser();
+
+  const { userData } = useSelector((store) => store.userStore);
 
   const onChangeEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
   }, [setEditMode]);
 
   useEffect(() => {
-    if (userRd) {
-      setUserName(userRd.nickName);
-      setUserEmail(userRd.email);
-      setUserData(userRd);
-      if (userRd.avatar) {
-        setImagePreviewUrl(userRd.avatar);
+    if (userData) {
+      setUserName(userData.nickName);
+      setUserEmail(userData.email);
+      if (userData.avatar) {
+        setImagePreviewUrl(userData.avatar);
       }
     }
-  }, [userRd]);
+  }, [userData]);
 
   const cutUserAddress = () => {
     if (userName) {
@@ -74,18 +71,6 @@ const PopUpSettings = ({
   useEffect(() => {
     setOpenModal();
   }, [setOpenModal]);
-
-  const logout = async () => {
-    const { success } = await rFetch('/api/v2/auth/logout');
-    if (success) {
-      dispatch(getTokenComplete(null));
-      dispatch(setUserAddress(undefined));
-      dispatch(getUserLogout());
-      dispatch(setAdminRights(false));
-      setLoginDone(false);
-      navigate('/');
-    }
-  };
 
   const pushToUploadVideo = (tab: number) => {
     setTabIndexItems(tab);
@@ -246,7 +231,7 @@ const PopUpSettings = ({
                     </li>
                   )}
                 <li
-                  onClick={logout}
+                  onClick={logoutUser}
                   style={{
                     color:
                       primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'

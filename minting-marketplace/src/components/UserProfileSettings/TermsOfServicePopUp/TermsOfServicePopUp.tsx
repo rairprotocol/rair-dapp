@@ -7,8 +7,8 @@ import { TUserResponse } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { getUserStart } from '../../../ducks/users/actions';
+import useSwal from '../../../hooks/useSwal';
 import { getRandomValues } from '../../../utils/getRandomValues';
-import { reactSwal } from '../../../utils/reactSwal';
 
 const TermsOfServicePopUp = () => {
   return <ConfirmAgreements />;
@@ -162,6 +162,7 @@ const ConfirmAgreements = () => {
     (store) => store.colorStore
   );
 
+  const reactSwal = useSwal();
   const openModal = () => {
     reactSwal.fire({
       title: <h2 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h2>,

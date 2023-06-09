@@ -3,7 +3,7 @@ import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import CustomShareButton from './CustomShareButton';
+// import CustomShareButton from './CustomShareButton';
 import EtherscanIconComponent from './EtherscanIconComponent';
 import SerialNumberBuySell from './SerialNumberBuySell';
 import SingleTokenViewProperties from './SingleTokenViewProperties';
@@ -45,7 +45,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   offerDataInfo,
   someUsersData,
   ownerInfo,
-  loginDone,
   embeddedParams,
   handleTokenBoughtButton
 }) => {
@@ -330,7 +329,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               selectedToken={selectedToken}
               textColor={textColor}
               currentUser={currentUser}
-              loginDone={loginDone}
               handleTokenBoughtButton={handleTokenBoughtButton}
             />
           )}

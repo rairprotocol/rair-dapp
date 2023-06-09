@@ -3,7 +3,6 @@ import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 import { teamNipseyverseArray } from './AboutUsTeam';
 
@@ -16,9 +15,10 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { InitialState } from '../../../ducks/seo/reducers';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 /* importing images*/
 import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
-import { metamaskCall } from '../../../utils/metamaskUtils';
 import { rFetch } from '../../../utils/rFetch';
 import { TAddChainData } from '../../../utils/utils.types';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -90,6 +90,9 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     //eslint-disable-next-line
   }, []);
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const switchEthereumChain = async (chainData: TAddChainData) => {
     try {
       await window.ethereum.request({
@@ -139,7 +142,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     );
     const instance = contractCreator?.(nipseyAddress, erc721Abi);
     const nextToken = await instance?.getNextSequentialIndex(0, 50, 250);
-    Swal.fire({
+    reactSwal.fire({
       title: 'Please wait...',
       html: `Buying token #${nextToken.toString()}`,
       icon: 'info',
@@ -148,24 +151,29 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     const [firstPressingOffer] = products[0].offers.filter(
       (item) => item.offerName === '1st Pressing'
     );
-    if (!firstPressingOffer) {
-      Swal.fire('Error', 'An error has ocurred', 'error');
+    if (!firstPressingOffer || !minterInstance) {
+      reactSwal.fire('Error', 'An error has ocurred', 'error');
       return;
     }
     if (
-      await metamaskCall(
-        minterInstance?.buyToken(
+      await web3TxHandler(
+        minterInstance,
+        'buyToken',
+        [
           products[0].offerPool.marketplaceCatalogIndex,
           firstPressingOffer.offerIndex,
           nextToken,
           {
             value: firstPressingOffer.price
           }
-        ),
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+        ],
+        {
+          failureMessage:
+            'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+        }
       )
     ) {
-      Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
+      reactSwal.fire('Success', `Bought token #${nextToken}!`, 'success');
     }
   };
 

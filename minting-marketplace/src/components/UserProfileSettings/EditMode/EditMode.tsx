@@ -7,7 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { getUserStart } from '../../../ducks/users/actions';
-import { reactSwal } from '../../../utils/reactSwal';
+import useSwal from '../../../hooks/useSwal';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import { SvgUserIcon } from '../SettingsIcons/SettingsIcons';
 import { AgreementsPopUp } from '../TermsOfServicePopUp/TermsOfServicePopUp';
@@ -26,6 +26,7 @@ const EditMode = ({
 }) => {
   const dispatch = useDispatch();
   const store = useStore();
+  const reactSwal = useSwal();
 
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
   const { currentUserAddress } = useSelector((store) => store.contractStore);

@@ -6,14 +6,12 @@ export interface IAboutPageNew {
   headerLogoBlack?: string;
   headerLogoWhite?: string;
   setIsSplashPage: (arg: boolean) => void;
-  connectUserData: () => void;
 }
 
 export interface IMainBlock {
   Metamask: string;
   primaryColor: ColorChoice;
   termsText: string;
-  connectUserData: () => void;
   purchaseButton: ReactNode;
   RairLogo?: string;
 }

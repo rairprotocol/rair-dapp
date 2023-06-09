@@ -9,8 +9,11 @@ import {
   useLocation,
   useNavigationType
 } from 'react-router-dom';
+import { BrowserTracing } from '@sentry/browser';
 import { init, reactRouterV6Instrumentation } from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
+import { OreId } from 'oreid-js';
+import { OreidProvider } from 'oreid-react';
+import { WebPopup } from 'oreid-webpopup';
 
 import App from './App';
 import store from './ducks';
@@ -18,6 +21,12 @@ import store from './ducks';
 import { GlobalModalStateProvider } from './providers/ModalProvider/ModalProvider';
 
 import './index.css';
+
+const oreId = new OreId({
+  appId: 't_00bc5d5b1bde4012af5207c2058e48db',
+  plugins: { popup: WebPopup() }
+});
+oreId.init();
 
 const sentryIoTraceRate = Number(process.env.REACT_APP_SENTRY_IO_TRACE_RATE);
 
@@ -48,7 +57,9 @@ ReactDOM.render(
       <Provider store={store}>
         <BrowserRouter>
           <GlobalModalStateProvider>
-            <App />
+            <OreidProvider oreId={oreId}>
+              <App />
+            </OreidProvider>
           </GlobalModalStateProvider>
         </BrowserRouter>
       </Provider>

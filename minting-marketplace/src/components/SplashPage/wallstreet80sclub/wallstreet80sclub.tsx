@@ -10,6 +10,7 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 import {
   blockchain,
   splashData
@@ -41,7 +42,6 @@ import './wallstreet80sclub.css';
 //ReactGA.initialize(TRACKING_ID);
 
 const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
-  loginDone,
   connectUserData,
   setIsSplashPage
 }) => {
@@ -54,6 +54,10 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   /* UTILITIES FOR CAROUSEL */
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
+
+  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   /* UTILITIES FOR NFT PURCHASE */
   const [soldCopies, setSoldCopies] = useState<number>(0);
@@ -115,7 +119,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
     setOpenCheckList((prev) => !prev);
   };
   const getAllProduct = useCallback(async () => {
-    if (loginDone) {
+    if (loggedIn) {
       if (currentChain === splashData.purchaseButton?.requiredBlockchain) {
         setSoldCopies(
           (
@@ -128,7 +132,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
         setSoldCopies(0);
       }
     }
-  }, [setSoldCopies, loginDone, currentChain, minterInstance]);
+  }, [setSoldCopies, loggedIn, currentChain, minterInstance]);
 
   useEffect(() => {
     getAllProduct();
@@ -154,7 +158,6 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
           counterData={splashData.counterData}
           soldCopies={soldCopies}
           primaryColor={primaryColor}
-          loginDone={loginDone}
           counterOverride={true}
           nftTitle="NFTs Left"
         />

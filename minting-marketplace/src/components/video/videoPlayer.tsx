@@ -1,14 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 
 import { VideoPlayerParams } from './video.types';
 
 import { TOnlySuccessResponse } from '../../axios.responseTypes';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { reactSwal } from '../../utils/reactSwal';
+import useSwal from '../../hooks/useSwal';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import NewVideo from '../MockUpPage/NftList/NftData/NftVideoplayer/NewVideo';
@@ -18,6 +15,8 @@ const VideoPlayer = () => {
   const { /*contract,*/ mainManifest, videoId } = params;
   const [videoName] = useState(videoId);
   const [mediaAddress, setMediaAddress] = useState<string | null>('');
+
+  const reactSwal = useSwal();
 
   const requestChallenge = useCallback(async () => {
     try {
@@ -41,7 +40,7 @@ const VideoPlayer = () => {
         title: 'NFT required to view this content'
       });
     }
-  }, [mainManifest, videoId]);
+  }, [mainManifest, reactSwal, videoId]);
 
   useEffect(() => {
     requestChallenge();

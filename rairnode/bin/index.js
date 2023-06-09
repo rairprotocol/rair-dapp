@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const Socket = require('socket.io');
 const morgan = require('morgan');
 const session = require('express-session');
@@ -49,8 +48,6 @@ async function main() {
   });
 
   await mongoConnectionManager.getMongooseConnection({});
-
-  mongoose.set('useFindAndModify', false);
 
   const app = express();
 

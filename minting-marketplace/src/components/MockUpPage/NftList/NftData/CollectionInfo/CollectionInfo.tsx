@@ -27,7 +27,6 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   offerData,
   openTitle,
   mintToken,
-  connectUserData,
   contractAddress,
   setPurchaseStatus
 }) => {
@@ -168,7 +167,6 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     {mintToken && (
                       <div className="collection-mint-button">
                         <PurchaseTokenButton
-                          connectUserData={connectUserData}
                           contractAddress={contractAddress}
                           requiredBlockchain={blockchain}
                           collection={true}

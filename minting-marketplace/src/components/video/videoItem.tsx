@@ -3,8 +3,8 @@ import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Contract } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import Swal from 'sweetalert2';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { IVideoItem, TVideoItemContractData } from './video.types';
@@ -14,12 +14,13 @@ import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
-import { SvgKey } from '../MockUpPage/NftList/SvgKey';
+// import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';
@@ -44,6 +45,9 @@ const VideoItem: React.FC<IVideoItem> = ({
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const customStyles = {
     overlay: {
@@ -86,24 +90,28 @@ const VideoItem: React.FC<IVideoItem> = ({
     selectedToken,
     price
   }) => {
-    if (!contractData && !diamondMarketplaceInstance && !minterInstance) {
+    if (!contractData || !diamondMarketplaceInstance || !minterInstance) {
       return;
     }
-    Swal.fire({
+    reactSwal.fire({
       title: 'Buying token',
       html: 'Awaiting transaction completion',
       icon: 'info',
       showConfirmButton: false
     });
-    let marketplaceCall, marketplaceArguments;
+    let marketplaceContract: Contract,
+      marketplaceMethod: string,
+      marketplaceArguments: any[];
     if (contractData?.diamond) {
-      marketplaceCall = diamondMarketplaceInstance?.buyMintingOffer;
+      marketplaceContract = diamondMarketplaceInstance;
+      marketplaceMethod = 'buyMintingOffer';
       marketplaceArguments = [
         offerIndex, // Offer Index
         selectedToken // Token Index
       ];
     } else {
-      marketplaceCall = minterInstance?.buyToken;
+      marketplaceContract = minterInstance;
+      marketplaceMethod = 'buyToken';
       marketplaceArguments = [
         offerPool, // Catalog Index
         offerIndex, // Range Index
@@ -114,13 +122,22 @@ const VideoItem: React.FC<IVideoItem> = ({
       value: price
     });
     if (
-      await metamaskCall(
-        marketplaceCall(...marketplaceArguments),
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
-        handleVideoIsUnlocked
+      await web3TxHandler(
+        marketplaceContract,
+        marketplaceMethod,
+        marketplaceArguments,
+        {
+          failureMessage:
+            'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
+          callback: handleVideoIsUnlocked
+        }
       )
     ) {
-      Swal.fire('Success', 'Now, you are the owner of this token', 'success');
+      reactSwal.fire(
+        'Success',
+        'Now, you are the owner of this token',
+        'success'
+      );
     }
   };
 

@@ -1,5 +1,4 @@
 const admin = require('./admin');
-const metaValidate = require('./metaValidate');
 const addMedia = require('./addMedia');
 const authentication = require('./authentication');
 const createContract = require('./createContract');
@@ -47,7 +46,11 @@ const {
   validateMediaData,
   addFileFromMediaService,
 } = require('./v2MediaFileSchemas');
-const { v2Unlock } = require('./v2AuthSchemas');
+const {
+  v2Unlock,
+  web3Validation,
+  oreIdValidation,
+} = require('./v2AuthSchemas');
 const {
   csvFileUpload,
   getTokenNumbers,
@@ -94,7 +97,6 @@ module.exports = {
   analyticsQuery,
 
   // V2
-  metaValidate,
   textSearch,
 
   // Import contract logic
@@ -134,6 +136,8 @@ module.exports = {
   addFileFromMediaService,
   // Auth schemas
   v2Unlock,
+  web3Validation,
+  oreIdValidation,
   // Token Schemas
   csvFileUpload,
   getTokenNumbers,

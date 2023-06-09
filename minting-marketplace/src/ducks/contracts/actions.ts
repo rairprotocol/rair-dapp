@@ -1,9 +1,13 @@
 import * as types from './types';
 
-const setChainId = (currentChain: BlockchainType | undefined) =>
+const setChainId = (
+  currentChain: BlockchainType | undefined,
+  oreIdAddress: string | undefined = ''
+) =>
   ({
     type: types.SET_CHAIN_ID,
-    currentChain
+    currentChain,
+    oreIdAddress
   } as const);
 
 const setUserAddress = (currentUserAddress: string | undefined) =>

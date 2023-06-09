@@ -10,8 +10,10 @@ import SellInputButton from './SellInputButton';
 
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import useSwal from '../../../../hooks/useSwal';
+import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import chainData from '../../../../utils/blockchainData';
-import { metamaskCall } from '../../../../utils/metamaskUtils';
 import { rFetch } from '../../../../utils/rFetch';
 import { web3Switch } from '../../../../utils/switchBlockchain';
 import { ContractType } from '../../../adminViews/adminView.types';
@@ -31,13 +33,17 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   primaryColor,
   offerData,
   currentUser,
-  loginDone,
   handleTokenBoughtButton
 }) => {
   const { minterInstance, diamondMarketplaceInstance, currentChain } =
     useSelector<RootState, ContractsInitialType>(
       (state) => state.contractStore
     );
+  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
+  const { web3TxHandler } = useWeb3Tx();
+  const reactSwal = useSwal();
 
   const currentProvider = MetaMaskOnboarding.isMetaMaskInstalled()
     ? window.ethereum.chainId
@@ -67,21 +73,23 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     ) {
       return;
     }
-    Swal.fire({
+    reactSwal.fire({
       title: 'Buying token',
       html: 'Awaiting transaction completion',
       icon: 'info',
       showConfirmButton: false
     });
-    let marketplaceCall, marketplaceArguments;
+    let marketplaceContract, marketplaceMethod, marketplaceArguments;
     if (contractData.diamond) {
-      marketplaceCall = diamondMarketplaceInstance?.buyMintingOffer;
+      marketplaceContract = diamondMarketplaceInstance;
+      marketplaceMethod = 'buyMintingOffer';
       marketplaceArguments = [
         offerData.offerIndex, // Offer Index
         selectedToken // Token Index
       ];
     } else {
-      marketplaceCall = minterInstance?.buyToken;
+      marketplaceContract = minterInstance;
+      marketplaceMethod = 'buyToken';
       marketplaceArguments = [
         offerData?.offerPool, // Catalog Index
         offerData?.offerIndex, // Range Index
@@ -91,22 +99,33 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     marketplaceArguments.push({
       value: offerData.price
     });
-    if (
-      await metamaskCall(
-        marketplaceCall(...marketplaceArguments),
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
-        handleTokenBoughtButton
-      )
-    ) {
-      Swal.fire('Success', 'Now, you are the owner of this token', 'success');
+    const result = await web3TxHandler(
+      marketplaceContract,
+      marketplaceMethod,
+      marketplaceArguments,
+      {
+        failureMessage:
+          'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
+        callback: handleTokenBoughtButton
+      }
+    );
+    console.info(result);
+    if (result) {
+      reactSwal.fire(
+        'Success',
+        'Now, you are the owner of this token',
+        'success'
+      );
     }
   }, [
-    minterInstance,
+    contractData,
     offerData,
     diamondMarketplaceInstance,
-    contractData,
-    selectedToken,
-    handleTokenBoughtButton
+    minterInstance,
+    reactSwal,
+    web3TxHandler,
+    handleTokenBoughtButton,
+    selectedToken
   ]);
 
   useEffect(() => {
@@ -145,7 +164,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
 
   const checkAllSteps = useCallback(() => {
     if (blockchain !== realChainProtected) {
-      return loginDone ? (
+      return loggedIn ? (
         <BuySellButton
           handleClick={() => web3Switch(blockchain)}
           isColorPurple={true}
@@ -172,7 +191,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     currentUser,
     selectedToken,
     tokenData,
-    loginDone
+    loggedIn
   ]);
 
   useEffect(() => {
@@ -232,7 +251,6 @@ export default SerialNumberBuySell;
 // import React, { useCallback, useState, useEffect } from 'react';
 // import { ISerialNumberBuySell } from '../../mockupPage.types';
 // import { BuySellButton } from './BuySellButton';
-// import { metamaskCall } from '../../../../utils/metamaskUtils';
 // import { RootState } from '../../../../ducks';
 // import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 // import { useSelector } from 'react-redux';
@@ -253,7 +271,6 @@ export default SerialNumberBuySell;
 //   primaryColor,
 //   offerData,
 //   currentUser,
-//   loginDone
 // }) => {
 //   const { minterInstance, currentChain, diamondMarketplaceInstance } =
 //     useSelector<RootState, ContractsInitialType>(
@@ -310,10 +327,10 @@ export default SerialNumberBuySell;
 //         showConfirmButton: false
 //       });
 //       if (
-//         await metamaskCall(
-//           diamondMarketplaceInstance.buyMintingOffer(offerIndex, nextToken, {
+//         await web3TxHandler(
+//           diamondMarketplaceInstance,'buyMintingOffer'[offerIndex, nextToken, {
 //             value: price
-//           })
+//           }]
 //         )
 //       ) {
 //         Swal.fire({
@@ -354,16 +371,16 @@ export default SerialNumberBuySell;
 //       } else {
 //         debugger;
 //         if (
-//           await metamaskCall(
-//             minterInstance?.buyToken(
+//           await web3TxHandler(
+//             minterInstance,'buyToken',[
 //               offerData.offerPool,
 //               offerData.offerIndex,
 //               selectedToken,
 //               {
 //                 value: offerData.price
 //               }
-//             ),
-//             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+//             ],
+//             {failureMessage: 'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'}
 //           )
 //         ) {
 //           Swal.fire(
@@ -404,7 +421,7 @@ export default SerialNumberBuySell;
 
 //   const checkAllSteps = useCallback(() => {
 //     if (blockchain !== realChainProtected) {
-//       return loginDone ? (
+//       return loggedIn ? (
 //         <BuySellButton
 //           handleClick={() => web3Switch(blockchain)}
 //           isColorPurple={true}
@@ -431,7 +448,7 @@ export default SerialNumberBuySell;
 //     currentUser,
 //     selectedToken,
 //     tokenData,
-//     loginDone
+//     loggedIn
 //   ]);
 
 //   return (

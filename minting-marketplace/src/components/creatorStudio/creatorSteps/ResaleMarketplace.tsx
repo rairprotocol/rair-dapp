@@ -1,15 +1,15 @@
-//@ts-nocheck
+// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
-import { metamaskCall } from '../../../utils/metamaskUtils';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import InputField from '../../common/InputField';
 import CustomFeeRow from '../common/customFeeRow';
@@ -31,11 +31,14 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
     ContractsInitialType
   >((store) => store.contractStore);
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const [customPayments, setCustomPayments] = useState<TCustomPayments[]>([]);
   const [approving, setApproving] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
   const [resaleAddress, setResaleAddress] = useState<string>(
-    resaleInstance?.address
+    resaleInstance?.address || ''
   );
   const [nodeFee, setNodeFee] = useState<BigNumber>(BigNumber.from(0));
   const [treasuryFee, setTreasuryFee] = useState<BigNumber>(BigNumber.from(0));
@@ -85,24 +88,25 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   }, [setStepNumber, stepNumber]);
 
   const setCustomFees = async () => {
+    if (!resaleInstance) {
+      return;
+    }
     setSendingData(true);
     try {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Setting custom fees',
         html: 'Please wait...',
         icon: 'info',
         showConfirmButton: false
       });
       if (
-        await metamaskCall(
-          resaleInstance.setCustomRoyalties(
-            contractData?.contractAddress,
-            customPayments.map((item) => item.recipient),
-            customPayments.map((item) => item.percentage)
-          )
-        )
+        await web3TxHandler(resaleInstance, 'setCustomRoyalties', [
+          contractData?.contractAddress,
+          customPayments.map((item) => item.recipient),
+          customPayments.map((item) => item.percentage)
+        ])
       ) {
-        Swal.fire({
+        reactSwal.fire({
           title: 'Success',
           html: 'Custom fees set',
           icon: 'success',
@@ -112,7 +116,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
       }
     } catch (e) {
       console.error(e);
-      Swal.fire('Error', '', 'error');
+      reactSwal.fire('Error', '', 'error');
     }
     setSendingData(false);
   };
@@ -123,7 +127,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
       let total = BigNumber.from(0);
       for (const payment of customPayments) {
         console.info(payment);
-        valid = valid && utils.isAddress(payment.recipient);
+        valid = valid && utils.isAddress(payment.recipient || '');
         total = total.add(payment.percentage);
         console.info(total);
       }
@@ -166,7 +170,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
                   deleter={removePayment}
                   rerender={() => setRerender(!rerender)}
                   minterDecimals={minterDecimals}
-                  symbol={chainData[contractData.blockchain].symbol}
+                  symbol={chainData[contractData.blockchain]?.symbol}
                   {...item}
                 />
               );
@@ -234,21 +238,19 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
             className="btn col-12 btn-stimorol"
             onClick={async () => {
               setApproving(true);
-              Swal.fire({
+              reactSwal.fire({
                 title: 'Approving address',
                 html: 'Please wait...',
                 icon: 'info',
                 showConfirmButton: false
               });
               if (
-                await metamaskCall(
-                  contractData?.instance.grantRole(
-                    await metamaskCall(contractData.instance.TRADER()),
-                    resaleAddress
-                  )
-                )
+                await web3TxHandler(contractData?.instance, 'grantRole', [
+                  await web3TxHandler(contractData.instance, 'TRADER', []),
+                  resaleAddress
+                ])
               ) {
-                Swal.fire(
+                reactSwal.fire(
                   'Success',
                   'The address has been approved to trade NFTs',
                   'success'

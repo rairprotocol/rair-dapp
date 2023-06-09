@@ -14,6 +14,7 @@ export interface IAgreementsPropsType {
   databaseOnly?: boolean;
   collection?: boolean | undefined;
   setPurchaseStatus?: any;
+  web3TxHandler: any;
 }
 
 export interface IPurchaseTokenButtonProps {
@@ -27,7 +28,6 @@ export interface IPurchaseTokenButtonProps {
   requiredBlockchain?: BlockchainType | undefined;
   offerIndex?: string[] | undefined;
   buttonLabel?: string;
-  connectUserData?: () => void;
   presaleMessage?: string | React.ReactNode;
   diamond: boolean;
   customSuccessAction?: (nextToken: number) => any;

@@ -67,8 +67,7 @@ import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
-import { getTokenComplete } from './ducks/auth/actions';
-import { setChainId, setUserAddress } from './ducks/contracts/actions';
+import { setChainId } from './ducks/contracts/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setAdminRights } from './ducks/users/actions';
 import useConnectUser from './hooks/useConnectUser';
@@ -79,12 +78,10 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
-import { rFetch } from './utils/rFetch';
 // views
 import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
 
 import './App.css';
-
 /* Track a page view */
 const analytics = getInformationGoogleAnalytics();
 analytics.page();
@@ -121,10 +118,9 @@ function App() {
   } = useSelector((store) => store.contractStore);
   const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
     useSelector((store) => store.colorStore);
-  const { adminRights } = useSelector((store) => store.userStore);
+  const { adminRights, loggedIn } = useSelector((store) => store.userStore);
 
-  const { startedLogin, userData, loginDone, connectUserData, setLoginDone } =
-    useConnectUser();
+  const { connectUserData, logoutUser } = useConnectUser();
 
   const goHome = () => {
     navigate('/');
@@ -147,18 +143,9 @@ function App() {
       window.ethereum.on('chainChanged', async (chainId) => {
         dispatch(setChainId(chainId));
       });
-      window.ethereum.on('accountsChanged', async () => {
-        const { success } = await rFetch('/api/v2/auth/logout');
-        if (success) {
-          dispatch(getTokenComplete(null));
-          dispatch(setUserAddress(undefined));
-          dispatch(setAdminRights(false));
-          setLoginDone(false);
-          navigate('/');
-        }
-      });
+      window.ethereum.on('accountsChanged', logoutUser);
     }
-  }, [dispatch, navigate, setLoginDone]);
+  }, [dispatch, logoutUser]);
 
   // gtag
 
@@ -271,12 +258,7 @@ function App() {
           {carousel && !isIframePage ? (
             <MainHeader
               goHome={goHome}
-              loginDone={loginDone}
-              startedLogin={startedLogin}
               renderBtnConnect={renderBtnConnect}
-              connectUserData={connectUserData}
-              setLoginDone={setLoginDone}
-              userData={userData}
               creatorViewsDisabled={creatorViewsDisabled}
               showAlert={showAlert}
               selectedChain={selectedChain}
@@ -289,11 +271,7 @@ function App() {
                 isSplashPage={isSplashPage}
                 adminRights={adminRights}
                 primaryColor={primaryColor}
-                startedLogin={startedLogin}
-                connectUserData={connectUserData}
                 renderBtnConnect={renderBtnConnect}
-                loginDone={loginDone}
-                setLoginDone={setLoginDone}
                 currentUserAddress={currentUserAddress}
                 creatorViewsDisabled={creatorViewsDisabled}
                 programmaticProvider={programmaticProvider}
@@ -365,15 +343,12 @@ function App() {
                   },
                   {
                     path: '/simdogs-splash',
-                    content: SimDogsSplashPage,
-                    props: {
-                      connectUserData: connectUserData
-                    }
+                    content: SimDogsSplashPage
                   },
                   {
                     path: '/markkohler-splash',
                     content: MarkKohler,
-                    props: { connectUserData, setIsSplashPage }
+                    props: { setIsSplashPage }
                   },
                   {
                     path: '/genesis-splash',
@@ -431,7 +406,6 @@ function App() {
                     path: '/about-page',
                     content: AboutPageNew,
                     props: {
-                      connectUserData: connectUserData,
                       headerLogoWhite: headerLogoWhite,
                       headerLogoBlack: headerLogoBlack,
                       setIsSplashPage: setIsSplashPage
@@ -441,8 +415,6 @@ function App() {
                     path: '/main-page',
                     content: MainPage,
                     props: {
-                      loginDone: loginDone,
-                      connectUserData: connectUserData,
                       setIsSplashPage: setIsSplashPage
                     }
                   }
@@ -463,7 +435,6 @@ function App() {
                         <item.content
                           {...{
                             connectUserData,
-                            loginDone,
                             setIsSplashPage,
                             isSplashPage
                           }}
@@ -493,7 +464,7 @@ function App() {
                     path: '/admin/fileUpload',
                     content: FileUpload,
                     requirement:
-                      loginDone && !creatorViewsDisabled && adminRights,
+                      loggedIn && !creatorViewsDisabled && adminRights,
                     props: {
                       primaryColor: primaryColor,
                       textColor: textColor
@@ -503,14 +474,14 @@ function App() {
                   {
                     path: '/admin/transferNFTs',
                     content: TransferTokens,
-                    constraint: loginDone && !creatorViewsDisabled
+                    constraint: loggedIn && !creatorViewsDisabled
                   },
                   // Resale offers page
                   {
                     path: '/resale-offers',
                     content: ResalePage,
                     requirement:
-                      loginDone && adminRights && !creatorViewsDisabled,
+                      loggedIn && adminRights && !creatorViewsDisabled,
                     exact: true
                   },
                   // Creator UI - New Views based on Figma
@@ -518,27 +489,27 @@ function App() {
                     path: '/creator/deploy',
                     content: Deploy,
                     requirement:
-                      loginDone && adminRights && !creatorViewsDisabled
+                      loggedIn && adminRights && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contracts',
                     content: Contracts,
-                    requirement: loginDone && !creatorViewsDisabled
+                    requirement: loggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/createCollection',
                     content: ContractDetails,
-                    requirement: loginDone && !creatorViewsDisabled
+                    requirement: loggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/listCollections',
                     content: ListCollections,
-                    requirement: loginDone && !creatorViewsDisabled
+                    requirement: loggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/*', // NEW: Wildcard allows WorkflowSteps to have routes within
                     content: WorkflowSteps,
-                    requirement: loginDone && !creatorViewsDisabled,
+                    requirement: loggedIn && !creatorViewsDisabled,
                     exact: false
                   },
 
@@ -546,19 +517,19 @@ function App() {
                   {
                     path: '/on-sale',
                     content: MinterMarketplace,
-                    requirement: loginDone && !creatorViewsDisabled
+                    requirement: loggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/rair/:contract/:product',
                     content: RairProduct,
-                    requirement: loginDone && !creatorViewsDisabled
+                    requirement: loggedIn && !creatorViewsDisabled
                   },
 
                   // Old Token Viewer (Using the database)
                   {
                     path: '/token/:blockchain/:contract/:identifier',
                     content: Token,
-                    requirement: loginDone && !creatorViewsDisabled
+                    requirement: loggedIn && !creatorViewsDisabled
                   },
 
                   // Classic Factory (Uses the blockchain)
@@ -566,7 +537,7 @@ function App() {
                     path: '/factory',
                     content: CreatorMode,
                     requirement:
-                      loginDone &&
+                      loggedIn &&
                       !creatorViewsDisabled &&
                       adminRights &&
                       factoryInstance !== undefined
@@ -577,7 +548,7 @@ function App() {
                     path: '/minter',
                     content: ConsumerMode,
                     requirement:
-                      loginDone &&
+                      loggedIn &&
                       !creatorViewsDisabled &&
                       minterInstance !== undefined
                   },
@@ -587,20 +558,19 @@ function App() {
                     path: '/diamondMinter',
                     content: DiamondMarketplace,
                     requirement:
-                      loginDone &&
+                      loggedIn &&
                       !creatorViewsDisabled &&
                       diamondMarketplaceInstance !== undefined
                   },
                   {
                     path: '/importExternalContracts',
                     content: ImportExternalContracts,
-                    constraint: loginDone && !creatorViewsDisabled
+                    constraint: loggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/about-page',
                     content: AboutPageNew,
                     props: {
-                      connectUserData: connectUserData,
                       headerLogoWhite: headerLogoWhite,
                       headerLogoBlack: headerLogoBlack,
                       setIsSplashPage: setIsSplashPage
@@ -619,10 +589,9 @@ function App() {
                   {
                     path: '/profile/my-items',
                     content: MyItems,
-                    requirement: loginDone,
+                    requirement: loggedIn,
                     props: {
                       goHome,
-                      userData,
                       setIsSplashPage,
                       setTabIndexItems,
                       tabIndexItems
@@ -633,7 +602,6 @@ function App() {
                     content: UserProfilePage
                     // props: {
                     //   goHome,
-                    //   userData,
                     //   setIsSplashPage,
                     //   setTabIndexItems,
                     //   tabIndexItems
@@ -641,8 +609,7 @@ function App() {
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',
-                    content: NftDataExternalLink,
-                    props: { loginDone }
+                    content: NftDataExternalLink
                   },
                   {
                     path: '/coming-soon',
@@ -668,17 +635,13 @@ function App() {
                   },
                   {
                     path: '/user-profile',
-                    content: UserProfile,
-                    props: {
-                      userData
-                    }
+                    content: UserProfile
                   },
                   {
                     path: '/:userAddress',
                     content: UserProfilePage
                     // props: {
                     //   goHome,
-                    //   userData,
                     //   setIsSplashPage,
                     //   setTabIndexItems,
                     //   tabIndexItems
@@ -699,28 +662,21 @@ function App() {
                     content: NftDataCommonLink,
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                      'true',
-                    props: { loginDone }
+                      'true'
                   },
                   {
                     path: '/collection/:blockchain/:contract/:product/:tokenId',
                     content: NftDataCommonLink,
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                      'true',
-                    props: {
-                      userData,
-                      loginDone,
-                      connectUserData
-                    }
+                      'true'
                   },
                   {
                     path: '/unlockables/:blockchain/:contract/:product/:tokenId',
                     content: NftDataCommonLink,
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                      'true',
-                    props: { userData, loginDone }
+                      'true'
                   },
 
                   {
@@ -732,18 +688,15 @@ function App() {
                     path: '/watch/:contract/:videoId/:mainManifest',
                     content: IframePage,
                     props: {
-                      loginDone,
                       setIsIframePage,
                       renderBtnConnect,
-                      programmaticProvider,
-                      startedLogin,
-                      connectUserData
+                      programmaticProvider
                     }
                   },
                   {
                     path: '/test-iframe/:contract/:videoId/:mainManifest',
                     content: TestIframe,
-                    props: { loginDone, setIsIframePage }
+                    props: { setIsIframePage }
                   },
                   {
                     path: '*',

@@ -111,7 +111,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
   };
 
   // const getAllProduct = useCallback(async () => {
-  //   if (loginDone) {
+  //   if (loggedIn) {
   //     if (currentChain === splashData.purchaseButton.requiredBlockchain) {
   //       setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
   //     } else {
@@ -119,7 +119,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
   //     }
   //   }
 
-  // }, [setSoldCopies, loginDone, currentChain, minterInstance]);
+  // }, [setSoldCopies, loggedIn, currentChain, minterInstance]);
 
   // useEffect(() => {
   //   getAllProduct()

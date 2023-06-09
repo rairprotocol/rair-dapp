@@ -9,6 +9,7 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 import { splashData } from '../../../utils/infoSplashData/ukraineSplashPage';
 /* importing images*/
@@ -48,7 +49,6 @@ import './UkraineSplash.css';
 //ReactGA.initialize(TRACKING_ID);
 
 const UkraineSplashPage: React.FC<ISplashPageProps> = ({
-  loginDone,
   connectUserData,
   setIsSplashPage
 }) => {
@@ -67,6 +67,9 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurshaseList] = useState(true);
   const ukraineglitchChainId = '0x1';
+  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   useEffect(() => {
     dispatch(
@@ -101,7 +104,7 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
   const getAllProduct = useCallback(async () => {
-    if (loginDone) {
+    if (loggedIn) {
       if (
         currentChain === splashData.purchaseButton?.requiredBlockchain &&
         splashData.purchaseButton?.offerIndex
@@ -117,7 +120,7 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
         setSoldCopies(0);
       }
     }
-  }, [setSoldCopies, loginDone, currentChain, minterInstance]);
+  }, [setSoldCopies, loggedIn, currentChain, minterInstance]);
 
   useEffect(() => {
     getAllProduct();
@@ -158,7 +161,6 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
           counterData={splashData.counterData}
           soldCopies={soldCopies}
           primaryColor={primaryColor}
-          loginDone={loginDone}
           nftTitle="NFTs Left"
         />
         <NFTImages

@@ -14,6 +14,7 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
 import { TUsersInitialState } from '../../ducks/users/users.types';
 import useComponentVisible from '../../hooks/useComponentVisible';
+import useConnectUser from '../../hooks/useConnectUser';
 import { DiscordIcon, TwitterIcon } from '../../images';
 //images
 import { headerLogoBlack, headerLogoWhite } from '../../images';
@@ -42,12 +43,7 @@ import './Header.css';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
-  loginDone,
-  startedLogin,
   renderBtnConnect,
-  connectUserData,
-  setLoginDone,
-  userData,
   creatorViewsDisabled,
   selectedChain,
   showAlert,
@@ -61,10 +57,11 @@ const MainHeader: React.FC<IMainHeader> = ({
   const { primaryColor, headerLogo } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const { connectUserData } = useConnectUser();
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
     (store) => store.allInformationFromSearch
   );
-  const { adminRights, superAdmin } = useSelector<
+  const { adminRights, superAdmin, loggedIn, loginProcess } = useSelector<
     RootState,
     TUsersInitialState
   >((store) => store.userStore);
@@ -320,18 +317,18 @@ const MainHeader: React.FC<IMainHeader> = ({
         <i className="fas fa-search" aria-hidden="true"></i>
       </div>
       <div className="box-header-info">
-        {!loginDone && (
+        {!loggedIn && (
           <div>
             {renderBtnConnect ? (
               <OnboardingButton />
             ) : (
               <button
                 disabled={
-                  !window.ethereum && !programmaticProvider && !startedLogin
+                  !window.ethereum && !programmaticProvider && !loginProcess
                 }
                 className={`btn btn-${primaryColor} btn-connect-wallet`}
-                onClick={connectUserData}>
-                {startedLogin ? 'Please wait...' : 'Connect'}
+                onClick={() => connectUserData()}>
+                {loginProcess ? 'Please wait...' : 'Connect'}
               </button>
             )}
           </div>
@@ -347,11 +344,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             </TooltipBox>
           )}
           <UserProfileSettings
-            userData={userData}
             adminAccess={adminRights}
-            currentUserAddress={currentUserAddress}
-            loginDone={loginDone}
-            setLoginDone={setLoginDone}
             showAlert={showAlert}
             selectedChain={selectedChain}
             setTabIndexItems={setTabIndexItems}
@@ -379,7 +372,6 @@ const MainHeader: React.FC<IMainHeader> = ({
               </a>
             </SocialBox>
             <AdminPanel
-              loginDone={loginDone}
               creatorViewsDisabled={creatorViewsDisabled}
               adminPanel={adminPanel}
               setAdminPanel={setAdminPanel}

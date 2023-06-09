@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import BatchMinting from './BatchMinting';
 import {
@@ -15,9 +14,9 @@ import {
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import blockchainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
-import { reactSwal } from '../../utils/reactSwal';
 
 const Range: React.FC<IRange> = ({
   tokenInstance,
@@ -37,6 +36,9 @@ const Range: React.FC<IRange> = ({
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const refreshData = useCallback(async () => {
     const data = await minterInstance?.getOfferRangeInfo(
@@ -76,28 +78,29 @@ const Range: React.FC<IRange> = ({
   }, [refreshData, tokenInstance]);
 
   const batchMint = async (data: TBatchMintingItem[]) => {
+    if (!minterInstance) {
+      return;
+    }
     const addresses = data.map((i: TBatchMintingItem) => i.address);
     const tokens = data.map((i: TBatchMintingItem) => i.token);
-    Swal.fire({
+    reactSwal.fire({
       title: 'Preparing transaction',
       html: 'Please wait',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        minterInstance?.buyTokenBatch(
-          offerIndex,
-          rangeIndex,
-          tokens,
-          addresses,
-          {
-            value: Number(price) * tokens.length
-          }
-        )
-      )
+      await web3TxHandler(minterInstance, 'buyTokenBatch', [
+        offerIndex,
+        rangeIndex,
+        tokens,
+        addresses,
+        {
+          value: Number(price) * tokens.length
+        }
+      ])
     ) {
-      Swal.fire('Success', 'Minted all tokens', 'success');
+      reactSwal.fire('Success', 'Minted all tokens', 'success');
     }
   };
 
@@ -109,21 +112,34 @@ const Range: React.FC<IRange> = ({
       <div style={{ position: 'absolute', right: 0 }}>...{end}</div>
       <button
         onClick={async () => {
-          Swal.fire({
+          if (!minterInstance) {
+            return;
+          }
+          reactSwal.fire({
             title: 'Preparing transaction',
             html: 'Please wait',
             icon: 'info',
             showConfirmButton: false
           });
           if (
-            await metamaskCall(
-              minterInstance?.buyToken(offerIndex, rangeIndex, next, {
-                value: price
-              }),
-              'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+            await web3TxHandler(
+              minterInstance,
+              'buyToken',
+              [
+                offerIndex,
+                rangeIndex,
+                next,
+                {
+                  value: price.toString()
+                }
+              ],
+              {
+                failureMessage:
+                  'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+              }
             )
           ) {
-            Swal.fire('Success', 'Token Minted!', 'success');
+            reactSwal.fire('Success', 'Token Minted!', 'success');
           }
         }}
         className="btn btn-success py-0">
@@ -182,7 +198,7 @@ const Range: React.FC<IRange> = ({
                       }
                     );
                   } catch (err: any) {
-                    Swal.fire('Error', err?.data?.message, 'error');
+                    reactSwal.fire('Error', err?.data?.message, 'error');
                   }
                 }}
                 className="btn py-0 btn-warning">

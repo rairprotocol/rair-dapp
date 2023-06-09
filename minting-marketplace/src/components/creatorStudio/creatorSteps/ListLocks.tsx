@@ -2,15 +2,16 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ethers, utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { erc721Abi } from '../../../contracts';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
-import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
+import { validateInteger } from '../../../utils/metamaskUtils';
 import colors from '../../../utils/offerLockColors';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import InputField from '../../common/InputField';
@@ -171,13 +172,19 @@ const ListLocks: React.FC<TListLocks> = ({
   const [instance, setInstance] = useState<ethers.Contract | undefined>();
   const [onMyChain, setOnMyChain] = useState<boolean>();
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const { contractCreator, programmaticProvider, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
   const { address } = useParams<TParamsListLocks>();
   const locker = async (data: TListLocksArrayItem) => {
-    Swal.fire({
+    if (!instance) {
+      return;
+    }
+    reactSwal.fire({
       title: `Locking ${Number(data.ends) - Number(data.starts)} tokens from ${
         data.name
       }`,
@@ -186,16 +193,14 @@ const ListLocks: React.FC<TListLocks> = ({
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        instance?.createRangeLock(
-          data.productIndex,
-          data.starts,
-          data.ends,
-          data.lockedNumber
-        )
-      )
+      await web3TxHandler(instance, 'createRangeLock', [
+        data.productIndex,
+        data.starts,
+        data.ends,
+        data.lockedNumber
+      ])
     ) {
-      Swal.fire({
+      reactSwal.fire({
         title: `Success!`,
         html: `The range has been locked`,
         icon: 'success'

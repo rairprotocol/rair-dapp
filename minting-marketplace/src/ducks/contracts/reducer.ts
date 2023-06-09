@@ -17,6 +17,7 @@ import {
   resaleAbi,
   tokenPurchaserAbi
 } from '../../contracts';
+import chainData from '../../utils/blockchainData';
 
 const contractAddresses: ContractAddressesType = {
   '0x38': {
@@ -135,7 +136,19 @@ export default function userStore(
         contractAddresses[action.currentChain] !== undefined
       ) {
         let signer;
-        if (window.ethereum) {
+        if (action.oreIdAddress) {
+          const data = chainData[action.currentChain];
+          if (data?.addChainData.rpcUrls?.at) {
+            const provider = new ethers.providers.StaticJsonRpcProvider(
+              chainData[action.currentChain]?.addChainData?.rpcUrls?.at(0),
+              {
+                name: data.name,
+                chainId: parseInt(action.currentChain, 16)
+              }
+            );
+            signer = provider.getSigner(action.oreIdAddress);
+          }
+        } else if (window.ethereum) {
           const provider = new ethers.providers.Web3Provider(
             window.ethereum,
             'any'
@@ -156,12 +169,11 @@ export default function userStore(
               }
             }
           );
-          //Eslint bloked the console.logs
-          //provider.on('network', (newNetwork, oldNetwork) => {
-          // When a Provider makes its initial connection, it emits a "network"
-          // event with a null oldNetwork along with the newNetwork. So, if the
-          // oldNetwork exists, it represents a changing network
-          /*
+          provider.on('network', (newNetwork, oldNetwork) => {
+            // When a Provider makes its initial connection, it emits a "network"
+            // event with a null oldNetwork along with the newNetwork. So, if the
+            // oldNetwork exists, it represents a changing network
+            /*
 							Example of a network object:
 							{
 							    "name": "goerli",
@@ -169,14 +181,14 @@ export default function userStore(
 							    "ensAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
 							}
 						*/
-          // if (oldNetwork) {
-          //   console.log(
-          //     `Detected a network change, from ${oldNetwork.name} to ${newNetwork.name}`
-          //   );
-          // } else {
-          //   console.log(`Connected to ${newNetwork.name}`);
-          //}
-          //});
+            if (oldNetwork) {
+              console.info(
+                `Detected a network change, from ${oldNetwork.name} to ${newNetwork.name}`
+              );
+            } else {
+              console.info(`Connected to ${newNetwork.name}`);
+            }
+          });
           signer = provider.getSigner(0);
         } else if (state.programmaticProvider) {
           signer = state.programmaticProvider;

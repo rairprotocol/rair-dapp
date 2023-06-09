@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
 import DiamondOfferRow from './diamondOfferRow';
 
@@ -9,8 +8,9 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
-import { metamaskCall } from '../../../utils/metamaskUtils';
 import {
   TAddDiamondOffer,
   TListOffers,
@@ -34,6 +34,9 @@ const ListOffers: React.FC<TListOffers> = ({
   const [forceRerender, setForceRerender] = useState<boolean>(false);
   const [onMyChain, setOnMyChain] = useState<boolean>();
   const [invalidItems, setInvalidItems] = useState<boolean>(true);
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const { programmaticProvider, currentChain } = useSelector<
     RootState,
@@ -95,32 +98,33 @@ const ListOffers: React.FC<TListOffers> = ({
   const navigate = useNavigate();
 
   const createOffers = async () => {
-    Swal.fire({
+    if (!contractData) {
+      return;
+    }
+    reactSwal.fire({
       title: 'Creating offer...',
       html: 'Please wait...',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        contractData?.instance.createRangeBatch(
-          collectionIndex,
-          offerList
-            .filter((item: TMarketplaceOfferConfigArrayItem) => !item._id)
-            .map((item) => {
-              return {
-                rangeLength: Number(item.range[1]) - Number(item.range[0]) + 1,
-                tokensAllowed: item.tokensAllowed,
-                lockedTokens: item.lockedTokens,
-                price: item.price,
-                name: item.offerName
-              };
-            })
-        )
-      )
+      await web3TxHandler(contractData.instance, 'createRangeBatch', [
+        collectionIndex,
+        offerList
+          .filter((item: TMarketplaceOfferConfigArrayItem) => !item._id)
+          .map((item) => {
+            return {
+              rangeLength: Number(item.range[1]) - Number(item.range[0]) + 1,
+              tokensAllowed: item.tokensAllowed,
+              lockedTokens: item.lockedTokens,
+              price: item.price,
+              name: item.offerName
+            };
+          })
+      ])
     ) {
       forceRefetch();
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success!',
         html: 'The offer(s) have been created!',
         icon: 'success',

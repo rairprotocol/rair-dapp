@@ -20,7 +20,6 @@ interface IMobileListMenu {
   messageAlert: string | null;
   activeSearch: boolean;
   primaryColor: ColorChoice;
-  logout: () => void;
   setMessageAlert;
   toggleMenu: (otherPage?: string | undefined) => void;
   setTabIndexItems: (arg: number) => void;
@@ -30,7 +29,6 @@ interface IMobileListMenu {
 const MobileListMenu: React.FC<IMobileListMenu> = ({
   primaryColor,
   click,
-  logout,
   activeSearch,
   toggleMenu,
   messageAlert,
@@ -70,7 +68,6 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
           primaryColor={primaryColor}
           toggleMenu={toggleMenu}
           currentUserAddress={currentUserAddress}
-          logout={logout}
           setTabIndexItems={setTabIndexItems}
           isSplashPage={isSplashPage}
         />

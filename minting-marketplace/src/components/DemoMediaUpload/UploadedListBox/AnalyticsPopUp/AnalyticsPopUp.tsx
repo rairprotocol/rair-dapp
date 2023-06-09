@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Moment from 'react-moment';
 
+import useSwal from '../../../../hooks/useSwal';
 import { rFetch } from '../../../../utils/rFetch';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
-
-import { reactSwal } from './../../../../utils/reactSwal';
 
 import './AnalyticsPopUp.css';
 
@@ -17,6 +16,7 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({
   watchCounter,
   videoId
 }) => {
+  const reactSwal = useSwal();
   const CounterDisplay = (num: number | null | undefined) => {
     if (typeof num === 'number') {
       if (num >= 1000000) {

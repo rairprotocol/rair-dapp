@@ -2,16 +2,13 @@ import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { v1 } from 'uuid';
 
+import useConnectUser from '../../../../hooks/useConnectUser';
 import PurchaseTokenButton from '../../../common/PurchaseToken';
 import AuthorCardButton from '../AuthorCard/AuthorCardButton';
 
 import './DonationSquare.css';
 
-const DonationSquare = ({
-  donationSquareData,
-  mobileView,
-  connectUserData
-}) => {
+const DonationSquare = ({ donationSquareData, mobileView }) => {
   const {
     title,
     image,
@@ -25,6 +22,7 @@ const DonationSquare = ({
   } = donationSquareData;
 
   const [open, setOpen] = useState(mobileView);
+  const { connectUserData } = useConnectUser();
 
   const clickHandler = () => {
     if (!mobileView) {
@@ -36,7 +34,7 @@ const DonationSquare = ({
     setOpen(mobileView);
   }, [mobileView]);
 
-  const connectUserDataMain = connectUserData && connectUserData;
+  const connectUserDataMain = connectUserData;
 
   return (
     <div className="donation-square" onClick={() => clickHandler()}>

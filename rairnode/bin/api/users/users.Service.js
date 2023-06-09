@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
 const _ = require('lodash');
-const config = require('../config');
-const gcp = require('../integrations/gcp')(config);
-const log = require('../utils/logger')(module);
-const { cleanStorage, textPurify } = require('../utils/helpers');
-const { User } = require('../models');
-const AppError = require('../utils/errors/AppError');
-const eFactory = require('../utils/entityFactory');
+const config = require('../../config');
+const gcp = require('../../integrations/gcp')(config);
+const log = require('../../utils/logger')(module);
+const { cleanStorage, textPurify } = require('../../utils/helpers');
+const { User } = require('../../models');
+const AppError = require('../../utils/errors/AppError');
+const eFactory = require('../../utils/entityFactory');
 
 exports.getAllUsers = eFactory.getAll(User);
 exports.getUserById = eFactory.getOne(User);
@@ -130,6 +130,11 @@ exports.updateUserByUserAddress = async (req, res, next) => {
       fieldsForUpdate,
       { new: true, projection: { nonce: 0 } },
     );
+
+    req.session.userData = {
+      ...req.session.userData,
+      ...updatedUser,
+    };
 
     return res.json({ success: true, user: updatedUser });
   } catch (e) {

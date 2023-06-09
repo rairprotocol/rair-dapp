@@ -8,10 +8,12 @@ import { AccessTextMarkKohler } from './InformationText';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
+import useConnectUser from '../../../hooks/useConnectUser';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import useSwal from '../../../hooks/useSwal';
 import {
   blockchain,
   contract,
@@ -42,11 +44,7 @@ import KohlerFavicon from './assets/favicon.ico';
 
 import './markKohler.css';
 
-const MarkKohler: React.FC<ISplashPageProps> = ({
-  loginDone,
-  connectUserData,
-  setIsSplashPage
-}) => {
+const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
 
@@ -60,6 +58,11 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
   /* UTILITIES FOR NFT PURCHASE */
+
+  const { connectUserData } = useConnectUser();
+  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
@@ -86,6 +89,8 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
       setHasNFT(undefined);
     };
   }
+
+  const reactSwal = useSwal();
 
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
@@ -206,7 +211,6 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             margin="auto">
             {hasNFT !== undefined && !hasNFT ? (
               <PurchaseTokenButton
-                connectUserData={connectUserData}
                 {...splashData.purchaseButton}
                 buttonLabel="PURCHASE"
                 diamond={true}
@@ -217,14 +221,18 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
                 className="card-button-mark-kohler"
                 buttonImg={splashData.button3?.buttonImg || ''}
                 buttonLabel={
-                  !loginDone
+                  !loggedIn
                     ? splashData.button3?.buttonLabel
                     : hasNFT
                     ? 'Join Zoom'
                     : 'Unlock Meeting'
                 }
                 buttonAction={
-                  loginDone ? (hasNFT ? joinZoom : unlockZoom) : connectUserData
+                  loggedIn
+                    ? hasNFT
+                      ? joinZoom
+                      : unlockZoom
+                    : () => connectUserData()
                 }
               />
             )}
@@ -261,7 +269,6 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
               gap="20px"
               flexDirection="column">
               <PurchaseTokenButton
-                connectUserData={connectUserData}
                 {...splashData.purchaseButton}
                 customButtonClassName="mark-kohler-purchase-button"
                 diamond={true}
@@ -452,7 +459,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({
             />
             <SplashCardButton
               className="need-help-kohler"
-              buttonAction={handleReactSwal}
+              buttonAction={handleReactSwal(reactSwal)}
               buttonLabel={'Need Help'}
             />
           </SplashVideoTextBlock>

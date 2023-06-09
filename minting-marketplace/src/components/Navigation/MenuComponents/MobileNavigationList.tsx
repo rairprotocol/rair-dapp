@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import MobileEditProfile from './MobileEditProfile';
 
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import useConnectUser from '../../../hooks/useConnectUser';
 import { NavFooter, NavFooterBox } from '../../Footer/FooterItems/FooterItems';
 import TalkSalesComponent from '../../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
@@ -14,7 +15,6 @@ interface IMobileNavigationList {
   primaryColor: ColorChoice;
   currentUserAddress: string | undefined;
   toggleMenu: (otherPage?: string) => void;
-  logout: () => void;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
 }
@@ -25,7 +25,6 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   primaryColor,
   toggleMenu,
   currentUserAddress,
-  logout,
   // setTabIndexItems,
   isSplashPage
 }) => {
@@ -33,6 +32,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   //   setTabIndexItems(tab);
   //   toggleMenu();
   // };
+
+  const { logoutUser } = useConnectUser();
 
   return (
     <NavFooter>
@@ -99,7 +100,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
             />
           </li>
           {currentUserAddress && (
-            <li className="logout" onClick={logout}>
+            <li className="logout" onClick={logoutUser}>
               <i className="fas fa-sign-out-alt"></i>Logout
             </li>
           )}

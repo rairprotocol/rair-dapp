@@ -10,6 +10,7 @@ import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import useSwal from '../../../hooks/useSwal';
 import { splashData } from '../../../utils/infoSplashData/nftla';
 import { TVideoPlayerViewSpecialVideoType } from '../../MockUpPage/NftList/nftList.types';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -49,6 +50,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
+  const reactSwal = useSwal();
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
@@ -144,7 +146,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
             </div>
             <SplashCardButton
               className="need-help-kohler"
-              buttonAction={handleReactSwal}
+              buttonAction={handleReactSwal(reactSwal)}
               buttonLabel={'Need Help'}
             />
           </SplashVideoTextBlock>

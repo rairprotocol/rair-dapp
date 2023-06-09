@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import { IFactoryManager } from './creatorMode.types';
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { metamaskCall } from '../../utils/metamaskUtils';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 
 const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
   const [erc721Name, setERC721Name] = useState<string>('');
@@ -22,6 +22,9 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const refreshData = useCallback(async () => {
     setRefetchingFlag(true);
@@ -80,22 +83,23 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
           <button
             disabled={erc721Name === '' || clientTokens?.lt(tokensRequired)}
             onClick={async () => {
-              Swal.fire({
+              if (!erc777Instance) {
+                return;
+              }
+              reactSwal.fire({
                 title: 'Deploying contract',
                 html: 'Please wait',
                 icon: 'info',
                 showConfirmButton: false
               });
               if (
-                await metamaskCall(
-                  erc777Instance?.send(
-                    factoryInstance?.address,
-                    tokensRequired,
-                    utils.toUtf8Bytes(erc721Name)
-                  )
-                )
+                await web3TxHandler(erc777Instance, 'send', [
+                  factoryInstance?.address,
+                  tokensRequired,
+                  utils.toUtf8Bytes(erc721Name)
+                ])
               ) {
-                Swal.fire({
+                reactSwal.fire({
                   title: 'Success',
                   html: 'Contract Deployed',
                   icon: 'success'
@@ -111,21 +115,22 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
               <br />
               <button
                 onClick={async () => {
-                  Swal.fire({
+                  if (!factoryInstance) {
+                    return;
+                  }
+                  reactSwal.fire({
                     title: 'Adding new token to the Master Factory',
                     html: 'Please wait',
                     icon: 'info',
                     showConfirmButton: false
                   });
                   if (
-                    await metamaskCall(
-                      factoryInstance?.add777Token(
-                        erc777Instance?.address,
-                        '10000000000000000000'
-                      )
-                    )
+                    await web3TxHandler(factoryInstance, 'add777Token', [
+                      erc777Instance?.address,
+                      '10000000000000000000'
+                    ])
                   ) {
-                    Swal.fire({
+                    reactSwal.fire({
                       title: 'Success',
                       html: 'Token added',
                       icon: 'success'

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 
 import BuyTokenModalContent from './BuyTokenModalContent';
 import { TMinterMarketplaceItemType } from './marketplace.types';
@@ -8,8 +8,8 @@ import { TMinterMarketplaceItemType } from './marketplace.types';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useSwal from '../../hooks/useSwal';
 import chainData from '../../utils/blockchainData';
-import { reactSwal } from '../../utils/reactSwal';
 
 const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
   item,
@@ -24,6 +24,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
     (state) => state.contractStore
   );
   const store = useStore();
+  const reactSwal = useSwal();
 
   const onMyChain = chainData[item.blockchain]?.chainId === currentChain;
 

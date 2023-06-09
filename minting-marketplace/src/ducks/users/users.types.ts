@@ -1,10 +1,13 @@
 import {
   getUserComplete,
   getUserError,
-  getUserLogout,
   getUserStart,
   setAdminRights,
-  setSuperAdmin
+  setLoginProcessStatus,
+  setLogInStatus,
+  setLoginType,
+  setSuperAdmin,
+  setUserData
 } from './actions';
 
 export type TUsersInitialState = {
@@ -12,6 +15,21 @@ export type TUsersInitialState = {
   error: string | null;
   adminRights: boolean | undefined;
   superAdmin: boolean | undefined;
+  loginProcess: boolean;
+  loggedIn: boolean;
+  userData: UserQueryType | undefined;
+  loginType: string | undefined;
+};
+
+export type UserQueryType = {
+  email: string;
+  avatar: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  publicAddress: string;
+  nickName: string | null;
+  adminRights: boolean;
+  superAdmin: boolean;
 };
 
 export type UserType = {
@@ -38,7 +56,11 @@ export type SetAdminRights = ReturnType<typeof setAdminRights>;
 export type SetSuperAdmin = ReturnType<typeof setSuperAdmin>;
 export type GetUserComplete = ReturnType<typeof getUserComplete>;
 export type GetUserError = ReturnType<typeof getUserError>;
-export type GetUserLogout = ReturnType<typeof getUserLogout>;
+
+export type SetLoginProcessStatus = ReturnType<typeof setLoginProcessStatus>;
+export type SetLogInStatus = ReturnType<typeof setLogInStatus>;
+export type SetUserData = ReturnType<typeof setUserData>;
+export type SetLoginType = ReturnType<typeof setLoginType>;
 
 export type UserReducerActionTypes =
   | GetUsersType
@@ -46,4 +68,7 @@ export type UserReducerActionTypes =
   | SetSuperAdmin
   | GetUserComplete
   | GetUserError
-  | GetUserLogout;
+  | SetLoginProcessStatus
+  | SetLogInStatus
+  | SetUserData
+  | SetLoginType;

@@ -5,13 +5,12 @@ import Swal from 'sweetalert2';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
+import useSwal from '../../../hooks/useSwal';
 import { TMediaType } from '../../creatorStudio/creatorStudio.types';
 import LinearProgressWithLabel from '../LinearProgressWithLabel/LinearProgressWithLabel';
 import MediaItemChange from '../MediaItemChange/MediaItemChange';
 import PopUpChoiceNFT from '../PopUpChoiceNFT/PopUpChoiceNFT';
 import { IMediaListBox } from '../types/DemoMediaUpload.types';
-
-import { reactSwal } from './../../../utils/reactSwal';
 
 const MediaListBox: React.FC<IMediaListBox> = ({
   item,
@@ -35,6 +34,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const reactSwal = useSwal();
 
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
@@ -48,7 +48,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
       uploadVideoDemo(currentItem, cloud);
       reactSwal.close();
     },
-    [currentItem, uploadVideoDemo]
+    [currentItem, uploadVideoDemo, reactSwal]
   );
 
   useEffect(() => {

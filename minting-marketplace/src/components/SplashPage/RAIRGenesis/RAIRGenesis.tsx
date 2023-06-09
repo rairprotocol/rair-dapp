@@ -11,6 +11,7 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import useSwal from '../../../hooks/useSwal';
 import { useSplashData } from '../../../utils/infoSplashData/rairGenesis';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
@@ -55,6 +56,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
+  const reactSwal = useSwal();
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
 
@@ -116,7 +118,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
     );
     setProductsFromOffer(response.data.files);
     setSelectVideo(response.data.files[0]);
-  }, []);
+  }, [splashData]);
 
   useEffect(() => {
     getProductsFromOffer();
@@ -148,7 +150,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
             </h1>
             <SplashCardButton
               className="need-help-kohler"
-              buttonAction={handleReactSwal}
+              buttonAction={handleReactSwal(reactSwal)}
               buttonLabel={'Need Help'}
             />
           </SplashVideoTextBlock>
@@ -167,10 +169,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
           <div>Marketplace &nbsp;</div>
           <div style={{ color: '#ee82d5' }}>Demo</div>
         </h1>
-        <NftDataCommonLink
-          userData={connectUserData}
-          embeddedParams={embeddedParams}
-        />
+        <NftDataCommonLink embeddedParams={embeddedParams} />
         <h1 className="splashpage-subtitle" style={{ marginTop: '150px' }}>
           {' '}
           <div> Membership </div>

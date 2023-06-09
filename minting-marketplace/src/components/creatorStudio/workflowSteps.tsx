@@ -22,8 +22,8 @@ import { diamondFactoryAbi, erc721Abi, minterAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
 
@@ -51,6 +51,8 @@ const WorkflowSteps: React.FC = () => {
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
+  const { web3TxHandler } = useWeb3Tx();
 
   const [mintingRole, setMintingRole] = useState<boolean>();
   const [traderRole, setTraderRole] = useState<boolean>();
@@ -341,28 +343,30 @@ const WorkflowSteps: React.FC = () => {
     ) {
       (async () => {
         setMintingRole(
-          await metamaskCall(
-            contractData.instance.hasRole(
-              await metamaskCall(contractData.instance.MINTER()),
-              contractData.diamond
-                ? diamondMarketplaceInstance?.address
-                : minterInstance?.address
-            )
-          )
+          await web3TxHandler(contractData.instance, 'hasRole', [
+            await web3TxHandler(contractData.instance, 'MINTER', []),
+            contractData.diamond
+              ? diamondMarketplaceInstance?.address
+              : minterInstance?.address
+          ])
         );
         setTraderRole(
-          await metamaskCall(
-            contractData.instance.hasRole(
-              await contractData.instance.TRADER(),
-              contractData.diamond
-                ? diamondMarketplaceInstance?.address
-                : minterInstance?.address
-            )
-          )
+          await web3TxHandler(contractData.instance, 'hasRole', [
+            await contractData.instance.TRADER(),
+            contractData.diamond
+              ? diamondMarketplaceInstance?.address
+              : minterInstance?.address
+          ])
         );
       })();
     }
-  }, [contractData, diamondMarketplaceInstance, minterInstance, currentChain]);
+  }, [
+    contractData,
+    diamondMarketplaceInstance,
+    minterInstance,
+    currentChain,
+    web3TxHandler
+  ]);
 
   useEffect(() => {
     // Fix this

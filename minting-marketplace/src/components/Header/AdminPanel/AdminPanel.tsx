@@ -1,19 +1,23 @@
-//@ts-nocheck
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
-const AdminPanel = ({
-  loginDone,
-  creatorViewsDisabled,
-  adminPanel,
-  setAdminPanel
-}) => {
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
+
+const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
   const { minterInstance, diamondMarketplaceInstance, factoryInstance } =
-    useSelector((store) => store.contractStore);
-  const { adminRights } = useSelector((store) => store.userStore);
-  const { primaryColor } = useSelector((store) => store.colorStore);
+    useSelector<RootState, ContractsInitialType>(
+      (store) => store.contractStore
+    );
+  const { adminRights, loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   return (
     <>
@@ -30,22 +34,22 @@ const AdminPanel = ({
               {
                 name: <i className="fas fa-photo-video" />,
                 route: '/all',
-                disabled: !loginDone
+                disabled: !loggedIn
               },
               {
                 name: <i className="fa fa-shopping-cart" aria-hidden="true" />,
                 route: '/resale-offers',
-                disabled: !loginDone
+                disabled: !loggedIn
               },
               {
                 name: <i className="fa fa-shopping-cart" aria-hidden="true" />,
                 route: '/on-sale',
-                disabled: !loginDone
+                disabled: !loggedIn
               },
               {
                 name: <i className="fa fa-user-secret" aria-hidden="true" />,
                 route: '/admin/fileUpload',
-                disabled: !loginDone
+                disabled: !loggedIn
               },
               {
                 name: <i className="fas fa-city" />,
@@ -65,12 +69,12 @@ const AdminPanel = ({
               {
                 name: <i className="fas fa-exchange" />,
                 route: '/admin/transferNFTs',
-                disabled: !loginDone
+                disabled: !loggedIn
               },
               {
                 name: <i className="fas fa-file-import" />,
                 route: '/importExternalContracts',
-                disabled: !loginDone
+                disabled: !loggedIn
               }
             ].map((item, index) => {
               if (!item.disabled) {

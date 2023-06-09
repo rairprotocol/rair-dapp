@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { BigNumber, ethers } from 'ethers';
-import Swal from 'sweetalert2';
 
 import OfferRow from './OfferRow';
 
@@ -11,8 +10,10 @@ import { erc721Abi } from '../../../contracts';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useSwal from '../../../hooks/useSwal';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
-import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
+import { validateInteger } from '../../../utils/metamaskUtils';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import {
   IListOffers,
@@ -49,6 +50,10 @@ const ListOffers: React.FC<IListOffers> = ({
     (store) => store.colorStore
   );
   const { address, collectionIndex } = useParams<TParamsListOffers>();
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   useEffect(() => {
     setOfferList(
       contractData?.product?.offers
@@ -122,62 +127,65 @@ const ListOffers: React.FC<IListOffers> = ({
     }
     try {
       setHasMinterRole(
-        await metamaskCall(
-          instance.hasRole(
-            await metamaskCall(instance.MINTER()),
-            minterInstance?.address
-          )
-        )
+        await web3TxHandler(instance, 'hasRole', [
+          await web3TxHandler(instance, 'MINTER', []),
+          minterInstance?.address
+        ])
       );
     } catch (err) {
       console.error(err);
       setHasMinterRole(false);
     }
-  }, [minterInstance, instance, onMyChain]);
+  }, [minterInstance, instance, onMyChain, web3TxHandler]);
 
   useEffect(() => {
     fetchMintingStatus();
   }, [fetchMintingStatus]);
 
   const giveMinterRole = async () => {
-    Swal.fire({
+    if (!instance) {
+      return;
+    }
+    reactSwal.fire({
       title: 'Granting Role...',
       html: 'Please wait',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        instance?.grantRole(await instance.MINTER(), minterInstance?.address)
-      )
+      await web3TxHandler(instance, 'grantRole', [
+        await web3TxHandler(instance, 'MINTER', []),
+        minterInstance?.address
+      ])
     ) {
-      Swal.fire('Success!', 'You can create offers now!', 'success');
+      reactSwal.fire('Success!', 'You can create offers now!', 'success');
       fetchMintingStatus();
     }
   };
 
   const createOffers = async () => {
-    Swal.fire({
+    if (!minterInstance || !instance) {
+      return;
+    }
+    reactSwal.fire({
       title: 'Creating offer...',
       html: 'Please wait...',
       icon: 'info',
       showConfirmButton: false
     });
     if (
-      await metamaskCall(
-        minterInstance?.addOffer(
-          instance?.address,
-          collectionIndex,
-          offerList.map((item) => item.starts),
-          offerList.map((item) => item.ends),
-          offerList.map((item) => item.price),
-          offerList.map((item) => item.name),
-          process.env.REACT_APP_NODE_ADDRESS
-        ),
-        undefined
-      )
+      (await web3TxHandler(minterInstance, 'addOffer', [
+        instance.address,
+        collectionIndex,
+        offerList.map((item) => item.starts),
+        offerList.map((item) => item.ends),
+        offerList.map((item) => item.price),
+        offerList.map((item) => item.name),
+        process.env.REACT_APP_NODE_ADDRESS
+      ]),
+      undefined)
     ) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success!',
         html: 'The offer has been created!',
         icon: 'success',
@@ -209,7 +217,10 @@ const ListOffers: React.FC<IListOffers> = ({
   };
 
   const appendOffers = async () => {
-    Swal.fire({
+    if (!minterInstance) {
+      return;
+    }
+    reactSwal.fire({
       title: 'Appending offers...',
       html: 'Please wait...',
       icon: 'info',
@@ -217,18 +228,20 @@ const ListOffers: React.FC<IListOffers> = ({
     });
     const filteredList = offerList.filter((item) => !item.fixed);
     if (
-      await metamaskCall(
-        minterInstance?.appendOfferRangeBatch(
+      await web3TxHandler(
+        minterInstance,
+        'appendOfferRangeBatch',
+        [
           contractData?.product.offers?.[0].offerPool,
           filteredList.map((item) => item.starts),
           filteredList.map((item) => item.ends),
           filteredList.map((item) => item.price),
           filteredList.map((item) => item.name)
-        ),
+        ],
         undefined
       )
     ) {
-      Swal.fire({
+      reactSwal.fire({
         title: 'Success!',
         html: 'The offers have been appended!',
         icon: 'success',

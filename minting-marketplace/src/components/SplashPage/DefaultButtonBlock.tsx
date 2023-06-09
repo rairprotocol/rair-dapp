@@ -2,11 +2,12 @@ import React from 'react';
 
 import { IDefaultButtonBlock } from './splashPage.types';
 
+import useConnectUser from '../../hooks/useConnectUser';
+
 import AuthorCardButton from './SplashPageTemplate/AuthorCard/AuthorCardButton';
 
 const DefaultButtonBlock: React.FC<IDefaultButtonBlock> = ({
   splashData,
-  connectUserData,
   whatSplashPage
 }) => {
   const {
@@ -17,6 +18,8 @@ const DefaultButtonBlock: React.FC<IDefaultButtonBlock> = ({
     buttonLabel,
     customStyle
   } = splashData || {};
+
+  const { connectUserData } = useConnectUser();
 
   return (
     <div className="button-wrapper">

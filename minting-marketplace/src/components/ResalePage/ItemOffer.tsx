@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { INftItemComponent } from './listOffers.types';
@@ -10,9 +9,10 @@ import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import chainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import { web3Switch } from '../../utils/switchBlockchain';
 import { ContractType } from '../adminViews/adminView.types';
@@ -38,6 +38,9 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
   const [contractData, setContractData] = useState<ContractType>();
   const { width } = useWindowDimensions();
   const { maxPrice, minPrice } = gettingPrice([price]);
+
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
 
   const { resaleInstance, currentUserAddress, currentChain, contractCreator } =
     useSelector<RootState, ContractsInitialType>(
@@ -119,14 +122,12 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
           diamondFactoryAbi
         );
         if (instance) {
-          const can = await metamaskCall(
-            instance.hasRole(
-              await metamaskCall(instance.TRADER()),
-              resaleInstance.address
-            )
-          );
+          const can = await web3TxHandler(instance, 'hasRole', [
+            await web3TxHandler(instance, 'TRADER', []),
+            resaleInstance.address
+          ]);
           if (!can) {
-            Swal.fire(
+            reactSwal.fire(
               'Error',
               'Resale marketplace has no access to this contract, TRADER role required',
               'error'
@@ -137,11 +138,12 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
       }
       //return;
       if (
-        await metamaskCall(
-          resaleInstance?.buyResaleOffer(tradeid, { value: price })
-        )
+        await web3TxHandler(resaleInstance, 'buyResaleOffer', [
+          tradeid,
+          { value: price.toString() }
+        ])
       ) {
-        Swal.fire('Success', 'Token purchased', 'success');
+        reactSwal.fire('Success', 'Token purchased', 'success');
       }
     }
   };
