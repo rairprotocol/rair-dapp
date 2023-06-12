@@ -332,7 +332,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               handleTokenBoughtButton={handleTokenBoughtButton}
             />
           )}
-
           <div className="properties-title">
             <TitleSingleTokenView
               title="Description"

@@ -1,4 +1,5 @@
-import React, { /*useEffect,*/ useState } from 'react';
+import { useState } from 'react';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 
 import { getRandomValues } from '../../utils/getRandomValues';
 
@@ -67,6 +68,15 @@ const InputField = <T extends any = any>({
 }: TInputFieldProps<T>) => {
   const [id] = useState<number | null>(getRandomValues);
 
+  const ethValidation = (value) => {
+    try {
+      formatEther(parseEther(value));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
   return (
     <>
       {label && (
@@ -81,15 +91,20 @@ const InputField = <T extends any = any>({
         </label>
       )}
       <input
-        type={type}
+        type={type === 'eth' ? 'number' : type}
         id={id?.toString()}
-        onChange={(e) =>
-          setter(
-            setterField.reduce((start, piece) => {
-              return start[piece];
-            }, e.target) as T
-          )
-        }
+        onChange={(e) => {
+          let finalValue = setterField.reduce((start, piece) => {
+            return start[piece];
+          }, e.target) as any;
+          if (type === 'eth') {
+            if (!ethValidation(finalValue)) {
+              return;
+            }
+            finalValue = formatEther(parseEther(finalValue));
+          }
+          setter(finalValue);
+        }}
         value={getter}
         disabled={disabled}
         style={{ ...customCSS }}

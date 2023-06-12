@@ -68,10 +68,10 @@ module.exports = {
     dbResales: () => ({
         operator: ethAddress,
         contract: mongoId,
-        tokenId: Joi.boolean(),
-        price: Joi.boolean(),
-        status: Joi.boolean(),
-        tradeid: Joi.string(),
+        tokenId: Joi.number(),
+        price: Joi.number(),
+        status: Joi.number(),
+        tradeid: Joi.number(),
     }),
     dbRoyalties: () => ({
         contract: mongoId,

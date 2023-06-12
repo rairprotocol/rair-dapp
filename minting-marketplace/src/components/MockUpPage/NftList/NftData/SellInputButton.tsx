@@ -1,8 +1,12 @@
-import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
 
 import SellButton from './SellButton';
 
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import InputField from '../../../common/InputField';
 import { ISellInputButton } from '../../mockupPage.types';
 
 const SellInputButton: React.FC<ISellInputButton> = ({
@@ -12,9 +16,9 @@ const SellInputButton: React.FC<ISellInputButton> = ({
 }) => {
   const [inputSellValue, setInputSellValue] = useState<string>('');
   const [isInputPriceExist, setIsInputPriceExist] = useState<boolean>(false);
-
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  inputRef.current?.checkValidity();
+  const { textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   const handleInputClear = useCallback(() => {
     if (inputSellValue) {
@@ -24,28 +28,16 @@ const SellInputButton: React.FC<ISellInputButton> = ({
     }
   }, [inputSellValue]);
 
-  const handleSetValue = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (inputRef.current?.checkValidity()) {
-        setInputSellValue(e.currentTarget.value);
-      }
-    },
-    [setInputSellValue]
-  );
-
   return (
     <div className="nft-data-sell-button">
       {isInputPriceExist && (
         <div className="input-sell-container">
-          <input
-            ref={inputRef}
-            tabIndex={0}
-            className="input-sell-value"
-            type={'text'}
-            value={inputSellValue}
-            onChange={handleSetValue}
-            placeholder="Choose the price"
-            pattern="[0-9]+"
+          <InputField
+            type="eth"
+            getter={inputSellValue}
+            setter={setInputSellValue}
+            customClass={`input-sell-value text-${textColor}`}
+            placeholder="Your price"
           />
           <CloseIcon
             className="input-sell-close-icon"

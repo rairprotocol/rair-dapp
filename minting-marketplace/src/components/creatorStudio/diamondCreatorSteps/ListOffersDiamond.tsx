@@ -136,9 +136,7 @@ const ListOffers: React.FC<TListOffers> = ({
   useEffect(() => {
     setOnMyChain(
       contractData &&
-        (window.ethereum
-          ? chainData[contractData?.blockchain]?.chainId === currentChain
-          : chainData[contractData?.blockchain]?.chainId === currentChain)
+        chainData[contractData?.blockchain]?.chainId === currentChain
     );
   }, [contractData, programmaticProvider, currentChain]);
 
