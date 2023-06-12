@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
@@ -8,6 +8,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Stack } from '@mui/material';
 import { Breadcrumbs, Typography } from '@mui/material';
 import axios from 'axios';
+import { utils } from 'ethers';
 import Swal from 'sweetalert2';
 
 import { TContract, TUserResponse } from '../../axios.responseTypes';
@@ -41,7 +42,6 @@ const UserProfilePage: React.FC = () => {
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
-  const navigate = useNavigate();
   const { userAddress } = useParams();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -75,7 +75,7 @@ const UserProfilePage: React.FC = () => {
 
   const getMyNft = useCallback(
     async (number) => {
-      if (userAddress) {
+      if (userAddress && utils.isAddress(userAddress)) {
         const response = await rFetch(
           `/api/nft/${userAddress}?itemsPerPage=${number}&pageNum=${1}`
         );
@@ -175,7 +175,7 @@ const UserProfilePage: React.FC = () => {
   );
 
   const getUserData = useCallback(async () => {
-    if (userAddress) {
+    if (userAddress && utils.isAddress(userAddress)) {
       const userAddressChanged = userAddress.toLowerCase();
       setTabIndexItems(0);
       setUserData(undefined);

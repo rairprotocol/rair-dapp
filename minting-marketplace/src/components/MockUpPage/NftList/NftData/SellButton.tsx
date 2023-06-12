@@ -23,11 +23,14 @@ const SellButton: React.FC<ISellButton> = ({
   }, [setIsInputPriceExist]);
 
   const shrinkSellPrice = useMemo(() => {
-    if (sellingPrice?.trim && sellingPrice.length < 3) {
-      return sellingPrice;
-    } else {
-      return `${sellingPrice?.slice(0, 4)}... `;
+    const limit = 5;
+    if (
+      sellingPrice?.toString()?.length &&
+      sellingPrice?.toString()?.length > limit
+    ) {
+      return `${sellingPrice?.slice(0, limit)}... `;
     }
+    return sellingPrice;
   }, [sellingPrice]);
 
   const sellButton = useCallback(() => {

@@ -9,10 +9,7 @@ import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { getUserStart } from '../../../../ducks/users/actions';
-import {
-  TUsersInitialState,
-  UserType
-} from '../../../../ducks/users/users.types';
+import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import { defaultAvatar } from '../../../../images';
 
 import cl from './PersonalProfileIcon.module.css';
@@ -53,33 +50,36 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
     (state) => state.colorStore
   );
 
-  const resetAllStatesOnCancel = useCallback((userData) => {
-    setEditMode(false);
-    if (setEditModeUpper) {
-      setEditModeUpper(false);
-    }
-    setIsPhotoUpdate(false);
+  const resetAllStatesOnCancel = useCallback(
+    (userData) => {
+      setEditMode(false);
+      if (setEditModeUpper) {
+        setEditModeUpper(false);
+      }
+      setIsPhotoUpdate(false);
 
-    setEmailUserNew(userData.email);
-    setEmailUser(userData.email);
+      setEmailUserNew(userData.email);
+      setEmailUser(userData.email);
 
-    setUserName(
-      userData.nickName
-        ? userData.nickName.replace(/@/g, '')
-        : userData.publicAddress
-    );
-    setUserNameNew(
-      userData.nickName
-        ? userData.nickName.replace(/@/g, '')
-        : userData.publicAddress
-    );
+      setUserName(
+        userData.nickName
+          ? userData.nickName.replace(/@/g, '')
+          : userData.publicAddress
+      );
+      setUserNameNew(
+        userData.nickName
+          ? userData.nickName.replace(/@/g, '')
+          : userData.publicAddress
+      );
 
-    if (userData && userData.avatar) {
-      setOriginalPhotoValue(userData.avatar);
-    } else {
-      setOriginalPhotoValue(defaultAvatar);
-    }
-  }, []);
+      if (userData && userData.avatar) {
+        setOriginalPhotoValue(userData.avatar);
+      } else {
+        setOriginalPhotoValue(defaultAvatar);
+      }
+    },
+    [setEditModeUpper]
+  );
 
   const checkInputForSame = (
     userName: string,
@@ -125,7 +125,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
       setEditModeUpper(!editMode);
     }
     setIsPhotoUpdate(false);
-  }, [setEditMode]);
+  }, [editMode, setEditModeUpper]);
 
   const onSubmitData = useCallback(
     async (e) => {

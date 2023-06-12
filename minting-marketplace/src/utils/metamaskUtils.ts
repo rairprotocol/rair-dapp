@@ -1,8 +1,9 @@
 import { BigNumber, ethers } from 'ethers';
-import Swal from 'sweetalert2';
 
 import { rFetch } from './rFetch';
 
+// Deprecated, use web3TxHandler from useWeb3Tx (custom hook)
+/*
 // 2 for the transaction catcher, 1 for speed
 const confirmationsRequired = 2;
 
@@ -101,7 +102,7 @@ const metamaskCall = async (
     return true;
   }
   return paramsValidation;
-};
+};*/
 
 const handleReceipt = async (
   transactionReceipt: ethers.ContractReceipt,
@@ -138,4 +139,4 @@ const validateInteger = (number: string | number) => {
   return true;
 };
 
-export { handleReceipt, metamaskCall, validateInteger };
+export { handleReceipt, validateInteger };

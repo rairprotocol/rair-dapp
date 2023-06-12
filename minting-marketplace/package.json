@@ -5,8 +5,8 @@
     "proxy": "http://rairnode:5000",
     "dependencies": {
         "@analytics/google-analytics": "^0.5.3",
-        "@emotion/react": "^11.10.8",
-        "@emotion/styled": "^11.10.8",
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
         "@metamask/onboarding": "^1.0.1",
         "@metamask/providers": "^8.1.1",
         "@mui/icons-material": "^5.11.16",

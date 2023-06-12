@@ -170,7 +170,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
   }, [checkUrl]);
 
   const operatorIsUser = currentUserAddress === operator.toLowerCase();
-  console.info(tokenId, tokenMetadata);
+  // console.info(tokenId, tokenMetadata);
 
   return (
     <>

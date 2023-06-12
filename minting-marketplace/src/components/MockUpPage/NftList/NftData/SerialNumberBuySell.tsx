@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import Swal from 'sweetalert2';
 
 import { BuySellButton } from './BuySellButton';
 import SellInputButton from './SellInputButton';
 
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import chainData from '../../../../utils/blockchainData';
@@ -35,22 +34,23 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   currentUser,
   handleTokenBoughtButton
 }) => {
-  const { minterInstance, diamondMarketplaceInstance, currentChain } =
-    useSelector<RootState, ContractsInitialType>(
-      (state) => state.contractStore
-    );
-  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
+  const {
+    resaleInstance,
+    minterInstance,
+    diamondMarketplaceInstance,
+    currentChain,
+    currentUserAddress
+  } = useSelector<RootState, ContractsInitialType>(
+    (state) => state.contractStore
   );
+
+  const numberTooBigThreshold = BigNumber.from(10000000000);
+
+  const [contractData, setContractData] = useState<ContractType>();
+  const [resaleData, setResaleData] = useState<any>();
+  const params = useParams();
   const { web3TxHandler } = useWeb3Tx();
   const reactSwal = useSwal();
-
-  const currentProvider = MetaMaskOnboarding.isMetaMaskInstalled()
-    ? window.ethereum.chainId
-    : blockchain;
-  const [contractData, setContractData] = useState<ContractType>();
-
-  const realChainProtected = currentChain || currentProvider;
 
   const disableBuyBtn = useCallback(() => {
     // Returns true to DISABLE the button
@@ -99,18 +99,18 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     marketplaceArguments.push({
       value: offerData.price
     });
-    const result = await web3TxHandler(
-      marketplaceContract,
-      marketplaceMethod,
-      marketplaceArguments,
-      {
-        failureMessage:
-          'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
-        callback: handleTokenBoughtButton
-      }
-    );
-    console.info(result);
-    if (result) {
+    if (
+      await web3TxHandler(
+        marketplaceContract,
+        marketplaceMethod,
+        marketplaceArguments,
+        {
+          failureMessage:
+            'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
+          callback: handleTokenBoughtButton
+        }
+      )
+    ) {
       reactSwal.fire(
         'Success',
         'Now, you are the owner of this token',
@@ -118,14 +118,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       );
     }
   }, [
-    contractData,
-    offerData,
-    diamondMarketplaceInstance,
-    minterInstance,
     reactSwal,
     web3TxHandler,
-    handleTokenBoughtButton,
-    selectedToken
+    minterInstance,
+    offerData,
+    diamondMarketplaceInstance,
+    contractData,
+    selectedToken,
+    handleTokenBoughtButton
   ]);
 
   useEffect(() => {
@@ -139,64 +139,156 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
   }, [offerData]);
 
-  const checkOwner = useCallback(() => {
-    const rawPrice = BigNumber.from(offerData?.price ? offerData?.price : 0);
-    const price = rawPrice.lte(100000) ? '0.000+' : formatEther(rawPrice);
-    const handleBuyButton = () => {
-      return realChainProtected === blockchain
-        ? buyContract
-        : () => {
-            web3Switch(blockchain);
-            // buyContract();
-          };
-    };
-    return offerData && offerData.price ? (
-      <BuySellButton
-        handleClick={handleBuyButton()}
-        disabled={disableBuyBtn()}
-        isColorPurple={true}
-        title={`Buy ${price} ${blockchain && chainData[blockchain]?.symbol}`}
-      />
-    ) : (
-      <p></p>
+  const getResaleData = useCallback(async () => {
+    if (!resaleInstance) {
+      return;
+    }
+    const contractResponse = await rFetch(
+      `/api/v2/contracts?contractAddress=${params.contract}&blockchain=${params.blockchain}`
     );
-  }, [offerData, disableBuyBtn, blockchain, realChainProtected, buyContract]);
+    if (!contractResponse.success) {
+      return;
+    }
+    const [contractData] = contractResponse?.data?.doc;
+    if (!contractData) {
+      return;
+    }
+    const resaleResponse = await rFetch(
+      `/api/v2/resales?contract=${contractData._id}&tokenId=${params.tokenId}&status=0`,
+      undefined,
+      undefined,
+      false
+    );
+    if (!resaleResponse.success) {
+      return;
+    }
+    const [resaleData] = resaleResponse?.data?.doc;
+    if (!resaleData) {
+      return;
+    }
+    const userResponse = await rFetch(
+      `/api/v2/users/${resaleData.operator.toLowerCase()}`
+    );
+    if (userResponse.success) {
+      resaleData.operator = userResponse.user.nickName;
+    }
+    setResaleData(resaleData);
+  }, [resaleInstance, params]);
+
+  useEffect(() => {
+    getResaleData();
+  }, [getResaleData]);
+
+  const resalePurchase = useCallback(async () => {
+    if (!resaleInstance) {
+      return;
+    }
+    const { isConfirmed } = await reactSwal.fire({
+      title: `Purchase token #${resaleData.tokenId}`,
+      html: `Currently owned by: ${resaleData.operator}`,
+      icon: 'info',
+      showCancelButton: true
+    });
+    reactSwal.fire({
+      title: `Please wait`,
+      html: `Purchasing token #${resaleData.tokenId}`,
+      icon: 'info',
+      showConfirmButton: false
+    });
+    if (
+      isConfirmed &&
+      (await web3TxHandler(resaleInstance, 'buyResaleOffer', [
+        resaleData.tradeid,
+        {
+          value: resaleData.price
+        }
+      ]))
+    ) {
+      reactSwal.fire(
+        'Success',
+        `You are now the owner of NFT #${resaleData.tokenId}`,
+        'success'
+      );
+    }
+  }, [resaleData, resaleInstance, reactSwal, web3TxHandler]);
 
   const checkAllSteps = useCallback(() => {
-    if (blockchain !== realChainProtected) {
-      return loggedIn ? (
+    if (!blockchain) {
+      return <></>;
+    }
+    // Blockchain is not correct
+    if (blockchain !== currentChain) {
+      return (
         <BuySellButton
           handleClick={() => web3Switch(blockchain)}
           isColorPurple={true}
           title={`Switch network`}
         />
-      ) : (
-        checkOwner()
       );
-    } else if (selectedToken && !tokenData?.[selectedToken]?.isMinted) {
-      return checkOwner();
-    } else {
+    }
+    // Blockchain is correct and offer exists
+    if (selectedToken && !tokenData?.[selectedToken]?.isMinted && offerData) {
+      const rawPrice = BigNumber.from(offerData?.price ? offerData?.price : 0);
+      const price = numberTooBigThreshold.gte(rawPrice)
+        ? '0.000+'
+        : formatEther(rawPrice);
       return (
-        <SellInputButton
-          currentUser={currentUser}
-          tokenData={tokenData}
-          selectedToken={selectedToken}
+        <BuySellButton
+          handleClick={buyContract}
+          disabled={disableBuyBtn()}
+          isColorPurple={true}
+          title={`Buy ${price} ${blockchain && chainData[blockchain]?.symbol}`}
         />
       );
+      // Token is minted
+    } else if (selectedToken && tokenData?.[selectedToken]?.isMinted) {
+      // Current user is owner of the token
+      if (
+        tokenData[selectedToken].ownerAddress ===
+        currentUserAddress?.toLowerCase()
+      ) {
+        return (
+          <SellInputButton
+            currentUser={currentUser}
+            tokenData={tokenData}
+            selectedToken={selectedToken}
+          />
+        );
+        // User is not owner and resale data exists
+      } else if (resaleData) {
+        const price = numberTooBigThreshold.gte(resaleData.price)
+          ? '0.000+'
+          : formatEther(resaleData.price);
+        return (
+          <>
+            <BuySellButton
+              isColorPurple={false}
+              handleClick={resalePurchase}
+              title={`Buy ${price} ${chainData[blockchain]?.symbol}`}
+            />
+            <small>Resale offer</small>
+          </>
+        );
+      }
     }
   }, [
     blockchain,
-    checkOwner,
-    realChainProtected,
-    currentUser,
+    currentChain,
     selectedToken,
     tokenData,
-    loggedIn
+    offerData,
+    numberTooBigThreshold,
+    buyContract,
+    disableBuyBtn,
+    currentUserAddress,
+    resaleData,
+    currentUser,
+    resalePurchase
   ]);
 
   useEffect(() => {
     if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
-      Swal.fire({
+      reactSwal.fire({
         imageWidth: 70,
         imageHeight: 'auto',
         imageAlt: 'Custom image',
@@ -242,255 +334,3 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
 };
 
 export default SerialNumberBuySell;
-
-// ======= New part of buy tokens =======
-// /* eslint-disable no-debugger */
-// /* eslint-disable no-console */
-// //@ts-nocheck
-
-// import React, { useCallback, useState, useEffect } from 'react';
-// import { ISerialNumberBuySell } from '../../mockupPage.types';
-// import { BuySellButton } from './BuySellButton';
-// import { RootState } from '../../../../ducks';
-// import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-// import { useSelector } from 'react-redux';
-// import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
-// import chainData from '../../../../utils/blockchainData';
-// import Swal from 'sweetalert2';
-// import SellInputButton from './SellInputButton';
-
-// const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
-//   tokenData,
-//   handleClickToken,
-//   blockchain,
-//   product,
-//   contract,
-//   totalCount,
-//   selectedToken,
-//   setSelectedToken,
-//   primaryColor,
-//   offerData,
-//   currentUser,
-// }) => {
-//   const { minterInstance, currentChain, diamondMarketplaceInstance } =
-//     useSelector<RootState, ContractsInitialType>(
-//       (state) => state.contractStore
-//     );
-
-//   const currentProvider = window.ethereum.chainId;
-//   const realChainProtected = currentChain || currentProvider;
-
-//   // const [offersArray, setOffersArray] = useState([]);
-
-//   const fetchDiamondData = useCallback(async () => {
-//     if (!diamondMarketplaceInstance) {
-//       return;
-//     }
-//     const offerCount = Number(
-//       (await diamondMarketplaceInstance.getTotalOfferCount()).toString()
-//     );
-//     const offerData = [];
-//     for (let i = 0; i < offerCount; i++) {
-//       const singleOfferData = await diamondMarketplaceInstance.getOfferInfo(i);
-//       offerData.push({
-//         offerIndex: i,
-//         contractAddress: singleOfferData.mintOffer.erc721Address,
-//         rangeIndex: singleOfferData.mintOffer.rangeIndex.toString(),
-//         visible: singleOfferData.mintOffer.visible,
-//         startingToken: singleOfferData.rangeData.rangeStart.toString(),
-//         endingToken: singleOfferData.rangeData.rangeEnd.toString(),
-//         name: singleOfferData.rangeData.rangeName,
-//         price: singleOfferData.rangeData.rangePrice,
-//         tokensAllowed: singleOfferData.rangeData.tokensAllowed.toString(),
-//         mintableTokens: singleOfferData.rangeData.mintableTokens.toString(),
-//         lockedTokens: singleOfferData.rangeData.lockedTokens.toString(),
-//         productIndex: singleOfferData.productIndex.toString()
-//       });
-//     }
-//     // setOffersArray(offerData);
-//   }, [diamondMarketplaceInstance]);
-
-//   useEffect(() => {
-//     if (diamondMarketplaceInstance) {
-//       diamondMarketplaceInstance.on('MintedToken', fetchDiamondData);
-//       return () =>
-//         diamondMarketplaceInstance.off('MintedToken', fetchDiamondData);
-//     }
-//   }, [diamondMarketplaceInstance, fetchDiamondData]);
-
-//   const mintTokenCall = useCallback(
-//     async (offerIndex, nextToken, price) => {
-//       Swal.fire({
-//         title: `Buying token #${nextToken}!`,
-//         html: 'Please wait...',
-//         icon: 'info',
-//         showConfirmButton: false
-//       });
-//       if (
-//         await web3TxHandler(
-//           diamondMarketplaceInstance,'buyMintingOffer'[offerIndex, nextToken, {
-//             value: price
-//           }]
-//         )
-//       ) {
-//         Swal.fire({
-//           title: 'Success',
-//           html: 'Token bought',
-//           icon: 'success',
-//           showConfirmButton: true
-//         });
-//       }
-//     },
-//     [diamondMarketplaceInstance]
-//   );
-
-//   const disableBuyBtn = useCallback(() => {
-//     if (!offerData.diamondRangeIndex) {
-//       return false;
-//     } else if (!offerData?.offerPool) {
-//       return false;
-//     } else {
-//       return true;
-//     }
-//   }, [offerData]);
-
-//   const buyContract = useCallback(async () => {
-//     Swal.fire({
-//       title: 'Buying token',
-//       html: 'Awaiting transaction completion',
-//       icon: 'info',
-//       showConfirmButton: false
-//     });
-//     if (offerData) {
-//       if (offerData.diamondRangeIndex) {
-//         await mintTokenCall?.(
-//           +offerData.diamondRangeIndex,
-//           +selectedToken,
-//           +offerData.price
-//         );
-//       } else {
-//         debugger;
-//         if (
-//           await web3TxHandler(
-//             minterInstance,'buyToken',[
-//               offerData.offerPool,
-//               offerData.offerIndex,
-//               selectedToken,
-//               {
-//                 value: offerData.price
-//               }
-//             ],
-//             {failureMessage: 'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'}
-//           )
-//         ) {
-//           Swal.fire(
-//             'Success',
-//             'Now, you are the owner of this token',
-//             'success'
-//           );
-//         }
-//       }
-//     }
-//   }, [mintTokenCall, minterInstance, offerData, selectedToken]);
-
-//   const checkOwner = useCallback(() => {
-//     const price = offerData?.price;
-//     const handleBuyButton = () => {
-//       return realChainProtected === blockchain
-//         ? buyContract
-//         : () => {
-//             web3Switch(blockchain);
-//             // buyContract();
-//           };
-//     };
-//     return offerData && offerData.price ? (
-//       <BuySellButton
-//         handleClick={handleBuyButton()}
-//         disabled={disableBuyBtn()}
-//         isColorPurple={true}
-//         title={`Buy .${(+price !== Infinity && price !== undefined
-//           ? price
-//           : 0
-//         ).toString()}
-//             ${blockchain && chainData[blockchain]?.symbol}`}
-//       />
-//     ) : (
-//       <p>no data</p>
-//     );
-//   }, [offerData, disableBuyBtn, blockchain, realChainProtected, buyContract]);
-
-//   const checkAllSteps = useCallback(() => {
-//     if (blockchain !== realChainProtected) {
-//       return loggedIn ? (
-//         <BuySellButton
-//           handleClick={() => web3Switch(blockchain)}
-//           isColorPurple={true}
-//           title={`Switch network`}
-//         />
-//       ) : (
-//         checkOwner()
-//       );
-//     } else if (!tokenData[selectedToken]?.isMinted) {
-//       return checkOwner();
-//     } else {
-//       return (
-//         <SellInputButton
-//           currentUser={currentUser}
-//           tokenData={tokenData}
-//           selectedToken={selectedToken}
-//         />
-//       );
-//     }
-//   }, [
-//     blockchain,
-//     checkOwner,
-//     realChainProtected,
-//     currentUser,
-//     selectedToken,
-//     tokenData,
-//     loggedIn
-//   ]);
-
-//   return (
-//     <div className="main-tab">
-//       <div className="main-tab-description-serial-number">
-//         <div
-//           className="description-text serial-number-text"
-//           style={{
-//             color: `${primaryColor === 'rhyno' ? '#7A797A' : '#A7A6A6'}`
-//           }}>
-//           Serial number
-//         </div>
-//         <div>
-//           {tokenData.length ? (
-//             <SelectNumber
-//               blockchain={blockchain}
-//               product={product}
-//               contract={contract}
-//               totalCount={totalCount}
-//               handleClickToken={handleClickToken}
-//               selectedToken={selectedToken}
-//               setSelectedToken={setSelectedToken}
-//               items={
-//                 tokenData &&
-//                 tokenData.map((p) => {
-//                   return {
-//                     value: p.metadata.name,
-//                     id: p._id,
-//                     token: p.token,
-//                     sold: p.isMinted
-//                   };
-//                 })
-//               }
-//             />
-//           ) : (
-//             <></>
-//           )}
-//         </div>
-//       </div>
-//       <div>{checkAllSteps()}</div>
-//     </div>
-//   );
-// };
-
-// export default SerialNumberBuySell;
