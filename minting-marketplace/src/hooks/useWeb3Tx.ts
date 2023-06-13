@@ -29,9 +29,13 @@ const useWeb3Tx = () => {
   const reactSwal = useSwal();
 
   const handleReceipt = useCallback(
-    async (transactionHash: string, callback?: (() => void) | undefined) => {
+    async (
+      transactionHash: string,
+      blockchain: string,
+      callback?: (() => void) | undefined
+    ) => {
       try {
-        await rFetch(`/api/transaction/${currentChain}/${transactionHash}`, {
+        await rFetch(`/api/transaction/${blockchain}/${transactionHash}`, {
           method: 'POST'
         });
         callback && callback();
@@ -39,11 +43,12 @@ const useWeb3Tx = () => {
         console.error(error);
       }
     },
-    [currentChain]
+    []
   );
 
   const handleWeb3Error = (
     errorMessage: any,
+    blockchain: string,
     defaultError: string | undefined = undefined
   ) => {
     //console.log('Reason:', errorMessage.reason)
@@ -63,7 +68,7 @@ const useWeb3Tx = () => {
       cleanError = 'The transaction has failed on the blockchain';
     } else if (errorMessage.receipt) {
       //console.info('Repriced');
-      handleReceipt(errorMessage.receipt);
+      handleReceipt(errorMessage.receipt, blockchain);
       return true;
     }
 
@@ -126,20 +131,36 @@ const useWeb3Tx = () => {
     }
   ) => {
     let paramsValidation: ContractTransaction;
+    const currentChainForThisTransaction = currentChain;
+    if (!currentChainForThisTransaction) {
+      return;
+    }
     try {
       paramsValidation = await contract[method](...args);
     } catch (errorMessage) {
-      return handleWeb3Error(errorMessage, options?.failureMessage);
+      return handleWeb3Error(
+        errorMessage,
+        currentChainForThisTransaction,
+        options?.failureMessage
+      );
     }
     if (paramsValidation?.wait) {
       let transactionReceipt: ContractReceipt;
       try {
         transactionReceipt = await paramsValidation.wait(confirmationsRequired);
       } catch (errorMessage) {
-        return handleWeb3Error(errorMessage, options?.failureMessage);
+        return handleWeb3Error(
+          errorMessage,
+          currentChainForThisTransaction,
+          options?.failureMessage
+        );
       }
       if (transactionReceipt && transactionReceipt.blockNumber) {
-        handleReceipt(transactionReceipt.transactionHash, options?.callback);
+        handleReceipt(
+          transactionReceipt.transactionHash,
+          currentChainForThisTransaction,
+          options?.callback
+        );
       }
       return true;
     }
@@ -155,6 +176,10 @@ const useWeb3Tx = () => {
       callback?: () => void;
     }
   ) => {
+    const currentChainForThisTransaction = currentChain;
+    if (!currentChainForThisTransaction) {
+      return;
+    }
     if (!oreId.isInitialized) {
       reactSwal.fire('OreID error', 'Please login', 'error');
     }
@@ -182,7 +207,7 @@ const useWeb3Tx = () => {
       try {
         estimatedGas = await contract.estimateGas[method](...args);
       } catch (error) {
-        return handleWeb3Error(error);
+        return handleWeb3Error(error, currentChainForThisTransaction);
       }
       const totalValue = BigNumber.from(args.at(-1).value).add(estimatedGas);
       args[args.length - 1] = {
@@ -222,7 +247,11 @@ const useWeb3Tx = () => {
           response.transactionId,
           confirmationsRequired
         );
-        handleReceipt(response.transactionId, options?.callback);
+        handleReceipt(
+          response.transactionId,
+          currentChainForThisTransaction,
+          options?.callback
+        );
         return true;
       } else {
         return false;
