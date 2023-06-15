@@ -338,6 +338,7 @@
   border: 1px solid #e882d5;
   border-radius: 12px;
   display: inline-block;
+  transition: all 0.3s ease;
   /* border-image: -webkit-linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
     border-width: 1px;
     border-image-slice: 1; */
@@ -345,6 +346,11 @@
 
 .profile-form .profile-input span {
   color: #fff;
+}
+
+.profile-form .profile-input span:hover {
+  background: #e882d5;
+  color: white;
 }
 
 .profile-input.deff {

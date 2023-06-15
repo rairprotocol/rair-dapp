@@ -36,6 +36,7 @@ const EditMode = ({
     imagePreviewUrl ? imagePreviewUrl : ''
   );
   const [filePhoto, setFilePhoto] = useState();
+  const [copyState, setCopyState] = useState(false);
 
   const onChangeAvatar = (e) => {
     e.preventDefault();
@@ -225,16 +226,29 @@ const EditMode = ({
                     value={userName}
                   />
                 ) : (
-                  <span
-                    style={{
-                      fontSize: '14px',
-                      color:
-                        primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
-                    }}>
-                    {userName && userName.length > 20
-                      ? cutUserAddress()
-                      : userName}
-                  </span>
+                  <>
+                    <TooltipBox title={'Click to copy your address'}>
+                      <span
+                        style={{
+                          fontSize: '14px',
+                          color:
+                            primaryColor === 'rhyno'
+                              ? 'rgb(41, 41, 41)'
+                              : 'white',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(currentUserAddress);
+                          setCopyState(true);
+                        }}>
+                        {copyState
+                          ? 'Copied!'
+                          : currentUserAddress.slice(0, 5) +
+                            '....' +
+                            currentUserAddress.slice(length - 4)}
+                      </span>
+                    </TooltipBox>
+                  </>
                 )}
               </div>
 

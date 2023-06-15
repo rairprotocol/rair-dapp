@@ -13,11 +13,13 @@ import InquiriesPage from '../../../InquiriesPage/InquiriesPage';
 interface ITalkSalesComponent {
   classes?: string;
   text: string;
+  isAboutPage?: boolean;
 }
 
 const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
   classes,
-  text
+  text,
+  isAboutPage
 }) => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -57,6 +59,7 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
 
   return (
     <TalkSalesButton
+      isAboutPage={isAboutPage}
       adminPanel={adminRights}
       primaryColor={primaryColor}
       className={classes ? classes : ''}

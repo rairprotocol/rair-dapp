@@ -16,6 +16,8 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { NFTTabIcon, VideoIcon } from '../../images';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
@@ -63,6 +65,8 @@ const UserProfilePage: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
+
+  const { width } = useWindowDimensions();
 
   const handleClose = (value: number) => {
     setOpen(false);
@@ -233,10 +237,12 @@ const UserProfilePage: React.FC = () => {
       key="3"
       color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
       {(userData && userData.nickName && userData.nickName.length > 20
-        ? userData.nickName.slice(0, 5) + '....' + userData.nickName.slice(38)
+        ? userData.nickName.slice(0, 5) +
+          '....' +
+          userData.nickName.slice(length - 4)
         : userData?.nickName) ||
         (userAddress &&
-          userAddress.slice(0, 4) + '....' + userAddress.slice(38))}
+          userAddress.slice(0, 4) + '....' + userAddress.slice(length - 4))}
     </Typography>
   ];
 
@@ -272,6 +278,10 @@ const UserProfilePage: React.FC = () => {
     handleNewUserStatus();
   }, [handleNewUserStatus]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // useEffect(() => {
   if (userData === null) {
     // navigate('/404');
@@ -284,7 +294,7 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="container">
+    <div className={`${width > 1025 ? 'container' : 'wrapper-user-page'}`}>
       <div>
         <SharePopUp
           primaryColor={primaryColor}
@@ -373,12 +383,12 @@ const UserProfilePage: React.FC = () => {
                       userData.nickName.length > 20
                         ? userData.nickName.slice(0, 5) +
                           '....' +
-                          userData.nickName.slice(38)
+                          userData.nickName.slice(length - 4)
                         : userData.nickName) ||
                         (userAddress &&
                           userAddress.slice(0, 4) +
                             '....' +
-                            userAddress.slice(38))}
+                            userAddress.slice(length - 4))}
                     </span>
                   </>
                 </div>
@@ -425,7 +435,7 @@ const UserProfilePage: React.FC = () => {
                     }`
                   }}
                   className="category-button-videos category-button">
-                  Created
+                  {width > 676 ? 'Created' : 'NFT'}
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
@@ -440,7 +450,7 @@ const UserProfilePage: React.FC = () => {
                     }`
                   }}
                   className="category-button-videos category-button">
-                  Favorited
+                  {width > 676 ? 'Favorited' : <i className="fas fa-heart" />}
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
@@ -455,7 +465,11 @@ const UserProfilePage: React.FC = () => {
                     }`
                   }}
                   className="category-button-videos category-button">
-                  Videos
+                  {width > 676 ? (
+                    'Videos'
+                  ) : (
+                    <VideoIcon primaryColor={primaryColor} />
+                  )}
                 </Tab>
               </TabList>
               <div className="bar-wrapper">

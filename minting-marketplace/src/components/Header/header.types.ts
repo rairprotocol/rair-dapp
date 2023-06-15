@@ -10,6 +10,7 @@ export interface IMainHeader {
   showAlert: boolean;
   isSplashPage: boolean;
   setTabIndexItems: (arg: number) => void;
+  isAboutPage: boolean;
 }
 
 export type TAxiosCollectionData = {

@@ -730,6 +730,7 @@ img.video-locked-modal {
   /* overflow: scroll; */
   overflow-y: hidden;
   justify-content: space-between;
+  padding-bottom: 15px;
 }
 .more-info-unlock-wrapper {
   display: flex;
@@ -1944,7 +1945,7 @@ button.metamask-on-boarding:focus {
 @media screen and (max-width: 1260px) and (min-width: 850px) {
   .ReactModal__Content--after-open {
     margin-right: auto !important;
-    margin-top: 5rem;
+    /* margin-top: 5rem; */
     height: fit-content;
     place-content: space-between !important;
     flex-wrap: nowrap !important;

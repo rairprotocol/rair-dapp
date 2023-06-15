@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import MobileEditProfile from './MobileEditProfile';
@@ -33,7 +33,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   //   toggleMenu();
   // };
 
+  const [copyEth, setCopyEth] = useState<boolean>(false);
+
   const { logoutUser } = useConnectUser();
+
+  useEffect(() => {
+    setCopyEth(false);
+  }, [messageAlert]);
 
   return (
     <NavFooter>
@@ -59,9 +65,15 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           <li onClick={() => toggleMenu()}>
             <NavLink to={`/${currentUserAddress}`}>View Profile</NavLink>
           </li>
-          {/* <li onClick={() => goToMyItems(0)}>
-            <NavLink to="/my-items">My items</NavLink>
-          </li> */}
+          {currentUserAddress && (
+            <li
+              onClick={() => {
+                navigator.clipboard.writeText(currentUserAddress);
+                setCopyEth(true);
+              }}>
+              {copyEth ? 'Copied!' : 'Copy your eth address'}
+            </li>
+          )}
         </NavFooterBox>
       ) : messageAlert === 'profileEdit' ? (
         <NavFooterBox

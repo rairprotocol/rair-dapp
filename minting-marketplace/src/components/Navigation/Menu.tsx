@@ -40,6 +40,7 @@ interface IMenuNavigation {
   selectedChain: string | null | undefined;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
+  isAboutPage: boolean;
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
@@ -49,7 +50,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   showAlert,
   selectedChain,
   setTabIndexItems,
-  isSplashPage
+  isSplashPage,
+  isAboutPage
 }) => {
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
@@ -173,14 +175,20 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                 {renderBtnConnect ? (
                   <OnboardingButton />
                 ) : (
-                  <button
-                    disabled={
-                      !window.ethereum && !programmaticProvider && !loginProcess
-                    }
-                    className={`btn btn-${primaryColor} btn-connect-wallet-mobile`}
-                    onClick={() => connectUserData()}>
-                    {loginProcess ? 'Please wait...' : 'Connect'}
-                  </button>
+                  <>
+                    {isAboutPage ? null : (
+                      <button
+                        disabled={
+                          !window.ethereum &&
+                          !programmaticProvider &&
+                          !loginProcess
+                        }
+                        className={`btn btn-${primaryColor} btn-connect-wallet-mobile`}
+                        onClick={() => connectUserData()}>
+                        {loginProcess ? 'Please wait...' : 'Connect'}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             ) : (

@@ -139,11 +139,15 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                 alt="User Avatar"
               />
               <h5>
-                {someUsersData && someUsersData.nickName
-                  ? someUsersData.nickName
-                  : userName && userName.length > 25
-                  ? userName.slice(0, 5) + '....' + userName.slice(length - 4)
-                  : userName}
+                {(someUsersData &&
+                someUsersData.nickName &&
+                someUsersData.nickName.length > 20
+                  ? someUsersData.nickName.slice(0, 5) +
+                    '....' +
+                    someUsersData.nickName.slice(length - 4)
+                  : someUsersData && someUsersData.nickName) ||
+                  (userName &&
+                    userName.slice(0, 4) + '....' + userName.slice(length - 4))}
               </h5>
             </div>
           </NavLink>

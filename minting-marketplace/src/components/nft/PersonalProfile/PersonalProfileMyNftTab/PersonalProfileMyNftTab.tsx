@@ -36,7 +36,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
   return (
     <div className="gen">
       <div
-        className={`my-items-product-wrapper ${
+        className={`list-button-wrapper-grid-template ${
           (profile && 'row profile') ||
           (width >= 1250 && width <= 1400 && 'row')
         }`}>
@@ -51,7 +51,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
                   }
                 }}
                 key={index}
-                className="col-2 my-item-element">
+                className="nft-item-collection grid-item">
                 <ImageLazy
                   className={`my-items-pict ${
                     profile && 'row profile'
@@ -105,7 +105,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
             );
           })
         ) : (
-          <p style={{ color: textColor, fontSize: '20px' }}>
+          <p style={{ color: textColor }}>
             There is no such item with that name
           </p>
         )}
