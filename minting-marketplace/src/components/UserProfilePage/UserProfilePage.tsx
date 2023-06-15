@@ -272,6 +272,10 @@ const UserProfilePage: React.FC = () => {
     handleNewUserStatus();
   }, [handleNewUserStatus]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // useEffect(() => {
   if (userData === null) {
     // navigate('/404');

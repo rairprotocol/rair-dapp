@@ -47,12 +47,23 @@
   word-break: keep-all;
 }
 
-.container-title-collection .block-user-creator img {
+.container-title-collection .block-user-creator img,
+.container-sell-button-user .block-user-creator img {
   width: 32px;
   height: 32px;
   border-radius: 8px;
   margin: 0 12px;
   object-fit: cover;
+}
+
+.container-sell-button-user .block-user-creator {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.container-sell-button-user .block-user-creator h5 {
+  margin: 0;
 }
 
 .container-title-collection .block-user-creator span {
@@ -216,6 +227,14 @@
 
   .collection-authenticity-link-share.external a {
     margin-right: 10px;
+  }
+
+  .container-sell-button-user {
+    font-size: 12px;
+  }
+
+  .container-sell-button-user h5 {
+    font-size: 14px;
   }
 }
 

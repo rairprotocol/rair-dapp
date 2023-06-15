@@ -1347,6 +1347,7 @@ video {
     padding: 40px 0px 0px;
     margin-bottom: 16px;
     align-items: flex-start;
+    align-items: center;
   }
 
   .main-tab-description {

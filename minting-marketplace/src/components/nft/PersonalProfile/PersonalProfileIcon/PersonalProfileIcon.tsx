@@ -361,7 +361,6 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
             {isPage ? (
               <>
                 <span className={cl['profileName' + textColor]}>
-                  {/* {userName ? `@${userName}` : userData.publicAddress} */}
                   {userName && userName.length > 20
                     ? '@' +
                       userName.slice(0, 5) +
