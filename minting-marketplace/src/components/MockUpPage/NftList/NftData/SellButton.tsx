@@ -1,7 +1,14 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import axios from 'axios';
+import { utils } from 'ethers';
 
 import { BuySellButton } from './BuySellButton';
 
+import { TUserResponse } from '../../../../axios.responseTypes';
+import { UserType } from '../../../../ducks/users/users.types';
+import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
+import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISellButton } from '../../mockupPage.types';
 
 const SellButton: React.FC<ISellButton> = ({
@@ -13,6 +20,8 @@ const SellButton: React.FC<ISellButton> = ({
   setIsInputPriceExist,
   setInputSellValue
 }) => {
+  const [accountData, setAccountData] = useState<UserType | null>(null);
+
   const handleClickSellButton = useCallback(() => {
     setInputSellValue('');
     setIsInputPriceExist(false);
@@ -32,6 +41,33 @@ const SellButton: React.FC<ISellButton> = ({
     }
     return sellingPrice;
   }, [sellingPrice]);
+
+  const getInfoFromUser = useCallback(async () => {
+    // find user
+    if (
+      selectedToken &&
+      tokenData?.[selectedToken]?.ownerAddress &&
+      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress)
+    ) {
+      try {
+        const result = await axios
+          .get<TUserResponse>(
+            `/api/users/${tokenData?.[selectedToken]?.ownerAddress}`
+          )
+          .then((res) => res.data);
+
+        if (result.success) {
+          setAccountData(result.user);
+        }
+      } catch (e) {
+        setAccountData(null);
+      }
+    }
+  }, [selectedToken, setAccountData, tokenData]);
+
+  useEffect(() => {
+    getInfoFromUser();
+  }, [getInfoFromUser]);
 
   const sellButton = useCallback(() => {
     if (
@@ -54,7 +90,36 @@ const SellButton: React.FC<ISellButton> = ({
         />
       );
     } else {
-      return <></>;
+      return (
+        <div className="container-sell-button-user">
+          Owned by{' '}
+          <div className="block-user-creator">
+            <ImageLazy
+              src={accountData?.avatar ? accountData.avatar : defaultImage}
+              alt="User Avatar"
+            />
+            {selectedToken && (
+              <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
+                <h5>
+                  {(accountData &&
+                  accountData.nickName &&
+                  accountData.nickName.length > 20
+                    ? accountData.nickName.slice(0, 5) +
+                      '....' +
+                      accountData.nickName.slice(length - 4)
+                    : accountData && accountData.nickName) ||
+                    (tokenData?.[selectedToken]?.ownerAddress &&
+                      tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
+                        '....' +
+                        tokenData?.[selectedToken]?.ownerAddress.slice(
+                          length - 4
+                        ))}
+                </h5>
+              </NavLink>
+            )}
+          </div>
+        </div>
+      );
     }
   }, [
     currentUser,
@@ -64,7 +129,8 @@ const SellButton: React.FC<ISellButton> = ({
     selectedToken,
     tokenData,
     isInputPriceExist,
-    shrinkSellPrice
+    shrinkSellPrice,
+    accountData
   ]);
 
   return sellButton();

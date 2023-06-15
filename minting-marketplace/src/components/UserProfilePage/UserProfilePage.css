@@ -1,3 +1,7 @@
+.wrapper-user-page {
+  width: 100%;
+}
+
 .user-page-background.charcoal {
   background: var(--stimorol);
   height: 18.75rem;
@@ -59,10 +63,10 @@
   display: flex;
   flex-direction: column;
   align-content: center;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   margin-top: -4.3rem;
-  margin-left: 5.875rem;
+  margin-left: 0;
   border-radius: 1rem;
 }
 
@@ -123,8 +127,8 @@
 }
 
 .user-page-main-tab-block {
-  min-height: 302px;
   margin-bottom: 3rem;
+  width: 100%;
 }
 
 .my-items-header-wrapper.userpage {
@@ -133,7 +137,7 @@
 
 .my-items-header-wrapper .share-button {
   border: 1px solid var(--bubblegum);
-  margin-top: 1.4rem;
+  margin-top: 10px;
 }
 
 .my-items-header-wrapper.user {
@@ -151,6 +155,9 @@
 @media screen and (max-width: 1260px) {
   .tabs-section .category-button {
     width: 175px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -166,9 +173,27 @@
   }
 }
 
+@media screen and (max-width: 1025px) {
+  .user-page-background.rhyno,
+  .user-page-background.charcoal {
+    width: 100%;
+  }
+
+  .wrapper-user-page {
+    padding: 0 0.8rem;
+  }
+
+  .my-items-header-wrapper.user {
+    width: 100%;
+    padding: 0;
+    justify-content: space-around;
+    max-width: 100%;
+  }
+}
+
 @media screen and (max-width: 980px) {
   .personal-profile-box .profile-avatar-block {
-    margin-left: calc(9.6rem - 2vw);
+    margin-left: 0;
   }
 
   .personal-profile-box .profile-avatar-block img {
@@ -205,7 +230,7 @@
 
 @media screen and (max-width: 700px) {
   .personal-profile-box .profile-avatar-block {
-    margin-left: calc(15rem - 1vw);
+    margin-left: 0;
   }
 
   .personal-profile-box .profile-avatar-block img {
@@ -219,8 +244,12 @@
   }
 
   .bar-wrapper input.input-styled {
-    max-width: 86.6vw;
+    max-width: 100%;
     border-top-left-radius: 16px !important;
+  }
+
+  .form-control.input-styled.user-search {
+    margin: 0 0 10px 0;
   }
 
   .list-button-wrapper.tree-tab-unlocks {
@@ -229,6 +258,23 @@
 
   .user-page-background img {
     height: 30px;
+  }
+
+  .tabs-section .category-wrapper {
+    width: 100%;
+  }
+
+  .tabs-section .category-button {
+    width: 100%;
+  }
+
+  .wrapper-user-page .bar-wrapper {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .bar-wrapper {
+    align-items: flex-end;
   }
 }
 
@@ -246,7 +292,7 @@
 
 @media screen and (max-width: 480px) {
   .personal-profile-box .profile-avatar-block {
-    margin-left: calc(18rem - 1vw);
+    margin-left: 0;
   }
 
   .personal-profile-box .profile-avatar-block img {
@@ -257,5 +303,11 @@
   .profileName {
     font-size: 16px;
     margin-left: 0;
+  }
+
+  .list-button-wrapper.tree-tab-unlocks h5.text-center,
+  .list-wrapper-empty h2,
+  .list-button-wrapper-grid-template.favotire p {
+    font-size: 14px;
   }
 }

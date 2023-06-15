@@ -43,6 +43,7 @@
   transition: all 0.3s ease;
   border-radius: 16px !important;
   aspect-ratio: 1;
+  position: relative;
 }
 
 .nft-item-collection.grid-item.vertical {
@@ -585,6 +586,16 @@ img.single-token-block-img {
   }
 }
 
+@media screen and (min-width: 1501px) {
+  .gen .list-button-wrapper-grid-template {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    justify-content: space-between;
+    grid-gap: 1.5rem;
+  }
+}
+
 /* @media screen and (max-width: 1760px) {
   .nft-item-collection.grid-item {
     width: 16rem;
@@ -776,6 +787,10 @@ img.single-token-block-img {
   }
   .general-title {
     width: 588px;
+  }
+
+  .list-button-wrapper.tree-tab-unlocks {
+    width: 100%;
   }
 }
 

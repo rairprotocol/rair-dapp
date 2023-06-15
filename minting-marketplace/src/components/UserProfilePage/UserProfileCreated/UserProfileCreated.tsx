@@ -6,13 +6,13 @@ const UserProfileCreated = ({ contractData }) => {
   const [playing, setPlaying] = useState<null | number>(null);
   return (
     <div className="gen">
-      <div className={`my-items-product-wrapper`}>
+      <div className={`list-button-wrapper-grid-template`}>
         {contractData && contractData.length > 0 ? (
           contractData.map((contractData, index) => {
             if (contractData.cover !== 'none') {
               return (
                 <NftItem
-                  className="col-2 my-item-element"
+                  className="nft-item-collection grid-item"
                   key={index}
                   pict={
                     contractData.cover

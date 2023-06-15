@@ -19,6 +19,7 @@ import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
+import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 // import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
@@ -430,7 +431,11 @@ const VideoItem: React.FC<IVideoItem> = ({
                         <div
                           key={token._id}
                           className="more-info-unlock-wrapper">
-                          <img
+                          {/* <img
+                            src={token.metadata.image}
+                            alt="NFT token powered by Rair Tech"
+                          /> */}
+                          <ImageLazy
                             src={token.metadata.image}
                             alt="NFT token powered by Rair Tech"
                           />

@@ -97,6 +97,7 @@ function App() {
   const { currentChain, realChain } = useSelector(
     (store) => store.contractStore
   );
+  const [isAboutPage, setIsAboutPage] = useState<boolean>(false);
   const { selectedChain, realNameChain, selectedChainId } = detectBlockchain(
     currentChain,
     realChain
@@ -264,6 +265,7 @@ function App() {
               selectedChain={selectedChain}
               isSplashPage={isSplashPage}
               setTabIndexItems={setTabIndexItems}
+              isAboutPage={isAboutPage}
             />
           ) : (
             !isIframePage && (
@@ -278,6 +280,7 @@ function App() {
                 showAlert={showAlert}
                 selectedChain={selectedChain}
                 setTabIndexItems={setTabIndexItems}
+                isAboutPage={isAboutPage}
               />
             )
           )}
@@ -415,7 +418,8 @@ function App() {
                     path: '/main-page',
                     content: MainPage,
                     props: {
-                      setIsSplashPage: setIsSplashPage
+                      setIsSplashPage: setIsSplashPage,
+                      setIsAboutPage: setIsAboutPage
                     }
                   }
                 ].map((item, index) => {
@@ -436,7 +440,8 @@ function App() {
                           {...{
                             connectUserData,
                             setIsSplashPage,
-                            isSplashPage
+                            isSplashPage,
+                            setIsAboutPage
                           }}
                         />
                       }

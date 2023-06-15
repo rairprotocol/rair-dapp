@@ -59,7 +59,7 @@ const offerIndexInMarketplace = ['0', '221'];
 const iframeLink =
   'https://iframetester.com/?url=https://staging.rair.market/watch/0x48e89cb354a30d4ce0dafac77205792040ef485f/FaR4Z7kLDOZ87Rx1UU6CaLce_bip0X7vnrPjBu2t3APd9s/stream.m3u8';
 
-const MainPage: React.FC<IMainPage> = ({ setIsSplashPage }) => {
+const MainPage: React.FC<IMainPage> = ({ setIsSplashPage, setIsAboutPage }) => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -102,7 +102,15 @@ const MainPage: React.FC<IMainPage> = ({ setIsSplashPage }) => {
   /*TURN OFF SEARCH BAR */
   useEffect(() => {
     setIsSplashPage?.(true);
-  }, [setIsSplashPage]);
+  }, [setIsSplashPage, setIsAboutPage]);
+
+  useEffect(() => {
+    setIsAboutPage?.(true);
+
+    return () => {
+      setIsAboutPage?.(false);
+    };
+  });
 
   /* SHOW MORE BUTTON */
 

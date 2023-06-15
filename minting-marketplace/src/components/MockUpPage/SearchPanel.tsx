@@ -22,6 +22,7 @@ import {
   getCurrentPageEnd,
   getCurrentPageNull
 } from '../../ducks/pages/actions';
+import { TUsersInitialState } from '../../ducks/users/users.types';
 import { getListVideosStart } from '../../ducks/videos/actions';
 import {
   GlobalModalContext,
@@ -77,6 +78,9 @@ const SearchPanel: React.FC<ISearchPanel> = ({
   );
   const videos = useSelector<RootState, MediaListResponseType | null>(
     (store) => store.videosStore.videos
+  );
+  const { userRd } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
   );
 
   const { globalModalState, globalModaldispatch } =
@@ -172,7 +176,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
       dispatch(getListVideosStart(params));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dispatch, videoUnlocked]
+    [dispatch, videoUnlocked, userRd]
   );
 
   const globalParams = useMemo(

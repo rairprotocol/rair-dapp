@@ -3,15 +3,3 @@
   height: inherit;
   object-fit: cover !important;
 }
-
-@media screen and (min-width: 1250px) and (max-width: 1400px) {
-  .my-items-pict {
-    margin-left: -11px;
-  }
-}
-
-@media screen and (min-width: 1150px) and (max-width: 1400px) {
-  .my-items-pict.profile {
-    margin-left: -11px !important;
-  }
-}

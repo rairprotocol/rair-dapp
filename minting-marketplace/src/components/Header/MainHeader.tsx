@@ -48,7 +48,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   selectedChain,
   showAlert,
   isSplashPage,
-  setTabIndexItems
+  setTabIndexItems,
+  isAboutPage
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -322,14 +323,18 @@ const MainHeader: React.FC<IMainHeader> = ({
             {renderBtnConnect ? (
               <OnboardingButton />
             ) : (
-              <button
-                disabled={
-                  !window.ethereum && !programmaticProvider && !loginProcess
-                }
-                className={`btn btn-${primaryColor} btn-connect-wallet`}
-                onClick={() => connectUserData()}>
-                {loginProcess ? 'Please wait...' : 'Connect'}
-              </button>
+              <>
+                {isAboutPage ? null : (
+                  <button
+                    disabled={
+                      !window.ethereum && !programmaticProvider && !loginProcess
+                    }
+                    className={`btn btn-${primaryColor} btn-connect-wallet`}
+                    onClick={() => connectUserData()}>
+                    {loginProcess ? 'Please wait...' : 'Connect'}
+                  </button>
+                )}
+              </>
             )}
           </div>
         )}
@@ -379,6 +384,7 @@ const MainHeader: React.FC<IMainHeader> = ({
           </div>
         </div>
         <TalkSalesComponent
+          isAboutPage={isAboutPage}
           text={currentUserAddress ? 'Contact Us' : 'Support'}
         />
       </div>
