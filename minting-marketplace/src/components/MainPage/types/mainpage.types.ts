@@ -9,4 +9,5 @@ export interface IMainPage {
   setIsSplashPage: (arg: boolean) => void;
   connectUserData: () => void;
   seoInformation: Object;
+  setIsAboutPage: (arg: boolean) => void;
 }

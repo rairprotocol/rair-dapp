@@ -6,11 +6,17 @@ interface ITalkSalesButton {
   currentUserAddress: string | undefined;
   primaryColor?: ColorChoice;
   adminPanel?: boolean;
+  isAboutPage?: boolean;
 }
 
 export const TalkSalesButton = styled.button<ITalkSalesButton>`
   position: absolute;
-  top: ${(props) => (props.currentUserAddress ? '79.5px' : '84px')};
+  top: ${(props) =>
+    props.currentUserAddress
+      ? '79.5px'
+      : props.isAboutPage && props.isAboutPage
+      ? '72px'
+      : '84px'};
   right: ${(props) =>
     props.currentUserAddress && props.adminPanel
       ? '163px'
