@@ -95,12 +95,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [offerData, contractData]);
 
   const buyContract = useCallback(async () => {
-    if (
-      !contractData ||
-      !offerData ||
-      !diamondMarketplaceInstance ||
-      !minterInstance
-    ) {
+    if (!contractData || !offerData) {
       return;
     }
     reactSwal.fire({
@@ -125,6 +120,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         offerData?.offerIndex, // Range Index
         selectedToken // Internal Token Index
       ];
+    }
+    if (!marketplaceContract) {
+      reactSwal.fire({
+        title: 'Error',
+        html: 'Lost connection to the marketplace contract',
+        icon: 'error'
+      });
+      return;
     }
     marketplaceArguments.push({
       value: offerData.price
