@@ -265,12 +265,14 @@
   }
 }
 
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 1025px) {
   .profileIconPicWrapper,
   .profileIcon {
-    margin-left: -3rem;
+    margin-left: 0;
   }
+}
 
+@media screen and (max-width: 980px) {
   .root.editMode {
     margin-bottom: 100px;
   }
@@ -349,6 +351,18 @@
 
   .editModeOn {
     margin-left: 0rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .root {
+    /* height: 100%; */
+  }
+
+  .root.editMode {
+    margin-left: 0px;
+    /* padding-top: 4rem 0; */
+    /* height: 8.625px; */
   }
 }
 

@@ -70,9 +70,9 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
   }
 
   return (
-    <div className="user-page-favorite-container">
+    <div className="gen">
       <div
-        className={`my-items-product-wrapper ${
+        className={`list-button-wrapper-grid-template ${
           width >= 1250 && width <= 1400 && 'row'
         } favorite`}>
         {userFavotites && userFavotites.result.length > 0 ? (
@@ -94,9 +94,7 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
               );
             })
         ) : (
-          <p style={{ fontSize: '20px' }}>
-            This user doesn`t have any favorites
-          </p>
+          <p>This user doesn`t have any favorites</p>
         )}
       </div>
     </div>
