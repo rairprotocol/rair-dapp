@@ -287,6 +287,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
+              reactSwal.close();
               return;
             }
 
