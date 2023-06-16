@@ -1,4 +1,4 @@
-FROM node:latest as build
+FROM node:lts as build
 
 #install dependencies
 WORKDIR /usr/src/media-service
@@ -8,7 +8,7 @@ RUN npm install -g npm@8.14.0
 COPY . /usr/src/media-service
 #RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
-FROM node:latest
+FROM node:lts
 WORKDIR /usr/src/media-service
 COPY --from=build /usr/src/media-service /usr/src/media-service
 
