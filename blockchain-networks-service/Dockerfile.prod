@@ -1,4 +1,4 @@
-FROM node:latest as build
+FROM node:lts as build
 
 #version management
 COPY VERSION /
@@ -11,7 +11,7 @@ RUN npm install -g npm@8.14.0
 COPY . /usr/src/event-listener-prod
 #RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
-FROM node:latest
+FROM node:lts
 
 ###############################################
 # install gcloud cli as per these instructions:
