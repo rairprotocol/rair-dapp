@@ -1,7 +1,7 @@
 const express = require('express');
 const { getFile, getFiles, getFilesForToken, getFilesByCategory } = require('./files.Service');
 const { validation, loadUserSession } = require('../middleware');
-const { getSpecificContracts } = require('../contracts/contracts.Service');
+const { getSpecificContracts } = require('../api/contracts/contracts.Service');
 const { getOfferIndexesByContractAndProduct } = require('../api/offers/offers.Service');
 const { getOfferPoolByContractAndProduct } = require('../offerPools/offerPools.Service');
 

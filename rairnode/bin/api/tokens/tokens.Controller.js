@@ -9,7 +9,7 @@ const {
   updateTokenCommonMetadata,
   getFullTokenInfo,
 } = require('./tokens.Service');
-const { getSpecificContracts } = require('../../contracts/contracts.Service');
+const { getSpecificContracts } = require('../contracts/contracts.Service');
 const {
   getOfferIndexesByContractAndProduct,
 } = require('../offers/offers.Service');
