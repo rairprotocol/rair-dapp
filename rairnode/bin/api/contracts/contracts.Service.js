@@ -1,11 +1,11 @@
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
-const { Contract, Blockchain, File } = require('../models');
-const AppError = require('../utils/errors/AppError');
-const eFactory = require('../utils/entityFactory');
+const { Contract, Blockchain, File } = require('../../models');
+const AppError = require('../../utils/errors/AppError');
+const eFactory = require('../../utils/entityFactory');
 const {
   importContractData,
-} = require('../integrations/ethers/importContractData');
+} = require('../../integrations/ethers/importContractData');
 
 exports.getAllContracts = eFactory.getAll(Contract);
 exports.updateContract = eFactory.updateOne(Contract);
@@ -19,7 +19,10 @@ exports.getContractByCategory = async (req, res, next) => {
 
   const contractList = (await File.find({ category: id }))
     .map((item) => item.contract);
-  const results = await Contract.find({ _id: { $in: contractList } })
+  const results = await Contract.find({
+    _id: { $in: contractList },
+    blockchain: { $nin: ['0x38', '0x61'] },
+  })
     .skip(skip)
     .limit(pageSize);
   const totalCount = await Contract.find({ _id: { $in: contractList } }).countDocuments();
@@ -156,7 +159,7 @@ exports.getFullContracts = async (req, res, next) => {
       options.unshift({
         $match: {
           blockchain: {
-            $in: [...blockchainArr],
+            $in: [...blockchainArr], $nin: ['0x38', '0x61'],
           },
         },
       });

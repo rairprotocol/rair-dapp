@@ -18,6 +18,9 @@ const getContractsByUser = async (user, res, next) => {
   try {
     const contractQuery = {
       blockView: false,
+      blockchain: {
+        $nin: ['0x61', '0x38'],
+      },
     };
     if (user) {
       contractQuery.user = user;
