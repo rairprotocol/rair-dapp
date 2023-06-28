@@ -17,6 +17,7 @@ import { UserType } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
+import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
@@ -161,11 +162,11 @@ const VideoItem: React.FC<IVideoItem> = ({
     );
   };
 
-  const goToUnlockView = () => {
-    navigate(
-      `/unlockables/${contractData?.blockchain}/${contractData?.contractAddress}/${mediaList[item]?.product}/0`
-    );
-  };
+  // const goToUnlockView = () => {
+  //   navigate(
+  //     `/unlockables/${contractData?.blockchain}/${contractData?.contractAddress}/${mediaList[item]?.product}/0`
+  //   );
+  // };
 
   const getInfo = useCallback(async () => {
     if (mediaList && item) {
@@ -312,7 +313,7 @@ const VideoItem: React.FC<IVideoItem> = ({
             <div className="price-total">
               <span className="duration-for-video">
                 {' '}
-                {mediaList[item].duration}
+                {formatDuration(mediaList[item].duration)}
               </span>
             </div>
           </div>
