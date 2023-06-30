@@ -7,6 +7,7 @@ import { formatEther } from 'ethers/lib/utils';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
+import { getRGBValue } from '../../../utils/determineColorRange';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 import {
@@ -42,6 +43,8 @@ const NftItemForCollectionViewComponent: React.FC<
 
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const ipfsLink = useIPFSImageLink(metadata?.image);
+
+  const rgbValue = getRGBValue(diamond, offer, offerData, indexId);
 
   const handlePlaying = (el?: unknown) => {
     if (el === null) {
@@ -233,7 +236,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 src={metadata?.image ? ipfsLink : pict}
               />
             )}
-            {diamond ? (
+            {/* {diamond ? (
               <>
                 {offerData && offerData[0] && (
                   <>
@@ -277,16 +280,23 @@ const NftItemForCollectionViewComponent: React.FC<
               </>
             ) : (
               <>
-                {/* {offer.toString() === '0' ? (
-                  <SvgKey color={'#E4476D'} bgColor={'rgba(34, 32, 33, 0.5)'} />
+                {offer.toString() === '0' ? (
+                  // <SvgKey color={'#E4476D'} bgColor={'rgba(34, 32, 33, 0.5)'} />
+                  <></>
                 ) : offer.toString() === '1' ? (
-                  <SvgKey color={'#CCA541'} bgColor={'rgba(34, 32, 33, 0.5)'} />
+                  // <SvgKey color={'#CCA541'} bgColor={'rgba(34, 32, 33, 0.5)'} />
+                  <></>
                 ) : (
-                  <SvgKey color={'silver'} bgColor={'rgba(34, 32, 33, 0.5)'} />
-                )} */}
+                  // <SvgKey color={'silver'} bgColor={'rgba(34, 32, 33, 0.5)'} />
+                  <></>
+                )}
               </>
-            )}
-            <div className="description-wrapper pic-description-wrapper wrapper-for-collection-view">
+            )} */}
+            <div
+              className="description-wrapper pic-description-wrapper wrapper-for-collection-view"
+              style={{
+                background: `linear-gradient(0deg, ${rgbValue} 0%, rgba(255,255,255,0) 12%)`
+              }}>
               <div className="description-title">
                 <div
                   className="description-item-name"

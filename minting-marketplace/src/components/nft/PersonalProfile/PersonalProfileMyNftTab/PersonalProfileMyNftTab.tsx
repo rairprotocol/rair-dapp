@@ -1,7 +1,9 @@
 import { memo } from 'react';
 
+import Collecteditem from './Collecteditem';
+
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
-import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
+import LoadingComponent from '../../../common/LoadingComponent';
 
 import './PersonalProfileMyNftTab.css';
 
@@ -33,6 +35,10 @@ const PersonalProfileMyNftTabComponent: React.FC<
 }) => {
   const { width } = useWindowDimensions();
 
+  if (!filteredData) {
+    return <LoadingComponent />;
+  }
+
   return (
     <div className="gen">
       <div
@@ -43,65 +49,14 @@ const PersonalProfileMyNftTabComponent: React.FC<
         {filteredData.length > 0 ? (
           filteredData.map((item, index) => {
             return (
-              <div
-                onClick={() => {
-                  if (openModal && setSelectedData) {
-                    openModal();
-                    setSelectedData(item);
-                  }
-                }}
-                key={index}
-                className="nft-item-collection grid-item">
-                <ImageLazy
-                  className={`my-items-pict ${
-                    profile && 'row profile'
-                  } zoom-event`}
-                  src={`${item.metadata.image || defaultImg}`}
-                  alt={`My favorite NFT ${item.metadata.name}`}
-                />
-                <div className="w-100 bg-my-items">
-                  <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
-                    <div
-                      className="container-blue-description"
-                      style={{ color: '#fff' }}>
-                      <span className="description-title">
-                        {item.metadata ? (
-                          <>
-                            <span>{item.title}</span>
-                          </>
-                        ) : (
-                          <b> No metadata available </b>
-                        )}
-                        <br />
-                      </span>
-                      <div className="container-blockchain-info">
-                        <small className="description">
-                          {item.metadata && item.metadata.name.length > 16
-                            ? item.metadata.name.slice(0, 5) +
-                              '...' +
-                              item.metadata.name.slice(
-                                item.metadata.name.length - 4
-                              )
-                            : item.metadata.name}
-                        </small>
-                        <div className="description-small" style={{}}>
-                          <img
-                            className="my-items-blockchain-img"
-                            src={
-                              item.contract.blockchain
-                                ? `${
-                                    chainData[item.contract.blockchain]?.image
-                                  }`
-                                : ''
-                            }
-                            alt="Blockchain network"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Collecteditem
+                key={item._id}
+                item={item}
+                index={index}
+                chainData={chainData}
+                profile={profile}
+                defaultImg={defaultImg}
+              />
             );
           })
         ) : (

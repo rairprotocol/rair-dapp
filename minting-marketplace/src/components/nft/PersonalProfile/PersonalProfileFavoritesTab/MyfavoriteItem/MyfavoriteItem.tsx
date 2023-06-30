@@ -70,7 +70,10 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
               goToTokenLink(item.token.contract);
             }
           }}
-          className="col my-items-description-wrapper my-items-pic-description-wrapper">
+          className="col my-items-description-wrapper my-items-pic-description-wrapper"
+          style={{
+            cursor: 'pointer'
+          }}>
           <div className="container-blue-description" style={{ color: '#fff' }}>
             <span className="description-title">
               {item.token.metadata ? (

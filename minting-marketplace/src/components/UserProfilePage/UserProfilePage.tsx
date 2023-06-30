@@ -52,9 +52,9 @@ const UserProfilePage: React.FC = () => {
     undefined
   );
   const [tokens, setTokens] = useState<TDiamondTokensType[]>([]);
-  const [collectedTokens, setCollectedTokens] = useState<TDiamondTokensType[]>(
-    []
-  );
+  const [collectedTokens, setCollectedTokens] = useState<
+    TDiamondTokensType[] | null
+  >(null);
   const [createdContracts, setCreatedContracts] = useState([]);
   const [fileUpload, setFileUpload] = useState<File | null>(null);
   const [loadingBg, setLoadingBg] = useState(false);

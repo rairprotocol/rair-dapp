@@ -1,14 +1,22 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
+import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 
+import {
+  IOffersResponseType,
+  TProducts
+} from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import { setTokenData } from '../../../../ducks/nftData/action';
+import {
+  setTokenData,
+  setTokenDataStart
+} from '../../../../ducks/nftData/action';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { rFetch } from '../../../../utils/rFetch';
@@ -18,7 +26,10 @@ import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import CustomButton from '../../utils/button/CustomButton';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
 import { NftItemForCollectionView } from '../NftItemForCollectionView';
-import { INftCollectionPageComponent } from '../nftList.types';
+import {
+  INftCollectionPageComponent,
+  TParamsNftDataCommonLink
+} from '../nftList.types';
 import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
@@ -29,7 +40,6 @@ import './../../GeneralCollectionStyles.css';
 
 const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   embeddedParams,
-  blockchain,
   selectedData,
   tokenData,
   totalCount,
@@ -50,6 +60,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
+
+  const params = useParams<TParamsNftDataCommonLink>();
+  const { contract, product, blockchain } = params;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const myRef = useRef<HTMLDivElement>(null);
@@ -59,6 +73,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const { width } = useWindowDimensions();
   const loader = useRef(null);
   const [fileUpload, setFileUpload] = useState<any>();
+  const [bannerInfo, setBannerInfo] = useState<TProducts>();
 
   const loadToken = useCallback(
     (entries) => {
@@ -79,6 +94,24 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const goBack = () => {
     navigate('/');
   };
+
+  const getBannerInfo = useCallback(async () => {
+    try {
+      setLoadingBg(true);
+      const response = await axios.get<IOffersResponseType>(
+        `/api/nft/network/${blockchain}/${contract}/${product}/offers`
+      );
+
+      if (response.data.success) {
+        setBannerInfo(response.data.product);
+        setLoadingBg(false);
+      }
+    } catch (err) {
+      setLoadingBg(false);
+      const error = err as AxiosError;
+      console.error(error?.message);
+    }
+  }, [product, contract, blockchain]);
 
   const photoUpload = useCallback(
     (e) => {
@@ -116,16 +149,17 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
         });
 
         if (response.success) {
+          getBannerInfo();
+          setLoadingBg(false);
           // setBackgroundUser(user.background);
           // setFileUpload(null);
-          setLoadingBg(false);
-          setRenderOffers((prev) => !prev);
+          // setRenderOffers((prev) => !prev);
         } else {
           setLoadingBg(false);
         }
       }
     }
-  }, [fileUpload, offerAllData, setRenderOffers, userRd]);
+  }, [fileUpload, offerAllData, userRd, getBannerInfo]);
 
   useEffect(() => {
     if (!embeddedParams) {
@@ -133,6 +167,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    getBannerInfo();
+  }, [getBannerInfo]);
 
   useEffect(() => {
     const option = {
@@ -183,8 +221,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                 className="picture-banner"
                 alt="Collection Banner"
                 src={
-                  offerAllData && offerAllData?.bannerImage
-                    ? `${changeIPFSLink(offerAllData?.bannerImage)}`
+                  bannerInfo && bannerInfo?.bannerImage
+                    ? `${changeIPFSLink(bannerInfo?.bannerImage)}`
                     : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg'
                 }
               />

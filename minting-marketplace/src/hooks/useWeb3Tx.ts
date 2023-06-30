@@ -19,9 +19,10 @@ import { rFetch } from '../utils/rFetch';
 const confirmationsRequired = 2;
 
 const useWeb3Tx = () => {
-  const { currentChain } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentChain, currentUserAddress } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
   const { loginType } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
@@ -244,6 +245,12 @@ const useWeb3Tx = () => {
         callback?: () => void;
       }
     ) => {
+      if (!currentUserAddress) {
+        console.error(
+          `Web3 method call ${method} will not be called without login`
+        );
+        return;
+      }
       switch (loginType) {
         case 'oreid':
           return oreIdCall(contract, method, args, options);
