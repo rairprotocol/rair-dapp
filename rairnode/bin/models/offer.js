@@ -18,6 +18,7 @@ const Offer = new Schema(
     diamond: { type: Boolean, required: true, default: false },
     diamondRangeIndex: { type: String, required: false },
     transactionHash: { type: String, required: false },
+    hidden: { type: Boolean, default: false },
   },
   { versionKey: false },
 );

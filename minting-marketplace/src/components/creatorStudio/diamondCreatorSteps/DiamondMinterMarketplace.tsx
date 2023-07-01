@@ -156,6 +156,7 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
             <MarketplaceOfferConfig
               key={index}
               {...{
+                enabled: !contractData?.instance,
                 array,
                 index,
                 nodeFee,

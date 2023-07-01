@@ -35,6 +35,7 @@ const {
   registerCustomSplits,
   depositCredits,
   withdrawCredits,
+  updateMintingOffer,
 } = require('./eventCatcherUtils');
 
 // Smart contract events are mapped to an insertion logic
@@ -54,6 +55,7 @@ const insertionMapping = {
   AddedMintingOffer: insertDiamondOffer,
   TokenMinted: insertTokenClassic,
   MintedToken: insertTokenDiamond,
+  UpdatedMintingOffer: updateMintingOffer,
 
   // Classic Factory
   NewContractDeployed: insertContract,

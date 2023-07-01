@@ -21,7 +21,8 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
   treasuryFee,
   treasuryAddress,
   simpleMode,
-  rerender
+  rerender,
+  enabled
 }) => {
   const item = array[index];
   const { currentUserAddress, diamondMarketplaceInstance, currentChain } =
@@ -125,7 +126,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
         <div className="col-2 rounded-rair text-end">
           {item._id && item.diamondRangeIndex && item.offerIndex && (
             <button
-              disabled={updateAvailable}
+              disabled={updateAvailable || enabled}
               className={`btn col-12 btn-${
                 updateAvailable ? 'success' : 'stimorol'
               }`}

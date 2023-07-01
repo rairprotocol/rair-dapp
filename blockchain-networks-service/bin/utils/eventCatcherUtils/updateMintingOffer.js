@@ -8,16 +8,14 @@ module.exports = async (
   chainId,
   transactionReceipt,
   diamondEvent,
-  erc721Address,
+  address,
   rangeIndex,
-  rangeName,
-  price,
   feeSplitsLength,
   visible,
   offerIndex,
 ) => {
   const contract = await findContractFromAddress(
-    erc721Address,
+    address,
     chainId,
     transactionReceipt,
   );
@@ -29,14 +27,12 @@ module.exports = async (
   const foundOffer = await Offer.findOneAndUpdate(
     {
       contract: contract._id,
-      offerName: rangeName,
-      price,
       diamondRangeIndex: rangeIndex,
+    },
+    {
+      offerIndex: offerIndex || visible,
       hidden: !visible,
     },
-    // If offer index doesn't exist then it's an old version of the event
-    // And 'visible' would hold the data for 'offerIndex'
-    { offerIndex: offerIndex || visible },
   );
 
   return foundOffer;

@@ -22,6 +22,7 @@ export type TOfferType = {
   transactionHash: string;
   _id: string;
   diamondRangeIndex?: string;
+  hidden: boolean;
 };
 
 export type TOfferData = TOfferType & {

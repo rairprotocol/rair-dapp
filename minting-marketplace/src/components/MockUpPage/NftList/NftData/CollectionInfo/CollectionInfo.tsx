@@ -82,6 +82,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                 }
                 return 0;
               })
+              .filter((offer) => offer.hidden !== true && !offer.sold)
               .map((token, index) => {
                 return (
                   <BlockItemCollection
