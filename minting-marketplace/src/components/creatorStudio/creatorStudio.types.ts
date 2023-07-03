@@ -21,6 +21,7 @@ export interface IMarketplaceOfferConfig {
   treasuryAddress: string;
   simpleMode: boolean;
   rerender: () => void;
+  enabled: boolean;
 }
 
 export type TListOffers = Pick<

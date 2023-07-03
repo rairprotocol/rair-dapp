@@ -82,6 +82,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                 }
                 return 0;
               })
+              .filter((offer) => offer.hidden !== true && !offer.sold)
               .map((token, index) => {
                 return (
                   <BlockItemCollection
@@ -91,7 +92,8 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                       <ImageLazy
                         src={
                           tokenData && tokenData[0].metadata
-                            ? tokenData[token.range[0]].metadata.image
+                            ? token.range[0] &&
+                              tokenData[token.range[0]].metadata.image
                             : defaultPhoto
                         }
                         alt="Created by user"

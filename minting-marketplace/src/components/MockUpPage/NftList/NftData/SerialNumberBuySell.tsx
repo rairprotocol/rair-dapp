@@ -1,27 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { NavLink } from 'react-router-dom';
 import MetaMaskOnboarding from '@metamask/onboarding';
-import axios from 'axios';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
 import { BuySellButton } from './BuySellButton';
 import SellInputButton from './SellInputButton';
 
-import { TUserResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
 import { web3Switch } from '../../../../utils/switchBlockchain';
 import { ContractType } from '../../../adminViews/adminView.types';
-import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
-import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISerialNumberBuySell } from '../../mockupPage.types';
 import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
 import { currentTokenData } from '../utils/currentTokenData';
@@ -50,37 +44,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     (state) => state.contractStore
   );
 
+  const reactSwal = useSwal();
+  const { web3TxHandler } = useWeb3Tx();
+
   const numberTooBigThreshold = BigNumber.from(10000000000);
 
-  const [accountData, setAccountData] = useState<UserType | null>(null);
   const [contractData, setContractData] = useState<ContractType>();
   const [resaleData, setResaleData] = useState<any>();
   const params = useParams();
-  const { web3TxHandler } = useWeb3Tx();
-  const reactSwal = useSwal();
-
-  const getInfoFromUser = useCallback(async () => {
-    // find user
-    if (
-      selectedToken &&
-      tokenData?.[selectedToken]?.ownerAddress &&
-      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress)
-    ) {
-      try {
-        const result = await axios
-          .get<TUserResponse>(
-            `/api/users/${tokenData?.[selectedToken]?.ownerAddress}`
-          )
-          .then((res) => res.data);
-
-        if (result.success) {
-          setAccountData(result.user);
-        }
-      } catch (e) {
-        setAccountData(null);
-      }
-    }
-  }, [selectedToken, setAccountData, tokenData]);
 
   const disableBuyBtn = useCallback(() => {
     // Returns true to DISABLE the button
@@ -95,7 +66,12 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [offerData, contractData]);
 
   const buyContract = useCallback(async () => {
-    if (!contractData || !offerData) {
+    if (
+      !contractData ||
+      !offerData ||
+      !diamondMarketplaceInstance ||
+      !minterInstance
+    ) {
       return;
     }
     reactSwal.fire({
@@ -121,14 +97,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         selectedToken // Internal Token Index
       ];
     }
-    if (!marketplaceContract) {
-      reactSwal.fire({
-        title: 'Error',
-        html: 'Lost connection to the marketplace contract',
-        icon: 'error'
-      });
-      return;
-    }
     marketplaceArguments.push({
       value: offerData.price
     });
@@ -151,14 +119,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       );
     }
   }, [
-    reactSwal,
-    web3TxHandler,
-    minterInstance,
+    contractData,
     offerData,
     diamondMarketplaceInstance,
-    contractData,
-    selectedToken,
-    handleTokenBoughtButton
+    minterInstance,
+    reactSwal,
+    web3TxHandler,
+    handleTokenBoughtButton,
+    selectedToken
   ]);
 
   useEffect(() => {
@@ -212,42 +180,34 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     getResaleData();
   }, [getResaleData]);
 
-  useEffect(() => {
-    getInfoFromUser();
-  }, [getInfoFromUser]);
-
   const resalePurchase = useCallback(async () => {
     if (!resaleInstance) {
       return;
     }
     const { isConfirmed } = await reactSwal.fire({
-      title: `Purchase token #${resaleData.tokenId}`,
+      title: 'Purchase token from user',
       html: `Currently owned by: ${resaleData.operator}`,
       icon: 'info',
       showCancelButton: true
     });
-    reactSwal.fire({
-      title: `Please wait`,
-      html: `Purchasing token #${resaleData.tokenId}`,
-      icon: 'info',
-      showConfirmButton: false
-    });
     if (
       isConfirmed &&
-      (await web3TxHandler(resaleInstance, 'buyResaleOffer', [
-        resaleData.tradeid,
-        {
-          value: resaleData.price
-        }
-      ]))
+      (await web3TxHandler(
+        resaleInstance,
+        'buyResaleOffer',
+        [resaleData.tradeid, { value: resaleData.price }],
+        { callback: handleTokenBoughtButton }
+      ))
     ) {
-      reactSwal.fire(
-        'Success',
-        `You are now the owner of NFT #${resaleData.tokenId}`,
-        'success'
-      );
+      reactSwal.fire('Success', 'Token purchased', 'success');
     }
-  }, [resaleData, resaleInstance, reactSwal, web3TxHandler]);
+  }, [
+    reactSwal,
+    resaleData,
+    resaleInstance,
+    web3TxHandler,
+    handleTokenBoughtButton
+  ]);
 
   const checkAllSteps = useCallback(() => {
     if (!blockchain) {
@@ -306,37 +266,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             <small>Resale offer</small>
           </>
         );
-      } else {
-        return (
-          <div className="container-sell-button-user">
-            Owned by{' '}
-            <div className="block-user-creator">
-              <ImageLazy
-                src={accountData?.avatar ? accountData.avatar : defaultImage}
-                alt="User Avatar"
-              />
-              {selectedToken && (
-                <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
-                  <h5>
-                    {(accountData &&
-                    accountData.nickName &&
-                    accountData.nickName.length > 20
-                      ? accountData.nickName.slice(0, 5) +
-                        '....' +
-                        accountData.nickName.slice(length - 4)
-                      : accountData && accountData.nickName) ||
-                      (tokenData?.[selectedToken]?.ownerAddress &&
-                        tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
-                          '....' +
-                          tokenData?.[selectedToken]?.ownerAddress.slice(
-                            length - 4
-                          ))}
-                  </h5>
-                </NavLink>
-              )}
-            </div>
-          </div>
-        );
       }
     }
   }, [
@@ -351,8 +280,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     currentUserAddress,
     resaleData,
     currentUser,
-    resalePurchase,
-    accountData
+    resalePurchase
   ]);
 
   useEffect(() => {
