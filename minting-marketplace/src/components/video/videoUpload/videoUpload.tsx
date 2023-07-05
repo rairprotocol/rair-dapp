@@ -78,7 +78,9 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
   }, [getCategories]);
 
   const getFullContractData = useCallback(async () => {
-    const request = await rFetch('/api/contracts/full?itemsPerPage=5');
+    const request = await rFetch(
+      '/api/contracts/full?itemsPerPage=5&hidden=true'
+    );
     if (request.success) {
       const { success, contracts } = await rFetch(
         `/api/contracts/full?itemsPerPage=${request.totalNumber}&hidden=true`
@@ -121,7 +123,11 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
         });
 
         setFullContractData(mapping);
-        setContractOptions(options);
+        setContractOptions(
+          options.sort((a, b) =>
+            a.label.toLowerCase() >= b.label.toLowerCase() ? 1 : -1
+          )
+        );
       }
     }
   }, []);
