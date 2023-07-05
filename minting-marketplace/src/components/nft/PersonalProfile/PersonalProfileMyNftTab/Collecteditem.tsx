@@ -9,7 +9,12 @@ const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
   const navigate = useNavigate();
 
   const getTokenData = useCallback(async () => {
-    const response = await rFetch(`/api/v2/tokens/${item._id}`);
+    const response = await rFetch(
+      `/api/v2/tokens/${item._id}`,
+      undefined,
+      undefined,
+      undefined
+    );
 
     if (response.success) {
       setTokenInfo(response.tokenData);
