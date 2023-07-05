@@ -10,7 +10,6 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import TalkSalesComponent from '../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 
 import {
   CommunityBlock,
@@ -54,74 +53,55 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
     <FooterMain primaryColor={primaryColor}>
       <FooterWrapper primaryColor={primaryColor}>
         <div className="footer-box-join">
-          <FooterImage>
-            <NavLink to="/">
-              <img src={headerLogo} alt="Rair Tech" />
-            </NavLink>
-          </FooterImage>
-          <CommunityBlock primaryColor={primaryColor}>
-            <div className="community-text">Join our community</div>
-            <CommunityBoxFooter>
-              <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
-                <a
-                  href="https://discord.gg/pSTbf2yz7V"
-                  target={'_blank'}
-                  rel="noreferrer">
-                  <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
-                </a>
-              </SocialBox>
-              <SocialBox
-                marginRight={'17px'}
-                marginLeft={'17px'}
-                hoverColor={'#1DA1F2'}
-                primaryColor={primaryColor}>
-                <a
-                  href="https://twitter.com/rairtech"
-                  target={'_blank'}
-                  rel="noreferrer">
-                  <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
-                </a>
-              </SocialBox>
-              <SocialBox hoverColor={'#229ED9'} primaryColor={primaryColor}>
-                <TelegramIcon primaryColor={primaryColor} color={'#fff'} />
-              </SocialBox>
-            </CommunityBoxFooter>
-          </CommunityBlock>
-        </div>
-        <NavFooter>
-          <NavFooterBox primaryColor={primaryColor}>
-            <h4>Company</h4>
-            {!isSplashPage && (
-              <li>
-                <NavLink to="//rair.tech/">About</NavLink>
-              </li>
-            )}
-            <li>
-              <a
-                href="https://etherscan.io/token/0xc76c3ebea0ac6ac78d9c0b324f72ca59da36b9df"
-                target={'_blank'}
-                rel="noreferrer">
-                Contract
-              </a>
-            </li>
-            <li>
-              <TalkSalesComponent
-                text={'Inquiries'}
-                classes={'inquiries-sales'}
-              />
-            </li>
-          </NavFooterBox>
-          {currentUserAddress && (
+          <div className="footer-wrapper">
+            <FooterImage>
+              <NavLink to="/">
+                <img src={headerLogo} alt="Rair Tech" />
+              </NavLink>
+            </FooterImage>
+            <CommunityBlock primaryColor={primaryColor}>
+              <div className="community-text">Join our community</div>
+              <CommunityBoxFooter>
+                <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
+                  <a
+                    href="https://discord.gg/pSTbf2yz7V"
+                    target={'_blank'}
+                    rel="noreferrer">
+                    <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
+                  </a>
+                </SocialBox>
+                <SocialBox
+                  marginRight={'17px'}
+                  marginLeft={'17px'}
+                  hoverColor={'#1DA1F2'}
+                  primaryColor={primaryColor}>
+                  <a
+                    href="https://twitter.com/rairtech"
+                    target={'_blank'}
+                    rel="noreferrer">
+                    <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
+                  </a>
+                </SocialBox>
+                <SocialBox hoverColor={'#229ED9'} primaryColor={primaryColor}>
+                  <TelegramIcon primaryColor={primaryColor} color={'#fff'} />
+                </SocialBox>
+              </CommunityBoxFooter>
+            </CommunityBlock>
+          </div>
+          <NavFooter>
             <NavFooterBox primaryColor={primaryColor}>
-              <h4>My Account</h4>
-              {/* <li>
-                <NavLink to="/my-items">My items</NavLink>
-              </li> */}
-              {/* <li>My collections</li> */}
-              {/* <li>My favorites</li> */}
+              <h4>Company</h4>
+              <li>
+                <a
+                  href="https://etherscan.io/token/0xe3fFbD303ccC7733e501713aAF06E46312B22D3E"
+                  target={'_blank'}
+                  rel="noreferrer">
+                  Contract
+                </a>
+              </li>
             </NavFooterBox>
-          )}
-        </NavFooter>
+          </NavFooter>
+        </div>
         <FooterEmailBlock primaryColor={primaryColor}>
           <h4>Stay in the loop</h4>
           <form

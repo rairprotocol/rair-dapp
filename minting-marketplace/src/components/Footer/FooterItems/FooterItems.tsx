@@ -28,15 +28,23 @@ export const FooterWrapper = styled.div<TFooterMainStyled>`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-
   padding-bottom: 52px;
   border-bottom: 1px solid
     ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
+
+  .footer-box-join {
+    display: flex;
+    flex-direction: row;
+  }
 
   @media screen and (max-width: 768px) {
     flex-direction: column-reverse;
     justify-content: center;
     align-items: center;
+
+    .footer-box-join {
+      flex-direction: column;
+    }
   }
 `;
 
@@ -98,7 +106,14 @@ export const NavFooter = styled.nav`
 
 export const NavFooterBox = styled.ul<TFooterMainStyled>`
   list-type: none;
+  padding-left: 5rem;
 
+  @media screen and (max-width: 768px) {
+    margin-top: 1rem;
+    padding-left: 0rem;
+  }
+
+  // no longer using this code chunk in footer, but was previously used in FooterItems
   &.nav-header-box-mobile {
     li {
       cursor: pointer;
@@ -138,20 +153,17 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
   li {
     font-size: 14px;
     color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
-    margin-bottom: 8px;
+    justify-content: center;
+    display: flex;
   }
 
   li.logout {
     cursor: pointer;
   }
 
-  li:last-child {
-    margin-bottom: 0px;
-  }
-
-  @media screen and (max-width: 450px) {
-    padding-left: 0;
-  }
+  // li:last-child {
+  //   margin-bottom: 0px;
+  // }
 `;
 
 export const ListFooter = styled.ul``;
