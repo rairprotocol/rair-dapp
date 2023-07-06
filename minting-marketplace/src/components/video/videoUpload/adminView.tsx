@@ -131,10 +131,10 @@ const AdminView = ({
                 customClass="form-control input-select-custom-style"
                 customCSS={reusableStyle}
                 // labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
-                label="Select contract that need to be hidden"
+                label="Select contract that needs to be hidden"
                 getter={item}
                 setter={(e) => selectContract(e, index)}
-                placeholder="Select contract that need to be hidden"
+                placeholder="Select contract that needs to be hidden"
                 options={options}
               />
               <div className="hidden-options-wrapper">
