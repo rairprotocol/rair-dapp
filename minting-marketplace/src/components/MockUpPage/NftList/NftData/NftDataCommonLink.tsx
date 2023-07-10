@@ -112,46 +112,33 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const getProductsFromOffer = useCallback(async () => {
     setIsLoading(true);
-    if (currentUserAddress) {
-      const responseIfUserConnect = await axios.get<TNftFilesResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}/files`,
-        {
-          headers: {
-            Accept: 'application/json'
-          }
+    const response = await axios.get<TNftFilesResponse>(
+      `/api/nft/network/${blockchain}/${contract}/${product}/files`
+    );
+    setIsLoading(false);
+    console.info(response);
+    const loadedFiles: string[] = [];
+    setProductsFromOffer(
+      response.data.files.filter((item: TFileType) => {
+        if (!loadedFiles.includes(item._id)) {
+          loadedFiles.push(item._id);
+          return true;
         }
-      );
-      setProductsFromOffer(responseIfUserConnect.data.files);
-      if (tokenData && tokenId) {
-        if (tokenData[tokenId]?.offer?.diamond) {
-          setSelectedOfferIndex(
-            tokenData && tokenData[tokenId]?.offer?.diamondRangeIndex
-          );
-        } else {
-          setSelectedOfferIndex(
-            tokenData && tokenData[tokenId]?.offer?.offerIndex
-          );
-        }
-      }
-    } else {
-      const response = await axios.get<TNftFilesResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}/files`
-      );
-      setIsLoading(false);
-      setProductsFromOffer(response.data.files);
-      if (tokenData && tokenId) {
-        if (tokenData[tokenId]?.offer?.diamond) {
-          setSelectedOfferIndex(
-            tokenData && tokenData[tokenId]?.offer?.diamondRangeIndex
-          );
-        } else {
-          setSelectedOfferIndex(
-            tokenData && tokenData[tokenId]?.offer?.offerIndex
-          );
-        }
+        return false;
+      })
+    );
+    if (tokenData && tokenId) {
+      if (tokenData[tokenId]?.offer?.diamond) {
+        setSelectedOfferIndex(
+          tokenData && tokenData[tokenId]?.offer?.diamondRangeIndex
+        );
+      } else {
+        setSelectedOfferIndex(
+          tokenData && tokenData[tokenId]?.offer?.offerIndex
+        );
       }
     }
-  }, [blockchain, contract, product, tokenId, tokenData, currentUserAddress]);
+  }, [blockchain, contract, product, tokenId, tokenData]);
 
   const getParticularOffer = useCallback(async () => {
     try {

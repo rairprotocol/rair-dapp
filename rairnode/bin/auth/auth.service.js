@@ -3,7 +3,7 @@ const axios = require('axios');
 // const { vaultAppRoleTokenManager, vaultKeyManager } = require('../vault');
 const { OreId } = require('oreid-js');
 const log = require('../utils/logger')(module);
-const { File, User, Contract, Offer, MediaViewLog } = require('../models');
+const { File, User, MediaViewLog, Unlock } = require('../models');
 const AppError = require('../utils/errors/AppError');
 const { zoomSecret, zoomClientID } = require('../config');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
@@ -70,6 +70,7 @@ module.exports = {
     }
     return next(new AppError('Authentication failed', 403));
   },
+
   unlockMediaWithSession: async (req, res, next) => {
     const { type, fileId } = req.body;
     const { userData } = req.session;
@@ -81,79 +82,106 @@ module.exports = {
     }
     if (type === 'file') {
       const media = await File.findOne({ _id: fileId });
-      const contract = await Contract.findOne(media.contract);
-      if (!contract) {
-        return next(new AppError('No contract found', 400));
-      }
+      const unlocks = await Unlock.aggregate([
+        {
+          $match: {
+            file: fileId,
+          },
+        }, {
+          $lookup: {
+            from: 'File',
+            localField: 'file',
+            foreignField: '_id',
+            as: 'file',
+          },
+        }, {
+          $lookup: {
+            from: 'Offer',
+            localField: 'offers',
+            foreignField: '_id',
+            as: 'offers',
+          },
+        }, {
+          $lookup: {
+            from: 'Contract',
+            localField: 'offers.contract',
+            foreignField: '_id',
+            as: 'contractData',
+          },
+        },
+      ]);
 
-      const offerQuery = {
-        contract: media.contract,
-      };
-      if (contract.diamond) {
-        offerQuery.diamondRangeIndex = { $in: media.offer };
-      } else {
-        offerQuery.offerIndex = { $in: media.offer };
+      const fileData = unlocks[0].file[0];
+      const offerData = unlocks[0].offers.map((item) => item);
+      const contractData = unlocks[0].contractData.map((item) => item);
+
+      if (!fileData) {
+        return next(new AppError('No data found for file', 403));
       }
-      const offers = await Offer.find(offerQuery);
 
       let ownsMediaNFT = false;
+      let unlockingOffer;
 
-      // Don't bother if the file is marked as a demo
-      if (!media.demo) {
-        // Verify the user has the tokens needed in a RAIR contract
-        // eslint-disable-next-line no-restricted-syntax
-        for await (const offer of offers) {
-          const result = contract.external
-            ? await checkBalanceAny(
-              userData.publicAddress,
-              contract.blockchain,
-              contract.contractAddress,
-            )
-            : await checkBalanceProduct(
-              userData.publicAddress,
-              contract.blockchain,
-              contract.contractAddress,
-              offer.product,
-              offer.range[0],
-              offer.range[1],
-            );
-          if (result) {
+      try {
+        if (fileData.demo) {
+          ownsMediaNFT = true;
+          log.info(`Media ${fileId} is flagged as demo, will not validate NFT ownership`);
+        } else if (fileData.uploader === userData.publicAddress) {
+          ownsMediaNFT = true;
+          log.info(`Media ${fileId} unlocked by uploader ${userData.publicAddress}`);
+        } else if (offerData) {
+          const contractMapping = {};
+          contractData.forEach((contract) => {
+            contractMapping[contract._id] = contract;
+          });
+          if (await checkAdminTokenOwns(userData.publicAddress)) {
             ownsMediaNFT = true;
-            break;
+            log.info(`User address ${
+              userData.publicAddress
+            } unlocked media ${fileId} with admin privileges`);
           }
-        }
-        // verify the account holds the required admin NFT
-        if (
-          !ownsMediaNFT &&
-          media.authorPublicAddress === userData.publicAddress
-        ) {
-          try {
-            ownsMediaNFT = await checkAdminTokenOwns(userData.publicAddress);
-            if (ownsMediaNFT) {
-              log.info(`User address ${userData.publicAddress} unlocked media ${fileId} with admin privileges`);
+          if (!ownsMediaNFT) {
+            // eslint-disable-next-line no-restricted-syntax
+            for await (const offer of offerData) {
+              const contract = contractMapping[offer.contract];
+              if (contract.external) {
+                ownsMediaNFT = await checkBalanceAny(
+                  userData.publicAddress,
+                  contract.blockchain,
+                  contract.contractAddress,
+                );
+              } else {
+                ownsMediaNFT = await checkBalanceProduct(
+                  userData.publicAddress,
+                  contract.blockchain,
+                  contract.contractAddress,
+                  offer.product,
+                  offer.range[0],
+                  offer.range[1],
+                );
+              }
+              if (ownsMediaNFT) {
+                unlockingOffer = offer._id;
+                log.info(`User ${userData.publicAddress} unlocked ${fileId} with offer ${offer._id}: ${offer.offerName} in ${contract.blockchain}`);
+                break;
+              }
             }
-          } catch (e) {
-            return next(new AppError(`Could not verify account: ${e}`, 403));
           }
         }
-      } else {
-        log.info(`Media ${fileId} is flagged as demo, will not validate NFT ownership`);
+      } catch (e) {
+        return next(new AppError(`Could not verify account: ${e}`, 403));
       }
 
-      if (
-        !ownsMediaNFT &&
-        !media.demo
-      ) {
+      if (!ownsMediaNFT) {
         return next(new AppError('Unauthorized', 403));
       }
-
       req.session.authorizedMediaStream = fileId;
       req.session.authorizedMediaType = type;
-
       const viewData = new MediaViewLog({
         userAddress: userData.publicAddress,
         file: fileId,
         decryptedFiles: 0,
+        offer: unlockingOffer,
       });
       if (type === 'file') {
         await viewData.save();

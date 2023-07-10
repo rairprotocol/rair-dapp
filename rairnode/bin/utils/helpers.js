@@ -3,9 +3,9 @@ const _ = require('lodash');
 const { JSDOM } = require('jsdom');
 const createDOMPurify = require('dompurify');
 const { promises: fs } = require('fs');
-const { checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
+const { checkBalanceProduct, checkAdminTokenOwns, checkBalanceAny } = require('../integrations/ethers/tokenValidation');
 const log = require('./logger')(module);
-const { Contract, Offer } = require('../models');
+const { Contract, Offer, Unlock } = require('../models');
 
 const execPromise = (command, options = {}) => new Promise((resolve, reject) => {
   exec(command, options, (error/* , stdout, stderr */) => {
@@ -15,6 +15,106 @@ const execPromise = (command, options = {}) => new Promise((resolve, reject) => 
     return resolve();
   });
 });
+
+const checkFileAccess = async (files, user) => {
+  const result = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const file of files) {
+    delete file.key;
+    if (file.demo) {
+      file.isUnlocked = true;
+      result.push(file);
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    const unlocks = await Unlock.aggregate([
+      {
+        $match: {
+          file: file._id,
+        },
+      }, {
+        $lookup: {
+          from: 'Offer',
+          localField: 'offers',
+          foreignField: '_id',
+          as: 'offers',
+        },
+      }, {
+        $lookup: {
+          from: 'Contract',
+          localField: 'offers.contract',
+          foreignField: '_id',
+          as: 'contractData',
+        },
+      },
+    ]);
+
+    if (!unlocks[0]) {
+      file.isUnlocked = false;
+      result.push(file);
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+
+    const offerData = unlocks[0].offers.map((item) => item);
+    const contractData = unlocks[0].contractData.map((item) => item);
+
+    let ownsMediaNFT = false;
+
+    try {
+      if (file.uploader === user.publicAddress) {
+        ownsMediaNFT = true;
+      } else if (offerData) {
+        const contractMapping = {};
+        contractData.forEach((contract) => {
+          contractMapping[contract._id] = contract;
+        });
+        if (await checkAdminTokenOwns(user.publicAddress)) {
+          ownsMediaNFT = true;
+          log.info(`User address ${
+            user.publicAddress
+          } unlocked media ${file._id} with admin privileges`);
+        }
+        if (!ownsMediaNFT) {
+          // eslint-disable-next-line no-restricted-syntax
+          for await (const offer of offerData) {
+            const contract = contractMapping[offer.contract];
+            if (contract.external) {
+              ownsMediaNFT = await checkBalanceAny(
+                user.publicAddress,
+                contract.blockchain,
+                contract.contractAddress,
+              );
+            } else {
+              ownsMediaNFT = await checkBalanceProduct(
+                user.publicAddress,
+                contract.blockchain,
+                contract.contractAddress,
+                offer.product,
+                offer.range[0],
+                offer.range[1],
+              );
+            }
+            if (ownsMediaNFT) {
+              log.info(`User ${user.publicAddress} unlocked ${file._id} with offer ${offer._id}: ${offer.offerName} in ${contract.blockchain}`);
+              break;
+            }
+          }
+        }
+      } else {
+        ownsMediaNFT = true;
+        log.info(`Media ${file._id} is flagged as demo, will not validate NFT ownership`);
+      }
+    } catch (e) {
+      log.error(e);
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    file.isUnlocked = !!ownsMediaNFT;
+    result.push(file);
+  }
+  return result;
+};
 
 const verifyAccessRightsToFile = (files, user) => Promise.all(_.map(files, async (file) => {
   const clonedFile = _.assign({ isUnlocked: false }, file.toObject ? file.toObject() : file);
@@ -161,4 +261,5 @@ module.exports = {
   verifyAccessRightsToFile,
   textPurify: textPurify(),
   cleanStorage,
+  checkFileAccess,
 };

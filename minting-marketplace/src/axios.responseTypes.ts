@@ -83,7 +83,7 @@ export type TFileKeyType = {
 export type TFileType = {
   animatedThumbnail: string;
   author: string;
-  authorPublicAddress: string;
+  uploader: string;
   category: string;
   contract: string;
   creationDate: string;

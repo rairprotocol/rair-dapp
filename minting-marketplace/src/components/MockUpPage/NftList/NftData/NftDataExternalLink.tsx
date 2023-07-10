@@ -73,7 +73,6 @@ const NftDataExternalLink = () => {
         const response = await axios.get(
           `/api/v2/tokens/${token}?contract=${contractId}&product=${product}`
         );
-
         const { success, data } = response.data;
         if (success) {
           setNeededContract(data.doc.contract);

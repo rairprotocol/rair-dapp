@@ -75,6 +75,11 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                 name: <i className="fas fa-file-import" />,
                 route: '/importExternalContracts',
                 disabled: !loggedIn
+              },
+              {
+                name: <i className="fas fa-film" />,
+                route: '/user/videos',
+                disabled: !loggedIn
               }
             ].map((item, index) => {
               if (!item.disabled) {

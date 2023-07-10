@@ -59,7 +59,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
       )}
       <div className={'unlockables-videos-list'}>
         {productsFromOffer?.length &&
-          productsFromOffer.map((data: TFileType) => {
+          productsFromOffer.map((data: TFileType, index) => {
             return (
               <div
                 className={
@@ -67,7 +67,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
                     ? 'unlockables-videos-list-container'
                     : ''
                 }
-                key={data._id}>
+                key={index}>
                 <div
                   onClick={() => {
                     setSelectVideo(data);

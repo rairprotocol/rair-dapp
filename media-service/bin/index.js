@@ -35,7 +35,7 @@ async function main() {
   await client.connect().catch(log.error);
   const context = {
     redis: { client },
-  }
+  };
   context.redis.redisService = redisService(context);
 
   mediaDirectories.forEach((folder) => {

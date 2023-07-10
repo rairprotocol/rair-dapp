@@ -59,7 +59,7 @@
         "slick-carousel": "^1.8.1",
         "socket.io-client": "^4.6.1",
         "styled-components": "^5.3.3",
-        "sweetalert2": "^11.7.3",
+        "sweetalert2": "^11.7.12",
         "sweetalert2-react-content": "^4.2.0",
         "use-state-if-mounted": "^1.0.7",
         "uuid": "^9.0.0",

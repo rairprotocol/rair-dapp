@@ -67,6 +67,7 @@ import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
+import VideoManager from './components/videoManager/VideoManager';
 import { setChainId } from './ducks/contracts/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setAdminRights } from './ducks/users/actions';
@@ -462,6 +463,11 @@ function App() {
                       tabIndex: tabIndex,
                       setTabIndex: setTabIndex
                     }
+                  },
+
+                  {
+                    path: '/user/videos',
+                    content: VideoManager
                   },
 
                   // Old Video Upload view

@@ -15,7 +15,7 @@ import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
-import useWindowDimensions from '../../../../hooks/useWindowDimensions';
+// import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { ExpandImageIcon } from '../../../../images';
 import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
 import setDocumentTitle from '../../../../utils/setTitle';
@@ -51,7 +51,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
     (state) => state.nftDataStore
   );
-  const { width } = useWindowDimensions();
+  // const { width } = useWindowDimensions();
   const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const [verticalImage, setVerticalImage] = useState(false);
@@ -120,6 +120,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     checkUrl();
   }, [checkUrl]);
 
+  /*
   const goToUnlockables = () => {
     embeddedParams
       ? embeddedParams.setMode('unlockables')
@@ -127,6 +128,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
           `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
         );
   };
+  */
 
   const handlePlayerClick = () => {
     setOpenVideoPlayer(true);

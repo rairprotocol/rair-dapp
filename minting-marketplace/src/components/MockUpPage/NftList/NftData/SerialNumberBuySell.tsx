@@ -179,7 +179,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (!contractResponse.success) {
       return;
     }
-    const [contractData] = contractResponse?.data?.doc;
+    const [contractData] = contractResponse?.result;
     if (!contractData) {
       return;
     }
