@@ -71,6 +71,7 @@ module.exports = (context) => {
           blockchain = '',
           category = [],
           hidden = false,
+          contractTitle = '',
         } = req.query;
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
@@ -209,6 +210,13 @@ module.exports = (context) => {
           options.unshift({
             $match: {
               blockView: false,
+            },
+          });
+        }
+        if (contractTitle !== '') {
+          options.unshift({
+            $match: {
+              title: { $regex: contractTitle, $options: 'i' },
             },
           });
         }
