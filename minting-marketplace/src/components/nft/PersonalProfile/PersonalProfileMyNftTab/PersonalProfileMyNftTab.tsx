@@ -1,4 +1,5 @@
-import { memo } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import Collecteditem from './Collecteditem';
 
@@ -15,11 +16,11 @@ interface IPersonalProfileMyNftTabComponent {
   chainData: any;
   textColor: any;
   totalCount?: number | undefined;
-  showTokensRef?: any;
-  loader?: any;
   isLoading?: boolean;
   loadToken?: any;
   profile?: boolean;
+  getMyNft?: (number: number, page: number) => void;
+  showTokensRef?: any;
 }
 
 const PersonalProfileMyNftTabComponent: React.FC<
@@ -31,9 +32,37 @@ const PersonalProfileMyNftTabComponent: React.FC<
   defaultImg,
   chainData,
   textColor,
-  profile
+  profile,
+  getMyNft,
+  totalCount,
+  isLoading,
+  showTokensRef
 }) => {
   const { width } = useWindowDimensions();
+  const loader = useRef(null);
+
+  const loadToken = useCallback(
+    (entries) => {
+      const target = entries[0];
+      if (target.isIntersecting) {
+        showTokensRef.current = showTokensRef.current + 40;
+        if (getMyNft) {
+          getMyNft(Number(showTokensRef.current), 1);
+        }
+      }
+    },
+    [getMyNft, showTokensRef]
+  );
+
+  useEffect(() => {
+    const option = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 0
+    };
+    const observer = new IntersectionObserver(loadToken, option);
+    if (loader.current) observer.observe(loader.current);
+  }, [loadToken, loader, isLoading]);
 
   if (!filteredData) {
     return <LoadingComponent />;
@@ -48,16 +77,20 @@ const PersonalProfileMyNftTabComponent: React.FC<
         }`}>
         {filteredData.length > 0 ? (
           filteredData.map((item, index) => {
-            return (
-              <Collecteditem
-                key={item._id}
-                item={item}
-                index={index}
-                chainData={chainData}
-                profile={profile}
-                defaultImg={defaultImg}
-              />
-            );
+            if (item.contract.blockchain === '0x38') {
+              return null;
+            } else {
+              return (
+                <Collecteditem
+                  key={item._id}
+                  item={item}
+                  index={index}
+                  chainData={chainData}
+                  profile={profile}
+                  defaultImg={defaultImg}
+                />
+              );
+            }
           })
         ) : (
           <p style={{ color: textColor }}>
@@ -65,6 +98,19 @@ const PersonalProfileMyNftTabComponent: React.FC<
           </p>
         )}
       </div>
+      {isLoading && (
+        <div className="progress-token">
+          <CircularProgress
+            style={{
+              width: '70px',
+              height: '70px'
+            }}
+          />
+        </div>
+      )}
+      {totalCount && showTokensRef.current <= totalCount && (
+        <div ref={loader} className="ref"></div>
+      )}
     </div>
   );
 };
