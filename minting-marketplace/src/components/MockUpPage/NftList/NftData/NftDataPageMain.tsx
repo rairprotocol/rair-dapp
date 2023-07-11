@@ -46,7 +46,8 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   someUsersData,
   ownerInfo,
   embeddedParams,
-  handleTokenBoughtButton
+  handleTokenBoughtButton,
+  setTokenNumber
 }) => {
   const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
     (state) => state.nftDataStore
@@ -185,6 +186,12 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
       );
     }
   }, [offerDataInfo]);
+
+  useEffect(() => {
+    if (selectedToken) {
+      setTokenNumber(Number(selectedToken));
+    }
+  }, [selectedToken]);
 
   if (!selectedData?.name) {
     return <LoadingComponent />;

@@ -108,6 +108,7 @@ function App() {
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [tabIndex, setTabIndex] = useState(0);
   const [tabIndexItems, setTabIndexItems] = useState(0);
+  const [tokenNumber, setTokenNumber] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
 
   // Redux
@@ -267,6 +268,7 @@ function App() {
               isSplashPage={isSplashPage}
               setTabIndexItems={setTabIndexItems}
               isAboutPage={isAboutPage}
+              setTokenNumber={setTokenNumber}
             />
           ) : (
             !isIframePage && (
@@ -671,6 +673,10 @@ function App() {
                   {
                     path: '/tokens/:blockchain/:contract/:product/:tokenId',
                     content: NftDataCommonLink,
+                    props: {
+                      setTokenNumber,
+                      tokenNumber
+                    },
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true'
@@ -678,6 +684,10 @@ function App() {
                   {
                     path: '/collection/:blockchain/:contract/:product/:tokenId',
                     content: NftDataCommonLink,
+                    props: {
+                      setTokenNumber,
+                      tokenNumber
+                    },
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true'
@@ -685,6 +695,10 @@ function App() {
                   {
                     path: '/unlockables/:blockchain/:contract/:product/:tokenId',
                     content: NftDataCommonLink,
+                    props: {
+                      setTokenNumber,
+                      tokenNumber
+                    },
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true'

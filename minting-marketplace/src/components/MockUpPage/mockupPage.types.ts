@@ -31,6 +31,7 @@ export interface INftItemForCollectionView {
   setPlaying: (arg: null | string) => void;
   diamond: boolean;
   offerData: TOfferType[] | undefined;
+  id: string;
 }
 
 export type TParamsNftItemForCollectionView = {
@@ -194,6 +195,7 @@ export interface INftDataPageMain {
   ownerInfo?: TProducts | undefined;
   embeddedParams?: TEmbeddedParams | undefined;
   handleTokenBoughtButton: () => void;
+  setTokenNumber: (arg: undefined | number) => void;
 }
 
 export type TOffersIndexesData = {
