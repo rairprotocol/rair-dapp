@@ -7,4 +7,6 @@ module.exports = () => ({
   userAddress: ethAddress,
   contractAddress: ethAddress,
   hidden: Joi.boolean(),
+  mediaTitle: Joi.string(),
+  contractTitle: Joi.string(),
 });

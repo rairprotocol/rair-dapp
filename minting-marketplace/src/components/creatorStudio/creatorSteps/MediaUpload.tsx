@@ -22,12 +22,7 @@ import LoadingComponent from '../../common/LoadingComponent';
 import MediaListBox from '../../DemoMediaUpload/MediaListBox/MediaListBox';
 import UploadedListBox from '../../DemoMediaUpload/UploadedListBox/UploadedListBox';
 import { TOfferType } from '../../marketplace/marketplace.types';
-import {
-  IMediaUpload,
-  TCategories,
-  TMediaType,
-  TParamsBatchMetadata
-} from '../creatorStudio.types';
+import { IMediaUpload, TCategories, TMediaType } from '../creatorStudio.types';
 
 const MediaUpload: React.FC<IMediaUpload> = ({
   setStepNumber,
@@ -129,7 +124,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
     const formData = new FormData();
     formData.append('video', item.file);
     formData.append('title', item.title.slice(0, 29));
-    formData.append('description', item.description);
+    formData.append('description', item.title);
     formData.append('storage', storage);
     if (item.contractAddress && item.productIndex && item.offer) {
       formData.append('contract', item.contractAddress);

@@ -11,6 +11,7 @@ export interface IMainHeader {
   isSplashPage: boolean;
   setTabIndexItems: (arg: number) => void;
   isAboutPage: boolean;
+  setTokenNumber: (arg: number | undefined) => void;
 }
 
 export type TAxiosCollectionData = {

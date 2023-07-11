@@ -4,7 +4,7 @@ const { ethAddress, mongoId } = require('./reusableCustomTypes');
 module.exports = {
     pagination: () => ({
         pageNum: Joi.number(),
-        itemsPerPage: Joi.number(),
+        itemsPerPage: [Joi.number(), Joi.string().valid('all')],
     }),
     dbId: () => ({
         id: mongoId,

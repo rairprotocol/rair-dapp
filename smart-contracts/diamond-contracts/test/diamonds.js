@@ -93,6 +93,7 @@ describe("Diamonds", function () {
 	let RAIRMetadataFacetFactory, rairMetadataFacetInstance;
 	let RAIRProductFacetFactory, rairProductFacetInstance;
 	let RAIRRangesFacetFactory, rairRangesFacetInstance;
+	let RAIRRoyaltiesFacetFactory, rairRoyaltiesFacetInstance;
 
 	let MintingOffersFacetFactory, mintingOfferFacetsInstance;
 	let FeesFacetFactory, feesFacetInstance;
@@ -132,6 +133,7 @@ describe("Diamonds", function () {
 		RAIRMetadataFacetFactory = await ethers.getContractFactory("RAIRMetadataFacet");
 		RAIRProductFacetFactory = await ethers.getContractFactory("RAIRProductFacet");
 		RAIRRangesFacetFactory = await ethers.getContractFactory("RAIRRangesFacet");
+		RAIRRoyaltiesFacetFactory = await ethers.getContractFactory("RAIRRoyaltiesFacet");
 
 		// Marketplace's Facets
 		MintingOffersFacetFactory = await ethers.getContractFactory("MintingOffersFacet");
@@ -202,6 +204,11 @@ describe("Diamonds", function () {
 		it ("Should deploy the RAIR Ranges Facet", async () => {
 			rairRangesFacetInstance = await RAIRRangesFacetFactory.deploy();
 			await rairRangesFacetInstance.deployed();
+		});
+
+		it ("Should deploy the RAIR Royalties Facet", async () => {
+			rairRoyaltiesFacetInstance = await RAIRRoyaltiesFacetFactory.deploy();
+			await rairRoyaltiesFacetInstance.deployed();
 		});
 
 		it ("Should deploy the RAIR Metadata Facet", async () => {
@@ -339,6 +346,18 @@ describe("Diamonds", function () {
 				facetAddress: rairRangesFacetInstance.address,
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(rairRangesFacetInstance, usedSelectorsForFactory)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should add the RAIR Royalties facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: rairRoyaltiesFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(rairRoyaltiesFacetInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
@@ -2095,6 +2114,19 @@ describe("Diamonds", function () {
 				.to.equal(0);
 			await expect(await erc777Instance.balanceOf(addr1.address)).to.equal(2000);
 		});
+	});
+
+	describe("Resale marketplace", () => {
+		it ("Should display the correct 2981 data", async () => {
+			const royaltiesFacet = await ethers.getContractAt('RAIRRoyaltiesFacet', firstDeploymentAddress);
+			const price = 412000000;
+			const data = await royaltiesFacet.royaltyInfo(
+				0,
+				price,
+			);
+			expect(data.receiver).to.equal(owner.address);
+			expect(data.royaltyAmount).to.equal((price * await royaltiesFacet.royaltyFee()) / 100000);
+		})
 	});
 
 	describe("Loupe Facet", () => {

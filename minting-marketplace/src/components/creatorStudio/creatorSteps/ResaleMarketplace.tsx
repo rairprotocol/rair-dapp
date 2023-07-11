@@ -26,7 +26,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const { currentChain, resaleInstance } = useSelector<
+  const { currentChain, resaleInstance, currentUserAddress } = useSelector<
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
@@ -126,15 +126,9 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
       let valid = true;
       let total = BigNumber.from(0);
       for (const payment of customPayments) {
-        console.info(payment);
         valid = valid && utils.isAddress(payment.recipient || '');
         total = total.add(payment.percentage);
-        console.info(total);
       }
-      console.info(
-        BigNumber.from(90).mul(precisionFactor).toString(),
-        total.add(nodeFee).add(treasuryFee).toString()
-      );
       if (
         BigNumber.from(90)
           .mul(precisionFactor)
@@ -268,17 +262,22 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           backwardFunction={goBack}
           forwardFunctions={[
             {
-              label: `Switch to ${
-                chainData[contractData?.blockchain].name
-              } for more options.`,
+              label: `Switch to ${chainData[contractData?.blockchain].name}`,
               action: () => web3Switch(contractData?.blockchain),
               disabled: contractData?.blockchain === currentChain,
               visible: contractData?.blockchain !== currentChain
             },
             {
-              label: customPayments.length ? 'Set custom fees' : 'Continue',
-              action: customPayments.length ? setCustomFees : gotoNextStep,
-              disabled: sendingData || !validatePaymentData()
+              label: 'Set custom fees',
+              action: setCustomFees,
+              disabled:
+                sendingData || !validatePaymentData() || !resaleInstance,
+              visible: customPayments.length
+            },
+            {
+              label: 'Continue',
+              action: gotoNextStep,
+              visible: !customPayments.length
             }
           ]}
         />

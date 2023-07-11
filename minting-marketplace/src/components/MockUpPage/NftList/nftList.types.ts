@@ -62,6 +62,8 @@ export type TAuthenticityStyled = {
 export interface INftDataCommonLinkComponent {
   embeddedParams: TEmbeddedParams | undefined;
   connectUserData: () => void;
+  setTokenNumber: (arg: number | undefined) => void;
+  tokenNumber: number | undefined;
 }
 
 export type TParamsNftDataCommonLink = {
@@ -94,6 +96,7 @@ export interface INftCollectionPageComponent {
   collectionName: string | undefined;
   showTokensRef: any;
   setRenderOffers: any;
+  tokenNumber: number | undefined;
 }
 
 export interface INftUnlockablesPage {

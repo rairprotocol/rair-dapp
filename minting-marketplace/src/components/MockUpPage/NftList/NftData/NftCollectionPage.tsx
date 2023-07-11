@@ -55,7 +55,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   offerAllData,
   collectionName,
   showTokensRef,
-  setRenderOffers
+  setRenderOffers,
+  tokenNumber
 }) => {
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
@@ -163,9 +164,24 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
 
   useEffect(() => {
     if (!embeddedParams) {
-      window.scroll(0, 0);
+      if (tokenNumber && tokenNumber > 10) {
+        if (tokenData && Object.keys(tokenData).length > 20) {
+          const element = document.getElementById(
+            `collection-view-${tokenNumber}`
+          );
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenNumber, tokenData]);
+
+  useEffect(() => {
+    if (tokenData && Object.keys(tokenData).length > 20) {
+      window.scroll(0, 0);
+    }
   }, []);
 
   useEffect(() => {
@@ -188,7 +204,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
 
   useEffect(() => {
     return () => {
-      showTokensRef.current = 40;
+      showTokensRef.current = 20;
     };
   }, []);
 
@@ -286,6 +302,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                     ) {
                       return (
                         <NftItemForCollectionView
+                          id={`collection-view-${index}`}
                           key={`${
                             token._id +
                             '-' +
@@ -325,6 +342,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                     ) {
                       return (
                         <NftItemForCollectionView
+                          id={`collection-view-${index}`}
                           key={`${
                             token._id +
                             '-' +

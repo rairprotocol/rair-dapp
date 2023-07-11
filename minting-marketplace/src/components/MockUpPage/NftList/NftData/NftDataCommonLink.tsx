@@ -35,7 +35,9 @@ import {
 } from '../nftList.types';
 
 const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
-  embeddedParams
+  embeddedParams,
+  tokenNumber,
+  setTokenNumber
 }) => {
   const [collectionName, setCollectionName] = useState<string>();
   const [tokenDataFiltered, setTokenDataFiltered] = useState<TTokenData[]>([]);
@@ -112,46 +114,33 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const getProductsFromOffer = useCallback(async () => {
     setIsLoading(true);
-    if (currentUserAddress) {
-      const responseIfUserConnect = await axios.get<TNftFilesResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}/files`,
-        {
-          headers: {
-            Accept: 'application/json'
-          }
+    const response = await axios.get<TNftFilesResponse>(
+      `/api/nft/network/${blockchain}/${contract}/${product}/files`
+    );
+    setIsLoading(false);
+    console.info(response);
+    const loadedFiles: string[] = [];
+    setProductsFromOffer(
+      response.data.files.filter((item: TFileType) => {
+        if (!loadedFiles.includes(item._id)) {
+          loadedFiles.push(item._id);
+          return true;
         }
-      );
-      setProductsFromOffer(responseIfUserConnect.data.files);
-      if (tokenData && tokenId) {
-        if (tokenData[tokenId]?.offer?.diamond) {
-          setSelectedOfferIndex(
-            tokenData && tokenData[tokenId]?.offer?.diamondRangeIndex
-          );
-        } else {
-          setSelectedOfferIndex(
-            tokenData && tokenData[tokenId]?.offer?.offerIndex
-          );
-        }
-      }
-    } else {
-      const response = await axios.get<TNftFilesResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}/files`
-      );
-      setIsLoading(false);
-      setProductsFromOffer(response.data.files);
-      if (tokenData && tokenId) {
-        if (tokenData[tokenId]?.offer?.diamond) {
-          setSelectedOfferIndex(
-            tokenData && tokenData[tokenId]?.offer?.diamondRangeIndex
-          );
-        } else {
-          setSelectedOfferIndex(
-            tokenData && tokenData[tokenId]?.offer?.offerIndex
-          );
-        }
+        return false;
+      })
+    );
+    if (tokenData && tokenId) {
+      if (tokenData[tokenId]?.offer?.diamond) {
+        setSelectedOfferIndex(
+          tokenData && tokenData[tokenId]?.offer?.diamondRangeIndex
+        );
+      } else {
+        setSelectedOfferIndex(
+          tokenData && tokenData[tokenId]?.offer?.offerIndex
+        );
       }
     }
-  }, [blockchain, contract, product, tokenId, tokenData, currentUserAddress]);
+  }, [blockchain, contract, product, tokenId, tokenData]);
 
   const getParticularOffer = useCallback(async () => {
     try {
@@ -255,10 +244,15 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       if (tokenStart.lt(0)) {
         tokenStart = BigNumber.from(0);
       }
-      tokenEnd = tokenStart.add(20);
+      if (tokenNumber && tokenNumber > 20) {
+        tokenEnd = BigNumber.from(tokenNumber);
+      } else {
+        tokenEnd = tokenStart.add(showTokensRef.current);
+        setTokenNumber(undefined);
+      }
     }
     getAllProduct(tokenStart.toString(), tokenEnd.toString());
-  }, [getAllProduct, showTokensRef, tokenId]);
+  }, [getAllProduct, showTokensRef, tokenId, tokenNumber, setTokenNumber]);
 
   useEffect(() => {
     getParticularOffer();
@@ -270,6 +264,18 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   useEffect(() => {
     showTokensRef.current = 20;
+  }, []);
+
+  useEffect(() => {
+    if (tokenData === undefined || !tokenData) {
+      setTokenNumber(undefined);
+    }
+  }, [tokenData]);
+
+  useEffect(() => {
+    return () => {
+      setTokenNumber(undefined);
+    };
   }, []);
 
   if (mode === 'collection') {
@@ -293,6 +299,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         collectionName={collectionName}
         showTokensRef={showTokensRef}
         setRenderOffers={setRenderOffers}
+        tokenNumber={tokenNumber}
       />
     );
   } else if (mode === 'unlockables') {
@@ -330,6 +337,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         ownerInfo={ownerInfo}
         offerDataInfo={offerDataInfo}
         handleTokenBoughtButton={handleTokenBoughtButton}
+        setTokenNumber={setTokenNumber}
       />
     );
   } else {

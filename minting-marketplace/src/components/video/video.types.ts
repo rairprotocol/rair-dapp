@@ -46,7 +46,8 @@ export type MediaListResponseType = {
     description: string;
     creationDate: string;
     isUnlocked: boolean;
-    authorPublicAddress: string;
+    uploader: string;
+    unlockData: any;
   };
 };
 

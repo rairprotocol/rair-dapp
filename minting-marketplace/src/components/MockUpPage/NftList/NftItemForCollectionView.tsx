@@ -36,7 +36,8 @@ const NftItemForCollectionViewComponent: React.FC<
   playing,
   diamond,
   offerData,
-  offerItemData
+  offerItemData,
+  id
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
@@ -137,7 +138,7 @@ const NftItemForCollectionViewComponent: React.FC<
     <>
       {offer && (
         // <div className="nft-item-collection grid-item">
-        <div className="nft-item-collection grid-item">
+        <div className="nft-item-collection grid-item" id={id}>
           <div
             onClick={() => {
               if (

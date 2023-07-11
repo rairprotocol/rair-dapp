@@ -67,6 +67,7 @@ import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
+import VideoManager from './components/videoManager/VideoManager';
 import { setChainId } from './ducks/contracts/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setAdminRights } from './ducks/users/actions';
@@ -107,6 +108,7 @@ function App() {
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [tabIndex, setTabIndex] = useState(0);
   const [tabIndexItems, setTabIndexItems] = useState(0);
+  const [tokenNumber, setTokenNumber] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
 
   // Redux
@@ -266,6 +268,7 @@ function App() {
               isSplashPage={isSplashPage}
               setTabIndexItems={setTabIndexItems}
               isAboutPage={isAboutPage}
+              setTokenNumber={setTokenNumber}
             />
           ) : (
             !isIframePage && (
@@ -462,6 +465,11 @@ function App() {
                       tabIndex: tabIndex,
                       setTabIndex: setTabIndex
                     }
+                  },
+
+                  {
+                    path: '/user/videos',
+                    content: VideoManager
                   },
 
                   // Old Video Upload view
@@ -665,6 +673,10 @@ function App() {
                   {
                     path: '/tokens/:blockchain/:contract/:product/:tokenId',
                     content: NftDataCommonLink,
+                    props: {
+                      setTokenNumber,
+                      tokenNumber
+                    },
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true'
@@ -672,6 +684,10 @@ function App() {
                   {
                     path: '/collection/:blockchain/:contract/:product/:tokenId',
                     content: NftDataCommonLink,
+                    props: {
+                      setTokenNumber,
+                      tokenNumber
+                    },
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true'
@@ -679,6 +695,10 @@ function App() {
                   {
                     path: '/unlockables/:blockchain/:contract/:product/:tokenId',
                     content: NftDataCommonLink,
+                    props: {
+                      setTokenNumber,
+                      tokenNumber
+                    },
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true'

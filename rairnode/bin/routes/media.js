@@ -20,7 +20,7 @@ const {
   encryptFolderContents,
 } = require('../utils/ffmpegUtils');
 const { vaultKeyManager, vaultAppRoleTokenManager } = require('../vault');
-const { verifyAccessRightsToFile } = require('../utils/helpers');
+const { checkFileAccess } = require('../utils/helpers');
 const config = require('../config/index');
 const gcp = require('../integrations/gcp')(config);
 const { textPurify } = require('../utils/helpers');
@@ -216,6 +216,8 @@ module.exports = () => {
           category = [],
           userAddress = '',
           contractAddress = '',
+          contractTitle = '',
+          mediaTitle = '',
         } = req.query;
         const searchQuery = {
           'contractData.blockView': false,
@@ -238,62 +240,74 @@ module.exports = () => {
         const foundBlockchain = await Blockchain.findOne({ hash: blockchain });
         const contractQuery = {};
         if (foundBlockchain) {
-          const query = {
-            blockchain,
-          };
-          if (contractAddress) {
-            query.contractAddress = contractAddress;
-          }
+          contractQuery.blockchain = blockchain;
+        }
+        if (contractAddress) {
+          contractQuery.contractAddress = contractAddress;
+        }
+        if (contractTitle) {
+          contractQuery.title = { $regex: contractTitle, $options: 'i' };
         }
         const arrayOfContracts = await Contract.find(contractQuery).distinct(
           '_id',
         );
         searchQuery.contract = { $in: arrayOfContracts };
 
+        const matchData = {
+          $or: [{
+            'unlockData.offers.contract': {
+              $in: arrayOfContracts,
+            },
+          }, {
+            demo: true,
+          }],
+        };
+
+        if (mediaTitle !== '') {
+          matchData.title = { $regex: mediaTitle, $options: 'i' };
+        }
+
         const pipeline = [
           {
             $lookup: {
-                from: 'Contract',
-                localField: 'contract',
-                foreignField: '_id',
-                as: 'contractData',
+              from: 'Unlock',
+              localField: '_id',
+              foreignField: 'file',
+              as: 'unlockData',
             },
           }, {
-              $unwind: {
-                  path: '$contractData',
-              },
-          }, {
-              $match: searchQuery,
-          }, {
-              $unset: 'contractData',
-          }, {
+            $lookup: {
+              from: 'Offer',
+              localField: 'unlockData.offers',
+              foreignField: '_id',
+              as: 'unlockData.offers',
+            },
+          },
+          {
+            $match: matchData,
+          },
+          {
             $project: {
-              key: 0, uri: 0,
-            },
-          }, {
-            $sort: {
-              title: 1,
+              key: false,
+              encryptionType: false,
+              totalEncryptedFiles: false,
+              extension: false,
             },
           },
         ];
 
-        let data = await File.aggregate(
-          [
-            ...pipeline,
-            {
-              $skip: skip,
-            },
-            {
-              $limit: pageSize,
-            },
-          ],
-        );
+        let data = (await File.aggregate([
+          ...pipeline,
+          { $skip: skip },
+          { $limit: pageSize },
+        ]));
+
         const [countResult] = await File.aggregate([...pipeline, { $count: 'totalCount' }]);
 
         const { totalCount } = countResult || 0;
 
         // verify the user have needed tokens for unlock the files
-        data = await verifyAccessRightsToFile(data, req.user);
+        data = await checkFileAccess(data, req.user);
 
         const list = _.chain(data)
           .reduce((result, value) => {

@@ -2,8 +2,16 @@ const express = require('express');
 const _ = require('lodash');
 const AppError = require('../../../../utils/errors/AppError');
 const { validation, loadUserSession } = require('../../../../middleware');
-const { verifyAccessRightsToFile, attributesCounter } = require('../../../../utils/helpers');
-const { Offer, OfferPool, Product, MintedToken, File, LockedTokens } = require('../../../../models');
+const { attributesCounter, checkFileAccess } = require('../../../../utils/helpers');
+const {
+  Offer,
+  OfferPool,
+  Product,
+  MintedToken,
+  File,
+  LockedTokens,
+  Unlock,
+} = require('../../../../models');
 const tokenRoutes = require('./token');
 
 module.exports = (context) => {
@@ -221,87 +229,19 @@ module.exports = (context) => {
     try {
       const { token } = req.params;
       const { contract, product } = req;
-      const sanitizedToken = token;
-      const options = [
-        {
-          $lookup: {
-            from: 'File',
-            let: {
-              contractT: '$contract',
-              offerIndex: '$offer',
-              productT: product,
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: ['$contract', '$$contractT'],
-                      },
-                      {
-                        $eq: ['$product', '$$productT'],
-                      },
-                      {
-                        $in: ['$$offerIndex', '$offer'],
-                      },
-                    ],
-                  },
-                },
-              },
-            ],
-            as: 'files',
-          },
-        },
-        { $unwind: '$files' },
-        { $replaceRoot: { newRoot: '$files' } },
-      ];
 
-      if (contract.diamond) {
-        const offers = await Offer.find({
-          contract: contract._id,
-          product,
-        }).distinct('diamondRangeIndex');
+      let foundOffers = await Offer.find({
+        contract: contract._id,
+        product,
+      });
+      foundOffers = foundOffers.filter((offer) => offer.range[0] < token && offer.range[1] > token);
+      const offerArray = foundOffers.map((item) => item._id);
+      const foundUnlocks = await Unlock.find({
+        offers: { $all: offerArray },
+      }).populate('file');
 
-        if (_.isEmpty(offers)) {
-          return res
-            .status(404)
-            .send({ success: false, message: 'Offers not found.' });
-        }
-
-        options.unshift({
-          $match: {
-            contract: contract._id,
-            offer: { $in: offers },
-            token: sanitizedToken,
-          },
-        });
-      } else {
-        const offerPoolRaw = await OfferPool.findOne({
-          contract: contract._id,
-          product,
-        });
-
-        if (_.isEmpty(offerPoolRaw)) {
-          return res.json({
-            success: false,
-            message:
-              'Offer pool which belong to this particular product not found.',
-          });
-        }
-
-        const offerPool = offerPoolRaw.toObject();
-
-        options.unshift({
-          $match: {
-            contract: contract._id,
-            offerPool: offerPool.marketplaceCatalogIndex,
-            token: sanitizedToken,
-          },
-        });
-      }
-
-      const files = await MintedToken.aggregate(options);
+      let files = foundUnlocks.map((unlock) => unlock.file);
+      files = await checkFileAccess(files, req.user);
 
       return res.json({ success: true, files });
     } catch (err) {
@@ -314,15 +254,56 @@ module.exports = (context) => {
     try {
       const { contract, product } = req;
 
-      let files = await File.find({
-        contract: contract._id,
-        product,
-      });
+      const pipeline = [
+        {
+          $lookup: {
+            from: 'Unlock',
+            localField: '_id',
+            foreignField: 'file',
+            as: 'unlockData',
+          },
+        }, {
+          $lookup: {
+            from: 'Offer',
+            localField: 'unlockData.offers',
+            foreignField: '_id',
+            as: 'unlockData.offers',
+          },
+        }, {
+          $match: {
+            $and: [{
+              'unlockData.offers.contract': contract._id,
+            }, {
+              'unlockData.offers.product': product,
+            }],
+          },
+        }, {
+          $project: {
+            key: false,
+            encryptionType: false,
+            totalEncryptedFiles: false,
+            extension: false,
+            unlockData: false,
+          },
+        },
+      ];
+
+      const data = (await File.aggregate([
+        ...pipeline,
+      ]));
 
       // verify the user have needed tokens for unlock the files
-      files = await verifyAccessRightsToFile(files, req.user);
-
-      res.json({ success: true, files });
+      const files = await checkFileAccess(data, req.user);
+      const loadedFiles = [];
+      const filteredFiles = [];
+      files.forEach((file) => {
+        if (loadedFiles.includes(file._id)) {
+          return;
+        }
+        filteredFiles.push(file);
+        loadedFiles.push(file._id);
+      });
+      res.json({ success: true, files: filteredFiles });
     } catch (err) {
       next(err);
     }

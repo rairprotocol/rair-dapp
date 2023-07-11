@@ -7,8 +7,49 @@ const {
   importContractData,
 } = require('../../integrations/ethers/importContractData');
 
-exports.getAllContracts = eFactory.getAll(Contract);
 exports.updateContract = eFactory.updateOne(Contract);
+
+exports.getAllContracts = async (req, res, next) => {
+  const {
+    pageNum = 1,
+    itemsPerPage = 10,
+    ...query
+  } = req.query;
+  const pageSize = parseInt(itemsPerPage, 10);
+  const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+
+  const clearFilter = {};
+  Object.keys(query).forEach((item) => {
+    if (query[item] !== undefined) {
+      clearFilter[item] = query[item];
+    }
+  });
+
+  const pipeline = [
+    {
+        $match: {
+            blockView: false,
+            blockchain: { $nin: ['0x61', '0x38'] },
+            ...clearFilter,
+        },
+    },
+  ];
+
+  const count = await Contract.aggregate([
+    ...pipeline,
+    {
+      $count: 'totalCount',
+    },
+  ]);
+
+  if (itemsPerPage !== 'all') {
+    pipeline.push({ $skip: skip });
+    pipeline.push({ $limit: pageSize });
+  }
+  const result = await Contract.aggregate([...pipeline]);
+
+  res.json({ success: true, result, totalCount: count[0]?.totalCount });
+};
 
 // Returns all contracts associated with a video with the specified category
 exports.getContractByCategory = async (req, res, next) => {

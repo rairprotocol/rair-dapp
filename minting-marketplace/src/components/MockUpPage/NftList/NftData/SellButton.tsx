@@ -1,17 +1,24 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import axios from 'axios';
+import { utils } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
 
 import { BuySellButton } from './BuySellButton';
 
+import { TUserResponse } from '../../../../axios.responseTypes';
 import { erc721Abi } from '../../../../contracts';
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import chainData from '../../../../utils/blockchainData';
 import { blockchain } from '../../../../utils/infoSplashData/markKohler';
+import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
+import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISellButton } from '../../mockupPage.types';
 
 const SellButton: React.FC<ISellButton> = ({
@@ -29,6 +36,7 @@ const SellButton: React.FC<ISellButton> = ({
   >((store) => store.contractStore);
 
   const { contract, tokenId } = useParams();
+  const [accountData, setAccountData] = useState<UserType | null>(null);
 
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
@@ -116,6 +124,32 @@ const SellButton: React.FC<ISellButton> = ({
     setIsInputPriceExist(true);
   }, [setIsInputPriceExist]);
 
+  const getInfoFromUser = useCallback(async () => {
+    // find user
+    if (
+      selectedToken &&
+      tokenData?.[selectedToken]?.ownerAddress &&
+      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress)
+    ) {
+      try {
+        const result = await axios
+          .get<TUserResponse>(
+            `/api/users/${tokenData?.[selectedToken]?.ownerAddress}`
+          )
+          .then((res) => res.data);
+        if (result.success) {
+          setAccountData(result.user);
+        }
+      } catch (e) {
+        setAccountData(null);
+      }
+    }
+  }, [selectedToken, setAccountData, tokenData]);
+
+  useEffect(() => {
+    getInfoFromUser();
+  }, [getInfoFromUser]);
+
   const sellButton = useCallback(() => {
     if (
       selectedToken &&
@@ -137,7 +171,36 @@ const SellButton: React.FC<ISellButton> = ({
         />
       );
     } else {
-      return <></>;
+      return (
+        <div className="container-sell-button-user">
+          Owned by{' '}
+          <div className="block-user-creator">
+            <ImageLazy
+              src={accountData?.avatar ? accountData.avatar : defaultImage}
+              alt="User Avatar"
+            />
+            {selectedToken && (
+              <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
+                <h5>
+                  {(accountData &&
+                  accountData.nickName &&
+                  accountData.nickName.length > 20
+                    ? accountData.nickName.slice(0, 5) +
+                      '....' +
+                      accountData.nickName.slice(length - 4)
+                    : accountData && accountData.nickName) ||
+                    (tokenData?.[selectedToken]?.ownerAddress &&
+                      tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
+                        '....' +
+                        tokenData?.[selectedToken]?.ownerAddress.slice(
+                          length - 4
+                        ))}
+                </h5>
+              </NavLink>
+            )}
+          </div>
+        </div>
+      );
     }
   }, [
     currentUser,
@@ -146,7 +209,8 @@ const SellButton: React.FC<ISellButton> = ({
     sellingPrice,
     selectedToken,
     tokenData,
-    isInputPriceExist
+    isInputPriceExist,
+    accountData
   ]);
 
   return sellButton();

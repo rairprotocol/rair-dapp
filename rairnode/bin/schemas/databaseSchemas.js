@@ -78,4 +78,18 @@ module.exports = {
         recipients: Joi.number(),
         remainderForSeller: Joi.number(),
     }),
+    dbFiles: () => ({
+        _id: mongoId,
+        author: ethAddress,
+        authorPublicAddress: ethAddress,
+        title: Joi.string(),
+        description: Joi.string(),
+        // Blockchain data
+        contract: mongoId,
+        product: Joi.string(),
+        offer: Joi.array().items(Joi.string()),
+        // Extra data
+        category: mongoId,
+        demo: Joi.boolean(),
+    }),
 };

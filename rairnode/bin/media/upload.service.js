@@ -8,6 +8,7 @@ const {
   OfferPool,
   Product,
   File,
+  Unlock,
 } = require('../models/index');
 
 module.exports = {
@@ -103,9 +104,72 @@ module.exports = {
   addFile: async (req, res, next) => {
     try {
       const { cid, meta } = req.body;
+
+      const {
+        mainManifest,
+        authorPublicAddress,
+        encryptionType,
+        title,
+        contract,
+        product,
+        offer,
+        category,
+        staticThumbnail,
+        animatedThumbnail,
+        type,
+        extension,
+        duration,
+        demo,
+        totalEncryptedFiles,
+        storage,
+        storagePath,
+        description,
+      } = meta;
+
+      const query = {
+        contract,
+        product,
+      };
+
+      const contractData = await Contract.findById(contract);
+
+      if (contractData.diamond) {
+        query.diamondRangeIndex = { $in: offer };
+      } else {
+        query.offerIndex = { $in: offer };
+      }
+
       await File.create({
         _id: cid,
-        ...meta,
+        demo,
+        mainManifest,
+        encryptionType,
+        title,
+        category,
+        staticThumbnail,
+        animatedThumbnail,
+        type,
+        extension,
+        duration,
+        description,
+        totalEncryptedFiles,
+        storage,
+        storagePath,
+        uploader: authorPublicAddress,
+      });
+
+      const foundOffers = await Offer.find(query);
+
+      const offers = [];
+
+      // eslint-disable-next-line no-restricted-syntax
+      for await (const offerData of foundOffers) {
+        offers.push(offerData._id);
+      }
+
+      await Unlock.create({
+        file: cid,
+        offers,
       });
 
       return res.end();

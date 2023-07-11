@@ -93,7 +93,7 @@ module.exports = (opts) => {
       const filePath = url.parse(req.url).pathname;
       const extension = path.extname(filePath);
 
-      log.info('request for media', mediaId, filePath);
+      log.info(`request for media ${mediaId}${filePath}`);
 
       const mediaConfig = await mediaConfigStore(mediaId);
       if (mediaConfig === undefined) {
@@ -119,19 +119,21 @@ module.exports = (opts) => {
 
       httpProvider.exists(req, (err, exists) => {
         if (err) {
+          log.error(`Error on HTTP provider ${err}`);
           res.statusCode = 500;
           res.end();
         } else if (!exists) {
+          log.error("HTTP provider doesn't exist");
           res.statusCode = 404;
           res.end();
         } else {
           switch (extension) {
             case '.m3u8':
-              log.info('retrieving manifest', req.fsPath || req.proxyUrl);
+              log.info(`retrieving manifest ${req.fsPath || req.proxyUrl}`);
               _writeManifest(req, res, next, httpProvider);
               break;
             case '.ts':
-              log.info('retrieving segment', req.fsPath || req.proxyUrl);
+              log.info(`retrieving segment ${req.fsPath || req.proxyUrl}`);
               _writeSegment(
                 req,
                 res,
@@ -141,7 +143,7 @@ module.exports = (opts) => {
               );
               break;
             default:
-              log.info('retrieving file', req.fsPath || req.proxyUrl);
+              log.info(`retrieving file ${req.fsPath || req.proxyUrl}`);
               _writeGeneric(req, res, next, httpProvider);
               break;
           }

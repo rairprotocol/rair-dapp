@@ -1,22 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Contract } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
-import { IVideoItem, TVideoItemContractData } from './video.types';
+import { IVideoItem } from './video.types';
+import OfferBuyButton from './videoOfferBuy';
 
 import { TTokenData, TUserResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { UserType } from '../../ducks/users/users.types';
-import useSwal from '../../hooks/useSwal';
-import useWeb3Tx from '../../hooks/useWeb3Tx';
-import chainData from '../../utils/blockchainData';
 import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -33,23 +27,16 @@ Modal.setAppElement('#root');
 
 const VideoItem: React.FC<IVideoItem> = ({
   mediaList,
-  item,
-  handleVideoIsUnlocked
+  item
+  // handleVideoIsUnlocked
 }) => {
   const loading = useSelector<RootState, boolean>(
     (state) => state.videosStore.loading
   );
-  const navigate = useNavigate();
-  const { minterInstance, diamondMarketplaceInstance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
-  const primaryColor = useSelector<RootState, ColorChoice>(
-    (store) => store.colorStore.primaryColor
-  );
 
-  const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   const customStyles = {
     overlay: {
@@ -75,73 +62,14 @@ const VideoItem: React.FC<IVideoItem> = ({
     }
   };
 
-  let availableToken: TTokenData[] = [];
+  const availableToken: TTokenData[] = [];
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalHelp, setModalHelp] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [owned /*setOwned*/] = useState(false);
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
-  const [contractData, setContractData] =
-    useStateIfMounted<TVideoItemContractData | null>(null);
   const [dataUser, setDataUser] = useStateIfMounted<UserType | null>(null);
-  // primaryColor === 'rhyno' ? '#F2F2F2' : '#383637'
-  const buy = async ({
-    offerPool = undefined,
-    offerIndex,
-    selectedToken,
-    price
-  }) => {
-    if (!contractData || !diamondMarketplaceInstance || !minterInstance) {
-      return;
-    }
-    reactSwal.fire({
-      title: 'Buying token',
-      html: 'Awaiting transaction completion',
-      icon: 'info',
-      showConfirmButton: false
-    });
-    let marketplaceContract: Contract,
-      marketplaceMethod: string,
-      marketplaceArguments: any[];
-    if (contractData?.diamond) {
-      marketplaceContract = diamondMarketplaceInstance;
-      marketplaceMethod = 'buyMintingOffer';
-      marketplaceArguments = [
-        offerIndex, // Offer Index
-        selectedToken // Token Index
-      ];
-    } else {
-      marketplaceContract = minterInstance;
-      marketplaceMethod = 'buyToken';
-      marketplaceArguments = [
-        offerPool, // Catalog Index
-        offerIndex, // Range Index
-        selectedToken // Internal Token Index
-      ];
-    }
-    marketplaceArguments.push({
-      value: price
-    });
-    if (
-      await web3TxHandler(
-        marketplaceContract,
-        marketplaceMethod,
-        marketplaceArguments,
-        {
-          failureMessage:
-            'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
-          callback: handleVideoIsUnlocked
-        }
-      )
-    ) {
-      reactSwal.fire(
-        'Success',
-        'Now, you are the owner of this token',
-        'success'
-      );
-    }
-  };
 
   const openModal = useCallback(() => {
     setModalIsOpen(true);
@@ -156,75 +84,21 @@ const VideoItem: React.FC<IVideoItem> = ({
     setOpenVideoplayer(false);
   }, [setModalIsOpen]);
 
-  const goToCollectionView = () => {
-    navigate(
-      `/collection/${contractData?.blockchain}/${contractData?.contractAddress}/${mediaList[item]?.product}/0`
-    );
-  };
-
   // const goToUnlockView = () => {
   //   navigate(
   //     `/unlockables/${contractData?.blockchain}/${contractData?.contractAddress}/${mediaList[item]?.product}/0`
   //   );
   // };
 
-  const getInfo = useCallback(async () => {
-    if (mediaList && item) {
-      const { contract } = await rFetch(
-        `/api/v2/contracts/${mediaList[item].contract}`
-      );
-      try {
-        const tokensrResp = await axios.get(
-          `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}`
-          // `/api/${mediaList[item].contract}/${mediaList[item]?.product}`
-        );
-
-        contract.tokens = tokensrResp.data.result.tokens;
-        // contract.products = productsResp.data.product;
-      } catch (err) {
-        console.error(err);
-      }
-
-      setContractData(contract);
-    }
-  }, [mediaList, item, setContractData]);
-
   const getInfoUser = useCallback(async () => {
-    if (
-      mediaList &&
-      item &&
-      contractData &&
-      mediaList[item].authorPublicAddress
-    ) {
+    if (mediaList && item && mediaList[item].uploader) {
       const response = await axios.get<TUserResponse>(
-        `/api/users/${mediaList[item].authorPublicAddress}`
+        `/api/users/${mediaList[item].uploader}`
         // `/api/users/${data.data.result.contract.user}`
       );
       setDataUser(response.data.user);
     }
-  }, [mediaList, item, contractData, setDataUser]);
-
-  const arrAllTokens = () => {
-    if (contractData) {
-      availableToken = contractData?.tokens
-        ?.filter((availableToken) => availableToken.isMinted === false)
-        .slice(0, 7);
-      return availableToken;
-    } else {
-      return (
-        <div className="ol">we do not have any tokens available for sale</div>
-      );
-    }
-  };
-  arrAllTokens();
-  //TODO: use in a future
-  // const sortRevers = () => {
-  //   console.info(data?.tokens.reverse(), 'sort');
-  // };
-
-  useEffect(() => {
-    getInfo();
-  }, [getInfo]);
+  }, [mediaList, item, setDataUser]);
 
   useEffect(() => {
     getInfoUser();
@@ -238,20 +112,9 @@ const VideoItem: React.FC<IVideoItem> = ({
     <button
       className="text-start video-wrapper unlockable-video"
       style={{
-        // height: '215px',
-        // width: '384px',
         border: 'none',
         backgroundColor: 'transparent'
-        // marginBottom: '24px',
-        // marginRight: '24px'
       }}
-      // onClick={() => {
-      // setIsOpen(true);
-      // openModal();
-      // navigate(
-      //   `/watch/${mediaList[item]._id}/${mediaList[item].mainManifest}`
-      // );
-      // }}
       onMouseEnter={() => setHovering(mediaList[item].animatedThumbnail !== '')}
       onMouseLeave={() => setHovering(false)}>
       <div
@@ -333,11 +196,9 @@ const VideoItem: React.FC<IVideoItem> = ({
               </ModalContentCloseBtn>
             </div>
             <div
-              className={
-                mediaList[item]?.isUnlocked === false && !owned
-                  ? 'modal-content-wrapper-for-video modal-content-wrapper-for-video-locked'
-                  : 'modal-content-wrapper-for-video modal-content-wrapper-for-video-unlocked'
-              }>
+              className={`text-white modal-content-wrapper-for-video modal-content-wrapper-for-video-${
+                mediaList[item]?.isUnlocked && !owned ? 'unlocked' : 'locked'
+              }`}>
               <div className="modal-content-video">
                 {mediaList[item]?.isUnlocked === false && !owned ? (
                   <>
@@ -381,10 +242,6 @@ const VideoItem: React.FC<IVideoItem> = ({
               <div className="modal-content-video-choice">
                 <div className="modal-content-block-btns">
                   <div className="modal-content-block-buy">
-                    <img
-                      src={contractData?.tokens?.at(0)?.metadata?.image}
-                      alt="NFT token powered by Rair tech"
-                    />
                     {mediaList[item]?.isUnlocked === false && (
                       <CustomButton
                         text={'Upgrade'}
@@ -403,23 +260,13 @@ const VideoItem: React.FC<IVideoItem> = ({
                       />
                     )}
                   </div>
-                  <CustomButton
-                    text={'View Collection'}
-                    width={'208px'}
-                    height={'48px'}
-                    textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
-                    onClick={goToCollectionView}
-                    margin={'0px 0px 0.35rem 0.5rem'}
-                    custom={false}
-                    background={`var(--${
-                      primaryColor === 'charcoal'
-                        ? 'charcoal-80'
-                        : 'charcoal-40'
-                    })`}
-                  />
                 </div>
               </div>
             </div>
+            <span className="text-white mt-5">Unlocked by NFTs from:</span>
+            {mediaList[item]?.unlockData?.offers?.map((offer, index) => (
+              <OfferBuyButton key={index} {...offer} />
+            ))}
             {modalHelp && mediaList[item]?.isUnlocked === false && (
               <div className="more-info-wrapper">
                 <span className="more-info-text">
@@ -432,41 +279,10 @@ const VideoItem: React.FC<IVideoItem> = ({
                         <div
                           key={token._id}
                           className="more-info-unlock-wrapper">
-                          {/* <img
-                            src={token.metadata.image}
-                            alt="NFT token powered by Rair Tech"
-                          /> */}
                           <ImageLazy
                             src={token.metadata.image}
                             alt="NFT token powered by Rair Tech"
                           />
-                          {contractData && contractData?.blockchain && (
-                            <CustomButton
-                              loading={loading}
-                              text={
-                                formatEther(token.offer.price) +
-                                ' ' +
-                                chainData[contractData?.blockchain]?.symbol
-                              }
-                              width={'auto'}
-                              height={'45px'}
-                              textColor={'white'}
-                              background={`var(--${
-                                primaryColor === 'charcoal'
-                                  ? 'charcoal-80'
-                                  : 'charcoal-40'
-                              })`}
-                              onClick={() => {
-                                buy({
-                                  offerIndex: token.offer.offerIndex,
-                                  selectedToken: token.token,
-                                  price: token.offer.price
-                                });
-                              }}
-                              margin={'0'}
-                              custom={true}
-                            />
-                          )}
                         </div>
                       );
                     })

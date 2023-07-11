@@ -49,7 +49,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   showAlert,
   isSplashPage,
   setTabIndexItems,
-  isAboutPage
+  isAboutPage,
+  setTokenNumber
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -214,12 +215,13 @@ const MainHeader: React.FC<IMainHeader> = ({
                                 alt={item.name}
                               />
                               <p
-                                onClick={() =>
+                                onClick={() => {
+                                  setTokenNumber(undefined);
                                   goToExactlyContract(
                                     item.contract,
                                     item.collectionIndexInContract
-                                  )
-                                }>
+                                  );
+                                }}>
                                 <Highlight
                                   filter={textSearch}
                                   str={item.name}
@@ -242,12 +244,13 @@ const MainHeader: React.FC<IMainHeader> = ({
                               className="data-find">
                               <ImageCustomForSearch item={item} />
                               <p
-                                onClick={() =>
+                                onClick={() => {
+                                  setTokenNumber(undefined);
                                   goToExactlyToken(
                                     item.contract,
                                     item.uniqueIndexInContract
-                                  )
-                                }>
+                                  );
+                                }}>
                                 <Highlight
                                   filter={textSearch}
                                   str={item.metadata.name}

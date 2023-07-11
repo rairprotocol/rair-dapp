@@ -312,7 +312,7 @@ module.exports = {
           vaultToken: vaultAppRoleTokenManager.getToken(),
         });
 
-        log.info('Key wrote to vault.');
+        log.info('Key written to vault.');
 
         await axios({
           method: 'POST',

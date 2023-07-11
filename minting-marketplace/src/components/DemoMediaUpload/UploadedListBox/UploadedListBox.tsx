@@ -124,11 +124,13 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   };
 
   const getCurrentContract = useCallback(async () => {
-    const request = await rFetch(
-      `/api/contracts/singleContract/${fileData.contract}`
-    );
-
-    setCurrentContract(request.contract);
+    const contracts = fileData.unlockData.offers.map((offer) => offer.contract);
+    if (contracts.length) {
+      const request = await rFetch(
+        `/api/contracts/singleContract/${contracts[0]}`
+      );
+      setCurrentContract(request.contract);
+    }
   }, [fileData]);
 
   const openModal = useCallback(() => {
@@ -196,8 +198,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
             </>
           </button>
         )}
-        <div className="border-stimorol rounded-rair col-12">
-          {currentContract && (
+        {currentContract && (
+          <div className="border-stimorol rounded-rair col-12">
             <PopUpChoiceNFT
               fileData={fileData}
               setMediaList={setMediaList}
@@ -209,8 +211,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               address={address}
               collectionIndex={collectionIndex}
             />
-          )}
-        </div>
+          </div>
+        )}
         <button
           onClick={() => removeVideoAlert()}
           disabled={loadDeleting}

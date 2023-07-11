@@ -16,7 +16,8 @@ const diamondContracts = {
 			'ERC721Facet', // Deployed Token Facets
 			'RAIRMetadataFacet',
 			'RAIRProductFacet',
-			'RAIRRangesFacet'
+			'RAIRRangesFacet',
+			'RAIRRoyaltiesFacet'
 		]
 	},
 	Marketplace: {

@@ -40,6 +40,7 @@ const {
   dbOffers,
   dbResales,
   dbRoyalties,
+  dbFiles,
 } = require('./databaseSchemas');
 const textSearch = require('./textSearch');
 const {
@@ -131,6 +132,7 @@ module.exports = {
   dbOffers,
   dbResales,
   dbRoyalties,
+  dbFiles,
   // Media schemas
   validateMediaData,
   addFileFromMediaService,

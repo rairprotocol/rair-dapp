@@ -139,8 +139,11 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
   const getMediaList = async () => {
     if (currentUserAddress !== undefined) {
       setLoading(true);
+      const firstData = await rFetch(
+        `/api/media/list?userAddress=${currentUserAddress}&itemsPerPage=1`
+      );
       const { success, list, error } = await rFetch(
-        `/api/media/list?userAddress=${currentUserAddress}`
+        `/api/media/list?userAddress=${currentUserAddress}&itemsPerPage=${firstData.totalNumber}`
       );
 
       if (success) {

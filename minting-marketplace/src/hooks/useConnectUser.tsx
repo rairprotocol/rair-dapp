@@ -310,7 +310,6 @@ const useConnectUser = () => {
         false
       );
       if (success && user) {
-        console.info(user);
         if (user.oreId) {
           const { address, blockchain } = await loginWithOreIdToken(user.oreId);
           dispatch(setChainId(blockchain, address));
