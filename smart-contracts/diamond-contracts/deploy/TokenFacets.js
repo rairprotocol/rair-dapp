@@ -8,7 +8,8 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
 		"ERC721Facet",
 		"RAIRMetadataFacet",
 		"RAIRProductFacet",
-		"RAIRRangesFacet"
+		"RAIRRangesFacet",
+		"RAIRRoyaltiesFacet"
 	]
 
 	for await (let facet of facets) {
