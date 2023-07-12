@@ -17,6 +17,7 @@ interface IMobileNavigationList {
   toggleMenu: (otherPage?: string) => void;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
+  click: boolean;
 }
 
 const MobileNavigationList: React.FC<IMobileNavigationList> = ({
@@ -26,7 +27,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   toggleMenu,
   currentUserAddress,
   // setTabIndexItems,
-  isSplashPage
+  isSplashPage,
+  click
 }) => {
   // const goToMyItems = (tab: number) => {
   //   setTabIndexItems(tab);
@@ -39,7 +41,11 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 
   useEffect(() => {
     setCopyEth(false);
-  }, [messageAlert]);
+
+    return () => {
+      setCopyEth(false);
+    };
+  }, [messageAlert, click]);
 
   return (
     <NavFooter>
@@ -59,9 +65,9 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
             <i className="fas fa-chevron-left"></i>
           </BackBtnMobileNav>
-          <li onClick={() => setMessageAlert('profileEdit')}>
+          {/* <li onClick={() => setMessageAlert('profileEdit')}>
             Personal Profile <i className="fal fa-edit" />
-          </li>
+          </li> */}
           <li onClick={() => toggleMenu()}>
             <NavLink to={`/${currentUserAddress}`}>View Profile</NavLink>
           </li>
@@ -92,19 +98,33 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         <NavFooterBox
           className="nav-header-box-mobile"
           primaryColor={primaryColor}>
-          {!isSplashPage && (
+          {/* {!isSplashPage && (
             <li onClick={() => toggleMenu()}>
               <NavLink to="/about-page">About</NavLink>
             </li>
-          )}
+          )} */}
           <li>
             <a
               href="https://etherscan.io/token/0xc76c3ebea0ac6ac78d9c0b324f72ca59da36b9df"
               target={'_blank'}
               rel="noreferrer">
-              Contract
+              Token
             </a>
           </li>
+          {/* {currentUserAddress && (
+            <li onClick={() => toggleMenu()}>
+              <NavLink to={`/${currentUserAddress}`}>View Profile</NavLink>
+            </li>
+          )} */}
+          {/* {currentUserAddress && (
+            <li
+              onClick={() => {
+                navigator.clipboard.writeText(currentUserAddress);
+                setCopyEth(true);
+              }}>
+              {copyEth ? 'Copied!' : 'Copy your eth address'}
+            </li>
+          )} */}
           <li>
             <TalkSalesComponent
               text={'Inquiries'}

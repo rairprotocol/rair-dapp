@@ -63,6 +63,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
           </SearchInputMobile>
         )}
         <MobileNavigationList
+          click={click}
           messageAlert={messageAlert}
           setMessageAlert={setMessageAlert}
           primaryColor={primaryColor}
@@ -72,7 +73,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
           isSplashPage={isSplashPage}
         />
       </div>
-      <CommunityBlock primaryColor={primaryColor}>
+      {/* <CommunityBlock primaryColor={primaryColor}>
         <div className="community-text">Join our community</div>
         <CommunityBoxFooter className="header-mobile-community">
           <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
@@ -99,7 +100,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
             <TelegramIcon primaryColor={primaryColor} color={'#fff'} />
           </SocialBox>
         </CommunityBoxFooter>
-      </CommunityBlock>
+      </CommunityBlock> */}
     </List>
   );
 };

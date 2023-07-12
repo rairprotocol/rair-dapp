@@ -119,6 +119,7 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
       cursor: pointer;
       transition: all 0.3s ease;
       font-size: 16px;
+      margin-bottom: 5px;
       color: ${(props) =>
         props.messageAlert && props.messageAlert === 'profileEdit'
           ? '#19a7f6'
@@ -159,6 +160,8 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
 
   li.logout {
     cursor: pointer;
+    display: flex;
+    align-items: center;
   }
 
   // li:last-child {
