@@ -27,6 +27,8 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
     (store) => store.contractStore
   );
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   return (
     <>
       {blockchain && chainData[blockchain] && (
@@ -36,13 +38,19 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
             target="_blank"
             rel="noreferrer">
             {primaryColor === 'charcoal' ? (
-              <div className="etherscan-icon-token-dark">
+              <div
+                className={`etherscan-icon-token-dark ${
+                  hotdropsVar === 'true' ? 'hotdrops-border' : ''
+                }`}>
                 <TooltipBox position="top" title="Token Address">
                   <EtherscanDark className="nft-collection-icons-icon" />
                 </TooltipBox>
               </div>
             ) : (
-              <div className="etherscan-icon-token-light">
+              <div
+                className={`etherscan-icon-token-light ${
+                  hotdropsVar === 'true' ? 'hotdrops-border' : ''
+                }`}>
                 <TooltipBox position="top" title="Token Address">
                   <EtherscanLight className="nft-collection-icons-icon" />
                 </TooltipBox>
@@ -52,7 +60,10 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
           {currentUserAddress && (
             <>
               {primaryColor === 'charcoal' ? (
-                <div className="etherscan-icon-token-dark">
+                <div
+                  className={`etherscan-icon-token-dark ${
+                    hotdropsVar === 'true' ? 'hotdrops-border' : ''
+                  }`}>
                   <LikeButton
                     selectedToken={selectedToken}
                     tokenId={currentTokenId}
@@ -60,7 +71,10 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
                   />
                 </div>
               ) : (
-                <div className="etherscan-icon-token-light">
+                <div
+                  className={`etherscan-icon-token-light ${
+                    hotdropsVar === 'true' ? 'hotdrops-border' : ''
+                  }`}>
                   <LikeButton
                     selectedToken={selectedToken}
                     tokenId={currentTokenId}

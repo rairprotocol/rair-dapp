@@ -11,26 +11,31 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
     setIsSplashPage(false);
   }, [setIsSplashPage]);
 
+  const currentName =
+    process.env.REACT_APP_HOTDROPS === 'true' ? 'HotDrops' : 'Rair';
+
   return (
     <div className={cl.main}>
       <h1>PRIVACY POLICY</h1>
       <div className="fe">
         <p>
-          The websites located at rairtechnologies.com, social media pages
-          (which could include, without limitation, profiles operated by Rair
-          Technology, Inc., software, tablet software, iOS and Android apps)
-          “Rair” shall be referred to collectively as the “Web Site.”
+          The websites located at {currentName.toLocaleLowerCase()}
+          technologies.com, social media pages (which could include, without
+          limitation, profiles operated by {currentName}
+          Technology, Inc., software, tablet software, iOS and Android apps) “
+          {currentName}” shall be referred to collectively as the “Web Site.”
         </p>
         <p>
-          This Privacy Policy explains what information Rair Technologies, Inc.
-          ("Rair," “Company” or "we") collects on the Web Site, how Rair uses
-          that information, your choices and this Web Site's other privacy
-          practices. This Privacy Policy only covers information collected at at
-          this Web Site, and does not cover any information collected at any
-          other web site or offline by Rair, any affiliated company or any other
-          company (unless specifically stated). Please read this Privacy Policy
-          carefully. In addition, please review this Web Site's “Terms and
-          Conditions”, which governs your use of this Web Site.
+          This Privacy Policy explains what information {currentName}{' '}
+          Technologies, Inc. ("{currentName}," “Company” or "we") collects on
+          the Web Site, how {currentName} uses that information, your choices
+          and this Web Site's other privacy practices. This Privacy Policy only
+          covers information collected at at this Web Site, and does not cover
+          any information collected at any other web site or offline by{' '}
+          {currentName}, any affiliated company or any other company (unless
+          specifically stated). Please read this Privacy Policy carefully. In
+          addition, please review this Web Site's “Terms and Conditions”, which
+          governs your use of this Web Site.
         </p>
       </div>
       <div className="fsdf">
@@ -61,19 +66,19 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
           received.
         </p>
         <p>
-          Rair may use your personally identifiable information to provide you
-          with requested information or services, to contact you in connection
-          with a promotion, or for other purposes disclosed when you provide
-          your information. We may use your information for internal business
-          purposes, such as to improve the Web Site and our business strategies,
-          or to serve specific content or advertisements to you. If you choose
-          to receive information from the Web Site, we may contact you with
-          information regarding one of our services or events, or those of an
-          affiliate or business partner. We may also contact you regarding any
-          problems or questions we have relating to your use of the Web Site,
-          or, in our discretion, notify you of changes to our Privacy Policy,
-          Terms of Use or other policy or terms that affect you or your use of
-          the Web Site
+          {currentName} may use your personally identifiable information to
+          provide you with requested information or services, to contact you in
+          connection with a promotion, or for other purposes disclosed when you
+          provide your information. We may use your information for internal
+          business purposes, such as to improve the Web Site and our business
+          strategies, or to serve specific content or advertisements to you. If
+          you choose to receive information from the Web Site, we may contact
+          you with information regarding one of our services or events, or those
+          of an affiliate or business partner. We may also contact you regarding
+          any problems or questions we have relating to your use of the Web
+          Site, or, in our discretion, notify you of changes to our Privacy
+          Policy, Terms of Use or other policy or terms that affect you or your
+          use of the Web Site
         </p>
         <p>
           If you submit to the Web Site a comment, photograph or other content
@@ -101,10 +106,10 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
           This Web Site is not directed to persons younger than 18, and does not
           knowingly collect any personally identifiable information from persons
           younger than 18. If you are younger than 18, do not send any
-          information about yourself to the Web Site. If Rair discovers that a
-          person younger than 18 has provided the Web Site with personally
-          identifiable information, Rair will delete that person's personally
-          identifiable information.
+          information about yourself to the Web Site. If {currentName} discovers
+          that a person younger than 18 has provided the Web Site with
+          personally identifiable information, {currentName} will delete that
+          person's personally identifiable information.
         </p>
         <p>
           <strong>Non-Personally Identifiable Information: </strong>
@@ -125,8 +130,8 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
           An internet protocol or IP address is a number that is assigned to
           your computer or network when you are on the internet. When you
           request pages from this Web Site, our servers may log your IP address.
-          Rair may use IP addresses for a number of purposes, such as system
-          administration, to generally determine your computer's server
+          {currentName} may use IP addresses for a number of purposes, such as
+          system administration, to generally determine your computer's server
           location, to report aggregate information to our business partners or
           to audit use of the Web Site.
         </p>
@@ -159,7 +164,8 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
           computer that the web beacon is sent to and the time the web beacon
           viewed. Web beacons can be very small and invisible to the user, but,
           in general, any electronic image viewed as part of a web page or
-          e-mail, including HTML based content, can act as a web beacon. Rair
+          e-mail, including HTML based content, can act as a web beacon.{' '}
+          {currentName}
           may use web beacons to count visitors to the web pages on the Web Site
           or to monitor how our users navigate the Web Site, and we may include
           web beacons in e-mail messages in order to count how many messages
@@ -168,9 +174,9 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
         <p>
           Our web pages may include advertisements for third parties and their
           products, and those third-party advertisements may include a cookie or
-          web beacon served by the third party. Rair does not have control over
-          the cookies or web beacons used by third parties and does not have
-          access to whatever information they may collect.
+          web beacon served by the third party. {currentName} does not have
+          control over the cookies or web beacons used by third parties and does
+          not have access to whatever information they may collect.
         </p>
         <p>
           <strong>Do Not Track Features: </strong>
@@ -183,49 +189,49 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
       <div className="fasd">
         <h1>DISCLOSURE OF COLLECTED INFORMATION & THIRD PARTIES</h1>
         <p>
-          Rair will not disclose non-personally identifying, aggregated user
-          statistics to third parties. Rair does not share your personally
-          identifiable information with third parties for their direct marketing
-          purposes unless you first affirmatively agree to the disclosure. If
-          you agree to receive communications from a third party, your
-          information will be subject to the third party's privacy policy.
+          {currentName} will not disclose non-personally identifying, aggregated
+          user statistics to third parties. {currentName} does not share your
+          personally identifiable information with third parties for their
+          direct marketing purposes unless you first affirmatively agree to the
+          disclosure. If you agree to receive communications from a third party,
+          your information will be subject to the third party's privacy policy.
           Therefore, if you later decide that you do not want that third party
           to use your information, you will need to contact the third party
           directly.
         </p>
         <p>
           In addition, unless otherwise disclosed in this Privacy Policy or at
-          the time you provide your information, Rair will only share your
-          personally identifiable information with third parties under the
+          the time you provide your information, {currentName} will only share
+          your personally identifiable information with third parties under the
           following limited circumstances:
         </p>
         <p>
           <strong>Third parties providing services on our behalf:</strong>
-          Rair may employ other companies and individuals to perform functions
-          on our behalf. Examples include, without limitation, hosting and
-          administering this Web Site, fulfilling orders, sending communications
-          on our behalf, analyzing data, and administering promotions. These
-          third parties may have access to this Web Site's user information,
-          including personally identifiable information, in order to perform
-          these functions on our behalf.
+          {currentName} may employ other companies and individuals to perform
+          functions on our behalf. Examples include, without limitation, hosting
+          and administering this Web Site, fulfilling orders, sending
+          communications on our behalf, analyzing data, and administering
+          promotions. These third parties may have access to this Web Site's
+          user information, including personally identifiable information, in
+          order to perform these functions on our behalf.
         </p>
         <p>
           <strong>Legal Protection:</strong>
-          Rair may transfer and disclose information about our users, including
-          personally identifiable information, and may use IP addresses to
-          identify users in cooperation with internet service providers or law
-          enforcement agencies, to comply with a legal obligation, at the
-          request of governmental authorities conducting an investigation, to
-          verify or enforce compliance with the policies governing the Web Site
-          and applicable laws, or to protect the legal rights, interests, or
-          safety of the Web Site, our users or others.
+          {currentName} may transfer and disclose information about our users,
+          including personally identifiable information, and may use IP
+          addresses to identify users in cooperation with internet service
+          providers or law enforcement agencies, to comply with a legal
+          obligation, at the request of governmental authorities conducting an
+          investigation, to verify or enforce compliance with the policies
+          governing the Web Site and applicable laws, or to protect the legal
+          rights, interests, or safety of the Web Site, our users or others.
         </p>
         <p>
           <strong>Corporate change:</strong>
-          Rair reserves the right to disclose and transfer user information,
-          including personally identifiable information, in connection with a
-          corporate merger, consolidation, restructuring, a sale of assets, or
-          other fundamental corporate change.
+          {currentName} reserves the right to disclose and transfer user
+          information, including personally identifiable information, in
+          connection with a corporate merger, consolidation, restructuring, a
+          sale of assets, or other fundamental corporate change.
         </p>
         <p>
           <strong>Sweepstakes, Contests and Promotions:</strong>
@@ -248,7 +254,7 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
           policies, or to unsubscribe from the features you subscribed to on
           this Web Site, please email{' '}
           <a href="mailto:support@rairtechnologies.com?subject=Support%20from%20Privacy%20Policy">
-            support@rairtechnologies.com.
+            support@{currentName.toLocaleLowerCase()}technologies.com.
           </a>{' '}
           In addition, you can unsubscribe from receiving commercial e-mail from
           the Web Site by clicking the link contained within an e-mail sent to
@@ -256,8 +262,9 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
           remove or modify information in our databases. In addition, we may
           institute a policy in which user information is deleted after a amount
           of time, and therefore, your user information may no longer exist in
-          Rair's active database(s). In addition, even if you choose to
-          unsubscribe or otherwise modify your user account settings, Rair
+          {currentName}'s active database(s). In addition, even if you choose to
+          unsubscribe or otherwise modify your user account settings,{' '}
+          {currentName}
           reserves the right to contact you regarding your account and your use
           of this Web Site.
         </p>
@@ -266,9 +273,10 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
         <h4>SECURITY</h4>
         <p>
           No data transmission over the internet or electronic storage of
-          information can be guaranteed to be 100% secure. Please note that Rair
+          information can be guaranteed to be 100% secure. Please note that{' '}
+          {currentName}
           cannot ensure or warrant the security of any information you transmit
-          to Rair, and you do so at your own risk.
+          to {currentName}, and you do so at your own risk.
         </p>
       </div>
       <div className="links">
@@ -277,11 +285,11 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
           The Web Site and communications sent by the Web Site may contain links
           that take you outside our services and are beyond our control. For
           example, you may encounter links from sponsors or partners, which may
-          or may not include the Rair logo as part of a co-branding agreement.
-          If you "click" on the link to a third party, the "click" takes you to
-          party's web site or online content. These other web sites may set
-          their own cookies, collect data, solicit personally identifiable
-          information and/or have their own privacy policies.
+          or may not include the {currentName} logo as part of a co-branding
+          agreement. If you "click" on the link to a third party, the "click"
+          takes you to party's web site or online content. These other web sites
+          may set their own cookies, collect data, solicit personally
+          identifiable information and/or have their own privacy policies.
         </p>
       </div>
       <div className="fwftyh">
@@ -298,12 +306,12 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
         <h4>ACCEPTANCE & PRIVACY POLICY CHANGES</h4>
         <p>
           By using this Web Site, you accept our privacy practices, as outlined
-          in this Privacy Policy. Rair reserves the right to modify, alter or
-          otherwise update this Privacy Policy at any time. We will post any new
-          or revised policies on the Web Site. However, Rair will use your
-          personally identifiable information in a manner consistent with the
-          Policy in effect at the time you submitted the information, unless you
-          consent to the new or revised policy.
+          in this Privacy Policy. {currentName} reserves the right to modify,
+          alter or otherwise update this Privacy Policy at any time. We will
+          post any new or revised policies on the Web Site. However,{' '}
+          {currentName} will use your personally identifiable information in a
+          manner consistent with the Policy in effect at the time you submitted
+          the information, unless you consent to the new or revised policy.
         </p>
         <p>
           <strong>Notice to California Residents: </strong>
@@ -316,12 +324,13 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
           unless you first affirmatively agree to the disclosure. For those
           California residents who want more information regarding our
           compliance with this law or your choices, please contact us at
-          support@rairtechnologies.com. You must include this Web Site as the
-          subject line, and your full name, e-mail address, and postal address
-          in your message. We will only respond to messages specifically
-          requesting information regarding our compliance with this law or your
-          your choices, and those that include the above information. We will
-          also only respond to a request from you one time per calendar year.
+          support@{currentName.toLocaleLowerCase()}technologies.com. You must
+          include this Web Site as the subject line, and your full name, e-mail
+          address, and postal address in your message. We will only respond to
+          messages specifically requesting information regarding our compliance
+          with this law or your your choices, and those that include the above
+          information. We will also only respond to a request from you one time
+          per calendar year.
         </p>
       </div>
       <div className="f">

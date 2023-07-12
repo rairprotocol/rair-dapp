@@ -8,7 +8,7 @@ import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useSwal from '../../../hooks/useSwal';
-import { BellIcon } from '../../../images';
+import { BellIcon, HotDropsLogo } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import NotificationPage from '../NotificationPage/NotificationPage';
 
@@ -17,6 +17,8 @@ import NftImg from './images/image.png';
 const PopUpNotification = () =>
   // props was - isNotification
   {
+    const currentName =
+      process.env.REACT_APP_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
     const [openModal, setOpenModal] = useState(false);
     const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
       RootState,
@@ -102,11 +104,18 @@ const PopUpNotification = () =>
                 <div className="box-notification">
                   <div className="dot-notification" />
                   <div className="notification-img">
-                    <img src={headerLogoMobile} alt="Rair Tech" />
+                    <img
+                      src={
+                        currentName === 'HotDrops'
+                          ? HotDropsLogo
+                          : headerLogoMobile
+                      }
+                      alt="Rair Tech"
+                    />
                   </div>
                   <div className="text-notification">
                     <div className="title-notif">
-                      Notification from Rair.tech
+                      Notification from {currentName}
                     </div>
                     <div className="text-notif">
                       Don’t click away! You can navigate away from the page once

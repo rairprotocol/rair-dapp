@@ -66,7 +66,11 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                 <div
                   className={`select-number-box ${
                     selectedToken === el.token ? 'selected-box' : ''
-                  } ${el.sold ? 'sold-token' : ''}`}
+                  } ${el.sold ? 'sold-token' : ''} ${
+                    process.env.REACT_APP_HOTDROPS === 'true'
+                      ? 'hotdrops-border'
+                      : ''
+                  }`}
                   data-title={` #${el.token}`}
                   style={{
                     background: `${

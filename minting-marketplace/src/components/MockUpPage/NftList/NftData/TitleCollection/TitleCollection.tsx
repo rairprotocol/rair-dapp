@@ -238,7 +238,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               }address/${contract}`}
               target="_blank"
               rel="noreferrer">
-              <div className="etherscan-icon">
+              <div className="etherscan-icon hotdrops-border">
                 <TooltipBox title="Link to Contract Review">
                   <EtherScanCollectionLogo className="etherscan-collection-icon" />
                 </TooltipBox>

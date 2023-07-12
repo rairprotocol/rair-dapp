@@ -92,7 +92,11 @@ export const ModalContentPicture = styled.div`
 export const StyledFilterIcon = styled(FilterIconNew)`
   path {
     stroke: ${(props: TFiltersTitleIconStyled) =>
-      props.filterPopUp ? '#fff' : '#E882D5'};
+      process.env.REACT_APP_HOTDROPS === 'true'
+        ? '#F95631'
+        : props.filterPopUp
+        ? '#fff'
+        : '#E882D5'};
   }
   margin-right: 8px;
 `;
@@ -100,13 +104,21 @@ export const StyledFilterIcon = styled(FilterIconNew)`
 export const StyledArrowUpIcon = styled(ArrowUp)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
-      props.sortItem === 'up' ? '#E882D5' : '#A7A6A6'};
+      process.env.REACT_APP_HOTDROPS === 'true'
+        ? '#F95631'
+        : props.sortItem === 'up'
+        ? '#E882D5'
+        : '#A7A6A6'};
   }
 `;
 export const StyledArrowDownIcon = styled(ArrowDown)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
-      props.sortItem === 'down' ? '#E882D5' : '#A7A6A6'};
+      process.env.REACT_APP_HOTDROPS === 'true'
+        ? '#F95631'
+        : props.sortItem === 'down'
+        ? '#E882D5'
+        : '#A7A6A6'};
   }
 `;
 

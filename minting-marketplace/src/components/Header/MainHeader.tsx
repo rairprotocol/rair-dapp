@@ -184,14 +184,29 @@ const MainHeader: React.FC<IMainHeader> = ({
         />
       </div>
       <div className={`main-search ${isSplashPage ? 'hidden' : ''}`}>
-        <input
-          className={primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'}
-          type="text"
-          placeholder="Search the rairverse..."
-          onChange={handleChangeText}
-          value={textSearch}
-          onClick={() => setIsComponentVisible(true)}
-        />
+        {process.env.REACT_APP_HOTDROPS === 'true' ? (
+          <input
+            className={
+              primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
+            }
+            type="text"
+            placeholder="Search"
+            onChange={handleChangeText}
+            value={textSearch}
+            onClick={() => setIsComponentVisible(true)}
+          />
+        ) : (
+          <input
+            className={
+              primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
+            }
+            type="text"
+            placeholder="Search the rairverse..."
+            onChange={handleChangeText}
+            value={textSearch}
+            onClick={() => setIsComponentVisible(true)}
+          />
+        )}
         {isComponentVisible && (
           <div
             className={`search-holder-wrapper ${
@@ -318,7 +333,11 @@ const MainHeader: React.FC<IMainHeader> = ({
             className="fas fa-times"
             aria-hidden="true"></i>
         )}
-        <i className="fas fa-search" aria-hidden="true"></i>
+        <i
+          className={`fas fa-search ${
+            process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-color'
+          }`}
+          aria-hidden="true"></i>
       </div>
       <div className="box-header-info">
         {!loggedIn && (
@@ -332,7 +351,9 @@ const MainHeader: React.FC<IMainHeader> = ({
                     disabled={
                       !window.ethereum && !programmaticProvider && !loginProcess
                     }
-                    className={`btn btn-${primaryColor} btn-connect-wallet`}
+                    className={`btn btn-${primaryColor} btn-connect-wallet ${
+                      process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-bg'
+                    }`}
                     onClick={() => connectUserData()}>
                     {loginProcess ? 'Please wait...' : 'Connect'}
                   </button>
@@ -359,26 +380,30 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
-              <a
-                href="https://discord.gg/pSTbf2yz7V"
-                target={'_blank'}
-                rel="noreferrer">
-                <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
-              </a>
-            </SocialBox>
-            <SocialBox
-              marginRight={'17px'}
-              marginLeft={'17px'}
-              hoverColor={'#1DA1F2'}
-              primaryColor={primaryColor}>
-              <a
-                href="https://twitter.com/rairtech"
-                target={'_blank'}
-                rel="noreferrer">
-                <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
-              </a>
-            </SocialBox>
+            {process.env.REACT_APP_HOTDROPS !== 'true' && (
+              <>
+                <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
+                  <a
+                    href="https://discord.gg/pSTbf2yz7V"
+                    target={'_blank'}
+                    rel="noreferrer">
+                    <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
+                  </a>
+                </SocialBox>
+                <SocialBox
+                  marginRight={'17px'}
+                  marginLeft={'17px'}
+                  hoverColor={'#1DA1F2'}
+                  primaryColor={primaryColor}>
+                  <a
+                    href="https://twitter.com/rairtech"
+                    target={'_blank'}
+                    rel="noreferrer">
+                    <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
+                  </a>
+                </SocialBox>
+              </>
+            )}
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}
               adminPanel={adminPanel}

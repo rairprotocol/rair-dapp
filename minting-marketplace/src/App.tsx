@@ -235,6 +235,14 @@ function App() {
     //eslint-disable-next-line
   }, [selectedChain]);
 
+  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+
+  useEffect(() => {
+    if (hotDropsVar === 'true') {
+      document.body.classList.add('hotdrops');
+    }
+  }, []);
+
   const creatorViewsDisabled =
     process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
 

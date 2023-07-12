@@ -46,6 +46,8 @@ const useConnectUser = () => {
       (store) => store.contractStore
     );
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const reactSwal = useSwal();
   const navigate = useNavigate();
   const oreId = useOreId();
@@ -114,13 +116,15 @@ const useConnectUser = () => {
     () =>
       new Promise((resolve: (value: string) => void) => {
         reactSwal.fire({
-          title: 'Welcome to RAIR',
+          title: `Welcome to ${hotdropsVar === 'true' ? 'HOTDROPS' : 'RAIR'}`,
           html: (
             <>
               Please select a login method
               <hr />
               <button
-                className="btn btn-stimorol"
+                className={`btn btn-stimorol ${
+                  hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+                }`}
                 onClick={() => resolve('metamask')}>
                 Login Web3
               </button>

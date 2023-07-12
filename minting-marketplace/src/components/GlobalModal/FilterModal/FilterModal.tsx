@@ -576,7 +576,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
           disabled={!selectedBchItems && !selectedCatItems}
           className={`modal-filtering-button apply-btn ${
             isMobileDesign ? 'mobile-filter-apply-btn' : ''
-          }`}
+          } ${process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-bg' : ''}`}
           onClick={() => onFilterApply(selectedBchItems, selectedCatItems)}>
           Apply
         </button>

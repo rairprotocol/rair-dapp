@@ -12,7 +12,10 @@ export const ShowMoreContainer = styled.div<TShowMoreContainer>`
   height: ${(props) => props.height};
   color: ${(props) => props.textColor};
   margin: ${(props) => props.margin};
-  background: ${(props) => props.background};
+  background: ${(props) =>
+    process.env.REACT_APP_HOTDROPS === 'true'
+      ? 'var(--hot-drops-gradient)'
+      : props.background};
   pointer-events: ${(props) => (props.loading === 'true' ? 'none' : 'auto')};
   @media screen and (max-width: 659px) and (min-width: 410px) {
     margin: 0.5rem;
@@ -37,7 +40,10 @@ export const ShowMoreItem = styled.div<TShowMoreItem>`
   transition-duration: 0.5s;
   &:hover {
     transition-duration: 0.5s;
-    background: ${(props) => props.hoverBackground};
+    background: ${(props) =>
+      process.env.REACT_APP_HOTDROPS === 'true'
+        ? 'var(--hot-drops-click)'
+        : props.hoverBackground};
   }
   // @media screen and (max-width: 409px) and (min-width: 250px) {
   //   width: -webkit-fill-available;

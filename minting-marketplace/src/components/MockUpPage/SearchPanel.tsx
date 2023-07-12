@@ -274,7 +274,9 @@ const SearchPanel: React.FC<ISearchPanel> = ({
           />
           <div className="nft-form-control-icon">
             <i
-              className="fas fa-search fa-lg fas-custom"
+              className={`fas fa-search fa-lg fas-custom ${
+                process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-color'
+              }`}
               aria-hidden="true"></i>
             <FilteringBlock
               click={click}
@@ -305,6 +307,10 @@ const SearchPanel: React.FC<ISearchPanel> = ({
                   key={Math.random() * 1_000_000}
                   className={`clear-filter ${
                     primaryColor === 'rhyno' ? 'rhyno' : ''
+                  } ${
+                    process.env.REACT_APP_HOTDROPS === 'true'
+                      ? 'hotdrops-bg'
+                      : ''
                   }`}
                   onClick={() => clearSelected(filterItemText)}>
                   {filterItemText}
@@ -315,6 +321,8 @@ const SearchPanel: React.FC<ISearchPanel> = ({
               <button
                 className={`clear-filter filter-category ${
                   primaryColor === 'rhyno' ? 'rhyno' : ''
+                } ${
+                  process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
                 }`}
                 onClick={() => clearCategoriesFilter()}>
                 {filterCategoriesText}
@@ -343,6 +351,10 @@ const SearchPanel: React.FC<ISearchPanel> = ({
                   key={Math.random() * 1_000_000}
                   className={`clear-filter ${
                     primaryColor === 'rhyno' ? 'rhyno' : ''
+                  } ${
+                    process.env.REACT_APP_HOTDROPS === 'true'
+                      ? 'hotdrops-bg'
+                      : ''
                   }`}
                   onClick={() => clearSelected(filterItemText)}>
                   {filterItemText}

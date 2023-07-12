@@ -53,13 +53,23 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
         {activeSearch && (
           <SearchInputMobile primaryColor={primaryColor}>
             <i className="fas fa-search" aria-hidden="true"></i>
-            <input
-              className={
-                primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
-              }
-              type="text"
-              placeholder="Search the rairverse..."
-            />
+            {process.env.REACT_APP_HOTDROPS === 'true' ? (
+              <input
+                className={
+                  primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
+                }
+                type="text"
+                placeholder="Search"
+              />
+            ) : (
+              <input
+                className={
+                  primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
+                }
+                type="text"
+                placeholder="Search the rairverse..."
+              />
+            )}
           </SearchInputMobile>
         )}
         <MobileNavigationList

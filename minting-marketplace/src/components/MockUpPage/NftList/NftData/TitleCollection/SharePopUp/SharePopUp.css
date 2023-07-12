@@ -64,6 +64,10 @@
   ) !important;
 }
 
+.share-button.hotdrops-border:hover {
+  background: var(--hot-drops-gradient) !important;
+}
+
 .share-button:focus {
   background: linear-gradient(
     96.34deg,

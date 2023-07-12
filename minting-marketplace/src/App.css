@@ -1,4 +1,6 @@
 @import url('https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-text.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Montserrat:wght@100;200;400;500;700;900&display=swap');
+
 :root {
   --bubblegum: #e882d5;
   --bubblegum-hover: #bd6bae;
@@ -49,10 +51,39 @@
     var(--royal-purple-click),
     var(--bubblegum-click)
   );
+  --hot-drops: #f95631;
+  --hot-drops-orange: #ff8200;
+  --hot-drops-light: #ff6300;
+  --hot-drops-dark: #ff3f14;
+  --hot-drops-gradient: linear-gradient(
+    to right,
+    var(--hot-drops),
+    var(--hot-drops-light)
+  );
+  --hot-drops-hover: linear-gradient(
+    to right,
+    var(--hot-drops),
+    var(--hot-drops-orange)
+  );
+  --hot-drops-click: linear-gradient(
+    to right,
+    var(--hot-drops),
+    var(--hot-drops-dark)
+  );
+  --hot-drops-thrird: linear-gradient(
+    to right,
+    var(--hot-drops),
+    var(--hot-drops-light),
+    var(--hot-drops-orange)
+  );
 }
 
 body {
   font-family: 'Plus Jakarta Text' !important;
+}
+
+body.hotdrops {
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 .rair-abbr {
@@ -192,6 +223,36 @@ a:hover {
 /* .main-block-app {
   margin-top: 40px;
 } */
+
+.hotdrops-color {
+  color: var(--hot-drops) !important;
+}
+
+.hotdrops-bg {
+  background: var(--hot-drops-gradient) !important;
+}
+
+.hotdrops-bg:hover {
+  background: var(--hot-drops-hover) !important;
+}
+
+.hotdrops-hover:hover {
+  border: 1px solid var(--hot-drops) !important;
+}
+
+button:disabled.hotdrops-bg {
+  background: var(--hot-drops-click) !important;
+}
+
+.hotdrops-border {
+  border: 1px solid var(--hot-drops) !important;
+}
+
+.hotdrops-border:hover {
+  border: 1px solid var(--hot-drops) !important;
+  background: var(--hot-drops-click) !important;
+  border-radius: 16px !important;
+}
 
 .general-title {
   text-align: left;
@@ -1335,6 +1396,10 @@ select.form-control.rounded-rair:disabled {
   background: var(--stimorol-hover) !important;
 }
 
+.clear-filter.hotdrops-bg:hover {
+  background: var(--hot-drops-hover) !important;
+}
+
 .clear-filter:hover::after {
   content: '\274E';
   color: blue;
@@ -2334,6 +2399,11 @@ body::-webkit-scrollbar-track {
   border-radius: 12px;
 }
 
+body.hotdrops::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--hot-drops);
+  border-radius: 12px;
+}
+
 /* Handle */
 
 body::-webkit-scrollbar-thumb {
@@ -2355,6 +2425,11 @@ body::-webkit-scrollbar-thumb {
   border-radius: 12px;
 }
 
+body.hotdrops::-webkit-scrollbar-thumb {
+  background: var(--hot-drops);
+  border-radius: 12px;
+}
+
 /* Handle on hover */
 
 body::-webkit-scrollbar-thumb:hover {
@@ -2363,6 +2438,14 @@ body::-webkit-scrollbar-thumb:hover {
 
 body::-webkit-scrollbar-thumb:active {
   background: #8c63da;
+}
+
+body.hotdrops::-webkit-scrollbar-thumb:hover {
+  background: var(--hot-drops-hover);
+}
+
+body.hotdrops::-webkit-scrollbar-thumb:active {
+  background: var(--hot-drops-click);
 }
 
 .video-btn-back {

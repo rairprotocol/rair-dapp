@@ -9,8 +9,12 @@ import avatar from './defaultAvatarProfile.webp';
 import discordIconWhiteNoBorder from './discord-white-no-border.webp';
 import documentIcon from './documentIcon.svg';
 import ethereum from './ethereum-logo.svg';
+import defaultHotDropsImg from './hotdrops-default.png';
+import logoHotDropsLight from './HotdropsLogoLight.png';
+import logoHotDrops from './logo-hotdrops.png';
 import metamaskLogo from './metamask_logo.webp';
 import minTable from './mintable-logo.webp';
+import hotdropsLogoMobile from './mobile-logo-hotdrops.png';
 import oneOf from './oneOf-logo.webp';
 import openSea from './openSea-logo.webp';
 // import Icons
@@ -38,6 +42,10 @@ export const OneOf = oneOf;
 export const Dapper = dapper;
 export const MinTable = minTable;
 export const Curios = curios;
+export const HotDropsLogo = logoHotDrops;
+export const HotDropsLogoLight = logoHotDropsLight;
+export const defaultHotDrops = defaultHotDropsImg;
+export const HotDropsLogoMobile = hotdropsLogoMobile;
 
 // Icons
 export const discrodIconNoBorder = discordIconWhiteNoBorder;
