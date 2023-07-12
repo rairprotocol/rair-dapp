@@ -13,6 +13,7 @@ import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 import setTitle from '../../utils/setTitle';
+import { web3Switch } from '../../utils/switchBlockchain';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
@@ -101,28 +102,29 @@ const Factory = () => {
     getPrice();
   }, [getPrice]);
 
-  useEffect(() => {
-    if (chainId !== undefined) {
-      if (window.ethereum) {
-        if (chainId === currentChain) {
-          return;
+  const updateChain = useCallback(
+    async (chainId) => {
+      if (chainId !== undefined) {
+        setChainId(chainId);
+        if (window.ethereum) {
+          if (chainId === currentChain) {
+            return;
+          }
+          web3Switch(chainId);
+        } else {
+          reactSwal.fire(
+            'Blockchain Switch is disabled on Programmatic Connections!',
+            'Switch to the proper chain manually!'
+          );
         }
-        window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: chainId }]
-        });
-      } else {
-        reactSwal.fire(
-          'Blockchain Switch is disabled on Programmatic Connections!',
-          'Switch to the proper chain manually!'
-        );
+        setDeploymentPrice(BigNumber.from(0));
+        setDeploymentPriceDiamond(BigNumber.from(0));
+        setTokenSymbol('');
+        setUserBalance(BigNumber.from(0));
       }
-      setDeploymentPrice(BigNumber.from(0));
-      setDeploymentPriceDiamond(BigNumber.from(0));
-      setTokenSymbol('');
-      setUserBalance(BigNumber.from(0));
-    }
-  }, [chainId, currentChain, reactSwal]);
+    },
+    [reactSwal, currentChain]
+  );
 
   useEffect(() => {
     setTitle('Rair Factory');
@@ -152,7 +154,7 @@ const Factory = () => {
               return { label: chainData[item].name, value: item };
             })}
             getter={chainId}
-            setter={setChainId}
+            setter={updateChain}
             placeholder="Please select"
             label="Contract's Blockchain"
             customClass="rounded-rair form-control"
