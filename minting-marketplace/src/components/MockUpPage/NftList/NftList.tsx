@@ -8,6 +8,7 @@ import { INftListComponent } from './nftList.types';
 import { RootState } from '../../../ducks';
 import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import { defaultHotDrops } from '../../../images';
 import {
   GlobalModalContext,
   TGlobalModalContext
@@ -43,7 +44,9 @@ const NftListComponent: React.FC<INftListComponent> = ({
   }
 
   const defaultImg =
-    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
+    process.env.REACT_APP_HOTDROPS === 'true'
+      ? defaultHotDrops
+      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
   const filteredData =
     data &&

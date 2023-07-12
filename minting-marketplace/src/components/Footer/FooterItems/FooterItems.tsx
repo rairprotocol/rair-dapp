@@ -56,6 +56,11 @@ export const FooterImage = styled.div`
     width: auto;
   }
 
+  img.logo-hotdrops-image {
+    height: 45px;
+    width: auto;
+  }
+
   @media screen and (max-width: 450px) {
     margin-bottom: 0;
 
@@ -119,6 +124,7 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
       cursor: pointer;
       transition: all 0.3s ease;
       font-size: 16px;
+      margin-bottom: 5px;
       color: ${(props) =>
         props.messageAlert && props.messageAlert === 'profileEdit'
           ? '#19a7f6'
@@ -147,7 +153,11 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
     line-height: 20px;
     margin-bottom: 14px;
     color: ${(props) =>
-      props.primaryColor === 'rhyno' ? '#725BDB' : '#AA9DE9'};
+      process.env.REACT_APP_HOTDROPS === 'true'
+        ? 'var(--hot-drops)'
+        : props.primaryColor === 'rhyno'
+        ? '#725BDB'
+        : '#AA9DE9'};
   }
 
   li {
@@ -159,6 +169,8 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
 
   li.logout {
     cursor: pointer;
+    display: flex;
+    align-items: center;
   }
 
   // li:last-child {

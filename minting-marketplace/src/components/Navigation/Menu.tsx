@@ -1,5 +1,6 @@
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { ethers, utils } from 'ethers';
 
@@ -206,19 +207,20 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                       marginRight={'17px'}>
                       <BellIcon primaryColor={primaryColor} />
                     </SocialBox>
-                    <UserIconMobile
-                      onClick={() => {
-                        handleMessageAlert('profile');
-                        toggleMenu('nav');
-                      }}
-                      avatar={userData && userData.avatar}
-                      marginRight={'16px'}
-                      messageAlert={messageAlert}
-                      primaryColor={primaryColor}>
-                      {userData && !userData.avatar && (
-                        <SvgUserIcon width={'22.5px'} height={'22.5px'} />
-                      )}
-                    </UserIconMobile>
+                    <NavLink to={`/${currentUserAddress}`}>
+                      <UserIconMobile
+                        onClick={() => {
+                          toggleMenu();
+                        }}
+                        avatar={userData && userData.avatar}
+                        marginRight={'16px'}
+                        messageAlert={messageAlert}
+                        primaryColor={primaryColor}>
+                        {userData && !userData.avatar && (
+                          <SvgUserIcon width={'22.5px'} height={'22.5px'} />
+                        )}
+                      </UserIconMobile>
+                    </NavLink>
                   </>
                 )}
               </div>

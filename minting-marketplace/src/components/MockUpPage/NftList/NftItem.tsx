@@ -22,6 +22,7 @@ import {
 import { UserType } from '../../../ducks/users/users.types';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import { defaultHotDrops } from '../../../images';
 import {
   GlobalModalContext,
   TGlobalModalContext
@@ -249,6 +250,8 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 src={
                   metaDataProducts?.metadata?.image
                     ? metaDataProducts?.metadata?.image
+                    : process.env.REACT_APP_HOTDROPS === 'true'
+                    ? defaultHotDrops
                     : pict
                 }
               />
@@ -268,6 +271,8 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                     light={
                       metaDataProducts.metadata?.image
                         ? metaDataProducts.metadata?.image
+                        : process.env.REACT_APP_HOTDROPS === 'true'
+                        ? defaultHotDrops
                         : pict
                     }
                     style={{
@@ -290,7 +295,13 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               className="col-12 h-100 w-100 zoom-event"
               width={'282px'}
               height={'282px'}
-              src={metaDataProducts?.metadata?.image ? ipfsLink : pict}
+              src={
+                metaDataProducts?.metadata?.image
+                  ? ipfsLink
+                  : process.env.REACT_APP_HOTDROPS === 'true'
+                  ? defaultHotDrops
+                  : pict
+              }
               alt={collectionName}
               cover={true}
             />

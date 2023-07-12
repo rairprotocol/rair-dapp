@@ -8,7 +8,13 @@ import { IFooter } from './footer.types';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../images';
+import {
+  DiscordIcon,
+  HotDropsLogo,
+  HotDropsLogoLight,
+  TelegramIcon,
+  TwitterIcon
+} from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 
 import {
@@ -56,36 +62,65 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
           <div className="footer-wrapper">
             <FooterImage>
               <NavLink to="/">
-                <img src={headerLogo} alt="Rair Tech" />
+                {process.env.REACT_APP_HOTDROPS === 'true' ? (
+                  <img
+                    className="logo-hotdrops-image"
+                    alt="Rair Tech"
+                    src={
+                      primaryColor === 'rhyno'
+                        ? HotDropsLogoLight
+                        : HotDropsLogo
+                    }
+                  />
+                ) : (
+                  <img src={headerLogo} alt="Rair Tech" />
+                )}
               </NavLink>
             </FooterImage>
             <CommunityBlock primaryColor={primaryColor}>
-              <div className="community-text">Join our community</div>
-              <CommunityBoxFooter>
-                <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
-                  <a
-                    href="https://discord.gg/pSTbf2yz7V"
-                    target={'_blank'}
-                    rel="noreferrer">
-                    <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
-                  </a>
-                </SocialBox>
-                <SocialBox
-                  marginRight={'17px'}
-                  marginLeft={'17px'}
-                  hoverColor={'#1DA1F2'}
-                  primaryColor={primaryColor}>
-                  <a
-                    href="https://twitter.com/rairtech"
-                    target={'_blank'}
-                    rel="noreferrer">
-                    <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
-                  </a>
-                </SocialBox>
-                <SocialBox hoverColor={'#229ED9'} primaryColor={primaryColor}>
-                  <TelegramIcon primaryColor={primaryColor} color={'#fff'} />
-                </SocialBox>
-              </CommunityBoxFooter>
+              {process.env.REACT_APP_HOTDROPS !== 'true' && (
+                <>
+                  <div className="community-text">Join our community</div>
+                  <CommunityBoxFooter>
+                    <SocialBox
+                      hoverColor={'#7289d9'}
+                      primaryColor={primaryColor}>
+                      <a
+                        href="https://discord.gg/pSTbf2yz7V"
+                        target={'_blank'}
+                        rel="noreferrer">
+                        <DiscordIcon
+                          primaryColor={primaryColor}
+                          color={'#fff'}
+                        />
+                      </a>
+                    </SocialBox>
+                    <SocialBox
+                      marginRight={'17px'}
+                      marginLeft={'17px'}
+                      hoverColor={'#1DA1F2'}
+                      primaryColor={primaryColor}>
+                      <a
+                        href="https://twitter.com/rairtech"
+                        target={'_blank'}
+                        rel="noreferrer">
+                        <TwitterIcon
+                          primaryColor={primaryColor}
+                          color={'#fff'}
+                        />
+                      </a>
+                    </SocialBox>
+                    <SocialBox
+                      hoverColor={'#229ED9'}
+                      primaryColor={primaryColor}>
+                      <TelegramIcon
+                        primaryColor={primaryColor}
+                        color={'#fff'}
+                      />
+                    </SocialBox>
+                  </CommunityBoxFooter>
+                </>
+              )}
             </CommunityBlock>
           </div>
           <NavFooter>
@@ -112,7 +147,7 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
             className="validate"
             target="_blank"
             onSubmit={onSubmit}>
-            <div className="footer-send-email">
+            <div className={`footer-send-email`}>
               <input
                 value={emailChimp}
                 type="email"
@@ -122,7 +157,13 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
                 onChange={onChangeEmail}
                 required
               />
-              <button type="submit">Sign up</button>
+              <button
+                className={`${
+                  process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
+                }`}
+                type="submit">
+                Sign up
+              </button>
               <div
                 style={{
                   position: 'absolute',
@@ -140,7 +181,13 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
       </FooterWrapper>
       <FooterTextRairTech primaryColor={primaryColor}>
         <ul>
-          <li>© Rairtech 2022. All rights reserved</li>
+          <li>
+            ©{' '}
+            {process.env.REACT_APP_HOTDROPS === 'true'
+              ? 'HotDrops'
+              : 'Rairtech'}{' '}
+            {new Date().getFullYear()}. All rights reserved
+          </li>
           <li>
             <NavLink to="/privacy">Privacy policy</NavLink>
           </li>

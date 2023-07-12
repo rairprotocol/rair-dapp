@@ -28,6 +28,8 @@ const EditMode = ({
   const store = useStore();
   const reactSwal = useSwal();
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
   const { currentUserAddress } = useSelector((store) => store.contractStore);
   const [userName, setUserName] = useState(mainName.replace(/@/g, ''));
@@ -229,6 +231,9 @@ const EditMode = ({
                   <>
                     <TooltipBox title={'Click to copy your address'}>
                       <span
+                        className={
+                          hotdropsVar === 'true' ? 'hotdrops-border' : ''
+                        }
                         style={{
                           fontSize: '14px',
                           color:
@@ -272,6 +277,7 @@ const EditMode = ({
                   />
                 ) : (
                   <span
+                    className={hotdropsVar === 'true' ? 'hotdrops-border' : ''}
                     style={{
                       fontSize: '14px',
                       color:
@@ -312,7 +318,9 @@ const EditMode = ({
               <div className="profile-input">
                 <NavLink to={`/${currentUserAddress}`}>
                   <span
-                    className="profile-input-edit btn"
+                    className={`profile-input-edit btn ${
+                      hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+                    }`}
                     // onClick={() => onChangeEditMode()}
                     style={{
                       color: '#fff',

@@ -11,6 +11,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
 import { RootState } from '../../../../../../ducks';
+import { HotDropsLogoMobile } from '../../../../../../images';
 import { ISharePopUp } from '../../../../mockupPage.types';
 
 import './SharePopUp.css';
@@ -23,6 +24,8 @@ const SharePopUp: React.FC<ISharePopUp> = ({
 }) => {
   const [copySuccess /*setCopySuccess*/] = useState<string>('Copy link');
   const currentUrl = document.location.href;
+
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const headerLogo = useSelector<RootState, string>(
     (store) => store.colorStore.headerLogo
@@ -67,7 +70,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
           <ListItemAvatar>
             <img
               style={{ width: 30, height: 'auto', marginLeft: '10px' }}
-              src={headerLogo}
+              src={hotdropsVar === 'true' ? HotDropsLogoMobile : headerLogo}
               alt="Rair Tech"
             />
           </ListItemAvatar>
@@ -76,40 +79,46 @@ const SharePopUp: React.FC<ISharePopUp> = ({
             primary={copySuccess}
           />
         </ListItem>
-        <ListItem style={{ overflow: 'hidden' }} autoFocus button>
-          <FacebookShareButton
-            className="share-copy-link network__share-button"
-            url={currentUrl}
-            quote={'Rair tech'}
-            style={{ display: 'flex' }}>
-            <ListItemAvatar>
-              <FacebookRoundedIcon style={{ color: '#4267B2', fontSize: 40 }} />
-            </ListItemAvatar>
-            <ListItemText
-              style={{
-                color: `${primaryColor === 'rhyno' ? 'black' : 'white'}`
-              }}
-              primary="Share on Facebook"
-            />
-          </FacebookShareButton>
-        </ListItem>
-        <ListItem autoFocus>
-          <TwitterShareButton
-            className="share-copy-link"
-            url={currentUrl}
-            // quote={'Rair tech'} - property quote doesn't exist in the lib
-            style={{ display: 'flex' }}>
-            <ListItemAvatar>
-              <TwitterIcon style={{ color: '#1D9BF0', fontSize: 40 }} />
-            </ListItemAvatar>
-            <ListItemText
-              style={{
-                color: `${primaryColor === 'rhyno' ? 'black' : 'white'}`
-              }}
-              primary="Share on Twitter"
-            />
-          </TwitterShareButton>
-        </ListItem>
+        {hotdropsVar !== 'true' && (
+          <>
+            <ListItem style={{ overflow: 'hidden' }} autoFocus button>
+              <FacebookShareButton
+                className="share-copy-link network__share-button"
+                url={currentUrl}
+                quote={'Rair tech'}
+                style={{ display: 'flex' }}>
+                <ListItemAvatar>
+                  <FacebookRoundedIcon
+                    style={{ color: '#4267B2', fontSize: 40 }}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  style={{
+                    color: `${primaryColor === 'rhyno' ? 'black' : 'white'}`
+                  }}
+                  primary="Share on Facebook"
+                />
+              </FacebookShareButton>
+            </ListItem>
+            <ListItem autoFocus>
+              <TwitterShareButton
+                className="share-copy-link"
+                url={currentUrl}
+                // quote={'Rair tech'} - property quote doesn't exist in the lib
+                style={{ display: 'flex' }}>
+                <ListItemAvatar>
+                  <TwitterIcon style={{ color: '#1D9BF0', fontSize: 40 }} />
+                </ListItemAvatar>
+                <ListItemText
+                  style={{
+                    color: `${primaryColor === 'rhyno' ? 'black' : 'white'}`
+                  }}
+                  primary="Share on Twitter"
+                />
+              </TwitterShareButton>
+            </ListItem>
+          </>
+        )}
       </List>
     </Dialog>
   );

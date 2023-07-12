@@ -1,12 +1,17 @@
 //@ts-nocheck
 import React from 'react';
 
+import { HotDropsLogo } from '../../../images';
+
 import IconRemove from './images/icon-remove.png';
 
 // import { useSelector } from 'react-redux';
 import './NotificationPage.css';
 
 const NotificationPage = ({ headerLogo, primaryColor }) => {
+  const currentName =
+    process.env.REACT_APP_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
+
   return (
     <div className="wrapper-notification">
       <div className="notification-from-rair">
@@ -26,10 +31,15 @@ const NotificationPage = ({ headerLogo, primaryColor }) => {
             <div className="notification-left">
               <div className="dot-notification" />
               <div className="notification-img">
-                <img src={headerLogo} alt="Rair Tech" />
+                <img
+                  src={currentName === 'HotDrops' ? HotDropsLogo : headerLogo}
+                  alt="Rair Tech"
+                />
               </div>
               <div className="text-notification">
-                <div className="title-notif">Notification from Rair.tech</div>
+                <div className="title-notif">
+                  Notification from {currentName}
+                </div>
                 <div className="text-notif">
                   Don’t click away! You can navigate away from the page once
                   your video is done uploading

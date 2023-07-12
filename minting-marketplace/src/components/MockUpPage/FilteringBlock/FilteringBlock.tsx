@@ -126,7 +126,9 @@ const FilteringBlock = ({
       <div ref={sortRef} className="select-sort-wrapper">
         <SelectSortItem
           onClick={onChangeSortPopUp}
-          className="select-sort"
+          className={`select-sort ${
+            process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-hover' : ''
+          }`}
           primaryColor={primaryColor}
           textColor={textColor}
           sortPopUp={sortPopUp}>
@@ -209,7 +211,9 @@ const FilteringBlock = ({
       ) : (
         <div ref={filterRef} className="select-filters-wrapper">
           <SelectFiltersItem
-            className="select-filters"
+            className={`select-filters ${
+              process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-hover' : ''
+            }`}
             onClick={onChangeFilterPopUp}
             filterPopUp={filterPopUp}
             textColor={textColor}

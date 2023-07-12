@@ -7,6 +7,12 @@ export const MainLogoContaier = styled.div`
     cursor: pointer;
   }
 
+  img.logo-hotdrops-image {
+    width: auto;
+    height: 50px;
+    cursor: pointer;
+  }
+
   @media screen and (max-width: 1130px) {
     img {
       height: 23px;

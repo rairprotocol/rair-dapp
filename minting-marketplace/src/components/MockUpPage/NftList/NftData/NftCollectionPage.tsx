@@ -435,7 +435,11 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               }}
               onClick={() => goBack()}
               className="arrow-back">
-              <i className="fas fa-arrow-alt-circle-left"></i>
+              {process.env.REACT_APP_HOTDROPS === 'true' ? (
+                <i className="fas fa-arrow-alt-circle-left hotdrops-color"></i>
+              ) : (
+                <i className="fas fa-arrow-alt-circle-left"></i>
+              )}
             </div>
           )}
           <h2>{"Don't have product"}</h2>

@@ -53,16 +53,27 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
         {activeSearch && (
           <SearchInputMobile primaryColor={primaryColor}>
             <i className="fas fa-search" aria-hidden="true"></i>
-            <input
-              className={
-                primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
-              }
-              type="text"
-              placeholder="Search the rairverse..."
-            />
+            {process.env.REACT_APP_HOTDROPS === 'true' ? (
+              <input
+                className={
+                  primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
+                }
+                type="text"
+                placeholder="Search"
+              />
+            ) : (
+              <input
+                className={
+                  primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
+                }
+                type="text"
+                placeholder="Search the rairverse..."
+              />
+            )}
           </SearchInputMobile>
         )}
         <MobileNavigationList
+          click={click}
           messageAlert={messageAlert}
           setMessageAlert={setMessageAlert}
           primaryColor={primaryColor}
@@ -72,7 +83,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
           isSplashPage={isSplashPage}
         />
       </div>
-      <CommunityBlock primaryColor={primaryColor}>
+      {/* <CommunityBlock primaryColor={primaryColor}>
         <div className="community-text">Join our community</div>
         <CommunityBoxFooter className="header-mobile-community">
           <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
@@ -99,7 +110,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
             <TelegramIcon primaryColor={primaryColor} color={'#fff'} />
           </SocialBox>
         </CommunityBoxFooter>
-      </CommunityBlock>
+      </CommunityBlock> */}
     </List>
   );
 };

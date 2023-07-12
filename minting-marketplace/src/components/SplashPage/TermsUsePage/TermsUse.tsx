@@ -11,14 +11,17 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
     setIsSplashPage(false);
   }, [setIsSplashPage]);
 
+  const currentName =
+    process.env.REACT_APP_HOTDROPS === 'true' ? 'HotDrops' : 'Rair';
+
   return (
     <div className={cl.main}>
       <div className="header">
         <h1>TERMS OF USE</h1>
         <p>Last revised on 03/31/2021</p>
         <strong style={{ paddingBottom: '20px', display: 'inline-block' }}>
-          Welcome to Rair, operated by Rair Technologies, Inc. (“us,” “we,” the
-          “Company” or “Rair”).
+          Welcome to {currentName}, operated by {currentName} Technologies, Inc.
+          (“us,” “we,” the “Company” or “{currentName}”).
         </strong>
       </div>
       <div className={cl.content}>
@@ -26,15 +29,15 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
           <li>
             <h3>Acceptance of Terms of Use Agreement.</h3>
             <p>
-              By creating a Rair account whether through a mobile device, mobile
-              application or computer (collectively, the “Service”) you agree to
-              be bound by (i) these Terms of Use and (ii) our Privacy Policy
-              each of which is incorporated by reference into this Agreement,
-              and (iii) any terms disclosed and agreed to by you if you purchase
-              additional features, products or services we offer on the Service
-              (collectively, this “Agreement”). If you do not accept and agree
-              to be bound by all of the terms of this Agreement, please do not
-              use the Service.
+              By creating a {currentName} account whether through a mobile
+              device, mobile application or computer (collectively, the
+              “Service”) you agree to be bound by (i) these Terms of Use and
+              (ii) our Privacy Policy each of which is incorporated by reference
+              into this Agreement, and (iii) any terms disclosed and agreed to
+              by you if you purchase additional features, products or services
+              we offer on the Service (collectively, this “Agreement”). If you
+              do not accept and agree to be bound by all of the terms of this
+              Agreement, please do not use the Service.
             </p>
             <p>
               We may make changes to this Agreement and to the Services from
@@ -55,12 +58,13 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
           <li>
             <h3>Eligibility.</h3>
             <p>
-              You must be at least 18 years of age to create an account on Rair
+              You must be at least 18 years of age to create an account on{' '}
+              {currentName}
               and use the Service. By creating an account and using the Service,
               you represent and warrant that:
             </p>
             <ul>
-              <li>you can form a binding contract with Rair</li>
+              <li>you can form a binding contract with {currentName}</li>
               <li>
                 you are not a person who is barred from using the Service under
                 the laws of the United States or any other applicable
@@ -83,10 +87,10 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
           <li>
             <h3>Your Account.</h3>
             <p>
-              In order to use Rair, you must sign in using your Non-custodial{' '}
-              <strong>Web 3 wallet (such as MetaMask)</strong>. For more
-              information regarding the information we collect from you and how
-              we use it, please consult our Privacy Policy.
+              In order to use {currentName}, you must sign in using your
+              Non-custodial <strong>Web 3 wallet (such as MetaMask)</strong>.
+              For more information regarding the information we collect from you
+              and how we use it, please consult our Privacy Policy.
             </p>
             <p>
               You are responsible for maintaining the confidentiality of your
@@ -95,30 +99,31 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               credentials. If you think someone has gained access to your
               account, please immediately contact{' '}
               <a href="mailto:support@help@rairtechnologies.com?subject=Support%20from%20Terms%20of%20Use">
-                help@rairtechnologies.com.
+                help@{currentName.toLocaleLowerCase()}technologies.com.
               </a>{' '}
-              Please note that Rair does not control your MetaMask wallet, or
-              any information necessary to access any crypto wallet that you may
-              use in conjunction with the Service.
+              Please note that {currentName} does not control your MetaMask
+              wallet, or any information necessary to access any crypto wallet
+              that you may use in conjunction with the Service.
             </p>
             <p>
-              Rair charges the following fees in connection with the sale and/or
-              purchase of Digital Content (defined below): any creator, author,
-              or authorized seller (“Creator”) of Digital Content will receive
-              XX% of each sale, and Rair retains the remainder. These fees will
-              be processed through the blockchain and you may incur additional
-              related to the processing of the transaction through the
-              blockchain. Many transactions on Rair, including without
-              limitation minting, tokenizing, bidding, listing, offering,
-              purchasing, or confirming, are facilitated by smart contracts
-              existing on the Ethereum network. The Ethereum network requires
-              the payment of a transaction fee (a “Gas fee”) for every for every
-              transaction that occurs on a public blockchain network, and thus
-              every transaction occurring on Rair. The value of the Gas Fee
-              changes, often unpredictably, and is entirely outside of the
-              control of Rair. You acknowledge that under no circumstances will
-              a contract, agreement, offer, sale, bid, or other transaction on
-              Rair be invalidated, revocable, retractable, or otherwise
+              {currentName} charges the following fees in connection with the
+              sale and/or purchase of Digital Content (defined below): any
+              creator, author, or authorized seller (“Creator”) of Digital
+              Content will receive XX% of each sale, and {currentName} retains
+              the remainder. These fees will be processed through the blockchain
+              and you may incur additional related to the processing of the
+              transaction through the blockchain. Many transactions on{' '}
+              {currentName}, including without limitation minting, tokenizing,
+              bidding, listing, offering, purchasing, or confirming, are
+              facilitated by smart contracts existing on the Ethereum network.
+              The Ethereum network requires the payment of a transaction fee (a
+              “Gas fee”) for every for every transaction that occurs on a public
+              blockchain network, and thus every transaction occurring on{' '}
+              {currentName}. The value of the Gas Fee changes, often
+              unpredictably, and is entirely outside of the control of{' '}
+              {currentName}. You acknowledge that under no circumstances will a
+              contract, agreement, offer, sale, bid, or other transaction on
+              {currentName} be invalidated, revocable, retractable, or otherwise
               unenforceable on the basis that the Gas Fee for the given
               transaction was unknown, too high, or otherwise unacceptable.
             </p>
@@ -126,72 +131,75 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               You are responsible to pay any and all sales, use, value-added and
               other taxes, duties, and assessments now or hereafter claimed or
               imposed by any governmental authority, “associated with your use
-              of Rair (including, without limitation, any taxes that may become
-              payable as the result of your ownership, transfer, purchase, sale,
-              or creation of any artworks).​
+              of {currentName} (including, without limitation, any taxes that
+              may become payable as the result of your ownership, transfer,
+              purchase, sale, or creation of any artworks).​
             </p>
           </li>
           <li>
             <h3>Modifying the Services and Termination.</h3>
             <p>
-              Rair is always striving to improve the Services and bring you
-              additional functionality that you will find engaging and useful.
-              This means we may add new product features or enhancements from
-              time to time as well as remove some features, and if these actions
-              do not materially affect your rights or obligations, we may not
-              provide you with notice before taking them. We may even suspend
-              the Services entirely, in which event we may notify you in advance
-              unless extenuating circumstances prevent us from doing so.
+              {currentName} is always striving to improve the Services and bring
+              you additional functionality that you will find engaging and
+              useful. This means we may add new product features or enhancements
+              from time to time as well as remove some features, and if these
+              actions do not materially affect your rights or obligations, we
+              may not provide you with notice before taking them. We may even
+              suspend the Services entirely, in which event we may notify you in
+              advance unless extenuating circumstances prevent us from doing so.
             </p>
             <p>
               Account access is managed by blockchain verification and therefore
               is not terminable by a user; however, any authorized users (or
-              governing body of such user account) hosting content on Rair’s
-              platform may terminate their hosting account at any time, for any
-              reason, by contacting Rair. Rair may terminate your account at any
-              without notice if it believes that you have violated this
-              Agreement. Upon such termination, you will not be entitled to any
-              refund for any purchases. After your account is terminated, this
-              Agreement will terminate, except that the following provisions
-              will still apply to you and Rair: Section 5, Section 6, and
-              Sections 13 through 20.
+              governing body of such user account) hosting content on{' '}
+              {currentName}’s platform may terminate their hosting account at
+              any time, for any reason, by contacting {currentName}.{' '}
+              {currentName} may terminate your account at any without notice if
+              it believes that you have violated this Agreement. Upon such
+              termination, you will not be entitled to any refund for any
+              purchases. After your account is terminated, this Agreement will
+              terminate, except that the following provisions will still apply
+              to you and {currentName}: Section 5, Section 6, and Sections 13
+              through 20.
             </p>
             <p>
-              In no event shall Rair be liable to you or to any third-party for
-              any modification, price change, suspension or discontinuance of
-              the Service.
+              In no event shall {currentName} be liable to you or to any
+              third-party for any modification, price change, suspension or
+              discontinuance of the Service.
             </p>
           </li>
           <li>
             <h3>Safety; Your Interactions with Other Users.</h3>
             <p>
-              Though Rair strives to encourage a respectful user experience, it
-              is not responsible for the conduct of any user on or off of the
-              Services. You agree to use caution in all interactions with other
-              users, particularly if you decide to communicate off the Service
-              Service or meet in person. You should not provide your financial
-              information (for example, your credit card or bank account
-              information), or wire or otherwise send money, to other users.
+              Though {currentName} strives to encourage a respectful user
+              experience, it is not responsible for the conduct of any user on
+              or off of the Services. You agree to use caution in all
+              interactions with other users, particularly if you decide to
+              communicate off the Service Service or meet in person. You should
+              not provide your financial information (for example, your credit
+              card or bank account information), or wire or otherwise send
+              money, to other users.
             </p>
             <strong>
               YOU ARE SOLELY RESPONSIBLE FOR YOUR INTERACTIONS WITH OTHER USERS.
-              YOU UNDERSTAND THAT RAIR DOES NOT CONDUCT CRIMINAL BACKGROUND
-              CHECKS ON ITS USERS OR OTHERWISE INQUIRE INTO THE BACKGROUND OF
-              ITS USERS. RAIR MAKES NO REPRESENTATIONS OR WARRANTIES AS TO THE
-              CONDUCT OF USERS. RAIR RESERVES THE RIGHT TO CONDUCT ANY CRIMINAL
-              BACKGROUND CHECK OR OTHER SCREENINGS (SUCH AS SEX OFFENDER
-              REGISTER SEARCHES) AT ANY TIME USING AVAILABLE PUBLIC RECORDS.
+              YOU UNDERSTAND THAT {currentName} DOES NOT CONDUCT CRIMINAL
+              BACKGROUND CHECKS ON ITS USERS OR OTHERWISE INQUIRE INTO THE
+              BACKGROUND OF ITS USERS. {currentName} MAKES NO REPRESENTATIONS OR
+              WARRANTIES AS TO THE CONDUCT OF USERS. {currentName} RESERVES THE
+              RIGHT TO CONDUCT ANY CRIMINAL BACKGROUND CHECK OR OTHER SCREENINGS
+              (SUCH AS SEX OFFENDER REGISTER SEARCHES) AT ANY TIME USING
+              AVAILABLE PUBLIC RECORDS.
             </strong>
           </li>
           <li>
-            <h3>Rights Rair Grants You.</h3>
+            <h3>Rights {currentName} Grants You.</h3>
             <p>
-              Rair grants you a personal, worldwide, royalty-free,
+              {currentName} grants you a personal, worldwide, royalty-free,
               non-assignable, nonexclusive, revocable, and non-sublicensable
               license to access and use the Services. This license is for the is
               for the sole purpose of letting you use and enjoy the Services’
-              benefits as intended by Rair and permitted by this Agreement.
-              Therefore, you agree not to:
+              benefits as intended by {currentName} and permitted by this
+              Agreement. Therefore, you agree not to:
             </p>
             <ul>
               <li>
@@ -204,13 +212,13 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
                   use of, or reproduce in any way any copyrighted material,
                   images, trademarks, trade names, service marks, or other
                   intellectual property, content or proprietary information
-                  accessible through the Service without Rair’s prior written
-                  consent.
+                  accessible through the Service without {currentName}’s prior
+                  written consent.
                 </strong>
               </li>
               <li>
                 express or imply that any statements you make are endorsed by
-                Rair.
+                {currentName}.
               </li>
               <li>
                 use any robot, bot, spider, crawler, scraper, site
@@ -235,14 +243,14 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
                 the Service.
               </li>
               <li>
-                “frame” or “mirror” any part of the Service without Rair’s prior
-                written authorization.
+                “frame” or “mirror” any part of the Service without{' '}
+                {currentName}’s prior written authorization.
               </li>
               <li>
                 use meta tags or code or other devices containing any reference
-                to Rair or the Service (or any trademark, trade name, service
-                mark, logo or slogan of Rair) to direct any person to any other
-                website for any purpose.
+                to {currentName} or the Service (or any trademark, trade name,
+                service mark, logo or slogan of {currentName}) to direct any
+                person to any other website for any purpose.
               </li>
               <li>
                 modify, adapt, sublicense, translate, sell, reverse engineer,
@@ -255,8 +263,8 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
                 written consent.
               </li>
               <li>
-                use, access, or publish the Rair application programming
-                interface without our written consent.
+                use, access, or publish the {currentName} application
+                programming interface without our written consent.
               </li>
               <li>
                 probe, scan or test the vulnerability of our Services or any
@@ -281,9 +289,9 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
             </p>
           </li>
           <li>
-            <h3>Rights you Grant Rair.</h3>
+            <h3>Rights you Grant {currentName}.</h3>
             <p>
-              By creating an account, you grant to Rair a worldwide,
+              By creating an account, you grant to {currentName} a worldwide,
               transferable, perpetual, sub-licensable, royalty-free, right and
               license to host, store, use, copy, display, reproduce, adapt,
               edit, publish, modify and distribute information as well as any
@@ -301,22 +309,23 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               person viewing, using, visiting or participating in the Service.
             </p>
             <p>
-              If you use Rair to tokenize, store, publish, display, and/or sell
-              an original NFT, encrypted data container, or Digital Content
-              (which may include, without limitation, visual art, videos,
-              digital files) (“Digital Content”), you agree you have not, will
-              not, and will not cause another to sell, tokenize, or create
-              another cryptographic token representing a digital collectible for
-              the same Digital Content, excepting, without limitation, the your
-              ability to sell, tokenize, or create a cryptographic token or
-              other digital asset representing a legal, economic, or other
-              interest relating to any of the exclusive rights belonging to the
-              you under copyright law.
+              If you use {currentName} to tokenize, store, publish, display,
+              and/or sell an original NFT, encrypted data container, or Digital
+              Content (which may include, without limitation, visual art,
+              videos, digital files) (“Digital Content”), you agree you have
+              not, will not, and will not cause another to sell, tokenize, or
+              create another cryptographic token representing a digital
+              collectible for the same Digital Content, excepting, without
+              limitation, the your ability to sell, tokenize, or create a
+              cryptographic token or other digital asset representing a legal,
+              economic, or other interest relating to any of the exclusive
+              rights belonging to the you under copyright law.
             </p>
             <p>
               You agree that all information that you submit upon creation of
               your account is accurate and truthful and you have the right to
-              post the Content on the Service and grant the license to Rair
+              post the Content on the Service and grant the license to{' '}
+              {currentName}
               above.
             </p>
             <p>
@@ -333,22 +342,23 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               right to immediately terminate your account.
             </p>
             <p>
-              In consideration for Rair allowing you to use the Services, you
-              agree that we, our affiliates, and our third-party partners may
-              place advertising on the Services. By submitting suggestions or
-              feedback to Rair regarding our Services, you agree that Rair may
-              use and share such feedback for any purpose without compensating
-              you.
+              In consideration for {currentName} allowing you to use the
+              Services, you agree that we, our affiliates, and our third-party
+              partners may place advertising on the Services. By submitting
+              suggestions or feedback to {currentName} regarding our Services,
+              you agree that {currentName} may use and share such feedback for
+              any purpose without compensating you.
             </p>
             <p>
-              You agree that Rair may access, preserve and disclose your account
-              information and Content if required to do so by law or in a good
-              faith belief that such access, preservation or disclosure is
-              reasonably necessary, such as to: (i) comply with legal process;
-              process; (ii) enforce this Agreement; (iii) respond to claims that
-              any Content violates the rights of third parties; (iv) respond to
-              your requests for customer service; or (v) protect the rights,
-              property or personal safety of the Company or any other person.
+              You agree that {currentName} may access, preserve and disclose
+              your account information and Content if required to do so by law
+              or in a good faith belief that such access, preservation or
+              disclosure is reasonably necessary, such as to: (i) comply with
+              legal process; process; (ii) enforce this Agreement; (iii) respond
+              to claims that any Content violates the rights of third parties;
+              (iv) respond to your requests for customer service; or (v) protect
+              the rights, property or personal safety of the Company or any
+              other person.
             </p>
           </li>
           <li>
@@ -399,14 +409,14 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               <li>Use the Services to conceal financial activity</li>
               <li>
                 Use the Services to create a product or service that is
-                competitive with Rair.
+                competitive with {currentName}.
               </li>
             </ul>
             <p>
-              Rair reserves the right to investigate and/ or terminate your
-              account without a refund of any in app purchases if you have
-              misused the Service or behaved in a way that Rair regards as
-              regards as inappropriate or unlawful, including actions or
+              {currentName} reserves the right to investigate and/ or terminate
+              your account without a refund of any in app purchases if you have
+              misused the Service or behaved in a way that {currentName} regards
+              as regards as inappropriate or unlawful, including actions or
               communications that occur off the Service but involve users you
               meet through the Service.
             </p>
@@ -414,43 +424,43 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
           <li>
             <h3>Other Users’ Content.</h3>
             <p>
-              Although Rair reserves the right to review and remove Content that
-              violates this Agreement, such Content is the sole responsibility
-              of the user who posts it, and Rair cannot guarantee that all
-              Content will comply with this Agreement. If you see Content on the
-              Services that violates this Agreement, please report it within the
-              via{' '}
+              Although {currentName} reserves the right to review and remove
+              Content that violates this Agreement, such Content is the sole
+              responsibility of the user who posts it, and {currentName} cannot
+              guarantee that all Content will comply with this Agreement. If you
+              see Content on the Services that violates this Agreement, please
+              report it within the via{' '}
               <a href="mailto:support@help@help@goRair.com?subject=Support%20from%20Terms%20of%20Use">
-                help@goRair.com.
+                help@go{currentName}.com.
               </a>{' '}
             </p>
           </li>
           <li>
             <h3>Purchase.</h3>
             <p>
-              <strong>Generally.</strong> From time to time, Rair may offer
-              products and services for purchase (“Purchases”) through
-              application platforms authorized by Rair (each, a “Software
-              “Software Store”). If you choose to make an Purchase, you will be
-              prompted to enter details for your account with your Software
-              Store (“your IAP Account”), and your IAP Account will be charged
-              for the Purchase in accordance with the terms disclosed to you at
-              the time of purchase as well as the general terms for Purchases
-              that apply to your IAP Account. Some Software Stores may charge
-              you sales tax, depending on where you live.
+              <strong>Generally.</strong> From time to time, {currentName} may
+              offer products and services for purchase (“Purchases”) through
+              application platforms authorized by {currentName} (each, a
+              “Software “Software Store”). If you choose to make an Purchase,
+              you will be prompted to enter details for your account with your
+              Software Store (“your IAP Account”), and your IAP Account will be
+              charged for the Purchase in accordance with the terms disclosed to
+              you at the time of purchase as well as the general terms for
+              Purchases that apply to your IAP Account. Some Software Stores may
+              charge you sales tax, depending on where you live.
             </p>
             <p>
-              Rair reserve the right to refuse any Purchase you place Service.
-              We may, in our sole discretion, limit or cancel quantities
-              purchased per person, per household or per order. These order.
-              These restrictions may include orders placed by or under the same
-              customer account, the same credit card, and/or orders that use the
-              same billing and/or shipping address. In the event that we make a
-              change to or cancel an order, we may attempt to notify you by
-              contacting the e-mail and/or billing address/phone number provided
-              at the time the order was made. We reserve the right to limit or
-              prohibit orders that, in our sole judgment, appear to be placed by
-              dealers, resellers or distributors.
+              {currentName} reserve the right to refuse any Purchase you place
+              Service. We may, in our sole discretion, limit or cancel
+              quantities purchased per person, per household or per order. These
+              order. These restrictions may include orders placed by or under
+              the same customer account, the same credit card, and/or orders
+              that use the same billing and/or shipping address. In the event
+              that we make a change to or cancel an order, we may attempt to
+              notify you by contacting the e-mail and/or billing address/phone
+              number provided at the time the order was made. We reserve the
+              right to limit or prohibit orders that, in our sole judgment,
+              appear to be placed by dealers, resellers or distributors.
             </p>
             <p>
               You agree to provide current, complete and accurate purchase and
@@ -461,21 +471,21 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               as needed.
             </p>
             <p>
-              Certain purchases available through Rair and the Services will be
-              based on a public blockchain network through something called
-              “Smart Contracts.” These Purchases are outside of the control of
-              any one party, including Rair, and are subject to many risks and
-              and uncertainties. We neither own nor control MetaMask, Coinbase,
-              OpenSea, the Ethereum network, your browser, or any other third
-              party site, blockchain network, cryptocurrency, exchange platform,
-              product, or service that you might access, visit, or use for the
-              purpose of enabling you to use the various features of the
-              Services. We will not be liable for the acts or omissions of any
-              such third parties, nor will we be liable for any damage that you
-              may suffer as a result of your transactions or any other
-              interaction with any such third parties. You understand that your
-              public blockchain address will be made publicly visible whenever
-              you engage in a transaction on the Services.
+              Certain purchases available through {currentName} and the Services
+              will be based on a public blockchain network through something
+              called “Smart Contracts.” These Purchases are outside of the
+              control of any one party, including {currentName}, and are subject
+              to many risks and and uncertainties. We neither own nor control
+              MetaMask, Coinbase, OpenSea, the Ethereum network, your browser,
+              or any other third party site, blockchain network, cryptocurrency,
+              exchange platform, product, or service that you might access,
+              visit, or use for the purpose of enabling you to use the various
+              features of the Services. We will not be liable for the acts or
+              omissions of any such third parties, nor will we be liable for any
+              damage that you may suffer as a result of your transactions or any
+              other interaction with any such third parties. You understand that
+              your public blockchain address will be made publicly visible
+              whenever you engage in a transaction on the Services.
             </p>
             <p>
               If you purchase, view, or access <strong>Digital Content</strong>{' '}
@@ -535,22 +545,22 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               your or any third party’s commercial benefit.
             </p>
             <p>
-              You irrevocably release, acquit, and forever discharge Rair and
-              its subsidiaries, affiliates, officers, and successors of any
-              liability for direct or indirect copyright or trademark
-              infringement for Rair use of a Digital Content in accordance with
-              Terms and Conditions.
+              You irrevocably release, acquit, and forever discharge{' '}
+              {currentName} and its subsidiaries, affiliates, officers, and
+              successors of any liability for direct or indirect copyright or
+              trademark infringement for {currentName} use of a Digital Content
+              in accordance with Terms and Conditions.
             </p>
             <p>
-              Access to your Digital Content is not guaranteed via Rair and/or
-              its websites in perpetuity. Purchasers of Digital Content will
-              retain their ownership, but it is your responsibility to ensure
-              that you have downloaded local copies of your Digital Content, if
-              Content, if available. Rair’s hosting of Digital Content is
-              subject to the terms and conditions herein as well (and access may
-              be restricted for violating the terms and conditions) as the
-              agreed upon terms between Rair and the party who entered into a
-              hostin agreement with Rair.
+              Access to your Digital Content is not guaranteed via {currentName}{' '}
+              and/or its websites in perpetuity. Purchasers of Digital Content
+              will retain their ownership, but it is your responsibility to
+              ensure that you have downloaded local copies of your Digital
+              Content, if Content, if available. {currentName}’s hosting of
+              Digital Content is subject to the terms and conditions herein as
+              well (and access may be restricted for violating the terms and
+              conditions) as the agreed upon terms between {currentName} and the
+              party who entered into a hostin agreement with {currentName}.
             </p>
           </li>
           <li>
@@ -562,7 +572,7 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               provide for refunds.
             </p>
             <strong>
-              For Rair services that are on a subscription basis, any
+              For {currentName} services that are on a subscription basis, any
               subscribers residing in the EU or European Economic Area, in
               accordance with local law, you are entitled to a full refund
               refund during the 14 days after the your begin your subscription
@@ -583,11 +593,12 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               that portion of any payment you had made for your subscription
               which is allocable to the period after your death. In the event
               that you become disabled (such that you are unable to use the
-              services of Rair) before the end of your subscription period, you
-              shall be entitled to a refund of that portion of any payment you
-              had made for your subscription which is allocable to the period
-              after your disability by providing the company notice in the same
-              same manner as you request a refund as described below.
+              services of {currentName}) before the end of your subscription
+              period, you shall be entitled to a refund of that portion of any
+              payment you had made for your subscription which is allocable to
+              the period after your disability by providing the company notice
+              in the same same manner as you request a refund as described
+              below.
             </strong>
             <h3>
               Purchases of Digital Content or any other virtual items are FINAL
@@ -663,79 +674,85 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               </li>
             </ul>
             <p>
-              If a counter-notice is received by the Copyright Agent, Rair will
-              send a copy of the counter-notice to the original complaining
-              party informing that person that it may replace the removed
-              content or cease disabling it in 10 business days. Unless the
-              copyright owner files an action seeking a court order against the
-              content provider, member or user, the removed content may be
-              replaced, or access to it restored, in 10 to 14 business days or
-              more after receipt of the counter-notice, at our sole discretion.​
+              If a counter-notice is received by the Copyright Agent,{' '}
+              {currentName} will send a copy of the counter-notice to the
+              original complaining party informing that person that it may
+              replace the removed content or cease disabling it in 10 business
+              days. Unless the copyright owner files an action seeking a court
+              order against the content provider, member or user, the removed
+              content may be replaced, or access to it restored, in 10 to 14
+              business days or more after receipt of the counter-notice, at our
+              sole discretion.​
             </p>
             <p>
-              In accordance with the DMCA and other applicable law, Rair has
-              adopted a policy of terminating, in appropriate circumstances and
-              at Rair’s sole discretion, any users who are deemed to be repeat
-              infringers (whether through a single account or several). Rair may
-              may also at its sole discretion limit access to the Services
-              and/or terminate the accounts of any users who infringe any
-              intellectual property rights of others, whether or not there is
-              any repeat infringement.​
+              In accordance with the DMCA and other applicable law,{' '}
+              {currentName} has adopted a policy of terminating, in appropriate
+              circumstances and at {currentName}’s sole discretion, any users
+              who are deemed to be repeat infringers (whether through a single
+              account or several). {currentName} may may also at its sole
+              discretion limit access to the Services and/or terminate the
+              accounts of any users who infringe any intellectual property
+              rights of others, whether or not there is any repeat
+              infringement.​
             </p>
           </li>
           <li>
             <h3>Disclaimers.</h3>
             <strong>
-              RAIR PROVIDES THE SERVICE ON AN “AS IS” AND “AS AVAILABLE” BASIS
-              AND TO THE EXTENT PERMITTED BY APPLICABLE LAW, GRANTS NO
-              WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY OR
-              OTHERWISE WITH RESPECT TO THE SERVICE (INCLUDING ALL CONTENT
-              CONTAINED THEREIN), INCLUDING, WITHOUT LIMITATION, ANY IMPLIED
-              WARRANTIES OF SATISFACTORY QUALITY, MERCHANTABILITY, FITNESS FOR A
-              PARTICULAR PURPOSE OR NON-INFRINGEMENT. RAIR DOES NOT REPRESENT OR
-              WARRANT THAT (A) THE SERVICE WILL BE UNINTERRUPTED, SECURE OR
-              ERROR FREE, (B) ANY DEFECTS OR ERRORS IN THE SERVICE WILL BE
-              CORRECTED, OR (C) THAT ANY CONTENT OR INFORMATION YOU OBTAIN ON OR
-              THROUGH THE SERVICES WILL BE ACCURATE.
+              {currentName} PROVIDES THE SERVICE ON AN “AS IS” AND “AS
+              AVAILABLE” BASIS AND TO THE EXTENT PERMITTED BY APPLICABLE LAW,
+              GRANTS NO WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED,
+              STATUTORY OR OTHERWISE WITH RESPECT TO THE SERVICE (INCLUDING ALL
+              CONTENT CONTAINED THEREIN), INCLUDING, WITHOUT LIMITATION, ANY
+              IMPLIED WARRANTIES OF SATISFACTORY QUALITY, MERCHANTABILITY,
+              FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.{' '}
+              {currentName} DOES NOT REPRESENT OR WARRANT THAT (A) THE SERVICE
+              WILL BE UNINTERRUPTED, SECURE OR ERROR FREE, (B) ANY DEFECTS OR
+              ERRORS IN THE SERVICE WILL BE CORRECTED, OR (C) THAT ANY CONTENT
+              OR INFORMATION YOU OBTAIN ON OR THROUGH THE SERVICES WILL BE
+              ACCURATE.
             </strong>
             <strong>
-              RAIR TAKES NO RESPONSIBILITY FOR ANY CONTENT THAT YOU OR ANOTHER
-              USER OR THIRD PARTY POSTS, SENDS OR RECEIVES THROUGH THE SERVICES.
-              ANY MATERIAL DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE USE OF
-              THE SERVICE IS ACCESSED AT YOUR OWN DISCRETION AND RISK.
+              {currentName} TAKES NO RESPONSIBILITY FOR ANY CONTENT THAT YOU OR
+              ANOTHER USER OR THIRD PARTY POSTS, SENDS OR RECEIVES THROUGH THE
+              SERVICES. ANY MATERIAL DOWNLOADED OR OTHERWISE OBTAINED THROUGH
+              THE USE OF THE SERVICE IS ACCESSED AT YOUR OWN DISCRETION AND
+              RISK.
             </strong>
           </li>
           <li>
             <h3>Third Party Services.</h3>
             <p>
               The Service may contain advertisements and promotions offered by
-              third parties and links to other web sites or resources. Rair is
-              not responsible for the availability (or lack of availability) of
-              such external websites or resources. If you choose to interact
-              interact with the third parties made available through our
-              Service, such party’s terms will govern their relationship with
-              you. Rair is not responsible or liable for such third parties’
-              terms or actions.
+              third parties and links to other web sites or resources.{' '}
+              {currentName} is not responsible for the availability (or lack of
+              availability) of such external websites or resources. If you
+              choose to interact interact with the third parties made available
+              through our Service, such party’s terms will govern their
+              relationship with you. {currentName} is not responsible or liable
+              for such third parties’ terms or actions.
             </p>
           </li>
           <li>
             <h3>Limitation of Liability.</h3>
             <strong>
               TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT
-              WILL RAIR, ITS AFFILIATES, EMPLOYEES, LICENSORS OR SERVICE
-              PROVIDERS BE LIABLE FOR ANY INDIRECT, CONSEQUENTIAL, EXEMPLARY,
-              INCIDENTAL, SPECIAL OR PUNITIVE DAMAGES, INCLUDING, WITHOUT
-              LIMITATION, LOSS OF PROFITS, WHETHER INCURRED DIRECTLY OR
+              WILL {currentName}, ITS AFFILIATES, EMPLOYEES, LICENSORS OR
+              SERVICE PROVIDERS BE LIABLE FOR ANY INDIRECT, CONSEQUENTIAL,
+              EXEMPLARY, INCIDENTAL, SPECIAL OR PUNITIVE DAMAGES, INCLUDING,
+              WITHOUT LIMITATION, LOSS OF PROFITS, WHETHER INCURRED DIRECTLY OR
               INDIRECTLY, OR ANY LOSS OF DATA, USE, GOODWILL, OR OTHER
               INTANGIBLE LOSSES, RESULTING FROM: (I) YOUR ACCESS TO OR USE OF OR
               INABILITY TO ACCESS OR USE THE SERVICES, (II) THE CONDUCT OR
               CONTENT OF OTHER USERS OR THIRD PARTIES ON, THROUGH, OR FOLLOWING
               USE OF THE SERVICES; OR (III) UNAUTHORIZED ACCESS, USE OR
-              ALTERATION OF YOUR CONTENT, EVEN IF RAIR HAS BEEN ADVISED OF THE
-              POSSIBILITY OF SUCH DAMAGES. IN NO EVENT WILL RAIR’S AGGREGATE
-              LIABILITY TO YOU FOR ALL CLAIMS RELATING TO THE SERVICE EXCEED THE
-              AMOUNT PAID, IF ANY, BY YOU TO RAIR FOR THE SERVICE WHILE YOU HAVE
-              AN ACCOUNT.
+              ALTERATION OF YOUR CONTENT, EVEN IF {currentName} HAS BEEN ADVISED
+              OF THE POSSIBILITY OF SUCH DAMAGES. IN NO EVENT WILL {currentName}
+              ’S AGGREGATE LIABILITY TO YOU FOR ALL CLAIMS RELATING TO THE
+              SERVICE EXCEED THE AMOUNT PAID, IF ANY, BY YOU TO {
+                currentName
+              }{' '}
+              FOR THE SERVICE WHILE YOU HAVE AN ACCOUNT.
             </strong>
             <strong>
               SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF
@@ -830,17 +847,18 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               applicable law, all claims arising out of or relating to this
               Agreement or the Services will be litigated exclusively in the
               federal or state courts of Los Angeles County, California, U.S.A.,
-              and you and Rair consent to personal jurisdiction in those courts.
+              and you and {currentName} consent to personal jurisdiction in
+              those courts.
             </p>
           </li>
           <li>
             <h3>Indemnity by You.</h3>
             <p>
               You agree, to the extent permitted under applicable law, to
-              indemnify, defend and hold harmless Rair, our affiliates, and
-              their and our respective officers, directors, agents, and agents,
-              and employees from and against any and all complaints, demands,
-              claims, damages, losses, costs, liabilities and expenses,
+              indemnify, defend and hold harmless {currentName}, our affiliates,
+              and their and our respective officers, directors, agents, and
+              agents, and employees from and against any and all complaints,
+              demands, claims, damages, losses, costs, liabilities and expenses,
               including attorney’s fees, due to, arising out of, or relating in
               any way to your access to or use of the Services, your Content, or
               your breach of this Agreement.
@@ -852,17 +870,18 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               This Agreement along with the Privacy Policy and any terms
               disclosed and agreed to by you if you purchase additional
               features, products or services we offer on the Service, contains
-              contains the entire agreement between you and Rair regarding the
-              use of the Service. If any provision of this Agreement is held
-              invalid, the remainder of this Agreement shall continue in full
-              force and effect. The failure of the Company to exercise or
-              enforce any right or provision of this Agreement shall not
-              constitute a waiver of such right or provision. You agree that
-              your Rair account is non-transferable and all of your rights to
-              your account and its Content terminate upon your death. No agency,
-              partnership, joint venture or employment is created as a result of
-              this Agreement and you may not make any representations or bind
-              Rair in any manner.
+              contains the entire agreement between you and {currentName}{' '}
+              regarding the use of the Service. If any provision of this
+              Agreement is held invalid, the remainder of this Agreement shall
+              continue in full force and effect. The failure of the Company to
+              exercise or enforce any right or provision of this Agreement shall
+              not constitute a waiver of such right or provision. You agree that
+              your {currentName} account is non-transferable and all of your
+              rights to your account and its Content terminate upon your death.
+              No agency, partnership, joint venture or employment is created as
+              a result of this Agreement and you may not make any
+              representations or bind
+              {currentName} in any manner.
             </p>
           </li>
         </ol>

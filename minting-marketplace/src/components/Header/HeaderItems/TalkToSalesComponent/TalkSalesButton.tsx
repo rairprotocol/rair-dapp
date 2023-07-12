@@ -40,7 +40,7 @@ export const TalkSalesButton = styled.button<ITalkSalesButton>`
     height: auto;
     padding: 0;
     font-weight: 500;
-    font-size: 15px;
+    font-size: 16px;
     color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : 'white')};
   }
 

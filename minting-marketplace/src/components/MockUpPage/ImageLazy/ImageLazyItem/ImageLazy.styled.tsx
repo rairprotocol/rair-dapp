@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { defaultHotDrops } from '../../../../images';
 import { ILazyImageItem } from '../types/imageLazy.types';
 
 export const Image = styled.img<ILazyImageItem>`
@@ -25,6 +26,8 @@ export const Image = styled.img<ILazyImageItem>`
   }
   &.has-error {
     max-width: -webkit-fill-available;
-    content: url('https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW');
+    content: url(${process.env.REACT_APP_HOTDROPS === 'true'
+      ? defaultHotDrops
+      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'});
   }
 `;

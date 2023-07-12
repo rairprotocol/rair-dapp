@@ -91,9 +91,9 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     <div className="item-name">
                       <ImageLazy
                         src={
-                          tokenData && tokenData[0].metadata
-                            ? token.range[0] &&
-                              tokenData[token.range[0]].metadata.image
+                          tokenData && tokenData[0]?.metadata
+                            ? token?.range[0] &&
+                              tokenData[token.range[0]]?.metadata.image
                             : defaultPhoto
                         }
                         alt="Created by user"
