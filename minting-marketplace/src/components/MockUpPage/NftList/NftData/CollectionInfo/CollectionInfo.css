@@ -125,6 +125,12 @@
   outline: none;
 }
 
+.wrapper-collection-info.mint .collection-mint-button button:disabled,
+.wrapper-collection-info.mint .collection-mint-button button:disabled:hover {
+  background: var(--stimorol-click);
+  cursor: not-allowed;
+}
+
 .wrapper-collection-info.mint .collection-mint-button button:hover {
   background: var(--stimorol-hover);
 }

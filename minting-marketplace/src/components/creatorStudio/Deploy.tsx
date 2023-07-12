@@ -13,6 +13,7 @@ import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 import setTitle from '../../utils/setTitle';
+import { web3Switch } from '../../utils/switchBlockchain';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
@@ -69,10 +70,12 @@ const Factory = () => {
     } else if (programmaticProvider) {
       setChainId(currentChain);
     }
-    if (factoryInstance && erc777Instance && currentUserAddress) {
+    if (factoryInstance && erc777Instance) {
       setDeploymentPrice(
         await factoryInstance.deploymentCostForERC777(erc777Instance.address)
       );
+    }
+    if (erc777Instance && currentUserAddress) {
       const userBalance = await erc777Instance.balanceOf(currentUserAddress);
       if (userBalance) {
         getExchangeData();
@@ -99,28 +102,29 @@ const Factory = () => {
     getPrice();
   }, [getPrice]);
 
-  useEffect(() => {
-    if (chainId !== undefined) {
-      if (window.ethereum) {
-        if (chainId === currentChain) {
-          return;
+  const updateChain = useCallback(
+    async (chainId) => {
+      if (chainId !== undefined) {
+        setChainId(chainId);
+        if (window.ethereum) {
+          if (chainId === currentChain) {
+            return;
+          }
+          web3Switch(chainId);
+        } else {
+          reactSwal.fire(
+            'Blockchain Switch is disabled on Programmatic Connections!',
+            'Switch to the proper chain manually!'
+          );
         }
-        window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: chainId }]
-        });
-      } else {
-        reactSwal.fire(
-          'Blockchain Switch is disabled on Programmatic Connections!',
-          'Switch to the proper chain manually!'
-        );
+        setDeploymentPrice(BigNumber.from(0));
+        setDeploymentPriceDiamond(BigNumber.from(0));
+        setTokenSymbol('');
+        setUserBalance(BigNumber.from(0));
       }
-      setDeploymentPrice(BigNumber.from(0));
-      setDeploymentPriceDiamond(BigNumber.from(0));
-      setTokenSymbol('');
-      setUserBalance(BigNumber.from(0));
-    }
-  }, [chainId, currentChain, reactSwal]);
+    },
+    [reactSwal, currentChain]
+  );
 
   useEffect(() => {
     setTitle('Rair Factory');
@@ -150,7 +154,7 @@ const Factory = () => {
               return { label: chainData[item].name, value: item };
             })}
             getter={chainId}
-            setter={setChainId}
+            setter={updateChain}
             placeholder="Please select"
             label="Contract's Blockchain"
             customClass="rounded-rair form-control"
@@ -164,96 +168,99 @@ const Factory = () => {
           />
         </div>
         <div className="col-12 p-2">
-          <button
-            disabled={
-              contractName === '' ||
-              chainId === undefined ||
-              adminRights === false ||
-              deploymentPrice === BigNumber.from(0) ||
-              userBalance === BigNumber.from(0) ||
-              deploying ||
-              !erc777Instance
-            }
-            className="btn btn-stimorol col-12 rounded-rair"
-            onClick={async () => {
-              if (!erc777Instance) {
-                return;
+          {factoryInstance && (
+            <button
+              disabled={
+                contractName === '' ||
+                chainId === undefined ||
+                adminRights === false ||
+                deploymentPrice === BigNumber.from(0) ||
+                userBalance === BigNumber.from(0) ||
+                deploying ||
+                !erc777Instance
               }
-              setDeploying(true);
-              reactSwal.fire({
-                title: 'Deploying contract!',
-                html: 'Please wait...',
-                icon: 'info',
-                showConfirmButton: false
-              });
-              const success = await web3TxHandler(erc777Instance, 'send', [
-                factoryInstance?.address,
-                deploymentPrice,
-                utils.toUtf8Bytes(contractName)
-              ]);
-              setDeploying(false);
-              if (success) {
-                reactSwal.fire({
-                  title: 'Success',
-                  html: 'Contract deployed',
-                  icon: 'success',
-                  showConfirmButton: true
-                });
-                setContractName('');
-              }
-            }}>
-            Deploy a classic contract for{' '}
-            {utils.formatEther(deploymentPrice).toString()} {tokenSymbol} Tokens
-          </button>
-          {diamondFactoryInstance && (
-            <>
-              <div className="col-12">or</div>
-              <button
-                disabled={
-                  contractName === '' ||
-                  chainId === undefined ||
-                  adminRights === false ||
-                  deploymentPrice === BigNumber.from(0) ||
-                  userBalance === BigNumber.from(0) ||
-                  deploying ||
-                  diamondFactoryInstance === undefined ||
-                  !erc777Instance
+              className="btn btn-stimorol col-12 rounded-rair"
+              onClick={async () => {
+                if (!erc777Instance) {
+                  return;
                 }
-                className="btn btn-stimorol col-12 rounded-rair mt-3"
-                onClick={async () => {
-                  if (!erc777Instance) {
-                    return;
-                  }
-                  setDeploying(true);
+                setDeploying(true);
+                reactSwal.fire({
+                  title: 'Deploying contract!',
+                  html: 'Please wait...',
+                  icon: 'info',
+                  showConfirmButton: false
+                });
+                const success = await web3TxHandler(erc777Instance, 'send', [
+                  factoryInstance?.address,
+                  deploymentPrice,
+                  utils.toUtf8Bytes(contractName)
+                ]);
+                setDeploying(false);
+                if (success) {
                   reactSwal.fire({
-                    title: 'Deploying contract (with Diamonds)!',
-                    html: 'Please wait...',
-                    icon: 'info',
-                    showConfirmButton: false
+                    title: 'Success',
+                    html: 'Contract deployed',
+                    icon: 'success',
+                    showConfirmButton: true
                   });
-                  const success = await web3TxHandler(erc777Instance, 'send', [
-                    diamondFactoryInstance.address,
-                    deploymentPriceDiamond,
-                    utils.toUtf8Bytes(contractName)
-                  ]);
-                  setDeploying(false);
-                  if (success) {
-                    reactSwal.fire({
-                      title: 'Success',
-                      html: 'Contract deployed with Diamonds!',
-                      icon: 'success',
-                      showConfirmButton: true
-                    });
-                    setContractName('');
-                  }
-                }}>
-                <i className="fas fa-gem" /> Deploy a <b>diamond</b> contract
-                for {utils.formatEther(deploymentPriceDiamond).toString()}{' '}
-                {tokenSymbol} Tokens <i className="fas fa-gem" />
-              </button>
-              <br />
-            </>
+                  setContractName('');
+                }
+              }}>
+              Deploy a classic contract for{' '}
+              {utils.formatEther(deploymentPrice).toString()} {tokenSymbol}{' '}
+              Tokens
+            </button>
           )}
+          {factoryInstance && diamondFactoryInstance && (
+            <div className="col-12">or</div>
+          )}
+          {diamondFactoryInstance && (
+            <button
+              disabled={
+                contractName === '' ||
+                chainId === undefined ||
+                adminRights === false ||
+                deploymentPrice === BigNumber.from(0) ||
+                userBalance === BigNumber.from(0) ||
+                deploying ||
+                diamondFactoryInstance === undefined ||
+                !erc777Instance
+              }
+              className="btn btn-stimorol col-12 rounded-rair mt-3"
+              onClick={async () => {
+                if (!erc777Instance) {
+                  return;
+                }
+                setDeploying(true);
+                reactSwal.fire({
+                  title: 'Deploying contract (with Diamonds)!',
+                  html: 'Please wait...',
+                  icon: 'info',
+                  showConfirmButton: false
+                });
+                const success = await web3TxHandler(erc777Instance, 'send', [
+                  diamondFactoryInstance.address,
+                  deploymentPriceDiamond,
+                  utils.toUtf8Bytes(contractName)
+                ]);
+                setDeploying(false);
+                if (success) {
+                  reactSwal.fire({
+                    title: 'Success',
+                    html: 'Contract deployed with Diamonds!',
+                    icon: 'success',
+                    showConfirmButton: true
+                  });
+                  setContractName('');
+                }
+              }}>
+              <i className="fas fa-gem" /> Deploy a <b>diamond</b> contract for{' '}
+              {utils.formatEther(deploymentPriceDiamond).toString()}{' '}
+              {tokenSymbol} Tokens <i className="fas fa-gem" />
+            </button>
+          )}
+          <br />
           <hr />
           <h5>Your balance:</h5>
           <h2>

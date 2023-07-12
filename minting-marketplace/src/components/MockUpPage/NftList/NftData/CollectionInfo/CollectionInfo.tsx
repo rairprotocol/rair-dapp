@@ -174,28 +174,33 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     </div>
                     {mintToken && (
                       <div className="collection-mint-button">
-                        <PurchaseTokenButton
-                          contractAddress={contractAddress}
-                          requiredBlockchain={blockchain}
-                          collection={true}
-                          offerIndex={[token.offerIndex]}
-                          buttonLabel="Buy"
-                          diamond={token.diamond}
-                          setPurchaseStatus={setPurchaseStatus}
-                          customSuccessAction={(nextToken) => {
-                            Swal.fire(
-                              'Success',
-                              `You own token #${nextToken}!`,
-                              'success'
-                            ).then((result) => {
-                              if (result.isConfirmed || result.isDismissed) {
-                                navigate(
-                                  `/tokens/${blockchain}/${params.contract}/${params.product}/${nextToken}`
-                                );
-                              }
-                            });
-                          }}
-                        />
+                        {Number(token.copies - token.soldCopies) ===
+                        Number(0) ? (
+                          <button disabled>Buy</button>
+                        ) : (
+                          <PurchaseTokenButton
+                            contractAddress={contractAddress}
+                            requiredBlockchain={blockchain}
+                            collection={true}
+                            offerIndex={[token.offerIndex]}
+                            buttonLabel="Buy"
+                            diamond={token.diamond}
+                            setPurchaseStatus={setPurchaseStatus}
+                            customSuccessAction={(nextToken) => {
+                              Swal.fire(
+                                'Success',
+                                `You own token #${nextToken}!`,
+                                'success'
+                              ).then((result) => {
+                                if (result.isConfirmed || result.isDismissed) {
+                                  navigate(
+                                    `/tokens/${blockchain}/${params.contract}/${params.product}/${nextToken}`
+                                  );
+                                }
+                              });
+                            }}
+                          />
+                        )}
                       </div>
                     )}
                   </BlockItemCollection>

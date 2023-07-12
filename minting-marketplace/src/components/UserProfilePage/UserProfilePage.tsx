@@ -65,6 +65,8 @@ const UserProfilePage: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
+  const [totalCount, setTotalCount] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { width } = useWindowDimensions();
 
@@ -78,13 +80,15 @@ const UserProfilePage: React.FC = () => {
   };
 
   const getMyNft = useCallback(
-    async (number) => {
+    async (number, page) => {
       if (userAddress && utils.isAddress(userAddress)) {
+        setIsLoading(true);
         const response = await rFetch(
-          `/api/nft/${userAddress}?itemsPerPage=${number}&pageNum=${1}`
+          `/api/nft/${userAddress}?itemsPerPage=${number}&pageNum=${page}`
         );
         if (response.success) {
           const tokenData: TDiamondTokensType[] = [];
+          setTotalCount(response.totalCount);
           for await (const token of response.result) {
             if (!token.contract._id) {
               return;
@@ -97,14 +101,18 @@ const UserProfilePage: React.FC = () => {
               ...contractData.contract._id
             });
           }
+
           const newCollectedTokens = tokenData.filter(
             (el) => el.isMinted === true
           );
+
           setTokens(tokenData);
           setCollectedTokens(newCollectedTokens);
+          setIsLoading(false);
         }
 
         if (response.error && response.message) {
+          setIsLoading(false);
           return;
         }
       }
@@ -166,17 +174,6 @@ const UserProfilePage: React.FC = () => {
 
         return 0;
       });
-
-  const loadToken = useCallback(
-    (entries) => {
-      const target = entries[0];
-      if (target.isIntersecting) {
-        showTokensRef.current = showTokensRef.current + 20;
-        getMyNft(Number(showTokensRef.current));
-      }
-    },
-    [getMyNft, showTokensRef]
-  );
 
   const getUserData = useCallback(async () => {
     if (userAddress && utils.isAddress(userAddress)) {
@@ -267,7 +264,7 @@ const UserProfilePage: React.FC = () => {
   }, [editBackground]);
 
   useEffect(() => {
-    getMyNft(showTokensRef.current);
+    getMyNft(showTokensRef.current, 1);
   }, [getMyNft, showTokensRef]);
 
   useEffect(() => {
@@ -510,6 +507,10 @@ const UserProfilePage: React.FC = () => {
                     }
                     chainData={chainData}
                     textColor={textColor}
+                    getMyNft={getMyNft}
+                    totalCount={totalCount}
+                    isLoading={isLoading}
+                    showTokensRef={showTokensRef}
                   />
                 </TabPanel>
                 <TabPanel>
