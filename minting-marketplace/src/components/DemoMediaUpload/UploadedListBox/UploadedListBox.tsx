@@ -124,8 +124,10 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   };
 
   const getCurrentContract = useCallback(async () => {
-    const contracts = fileData.unlockData.offers.map((offer) => offer.contract);
-    if (contracts.length) {
+    const contracts = fileData?.unlockData?.offers?.map(
+      (offer) => offer.contract
+    );
+    if (contracts?.length) {
       const request = await rFetch(
         `/api/contracts/singleContract/${contracts[0]}`
       );
