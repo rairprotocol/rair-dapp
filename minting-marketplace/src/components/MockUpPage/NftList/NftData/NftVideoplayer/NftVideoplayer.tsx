@@ -73,7 +73,15 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
     );
   } else {
     return (
-      <div style={{ paddingTop: '20%' }}>
+      <div
+        style={{
+          padding: '20%',
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
         <div className="loader-wrapper">
           <div className="load" />
         </div>

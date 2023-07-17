@@ -149,6 +149,7 @@ export interface ICollectionInfo {
   connectUserData?: () => void;
   contractAddress?: string;
   setPurchaseStatus?: any;
+  closeModal?: any;
 }
 
 export type TCollectionInfoBody = {

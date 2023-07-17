@@ -20,6 +20,7 @@ import { TParamsNftItemForCollectionView } from '../../../mockupPage.types';
 import { ICollectionInfo } from '../../nftList.types';
 
 import chainData from './../../../../../utils/blockchainData';
+import { ModalContentCloseBtn } from './../../../../MockUpPage/utils/button/ShowMoreItems';
 
 import './CollectionInfo.css';
 
@@ -29,7 +30,8 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   openTitle,
   mintToken,
   contractAddress,
-  setPurchaseStatus
+  setPurchaseStatus,
+  closeModal
 }) => {
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
@@ -74,6 +76,18 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
         <CollectionInfoBody
           primaryColor={primaryColor}
           className={`collection-info-body ${mintToken ? 'mint' : ''}`}>
+          {closeModal && (
+            <div
+              style={{
+                position: 'fixed'
+              }}>
+              <ModalContentCloseBtn
+                primaryColor={primaryColor}
+                onClick={closeModal}>
+                <i className="fas fa-times" style={{ lineHeight: 'inherit' }} />
+              </ModalContentCloseBtn>
+            </div>
+          )}
           {offerData &&
             offerData
               ?.sort((a, b) => {
