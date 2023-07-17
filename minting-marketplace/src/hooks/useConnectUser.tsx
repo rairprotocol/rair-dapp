@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
@@ -40,6 +40,7 @@ const useConnectUser = () => {
     RootState,
     TUsersInitialState
   >((store) => store.userStore);
+  const [renderBtnConnect, setRenderBtnConnect] = useState(false);
 
   const { currentUserAddress, programmaticProvider, currentChain } =
     useSelector<RootState, ContractsInitialType>(
@@ -51,6 +52,14 @@ const useConnectUser = () => {
   const reactSwal = useSwal();
   const navigate = useNavigate();
   const oreId = useOreId();
+
+  const checkMetamask = useCallback(() => {
+    if (window.ethereum && window.ethereum.isMetaMask) {
+      setRenderBtnConnect(false);
+    } else {
+      setRenderBtnConnect(true);
+    }
+  }, [setRenderBtnConnect]);
 
   const loginWithOreIdToken = useCallback(
     async (idToken: string) => {
@@ -121,13 +130,17 @@ const useConnectUser = () => {
             <>
               Please select a login method
               <hr />
-              <button
-                className={`btn btn-stimorol ${
-                  hotdropsVar === 'true' ? 'hotdrops-bg' : ''
-                }`}
-                onClick={() => resolve('metamask')}>
-                Login Web3
-              </button>
+              {renderBtnConnect ? (
+                <OnboardingButton />
+              ) : (
+                <button
+                  className={`btn btn-stimorol ${
+                    hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+                  }`}
+                  onClick={() => resolve('metamask')}>
+                  Login Web3
+                </button>
+              )}
               <hr />
               {[
                 'google'
@@ -151,6 +164,11 @@ const useConnectUser = () => {
           ),
           showConfirmButton: false
         });
+        // .then((result) => {
+        //   if (result.isDismissed) {
+        //     dispatch(setLoginProcessStatus(false));
+        //   }
+        // });
       }),
     [reactSwal]
   );
@@ -300,6 +318,10 @@ const useConnectUser = () => {
     programmaticProvider,
     dispatch
   ]);
+
+  useEffect(() => {
+    checkMetamask();
+  }, [checkMetamask]);
 
   useEffect(() => {
     if (loggedIn || loginProcess) {

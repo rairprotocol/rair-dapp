@@ -342,23 +342,15 @@ const MainHeader: React.FC<IMainHeader> = ({
       <div className="box-header-info">
         {!loggedIn && (
           <div>
-            {renderBtnConnect ? (
-              <OnboardingButton />
-            ) : (
-              <>
-                {isAboutPage ? null : (
-                  <button
-                    disabled={
-                      !window.ethereum && !programmaticProvider && !loginProcess
-                    }
-                    className={`btn btn-${primaryColor} btn-connect-wallet ${
-                      process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-bg'
-                    }`}
-                    onClick={() => connectUserData()}>
-                    {loginProcess ? 'Please wait...' : 'Connect'}
-                  </button>
-                )}
-              </>
+            {isAboutPage ? null : (
+              <button
+                // disabled={!loginProcess}
+                className={`btn btn-${primaryColor} btn-connect-wallet ${
+                  process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
+                }`}
+                onClick={() => connectUserData()}>
+                {loginProcess ? 'Please wait...' : 'Connect'}
+              </button>
             )}
           </div>
         )}
