@@ -118,7 +118,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       `/api/nft/network/${blockchain}/${contract}/${product}/files`
     );
     setIsLoading(false);
-    console.info(response);
     const loadedFiles: string[] = [];
     setProductsFromOffer(
       response.data.files.filter((item: TFileType) => {

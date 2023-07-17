@@ -749,7 +749,9 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
               ALTERATION OF YOUR CONTENT, EVEN IF {currentName} HAS BEEN ADVISED
               OF THE POSSIBILITY OF SUCH DAMAGES. IN NO EVENT WILL {currentName}
               ’S AGGREGATE LIABILITY TO YOU FOR ALL CLAIMS RELATING TO THE
-              SERVICE EXCEED THE AMOUNT PAID, IF ANY, BY YOU TO {currentName}{' '}
+              SERVICE EXCEED THE AMOUNT PAID, IF ANY, BY YOU TO {
+                currentName
+              }{' '}
               FOR THE SERVICE WHILE YOU HAVE AN ACCOUNT.
             </strong>
             <strong>

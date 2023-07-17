@@ -95,22 +95,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [offerData, contractData]);
 
   const buyContract = useCallback(async () => {
-    if (
-      !contractData ||
-      !offerData ||
-      !diamondMarketplaceInstance ||
-      !minterInstance
-    ) {
+    if (!contractData || !offerData) {
       return;
     }
-    reactSwal.fire({
-      title: 'Buying token',
-      html: 'Awaiting transaction completion',
-      icon: 'info',
-      showConfirmButton: false
-    });
     let marketplaceContract, marketplaceMethod, marketplaceArguments;
     if (contractData.diamond) {
+      if (!diamondMarketplaceInstance) {
+        return;
+      }
       marketplaceContract = diamondMarketplaceInstance;
       marketplaceMethod = 'buyMintingOffer';
       marketplaceArguments = [
@@ -118,6 +110,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         selectedToken // Token Index
       ];
     } else {
+      if (!minterInstance) {
+        return;
+      }
       marketplaceContract = minterInstance;
       marketplaceMethod = 'buyToken';
       marketplaceArguments = [
@@ -128,6 +123,12 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     marketplaceArguments.push({
       value: offerData.price
+    });
+    reactSwal.fire({
+      title: 'Buying token',
+      html: 'Awaiting transaction completion',
+      icon: 'info',
+      showConfirmButton: false
     });
     if (
       await web3TxHandler(
