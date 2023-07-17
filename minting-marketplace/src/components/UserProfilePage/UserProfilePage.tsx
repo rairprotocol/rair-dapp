@@ -17,7 +17,7 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { NFTTabIcon, VideoIcon } from '../../images';
+import { HotDropsLogo, NFTTabIcon, VideoIcon } from '../../images';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
@@ -279,6 +279,8 @@ const UserProfilePage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   // useEffect(() => {
   if (userData === null) {
     // navigate('/404');
@@ -315,7 +317,11 @@ const UserProfilePage: React.FC = () => {
             </Stack>
           </div>
           <div
-            className={`user-page-background ${primaryColor}`}
+            className={`user-page-background ${primaryColor} ${
+              hotdropsVar === 'true' && !userData.background
+                ? 'hotdrops-bg'
+                : ''
+            }`}
             style={{
               backgroundImage:
                 userData && userData?.background
@@ -323,7 +329,10 @@ const UserProfilePage: React.FC = () => {
                   : ''
             }}>
             {userData && !userData.background && (
-              <img src={headerLogo} alt="background-logo-default" />
+              <img
+                src={hotdropsVar === 'true' ? HotDropsLogo : headerLogo}
+                alt="background-logo-default"
+              />
             )}
             {currentUserAddress &&
               currentUserAddress &&
