@@ -264,7 +264,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                 </div>
               )}
           </div>
-
           <TitleCollection
             selectedData={tokenData[0]?.metadata}
             title={collectionName}

@@ -19,6 +19,7 @@ const FavoriteTokens = require('./favoriteTokens');
 const MediaViewLog = require('./mediaViewLog');
 const UserCredit = require('./userCredit');
 const UserCreditMovement = require('./userCreditMovement');
+const ServerSetting = require('./serverSettings');
 const Unlock = require('./unlock');
 
 module.exports = {
@@ -41,5 +42,6 @@ module.exports = {
   MediaViewLog: mongoose.model('MediaViewLog', MediaViewLog, 'MediaViewLog'),
   UserCredit: mongoose.model('UserCredit', UserCredit, 'UserCredit'),
   UserCreditMovement: mongoose.model('UserCreditMovement', UserCreditMovement, 'UserCreditMovement'),
+  ServerSetting: mongoose.model('ServerSetting', ServerSetting, 'ServerSetting'),
   Unlock: mongoose.model('Unlock', Unlock, 'Unlock'),
 };
