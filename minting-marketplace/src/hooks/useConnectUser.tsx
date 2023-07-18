@@ -143,12 +143,15 @@ const useConnectUser = () => {
               )}
               <hr />
               {[
-                'google'
-                //'facebook',
+                'google',
+                // 'facebook',
+                'email',
                 // 'github',
-                //'apple',
+                'apple',
                 // 'linkedin',
-                //'twitter',
+                'twitter'
+                //'instagram',
+                //'phone'
                 //'twitch'
               ].map((provider: AuthProvider, index) => (
                 <LoginProviderButton
