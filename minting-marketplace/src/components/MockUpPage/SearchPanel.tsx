@@ -83,6 +83,8 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     (store) => store.userStore
   );
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
 
@@ -231,7 +233,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
                   : 'solid 1px var(--rhyno)'
               } `
             }}>
-            NFT
+            {hotdropsVar === 'true' ? 'Collectible' : 'NFT'}
           </Tab>
           <Tab
             onClick={() => {

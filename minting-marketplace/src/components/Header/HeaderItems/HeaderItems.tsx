@@ -7,11 +7,16 @@ interface IHeaderContainerStyled {
   showAlert?: boolean;
   selectedChain?: string | null;
   isSplashPage?: boolean;
+  hotdrops?: string;
 }
 
 export const HeaderContainer = styled.div<IHeaderContainerStyled>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? '#fff' : '#383637'};
+    props.primaryColor === 'rhyno'
+      ? '#fff'
+      : `${
+          props.hotdrops && props.hotdrops === 'true' ? '#0a0a0a' : '#383637'
+        }`};
   margin-top: ${(props) =>
     props.showAlert && props.selectedChain && !props.isSplashPage
       ? '50px'
