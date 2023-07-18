@@ -80,9 +80,9 @@ module.exports = (context) => {
       if (req?.body?.mediaId) {
         const fileData = await File.findById(req.body.mediaId);
         const authorData = await User.findOne({
-          publicAddress: fileData?.authorPublicAddress,
+          publicAddress: fileData?.uploader,
         });
-        messages.decrypt = `Complete this signature request to unlock media: ${fileData?.title} by ${authorData?.nickName ? authorData?.nickName : fileData?.authorPublicAddress}`;
+        messages.decrypt = `Complete this signature request to unlock media: ${fileData?.title} by ${authorData?.nickName ? authorData?.nickName : fileData?.uploader}`;
       }
       if (req.body.zoomId) {
         let zoomData;
@@ -96,7 +96,7 @@ module.exports = (context) => {
         }
         /* const fileData = await context.db.File.findById(req.body.mediaId);
         const authorData = await context.db.User.findOne({
-          publicAddress: fileData?.authorPublicAddress,
+          publicAddress: fileData?.uploader,
         }); */
         messages.decrypt = `Complete this signature request to unlock the meeting: ${zoomData.title} by ${zoomData.user}`;
       }
@@ -225,7 +225,7 @@ module.exports = (context) => {
           // verify the account holds the required admin NFT
           if (
             !ownsTheAccessTokens.includes(true) &&
-            file.authorPublicAddress === ethAddress.toLowerCase()
+            file.uploader === ethAddress.toLowerCase()
           ) {
             try {
               ownsTheAdminToken = await checkAdminTokenOwns(ethAddress);

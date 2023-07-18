@@ -6,7 +6,7 @@ module.exports = (Model) => async (req, res, next) => {
   try {
     const { publicAddress } = req.user;
     const { mediaId, id } = req.params;
-    const itemsToCompare = ['authorPublicAddress', 'userAddress'];
+    const itemsToCompare = ['uploader', 'userAddress'];
 
     let foundItem = await Model.findById(mediaId || id);
 

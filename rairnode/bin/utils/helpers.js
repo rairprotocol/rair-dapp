@@ -159,7 +159,7 @@ const verifyAccessRightsToFile = (files, user) => Promise.all(_.map(files, async
 
   if (user) {
     // verify the account holds the required NFT
-    if (user.publicAddress === clonedFile.authorPublicAddress) {
+    if (user.publicAddress === clonedFile.uploader) {
       // Verifying account has token
       try {
         clonedFile.isUnlocked = await checkAdminTokenOwns(user.publicAddress);
