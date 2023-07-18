@@ -59,6 +59,7 @@ services:
       WITHDRAWER_PRIVATE_KEY: ${withdrawer_private_key}
       ORE_ID_APPID: ${ore_id_appid}
       ORE_ID_APIKEY: ${ore_id_apikey}
+      APP_NAME: ${app_name}
     ports:
       - 3000:3000
       - 5000:5000

@@ -75,7 +75,7 @@ module.exports = (context) => {
     validation(['getChallengeV2']),
     async (req, res, next) => {
       const messages = {
-        login: 'Login to RAIR. This sign request securely logs you in to RAIR.',
+        login: `Login to ${process.env.APP_NAME}. This sign request securely logs you in and will not trigger a blockchain transaction or cost any gas fees.`,
       };
       if (req?.body?.mediaId) {
         const fileData = await File.findById(req.body.mediaId);
@@ -133,7 +133,7 @@ module.exports = (context) => {
   router.get(
     '/get_challenge/:MetaAddress',
     validation(['getChallenge'], 'params'),
-    generateChallenge('Login to RAIR. This sign request securely logs you in to RAIR.'),
+    generateChallenge(`Login to ${process.env.APP_NAME}. This sign request securely logs you in and will not trigger a blockchain transaction or cost any gas fees.`),
     (req, res) => {
       res.send({ success: true, response: req.metaAuth.challenge });
     },
