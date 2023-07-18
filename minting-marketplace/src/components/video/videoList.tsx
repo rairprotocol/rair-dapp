@@ -36,7 +36,8 @@ const VideoList: React.FC<IVideoList> = ({
     <div
       style={{
         display: 'flex',
-        transition: 'all .2s ease'
+        transition: 'all .2s ease',
+        width: '100%'
       }}>
       {/* <div className="input-search-wrapper list-button-wrapper"></div> */}
       <div

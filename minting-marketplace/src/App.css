@@ -1044,6 +1044,10 @@ select.form-control.rounded-rair:disabled {
   background-color: #434343 !important;
 }
 
+.mobile-view-buttons-video div span {
+  font-size: 14px;
+}
+
 .custom-desc-to-offer-wrapper {
   margin-top: 2rem;
   padding-bottom: 0;
@@ -2027,7 +2031,7 @@ button.metamask-on-boarding:focus {
   }
 
   .modal-content-wrapper-for-video .modal-content-video-thumbnail {
-    height: 432px;
+    height: 100%;
   }
 
   .modal-content-video-thumbnail {
@@ -2093,7 +2097,7 @@ button.metamask-on-boarding:focus {
   }
 
   .modal-content-wrapper-for-video {
-    height: auto;
+    height: 100%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -2215,15 +2219,16 @@ button.metamask-on-boarding:focus {
     width: 90%;
     place-content: space-between !important;
     flex-wrap: nowrap !important;
+    height: 85%;
   }
 
   .modal-content-wrapper-for-video .modal-content-video-thumbnail {
-    height: 450px;
+    height: 100%;
   }
 
   .modal-content-wrapper-for-video {
-    width: 95%;
-    height: auto;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -2244,7 +2249,16 @@ button.metamask-on-boarding:focus {
   }
 
   .modal-content-video {
-    width: 22rem;
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal-content-video .col-12 {
+    height: 100%;
+  }
+
+  .modal-content-video .col-12 .vjs-fluid:not(.vjs-audio-only-mode) {
+    height: inherit;
   }
 
   .modal-content-block-btns {
@@ -2260,10 +2274,21 @@ button.metamask-on-boarding:focus {
     width: -webkit-fill-available;
   }
 
-  .modal-content-play-image {
+  .modal-content-play-image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    top: 9px;
-    left: 29%;
+  }
+
+  .modal-content-play-image {
+    position: relative;
+    left: 0;
+    top: 0;
+    /* top: 9px; */
+    /* left: 29%; */
     max-width: 100%;
     transform: scale(0.5);
   }
@@ -2276,14 +2301,13 @@ button.metamask-on-boarding:focus {
 @media screen and (max-width: 409px) and (min-width: 200px) {
   .ReactModal__Content--after-open {
     margin-right: auto !important;
-    width: 90%;
-    /* height: 55%; */
+    width: 93%;
     place-content: space-between !important;
     flex-wrap: nowrap !important;
   }
   .modal-content-wrapper-for-video {
-    width: 95%;
-    height: auto;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -2300,7 +2324,7 @@ button.metamask-on-boarding:focus {
 
   .modal-content-video {
     width: 100%;
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
   }
 
   .modal-content-block-btns {
@@ -2316,7 +2340,7 @@ button.metamask-on-boarding:focus {
   }
 
   .modal-content-play-image {
-    position: absolute;
+    position: inherit;
     top: 8px;
     left: 20%;
     max-width: 100%;
@@ -2526,6 +2550,12 @@ body.hotdrops::-webkit-scrollbar-thumb:active {
 
   .col-6.text-left.main p {
     text-align: center !important;
+  }
+}
+
+@media screen and (max-width: 499px) {
+  .modal-content-close-btn-wrapper {
+    justify-content: space-between;
   }
 }
 

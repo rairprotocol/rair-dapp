@@ -1,23 +1,45 @@
 import { TInfoSeo, TSeoActionTypes } from './seo.types';
 import * as types from './types';
 
+import HotDropsFavicon from '../../components/MockUpPage/assets/Hotdrops-favicon.ico';
 import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
 
-export const InitialState: TInfoSeo = {
-  title: 'RAIR Technologies',
-  ogTitle: 'RAIR Technologies',
-  twitterTitle: 'RAIR Technologies',
-  contentName: 'author',
-  content: 'Digital Ownership Encryption',
-  description:
-    'RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
-  ogDescription: 'Encrypted, Streaming NFTs',
-  twitterDescription: 'Encrypted, Streaming NFTs',
-  image:
-    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
-  favicon: RairFavicon,
-  faviconMobile: RairFavicon
-};
+const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+
+export let InitialState: TInfoSeo;
+
+if (hotDropsVar === 'true') {
+  InitialState = {
+    title: 'HotDrops Technologies',
+    ogTitle: 'HotDrops Technologies',
+    twitterTitle: 'HotDrops Technologies',
+    contentName: 'author',
+    content: 'Digital Ownership Encryption',
+    description:
+      'HotDrops is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
+    ogDescription: 'Encrypted, Streaming NFTs',
+    twitterDescription: 'Encrypted, Streaming NFTs',
+    image: 'https://hotdrops.live/static/media/hotdrops-default.e7c4e7eb.png',
+    favicon: HotDropsFavicon,
+    faviconMobile: HotDropsFavicon
+  };
+} else {
+  InitialState = {
+    title: 'RAIR Technologies',
+    ogTitle: 'RAIR Technologies',
+    twitterTitle: 'RAIR Technologies',
+    contentName: 'author',
+    content: 'Digital Ownership Encryption',
+    description:
+      'RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
+    ogDescription: 'Encrypted, Streaming NFTs',
+    twitterDescription: 'Encrypted, Streaming NFTs',
+    image:
+      'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+    favicon: RairFavicon,
+    faviconMobile: RairFavicon
+  };
+}
 
 export default function seoStore(
   state: TInfoSeo = InitialState,
