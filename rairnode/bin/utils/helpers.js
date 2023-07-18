@@ -21,6 +21,12 @@ const checkFileAccess = async (files, user) => {
   // eslint-disable-next-line no-restricted-syntax
   for await (const file of files) {
     delete file.key;
+    if (!user?.publicAddress) {
+      file.isUnlocked = false;
+      result.push(file);
+      // eslint-disable-next-line no-continue
+      continue;
+    }
     if (file.demo) {
       file.isUnlocked = true;
       result.push(file);
