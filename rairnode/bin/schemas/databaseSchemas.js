@@ -81,7 +81,7 @@ module.exports = {
     dbFiles: () => ({
         _id: mongoId,
         author: ethAddress,
-        authorPublicAddress: ethAddress,
+        uploader: ethAddress,
         title: Joi.string(),
         description: Joi.string(),
         // Blockchain data

@@ -219,26 +219,15 @@ module.exports = () => {
           contractTitle = '',
           mediaTitle = '',
         } = req.query;
-        const searchQuery = {
-          'contractData.blockView': false,
-        };
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
         const foundUser = await User.findOne({ publicAddress: userAddress });
-        if (foundUser) {
-          searchQuery.authorPublicAddress = userAddress;
-        }
-
-        if (category.length) {
-          const foundCategory = await Category.find({ _id: { $in: category } });
-          if (foundCategory) {
-            searchQuery.category = { $in: category };
-          }
-        }
 
         const foundBlockchain = await Blockchain.findOne({ hash: blockchain });
-        const contractQuery = {};
+        const contractQuery = {
+          blockView: false,
+        };
         if (foundBlockchain) {
           contractQuery.blockchain = blockchain;
         }
@@ -251,8 +240,6 @@ module.exports = () => {
         const arrayOfContracts = await Contract.find(contractQuery).distinct(
           '_id',
         );
-        searchQuery.contract = { $in: arrayOfContracts };
-
         const matchData = {
           $or: [{
             'unlockData.offers.contract': {
@@ -262,6 +249,17 @@ module.exports = () => {
             demo: true,
           }],
         };
+
+        if (category.length) {
+          const foundCategory = await Category.find({ _id: { $in: category } });
+          if (foundCategory) {
+            matchData.category = { $in: category };
+          }
+        }
+
+        if (foundUser) {
+          matchData.uploader = userAddress;
+        }
 
         if (mediaTitle !== '') {
           matchData.title = { $regex: mediaTitle, $options: 'i' };
@@ -505,7 +503,7 @@ module.exports = () => {
 
           const meta = {
             mainManifest: 'stream.m3u8',
-            authorPublicAddress: superAdmin ? foundContract.user : publicAddress,
+            uploader: superAdmin ? foundContract.user : publicAddress,
             encryptionType: 'aes-256-gcm',
             title: textPurify.sanitize(title),
             contract: foundContract._id,

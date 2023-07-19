@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 //@ts-nocheck
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 import Swal from 'sweetalert2';
@@ -11,6 +11,7 @@ import {
   // TAuthGetChallengeResponse,
   TUploadSocket
 } from '../../../axios.responseTypes';
+import useSwal from '../../../hooks/useSwal';
 import { getRandomValues } from '../../../utils/getRandomValues';
 import { rFetch } from '../../../utils/rFetch';
 import BlockChainSwitcher from '../../adminViews/BlockchainSwitcher';
@@ -72,6 +73,8 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
   // const currentUserAddress = useSelector<RootState, string>(
   //   (state) => state.contractStore.currentUserAddress
   // );
+
+  const reactSwal = useSwal();
 
   useEffect(() => {
     getCategories();
@@ -282,6 +285,21 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     return selectedOffers.reduce((prev, current) => {
       return prev && current === 'null';
     }, true);
+  };
+
+  const setMintedQueryResults = async (value) => {
+    const { success } = await rFetch('/api/settings/mintedTokenResults', {
+      method: 'POST',
+      body: JSON.stringify({
+        value
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (success) {
+      reactSwal.fire('Success', 'Setting set', 'success');
+    }
   };
 
   return (
@@ -531,7 +549,20 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
         <div>{status !== 100 && status !== 0 ? `Step: ${message}` : ''}</div>
         <hr className="w-100 my-5" />
       </div>
-
+      <hr />
+      <h5>Server Settings</h5>
+      Only return minted tokens on collection page:{' '}
+      <button
+        className="btn btn-royal-ice"
+        onClick={() => setMintedQueryResults(true)}>
+        Yes
+      </button>
+      <button
+        className="btn btn-stimorol"
+        onClick={() => setMintedQueryResults(false)}>
+        No
+      </button>
+      <hr />
       <div className="new">
         <AdminView
           primaryColor={primaryColor}

@@ -41,6 +41,8 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   const [tokenData, setTokenData] = useState<TTokenData[] | null>(null);
   const { width } = useWindowDimensions();
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const defaultPhoto =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
@@ -187,12 +189,15 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                       {blockchain && chainData[blockchain]?.symbol}
                     </div>
                     {mintToken && (
-                      <div className="collection-mint-button">
+                      <div className={`collection-mint-button`}>
                         {Number(token.copies - token.soldCopies) ===
                         Number(0) ? (
                           <button disabled>Buy</button>
                         ) : (
                           <PurchaseTokenButton
+                            customButtonClassName={`${
+                              hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+                            }`}
                             contractAddress={contractAddress}
                             requiredBlockchain={blockchain}
                             collection={true}

@@ -39,6 +39,28 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
     }
   }
 
+  &.hotdrops-color {
+    ul {
+      li {
+        button {
+          &.Mui-selected {
+            background: var(--hot-drops-gradient);
+            color: #fff;
+            border: none;
+            -webkit-box-shadow: 0px 0px 7px 0.4px #b278a7;
+            -moz-box-shadow: 0px 0px 7px 0.4px #b278a7;
+            box-shadow: 0px 0px 7px 0.4px #b278a7;
+          }
+
+          &:hover {
+            background: var(--hot-drops);
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+
   @media screen and (max-width: 540px) {
     ul li {
       margin: 3px !important;

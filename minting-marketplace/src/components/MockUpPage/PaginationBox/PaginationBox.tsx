@@ -25,6 +25,8 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   const [totalPage, setTotalPages] = useState<number>();
   const [totalPageVideo, setTotalPagesVideo] = useState<number>();
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const pagesArray: number[] = [];
   if (whatPage && whatPage === 'nft' && totalPage) {
     for (let i = 0; i < totalPage; i++) {
@@ -60,7 +62,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   }
 
   return (
-    <div className="pagination__wrapper">
+    <div className={`pagination__wrapper`}>
       {/* {pagesArray && pagesArray.length > 0 ? (
                 pagesArray.map((p) => (
                     <div
@@ -87,8 +89,12 @@ const PaginationBox: React.FC<IPaginationBox> = ({
               primarycolor={primaryColor}
               className={
                 primaryColor === 'rhyno'
-                  ? 'pagination-white'
-                  : 'pagination-black'
+                  ? `pagination-white ${
+                      hotdropsVar === 'true' ? 'hotdrops-color' : ''
+                    }`
+                  : `pagination-black ${
+                      hotdropsVar === 'true' ? 'hotdrops-color' : ''
+                    }`
               }
               count={pagesArray.length}
               page={page}

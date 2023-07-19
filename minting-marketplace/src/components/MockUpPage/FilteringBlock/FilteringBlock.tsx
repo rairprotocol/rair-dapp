@@ -53,6 +53,8 @@ const FilteringBlock = ({
   const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
   const { width /*height*/ } = useWindowDimensions();
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
 
@@ -147,7 +149,10 @@ const FilteringBlock = ({
               {width > 700 && <div>Sort by name</div>}
             </div>
             {width > 700 && (
-              <div className="title-right-arrow">
+              <div
+                className={`title-right-arrow ${
+                  hotdropsVar === 'true' ? 'hotdrops-color' : ''
+                }`}>
                 {sortPopUp ? (
                   // <i className="fas fa-chevron-up"></i>
                   <StyledShevronIcon

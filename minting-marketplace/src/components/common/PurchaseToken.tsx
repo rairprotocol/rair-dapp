@@ -96,6 +96,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   const [buyingToken, setBuyingToken] = useState<boolean>(false);
   const [buttonMessage, setButtonMessage] = useState<string>('');
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const reactSwal = useSwal();
 
   const {
@@ -264,7 +266,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
                 (!privacyPolicy || !termsOfUse)
             )
           }
-          className="btn my-4 btn-stimorol rounded-rair col-12 col-sm-8 col-md-4"
+          className={`btn my-4 btn-stimorol rounded-rair col-12 col-sm-8 col-md-4 ${
+            hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+          }`}
           onClick={async () => {
             setBuyingToken(true);
             if (setPurchaseStatus) {
@@ -368,11 +372,13 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               setPurchaseStatus(false);
             }
           }}>
-          <img
-            style={{ maxHeight: '7vh' }}
-            src={metaMaskIcon}
-            alt="metamask-logo"
-          />
+          {hotdropsVar !== 'true' && (
+            <img
+              style={{ maxHeight: '7vh' }}
+              src={metaMaskIcon}
+              alt="metamask-logo"
+            />
+          )}
           <wbr />{' '}
           {currentUserAddress
             ? currentChain !== requiredBlockchain
@@ -412,6 +418,7 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const { web3TxHandler } = useWeb3Tx();
   const reactSwal = useSwal();
@@ -482,7 +489,9 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
       <button
         className={customButtonClassName}
         onClick={handleClick ? handleClick : fireAgreementModal}>
-        <img className={customButtonIconClassName} src={img} />
+        {hotdropsVar !== 'true' && (
+          <img className={customButtonIconClassName} src={img} />
+        )}
         <div style={{ color: textColor }} className={customButtonTextClassName}>
           {' '}
           {buttonLabel}{' '}

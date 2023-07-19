@@ -12,7 +12,7 @@ exports.getAnalyticsData = async (req, res, next) => {
         }
         if (
             !req.user.superAdmin &&
-            req.user.publicAddress !== mediaData.authorPublicAddress
+            req.user.publicAddress !== mediaData.uploader
         ) {
             return next(new AppError('Invalid user address', 403));
         }
@@ -75,7 +75,7 @@ exports.getAnalyticsCSVReport = async (req, res, next) => {
         }
         if (
             !req.user.superAdmin &&
-            req.user.publicAddress !== mediaData.authorPublicAddress
+            req.user.publicAddress !== mediaData.uploader
         ) {
             return next(new AppError('Invalid user address', 403));
         }

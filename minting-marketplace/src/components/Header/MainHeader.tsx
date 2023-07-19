@@ -15,7 +15,7 @@ import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
 import { TUsersInitialState } from '../../ducks/users/users.types';
 import useComponentVisible from '../../hooks/useComponentVisible';
 import useConnectUser from '../../hooks/useConnectUser';
-import { DiscordIcon, TwitterIcon } from '../../images';
+import { DiscordIcon, InstagramIcon, TwitterIcon } from '../../images';
 //images
 import { headerLogoBlack, headerLogoWhite } from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
@@ -72,6 +72,8 @@ const MainHeader: React.FC<IMainHeader> = ({
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
+
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
@@ -168,6 +170,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   return (
     <HeaderContainer
+      hotdrops={hotdropsVar}
       className="col-12 header-master"
       primaryColor={primaryColor}
       showAlert={showAlert}
@@ -183,162 +186,221 @@ const MainHeader: React.FC<IMainHeader> = ({
           primaryColor={primaryColor}
         />
       </div>
-      <div className={`main-search ${isSplashPage ? 'hidden' : ''}`}>
-        {process.env.REACT_APP_HOTDROPS === 'true' ? (
-          <input
-            className={
-              primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
-            }
-            type="text"
-            placeholder="Search"
-            onChange={handleChangeText}
-            value={textSearch}
-            onClick={() => setIsComponentVisible(true)}
-          />
-        ) : (
-          <input
-            className={
-              primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
-            }
-            type="text"
-            placeholder="Search the rairverse..."
-            onChange={handleChangeText}
-            value={textSearch}
-            onClick={() => setIsComponentVisible(true)}
-          />
-        )}
-        {isComponentVisible && (
-          <div
-            className={`search-holder-wrapper ${
-              primaryColor === 'rhyno' ? 'rhyno' : ''
-            }`}>
-            <div>
-              <div className="search-holder">
-                {textSearch && (
-                  <>
-                    {dataAll && dataAll?.products.length > 0 ? (
-                      <div className="data-find-wrapper">
-                        <h5>Products</h5>
-                        {dataAll?.products.map(
-                          (item: TSearchDataProduct, index: number) => (
-                            <div
-                              key={Number(index) + Math.random()}
-                              className="data-find">
-                              <img
-                                className="data-find-img"
-                                src={item.cover}
-                                alt={item.name}
-                              />
-                              <p
-                                onClick={() => {
-                                  setTokenNumber(undefined);
-                                  goToExactlyContract(
-                                    item.contract,
-                                    item.collectionIndexInContract
-                                  );
-                                }}>
-                                <Highlight
-                                  filter={textSearch}
-                                  str={item.name}
+      {hotdropsVar !== 'true' ? (
+        <div className={`main-search ${isSplashPage ? 'hidden' : ''}`}>
+          {hotdropsVar === 'true' ? (
+            <input
+              className={
+                primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
+              }
+              type="text"
+              placeholder="Search"
+              onChange={handleChangeText}
+              value={textSearch}
+              onClick={() => setIsComponentVisible(true)}
+            />
+          ) : (
+            <input
+              className={
+                primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
+              }
+              type="text"
+              placeholder="Search the rairverse..."
+              onChange={handleChangeText}
+              value={textSearch}
+              onClick={() => setIsComponentVisible(true)}
+            />
+          )}
+          {isComponentVisible && (
+            <div
+              className={`search-holder-wrapper ${
+                primaryColor === 'rhyno' ? 'rhyno' : ''
+              }`}>
+              <div>
+                <div className="search-holder">
+                  {textSearch && (
+                    <>
+                      {dataAll && dataAll?.products.length > 0 ? (
+                        <div className="data-find-wrapper">
+                          <h5>Products</h5>
+                          {dataAll?.products.map(
+                            (item: TSearchDataProduct, index: number) => (
+                              <div
+                                key={Number(index) + Math.random()}
+                                className="data-find">
+                                <img
+                                  className="data-find-img"
+                                  src={item.cover}
+                                  alt={item.name}
                                 />
-                              </p>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                    {dataAll && dataAll?.tokens.length > 0 ? (
-                      <div className="data-find-wrapper">
-                        <h5>Tokens</h5>
-                        {dataAll?.tokens.map(
-                          (item: TSearchDataTokens, index: number) => (
-                            <div
-                              key={Number(index) + Math.random()}
-                              className="data-find">
-                              <ImageCustomForSearch item={item} />
-                              <p
-                                onClick={() => {
-                                  setTokenNumber(undefined);
-                                  goToExactlyToken(
-                                    item.contract,
-                                    item.uniqueIndexInContract
-                                  );
-                                }}>
-                                <Highlight
-                                  filter={textSearch}
-                                  str={item.metadata.name}
-                                />
-                              </p>
-                              <div className="desc-wrapper">
-                                <p>
+                                <p
+                                  onClick={() => {
+                                    setTokenNumber(undefined);
+                                    goToExactlyContract(
+                                      item.contract,
+                                      item.collectionIndexInContract
+                                    );
+                                  }}>
                                   <Highlight
                                     filter={textSearch}
-                                    str={item.metadata.description}
+                                    str={item.name}
                                   />
                                 </p>
                               </div>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                    {dataAll && dataAll?.users.length > 0 ? (
-                      <div className="data-find-wrapper">
-                        <h5>Users</h5>
-                        {dataAll?.users.map(
-                          (item: TSearchDataUser, index: number) => (
-                            <div
-                              key={Number(index) + Math.random()}
-                              className="data-find"
-                              onClick={() =>
-                                goToExactlyUser(item.publicAddress)
-                              }>
-                              <img
-                                className="data-find-img"
-                                src={item.avatar ? item.avatar : ''}
-                                alt="user-photo"
-                              />
-                              <p>
-                                <Highlight
-                                  filter={textSearch}
-                                  str={item.nickName}
+                            )
+                          )}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                      {dataAll && dataAll?.tokens.length > 0 ? (
+                        <div className="data-find-wrapper">
+                          <h5>Tokens</h5>
+                          {dataAll?.tokens.map(
+                            (item: TSearchDataTokens, index: number) => (
+                              <div
+                                key={Number(index) + Math.random()}
+                                className="data-find">
+                                <ImageCustomForSearch item={item} />
+                                <p
+                                  onClick={() => {
+                                    setTokenNumber(undefined);
+                                    goToExactlyToken(
+                                      item.contract,
+                                      item.uniqueIndexInContract
+                                    );
+                                  }}>
+                                  <Highlight
+                                    filter={textSearch}
+                                    str={item.metadata.name}
+                                  />
+                                </p>
+                                <div className="desc-wrapper">
+                                  <p>
+                                    <Highlight
+                                      filter={textSearch}
+                                      str={item.metadata.description}
+                                    />
+                                  </p>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                      {dataAll && dataAll?.users.length > 0 ? (
+                        <div className="data-find-wrapper">
+                          <h5>Users</h5>
+                          {dataAll?.users.map(
+                            (item: TSearchDataUser, index: number) => (
+                              <div
+                                key={Number(index) + Math.random()}
+                                className="data-find"
+                                onClick={() =>
+                                  goToExactlyUser(item.publicAddress)
+                                }>
+                                <img
+                                  className="data-find-img"
+                                  src={item.avatar ? item.avatar : ''}
+                                  alt="user-photo"
                                 />
-                              </p>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                )}
-                {textSearch !== '' && message === 'Nothing can found' ? (
-                  <span className="data-nothing-find">No items found</span>
-                ) : (
-                  <></>
-                )}
+                                <p>
+                                  <Highlight
+                                    filter={textSearch}
+                                    str={item.nickName}
+                                  />
+                                </p>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  )}
+                  {textSearch !== '' && message === 'Nothing can found' ? (
+                    <span className="data-nothing-find">No items found</span>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        {!isComponentVisible && null}
-        {textSearch && textSearch.length > 0 && (
+          )}
+          {!isComponentVisible && null}
+          {textSearch && textSearch.length > 0 && (
+            <i
+              onClick={handleClearText}
+              className="fas fa-times"
+              aria-hidden="true"></i>
+          )}
           <i
-            onClick={handleClearText}
-            className="fas fa-times"
+            className={`fas fa-search ${
+              hotdropsVar === 'true' && 'hotdrops-color'
+            }`}
             aria-hidden="true"></i>
-        )}
-        <i
-          className={`fas fa-search ${
-            process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-color'
-          }`}
-          aria-hidden="true"></i>
-      </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          className="hotdrops-menu-list">
+          <ul
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              margin: '0'
+            }}>
+            <li
+              style={{
+                marginRight: '30px'
+              }}>
+              <a
+                target="_blank"
+                href="https://www.myhotdrops.com/abouthotdrops"
+                rel="noreferrer">
+                About us
+              </a>
+            </li>
+            <li
+              style={{
+                marginRight: '30px'
+              }}>
+              <a
+                href="https://www.myhotdrops.com/faqs"
+                target="_blank"
+                rel="noreferrer">
+                FAQs
+              </a>
+            </li>
+            <li
+              style={{
+                marginRight: '30px'
+              }}>
+              <a
+                href="https://www.myhotdrops.com/collections"
+                target="_blank"
+                rel="noreferrer">
+                Collections
+              </a>
+            </li>
+            <li>
+              <a
+                target="_blank"
+                href="https://www.myhotdrops.com/hotties"
+                rel="noreferrer">
+                Hotties
+              </a>
+            </li>
+          </ul>
+        </div>
+      )}
       <div className="box-header-info">
         {!loggedIn && (
           <div>
@@ -372,30 +434,62 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            {process.env.REACT_APP_HOTDROPS !== 'true' && (
-              <>
-                <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
+            <>
+              <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
+                {hotdropsVar === 'true' ? (
+                  <a
+                    href="https://discord.gg/KZxRNx3K"
+                    target={'_blank'}
+                    rel="noreferrer">
+                    <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
+                  </a>
+                ) : (
                   <a
                     href="https://discord.gg/pSTbf2yz7V"
                     target={'_blank'}
                     rel="noreferrer">
                     <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
                   </a>
-                </SocialBox>
-                <SocialBox
-                  marginRight={'17px'}
-                  marginLeft={'17px'}
-                  hoverColor={'#1DA1F2'}
-                  primaryColor={primaryColor}>
+                )}
+              </SocialBox>
+              <SocialBox
+                marginRight={'17px'}
+                marginLeft={'17px'}
+                hoverColor={'#1DA1F2'}
+                primaryColor={primaryColor}>
+                {hotdropsVar === 'true' ? (
+                  <a
+                    href="https://twitter.com/myhotdrops"
+                    target={'_blank'}
+                    rel="noreferrer">
+                    <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
+                  </a>
+                ) : (
                   <a
                     href="https://twitter.com/rairtech"
                     target={'_blank'}
                     rel="noreferrer">
                     <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
                   </a>
+                )}
+              </SocialBox>
+              {hotdropsVar === 'true' && (
+                <SocialBox
+                  marginRight={'17px'}
+                  hoverColor={
+                    'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)'
+                  }
+                  primaryColor={primaryColor}>
+                  <a
+                    href="https://www.instagram.com/myhotdropsnft/"
+                    target={'_blank'}
+                    rel="noreferrer">
+                    <InstagramIcon primaryColor={primaryColor} color={'#fff'} />
+                  </a>
                 </SocialBox>
-              </>
-            )}
+              )}
+            </>
+
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}
               adminPanel={adminPanel}
@@ -403,10 +497,12 @@ const MainHeader: React.FC<IMainHeader> = ({
             />
           </div>
         </div>
-        <TalkSalesComponent
-          isAboutPage={isAboutPage}
-          text={currentUserAddress ? 'Contact Us' : 'Support'}
-        />
+        {hotdropsVar !== 'true' && (
+          <TalkSalesComponent
+            isAboutPage={isAboutPage}
+            text={currentUserAddress ? 'Contact Us' : 'Support'}
+          />
+        )}
       </div>
     </HeaderContainer>
   );

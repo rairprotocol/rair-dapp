@@ -5,11 +5,18 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 type TFooterMainStyled = {
   primaryColor: ColorChoice;
   messageAlert?: string;
+  hotdrops?: string;
 };
 
 export const FooterMain = styled.footer<TFooterMainStyled>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? '#fff' : 'rgba(56, 54, 55, 0.9);'};
+    props.primaryColor === 'rhyno'
+      ? '#fff'
+      : `${
+          props.hotdrops && props.hotdrops === 'true'
+            ? '#0a0a0a'
+            : 'rgba(56, 54, 55, 0.9)'
+        }`};
   padding: 40px 120px 25px 120px;
 
   border-top: 1px solid
@@ -31,6 +38,11 @@ export const FooterWrapper = styled.div<TFooterMainStyled>`
   padding-bottom: 52px;
   border-bottom: 1px solid
     ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
+
+  &.footer-wrapper-hotdrops {
+    padding-top: 52px;
+    border-top: 1px solid var(--hot-drops);
+  }
 
   .footer-box-join {
     display: flex;
@@ -57,7 +69,7 @@ export const FooterImage = styled.div`
   }
 
   img.logo-hotdrops-image {
-    height: 45px;
+    height: 80px;
     width: auto;
   }
 
@@ -75,6 +87,17 @@ export const FooterBoxJoin = styled.div``;
 export const CommunityBlock = styled.div<TFooterMainStyled>`
   .community-text {
     color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+  }
+
+  &.footer-community-hotdrops a {
+    color: var(--hot-drops);
+    text-decoration: underline;
+  }
+
+  &.footer-community-hotdrops h3 {
+    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    text-transform: uppercase;
+    margin-bottom: 20px;
   }
 
   @media screen and (max-width: 768px) {
@@ -113,6 +136,25 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
   list-type: none;
   padding-left: 5rem;
 
+  &.footer-nav-item-hotdrop {
+    padding-left: 0;
+
+    li {
+      justify-content: left;
+      display: flex;
+      margin-bottom: 5px;
+      text-decoration: underline;
+    }
+
+    li:last-child {
+      margin-top: 15px;
+      a {
+        color: var(--hot-drops);
+        text-decoration: underline;
+      }
+    }
+  }
+
   @media screen and (max-width: 768px) {
     margin-top: 1rem;
     padding-left: 0rem;
@@ -148,16 +190,18 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
     }
   }
 
+  &.footer-nav-item-hotdrop h3 {
+    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
   h4 {
     font-size: 16px;
     line-height: 20px;
     margin-bottom: 14px;
     color: ${(props) =>
-      process.env.REACT_APP_HOTDROPS === 'true'
-        ? 'var(--hot-drops)'
-        : props.primaryColor === 'rhyno'
-        ? '#725BDB'
-        : '#AA9DE9'};
+      props.primaryColor === 'rhyno' ? '#725BDB' : '#AA9DE9'};
   }
 
   li {

@@ -13,7 +13,7 @@ module.exports = {
         cid: Joi.string(),
         meta: Joi.object({
             mainManifest: Joi.string().required(),
-            authorPublicAddress: ethAddress.required(),
+            uploader: ethAddress.required(),
             encryptionType: Joi.string().required(),
             title: Joi.string(),
             contract: mongoId.required(),

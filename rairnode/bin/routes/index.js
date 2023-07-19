@@ -4,6 +4,7 @@ const searchController = require('../api/search/search.Controller');
 const v2 = require('./v2.router');
 const analyticsController = require('../api/analytics/analytics.Controller');
 const creditController = require('../api/credits/credits.Controller');
+const settingsRouter = require('../api/settings/settings.Controller');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -19,6 +20,7 @@ module.exports = (context) => {
   router.use('/transaction', require('./transactions')(context));
   router.use('/analytics', analyticsController);
   router.use('/credits', creditController);
+  router.use('/settings', settingsRouter);
 
   // Searches ->
   router.use('/search', searchController);
