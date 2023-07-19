@@ -8,6 +8,7 @@ import axios from 'axios';
 // import Popup from 'reactjs-popup';
 import { IMainHeader, TAxiosCollectionData } from './header.types';
 
+import { SvgUserIcon } from '../../components/UserProfileSettings/SettingsIcons/SettingsIcons';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -301,11 +302,17 @@ const MainHeader: React.FC<IMainHeader> = ({
                                 onClick={() =>
                                   goToExactlyUser(item.publicAddress)
                                 }>
-                                <img
-                                  className="data-find-img"
-                                  src={item.avatar ? item.avatar : ''}
-                                  alt="user-photo"
-                                />
+                                {item.avatar ? (
+                                  <img
+                                    className="data-find-img"
+                                    src={item.avatar}
+                                    alt="user-photo"
+                                  />
+                                ) : (
+                                  <div className="user-icon-svg-wrapper">
+                                    <SvgUserIcon />
+                                  </div>
+                                )}
                                 <p>
                                   <Highlight
                                     filter={textSearch}

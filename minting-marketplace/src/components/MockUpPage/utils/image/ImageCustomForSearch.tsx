@@ -1,14 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-const ImageCustomForSearch = ({ item }) => {
-  const [isFileUrl, setIsFileUrl] = useState();
+interface ImageCustomForSearchProps {
+  item: {
+    metadata: {
+      animation_url?: string;
+      image?: string;
+    };
+  };
+}
 
-  const checkUrl = useCallback((item) => {
+const ImageCustomForSearch: React.FC<ImageCustomForSearchProps> = ({
+  item
+}) => {
+  const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
+
+  const checkUrl = useCallback((item: ImageCustomForSearchProps['item']) => {
     if (item.metadata.animation_url) {
-      // refactored
       const fileUrl = item.metadata.animation_url;
-      const parts = fileUrl.split('/').pop().split('.');
-      const ext = parts.length > 1 ? parts.pop() : '';
+      const parts = fileUrl.split('/').pop()?.split('.');
+      const ext = parts && parts.length > 1 ? parts.pop() : '';
       setIsFileUrl(ext);
     }
   }, []);
@@ -20,25 +30,11 @@ const ImageCustomForSearch = ({ item }) => {
   return isFileUrl === 'gif' ? (
     <img
       className="data-find-img bot"
-      src={
-        item.metadata?.animation_url
-        // ?
-        // item.metadata.animation_url :
-        // item.metadata.image
-      }
+      src={item.metadata?.animation_url}
       alt={''}
     />
   ) : (
-    <img
-      className="data-find-img bot"
-      src={
-        // item.metadata.animation_url ?
-        // item.metadata.animation_url :
-        item.metadata?.image
-      }
-      // alt={item.metadata.description} />
-      alt={''}
-    />
+    <img className="data-find-img bot" src={item.metadata?.image} alt={''} />
   );
 };
 
