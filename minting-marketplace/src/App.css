@@ -1427,10 +1427,12 @@ select.form-control.rounded-rair:disabled {
     #e882d5 100%
   );
 }
+
+/* search bar styling */
+
 .search-panel-empty-text {
   cursor: default;
 }
-
 .search-holder-wrapper {
   /* position: fixed; */
   position: absolute;
@@ -1623,6 +1625,18 @@ select.form-control.rounded-rair:disabled {
   height: 20px;
   border-radius: 8px;
 }
+
+.user-icon-svg-wrapper {
+  margin-right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--royal-ice);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .price-info {
   display: flex;
 }
