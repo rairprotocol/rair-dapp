@@ -107,7 +107,7 @@ module.exports = {
 
       const {
         mainManifest,
-        authorPublicAddress,
+        uploader,
         encryptionType,
         title,
         contract,
@@ -155,7 +155,7 @@ module.exports = {
         totalEncryptedFiles,
         storage,
         storagePath,
-        uploader: authorPublicAddress,
+        uploader,
       });
 
       const foundOffers = await Offer.find(query);

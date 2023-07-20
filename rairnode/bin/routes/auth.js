@@ -353,7 +353,7 @@ module.exports = (context) => {
         // verify the account holds the required admin NFT
         if (
           !ownsTheAccessTokens.includes(true) &&
-          media.authorPublicAddress === ethAddress.toLowerCase()
+          media.uploader === ethAddress.toLowerCase()
         ) {
           try {
             ownsTheAdminToken = await checkAdminTokenOwns(ethAddress);
