@@ -255,14 +255,14 @@ module.exports = {
         );
         delete req.file.destination;
 
-        let authorPublicAddress = publicAddress;
+        let uploader = publicAddress;
         if (!publicDemoOverride && superAdmin) {
-          authorPublicAddress = foundContract.user;
+          uploader = foundContract.user;
         }
 
         const meta = {
           mainManifest: 'stream.m3u8',
-          authorPublicAddress,
+          uploader,
           encryptionType: 'aes-256-gcm',
           title: textPurify.sanitize(title),
           contract: foundContractId,

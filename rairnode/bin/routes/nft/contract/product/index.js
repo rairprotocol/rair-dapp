@@ -11,6 +11,7 @@ const {
   File,
   LockedTokens,
   Unlock,
+  ServerSetting,
 } = require('../../../../models');
 const tokenRoutes = require('./token');
 
@@ -63,6 +64,11 @@ module.exports = (context) => {
 
         if (forSale !== '') {
           filterOptions.isMinted = forSale !== 'true';
+        }
+
+        const serverConfig = await ServerSetting.findOne({});
+        if (serverConfig.onlyMintedTokensResult) {
+          filterOptions.isMinted = true;
         }
 
         if (contract.diamond) {
