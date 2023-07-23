@@ -16,6 +16,7 @@ import { ContractsInitialType } from '../../../../ducks/contracts/contracts.type
 import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
+import { HotDropsLogoMobile } from '../../../../images';
 import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
 import { web3Switch } from '../../../../utils/switchBlockchain';
@@ -54,6 +55,12 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   const { web3TxHandler } = useWeb3Tx();
 
   const numberTooBigThreshold = BigNumber.from(10000000000);
+
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const defaultLogo =
+    hotdropsVar === 'true'
+      ? HotDropsLogoMobile
+      : 'https://new-dev.rair.tech/static/media/RAIR-Tech-Logo-POWERED-BY-BLACK-2021.abf50c70.webp';
 
   const [accountData, setAccountData] = useState<UserType | null>(null);
   const [contractData, setContractData] = useState<ContractType>();
@@ -355,8 +362,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         imageWidth: 70,
         imageHeight: 'auto',
         imageAlt: 'Custom image',
-        imageUrl:
-          'https://new-dev.rair.tech/static/media/RAIR-Tech-Logo-POWERED-BY-BLACK-2021.abf50c70.webp',
+        imageUrl: defaultLogo,
         title: 'Oops...',
         text: 'Please use the metamask mobile browser to explore further content or Metamask extension for browser.'
       });

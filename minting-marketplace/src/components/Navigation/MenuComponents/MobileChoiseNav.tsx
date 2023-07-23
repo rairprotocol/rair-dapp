@@ -101,12 +101,12 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                 }}>
                 <SunIcon primaryColor={primaryColor} />
               </SocialBox>
-              <SocialBoxSearch
+              {/* <SocialBoxSearch
                 primaryColor={primaryColor}
                 onClick={handleActiveSearch}
                 activeSearch={activeSearch}>
                 <i className="fas fa-search" aria-hidden="true"></i>
-              </SocialBoxSearch>
+              </SocialBoxSearch> */}
             </>
           )}
         </div>

@@ -65,6 +65,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     (store) => store.userStore
   );
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -184,7 +186,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                           !programmaticProvider &&
                           !loginProcess
                         }
-                        className={`btn btn-${primaryColor} btn-connect-wallet-mobile`}
+                        className={`btn btn-${primaryColor} btn-connect-wallet-mobile ${
+                          hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+                        }`}
                         onClick={() => connectUserData()}>
                         {loginProcess ? 'Please wait...' : 'Connect'}
                       </button>
