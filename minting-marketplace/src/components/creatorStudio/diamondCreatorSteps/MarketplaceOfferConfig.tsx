@@ -50,7 +50,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     {
       message: 'Creator address (You)',
       recipient: currentUserAddress,
-      percentage: 90 * Math.pow(10, minterDecimals),
+      percentage: 95 * Math.pow(10, minterDecimals),
       editable: true
     }
   ]);
