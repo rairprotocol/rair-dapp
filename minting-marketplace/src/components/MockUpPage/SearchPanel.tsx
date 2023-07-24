@@ -186,9 +186,10 @@ const SearchPanel: React.FC<ISearchPanel> = ({
       itemsPerPage: itemsPerPage,
       pageNum: currentPageForVideo,
       category: category,
-      blockchain: blockchain
+      blockchain: blockchain,
+      mediaTitle: titleSearch
     }),
-    [itemsPerPage, currentPageForVideo, category, blockchain]
+    [itemsPerPage, currentPageForVideo, category, blockchain, titleSearch]
   );
 
   useEffect(() => {
@@ -204,11 +205,12 @@ const SearchPanel: React.FC<ISearchPanel> = ({
       itemsPerPage,
       currentPage,
       blockchain,
-      category
+      category,
+      contractTitle: titleSearch.toLocaleLowerCase()
     };
 
     dispatch(getNftDataStartWithParams(params));
-  }, [itemsPerPage, currentPage, blockchain, category, dispatch]);
+  }, [itemsPerPage, currentPage, blockchain, category, titleSearch, dispatch]);
 
   useEffect(() => {
     return () => {

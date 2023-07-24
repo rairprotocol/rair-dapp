@@ -26,7 +26,10 @@ export function* getVideos({ params }: TParamsVideosSaga) {
         `${params.pageNum ? '&pageNum=' + params.pageNum : ''}` +
         `${params.blockchain ? '&blockchain=' + params.blockchain : ''}` +
         `${params.category ? params.category : ''}` +
-        `${params.publicAddress ? '&userAddress=' + params.publicAddress : ''}`
+        `${
+          params.publicAddress ? '&userAddress=' + params.publicAddress : ''
+        }` +
+        `${params.mediaTitle ? '&mediaTitle=' + params.mediaTitle : ''}`
     );
 
     if (videos !== undefined && videos.status === 200) {

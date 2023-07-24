@@ -22,6 +22,7 @@ export type TUpdataVideoParams = {
   category: string;
   blockchain: string;
   publicAddress?: string;
+  mediaTitle?: string;
 };
 
 export type TGetListVideosStart = ReturnType<typeof getListVideosStart>;

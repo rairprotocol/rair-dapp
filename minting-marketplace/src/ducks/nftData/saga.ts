@@ -19,6 +19,9 @@ export function* setNftDataContract({ params }: TParamsNftDataProps) {
           params.category && params.category !== undefined
             ? params.category
             : ''
+        }` +
+        `${
+          params.contractTitle ? '&contractTitle=' + params.contractTitle : ''
         }`
     );
 

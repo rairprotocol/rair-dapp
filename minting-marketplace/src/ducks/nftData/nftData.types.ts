@@ -52,6 +52,7 @@ export type TParamsNftData = {
   blockchain?: string;
   category?: string[];
   type?: string;
+  contractTitle?: string;
 };
 
 export type TGetNftDataStartType = ReturnType<typeof getNftDataStart>;
