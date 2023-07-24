@@ -38,6 +38,8 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const [isBack /*setIsBack*/] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(true);
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const tokenData = useSelector<
     RootState,
     { [index: string]: TTokenData } | undefined
@@ -154,7 +156,11 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
         ref={numberRef}
         className="select-box--box select-box--box_listOfTokens">
         <div className="select-box--container">
-          <div ref={appRef} className="select-box--selected-item">
+          <div
+            ref={appRef}
+            className={`select-box--selected-item ${
+              hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+            }`}>
             Choose Range
           </div>
           <div className="select-box--arrow"></div>
@@ -173,7 +179,9 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
                   disabled={availableRanges[i] ? false : true}
                   key={i}
                   onClick={(e) => getPaginationToken(e)}
-                  className="serial-box serial-numb check-disable">
+                  className={`serial-box serial-numb check-disable ${
+                    hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+                  }`}>
                   {`${i} - ${i + 99}`}
                 </button>
               );

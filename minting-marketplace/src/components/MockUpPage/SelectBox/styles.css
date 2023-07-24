@@ -64,6 +64,10 @@
   box-sizing: border-box !important;
 }
 
+.select-box--selected-item.hotdrops-bg {
+  border-radius: 16px;
+}
+
 .select-box--selected-item {
   display: flex;
   justify-content: flex-start;
