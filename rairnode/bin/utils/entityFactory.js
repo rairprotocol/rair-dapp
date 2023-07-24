@@ -18,11 +18,7 @@ exports.validateQuery = (paramName) =>
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id);
-
-    if (!doc) {
-      return next(new AppError('No doc found with that ID', 404));
-    }
+    await Model.findByIdAndDelete(req.params.id);
 
     return res.status(204).json({
       success: true,
@@ -36,10 +32,6 @@ exports.updateOne = (Model) =>
       new: true,
       runValidators: true,
     });
-
-    if (!doc) {
-      return next(new AppError('No doc found with that ID', 404));
-    }
 
     return res.status(200).json({
       success: true,
@@ -106,10 +98,6 @@ exports.getOne = (Model, options = {}) =>
     }
     const doc = await query;
 
-    if (!doc) {
-      return next(new AppError('No doc found with that ID', 404));
-    }
-
     return res.status(200).json({
       success: true,
       data: {
@@ -155,9 +143,6 @@ exports.getAll = (Model, options = {}) =>
     }
 
     let doc = await features.query.find();
-    if (!doc || doc.length < 1) {
-      return next(new AppError('No doc found', 404));
-    }
 
     if (options.dataTransform) {
       doc = await options.dataTransform.func(
