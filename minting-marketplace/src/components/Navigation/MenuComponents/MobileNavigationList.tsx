@@ -35,6 +35,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   //   toggleMenu();
   // };
 
+  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+
   const [copyEth, setCopyEth] = useState<boolean>(false);
 
   const { logoutUser } = useConnectUser();
@@ -103,14 +105,16 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               <NavLink to="/about-page">About</NavLink>
             </li>
           )} */}
-          <li>
-            <a
-              href="https://etherscan.io/token/0xc76c3ebea0ac6ac78d9c0b324f72ca59da36b9df"
-              target={'_blank'}
-              rel="noreferrer">
-              Token
-            </a>
-          </li>
+          {hotDropsVar !== 'true' && (
+            <li>
+              <a
+                href="https://etherscan.io/token/0xc76c3ebea0ac6ac78d9c0b324f72ca59da36b9df"
+                target={'_blank'}
+                rel="noreferrer">
+                Token
+              </a>
+            </li>
+          )}
           {/* {currentUserAddress && (
             <li onClick={() => toggleMenu()}>
               <NavLink to={`/${currentUserAddress}`}>View Profile</NavLink>
@@ -125,12 +129,14 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               {copyEth ? 'Copied!' : 'Copy your eth address'}
             </li>
           )} */}
-          <li>
-            <TalkSalesComponent
-              text={'Inquiries'}
-              classes={'inquiries-sales'}
-            />
-          </li>
+          {hotDropsVar !== 'true' && (
+            <li>
+              <TalkSalesComponent
+                text={'Inquiries'}
+                classes={'inquiries-sales'}
+              />
+            </li>
+          )}
           {currentUserAddress && (
             <li className="logout" onClick={logoutUser}>
               <i className="fas fa-sign-out-alt"></i>Logout

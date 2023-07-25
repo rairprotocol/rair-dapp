@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
@@ -45,6 +45,7 @@ const UserProfilePage: React.FC = () => {
     ColorStoreType
   >((store) => store.colorStore);
   const { userAddress } = useParams();
+  const navigate = useNavigate();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -115,6 +116,8 @@ const UserProfilePage: React.FC = () => {
           setIsLoading(false);
           return;
         }
+      } else {
+        navigate('/404');
       }
     },
     [userAddress]
@@ -123,7 +126,7 @@ const UserProfilePage: React.FC = () => {
   const handleNewUserStatus = useCallback(async () => {
     const requestContract = await rFetch('/api/contracts/full?itemsPerPage=5');
     const { success, contracts } = await rFetch(
-      `/api/contracts/full?itemsPerPage=${requestContract.totalNumber}`
+      `/api/contracts/full?itemsPerPage=${requestContract.totalNumber || '5'}`
     );
 
     if (success) {
@@ -183,10 +186,27 @@ const UserProfilePage: React.FC = () => {
       const response = await rFetch(`/api/users/${userAddressChanged}`);
 
       if (response.success) {
-        setUserData(response.user);
+        if (response.user) {
+          setUserData(response.user);
+        } else {
+          const defaultUser = {
+            avatar: null,
+            background: null,
+            creationDate: '2023-04-25T14:54:58.190Z',
+            email: '',
+            firstName: null,
+            lastName: null,
+            nickName: `@${userAddress}`,
+            publicAddress: `${userAddress}`,
+            _id: 'none'
+          };
+          setUserData(defaultUser);
+        }
       } else {
         setUserData(null);
       }
+    } else {
+      navigate('/404');
     }
   }, [userAddress]);
 
@@ -282,11 +302,10 @@ const UserProfilePage: React.FC = () => {
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   // useEffect(() => {
-  if (userData === null) {
-    // navigate('/404');
-    return <NotFound />;
-  }
-  // }, [userData, navigate]);
+  //   if (userData === null) {
+  //     return <NotFound />;
+  //   }
+  // }, [userData]);
 
   if (userData === undefined) {
     return <LoadingComponent />;

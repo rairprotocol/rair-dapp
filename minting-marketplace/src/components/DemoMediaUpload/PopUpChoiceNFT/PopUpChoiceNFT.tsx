@@ -226,7 +226,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
 
     if (request.success) {
       const { success, contracts } = await rFetch(
-        `/api/contracts/full?itemsPerPage=${request.totalNumber}`
+        `/api/contracts/full?itemsPerPage=${request.totalNumber || '5'}`
       );
 
       let contractsFiltered = contracts.filter((el) => {
