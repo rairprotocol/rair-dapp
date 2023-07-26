@@ -107,7 +107,7 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
                     target={'_blank'}
                     href="https://www.myhotdrops.com/privacy-policy"
                     rel="noreferrer">
-                    Private Policy
+                    Privacy Policy
                   </a>
                 </li>
                 <li>
