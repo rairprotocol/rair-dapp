@@ -123,7 +123,7 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
                     target={'_blank'}
                     href="https://www.myhotdrops.com/hot-drops-content-removal-request"
                     rel="noreferrer">
-                    Hot Drops Content Removal Request
+                    Content Removal Request
                   </a>
                 </li>
                 <li>
@@ -134,17 +134,33 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
                     Apply to Be a Creator
                   </a>
                 </li>
+                <li>
+                  <a
+                    target={'_blank'}
+                    href="https://www.myhotdrops.com/hotties/recruiting"
+                    rel="noreferrer">
+                    USC 2257
+                  </a>
+                </li>
+                <li>
+                  <a
+                    target={'_blank'}
+                    href="https://www.myhotdrops.com/hotties/recruiting"
+                    rel="noreferrer">
+                    Contact Us
+                  </a>
+                </li>
               </NavFooterBox>
             </NavFooter>
           </FooterWrapper>
           <FooterTextRairTech primaryColor={primaryColor}>
             <ul>
               <li>
-                ©{' '}
+                © {new Date().getFullYear()}
                 {process.env.REACT_APP_HOTDROPS === 'true'
-                  ? 'HotDrops'
-                  : 'Rairtech'}{' '}
-                {new Date().getFullYear()}. All rights reserved
+                  ? ' HotDrops'
+                  : ' Rairtech'}{' '}
+                . All rights reserved
               </li>
             </ul>
           </FooterTextRairTech>
