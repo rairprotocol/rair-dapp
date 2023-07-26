@@ -1686,6 +1686,10 @@ button.metamask-on-boarding {
   font-size: 14px;
 }
 
+a button.metamask-on-boarding {
+  width: 100%;
+}
+
 button.metamask-on-boarding:hover {
   background-image: linear-gradient(
     305deg,

@@ -20,6 +20,7 @@ export function OnboardingButton() {
 
   const dappUrl = window.location.host;
   const metamaskAppDeepLink = 'https://metamask.app.link/dapp/' + dappUrl;
+  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
 
   const isMobileDevice = useCallback(() => {
     if (
@@ -81,15 +82,20 @@ export function OnboardingButton() {
     }
   };
   return showButtonPhone ? (
-    <a href={metamaskAppDeepLink}>
-      <button className="metamask-on-boarding">
-        Connect to
-        <img src={metaMaskIcon}></img>
+    <a target={'_blank'} href={metamaskAppDeepLink} rel="noreferrer">
+      <button
+        className={`metamask-on-boarding ${
+          hotDropsVar === 'true' ? 'hotdrops-bg' : ''
+        }`}>
+        Connect to Metamask
+        {hotDropsVar !== 'true' && <img src={metaMaskIcon}></img>}
       </button>
     </a>
   ) : (
     <button
-      className="metamask-on-boarding"
+      className={`metamask-on-boarding ${
+        hotDropsVar === 'true' ? 'hotdrops-bg' : ''
+      }`}
       disabled={isDisabled}
       onClick={onClick}>
       {buttonText}

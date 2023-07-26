@@ -208,6 +208,10 @@
   font-size: 18px;
 }
 
+.profile-btn.hotdrops-btn i {
+  color: var(--hot-drops);
+}
+
 .user-avatar-default {
   width: 83px;
   height: 83px;
@@ -228,6 +232,11 @@
 .btn-back {
   cursor: pointer;
   color: var(--bubblegum);
+}
+
+.btn-back.hotdrops-color {
+  cursor: pointer;
+  color: var(--hot-drops);
 }
 
 .profile-settings {
@@ -428,6 +437,12 @@ span.profile-input-edit:hover {
     #e882d5 100%
   );
   font-size: 12px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.icon-menu.hotdrops-btn {
+  background: var(--hot-drops-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

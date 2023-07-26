@@ -30,6 +30,8 @@ const PopUpSettings = ({
   const [triggerState, setTriggerState] = useState();
   const [editMode, setEditMode] = useState(false);
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const { adminRights } = useSelector((store) => store.userStore);
   const { primaryColor } = useSelector((store) => store.colorStore);
   const { currentUserAddress } = useSelector((store) => store.contractStore);
@@ -79,6 +81,11 @@ const PopUpSettings = ({
 
   const pushToFactory = () => {
     navigate('/creator/deploy');
+  };
+
+  const pushToProfile = () => {
+    navigate(`/${currentUserAddress}`);
+    setTriggerState(false);
   };
 
   const handlePopUp = () => {
@@ -160,7 +167,10 @@ const PopUpSettings = ({
             }}>
             {cutUserAddress()}
           </span>
-          <i className="icon-menu fas fa-bars"></i>
+          <i
+            className={`icon-menu fas fa-bars ${
+              hotdropsVar === 'true' ? 'hotdrops-btn' : ''
+            }`}></i>
         </div>
       </button>
       <Popup
@@ -186,7 +196,8 @@ const PopUpSettings = ({
             <div>
               <ul className="list-popup">
                 <li
-                  onClick={handlePopUp}
+                  // onClick={handlePopUp}
+                  onClick={pushToProfile}
                   style={{
                     color:
                       primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'

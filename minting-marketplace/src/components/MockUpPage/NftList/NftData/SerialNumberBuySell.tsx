@@ -356,19 +356,19 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     accountData
   ]);
 
-  useEffect(() => {
-    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
-      reactSwal.fire({
-        imageWidth: 70,
-        imageHeight: 'auto',
-        imageAlt: 'Custom image',
-        imageUrl: defaultLogo,
-        title: 'Oops...',
-        text: 'Please use the metamask mobile browser to explore further content or Metamask extension for browser.'
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (!MetaMaskOnboarding.isMetaMaskInstalled() || !currentUserAddress) {
+  //     reactSwal.fire({
+  //       imageWidth: 70,
+  //       imageHeight: 'auto',
+  //       imageAlt: 'Custom image',
+  //       imageUrl: defaultLogo,
+  //       title: 'Oops...',
+  //       text: 'Please use the metamask mobile browser to explore further content or Metamask extension for browser.'
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <div className="main-tab">
