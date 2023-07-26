@@ -137,18 +137,13 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
                 <li>
                   <a
                     target={'_blank'}
-                    href="https://www.myhotdrops.com/hotties/recruiting"
+                    href="https://www.myhotdrops.com/usc2257"
                     rel="noreferrer">
                     USC 2257
                   </a>
                 </li>
                 <li>
-                  <a
-                    target={'_blank'}
-                    href="https://www.myhotdrops.com/hotties/recruiting"
-                    rel="noreferrer">
-                    Contact Us
-                  </a>
+                  <a href="mailto:customerservice@myhotdrops.com">Contact Us</a>
                 </li>
               </NavFooterBox>
             </NavFooter>
