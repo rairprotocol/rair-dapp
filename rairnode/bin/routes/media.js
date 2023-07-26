@@ -109,10 +109,10 @@ module.exports = () => {
 
         const updateRes = await File.updateOne({ _id: mediaId }, cleanBody);
 
-        if (!updateRes.ok) {
+        if (!updateRes.acknowledged) {
           return res.json({ success: false, message: 'An error has ocurred' });
         }
-        if (updateRes.n === 1 && updateRes.nModified === 0) {
+        if (updateRes.matchedCount === 1 && updateRes.modifiedCount === 0) {
           return res.json({ success: false, message: 'Nothing to update' });
         }
         log.info(`File with ID: ${mediaId}, was updated on DB.`);
