@@ -214,7 +214,9 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
     )
   ) : (
     <div
-      className="nft-single-price-range"
+      className={`nft-single-price-range ${
+        hotdropsVar === 'true' ? 'hotdrops-border' : ''
+      }`}
       ref={rootRef}
       onClick={() => {
         handleOpenListOfTokens();

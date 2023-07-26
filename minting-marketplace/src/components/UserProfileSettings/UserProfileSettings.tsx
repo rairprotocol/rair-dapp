@@ -47,12 +47,12 @@ const UserProfileSettings = ({
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-        {loggedIn && (
+        {/* {loggedIn && (
           <PopUpNotification
             primaryColor={primaryColor}
             isNotification={true}
           />
-        )}
+        )} */}
         <TooltipBox position={'bottom'} title="Switch Theme">
           <SocialBox
             className="social-sun-icon"
