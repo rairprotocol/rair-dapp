@@ -11,6 +11,7 @@ const User = new Schema(
     background: { type: String, default: null },
     firstName: { type: String, default: null, trim: true },
     lastName: { type: String, default: null, trim: true },
+    ageVerified: { type: Boolean, default: false },
     publicAddress: {
       type: String,
       lowercase: true,
@@ -44,7 +45,7 @@ User.statics = {
   },
   async search(
     textParam,
-    projection = { _id: 1, avatar: 1, nickName: 1 },
+    projection = { _id: 1, avatar: 1, nickName: 1, publicAddress: 1 },
     limit = 4,
     page = 1,
   ) {

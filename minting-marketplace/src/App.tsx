@@ -95,9 +95,15 @@ function App() {
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
   const [isIframePage, setIsIframePage] = useState<boolean>(false);
-  const { currentChain, realChain } = useSelector(
-    (store) => store.contractStore
-  );
+  const {
+    currentChain,
+    realChain,
+    diamondMarketplaceInstance,
+    currentUserAddress,
+    minterInstance,
+    factoryInstance,
+    programmaticProvider
+  } = useSelector((store) => store.contractStore);
   const [isAboutPage, setIsAboutPage] = useState<boolean>(false);
   const { selectedChain, realNameChain, selectedChainId } = detectBlockchain(
     currentChain,
@@ -112,13 +118,6 @@ function App() {
   const navigate = useNavigate();
 
   // Redux
-  const {
-    currentUserAddress,
-    minterInstance,
-    factoryInstance,
-    programmaticProvider,
-    diamondMarketplaceInstance
-  } = useSelector((store) => store.contractStore);
   const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
     useSelector((store) => store.colorStore);
   const { adminRights, loggedIn } = useSelector((store) => store.userStore);

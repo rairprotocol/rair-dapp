@@ -11,6 +11,7 @@ const User = new Schema(
     background: { type: String, default: null },
     firstName: { type: String, default: null, trim: true },
     lastName: { type: String, default: null, trim: true },
+    ageVerified: { type: Boolean, default: false },
     publicAddress: {
       type: String,
       lowercase: true,

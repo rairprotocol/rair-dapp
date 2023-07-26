@@ -7,7 +7,6 @@ const getChallenge = require('./getChallenge');
 const getChallengeV2 = require('./getChallengeV2');
 const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
-const singleUser = require('./singleUser');
 const removeMedia = require('./removeMedia');
 const updateMedia = require('./updateMedia');
 const stream = require('./stream');
@@ -105,7 +104,6 @@ module.exports = {
 
   // user
   createUser,
-  singleUser,
   updateUser,
 
   // token

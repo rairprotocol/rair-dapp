@@ -82,6 +82,9 @@ module.exports = {
     }
     if (type === 'file') {
       const media = await File.findOne({ _id: fileId });
+      if (media.ageRestricted && !userData?.ageVerified) {
+        return next(new AppError('Age verification required', 403));
+      }
       const unlocks = await Unlock.aggregate([
         {
           $match: {
