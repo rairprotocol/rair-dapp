@@ -13,6 +13,8 @@ export const AppContainerFluid = styled.div<IAppContainerFluidStyled>`
   background-color: ${(props) =>
     props.primaryColor === 'rhyno'
       ? '#fafafa'
+      : props.backgroundImage === ''
+      ? '#000'
       : 'var(--' + props.primaryColor + ')'};
   color: ${(props) => props.textColor};
   background-image: url(${(props) => props.backgroundImage});

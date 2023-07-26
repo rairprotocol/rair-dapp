@@ -263,7 +263,7 @@ function App() {
         backgroundImageEffect={backgroundImageEffect}
         textColor={textColor}
         primaryColor={primaryColor}
-        backgroundImage={backgroundImage}
+        backgroundImage={hotDropsVar === 'true' ? '' : backgroundImage}
         showAlert={showAlert}>
         <div className="row w-100 m-0 p-0">
           {carousel && !isIframePage ? (
