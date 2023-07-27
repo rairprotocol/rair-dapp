@@ -3,9 +3,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
+import { BigNumber, ethers } from 'ethers';
 
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
+import chainData from '../../utils/blockchainData';
 
 import EditMode from './EditMode/EditMode';
 import defaultPictures from './images/defaultUserPictures.png';
@@ -29,16 +33,22 @@ const PopUpSettings = ({
   const [userEmail, setUserEmail] = useState();
   const [triggerState, setTriggerState] = useState();
   const [editMode, setEditMode] = useState(false);
+  const [userBalance, setUserBalance] = useState<string>('');
+
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const { adminRights } = useSelector((store) => store.userStore);
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
 
   const { logoutUser } = useConnectUser();
 
   const { userData } = useSelector((store) => store.userStore);
+  const { erc777Instance, factoryInstance, currentUserAddress } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
 
   const onChangeEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
@@ -53,6 +63,27 @@ const PopUpSettings = ({
       }
     }
   }, [userData]);
+
+  const getBalance = useCallback(async () => {
+    if (currentUserAddress) {
+      const balance = await erc777Instance.provider.getBalance(
+        currentUserAddress
+      );
+
+      let result = BigNumber.from(balance.toString());
+
+      result = ethers.utils.formatEther(result);
+
+      let final = Number(result).toFixed(3);
+
+      final = final.toString();
+      setUserBalance(final);
+    }
+  }, [currentUserAddress, erc777Instance.provider]);
+
+  useEffect(() => {
+    getBalance();
+  }, [getBalance]);
 
   const cutUserAddress = () => {
     if (userName) {
@@ -79,6 +110,11 @@ const PopUpSettings = ({
 
   const pushToFactory = () => {
     navigate('/creator/deploy');
+  };
+
+  const pushToProfile = () => {
+    navigate(`/${currentUserAddress}`);
+    setTriggerState(false);
   };
 
   const handlePopUp = () => {
@@ -112,6 +148,21 @@ const PopUpSettings = ({
           alignItems: 'center',
           justifyContent: 'flex-start'
         }}>
+        <div
+          className={`profile-buy-button ${
+            primaryColor === 'rhyno' ? 'rhyno' : ''
+          }`}>
+          AUTH
+        </div>
+        <div
+          className={`profile-user-balance ${
+            primaryColor === 'rhyno' ? 'rhyno' : ''
+          }`}>
+          <div>{userBalance}</div>
+          {window.ethereum && (
+            <img src={chainData[window.ethereum.chainId]?.image} alt="logo" />
+          )}
+        </div>
         <div
           className="profile-btn-img"
           style={{
@@ -160,7 +211,10 @@ const PopUpSettings = ({
             }}>
             {cutUserAddress()}
           </span>
-          <i className="icon-menu fas fa-bars"></i>
+          <i
+            className={`icon-menu fas fa-bars ${
+              hotdropsVar === 'true' ? 'hotdrops-btn' : ''
+            }`}></i>
         </div>
       </button>
       <Popup
@@ -186,7 +240,8 @@ const PopUpSettings = ({
             <div>
               <ul className="list-popup">
                 <li
-                  onClick={handlePopUp}
+                  // onClick={handlePopUp}
+                  onClick={pushToProfile}
                   style={{
                     color:
                       primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'

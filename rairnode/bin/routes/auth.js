@@ -79,6 +79,9 @@ module.exports = (context) => {
       };
       if (req?.body?.mediaId) {
         const fileData = await File.findById(req.body.mediaId);
+        if (fileData.ageRestricted && !req.session.userData.ageVerified) {
+          return next(new AppError('Age verification required', 400));
+        }
         const authorData = await User.findOne({
           publicAddress: fileData?.uploader,
         });

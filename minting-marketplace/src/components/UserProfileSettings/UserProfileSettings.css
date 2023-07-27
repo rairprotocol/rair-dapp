@@ -174,7 +174,7 @@
 }
 
 .profile-btn {
-  width: 186px;
+  /* width: 186px; */
   height: 39px;
   color: #fff;
   position: relative;
@@ -182,9 +182,43 @@
   padding: 0;
   overflow: hidden;
   border: solid 1px #fff;
-  border-radius: 12px;
+  border-radius: 8px;
   background: none;
   transition: 0.2s ease border;
+  padding-right: 5px;
+}
+
+.profile-buy-button,
+.profile-user-balance {
+  height: 100%;
+  padding: 0 10px;
+  border-right: 1px solid #fff;
+  display: flex;
+  align-items: center;
+}
+
+.profile-buy-button:hover,
+.profile-user-balance:hover {
+  transition: 0.2 all ease;
+  background: #4e4d4d;
+}
+
+.profile-buy-button.rhyno:hover,
+.profile-user-balance.rhyno:hover {
+  background: #dedede;
+  transition: 0.2 all ease;
+}
+
+.profile-user-balance img {
+  height: 18px;
+  width: auto;
+  margin-left: 5px;
+}
+
+.profile-user-balance.rhyno,
+.profile-buy-button.rhyno {
+  color: #000;
+  border-right: 1px solid #dedede;
 }
 
 .profile-btn span {
@@ -208,6 +242,10 @@
   font-size: 18px;
 }
 
+.profile-btn.hotdrops-btn i {
+  color: var(--hot-drops);
+}
+
 .user-avatar-default {
   width: 83px;
   height: 83px;
@@ -228,6 +266,11 @@
 .btn-back {
   cursor: pointer;
   color: var(--bubblegum);
+}
+
+.btn-back.hotdrops-color {
+  cursor: pointer;
+  color: var(--hot-drops);
 }
 
 .profile-settings {
@@ -428,6 +471,12 @@ span.profile-input-edit:hover {
     #e882d5 100%
   );
   font-size: 12px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.icon-menu.hotdrops-btn {
+  background: var(--hot-drops-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

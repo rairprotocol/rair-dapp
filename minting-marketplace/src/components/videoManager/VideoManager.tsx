@@ -69,18 +69,31 @@ const VideoManager = () => {
     }
   }, [selectedFile]);
 
-  const updateFile = useCallback(async () => {
-    await rFetch(`/api/v2/files/byId/${selectedFile._id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        demo: !selectedFile.demo
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+  const updateFile = useCallback(
+    async (body) => {
+      await rFetch(`/api/v2/files/byId/${selectedFile._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      refreshFileData();
+    },
+    [selectedFile, refreshFileData]
+  );
+
+  const updateDemoStatus = useCallback(async () => {
+    await updateFile({
+      demo: !selectedFile.demo
     });
-    refreshFileData();
-  }, [selectedFile, refreshFileData]);
+  }, [updateFile, selectedFile]);
+
+  const updateAgeRestriction = useCallback(async () => {
+    await updateFile({
+      ageRestricted: !selectedFile.ageRestricted
+    });
+  }, [updateFile, selectedFile]);
 
   const deleteUnlock = useCallback(
     async (offerId) => {
@@ -151,8 +164,17 @@ const VideoManager = () => {
                   </h5>
                   <span>{selectedFile.category.name}</span>
                   <br />
-                  <button onClick={updateFile} className="btn btn-royal-ice">
+                  <button
+                    onClick={updateDemoStatus}
+                    className="btn btn-royal-ice">
                     {selectedFile.demo ? 'Demo' : 'Unlockable'}
+                  </button>
+                  <button
+                    onClick={updateAgeRestriction}
+                    className="btn btn-stimorol">
+                    {selectedFile.ageRestricted
+                      ? 'Age Restricted'
+                      : 'NOT Age Restricted'}
                   </button>
                   <br />
                   <small>{selectedFile.duration}</small>

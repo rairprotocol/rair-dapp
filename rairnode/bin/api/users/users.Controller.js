@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', validation(['createUser']), usersService.createUser);
 
 // Common for the group of routes below validation
-router.use('/:publicAddress', validation(['singleUser'], 'params'));
+router.use('/:userAddress', validation(['userAddress'], 'params'));
 
 router
   .route('/:publicAddress')

@@ -91,5 +91,6 @@ module.exports = {
         // Extra data
         category: mongoId,
         demo: Joi.boolean(),
+        ageRestricted: Joi.boolean(),
     }),
 };

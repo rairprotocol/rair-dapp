@@ -127,7 +127,11 @@ const EditMode = ({
   return (
     <div className="profile-settings">
       <div className="profile-header">
-        <div className="btn-back" onClick={handlePopUp}>
+        <div
+          classNam={`btn-back ${
+            hotdropsVar === 'true' ? 'hotdrops-color' : ''
+          }`}
+          onClick={handlePopUp}>
           <i className="fas fa-chevron-left"></i>
         </div>
         <div

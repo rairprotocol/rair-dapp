@@ -175,26 +175,17 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
           <div>
             {!loggedIn ? (
               <div>
-                {renderBtnConnect ? (
-                  <OnboardingButton />
-                ) : (
-                  <>
-                    {isAboutPage ? null : (
-                      <button
-                        disabled={
-                          !window.ethereum &&
-                          !programmaticProvider &&
-                          !loginProcess
-                        }
-                        className={`btn btn-${primaryColor} btn-connect-wallet-mobile ${
-                          hotdropsVar === 'true' ? 'hotdrops-bg' : ''
-                        }`}
-                        onClick={() => connectUserData()}>
-                        {loginProcess ? 'Please wait...' : 'Connect'}
-                      </button>
-                    )}
-                  </>
-                )}
+                <div>
+                  {isAboutPage ? null : (
+                    <button
+                      className={`btn btn-${primaryColor} btn-connect-wallet-mobile ${
+                        hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+                      }`}
+                      onClick={() => connectUserData()}>
+                      {loginProcess ? 'Please wait...' : 'Connect'}
+                    </button>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="social-media">
@@ -213,9 +204,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                     </SocialBox>
                     <NavLink to={`/${currentUserAddress}`}>
                       <UserIconMobile
-                        onClick={() => {
-                          toggleMenu();
-                        }}
+                        onClick={() => setClick(false)}
                         avatar={userData && userData.avatar}
                         marginRight={'16px'}
                         messageAlert={messageAlert}

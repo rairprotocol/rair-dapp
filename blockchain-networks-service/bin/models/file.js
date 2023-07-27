@@ -6,6 +6,7 @@ const File = new Schema(
     _id: { type: String, required: true },
     uploader: { type: String },
     // Metadata
+    ageRestricted: { type: Boolean, default: false },
     title: { type: String, required: true, trim: true },
     description: { type: String },
     duration: { type: String, required: true },
@@ -14,7 +15,7 @@ const File = new Schema(
     // For Zoom integration
     meetingId: { type: String },
     // Encryption data
-    encryptionType: { type: String, required: true, select: false },
+    encryptionType: { type: String, required: true },
     mainManifest: { type: String, required: true, select: false },
     // Needed for delete functions
     storage: { type: String, required: false },
