@@ -42,6 +42,9 @@ export const FooterWrapper = styled.div<TFooterMainStyled>`
   &.footer-wrapper-hotdrops {
     padding-top: 52px;
     border-top: 1px solid var(--hot-drops);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .footer-box-join {

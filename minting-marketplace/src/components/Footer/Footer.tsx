@@ -64,14 +64,6 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
           <FooterWrapper
             className="footer-wrapper-hotdrops"
             primaryColor={primaryColor}>
-            <CommunityBlock
-              className="footer-community-hotdrops"
-              primaryColor={primaryColor}>
-              <h3>Contact</h3>
-              <a href="mailto:customerservice@myhotdrops.com">
-                customerservice@myhotdrops.com
-              </a>
-            </CommunityBlock>
             <FooterImage className="footer-img-hotdrops">
               <NavLink to="/">
                 {process.env.REACT_APP_HOTDROPS === 'true' ? (
