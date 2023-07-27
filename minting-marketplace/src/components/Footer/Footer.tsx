@@ -64,14 +64,6 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
           <FooterWrapper
             className="footer-wrapper-hotdrops"
             primaryColor={primaryColor}>
-            <CommunityBlock
-              className="footer-community-hotdrops"
-              primaryColor={primaryColor}>
-              <h3>Contact</h3>
-              <a href="mailto:customerservice@myhotdrops.com">
-                customerservice@myhotdrops.com
-              </a>
-            </CommunityBlock>
             <FooterImage className="footer-img-hotdrops">
               <NavLink to="/">
                 {process.env.REACT_APP_HOTDROPS === 'true' ? (
@@ -107,7 +99,7 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
                     target={'_blank'}
                     href="https://www.myhotdrops.com/privacy-policy"
                     rel="noreferrer">
-                    Private Policy
+                    Privacy Policy
                   </a>
                 </li>
                 <li>
@@ -123,7 +115,7 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
                     target={'_blank'}
                     href="https://www.myhotdrops.com/hot-drops-content-removal-request"
                     rel="noreferrer">
-                    Hot Drops Content Removal Request
+                    Content Removal Request
                   </a>
                 </li>
                 <li>
@@ -134,17 +126,28 @@ const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
                     Apply to Be a Creator
                   </a>
                 </li>
+                <li>
+                  <a
+                    target={'_blank'}
+                    href="https://www.myhotdrops.com/usc2257"
+                    rel="noreferrer">
+                    USC 2257
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:customerservice@myhotdrops.com">Contact Us</a>
+                </li>
               </NavFooterBox>
             </NavFooter>
           </FooterWrapper>
           <FooterTextRairTech primaryColor={primaryColor}>
             <ul>
               <li>
-                ©{' '}
+                © {new Date().getFullYear()}
                 {process.env.REACT_APP_HOTDROPS === 'true'
-                  ? 'HotDrops'
-                  : 'Rairtech'}{' '}
-                {new Date().getFullYear()}. All rights reserved
+                  ? ' HotDrops'
+                  : ' Rairtech'}{' '}
+                . All rights reserved
               </li>
             </ul>
           </FooterTextRairTech>

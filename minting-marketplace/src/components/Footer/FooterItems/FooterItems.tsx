@@ -42,6 +42,9 @@ export const FooterWrapper = styled.div<TFooterMainStyled>`
   &.footer-wrapper-hotdrops {
     padding-top: 52px;
     border-top: 1px solid var(--hot-drops);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .footer-box-join {
@@ -138,20 +141,17 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
 
   &.footer-nav-item-hotdrop {
     padding-left: 0;
+    text-align: center;
 
     li {
-      justify-content: left;
+      justify-content: center;
       display: flex;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
       text-decoration: underline;
     }
 
     li:last-child {
-      margin-top: 15px;
-      a {
-        color: var(--hot-drops);
-        text-decoration: underline;
-      }
+      margin-bottom: 0px;
     }
   }
 

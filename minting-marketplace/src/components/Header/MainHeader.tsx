@@ -370,20 +370,9 @@ const MainHeader: React.FC<IMainHeader> = ({
               }}>
               <a
                 target="_blank"
-                href="https://www.myhotdrops.com/abouthotdrops"
+                href="https://www.myhotdrops.com/info"
                 rel="noreferrer">
-                About us
-              </a>
-            </li>
-            <li
-              style={{
-                marginRight: '30px'
-              }}>
-              <a
-                href="https://www.myhotdrops.com/faqs"
-                target="_blank"
-                rel="noreferrer">
-                FAQs
+                Info
               </a>
             </li>
             <li
@@ -397,12 +386,23 @@ const MainHeader: React.FC<IMainHeader> = ({
                 Collections
               </a>
             </li>
-            <li>
+            <li
+              style={{
+                marginRight: '30px'
+              }}>
               <a
                 target="_blank"
                 href="https://www.myhotdrops.com/hotties"
                 rel="noreferrer">
                 Hotties
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://myhotdrops.shop/"
+                target="_blank"
+                rel="noreferrer">
+                Shop
               </a>
             </li>
           </ul>
