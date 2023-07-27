@@ -129,13 +129,48 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               {copyEth ? 'Copied!' : 'Copy your eth address'}
             </li>
           )} */}
-          {hotDropsVar !== 'true' && (
+          {hotDropsVar !== 'true' ? (
             <li>
               <TalkSalesComponent
                 text={'Inquiries'}
                 classes={'inquiries-sales'}
               />
             </li>
+          ) : (
+            <>
+              <li>
+                <a
+                  target="_blank"
+                  href="https://www.myhotdrops.com/info"
+                  rel="noreferrer">
+                  Info
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.myhotdrops.com/collections"
+                  target="_blank"
+                  rel="noreferrer">
+                  Collections
+                </a>
+              </li>
+              <li>
+                <a
+                  target="_blank"
+                  href="https://www.myhotdrops.com/hotties"
+                  rel="noreferrer">
+                  Hotties
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://myhotdrops.shop/"
+                  target="_blank"
+                  rel="noreferrer">
+                  Shop
+                </a>
+              </li>
+            </>
           )}
           {currentUserAddress && (
             <li className="logout" onClick={logoutUser}>
