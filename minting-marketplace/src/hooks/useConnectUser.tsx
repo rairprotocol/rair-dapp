@@ -120,6 +120,10 @@ const useConnectUser = () => {
     };
   }, [currentChain, programmaticProvider]);
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   const selectMethod = useCallback(
     () =>
       new Promise((resolve: (value: string) => void) => {
@@ -137,7 +141,7 @@ const useConnectUser = () => {
                     hotdropsVar === 'true' ? 'hotdrops-bg' : ''
                   }`}
                   onClick={() => resolve('metamask')}>
-                  Login Web3
+                  Web3
                 </button>
               )}
               <hr />
@@ -152,16 +156,26 @@ const useConnectUser = () => {
                 //'instagram',
                 //'phone'
                 //'twitch'
-              ].map((provider: AuthProvider, index) => (
-                <LoginProviderButton
-                  key={index}
-                  {...{
-                    onClick: () => resolve(`oreid-${provider}`),
-                    provider,
-                    className: 'btn'
-                  }}
-                />
-              ))}
+              ].map((provider: AuthProvider, index) => {
+                return (
+                  <LoginProviderButton
+                    key={index}
+                    {...{
+                      onClick: () => resolve(`oreid-${provider}`),
+                      provider,
+                      className: 'btn',
+                      text: capitalizeFirstLetter(provider)
+                    }}
+                  />
+                );
+              })}
+              <div className="login-modal-down-text">
+                <div>Each social login creates a unique wallet address</div>
+                <div>
+                  If you login with a different account, you won’t see purchases
+                  in your other wallets
+                </div>
+              </div>
             </>
           ),
           showConfirmButton: false

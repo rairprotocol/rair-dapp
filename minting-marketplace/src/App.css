@@ -220,6 +220,18 @@ a:hover {
   color: white;
 }
 
+.login-modal-down-text {
+  font-size: 16px;
+}
+
+.login-modal-down-text div:first-child {
+  margin: 20px 0;
+}
+
+.login-modal-down-text div:last-child {
+  font-style: italic;
+}
+
 /* .main-block-app {
   margin-top: 40px;
 } */
@@ -2585,6 +2597,10 @@ body.hotdrops::-webkit-scrollbar-thumb:active {
 
   .list-button-wrapper {
     margin-left: 5vw;
+  }
+
+  .login-modal-down-text {
+    font-size: 12px;
   }
 }
 
