@@ -40,7 +40,7 @@ const useConnectUser = () => {
     RootState,
     TUsersInitialState
   >((store) => store.userStore);
-  const [renderBtnConnect, setRenderBtnConnect] = useState(false);
+  const [metamaskInstalled, setMetamaskInstalled] = useState(false);
 
   const { currentUserAddress, programmaticProvider, currentChain } =
     useSelector<RootState, ContractsInitialType>(
@@ -54,12 +54,8 @@ const useConnectUser = () => {
   const oreId = useOreId();
 
   const checkMetamask = useCallback(() => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      setRenderBtnConnect(false);
-    } else {
-      setRenderBtnConnect(true);
-    }
-  }, [setRenderBtnConnect]);
+    setMetamaskInstalled(window?.ethereum && window?.ethereum?.isMetaMask);
+  }, [setMetamaskInstalled]);
 
   const loginWithOreIdToken = useCallback(
     async (idToken: string) => {
@@ -82,6 +78,9 @@ const useConnectUser = () => {
   const loginWithOreId = useCallback(
     async (loginMethod: AuthProvider) => {
       const response = await oreId.popup.auth({ provider: loginMethod });
+      if (!response) {
+        return { address: undefined, blockchain: undefined };
+      }
       const userAccount = response.user.chainAccounts.find((account) =>
         account.chainNetwork.includes('eth')
       );
@@ -121,6 +120,10 @@ const useConnectUser = () => {
     };
   }, [currentChain, programmaticProvider]);
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   const selectMethod = useCallback(
     () =>
       new Promise((resolve: (value: string) => void) => {
@@ -130,7 +133,7 @@ const useConnectUser = () => {
             <>
               Please select a login method
               <hr />
-              {renderBtnConnect ? (
+              {!metamaskInstalled ? (
                 <OnboardingButton />
               ) : (
                 <button
@@ -138,7 +141,7 @@ const useConnectUser = () => {
                     hotdropsVar === 'true' ? 'hotdrops-bg' : ''
                   }`}
                   onClick={() => resolve('metamask')}>
-                  Login Web3
+                  Web3
                 </button>
               )}
               <hr />
@@ -153,16 +156,26 @@ const useConnectUser = () => {
                 //'instagram',
                 //'phone'
                 //'twitch'
-              ].map((provider: AuthProvider, index) => (
-                <LoginProviderButton
-                  key={index}
-                  {...{
-                    onClick: () => resolve(`oreid-${provider}`),
-                    provider,
-                    className: 'btn'
-                  }}
-                />
-              ))}
+              ].map((provider: AuthProvider, index) => {
+                return (
+                  <LoginProviderButton
+                    key={index}
+                    {...{
+                      onClick: () => resolve(`oreid-${provider}`),
+                      provider,
+                      className: 'btn',
+                      text: capitalizeFirstLetter(provider)
+                    }}
+                  />
+                );
+              })}
+              <div className="login-modal-down-text">
+                <div>Each social login creates a unique wallet address</div>
+                <div>
+                  If you login with a different account, you won’t see purchases
+                  in your other wallets
+                </div>
+              </div>
             </>
           ),
           showConfirmButton: false
@@ -173,7 +186,7 @@ const useConnectUser = () => {
         //   }
         // });
       }),
-    [reactSwal]
+    [reactSwal, hotdropsVar, metamaskInstalled]
   );
 
   const connectUserData = useCallback(async () => {
@@ -188,30 +201,36 @@ const useConnectUser = () => {
     const loginMethod: string = await selectMethod();
     const [loginConnection, oreIdProvider] = loginMethod.split('-');
     reactSwal.close();
-    switch (loginConnection) {
-      case 'metamask':
-        loginData = await loginWithMetamask();
-        break;
-      case 'programmatic':
-        loginData = await loginWithProgrammaticProvider();
-        break;
-      case 'oreid':
-        loginData = await loginWithOreId(oreIdProvider as AuthProvider);
-        break;
-      default:
-        reactSwal.fire({
-          title: 'Please install a Crypto wallet',
-          html: (
-            <div>
-              <OnboardingButton />
-            </div>
-          ),
-          icon: 'error'
-        });
-        dispatch(setLoginProcessStatus(false));
-        return;
+    try {
+      switch (loginConnection) {
+        case 'metamask':
+          loginData = await loginWithMetamask();
+          break;
+        case 'programmatic':
+          loginData = await loginWithProgrammaticProvider();
+          break;
+        case 'oreid':
+          loginData = await loginWithOreId(oreIdProvider as AuthProvider);
+          break;
+        default:
+          reactSwal.fire({
+            title: 'Please install a Crypto wallet',
+            html: (
+              <div>
+                <OnboardingButton />
+              </div>
+            ),
+            icon: 'error'
+          });
+          dispatch(setLoginProcessStatus(false));
+          return;
+      }
+    } catch (err) {
+      console.error('Login error', err);
+      dispatch(setLoginProcessStatus(false));
+      return;
     }
-    if (!loginData.address || loginData.address === '') {
+    if (!loginData?.address || loginData?.address === '') {
       reactSwal.fire('Error', 'No user address found', 'error');
       dispatch(setLoginProcessStatus(false));
       return;
