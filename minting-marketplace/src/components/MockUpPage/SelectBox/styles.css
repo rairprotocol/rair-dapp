@@ -482,7 +482,7 @@ video::-webkit-media-controls-panel {
 .unlockables-video-player-circle {
   margin-top: 0rem;
   position: absolute;
-  z-index: 2;
+  z-index: 1;
   cursor: pointer;
   transition: all 0.1s ease;
 }
