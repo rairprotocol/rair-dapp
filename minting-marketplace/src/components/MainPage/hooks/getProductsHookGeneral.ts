@@ -19,12 +19,7 @@ export const useGetProductsGeneral = (
       setProductsFromOffer(response.data.files);
       setSelectVideo(response.data.files[0]);
     }
-  }, [
-    input.blockchain,
-    input.contract,
-    input.product,
-    input.currentUserAddress
-  ]);
+  }, [input]);
 
   useEffect(() => {
     getProductsFromOffer();

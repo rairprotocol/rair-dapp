@@ -291,6 +291,10 @@ module.exports = (context) => {
             extension: false,
             unlockData: false,
           },
+        }, {
+          $sort: {
+            title: 1,
+          },
         },
       ];
 
