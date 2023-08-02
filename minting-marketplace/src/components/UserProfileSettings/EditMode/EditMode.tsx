@@ -128,7 +128,7 @@ const EditMode = ({
     <div className="profile-settings">
       <div className="profile-header">
         <div
-          classNam={`btn-back ${
+          className={`btn-back ${
             hotdropsVar === 'true' ? 'hotdrops-color' : ''
           }`}
           onClick={handlePopUp}>
