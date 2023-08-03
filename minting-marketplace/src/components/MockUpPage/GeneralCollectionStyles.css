@@ -284,6 +284,10 @@ img.single-token-block-img {
   margin-bottom: 32px;
 }
 
+.container-search .form-control.input-styled::placeholder {
+  color: grey;
+}
+
 .nftlist-unlockable-videos {
   display: flex;
   flex-wrap: wrap;
@@ -1459,6 +1463,10 @@ p.general-title {
   .collection-background,
   .collection-background img {
     height: 13.75rem;
+  }
+
+  i.fas-custom {
+    top: 0.85rem;
   }
 }
 

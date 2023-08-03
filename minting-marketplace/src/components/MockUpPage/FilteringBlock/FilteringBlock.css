@@ -322,7 +322,9 @@ select.select-price option {
 
   .select-sort-title {
     /* justify-content: flex-start; */
-    padding: 0 8px;
+    /* padding: 0 8px; */
+    width: 40px;
+    height: 40px;
   }
 
   .title-left {
