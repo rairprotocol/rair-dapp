@@ -58,7 +58,7 @@ exports.getContractByCategory = async (req, res, next) => {
   const pageSize = parseInt(itemsPerPage, 10);
   const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
-  const contractList = (await File.find({ category: id }))
+  const contractList = (await File.find({ category: id })).sort({ title: 1 })
     .map((item) => item.contract);
   const results = await Contract.find({
     _id: { $in: contractList },

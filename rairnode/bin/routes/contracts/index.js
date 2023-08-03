@@ -108,7 +108,7 @@ module.exports = (context) => {
             category: { $in: category },
           }, {
             contract: 1,
-          })).map((item) => item.contract);
+          })).sort({ title: 1 }).map((item) => item.contract);
 
           options.push({
             $match: {

@@ -11,7 +11,7 @@ exports.getFiles = async (req, res) => {
     dataQuery.uploader = req.session.userData.publicAddress;
   }
 
-  const result = await File.find().populate({ path: 'category', model: 'Category' });
+  const result = await File.find().sort({ title: 1 }).populate({ path: 'category', model: 'Category' });
 
   return res.status(200).json({
     success: true,

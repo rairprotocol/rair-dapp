@@ -306,7 +306,7 @@ const WorkflowSteps: React.FC = () => {
                 {
                   message: 'Creator Address (You!)',
                   recipient: currentUserAddress,
-                  percentage: 90000,
+                  percentage: 95000,
                   editable: true
                 }
               ]

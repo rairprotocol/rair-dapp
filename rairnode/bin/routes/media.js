@@ -291,6 +291,10 @@ module.exports = () => {
               totalEncryptedFiles: false,
               extension: false,
             },
+          }, {
+            $sort: {
+              title: 1,
+            },
           },
         ];
 

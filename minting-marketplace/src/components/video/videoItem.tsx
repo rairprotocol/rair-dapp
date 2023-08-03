@@ -66,6 +66,8 @@ const VideoItem: React.FC<IVideoItem> = ({
     (store) => store.colorStore
   );
 
+  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+
   const customStyles = {
     overlay: {
       zIndex: '52'
@@ -233,9 +235,11 @@ const VideoItem: React.FC<IVideoItem> = ({
   };
 
   const goToCollectionView = () => {
-    navigate(
-      `/collection/${contractData?.blockchain}/${contractData?.contractAddress}/${mediaList[item]?.product}/0`
-    );
+    if (offerDataInfo && offerDataInfo.length > 0) {
+      navigate(
+        `/collection/${contractData?.blockchain}/${contractData?.contractAddress}/${offerDataInfo[0].product}/0`
+      );
+    }
   };
 
   // const goToUnlockView = () => {
@@ -246,30 +250,38 @@ const VideoItem: React.FC<IVideoItem> = ({
 
   const getInfo = useCallback(async () => {
     if (mediaList && item) {
-      const { contract } = await rFetch(
-        `/api/v2/contracts/${mediaList[item].contract}`
+      const { data } = await rFetch(
+        `/api/v2/files/${mediaList[item]._id}/unlocks`
       );
-      try {
-        const tokensrResp = await axios.get(
-          `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}`
-          // `/api/${mediaList[item].contract}/${mediaList[item]?.product}`
+
+      if (data && data.offers) {
+        const resultOffers = data.offers;
+        const { contract } = await rFetch(
+          `/api/v2/contracts/${data.offers[0].contract._id}`
         );
 
-        const { data } = await axios.get<IOffersResponseType>(
-          `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}/offers`
-        );
+        try {
+          const tokensrResp = await axios.get(
+            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${resultOffers[0].product}`
+            // `/api/${mediaList[item].contract}/${mediaList[item]?.product}`
+          );
 
-        if (data.success) {
-          setOfferDataInfo(data.product.offers);
+          const { data } = await axios.get<IOffersResponseType>(
+            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${resultOffers[0].product}/offers`
+          );
+
+          if (data.success) {
+            setOfferDataInfo(data.product.offers);
+          }
+
+          contract.tokens = tokensrResp.data.result.tokens;
+          // contract.products = productsResp.data.product;
+        } catch (err) {
+          console.error(err);
         }
 
-        contract.tokens = tokensrResp.data.result.tokens;
-        // contract.products = productsResp.data.product;
-      } catch (err) {
-        console.error(err);
+        setContractData(contract);
       }
-
-      setContractData(contract);
     }
   }, [mediaList, item, setContractData]);
 
@@ -290,6 +302,10 @@ const VideoItem: React.FC<IVideoItem> = ({
   useEffect(() => {
     closeModal();
   }, [closeModal]);
+
+  useEffect(() => {
+    getInfo();
+  }, [getInfo]);
 
   return (
     <button
@@ -599,10 +615,17 @@ const VideoItem: React.FC<IVideoItem> = ({
                 <div className="modal-content-video-choice">
                   <div className="modal-content-block-btns">
                     <div className="modal-content-block-buy">
-                      <img
-                        src={contractData?.tokens?.at(0)?.metadata?.image}
-                        alt="NFT token powered by Rair tech"
-                      />
+                      {hotDropsVar === 'true' ? (
+                        <img
+                          src={contractData?.tokens?.at(0)?.metadata?.image}
+                          alt="NFT token powered by Hotdrops"
+                        />
+                      ) : (
+                        <img
+                          src={contractData?.tokens?.at(0)?.metadata?.image}
+                          alt="NFT token powered by Rair tech"
+                        />
+                      )}
                       {mediaList[item]?.isUnlocked === false && (
                         <CustomButton
                           text={'Upgrade'}
