@@ -9,7 +9,6 @@ const {
   Product,
   MintedToken,
   File,
-  LockedTokens,
   Unlock,
   ServerSetting,
 } = require('../../../../models');
@@ -368,20 +367,21 @@ module.exports = (context) => {
     }
   });
 
-  // get locks for specific product
+  // get ranges with locked tokens for specific product
   router.get('/locks', async (req, res, next) => {
     try {
       const { contract, product } = req;
 
-      const locks = await LockedTokens.find({
+      const locks = await Offer.find({
         contract: contract._id,
         product,
+        lockedCopies: { $gt: 0 },
       });
 
-      if (_.isEmpty(locks)) {
+      if (!locks?.length) {
         return res
           .status(404)
-          .send({ success: false, message: 'Locks not found.' });
+          .send({ success: false, message: 'No locks found' });
       }
 
       return res.json({ success: true, locks });

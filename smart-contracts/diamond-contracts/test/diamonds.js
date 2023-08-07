@@ -864,9 +864,9 @@ describe("Diamonds", function () {
 		it ("Shouldn't update offers with bad information", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
 			await expect(rangesFacet.updateRange(0, "ASDF", 4500, 45, 5))
-				.to.be.revertedWith("RAIR ERC721: Allowed tokens should be less than range's length");
-			await expect(rangesFacet.updateRange(0, "ASDF", 4500, 8, 12))
-				.to.be.revertedWith("RAIR ERC721: Locked tokens should be less than range's length");
+				.to.be.revertedWith("RAIR ERC721: Allowed tokens should be less than the number of mintable tokens");
+			await expect(rangesFacet.updateRange(0, "ASDF", 4500, 8, 13))
+				.to.be.revertedWith("RAIR ERC721: Locked tokens should be less than the number of mintable tokens");
 		});
 
 		it ("Should update ranges", async () => {

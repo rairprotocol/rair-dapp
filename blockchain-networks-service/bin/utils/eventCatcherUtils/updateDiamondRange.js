@@ -3,7 +3,7 @@ const {
   findContractFromAddress,
 } = require('./eventsCommonUtils');
 
-const { Offer, LockedTokens } = require('../../models');
+const { Offer } = require('../../models');
 
 module.exports = async (
   dbModels,
@@ -38,22 +38,11 @@ module.exports = async (
     return;
   }
 
-  foundOffer.range[1] = tokensAllowed.add(foundOffer.range[0]);
+  foundOffer.allowedCopies = tokensAllowed;
+  foundOffer.lockedCopies = lockedTokens;
   foundOffer.price = price;
   foundOffer.offerName = name;
-  // MB:CHECK: Probably we need to return updated/new here.
   const updatedOffer = await foundOffer.save().catch(handleDuplicateKey);
-
-  const foundLock = await LockedTokens.findOne({
-    contract: contract._id,
-    lockIndex: rangeIndex,
-    product: updatedOffer.product,
-  });
-
-  if (foundLock) {
-    foundLock.lockedTokens = lockedTokens;
-    await foundLock.save().catch(handleDuplicateKey);
-  }
 
   // eslint-disable-next-line consistent-return
   return updatedOffer;

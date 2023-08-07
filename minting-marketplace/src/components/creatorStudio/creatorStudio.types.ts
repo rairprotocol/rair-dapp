@@ -106,8 +106,8 @@ export interface IDiamondOfferRow {
   rerender: () => void;
   maxCopies: number;
   blockchainSymbol: string | undefined;
-  copies: number;
-  lockedTokens: string;
+  allowedCopies: string;
+  lockedCopies: string;
   simpleMode: boolean;
   instance: ethers.Contract | undefined;
   diamondRangeIndex: string;
@@ -116,6 +116,8 @@ export interface IDiamondOfferRow {
 export type TMarketplaceOfferConfigArrayItem = {
   contract: string;
   copies: number;
+  allowedCopies: string;
+  lockedCopies: string;
   creationDate: string;
   customSplits?: TCustomPayments[];
   diamond: boolean;

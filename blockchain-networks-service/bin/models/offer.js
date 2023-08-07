@@ -9,6 +9,8 @@ const Offer = new Schema(
     product: { type: String, required: true },
     offerPool: { type: String },
     copies: { type: Number },
+    allowedCopies: { type: Number, default: 0 },
+    lockedCopies: { type: Number, default: 0 },
     soldCopies: { type: Number, default: 0 },
     sold: { type: Boolean, default: false },
     price: { type: String, required: true },

@@ -59,12 +59,22 @@ const TransferTokens = () => {
     const response: ContractsResponseType = await rFetch('/api/contracts');
     if (response.success) {
       setUserContracts(
-        response.contracts.map((item) => {
-          return {
-            label: `${item.title} (${item.diamond ? 'Diamond' : 'Classic'})`,
-            value: `/network/${item.blockchain}/${item.contractAddress}`
-          };
-        })
+        response.contracts
+          .map((item) => {
+            return {
+              label: `${item.title} (${item.blockchain}) (${
+                item.diamond ? 'Diamond' : 'Classic'
+              })`,
+              value: `/network/${item.blockchain}/${item.contractAddress}`
+            };
+          })
+          .sort((a, b) => {
+            if (a.label > b.label) {
+              return 1;
+            } else {
+              return -1;
+            }
+          })
       );
     }
   }, [setUserContracts]);
@@ -372,9 +382,10 @@ const TransferTokens = () => {
             {contractInstance && (
               <button
                 disabled={
-                  currentChain !== contractBlockchain?.chainId ||
-                  !traderRole ||
-                  targetAddress === ''
+                  (currentChain !== contractBlockchain?.chainId ||
+                    !traderRole ||
+                    targetAddress === '',
+                  !contractInstance)
                 }
                 className="btn btn-royal-ice"
                 onClick={async () => {

@@ -23,7 +23,7 @@ contract RAIRRoyaltiesFacet is AccessControlAppStorageEnumerable721, IERC2981 {
 		return s.royaltyFee;
 	}
 
-	function supportsInterface(bytes4 interfaceId) public view virtual override(IERC2981) returns (bool) {
+	function supportsInterface(bytes4 interfaceId) public view virtual returns (bool) {
 		return interfaceId == type(IERC2981).interfaceId;
 	}
 }

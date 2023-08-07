@@ -68,13 +68,21 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
     if (!diamondMarketplaceInstance) {
       return;
     }
-    const nodeFeeData = await diamondMarketplaceInstance.getNodeFee();
+    const nodeFeeData = await web3TxHandler(
+      diamondMarketplaceInstance,
+      'getNodeFee'
+    );
     setNodeFee(Number(nodeFeeData.nodeFee.toString()));
     setMinterDecimals(nodeFeeData.decimals);
-    const treasuryFeeData = await diamondMarketplaceInstance.getTreasuryFee();
+    const treasuryFeeData = await web3TxHandler(
+      diamondMarketplaceInstance,
+      'getTreasuryFee'
+    );
     setTreasuryFee(Number(treasuryFeeData.treasuryFee.toString()));
-    setTreasuryAddress(await diamondMarketplaceInstance.getTreasuryAddress());
-  }, [diamondMarketplaceInstance]);
+    setTreasuryAddress(
+      await web3TxHandler(diamondMarketplaceInstance, 'getTreasuryAddress')
+    );
+  }, [diamondMarketplaceInstance, web3TxHandler]);
 
   useEffect(() => {
     getContractData();

@@ -239,7 +239,7 @@ const useWeb3Tx = () => {
     web3TxHandler: (
       contract: Contract,
       method: string,
-      args: any[],
+      args: any[] = [],
       options?: {
         failureMessage?: string;
         callback?: () => void;
