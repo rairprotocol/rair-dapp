@@ -255,19 +255,18 @@ const VideoItem: React.FC<IVideoItem> = ({
       );
 
       if (data && data.offers) {
-        const resultOffers = data.offers;
         const { contract } = await rFetch(
           `/api/v2/contracts/${data.offers[0].contract._id}`
         );
 
         try {
           const tokensrResp = await axios.get(
-            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${resultOffers[0].product}`
+            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}`
             // `/api/${mediaList[item].contract}/${mediaList[item]?.product}`
           );
 
           const { data } = await axios.get<IOffersResponseType>(
-            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${resultOffers[0].product}/offers`
+            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}/offers`
           );
 
           if (data.success) {

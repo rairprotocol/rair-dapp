@@ -8,6 +8,7 @@ import { TableAuthenticity } from './AuthenticityBlockItems';
 import { TTokenData } from '../../../../../axios.responseTypes';
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import { defaultHotDrops } from '../../../../../images';
 import { IAuthenticityBlock } from '../../nftList.types';
 
 import './AuthenticityBlock.css';
@@ -23,10 +24,14 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
     (store) => store.colorStore.primaryColor
   );
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const [authCollection, setAuthCollection] = useState<string>();
   const [ipfsLink, setIpfsLink] = useState<string>('');
   const defaultImg =
-    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
+    hotdropsVar === 'true'
+      ? defaultHotDrops
+      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
   const generateUrlColection = useCallback(() => {
     if (collectionToken) {
@@ -82,7 +87,10 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                           </span>
                           Etherscan transaction
                         </div>
-                        <div className="block-arrow">
+                        <div
+                          className={`block-arrow ${
+                            hotdropsVar === 'true' ? 'hotdrops-color' : ''
+                          }`}>
                           <i className="fas fa-arrow-right"></i>
                         </div>
                       </a>
@@ -125,7 +133,10 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
               </span>
               View on IPFS
             </div>
-            <div className="block-arrow">
+            <div
+              className={`block-arrow ${
+                hotdropsVar === 'true' ? 'hotdrops-color' : ''
+              }`}>
               <i className="fas fa-arrow-right"></i>
             </div>
           </a>
