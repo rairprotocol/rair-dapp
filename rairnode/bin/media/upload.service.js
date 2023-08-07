@@ -9,6 +9,7 @@ const {
   Product,
   File,
   Unlock,
+  ServerSetting,
 } = require('../models/index');
 
 module.exports = {
@@ -35,6 +36,13 @@ module.exports = {
   validateData: async (req, res, next) => {
     try {
       const { contract, product, offer, category, demo } = req.query;
+
+      if (demo.toString() === 'true') {
+        const settings = await ServerSetting.findOne({});
+        if (!settings?.demoUploadsEnabled) {
+          return next(new AppError('Demo uploads are disabled', 404));
+        }
+      }
 
       const foundContract = await Contract.findById(contract);
       const foundContractId = foundContract._id;
