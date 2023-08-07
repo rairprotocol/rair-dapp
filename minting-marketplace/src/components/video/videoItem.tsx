@@ -644,20 +644,6 @@ const VideoItem: React.FC<IVideoItem> = ({
                         />
                       )}
                     </div>
-                    <CustomButton
-                      text={'View Collection'}
-                      width={'208px'}
-                      height={'48px'}
-                      textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
-                      onClick={goToCollectionView}
-                      margin={'0px 0px 0.35rem 0.5rem'}
-                      custom={false}
-                      background={`var(--${
-                        primaryColor === 'charcoal'
-                          ? 'charcoal-80'
-                          : 'charcoal-40'
-                      })`}
-                    />
                   </div>
                 </div>
               )}

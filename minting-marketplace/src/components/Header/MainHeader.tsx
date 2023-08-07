@@ -351,23 +351,9 @@ const MainHeader: React.FC<IMainHeader> = ({
             aria-hidden="true"></i>
         </div>
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          className="hotdrops-menu-list">
-          <ul
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              margin: '0'
-            }}>
-            <li
-              style={{
-                marginRight: '30px'
-              }}>
+        <div className="hotdrops-menu-list">
+          <ul>
+            <li>
               <a
                 target="_blank"
                 href="https://www.myhotdrops.com/info"
@@ -375,10 +361,7 @@ const MainHeader: React.FC<IMainHeader> = ({
                 Info
               </a>
             </li>
-            <li
-              style={{
-                marginRight: '30px'
-              }}>
+            <li>
               <a
                 href="https://www.myhotdrops.com/collections"
                 target="_blank"
@@ -386,10 +369,7 @@ const MainHeader: React.FC<IMainHeader> = ({
                 Collections
               </a>
             </li>
-            <li
-              style={{
-                marginRight: '30px'
-              }}>
+            <li>
               <a
                 target="_blank"
                 href="https://www.myhotdrops.com/hotties"
