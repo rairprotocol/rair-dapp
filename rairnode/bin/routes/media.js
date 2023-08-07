@@ -34,6 +34,7 @@ const {
   Product,
   User,
 } = require('../models');
+const { ObjectId } = require('mongodb');
 
 module.exports = () => {
   const router = express.Router();
@@ -251,10 +252,7 @@ module.exports = () => {
         };
 
         if (category.length) {
-          const foundCategory = await Category.find({ _id: { $in: category } });
-          if (foundCategory) {
-            matchData.category = { $in: category };
-          }
+          matchData.category = { $in: category.map((cat) => new ObjectId(cat)) };
         }
 
         if (foundUser) {
@@ -266,6 +264,9 @@ module.exports = () => {
         }
 
         const pipeline = [
+          {
+            $match: matchData,
+          },
           {
             $lookup: {
               from: 'Unlock',
@@ -280,9 +281,6 @@ module.exports = () => {
               foreignField: '_id',
               as: 'unlockData.offers',
             },
-          },
-          {
-            $match: matchData,
           },
           {
             $project: {

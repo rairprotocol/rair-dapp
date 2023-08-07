@@ -1,3 +1,4 @@
+const { MintedToken, ResaleTokenOffer } = require('../../models');
 const { findContractFromAddress, log } = require('./eventsCommonUtils');
 
 module.exports = async (
@@ -22,7 +23,7 @@ module.exports = async (
     return;
   }
 
-  const token = await dbModels.MintedToken.findOne({
+  const token = await MintedToken.findOne({
     contract: contract._id,
     uniqueIndexInContract: tokenId,
   });
@@ -31,14 +32,14 @@ module.exports = async (
     return;
   }
 
-  let offer = await dbModels.ResaleTokenOffer.findOne({
+  let resaleOffer = await ResaleTokenOffer.findOne({
     contract: contract._id,
     tokenId,
     tradeid,
     status: 0,
   });
 
-  if (offer) {
+  if (resaleOffer) {
     switch (status.toString()) {
       case '1':
         log.info('OFFER CLOSED');
@@ -51,9 +52,9 @@ module.exports = async (
         log.info('Unsupported status', status);
         return;
     }
-    offer.status = status;
+    resaleOffer.status = status;
   } else {
-    offer = await new dbModels.ResaleTokenOffer({
+    resaleOffer = await new dbModels.ResaleTokenOffer({
       operator,
       contract: contract._id,
       tokenId,
@@ -63,5 +64,5 @@ module.exports = async (
     });
   }
   await token.save();
-  await offer.save();
+  await resaleOffer.save();
 };

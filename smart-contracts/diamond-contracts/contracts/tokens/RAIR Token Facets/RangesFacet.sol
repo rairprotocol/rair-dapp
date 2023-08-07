@@ -105,18 +105,45 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 	/// @param	price_			Contains the selling price for the range of NFT
 	/// @param	tokensAllowed_	Contains all the allowed NFT tokens in the range that are available for sell
 	/// @param	lockedTokens_	Contains all the NFT tokens in the range that are unavailable for sell
-	function updateRange(uint rangeId, string memory name, uint price_, uint tokensAllowed_, uint lockedTokens_) public rangeExists(rangeId) onlyRole(CREATOR) {
-		require(price_ >= 100, "RAIR ERC721: Minimum price allowed is 100 wei");
+	function updateRange(
+		uint rangeId,
+		string memory name,
+		uint price_,
+		uint tokensAllowed_,
+		uint lockedTokens_
+	) public rangeExists(rangeId) onlyRole(CREATOR) {
+		require(
+			price_ == 0 || price_ >= 100,
+			"RAIR ERC721: Minimum price allowed is 100 wei"
+		);
 		range storage selectedRange = s.ranges[rangeId];
-		require(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
-		require(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
+		require(
+            tokensAllowed_ <= selectedRange.mintableTokens,
+            "RAIR ERC721: Allowed tokens should be less than the number of mintable tokens"
+        );
+        require(
+            lockedTokens_ <= selectedRange.mintableTokens + 1,
+			// The +1 allows for permanent lock of the range
+            "RAIR ERC721: Locked tokens should be less than the number of mintable tokens"
+        );
 		selectedRange.tokensAllowed = tokensAllowed_;
-		if (lockedTokens_ > 0) {
-			emit TradingLocked(rangeId, selectedRange.rangeStart, selectedRange.rangeEnd, lockedTokens_);
-			selectedRange.lockedTokens = lockedTokens_;
-		}
-		selectedRange.rangeName = name;
-		selectedRange.rangePrice = price_;
+		if (lockedTokens_ > 0 && selectedRange.lockedTokens == 0) {
+            emit TradingLocked(
+                rangeId,
+                selectedRange.rangeStart,
+                selectedRange.rangeEnd,
+                lockedTokens_
+            );
+        } else if (lockedTokens_ == 0 && selectedRange.lockedTokens > 0) {
+            emit TradingUnlocked(
+                rangeId,
+                selectedRange.rangeStart,
+                selectedRange.rangeEnd
+            );
+        }
+		selectedRange.lockedTokens = lockedTokens_;
+        selectedRange.rangePrice = price_;
+        selectedRange.rangeName = name;
 		emit UpdatedRange(rangeId, name, price_, tokensAllowed_, lockedTokens_);
 	}
 

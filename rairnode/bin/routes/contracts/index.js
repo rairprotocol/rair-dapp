@@ -12,7 +12,8 @@ const {
 } = require('../../integrations/ethers/importContractData');
 const log = require('../../utils/logger')(module);
 const contractRoutes = require('./contract');
-const { Contract, User, File, Blockchain } = require('../../models');
+const { Contract, User, File, Blockchain, Category } = require('../../models');
+const { ObjectId } = require('mongodb');
 
 const getContractsByUser = async (user, res, next) => {
   try {
@@ -104,11 +105,37 @@ module.exports = (context) => {
         options.push(lookupProduct, { $unwind: '$products' });
 
         if (category.length > 0) {
-          const matchingContractsForCategory = (await File.find({
-            category: { $in: category },
-          }, {
-            contract: 1,
-          })).sort({ title: 1 }).map((item) => item.contract);
+          const categoryIds = category.map((cat) => new ObjectId(cat));
+          const matchingMedia = await File.aggregate([
+            {
+              $match: {
+                category: {
+                  $in: categoryIds,
+                },
+              },
+            }, {
+              $lookup: {
+                from: 'Unlock',
+                localField: '_id',
+                foreignField: 'file',
+                as: 'unlockData',
+              },
+            }, {
+              $lookup: {
+                from: 'Offer',
+                localField: 'unlockData.offers',
+                foreignField: '_id',
+                as: 'unlockData.offers',
+              },
+            },
+          ]);
+
+          const matchingContractsForCategory = matchingMedia
+            .filter((item) => !!item?.unlockData?.offers?.length)
+            .reduce((result, item) => {
+              const contractsForVideos = item.unlockData.offers.map((offer) => offer.contract);
+              return [...result, ...contractsForVideos];
+            }, []);
 
           options.push({
             $match: {

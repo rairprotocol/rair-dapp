@@ -783,6 +783,7 @@ img.video-locked-modal {
   width: 7.5rem;
   height: 7.5rem;
   margin-bottom: 2rem;
+  margin-left: 2rem;
   border-radius: 1rem;
   object-fit: cover;
 }
@@ -1453,7 +1454,7 @@ select.form-control.rounded-rair:disabled {
   left: 35rem; */
   top: 3rem;
   /* left: 18rem; */
-  width: 35vw;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   border-bottom-right-radius: 16px;
@@ -1495,7 +1496,7 @@ select.form-control.rounded-rair:disabled {
 /* } */
 .data-find-wrapper {
   cursor: default;
-  width: 35vw;
+  width: 100%;
   border-bottom: 1px solid #817982;
   padding: 1rem;
 }

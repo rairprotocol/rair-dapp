@@ -1,4 +1,5 @@
 const express = require('express');
+const { Product } = require('../../../models');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -38,42 +39,8 @@ module.exports = (context) => {
       ];
 
       if (contract?.diamond) {
-        products = await context.db.Product.aggregate([
+        products = await Product.aggregate([
           ...commonQuery,
-          // Diamond contracts have no OfferPools, use token locks to find the offers
-          {
-            $lookup: {
-              from: 'LockedTokens',
-              let: {
-                contr: '$contract',
-                prod: '$collectionIndexInContract',
-              },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        {
-                          $eq: [
-                            '$contract',
-                            '$$contr',
-                          ],
-                        },
-                        {
-                          $eq: [
-                            '$product',
-                            '$$prod',
-                          ],
-                        },
-                      ],
-                    },
-                  },
-                },
-              ],
-              as: 'tokenLock',
-            },
-          },
-          { $unwind: '$tokenLock' },
           {
             $lookup: {
               from: 'Offer',
@@ -108,7 +75,7 @@ module.exports = (context) => {
           },
         ]);
       } else {
-        products = await context.db.Product.aggregate([
+        products = await Product.aggregate([
           ...commonQuery,
           {
             $lookup: {

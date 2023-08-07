@@ -2,32 +2,48 @@ const log = require('../utils/logger')(module);
 const categories = require('./categories');
 const blockchains = require('./blockchains');
 const syncRestrictions = require('./syncRestrictions');
-const _ = require('lodash');
+const { Blockchain, Category, ServerSetting, Contract } = require('../models');
 
-module.exports = async (context) => {
+module.exports = async () => {
   try {
-    await context.db.Category.insertMany(categories, { ordered: false });
-  } catch (e) {}
-
-  log.info('Categories was seeded.');
-
-  try {
-    await context.db.Blockchain.insertMany(blockchains, { ordered: false });
-  } catch (e) {}
-
-  log.info('Blockchains was seeded.');
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const category of categories) {
+      await Category.findOneAndUpdate(category, { upsert: true });
+    }
+  } catch (e) {
+    log.error(`Error seeding categories: ${e}`);
+  }
+  log.info('Categories seeded.');
 
   try {
-    const resultSyncRestrictions = _.map(syncRestrictions, (sr) => ({
-      updateOne: {
-        filter: _.pick(sr, ['blockchain', 'contractAddress']),
-        update: _.omit(sr, ['blockchain', 'contractAddress']),
-        upsert: true,
-      },
-    }));
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const blockchain of blockchains) {
+      await Blockchain.findOneAndUpdate(blockchain, { upsert: true });
+    }
+  } catch (e) {
+    log.error(`Error seeding blockchains: ${e}`);
+  }
+  log.info('Blockchains seeded.');
 
-    await context.db.SyncRestriction.bulkWrite(resultSyncRestrictions, { ordered: false });
-  } catch (e) {}
+  try {
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const restrictedContract of syncRestrictions) {
+      await Contract.findOneAndUpdate(
+        restrictedContract,
+        { $set: { blockSync: true } },
+        { upsert: true },
+      );
+    }
+  } catch (e) {
+    log.error(`Error seeding restricted contracts: ${e}`);
+  }
+  log.info('Restricted contracts seeded.');
 
-  log.info('SyncRestrictions was seeded.');
+  const serverSetting = await ServerSetting.findOne({});
+  if (!serverSetting) {
+    await ServerSetting.create({
+      onlyMintedTokensResult: false,
+    });
+    log.info('Server settings set by default!');
+  }
 };

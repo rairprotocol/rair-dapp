@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
@@ -21,8 +21,8 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   rerender,
   maxCopies,
   blockchainSymbol,
-  copies,
-  lockedTokens,
+  lockedCopies,
+  allowedCopies,
   simpleMode,
   instance,
   diamondRangeIndex
@@ -36,9 +36,11 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   const [startingToken, setStartingToken] = useState<string>(range[0]);
   const [endingToken, setEndingToken] = useState<string>(range[1]);
   const [individualPrice, setIndividualPrice] = useState<string>(price);
-  const [allowedTokenCount, setAllowedTokenCount] = useState<number>(copies);
+  const [allowedTokenCount, setAllowedTokenCount] = useState<string>(
+    allowedCopies || '0'
+  );
   const [lockedTokenCount, setLockedTokenCount] = useState<string>(
-    lockedTokens || '0'
+    lockedCopies || '0'
   );
   const [valuesChanged, setValuesChanged] = useState<boolean>(false);
   // const randColor = colors[index];
@@ -50,7 +52,7 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
     (
       fieldName: string,
       setter: (someValue: any /*string | number */) => void,
-      value: number,
+      value: string,
       doRerender = true
     ) => {
       array[index][fieldName] = value;
@@ -103,16 +105,36 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   }, [range, updateStartingToken, startingToken]);
 
   useEffect(() => {
-    const correctCount = +endingToken - +startingToken + 1;
-    if (!_id && simpleMode && correctCount !== allowedTokenCount) {
-      updater('tokensAllowed', setAllowedTokenCount, correctCount, false);
-      updater('lockedTokens', setLockedTokenCount, correctCount, false);
+    const correctCount = BigNumber.from(endingToken).sub(startingToken).add(1);
+    if (!_id && simpleMode && !correctCount.eq(allowedTokenCount)) {
+      updater(
+        'tokensAllowed',
+        setAllowedTokenCount,
+        correctCount.toString(),
+        false
+      );
+      updater(
+        'lockedTokens',
+        setLockedTokenCount,
+        correctCount.toString(),
+        false
+      );
     }
-    if (!_id && correctCount < allowedTokenCount) {
-      updater('tokensAllowed', setAllowedTokenCount, correctCount, false);
+    if (!_id && correctCount.lt(allowedTokenCount)) {
+      updater(
+        'tokensAllowed',
+        setAllowedTokenCount,
+        correctCount.toString(),
+        false
+      );
     }
-    if (!_id && correctCount < +lockedTokenCount) {
-      updater('lockedTokens', setLockedTokenCount, correctCount, false);
+    if (!_id && correctCount.lt(lockedTokenCount)) {
+      updater(
+        'lockedTokens',
+        setLockedTokenCount,
+        correctCount.toString(),
+        false
+      );
     }
     if (range?.at(1) === endingToken) {
       return;
@@ -269,7 +291,6 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
               getter={individualPrice}
               setter={(value) => updater('price', setIndividualPrice, value)}
               type="number"
-              min={100}
               customClass="form-control rounded-rair"
               customCSS={{
                 backgroundColor: `var(--${primaryColor})`,
@@ -294,9 +315,12 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
               <button
                 onClick={() =>
                   updater(
-                    'copies',
+                    'tokensAllowed',
                     setAllowedTokenCount,
-                    Number(endingToken) - Number(startingToken) + 1
+                    BigNumber.from(endingToken)
+                      .sub(startingToken)
+                      .add(1)
+                      .toString()
                   )
                 }
                 className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
@@ -307,7 +331,7 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
               <InputField
                 getter={allowedTokenCount}
                 setter={(value) =>
-                  updater('copies', setAllowedTokenCount, value)
+                  updater('tokensAllowed', setAllowedTokenCount, value)
                 }
                 type="number"
                 min={0}
@@ -331,7 +355,10 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
                   updater(
                     'lockedTokens',
                     setLockedTokenCount,
-                    Number(endingToken) - Number(startingToken) + 1
+                    BigNumber.from(endingToken)
+                      .sub(startingToken)
+                      .add(1)
+                      .toString()
                   )
                 }
                 className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>

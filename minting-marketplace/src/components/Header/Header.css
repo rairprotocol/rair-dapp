@@ -11,6 +11,8 @@
 
 .header-master .main-search {
   position: relative;
+  margin: 0 2vw;
+  width: 100%;
 }
 
 .header-master .main-search i.fas.fa-search {
@@ -34,7 +36,7 @@
 .header-master .main-search input {
   background: none;
   border-radius: 12px;
-  width: 35vw;
+  width: 100%;
   padding: 8px 16px 8px 42px;
   border: 1px solid #666666;
   color: white;
@@ -172,10 +174,36 @@
 .container-admin-panel .col-12.py-3 a {
 }
 
+.hotdrops-menu-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hotdrops-menu-list ul {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.hotdrops-menu-list ul li {
+  margin-right: 30px;
+}
+
+.hotdrops-menu-list ul li:last-child {
+  margin-right: 0;
+}
+
 @media screen and (max-width: 1320px) {
   .col-12.header-master {
     padding: 20px 40px;
     z-index: 2;
+  }
+}
+
+@media screen and (max-width: 1235px) {
+  .hotdrops-menu-list ul li {
+    margin-right: 10px;
   }
 }
 

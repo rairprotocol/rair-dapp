@@ -10,13 +10,12 @@ const { Contract, Product, MintedToken } = require('../../models');
 
 const fetchJson = async (URL) => {
   try {
-    const metadata = await (await fetch(URL)).json();
-    if (
-      !metadata.description ||
-        metadata.description !== '' ||
-        !metadata.name ||
-        metadata.name !== ''
-    ) {
+    const readableURL = URL.replace('ipfs://', 'https://ipfs.io/ipfs/');
+    const metadata = await (await fetch(readableURL)).json();
+    if (metadata.image) {
+      metadata.image = metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
+    }
+    if (metadata.name && metadata.name !== '') {
       return metadata;
     }
     log.error(
@@ -138,6 +137,7 @@ const updateMetadataForTokens = async (
 ) => {
   let tokensToUpdate = [];
   if (newURI !== '') {
+    newURI = newURI.replace('ipfs://', 'https://ipfs.io/ipfs/');
     try {
       await fetch(newURI);
     } catch (err) {
@@ -162,6 +162,9 @@ const updateMetadataForTokens = async (
         if (!fetchedMetadata) {
           // eslint-disable-next-line no-continue
           continue;
+        }
+        if (fetchedMetadata.image) {
+          fetchedMetadata.image = fetchedMetadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
         }
         token.metadata = fetchedMetadata;
         token.isMetadataPinned = true;

@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 
+const { Offer } = require('../../models');
 const {
   handleDuplicateKey,
   findContractFromAddress,
@@ -16,7 +17,7 @@ module.exports = async (
   start,
   end,
   price,
-  tokensAllowed, // Unused on the processing
+  tokensAllowed,
   lockedTokens,
   name,
   rangeIndex,
@@ -37,15 +38,17 @@ module.exports = async (
     product: productIndex,
   };
   // check if offer already exists:
-  let offer = await dbModels.Offer.findOne(searchParam);
+  let offer = await Offer.findOne(searchParam);
   if (!offer) {
-    offer = new dbModels.Offer({
+    offer = new Offer({
       // offerIndex: undefined, // Offer is not defined yet
       contract: contract._id,
       product: productIndex,
       // offerPool: undefined, // Diamond contracts have no offer pools
       copies: end.sub(start),
       price,
+      allowedCopies: tokensAllowed,
+      lockedCopies: lockedTokens,
       range: [start, end],
       offerName: name,
       diamond: true,
@@ -64,19 +67,5 @@ module.exports = async (
       await tokenDoc.save().catch(handleDuplicateKey);
     }
   }
-
-  // Locks are always made on Diamond Contracts, they're part of the range event
-  const tokenLock = new dbModels.LockedTokens({
-    lockIndex: rangeIndex,
-    contract: contract._id,
-    product: productIndex,
-    // Substract 1 because lockedTokens includes the start token
-    range: [start, start.add(lockedTokens).sub(1)],
-    lockedTokens,
-    isLocked: true,
-  });
-
-  await tokenLock.save().catch(handleDuplicateKey);
-
   return offer;
 };

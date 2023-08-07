@@ -255,19 +255,18 @@ const VideoItem: React.FC<IVideoItem> = ({
       );
 
       if (data && data.offers) {
-        const resultOffers = data.offers;
         const { contract } = await rFetch(
           `/api/v2/contracts/${data.offers[0].contract._id}`
         );
 
         try {
           const tokensrResp = await axios.get(
-            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${resultOffers[0].product}`
+            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}`
             // `/api/${mediaList[item].contract}/${mediaList[item]?.product}`
           );
 
           const { data } = await axios.get<IOffersResponseType>(
-            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${resultOffers[0].product}/offers`
+            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}/offers`
           );
 
           if (data.success) {
@@ -644,20 +643,6 @@ const VideoItem: React.FC<IVideoItem> = ({
                         />
                       )}
                     </div>
-                    <CustomButton
-                      text={'View Collection'}
-                      width={'208px'}
-                      height={'48px'}
-                      textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
-                      onClick={goToCollectionView}
-                      margin={'0px 0px 0.35rem 0.5rem'}
-                      custom={false}
-                      background={`var(--${
-                        primaryColor === 'charcoal'
-                          ? 'charcoal-80'
-                          : 'charcoal-40'
-                      })`}
-                    />
                   </div>
                 </div>
               )}
