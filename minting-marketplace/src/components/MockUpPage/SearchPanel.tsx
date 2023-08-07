@@ -261,7 +261,9 @@ const SearchPanel: React.FC<ISearchPanel> = ({
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
-            placeholder={'Search...'}
+            placeholder={`${
+              tabIndex === 0 ? 'Search collections' : 'Search videos'
+            }`}
             customCSS={{
               backgroundColor: `var(--${
                 primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`

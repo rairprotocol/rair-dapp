@@ -11,6 +11,7 @@ interface IMenuMobileWrapper {
   click?: boolean;
   errors?: FieldErrors | undefined;
   isSplashPage?: boolean;
+  hotdrops?: string;
 }
 
 export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
@@ -245,7 +246,7 @@ export const RightSideMenu = styled.div`
 
 export const SearchInputMobile = styled.div<IMenuMobileWrapper>`
   position: relative;
-  width: 90vw;
+  width: 100%;
   border-radius: 12px;
   background: none;
   padding: 8px 16px;
@@ -255,10 +256,10 @@ export const SearchInputMobile = styled.div<IMenuMobileWrapper>`
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
 
   i {
-    color: #bd6bae;
+    color: ${(props) =>
+      props.hotdrops === 'true' ? 'var(--hot-drops)' : '#bd6bae'};
     font-size: 18px;
     font-weight: 400;
   }

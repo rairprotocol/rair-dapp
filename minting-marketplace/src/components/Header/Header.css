@@ -33,6 +33,10 @@
   font-size: 20px;
 }
 
+.header-master .main-search.hotdrops-header i.fas.fa-times {
+  color: var(--hot-drops);
+}
+
 .header-master .main-search input {
   background: none;
   border-radius: 12px;

@@ -1460,6 +1460,18 @@ select.form-control.rounded-rair:disabled {
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;
 }
+
+.search-holder-wrapper.mobile {
+  position: relative;
+  width: 95vw;
+  height: 70vh;
+  overflow: auto;
+}
+
+.search-holder-wrapper.mobile .search-holder .data-find-wrapper {
+  width: 100%;
+}
+
 .popup-content .search-holder-wrapper-content {
   margin: 5% auto auto 26% !important;
 }

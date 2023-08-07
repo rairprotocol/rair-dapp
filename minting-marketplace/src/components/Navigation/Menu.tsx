@@ -12,6 +12,7 @@ import useConnectUser from '../../hooks/useConnectUser';
 import { BellIcon, CloseIconMobile, MenuIcon } from '../../images';
 import {
   SocialBox,
+  SocialBoxSearch,
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
@@ -96,6 +97,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
       } else {
         setMessageAlert(null);
         document.body.classList.remove('no-scroll');
+        setActiveSearch(false);
       }
     }
   };
@@ -191,17 +193,17 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               <div className="social-media">
                 {!messageAlert && (
                   <>
-                    <SocialBox
+                    <SocialBoxSearch
+                      primaryColor={primaryColor}
+                      hotdrops={hotdropsVar}
                       onClick={() => {
-                        handleMessageAlert('notification');
+                        handleActiveSearch();
                         toggleMenu('nav');
                       }}
-                      className="social-bell-icon"
-                      width="40px"
-                      height="40px"
+                      activeSearch={activeSearch}
                       marginRight={'17px'}>
-                      <BellIcon primaryColor={primaryColor} />
-                    </SocialBox>
+                      <i className="fas fa-search" aria-hidden="true"></i>
+                    </SocialBoxSearch>
                     <NavLink to={`/${currentUserAddress}`}>
                       <UserIconMobile
                         onClick={() => setClick(false)}
@@ -219,6 +221,19 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               </div>
             )}
           </div>
+          {!loggedIn && (
+            <SocialBoxSearch
+              primaryColor={primaryColor}
+              hotdrops={hotdropsVar}
+              onClick={() => {
+                handleActiveSearch();
+                toggleMenu('nav');
+              }}
+              activeSearch={activeSearch}
+              marginRight={'17px'}>
+              <i className="fas fa-search" aria-hidden="true"></i>
+            </SocialBoxSearch>
+          )}
           {click ? (
             <SocialMenuMobile primaryColor={primaryColor} onClick={toggleMenu}>
               <CloseIconMobile primaryColor={primaryColor} />
