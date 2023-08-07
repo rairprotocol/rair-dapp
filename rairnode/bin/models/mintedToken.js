@@ -12,7 +12,7 @@ const Metadata = new Schema(
     image_data: { type: String, required: false },
     artist: { type: String, default: 'none' },
     external_url: { type: String, default: 'none' },
-    description: { type: String, required: true, default: 'none' },
+    description: { type: String, default: 'none' },
     name: { type: String, required: true, default: 'none' },
     attributes: {
       type: [
