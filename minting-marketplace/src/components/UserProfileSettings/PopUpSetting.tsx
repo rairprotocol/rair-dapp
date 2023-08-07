@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
-import { BigNumber, ethers } from 'ethers';
+import { utils } from 'ethers';
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -45,7 +45,7 @@ const PopUpSettings = ({
   const { logoutUser } = useConnectUser();
 
   const { userData } = useSelector((store) => store.userStore);
-  const { erc777Instance, factoryInstance, currentUserAddress } = useSelector<
+  const { erc777Instance, currentUserAddress } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
@@ -65,21 +65,17 @@ const PopUpSettings = ({
   }, [userData]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress) {
+    if (currentUserAddress && erc777Instance?.provider) {
       const balance = await erc777Instance.provider.getBalance(
         currentUserAddress
       );
 
-      let result = BigNumber.from(balance.toString());
+      const result = utils.formatEther(balance);
+      const final = Number(result.toString())?.toFixed(3)?.toString();
 
-      result = ethers.utils.formatEther(result);
-
-      let final = Number(result).toFixed(3);
-
-      final = final.toString();
       setUserBalance(final);
     }
-  }, [currentUserAddress, erc777Instance.provider]);
+  }, [currentUserAddress, erc777Instance]);
 
   useEffect(() => {
     getBalance();
