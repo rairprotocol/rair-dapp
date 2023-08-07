@@ -425,7 +425,7 @@ const MainHeader: React.FC<IMainHeader> = ({
               <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
                 {hotdropsVar === 'true' ? (
                   <a
-                    href="https://discord.gg/KZxRNx3K"
+                    href="https://discord.com/invite/F4t4c2BQmc"
                     target={'_blank'}
                     rel="noreferrer">
                     <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
