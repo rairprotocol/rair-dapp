@@ -8,7 +8,11 @@ module.exports = async () => {
   try {
     // eslint-disable-next-line no-restricted-syntax
     for await (const category of categories) {
-      await Category.findOneAndUpdate(category, { upsert: true });
+      await Category.findOneAndUpdate(
+        category,
+        category,
+        { upsert: true, new: true },
+      );
     }
   } catch (e) {
     log.error(`Error seeding categories: ${e}`);
@@ -18,7 +22,11 @@ module.exports = async () => {
   try {
     // eslint-disable-next-line no-restricted-syntax
     for await (const blockchain of blockchains) {
-      await Blockchain.findOneAndUpdate(blockchain, { upsert: true });
+      await Blockchain.findOneAndUpdate(
+        blockchain,
+        blockchain,
+        { upsert: true, new: true },
+      );
     }
   } catch (e) {
     log.error(`Error seeding blockchains: ${e}`);
@@ -31,7 +39,7 @@ module.exports = async () => {
       await Contract.findOneAndUpdate(
         restrictedContract,
         { $set: { blockSync: true } },
-        { upsert: true },
+        { upsert: true, new: true },
       );
     }
   } catch (e) {
