@@ -244,7 +244,7 @@ const PopUpSettings = ({
                   }}>
                   <SvgUserIcon primaryColor={primaryColor} /> Profile settings
                 </li>
-                {!isSplashPage && (
+                {hotdropsVar !== 'true' && (
                   <li
                     onClick={() => pushToUploadVideo(2)}
                     style={{

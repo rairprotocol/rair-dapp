@@ -287,8 +287,8 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     }, true);
   };
 
-  const setMintedQueryResults = async (value) => {
-    const { success } = await rFetch('/api/settings/mintedTokenResults', {
+  const setServerSetting = async (setting, value) => {
+    const { success } = await rFetch(`/api/settings/${setting}`, {
       method: 'POST',
       body: JSON.stringify({
         value
@@ -554,12 +554,24 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
       Only return minted tokens on collection page:{' '}
       <button
         className="btn btn-royal-ice"
-        onClick={() => setMintedQueryResults(true)}>
+        onClick={() => setServerSetting('mintedTokenResults', true)}>
         Yes
       </button>
       <button
         className="btn btn-stimorol"
-        onClick={() => setMintedQueryResults(false)}>
+        onClick={() => setServerSetting('mintedTokenResults', false)}>
+        No
+      </button>
+      <br />
+      Allow demo page uploads:{' '}
+      <button
+        className="btn btn-royal-ice"
+        onClick={() => setServerSetting('demoUploadsEnabled', true)}>
+        Yes
+      </button>
+      <button
+        className="btn btn-stimorol"
+        onClick={() => setServerSetting('demoUploadsEnabled', false)}>
         No
       </button>
       <hr />

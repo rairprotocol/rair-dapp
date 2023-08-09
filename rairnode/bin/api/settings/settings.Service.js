@@ -29,3 +29,19 @@ exports.setMintedTokenResults = async (req, res, next) => {
     return next(new AppError(error));
   }
 };
+
+exports.setDemoUploads = async (req, res, next) => {
+  try {
+    const { value } = req.body;
+    await ServerSetting.findOneAndUpdate({}, {
+        $set: {
+          demoUploadsEnabled: value,
+        },
+    });
+    return res.json({
+        success: true,
+    });
+  } catch (error) {
+    return next(new AppError(error));
+  }
+};

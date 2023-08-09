@@ -14,6 +14,7 @@ interface ISocialBox {
   avatar?: string | null | undefined;
   onClick?: any;
   notification?: boolean;
+  hotdrops?: string;
 }
 
 export const SocialBox = styled.div<ISocialBox>`
@@ -104,7 +105,9 @@ export const SocialBoxSearch = styled.div<ISocialBox>`
   align-items: center;
   background: ${(props) =>
     props.activeSearch
-      ? 'var(--stimorol)'
+      ? props.hotdrops === 'true'
+        ? 'var(--hot-drops-gradient)'
+        : 'var(--stimorol)'
       : props.primaryColor === 'rhyno'
       ? '#ffffff'
       : '#424242'};
@@ -117,14 +120,18 @@ export const SocialBoxSearch = styled.div<ISocialBox>`
 
   &:hover {
     border: none;
-    background: var(--stimorol);
+    background: ${(props) =>
+      props.hotdrops === 'true' ? 'var(--hot-drops-hover)' : 'var(--stimorol)'};
     i {
       color: #fff;
     }
   }
 
   i {
-    color: ${(props) => (props.activeSearch ? '#fff' : '#bd6bae')};
+    color: ${(props) =>
+      props.activeSearch
+        ? '#fff'
+        : `${props.hotdrops === 'true' ? 'var(--hot-drops)' : '#bd6bae'}`};
     font-size: 18px;
     font-weight: 400;
     transition: all 0.3s ease;

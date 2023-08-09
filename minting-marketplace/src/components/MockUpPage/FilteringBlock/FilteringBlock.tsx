@@ -82,7 +82,7 @@ const FilteringBlock = ({
   };
 
   const handleClickOutSideFilter = (e) => {
-    if (!filterRef.current.contains(e.target)) {
+    if (hotdropsVar !== 'true' && !filterRef.current.contains(e.target)) {
       setFilterPopUp(false);
     }
   };
@@ -113,12 +113,21 @@ const FilteringBlock = ({
         }
       });
     } else {
-      globalModaldispatch({
-        type: GLOBAL_MODAL_ACTIONS.CREATE_MODAL,
-        payload: {
-          isOpen: true
-        }
-      });
+      if (hotdropsVar === 'true') {
+        globalModaldispatch({
+          type: GLOBAL_MODAL_ACTIONS.CREATE_MODAL,
+          payload: {
+            isOpen: false
+          }
+        });
+      } else {
+        globalModaldispatch({
+          type: GLOBAL_MODAL_ACTIONS.CREATE_MODAL,
+          payload: {
+            isOpen: true
+          }
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalModaldispatch]);
@@ -214,58 +223,64 @@ const FilteringBlock = ({
           {' '}
         </div>
       ) : (
-        <div ref={filterRef} className="select-filters-wrapper">
-          <SelectFiltersItem
-            className={`select-filters ${
-              process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-hover' : ''
-            }`}
-            onClick={onChangeFilterPopUp}
-            filterPopUp={filterPopUp}
-            textColor={textColor}
-            primaryColor={primaryColor}>
-            <div className="select-filters-title">
-              {width > 1101 ? (
-                <>
-                  {filterCloseText ? (
+        <>
+          {hotdropsVar !== 'true' && (
+            <div ref={filterRef} className="select-filters-wrapper">
+              <SelectFiltersItem
+                className={`select-filters ${
+                  hotdropsVar === 'true' ? 'hotdrops-hover' : ''
+                }`}
+                onClick={onChangeFilterPopUp}
+                filterPopUp={filterPopUp}
+                textColor={textColor}
+                primaryColor={primaryColor}>
+                <div className="select-filters-title">
+                  {width > 1101 ? (
+                    <>
+                      {filterCloseText ? (
+                        <StyledFilterIcon
+                          filterPopUp={filterPopUp}></StyledFilterIcon>
+                      ) : (
+                        <CloseIcon
+                          style={{
+                            marginRight: '5px'
+                          }}
+                        />
+                      )}
+                    </>
+                  ) : (
                     <StyledFilterIcon
                       filterPopUp={filterPopUp}></StyledFilterIcon>
-                  ) : (
-                    <CloseIcon
-                      style={{
-                        marginRight: '5px'
-                      }}
-                    />
                   )}
-                </>
-              ) : (
-                <StyledFilterIcon filterPopUp={filterPopUp}></StyledFilterIcon>
+                  {width > 700 && <span>Filters</span>}
+                </div>
+              </SelectFiltersItem>
+
+              {filterPopUp && (
+                <SelectFiltersPopUp
+                  className="select-filters-popup"
+                  primaryColor={primaryColor}>
+                  <div
+                    onClick={() => {
+                      onChangeFilterItem('Price');
+                      setIsOpenBlockchain(true);
+                    }}
+                    className="select-filters-item">
+                    Blockchain
+                  </div>
+                  <div
+                    onClick={() => {
+                      onChangeFilterItem('Metadata');
+                      setIsOpenCategories(true);
+                    }}
+                    className="select-filters-item">
+                    Categories
+                  </div>
+                </SelectFiltersPopUp>
               )}
-              {width > 700 && <span>Filters</span>}
             </div>
-          </SelectFiltersItem>
-          {filterPopUp && (
-            <SelectFiltersPopUp
-              className="select-filters-popup"
-              primaryColor={primaryColor}>
-              <div
-                onClick={() => {
-                  onChangeFilterItem('Price');
-                  setIsOpenBlockchain(true);
-                }}
-                className="select-filters-item">
-                Blockchain
-              </div>
-              <div
-                onClick={() => {
-                  onChangeFilterItem('Metadata');
-                  setIsOpenCategories(true);
-                }}
-                className="select-filters-item">
-                Categories
-              </div>
-            </SelectFiltersPopUp>
           )}
-        </div>
+        </>
       )}
     </>
   );

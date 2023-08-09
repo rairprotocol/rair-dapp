@@ -21,7 +21,7 @@ module.exports = {
             offer: Joi.array().items(Joi.string()).max(2),
             category: mongoId.required(),
             staticThumbnail: Joi.string(),
-            animatedThumbnail: Joi.string(),
+            animatedThumbnail: Joi.string().allow(''),
             type: Joi.string().required(),
             extension: Joi.string().required(),
             duration: Joi.string().required(),

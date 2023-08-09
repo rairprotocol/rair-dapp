@@ -314,35 +314,37 @@ module.exports = {
 
         log.info('Key written to vault.');
 
-        await axios({
+        const uploadData = await axios({
           method: 'POST',
           url: `${baseUri}/api/v2/upload/file`,
           data: {
             cid,
             meta,
           },
-        });
+        }).catch(log.error);
 
-        log.info(`${req.file.originalname} stored to DB.`);
-        socketInstance.emit('uploadProgress', {
-          message: 'Stored to database.',
-          last: !!['gcp'].includes(storage),
-          done: ['gcp'].includes(storage) ? 100 : 96,
-        });
+        if (uploadData?.data?.cid) {
+          log.info(`${req.file.originalname} stored to DB.`);
+          socketInstance.emit('uploadProgress', {
+            message: 'Stored to database.',
+            last: !!['gcp'].includes(storage),
+            done: ['gcp'].includes(storage) ? 100 : 96,
+          });
 
-        log.info(`${req.file.originalname} pinning to ${storageName}.`);
-        socketInstance.emit('uploadProgress', {
-          message: `${req.file.originalname} pinning to ${storageName}.`,
-          last: false,
-        });
+          log.info(`${req.file.originalname} pinning to ${storageName}.`);
+          socketInstance.emit('uploadProgress', {
+            message: `${req.file.originalname} pinning to ${storageName}.`,
+            last: false,
+          });
 
-        if (storage === 'ipfs') {
-          await addPin(cid, title, socketInstance);
+          if (storage === 'ipfs') {
+            await addPin(cid, title, socketInstance);
+          }
         }
       } catch (e) {
         log.error('An error has occurred encoding the file');
         log.error(e);
-        next(e);
+        return next(e);
       }
     } else {
       return next(new AppError('File not provided.', 400));
