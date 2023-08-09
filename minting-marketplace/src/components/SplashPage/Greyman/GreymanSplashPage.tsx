@@ -18,7 +18,6 @@ import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 /* importing images*/
 import { metaMaskIcon } from '../../../images';
-import { web3Switch } from '../../../utils/switchBlockchain';
 import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
@@ -110,7 +109,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   const [processDone, setProcessDone] = useState<boolean>(false);
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const [active, setActive] = useState<TSplashPageIsActive>({
     policy: false,
@@ -194,7 +193,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
       connectUserData?.();
       return;
     }
-    if (currentChain !== GreymanChainId) {
+    if (correctBlockchain(GreymanChainId)) {
       web3Switch(GreymanChainId);
       return;
     }
@@ -262,6 +261,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
             }
           ],
           {
+            intendedBlockchain: GreymanChainId,
             failureMessage:
               'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
           }
@@ -396,7 +396,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
     } catch (err) {
       console.error(err);
     }
-  }, [setSoldCopies, diamondMarketplaceInstance, setCopies, currentChain]);
+  }, [diamondMarketplaceInstance, currentChain, web3TxHandler]);
 
   useEffect(() => {
     if (!diamondMarketplaceInstance) {

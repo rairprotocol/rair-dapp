@@ -12,6 +12,7 @@ const chainData: TChainData = {
     testnet: false,
     image: AstarLogo,
     name: 'Astar Mainnet',
+    oreIdAlias: undefined,
     chainId: '0x250',
     symbol: 'ASTR',
     addChainData: {
@@ -29,6 +30,7 @@ const chainData: TChainData = {
   '0x89': {
     image: MaticLogo,
     name: 'Matic(Polygon) Mainnet',
+    oreIdAlias: 'polygon_main',
     chainId: '0x89',
     symbol: 'MATIC',
     addChainData: {
@@ -47,6 +49,7 @@ const chainData: TChainData = {
     testnet: true,
     image: MaticLogo,
     name: 'Matic(Polygon) Testnet',
+    oreIdAlias: 'polygon_mumbai',
     chainId: '0x13881',
     symbol: 'tMATIC',
     addChainData: {
@@ -64,6 +67,7 @@ const chainData: TChainData = {
   '0x1': {
     image: EthereumLogo,
     name: 'Ethereum Mainnet',
+    oreIdAlias: 'eth_main',
     chainId: '0x1',
     symbol: 'ETH',
     addChainData: {
@@ -77,6 +81,7 @@ const chainData: TChainData = {
     testnet: true,
     image: EthereumLogo,
     name: 'Ethereum Goerli',
+    oreIdAlias: 'eth_goerli',
     chainId: '0x5',
     symbol: 'ETH',
     addChainData: {

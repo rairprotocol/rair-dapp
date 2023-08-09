@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 import { ReactNode } from 'react';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
 import {
   TAttributes,
@@ -15,7 +15,7 @@ import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 export interface IMarketplaceOfferConfig {
   array: TMarketplaceOfferConfigArrayItem[];
   index: number;
-  nodeFee: number;
+  nodeFee: BigNumber;
   minterDecimals: number;
   treasuryFee: number;
   treasuryAddress: string;
@@ -52,11 +52,11 @@ export interface ICustomFeeRow {
   array: TCustomPayments[];
   recipient: string | undefined;
   deleter: (index: number) => void;
-  percentage: number;
+  percentage: BigNumber;
   rerender: () => void;
   editable: boolean;
   message?: string;
-  minterDecimals: number;
+  minterDecimals: BigNumber;
   disabled?: boolean;
   marketValuesChanged?: boolean;
   setMarketValuesChanged?: (value: boolean) => void;
@@ -86,7 +86,7 @@ export type TParamsBatchMetadata = {
 
 export type TCustomPayments = {
   recipient: string | undefined;
-  percentage: number;
+  percentage: BigNumber;
   editable: boolean;
   message?: string;
 };

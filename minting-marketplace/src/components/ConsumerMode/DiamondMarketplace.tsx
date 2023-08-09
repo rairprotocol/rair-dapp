@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { BigNumber, constants, utils } from 'ethers';
+import { OreidProvider, useOreId } from 'oreid-react';
 
 import {
   IBatchTokenSelector,
@@ -145,6 +146,7 @@ const DiamondMarketplace = () => {
   const { web3TxHandler } = useWeb3Tx();
 
   const store = useStore();
+  const oreId = useOreId();
 
   const { primaryColor, secondaryColor } = useSelector<
     RootState,
@@ -394,20 +396,22 @@ const DiamondMarketplace = () => {
                 onClick={async () => {
                   reactSwal.fire({
                     html: (
-                      <Provider store={store}>
-                        <BuyTokenModalContent
-                          diamonds={true}
-                          buyTokenFunction={mintTokenCall}
-                          buyTokenBatchFunction={batchMint}
-                          start={offer.startingToken}
-                          end={offer.endingToken}
-                          blockchain={currentChain}
-                          minterAddress={diamondMarketplaceInstance?.address}
-                          price={offer.price}
-                          offerName={offer.name}
-                          offerIndex={offer.offerIndex}
-                        />
-                      </Provider>
+                      <OreidProvider oreId={oreId}>
+                        <Provider store={store}>
+                          <BuyTokenModalContent
+                            diamonds={true}
+                            buyTokenFunction={mintTokenCall}
+                            buyTokenBatchFunction={batchMint}
+                            start={offer.startingToken}
+                            end={offer.endingToken}
+                            blockchain={currentChain}
+                            minterAddress={diamondMarketplaceInstance?.address}
+                            price={offer.price}
+                            offerName={offer.name}
+                            offerIndex={offer.offerIndex}
+                          />
+                        </Provider>
+                      </OreidProvider>
                     ),
                     showConfirmButton: false,
                     width: '70vw',

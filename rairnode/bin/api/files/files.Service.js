@@ -1,5 +1,4 @@
 const { File, MintedToken, Unlock } = require('../../models');
-const eFactory = require('../../utils/entityFactory');
 const AppError = require('../../utils/errors/AppError');
 
 exports.getFiles = async (req, res) => {

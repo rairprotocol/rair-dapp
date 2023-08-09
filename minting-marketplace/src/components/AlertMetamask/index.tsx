@@ -1,17 +1,19 @@
-import React from 'react';
+import { FC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { IAlertMetamask } from './alertMetamask.types';
 import { Alert } from './styles';
 
-import { web3Switch } from '../../utils/switchBlockchain';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 
-const AlertMetamask: React.FC<IAlertMetamask> = ({
+const AlertMetamask: FC<IAlertMetamask> = ({
   selectedChain,
   realNameChain,
   selectedChainId,
   setShowAlert
 }) => {
+  const { web3Switch } = useWeb3Tx();
+
   return (
     <Alert>
       <span>

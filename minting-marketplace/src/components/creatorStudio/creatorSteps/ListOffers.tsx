@@ -14,7 +14,6 @@ import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
 import { validateInteger } from '../../../utils/metamaskUtils';
-import { web3Switch } from '../../../utils/switchBlockchain';
 import {
   IListOffers,
   TOfferListItem,
@@ -30,11 +29,15 @@ const ListOffers: React.FC<IListOffers> = ({
   goBack,
   forceRefetch
 }) => {
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+
   const [offerList, setOfferList] = useState<TOfferListItem[]>([]);
   const [forceRerender, setForceRerender] = useState<boolean>(false);
   const [hasMinterRole, setHasMinterRole] = useState<boolean>(false);
   const [instance, setInstance] = useState<ethers.Contract | undefined>();
-  const [onMyChain, setOnMyChain] = useState<boolean>();
+  const [onMyChain, setOnMyChain] = useState<boolean>(
+    correctBlockchain(contractData?.blockchain as BlockchainType)
+  );
   const [emptyNames, setEmptyNames] = useState<boolean>(true);
   const [validPrice, setValidPrice] = useState<boolean>(true);
 
@@ -52,7 +55,6 @@ const ListOffers: React.FC<IListOffers> = ({
   const { address, collectionIndex } = useParams<TParamsListOffers>();
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
 
   useEffect(() => {
     setOfferList(
@@ -253,12 +255,10 @@ const ListOffers: React.FC<IListOffers> = ({
 
   useEffect(() => {
     setOnMyChain(
-      contractData &&
-        (window.ethereum
-          ? chainData[contractData?.blockchain]?.chainId === currentChain
-          : chainData[contractData?.blockchain]?.chainId === currentChain)
+      !!contractData &&
+        correctBlockchain(contractData.blockchain as BlockchainType)
     );
-  }, [contractData, programmaticProvider, currentChain]);
+  }, [contractData, programmaticProvider, currentChain, correctBlockchain]);
 
   return (
     <div className="row px-0 mx-0">
@@ -330,7 +330,8 @@ const ListOffers: React.FC<IListOffers> = ({
               forwardFunctions={[
                 !onMyChain
                   ? {
-                      action: () => web3Switch(contractData?.blockchain),
+                      action: () =>
+                        web3Switch(contractData?.blockchain as BlockchainType),
                       label: `Switch to ${
                         chainData[contractData?.blockchain]?.name
                       }`

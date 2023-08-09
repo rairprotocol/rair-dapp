@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   NavLink,
@@ -25,7 +25,6 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
-import { web3Switch } from '../../utils/switchBlockchain';
 
 import BatchMetadata from './creatorSteps/batchMetadata';
 import CustomizeFees from './creatorSteps/CustomizeFees';
@@ -39,7 +38,7 @@ import ListOffersDiamond from './diamondCreatorSteps/ListOffersDiamond';
 
 const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
-const WorkflowSteps: React.FC = () => {
+const WorkflowSteps: FC = () => {
   const { address, collectionIndex, blockchain } = useParams<TWorkflowParams>();
 
   const {
@@ -52,7 +51,7 @@ const WorkflowSteps: React.FC = () => {
     (store) => store.contractStore
   );
 
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
 
   const [mintingRole, setMintingRole] = useState<boolean>();
   const [traderRole, setTraderRole] = useState<boolean>();
@@ -339,8 +338,9 @@ const WorkflowSteps: React.FC = () => {
       contractData &&
       contractData.instance &&
       !contractData.external &&
-      currentChain === contractData.blockchain
+      correctBlockchain(contractData.blockchain as BlockchainType)
     ) {
+      console.info('Asking');
       (async () => {
         setMintingRole(
           await web3TxHandler(contractData.instance, 'hasRole', [
@@ -365,7 +365,8 @@ const WorkflowSteps: React.FC = () => {
     diamondMarketplaceInstance,
     minterInstance,
     currentChain,
-    web3TxHandler
+    web3TxHandler,
+    correctBlockchain
   ]);
 
   useEffect(() => {
@@ -406,13 +407,8 @@ const WorkflowSteps: React.FC = () => {
     gotoNextStep: () => {
       navigate(steps[currentStep + 1].populatedPath);
     },
-    switchBlockchain: async () => {
-      if (chainData === undefined || contractData === undefined) return;
-      return await web3Switch(
-        // eslint-disable-next-line
-        chainData[contractData?.blockchain]?.chainId!
-      ); /*here web3Switch method accepts only BlockchainType, but our chainId can be also of type undefined */
-    },
+    switchBlockchain: () =>
+      web3Switch(contractData?.blockchain as BlockchainType),
     goBack,
     mintingRole,
     traderRole,

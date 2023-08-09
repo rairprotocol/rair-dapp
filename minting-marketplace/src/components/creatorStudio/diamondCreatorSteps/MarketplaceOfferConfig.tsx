@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
@@ -44,13 +44,13 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     {
       message: 'Treasury address',
       recipient: treasuryAddress,
-      percentage: treasuryFee,
+      percentage: BigNumber.from(treasuryFee),
       editable: false
     },
     {
       message: 'Creator address (You)',
       recipient: currentUserAddress,
-      percentage: 95 * Math.pow(10, minterDecimals),
+      percentage: BigNumber.from(95 * Math.pow(10, minterDecimals)),
       editable: true
     }
   ]);
@@ -58,24 +58,25 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     if (!array[index].marketData || !!array[index]._id === false) {
       return;
     }
+    console.info(array[index].marketData);
     setCustomPayments(
       [
         {
           message: 'Node address',
           recipient: process.env.REACT_APP_NODE_ADDRESS,
-          percentage: nodeFee,
+          percentage: BigNumber.from(nodeFee),
           editable: false
         },
         {
           message: 'Treasury address',
           recipient: treasuryAddress,
-          percentage: treasuryFee,
+          percentage: BigNumber.from(treasuryFee),
           editable: false
         }
       ].concat(
         array[index].marketData.fees.map((fee: TCustomPayments) => ({
           recipient: fee.recipient,
-          percentage: fee.percentage,
+          percentage: BigNumber.from(fee.percentage),
           editable: true,
           message: 'Data from the marketplace'
         }))
@@ -93,7 +94,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     const aux = [...customPayments];
     aux.push({
       recipient: '',
-      percentage: 0,
+      percentage: BigNumber.from(0),
       editable: true
     });
     setCustomPayments(aux);
@@ -237,7 +238,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                         deleter={removePayment}
                         {...{
                           rerender,
-                          minterDecimals,
+                          minterDecimals: BigNumber.from(minterDecimals),
                           marketValuesChanged,
                           setMarketValuesChanged,
                           price: item.price,

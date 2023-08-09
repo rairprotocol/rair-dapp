@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { BigNumber } from 'ethers';
 
 //import InputSelect from '../../common/InputSelect';
 // import { TTokenData } from '../../../axios.responseTypes';
-import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 //import { UsersContractsType } from '../../adminViews/adminView.types';
 import { rFetch } from '../../../utils/rFetch';
-import { web3Switch } from '../../../utils/switchBlockchain';
 import InputField from '../../common/InputField';
 import {
   IIBlockchainURIManager,
@@ -84,15 +80,10 @@ const TokenURIRow: React.FC<ITokenURIRow> = ({
 const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
   contractData,
   collectionIndex,
-  refreshNFTMetadata,
   changeFile
 }) => {
-  const { currentChain } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
-
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const lastTokenInProduct = contractData?.product?.copies || 0;
   const [blockchainOperationInProgress, setBlockchainOperationInProgress] =
@@ -158,7 +149,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
   };
 
   const checkCurrentBlockchain = () => {
-    if (currentChain !== contractData.blockchain) {
+    if (!correctBlockchain(contractData.blockchain)) {
       web3Switch(contractData.blockchain);
       return false;
     }
@@ -482,6 +473,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                 'setMetadataExtension',
                 [metadataExtension],
                 {
+                  intendedBlockchain: contractData?.blockchain,
                   failureMessage: 'This feature might not be implemented yet!'
                 }
               )
@@ -579,6 +571,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                     uniqueURIArray.map((item) => item.metadataURI)
                   ],
                   {
+                    intendedBlockchain: contractData.blockchain,
                     failureMessage:
                       "Older versions of the RAIR contract don't have batch metadata update functionality!"
                   }

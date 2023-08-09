@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import Modal from 'react-modal';
 import { Provider, useSelector, useStore } from 'react-redux';
+import { OreidProvider, useOreId } from 'oreid-react';
 import Swal from 'sweetalert2';
 
 import { RootState } from '../../../../ducks';
@@ -49,15 +50,18 @@ const VideoTilesItem = ({
   backgroundImage
 }) => {
   const store = useStore();
+  const oreId = useOreId();
   const reactSwal = useSwal();
 
   const openRAIRvideo = () => {
     reactSwal.fire({
       title: videoName,
       html: (
-        <Provider store={store}>
-          <StandaloneVideoPlayer {...{ baseURL, mediaId }} />
-        </Provider>
+        <OreidProvider oreId={oreId}>
+          <Provider store={store}>
+            <StandaloneVideoPlayer {...{ baseURL, mediaId }} />
+          </Provider>
+        </OreidProvider>
       ),
       width: '90vw',
       customClass: {

@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ethers } from 'ethers';
+import { Contract } from 'ethers';
 
 import {
   BlockchainInfoType,
@@ -17,7 +17,6 @@ import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import blockchainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
-import { web3Switch } from '../../utils/switchBlockchain';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
@@ -49,11 +48,11 @@ const TransferTokens = () => {
     BlockchainInfoType | undefined
   >();
   const [contractInstance, setContractInstance] = useState<
-    ethers.Contract | undefined
+    Contract | undefined
   >();
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
 
   const getUserContracts = useCallback(async () => {
     const response: ContractsResponseType = await rFetch('/api/contracts');
@@ -100,6 +99,7 @@ const TransferTokens = () => {
       'name',
       [],
       {
+        intendedBlockchain: currentChain,
         failureMessage:
           'Unable to connect to the contract, please verify the address, blockchain and type of the contract'
       }
@@ -149,7 +149,7 @@ const TransferTokens = () => {
       const [, , selectedBlockchain, contractAddress] =
         selectedContract.split('/');
       setContractBlockchain(blockchainData[selectedBlockchain]);
-      if (selectedBlockchain === currentChain) {
+      if (correctBlockchain(selectedBlockchain as BlockchainType)) {
         const instance = contractCreator?.(
           contractAddress,
           response1.contract.diamond ? diamondFactoryAbi : erc721Abi
@@ -157,7 +157,7 @@ const TransferTokens = () => {
         setContractInstance(instance);
       }
     }
-  }, [selectedContract, currentChain, contractCreator, manualAddress]);
+  }, [manualAddress, selectedContract, correctBlockchain, contractCreator]);
 
   useEffect(() => {
     getContractData();
@@ -329,11 +329,11 @@ const TransferTokens = () => {
           <div className="col-12 col-md-6">
             {contractBlockchain && (
               <button
-                disabled={currentChain === contractBlockchain.chainId}
+                disabled={!correctBlockchain(contractBlockchain.chainId)}
                 className="btn btn-royal-ice"
                 onClick={() => web3Switch(contractBlockchain.chainId)}>
                 1.-{' '}
-                {currentChain === contractBlockchain.chainId
+                {correctBlockchain(contractBlockchain.chainId)
                   ? 'Connected to'
                   : 'Switch to'}{' '}
                 {contractBlockchain.name}
@@ -344,8 +344,9 @@ const TransferTokens = () => {
             {contractInstance && (
               <button
                 disabled={
-                  currentChain !== contractBlockchain?.chainId ||
-                  traderRole !== false
+                  correctBlockchain(
+                    contractBlockchain?.chainId as BlockchainType
+                  ) || traderRole !== false
                 }
                 className="btn btn-royal-ice"
                 onClick={async () => {
@@ -382,10 +383,12 @@ const TransferTokens = () => {
             {contractInstance && (
               <button
                 disabled={
-                  (currentChain !== contractBlockchain?.chainId ||
-                    !traderRole ||
-                    targetAddress === '',
-                  !contractInstance)
+                  !correctBlockchain(
+                    contractBlockchain?.chainId as BlockchainType
+                  ) ||
+                  !traderRole ||
+                  targetAddress === '' ||
+                  !contractInstance
                 }
                 className="btn btn-royal-ice"
                 onClick={async () => {
