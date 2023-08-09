@@ -265,9 +265,6 @@ module.exports = () => {
 
         const pipeline = [
           {
-            $match: matchData,
-          },
-          {
             $lookup: {
               from: 'Unlock',
               localField: '_id',
@@ -281,6 +278,9 @@ module.exports = () => {
               foreignField: '_id',
               as: 'unlockData.offers',
             },
+          },
+          {
+            $match: matchData,
           },
           {
             $project: {

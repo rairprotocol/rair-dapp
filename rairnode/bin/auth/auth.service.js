@@ -114,11 +114,10 @@ module.exports = {
         },
       ]);
 
-      const fileData = unlocks[0].file[0];
-      const offerData = unlocks[0].offers.map((item) => item);
-      const contractData = unlocks[0].contractData.map((item) => item);
+      const offerData = unlocks[0]?.offers?.map((item) => item);
+      const contractData = unlocks[0]?.contractData?.map((item) => item);
 
-      if (!fileData) {
+      if (!offerData && !media.demo) {
         return next(new AppError('No data found for file', 403));
       }
 
@@ -126,10 +125,10 @@ module.exports = {
       let unlockingOffer;
 
       try {
-        if (fileData.demo) {
+        if (media.demo) {
           ownsMediaNFT = true;
           log.info(`Media ${fileId} is flagged as demo, will not validate NFT ownership`);
-        } else if (fileData.uploader === userData.publicAddress) {
+        } else if (media.uploader === userData.publicAddress) {
           ownsMediaNFT = true;
           log.info(`Media ${fileId} unlocked by uploader ${userData.publicAddress}`);
         } else if (offerData) {

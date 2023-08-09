@@ -253,32 +253,10 @@ const VideoItem: React.FC<IVideoItem> = ({
       const { data } = await rFetch(
         `/api/v2/files/${mediaList[item]._id}/unlocks`
       );
-
-      if (data && data.offers) {
+      if (data?.offers?.at(0)?.contract?._id) {
         const { contract } = await rFetch(
           `/api/v2/contracts/${data.offers[0].contract._id}`
         );
-
-        try {
-          const tokensrResp = await axios.get(
-            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}`
-            // `/api/${mediaList[item].contract}/${mediaList[item]?.product}`
-          );
-
-          const { data } = await axios.get<IOffersResponseType>(
-            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}/offers`
-          );
-
-          if (data.success) {
-            setOfferDataInfo(data.product.offers);
-          }
-
-          contract.tokens = tokensrResp.data.result.tokens;
-          // contract.products = productsResp.data.product;
-        } catch (err) {
-          console.error(err);
-        }
-
         setContractData(contract);
       }
     }
