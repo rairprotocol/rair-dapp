@@ -2073,9 +2073,9 @@ button.metamask-on-boarding:focus {
     align-items: center;
   }
 
-  .modal-content-wrapper-for-video .modal-content-video-thumbnail {
+  /* .modal-content-wrapper-for-video .modal-content-video-thumbnail {
     height: 100%;
-  }
+  } */
 
   .modal-content-video-thumbnail {
     margin-right: 0;

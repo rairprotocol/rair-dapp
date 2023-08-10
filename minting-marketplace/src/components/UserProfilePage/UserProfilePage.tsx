@@ -199,6 +199,7 @@ const UserProfilePage: React.FC = () => {
             firstName: null,
             lastName: null,
             nickName: `@${userAddress}`,
+            ageVerified: false,
             publicAddress: `${userAddress}`,
             _id: 'none'
           };
