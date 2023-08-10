@@ -13,7 +13,6 @@ import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
 import { validateInteger } from '../../../utils/metamaskUtils';
 import colors from '../../../utils/offerLockColors';
-import { web3Switch } from '../../../utils/switchBlockchain';
 import InputField from '../../common/InputField';
 import {
   ILockRow,
@@ -167,13 +166,16 @@ const ListLocks: React.FC<TListLocks> = ({
   stepNumber,
   goBack
 }) => {
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+
   const [offerList, setOfferList] = useState<TListLocksArrayItem[]>([]);
   const [forceRerender, setForceRerender] = useState<boolean>(false);
   const [instance, setInstance] = useState<ethers.Contract | undefined>();
-  const [onMyChain, setOnMyChain] = useState<boolean>();
+  const [onMyChain, setOnMyChain] = useState<boolean>(
+    correctBlockchain(contractData?.blockchain as BlockchainType)
+  );
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
 
   const { contractCreator, programmaticProvider, currentChain } = useSelector<
     RootState,
@@ -238,16 +240,10 @@ const ListLocks: React.FC<TListLocks> = ({
 
   useEffect(() => {
     setOnMyChain(
-      contractData &&
-        (window.ethereum
-          ? chainData[contractData?.blockchain]?.chainId === currentChain
-          : chainData[contractData?.blockchain]?.chainId === currentChain)
+      !!contractData &&
+        correctBlockchain(contractData.blockchain as BlockchainType)
     );
-  }, [contractData, programmaticProvider, currentChain]);
-
-  const switchBlockchain = async (chainId: BlockchainType) => {
-    web3Switch(chainId);
-  };
+  }, [contractData, programmaticProvider, currentChain, correctBlockchain]);
 
   return (
     <div className="row px-0 mx-0">
@@ -293,9 +289,9 @@ const ListLocks: React.FC<TListLocks> = ({
                 {
                   action: !onMyChain
                     ? () =>
-                        switchBlockchain(
-                          // eslint-disable-next-line
-                          chainData[contractData?.blockchain]?.chainId!
+                        web3Switch(
+                          chainData[contractData?.blockchain]
+                            ?.chainId as BlockchainType
                         )
                     : gotoNextStep,
                   label: !onMyChain

@@ -72,6 +72,7 @@ import { setChainId } from './ducks/contracts/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setAdminRights } from './ducks/users/actions';
 import useConnectUser from './hooks/useConnectUser';
+import useWeb3Tx from './hooks/useWeb3Tx';
 import {
   AppContainerFluid,
   MainBlockApp
@@ -121,6 +122,8 @@ function App() {
   const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
     useSelector((store) => store.colorStore);
   const { adminRights, loggedIn } = useSelector((store) => store.userStore);
+
+  const { correctBlockchain } = useWeb3Tx();
 
   const { connectUserData, logoutUser } = useConnectUser();
 
@@ -248,7 +251,7 @@ function App() {
   return (
     <ErrorBoundary fallback={ErrorFallback}>
       <MetaTags seoMetaTags={seo} />
-      {selectedChain && showAlert && !isSplashPage ? (
+      {!correctBlockchain(selectedChain) && showAlert && isSplashPage ? (
         <AlertMetamask
           selectedChain={selectedChain}
           selectedChainId={selectedChainId}
@@ -347,13 +350,6 @@ function App() {
 										complex than just a boolean
 									*/}
                 {[
-                  {
-                    path: '/demo',
-                    content: DemoMediaUpload,
-                    props: {
-                      contractData: connectUserData
-                    }
-                  },
                   {
                     path: '/simdogs-splash',
                     content: SimDogsSplashPage
@@ -473,7 +469,14 @@ function App() {
                       setTabIndex: setTabIndex
                     }
                   },
-
+                  {
+                    path: '/demo',
+                    content: DemoMediaUpload,
+                    requirement:
+                      hotDropsVar === 'true'
+                        ? loggedIn && adminRights
+                        : loggedIn
+                  },
                   {
                     path: '/user/videos',
                     content: VideoManager

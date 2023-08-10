@@ -13,7 +13,6 @@ import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 import setTitle from '../../utils/setTitle';
-import { web3Switch } from '../../utils/switchBlockchain';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
@@ -32,7 +31,7 @@ const Factory = () => {
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, web3Switch } = useWeb3Tx();
   const reactSwal = useSwal();
 
   const {
@@ -108,24 +107,14 @@ const Factory = () => {
     async (chainId) => {
       if (chainId !== undefined) {
         setChainId(chainId);
-        if (window.ethereum) {
-          if (chainId === currentChain) {
-            return;
-          }
-          web3Switch(chainId);
-        } else {
-          reactSwal.fire(
-            'Blockchain Switch is disabled on Programmatic Connections!',
-            'Switch to the proper chain manually!'
-          );
-        }
+        web3Switch(chainId);
         setDeploymentPrice(BigNumber.from(0));
         setDeploymentPriceDiamond(BigNumber.from(0));
         setTokenSymbol('');
         setUserBalance(BigNumber.from(0));
       }
     },
-    [reactSwal, currentChain]
+    [web3Switch]
   );
 
   useEffect(() => {

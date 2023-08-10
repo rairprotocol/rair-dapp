@@ -25,7 +25,7 @@ import UploadedListBox from './UploadedListBox/UploadedListBox';
 
 import './DemoMediaUpload.css';
 
-const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
+const MediaUpload: React.FC<IMediaUpload> = () => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -323,8 +323,8 @@ const MediaUpload: React.FC<IMediaUpload> = ({ contractData }) => {
           file: item,
           description: 'test',
           preview: URL.createObjectURL(item),
-          contractAddress: contractData?._id,
-          productIndex: contractData?.product.collectionIndexInContract,
+          contractAddress: undefined,
+          productIndex: undefined,
           storage: 'null'
         };
       })

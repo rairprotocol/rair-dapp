@@ -3,9 +3,8 @@ import Modal from 'react-modal';
 import { Provider, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Popup from 'reactjs-popup';
-import axios, { AxiosError } from 'axios';
-import { Contract } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import axios from 'axios';
+import { OreidProvider, useOreId } from 'oreid-react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { IVideoItem, TVideoItemContractData } from './video.types';
@@ -17,14 +16,10 @@ import {
   TUserResponse
 } from '../../axios.responseTypes';
 import store, { RootState } from '../../ducks';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
-import useWeb3Tx from '../../hooks/useWeb3Tx';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import chainData from '../../utils/blockchainData';
 import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -48,16 +43,13 @@ const VideoItem: React.FC<IVideoItem> = ({
 }) => {
   const [mintPopUp, setMintPopUp] = useState<boolean>(false);
   const [firstStepPopUp, setFirstStepPopUp] = useState<boolean>(false);
-  const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
+  const [, /* purchaseStatus */ setPurchaseStatus] = useState<boolean>(false);
   const loading = useSelector<RootState, boolean>(
     (state) => state.videosStore.loading
   );
   const navigate = useNavigate();
   const [offerDataInfo, setOfferDataInfo] = useState<TOfferType[]>();
-  const { minterInstance, diamondMarketplaceInstance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
+  const oreId = useOreId();
   const [contractData, setContractData] =
     useStateIfMounted<TVideoItemContractData | null>(null);
   const { width } = useWindowDimensions();
@@ -145,22 +137,24 @@ const VideoItem: React.FC<IVideoItem> = ({
         </div>
       ),
       html: (
-        <Provider store={store}>
-          <div
-            className={`container-popup-video-player-mobile ${
-              primaryColor === 'rhyno' ? 'rhyno' : ''
-            }`}>
-            {offerDataInfo && contractData && (
-              <MintPopUpCollection
-                blockchain={contractData?.blockchain}
-                offerDataCol={offerDataInfo}
-                primaryColor={primaryColor}
-                contractAddress={contractData?.contractAddress}
-                setPurchaseStatus={setPurchaseStatus}
-              />
-            )}
-          </div>
-        </Provider>
+        <OreidProvider oreId={oreId}>
+          <Provider store={store}>
+            <div
+              className={`container-popup-video-player-mobile ${
+                primaryColor === 'rhyno' ? 'rhyno' : ''
+              }`}>
+              {offerDataInfo && contractData && (
+                <MintPopUpCollection
+                  blockchain={contractData?.blockchain}
+                  offerDataCol={offerDataInfo}
+                  primaryColor={primaryColor}
+                  contractAddress={contractData?.contractAddress}
+                  setPurchaseStatus={setPurchaseStatus}
+                />
+              )}
+            </div>
+          </Provider>
+        </OreidProvider>
       ),
       showCloseButton: true,
       showConfirmButton: false,
@@ -253,32 +247,10 @@ const VideoItem: React.FC<IVideoItem> = ({
       const { data } = await rFetch(
         `/api/v2/files/${mediaList[item]._id}/unlocks`
       );
-
-      if (data && data.offers) {
+      if (data?.offers?.at(0)?.contract?._id) {
         const { contract } = await rFetch(
           `/api/v2/contracts/${data.offers[0].contract._id}`
         );
-
-        try {
-          const tokensrResp = await axios.get(
-            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}`
-            // `/api/${mediaList[item].contract}/${mediaList[item]?.product}`
-          );
-
-          const { data } = await axios.get<IOffersResponseType>(
-            `/api/nft/network/${contract?.blockchain}/${contract?.contractAddress}/${mediaList[item]?.product}/offers`
-          );
-
-          if (data.success) {
-            setOfferDataInfo(data.product.offers);
-          }
-
-          contract.tokens = tokensrResp.data.result.tokens;
-          // contract.products = productsResp.data.product;
-        } catch (err) {
-          console.error(err);
-        }
-
         setContractData(contract);
       }
     }

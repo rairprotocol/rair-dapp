@@ -162,7 +162,7 @@ const VideoManager = () => {
                   <h5>
                     <i className="fa fa-eye" /> {selectedFile.views}
                   </h5>
-                  <span>{selectedFile.category.name}</span>
+                  <span>{selectedFile?.category?.name}</span>
                   <br />
                   <button
                     onClick={updateDemoStatus}

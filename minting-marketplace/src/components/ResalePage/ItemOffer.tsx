@@ -14,7 +14,6 @@ import useWeb3Tx from '../../hooks/useWeb3Tx';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
-import { web3Switch } from '../../utils/switchBlockchain';
 import { ContractType } from '../adminViews/adminView.types';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { gettingPrice } from '../MockUpPage/NftList/utils/gettingPrice';
@@ -40,7 +39,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
   const { maxPrice, minPrice } = gettingPrice([price]);
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const { resaleInstance, currentUserAddress, currentChain, contractCreator } =
     useSelector<RootState, ContractsInitialType>(
@@ -112,7 +111,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
     if (!contractData) {
       return;
     }
-    if (currentChain !== contractData.blockchain) {
+    if (correctBlockchain(contractData.blockchain)) {
       web3Switch(contractData.blockchain);
       return;
     } else if (resaleInstance) {

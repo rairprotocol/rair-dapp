@@ -31,7 +31,7 @@
         "jsonwebtoken": "^8.5.1",
         "jwt-decode": "^3.1.2",
         "moment-timezone": "^0.5.34",
-        "oreid-js": "^4.5.1",
+        "oreid-js": "^4.7.2-pre",
         "oreid-login-button": "^1.1.7",
         "oreid-react": "^1.5.0",
         "oreid-webpopup": "^2.2.5",

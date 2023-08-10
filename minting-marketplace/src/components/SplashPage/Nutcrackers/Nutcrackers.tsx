@@ -1,5 +1,4 @@
-//@ts-nocheck
-/* eslint-disable  */
+/* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
@@ -8,7 +7,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { teamNutArray } from './AboutUsTeam';
 
 import { erc721Abi } from '../../../contracts/index';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { InitialState } from '../../../ducks/seo/reducers';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
@@ -16,7 +18,6 @@ import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { metaMaskIcon } from '../../../images';
 import { rFetch } from '../../../utils/rFetch';
-import { web3Switch } from '../../../utils/switchBlockchain';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -36,23 +37,27 @@ import TeamMeet from '../TeamMeet/TeamMeetList';
 
 const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
   const dispatch = useDispatch();
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
   const [, /*percentTokens*/ setPresentTokens] = useState(0);
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const leftTokensNumber = 50;
   const wholeTokens = 50;
-  const { currentUserAddress, minterInstance, contractCreator } = useSelector(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress, minterInstance, contractCreator } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
 
   useEffect(() => {
     dispatch(setInfoSEO(InitialState));
     //eslint-disable-next-line
   }, []);
 
+  const targetBlockchain = '0x89';
   const nutcrackerAddress =
     '0xF4ca90d4a796f57133c6de47c2261BF237cfF780'.toLowerCase();
   const mintNutcracker = async () => {
@@ -61,16 +66,19 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
       return;
     }
 
-    if (window.ethereum.chainId !== '0x89') {
-      web3Switch('0x89');
+    if (correctBlockchain(targetBlockchain)) {
+      web3Switch(targetBlockchain);
       return;
     }
 
     const { success, products } = await rFetch(
       `/api/contracts/network/0x89/${nutcrackerAddress}/products/offers`
     );
-    if (success) {
+    if (success && contractCreator && minterInstance) {
       const instance = contractCreator(nutcrackerAddress, erc721Abi);
+      if (!instance) {
+        return;
+      }
       const nextToken = await instance.getNextSequentialIndex(0, 0, 50);
       reactSwal.fire({
         title: 'Please wait...',
@@ -98,6 +106,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
             }
           ],
           {
+            intendedBlockchain: targetBlockchain,
             failureMessage:
               'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
           }
@@ -159,8 +168,9 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
                   customWrapperClassName: 'btn-buy-metamask',
                   img: metaMaskIcon,
                   contractAddress: nutcrackerAddress,
+                  diamond: false,
                   requiredBlockchain: '0x89',
-                  offerIndex: [1, 0],
+                  offerIndex: ['1', '0'],
                   connectUserData,
                   buttonLabel: 'Mint with Matic',
                   customSuccessAction: (nextToken) => {
@@ -361,7 +371,6 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
         </div>
         <div className="block-photos-nuts"></div>
         <TeamMeet
-          primaryColor={primaryColor}
           arraySplash={'nuts'}
           classNameGap={true}
           teamArray={teamNutArray}

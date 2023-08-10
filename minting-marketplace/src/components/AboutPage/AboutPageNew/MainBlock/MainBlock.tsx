@@ -1,4 +1,4 @@
-import React, { useState /*useCallback, useEffect*/ } from 'react';
+import { useState /*useCallback, useEffect*/ } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
 
@@ -10,7 +10,6 @@ import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 // import { rFetch } from "../../../../utils/rFetch";
 // import { erc721Abi } from "../../../../contracts";
-import { web3Switch } from '../../../../utils/switchBlockchain';
 import { IMainBlock } from '../aboutPage.types';
 
 const customStyles = {
@@ -52,11 +51,11 @@ const MainBlock: React.FC<IMainBlock> = ({
     );
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const { connectUserData } = useConnectUser();
 
-  const switchToNetwork = '0x38';
+  const targetBlockchain = '0x38';
   const aboutPageAddress =
     '0xb6163454da87e9f3fd63683c5d476f7d067f75a2'.toLowerCase();
   const offerIndexInMarketplace = 1;
@@ -84,9 +83,8 @@ const MainBlock: React.FC<IMainBlock> = ({
       connectUserData();
       return;
     }
-    if (window.ethereum.chainId !== switchToNetwork) {
-      web3Switch(switchToNetwork);
-      return;
+    if (!correctBlockchain(targetBlockchain)) {
+      web3Switch(targetBlockchain);
     }
     if (!diamondMarketplaceInstance) {
       reactSwal.fire({
@@ -149,6 +147,7 @@ const MainBlock: React.FC<IMainBlock> = ({
             }
           ],
           {
+            intendedBlockchain: targetBlockchain,
             failureMessage:
               'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
           }
@@ -156,7 +155,7 @@ const MainBlock: React.FC<IMainBlock> = ({
       ) {
         reactSwal.fire({
           // title : "Success",
-          title: `You own #${nextToken}!`,
+          title: `You now own #${nextToken}!`,
           icon: 'success'
         });
       }

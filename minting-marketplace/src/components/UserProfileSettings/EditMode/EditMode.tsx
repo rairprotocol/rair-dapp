@@ -1,9 +1,10 @@
 //@ts-nocheck
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Provider, useStore } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import { OreidProvider, useOreId } from 'oreid-react';
 import Swal from 'sweetalert2';
 
 import { getUserStart } from '../../../ducks/users/actions';
@@ -15,7 +16,6 @@ import { AgreementsPopUp } from '../TermsOfServicePopUp/TermsOfServicePopUp';
 const EditMode = ({
   handlePopUp,
   imagePreviewUrl,
-  cutUserAddress,
   editMode,
   onChangeEditMode,
   userEmail,
@@ -26,6 +26,7 @@ const EditMode = ({
 }) => {
   const dispatch = useDispatch();
   const store = useStore();
+  const oreId = useOreId();
   const reactSwal = useSwal();
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
@@ -57,20 +58,22 @@ const EditMode = ({
       reactSwal.fire({
         title: <h2 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h2>,
         html: (
-          <Provider store={store}>
-            <AgreementsPopUp
-              userName={userName}
-              emailUser={emailUser}
-              filePhoto={filePhoto}
-              currentUserAddress={currentUserAddress}
-              setUserName={setUserName}
-              setMainEmail={setMainEmail}
-              setMainName={setMainName}
-              setUserAvatar={setUserAvatar}
-              setImagePreviewUrl={setImagePreviewUrl}
-              onChangeEditMode={onChangeEditMode}
-            />
-          </Provider>
+          <OreidProvider oreId={oreId}>
+            <Provider store={store}>
+              <AgreementsPopUp
+                userName={userName}
+                emailUser={emailUser}
+                filePhoto={filePhoto}
+                currentUserAddress={currentUserAddress}
+                setUserName={setUserName}
+                setMainEmail={setMainEmail}
+                setMainName={setMainName}
+                setUserAvatar={setUserAvatar}
+                setImagePreviewUrl={setImagePreviewUrl}
+                onChangeEditMode={onChangeEditMode}
+              />
+            </Provider>
+          </OreidProvider>
         ),
         showConfirmButton: false,
         width: '90vw',

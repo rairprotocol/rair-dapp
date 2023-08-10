@@ -6,20 +6,20 @@ import { isAddress } from 'ethers/lib/utils';
 import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 import { validateInteger } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
-import { web3Switch } from '../../utils/switchBlockchain';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
 const ImportExternalContract = () => {
   const [selectedContract, setSelectedContract] = useState<string>('');
   const [resultData, setResultData] = useState<string>('');
-  const [selectedBlockchain, setSelectedBlockchain] = useState<string>('null');
+  const [selectedBlockchain, setSelectedBlockchain] = useState<
+    BlockchainType | 'null'
+  >('null');
   const [owner, setOwner] = useState<string>('');
   const [sendingData, setSendingData] = useState<boolean>(false);
   const [limit, setLimit] = useState<number>(0);
@@ -28,7 +28,7 @@ const ImportExternalContract = () => {
   const [sessionId, setSessionId] = useState('');
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const blockchainOptions = Object.keys(chainData).map((blockchainId) => {
     return {
@@ -37,14 +37,9 @@ const ImportExternalContract = () => {
     };
   });
 
-  const { loginType } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
+  const { contractCreator } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
   );
-
-  const { contractCreator, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
 
   useEffect(() => {
     const sessionId = Math.random().toString(36).substr(2, 9);
@@ -109,15 +104,10 @@ const ImportExternalContract = () => {
   };
 
   const tryToGetCreator = async () => {
-    if (currentChain !== selectedBlockchain) {
-      if (loginType === 'oreid') {
-        reactSwal.fire(
-          'Error',
-          `Please login to ${chainData[selectedBlockchain].name} using OreId`,
-          'error'
-        );
-        return;
-      }
+    if (selectedBlockchain === 'null') {
+      return;
+    }
+    if (!correctBlockchain(selectedBlockchain)) {
       web3Switch(selectedBlockchain as BlockchainType);
       return;
     }
@@ -127,6 +117,7 @@ const ImportExternalContract = () => {
     const instance = await contractCreator(selectedContract, diamondFactoryAbi);
     if (instance) {
       const owner = await web3TxHandler(instance, 'owner', [], {
+        intendedBlockchain: selectedBlockchain,
         failureMessage:
           'Failed to get creator, the contract might not use Ownable standard'
       });

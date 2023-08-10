@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Provider, useDispatch, useSelector, useStore } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 
@@ -157,7 +157,6 @@ export const AgreementsPopUp = ({
 };
 
 const ConfirmAgreements = () => {
-  const store = useStore();
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -166,7 +165,6 @@ const ConfirmAgreements = () => {
   const openModal = () => {
     reactSwal.fire({
       title: <h2 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h2>,
-      html: <Provider store={store}>{/* <AgreementsPopUp /> */}</Provider>,
       showConfirmButton: false,
       width: '90vw',
       customClass: {

@@ -118,7 +118,7 @@ const InitialState: ContractsInitialType = {
   diamondMarketplaceInstance: undefined,
   tokenPurchaserInstance: undefined,
   creditHandlerInstance: undefined,
-  currentChain: undefined,
+  currentChain: process.env.REACT_APP_DEFAULT_BLOCKCHAIN as BlockchainType,
   currentUserAddress: undefined,
   programmaticProvider: undefined,
   contractCreator: undefined,

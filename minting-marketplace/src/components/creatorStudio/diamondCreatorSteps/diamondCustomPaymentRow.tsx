@@ -28,7 +28,7 @@ const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
     recipient
   );
   const [percentageReceived, setPercentageReceived] =
-    useState<number>(percentage);
+    useState<BigNumber>(percentage);
   const { secondaryColor, primaryColor } = useSelector<
     RootState,
     ColorStoreType
@@ -39,12 +39,12 @@ const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
   }, [recipient]);
 
   useEffect(() => {
-    setPercentageReceived(percentage);
+    setPercentageReceived(BigNumber.from(percentage));
   }, [percentage]);
 
-  const updatePercentage = (value: number) => {
+  const updatePercentage = (value: BigNumber) => {
     setPercentageReceived(value);
-    array[index].percentage = Number(value);
+    array[index].percentage = value;
     rerender();
     if (!marketValuesChanged && setMarketValuesChanged) {
       setMarketValuesChanged(true);
@@ -97,9 +97,9 @@ const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
             labelClass="w-100 text-start"
             customClass="form-control rounded-rair"
             min={0}
-            max={100 * Math.pow(10, minterDecimals)}
+            max={100 * Math.pow(10, Number(minterDecimals.toString()))}
             type="number"
-            getter={percentageReceived}
+            getter={percentageReceived.toString()}
             setter={updatePercentage}
             customCSS={{
               backgroundColor: `var(--${primaryColor})`,
@@ -110,7 +110,7 @@ const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
         </div>
         {!calculatedFee.eq(0) && (
           <small>
-            {percentageReceived / 10 ** minterDecimals}% (
+            {percentageReceived.div(minterDecimals.pow(10)).toString()}% (
             {utils.formatEther(
               BigNumber.from(calculatedPrice).div(calculatedFee)
             )}{' '}

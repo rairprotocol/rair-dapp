@@ -25,6 +25,7 @@ import {
   setUserData
 } from '../ducks/users/actions';
 import { TUsersInitialState } from '../ducks/users/users.types';
+import chainData from '../utils/blockchainData';
 import { rFetch, signWeb3Message } from '../utils/rFetch';
 
 const oreIdMappingToChainHash = {
@@ -57,33 +58,38 @@ const useConnectUser = () => {
     setMetamaskInstalled(window?.ethereum && window?.ethereum?.isMetaMask);
   }, [setMetamaskInstalled]);
 
+  const findMethodForOreId = useCallback(
+    (account) => {
+      if (!currentChain && account.chainAccount.length === 42) {
+        // If there is no default blockchain then take the first valid address
+        // (42 characters)
+        return true;
+      }
+      return account.chainNetwork === chainData[currentChain]?.oreIdAlias;
+    },
+    [currentChain]
+  );
+
   const loginWithOreIdToken = useCallback(
     async (idToken: string) => {
       if (!idToken) {
         return;
       }
       await oreId.auth.loginWithToken({ idToken });
-      const userAccount = oreId.auth.user.data.chainAccounts.find((account) =>
-        account.chainNetwork.includes('eth')
-      );
-      await oreId.init();
+      const userAccount =
+        oreId.auth.user.data.chainAccounts.find(findMethodForOreId);
       return {
         address: userAccount.chainAccount,
         blockchain: oreIdMappingToChainHash[userAccount.chainNetwork]
       };
     },
-    [oreId]
+    [oreId, findMethodForOreId]
   );
 
   const loginWithOreId = useCallback(
     async (loginMethod: AuthProvider) => {
       const response = await oreId.popup.auth({ provider: loginMethod });
-      if (!response) {
-        return { address: undefined, blockchain: undefined };
-      }
-      const userAccount = response.user.chainAccounts.find((account) =>
-        account.chainNetwork.includes('eth')
-      );
+      const userAccount = response.user.chainAccounts.find(findMethodForOreId);
       if (!userAccount) {
         return { address: undefined, blockchain: undefined };
       }
@@ -94,7 +100,7 @@ const useConnectUser = () => {
         provider: loginMethod
       };
     },
-    [oreId]
+    [oreId, findMethodForOreId]
   );
 
   const loginWithMetamask = useCallback(async () => {
@@ -186,7 +192,7 @@ const useConnectUser = () => {
         //   }
         // });
       }),
-    [reactSwal, hotdropsVar, metamaskInstalled]
+    [hotdropsVar, metamaskInstalled, reactSwal]
   );
 
   const connectUserData = useCallback(async () => {

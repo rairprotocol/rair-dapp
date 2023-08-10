@@ -17,6 +17,7 @@ export type TChainItemData = {
   name: string;
   chainId: BlockchainType;
   symbol: string;
+  oreIdAlias: string | undefined;
   addChainData: TAddChainData;
 };
 export type TChainData = {

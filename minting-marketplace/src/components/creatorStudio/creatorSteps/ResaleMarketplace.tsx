@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
@@ -10,7 +9,6 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import chainData from '../../../utils/blockchainData';
-import { web3Switch } from '../../../utils/switchBlockchain';
 import InputField from '../../common/InputField';
 import CustomFeeRow from '../common/customFeeRow';
 import { TCustomPayments, TResaleMarketplace } from '../creatorStudio.types';
@@ -26,13 +24,12 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const { currentChain, resaleInstance, currentUserAddress } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { resaleInstance } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const [customPayments, setCustomPayments] = useState<TCustomPayments[]>([]);
   const [approving, setApproving] = useState<boolean>(false);
@@ -257,22 +254,26 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           <hr />
         </div>
       )}
-      {chainData && (
+      {chainData && contractData && (
         <FixedBottomNavigation
           backwardFunction={goBack}
           forwardFunctions={[
             {
-              label: `Switch to ${chainData[contractData?.blockchain].name}`,
+              label: `Switch to ${chainData[contractData?.blockchain]?.name}`,
               action: () => web3Switch(contractData?.blockchain),
-              disabled: contractData?.blockchain === currentChain,
-              visible: contractData?.blockchain !== currentChain
+              disabled: correctBlockchain(
+                contractData?.blockchain as BlockchainType
+              ),
+              visible: !correctBlockchain(
+                contractData?.blockchain as BlockchainType
+              )
             },
             {
               label: 'Set custom fees',
               action: setCustomFees,
               disabled:
                 sendingData || !validatePaymentData() || !resaleInstance,
-              visible: customPayments.length
+              visible: !!customPayments.length
             },
             {
               label: 'Continue',

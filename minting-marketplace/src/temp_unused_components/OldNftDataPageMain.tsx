@@ -1,6 +1,5 @@
-//@ts-nocheck
 //unused-component  - new NftDataPageMain differs but for future I will keep this old version in project
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -12,7 +11,6 @@ import ReactPlayer from 'react-player';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { utils } from 'ethers';
-import Swal from 'sweetalert2';
 
 import { BreadcrumbsView } from '../components/MockUpPage/NftList/Breadcrumbs/Breadcrumbs';
 import AuthenticityBlock from '../components/MockUpPage/NftList/NftData/AuthenticityBlock/AuthenticityBlock';
@@ -22,13 +20,14 @@ import TitleCollection from '../components/MockUpPage/NftList/NftData/TitleColle
 import { gettingPrice } from '../components/MockUpPage/NftList/utils/gettingPrice';
 import ItemRank from '../components/MockUpPage/SelectBox/ItemRank';
 import SelectNumber from '../components/MockUpPage/SelectBox/SelectNumber/SelectNumber';
+import { RootState } from '../ducks';
+import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 // import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
 import { setShowSidebarTrue } from '../ducks/metadata/actions';
 import useSwal from '../hooks/useSwal';
 import useWeb3Tx from '../hooks/useWeb3Tx';
 import chainData from '../utils/blockchainData';
 import setDocumentTitle from '../utils/setTitle';
-import { web3Switch } from '../utils/switchBlockchain';
 
 const NftDataPageMain = ({
   // setTokenData,
@@ -55,11 +54,13 @@ const NftDataPageMain = ({
   ownerInfo,
   getAllProduct
 }) => {
-  const { minterInstance } = useSelector((state) => state.contractStore);
+  const { minterInstance } = useSelector<RootState, ContractsInitialType>(
+    (state) => state.contractStore
+  );
   const [playing, setPlaying] = useState(false);
   const [offersIndexesData, setOffersIndexesData] = useState();
 
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
   const reactSwal = useSwal();
 
   const handlePlaying = () => {
@@ -181,6 +182,9 @@ const NftDataPageMain = ({
       icon: 'info',
       showConfirmButton: false
     });
+    if (!minterInstance) {
+      return;
+    }
     if (
       await web3TxHandler(
         minterInstance,
@@ -194,6 +198,7 @@ const NftDataPageMain = ({
           }
         ],
         {
+          intendedBlockchain: blockchain,
           failureMessage:
             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
         }
@@ -240,7 +245,7 @@ const NftDataPageMain = ({
         className="btn rounded-rair btn-stimorol nft-btn-stimorol"
         disabled={!offerData?.offerPool}
         onClick={
-          window?.ethereum?.chainId === blockchain
+          correctBlockchain(blockchain)
             ? buyContract
             : () => web3Switch(blockchain)
         }
@@ -481,9 +486,7 @@ const NftDataPageMain = ({
                 <ItemRank
                   primaryColor={primaryColor}
                   items={offersIndexesData}
-                  getAllProduct={getAllProduct}
-                  setSelectedToken={setSelectedToken}
-                  handleClickToken={handleClickToken}
+                  selectedToken={selectedToken}
                 />
               </div>
             </div>
@@ -699,12 +702,8 @@ const NftDataPageMain = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <NftListUnlockablesVideos
-                  blockchain={blockchain}
-                  contract={contract}
-                  product={product}
                   productsFromOffer={productsFromOffer}
                   selectedData={selectedData}
-                  selectedToken={selectedToken}
                   primaryColor={primaryColor}
                 />
                 {/* {productsFromOffer && productsFromOffer.length !== 0 ? (
@@ -731,7 +730,7 @@ const NftDataPageMain = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <CollectionInfo
-                  someUsersData={someUsersData}
+                  openTitle={true}
                   offerData={offerDataInfo}
                   blockchain={blockchain}
                 />
@@ -745,7 +744,8 @@ const NftDataPageMain = ({
               <AccordionItemPanel>
                 {/* <div>{showLink()}</div> */}
                 <AuthenticityBlock
-                  ownerInfo={ownerInfo}
+                  title={false}
+                  collectionToken={'Test'}
                   tokenData={tokenData}
                   selectedToken={selectedToken}
                   selectedData={selectedData}

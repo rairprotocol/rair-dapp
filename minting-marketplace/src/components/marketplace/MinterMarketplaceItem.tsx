@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { BigNumber } from 'ethers';
+import { OreidProvider, useOreId } from 'oreid-react';
 
 import BuyTokenModalContent from './BuyTokenModalContent';
 import { TMinterMarketplaceItemType } from './marketplace.types';
@@ -24,6 +25,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
     (state) => state.contractStore
   );
   const store = useStore();
+  const oreId = useOreId();
   const reactSwal = useSwal();
 
   const onMyChain = chainData[item.blockchain]?.chainId === currentChain;
@@ -66,18 +68,20 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
             } else {
               reactSwal.fire({
                 html: (
-                  <Provider store={store}>
-                    <BuyTokenModalContent
-                      minterAddress={item.minterAddress}
-                      blockchain={item.blockchain}
-                      price={BigNumber.from(item.price)}
-                      start={item.range[0]}
-                      end={item.range[1]}
-                      offerName={item.offerName}
-                      offerIndex={item.offerPool}
-                      rangeIndex={item.offerIndex}
-                    />
-                  </Provider>
+                  <OreidProvider oreId={oreId}>
+                    <Provider store={store}>
+                      <BuyTokenModalContent
+                        minterAddress={item.minterAddress}
+                        blockchain={item.blockchain}
+                        price={BigNumber.from(item.price)}
+                        start={item.range[0]}
+                        end={item.range[1]}
+                        offerName={item.offerName}
+                        offerIndex={item.offerPool}
+                        rangeIndex={item.offerIndex}
+                      />
+                    </Provider>
+                  </OreidProvider>
                 ),
                 showConfirmButton: false,
                 width: '70vw',

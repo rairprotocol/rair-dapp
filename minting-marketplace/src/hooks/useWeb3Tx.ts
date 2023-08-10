@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   BigNumber,
   Contract,
@@ -12,8 +12,10 @@ import { useOreId } from 'oreid-react';
 import useSwal from './useSwal';
 
 import { RootState } from '../ducks';
+import { setChainId } from '../ducks/contracts/actions';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../ducks/users/users.types';
+import chainData from '../utils/blockchainData';
 import { rFetch } from '../utils/rFetch';
 
 const confirmationsRequired = 2;
@@ -28,6 +30,7 @@ const useWeb3Tx = () => {
   );
   const oreId = useOreId();
   const reactSwal = useSwal();
+  const dispatch = useDispatch();
 
   const handleReceipt = useCallback(
     async (transactionHash: string, callback?: (() => void) | undefined) => {
@@ -151,9 +154,10 @@ const useWeb3Tx = () => {
     contract: Contract,
     method: string,
     args: any[],
-    options?: {
+    options: {
       failureMessage?: string;
       callback?: () => void;
+      intendedBlockchain: BlockchainType;
     }
   ) => {
     if (!oreId.isInitialized) {
@@ -192,9 +196,14 @@ const useWeb3Tx = () => {
     }
     const userChainAccounts = oreId.auth.user.data.chainAccounts;
     // Find the ETH public address
-    const ethAccount = userChainAccounts.find((account) =>
-      account.chainNetwork.includes('eth')
+    const ethAccount = userChainAccounts.find(
+      (account) =>
+        account.chainNetwork ===
+        chainData[options?.intendedBlockchain]?.oreIdAlias
     );
+
+    console.info(ethAccount);
+
     if (!ethAccount) {
       reactSwal.fire('Error', 'No accounts found', 'error');
       return;
@@ -235,24 +244,89 @@ const useWeb3Tx = () => {
     }
   };
 
-  return {
-    web3TxHandler: (
-      contract: Contract,
-      method: string,
-      args: any[] = [],
-      options?: {
-        failureMessage?: string;
-        callback?: () => void;
+  const web3Switch = async (chainId: BlockchainType) => {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: chainId && chainData[chainId]?.chainId }]
+      });
+    } catch (switchError: any) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [chainId && chainData[chainId]?.addChainData]
+          });
+        } catch (addError) {
+          console.error(addError);
+        }
+      } else {
+        console.error(switchError);
       }
-    ) => {
+    }
+  };
+
+  const hasOreIdSupport = useCallback(
+    (chainId: BlockchainType) => {
+      const oreIdAlias = chainData[chainId]?.oreIdAlias;
+      if (!oreIdAlias) {
+        return undefined;
+      }
+      for (const accountData of oreId.auth.user.data.chainAccounts) {
+        if (accountData.chainNetwork === oreIdAlias) {
+          return accountData.chainAccount;
+        }
+      }
+    },
+    [oreId]
+  );
+
+  return {
+    correctBlockchain: (chainId: BlockchainType) => {
+      return chainId === currentChain;
+    },
+    web3Switch: async (chainId: BlockchainType) => {
       if (!currentUserAddress) {
-        console.error(
-          `Web3 method call ${method} will not be called without login`
-        );
         return;
       }
       switch (loginType) {
         case 'oreid':
+          // eslint-disable-next-line no-case-declarations
+          const oreIdAddress = hasOreIdSupport(chainId);
+          if (!oreIdAddress) {
+            reactSwal.fire(
+              'Error',
+              `${chainData[chainId]?.name} isn't currently supported`,
+              'error'
+            );
+            return;
+          }
+          dispatch(setChainId(chainId, oreIdAddress));
+          return;
+        case 'metamask':
+          return web3Switch(chainId);
+      }
+    },
+    web3TxHandler: async (
+      contract: Contract,
+      method: string,
+      args: any[] = [],
+      options: {
+        failureMessage?: string;
+        callback?: () => void;
+        intendedBlockchain: BlockchainType;
+      } = { intendedBlockchain: currentChain as BlockchainType }
+    ) => {
+      if (!currentUserAddress) {
+        console.error(`Login required for Web3 call ${method}`);
+        return;
+      }
+      switch (loginType) {
+        case 'oreid':
+          if (!options) {
+            return;
+          }
           return oreIdCall(contract, method, args, options);
         case 'metamask':
           return metamaskCall(contract, method, args, options);

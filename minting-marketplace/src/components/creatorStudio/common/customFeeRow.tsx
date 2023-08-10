@@ -46,7 +46,7 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
 
   const updatePercentage = (value: number) => {
     setPercentageReceived(BigNumber.from(!value ? 0 : value));
-    array[index].percentage = Number(value);
+    array[index].percentage = BigNumber.from(value);
     if (rerender) {
       rerender();
     }

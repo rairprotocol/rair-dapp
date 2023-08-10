@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
-import { ethers } from 'ethers';
+import { Contract } from 'ethers';
+import { OreidProvider, useOreId } from 'oreid-react';
 
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -13,7 +15,6 @@ import { metaMaskIcon } from '../../images';
 import blockchainData from '../../utils/blockchainData';
 import { getRandomValues } from '../../utils/getRandomValues';
 import { rFetch } from '../../utils/rFetch';
-import { web3Switch } from '../../utils/switchBlockchain';
 
 import {
   IAgreementsPropsType,
@@ -22,7 +23,7 @@ import {
 } from './commonTypes/PurchaseTokenTypes.types';
 
 const queryRangeDataFromDatabase = async (
-  contractInstance: ethers.Contract | undefined,
+  contractInstance: Contract | undefined,
   network: BlockchainType | undefined,
   offerIndex: string[] | undefined,
   diamond = false
@@ -69,7 +70,7 @@ const queryRangeDataFromDatabase = async (
 };
 
 const findNextToken = async (
-  contractInstance: ethers.Contract | undefined,
+  contractInstance: Contract | undefined,
   start: string,
   end: string,
   product: string
@@ -88,8 +89,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   blockchainOnly,
   databaseOnly,
   collection,
-  setPurchaseStatus,
-  web3TxHandler
+  setPurchaseStatus
 }) => {
   const [privacyPolicy, setPrivacyPolicy] = useState<boolean>(false);
   const [termsOfUse, setTermsOfUse] = useState<boolean>(false);
@@ -99,9 +99,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const reactSwal = useSwal();
+  const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
 
   const {
-    currentChain,
     currentUserAddress,
     minterInstance,
     diamondMarketplaceInstance,
@@ -112,9 +112,12 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   const { textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const { loginType } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const queryRangeDataFromBlockchain = async (
-    marketplaceInstance: ethers.Contract | undefined,
+    marketplaceInstance: Contract | undefined,
     offerIndex: string[] | undefined,
     diamond: boolean | undefined
   ): Promise<undefined | IRangeDataType> => {
@@ -154,8 +157,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   };
 
   const purchaseFunction = async (
-    minterInstance: ethers.Contract | undefined,
-    contractAddress: ethers.Contract | undefined,
+    minterInstance: Contract | undefined,
+    contractAddress: Contract | undefined,
     offerIndex: string[] | undefined,
     nextToken: number,
     price: string,
@@ -182,6 +185,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
       diamond ? 'buyMintingOffer' : 'buyToken',
       args,
       {
+        intendedBlockchain: requiredBlockchain as BlockchainType,
         failureMessage:
           'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
       }
@@ -276,7 +280,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             }
             // If currentUserAddress isn't set then the user hasn't connected their wallet
             if (!currentUserAddress) {
-              await connectUserData?.();
+              connectUserData?.();
               setBuyingToken(false);
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
@@ -285,13 +289,15 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             }
 
             // If the currentChain is different from the contract's chain, switch
-            if (currentChain !== requiredBlockchain) {
-              await web3Switch(requiredBlockchain);
+            if (!correctBlockchain(requiredBlockchain as BlockchainType)) {
+              await web3Switch(requiredBlockchain as BlockchainType);
               setBuyingToken(false);
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
-              reactSwal.close();
+              if (loginType !== 'oreid') {
+                reactSwal.close();
+              }
               return;
             }
 
@@ -381,7 +387,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
           )}
           <wbr />{' '}
           {currentUserAddress
-            ? currentChain !== requiredBlockchain
+            ? !correctBlockchain(requiredBlockchain as BlockchainType)
               ? `Switch to ${
                   requiredBlockchain && blockchainData[requiredBlockchain]?.name
                 }`
@@ -422,29 +428,32 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
 
   const { web3TxHandler } = useWeb3Tx();
   const reactSwal = useSwal();
+  const oreId = useOreId();
 
   const fireAgreementModal = () => {
     if (collection === true) {
       reactSwal.fire({
         html: (
-          <Provider store={store}>
-            <Agreements
-              {...{
-                contractAddress,
-                requiredBlockchain,
-                connectUserData,
-                diamond,
-                offerIndex,
-                presaleMessage,
-                customSuccessAction,
-                blockchainOnly,
-                databaseOnly,
-                collection,
-                setPurchaseStatus,
-                web3TxHandler
-              }}
-            />
-          </Provider>
+          <OreidProvider oreId={oreId}>
+            <Provider store={store}>
+              <Agreements
+                {...{
+                  contractAddress,
+                  requiredBlockchain,
+                  connectUserData,
+                  diamond,
+                  offerIndex,
+                  presaleMessage,
+                  customSuccessAction,
+                  blockchainOnly,
+                  databaseOnly,
+                  collection,
+                  setPurchaseStatus,
+                  web3TxHandler
+                }}
+              />
+            </Provider>
+          </OreidProvider>
         ),
         showConfirmButton: false,
         width: '85vw',
@@ -457,22 +466,24 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
       reactSwal.fire({
         title: <h1 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h1>,
         html: (
-          <Provider store={store}>
-            <Agreements
-              {...{
-                contractAddress,
-                requiredBlockchain,
-                connectUserData,
-                diamond,
-                offerIndex,
-                presaleMessage,
-                customSuccessAction,
-                blockchainOnly,
-                databaseOnly,
-                web3TxHandler
-              }}
-            />
-          </Provider>
+          <OreidProvider oreId={oreId}>
+            <Provider store={store}>
+              <Agreements
+                {...{
+                  contractAddress,
+                  requiredBlockchain,
+                  connectUserData,
+                  diamond,
+                  offerIndex,
+                  presaleMessage,
+                  customSuccessAction,
+                  blockchainOnly,
+                  databaseOnly,
+                  web3TxHandler
+                }}
+              />
+            </Provider>
+          </OreidProvider>
         ),
         showConfirmButton: false,
         width: '90vw',

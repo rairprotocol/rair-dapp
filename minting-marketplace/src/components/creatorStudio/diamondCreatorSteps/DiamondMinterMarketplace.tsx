@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { BigNumber } from 'ethers';
 
 import MarketplaceOfferConfig from './MarketplaceOfferConfig';
 
@@ -37,7 +38,7 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
   const [offerData, setOfferData] = useState<
     TMarketplaceOfferConfigArrayItem[]
   >([]);
-  const [nodeFee, setNodeFee] = useState<number>(0);
+  const [nodeFee, setNodeFee] = useState<BigNumber>(BigNumber.from(0));
   const [treasuryFee, setTreasuryFee] = useState<number>(0);
   const [treasuryAddress, setTreasuryAddress] = useState<string | undefined>(
     undefined
@@ -72,7 +73,7 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
       diamondMarketplaceInstance,
       'getNodeFee'
     );
-    setNodeFee(Number(nodeFeeData.nodeFee.toString()));
+    setNodeFee(nodeFeeData.nodeFee);
     setMinterDecimals(nodeFeeData.decimals);
     const treasuryFeeData = await web3TxHandler(
       diamondMarketplaceInstance,

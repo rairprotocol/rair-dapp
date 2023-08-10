@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import * as ethers from 'ethers';
+import { utils } from 'ethers';
 
 import { erc721Abi } from '../../../../../contracts';
 import { RootState } from '../../../../../ducks';
@@ -9,7 +9,6 @@ import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
 import blockchainData from '../../../../../utils/blockchainData';
 import { validateInteger } from '../../../../../utils/metamaskUtils';
-import { web3Switch } from '../../../../../utils/switchBlockchain';
 import InputField from '../../../../common/InputField';
 import { SvgKeyForModalItem } from '../../../NftList/SvgKeyForModalItem';
 import { IModalItem } from '../../filteringBlock.types';
@@ -26,6 +25,8 @@ const ModalItem: React.FC<IModalItem> = ({
   primaryColor,
   isCreatedTab
 }) => {
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+
   const [price, setPrice] = useState<number>(0);
   const [isApproved, setIsApproved] = useState<boolean | undefined>(undefined);
   const { currentChain, currentUserAddress, resaleInstance, contractCreator } =
@@ -34,11 +35,10 @@ const ModalItem: React.FC<IModalItem> = ({
     );
   const instance = contractCreator?.(selectedData?.contractAddress, erc721Abi);
   const [onMyChain, setOnMyChain] = useState<boolean>(
-    currentChain === selectedData?.blockchain
+    correctBlockchain(selectedData?.blockchain as BlockchainType)
   );
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
 
   useEffect(() => {
     setOnMyChain(currentChain === selectedData?.blockchain);
@@ -175,7 +175,7 @@ const ModalItem: React.FC<IModalItem> = ({
               <div className="border-stimorol rounded-rair">
                 {validateInteger(price) && (
                   <>
-                    {ethers.utils.formatEther(price)}{' '}
+                    {utils.formatEther(price)}{' '}
                     {selectedData?.blockchain &&
                       blockchainData[selectedData.blockchain]?.symbol}
                   </>
@@ -196,7 +196,7 @@ const ModalItem: React.FC<IModalItem> = ({
             {isCreatedTab ? (
               <span>
                 Price for this NFT on the marketplace :{' '}
-                {ethers.utils.formatEther(Number(selectedData?.offer?.price))}{' '}
+                {utils.formatEther(Number(selectedData?.offer?.price))}{' '}
                 {selectedData?.blockchain &&
                   blockchainData[selectedData.blockchain]?.symbol}
               </span>
@@ -211,7 +211,7 @@ const ModalItem: React.FC<IModalItem> = ({
                       createResaleOffer();
                     }
                   } else {
-                    web3Switch(selectedData?.blockchain);
+                    web3Switch(selectedData?.blockchain as BlockchainType);
                   }
                 }}>
                 {onMyChain

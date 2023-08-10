@@ -20,7 +20,6 @@ import useWeb3Tx from '../../../hooks/useWeb3Tx';
 /* importing images*/
 import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
 import { rFetch } from '../../../utils/rFetch';
-import { TAddChainData } from '../../../utils/utils.types';
 import MetaTags from '../../SeoTags/MetaTags';
 import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
 import { LogoAuthor } from '../images/commingSoon/commingSoonImages';
@@ -91,31 +90,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   }, []);
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
-
-  const switchEthereumChain = async (chainData: TAddChainData) => {
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: chainData.chainId }]
-      });
-    } catch (metamaskError) {
-      const switchError = metamaskError as TMetamaskError;
-      // This error code indicates that the chain has not been added to MetaMask.
-      if (switchError.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [chainData]
-          });
-        } catch (addError) {
-          console.error(addError);
-        }
-      } else {
-        console.error(switchError);
-      }
-    }
-  };
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   useEffect(() => {
     dispatch(setRealChain('0x1'));
@@ -134,6 +109,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     ContractsInitialType
   >((store) => store.contractStore);
 
+  const targetBlockchain = '0x5';
   const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
 
   const buyNipsey = async () => {
@@ -168,6 +144,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           }
         ],
         {
+          intendedBlockchain: targetBlockchain,
           failureMessage:
             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
         }
@@ -345,13 +322,9 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
                       <div className="modal-btn-wrapper">
                         <button
                           onClick={
-                            window?.ethereum?.chainId === '0x5'
+                            correctBlockchain(targetBlockchain)
                               ? buyNipsey
-                              : () =>
-                                  switchEthereumChain({
-                                    chainId: '0x5',
-                                    chainName: 'Goerli (Ethereum)'
-                                  })
+                              : () => web3Switch(targetBlockchain)
                           }
                           disabled={!Object.values(active).every((el) => el)}
                           className="modal-btn">

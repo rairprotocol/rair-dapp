@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
-import MetaMaskOnboarding from '@metamask/onboarding';
 import axios from 'axios';
 import { BigNumber, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
@@ -19,7 +18,6 @@ import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import { HotDropsLogoMobile } from '../../../../images';
 import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
-import { web3Switch } from '../../../../utils/switchBlockchain';
 import { ContractType } from '../../../adminViews/adminView.types';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
@@ -52,7 +50,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   );
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const numberTooBigThreshold = BigNumber.from(10000000000);
 
@@ -143,6 +141,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         marketplaceMethod,
         marketplaceArguments,
         {
+          intendedBlockchain: blockchain as BlockchainType,
           failureMessage:
             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
           callback: handleTokenBoughtButton
@@ -158,12 +157,13 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [
     contractData,
     offerData,
-    diamondMarketplaceInstance,
-    minterInstance,
     reactSwal,
     web3TxHandler,
+    blockchain,
     handleTokenBoughtButton,
-    selectedToken
+    diamondMarketplaceInstance,
+    selectedToken,
+    minterInstance
   ]);
 
   useEffect(() => {
@@ -237,17 +237,21 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         resaleInstance,
         'buyResaleOffer',
         [resaleData.tradeid, { value: resaleData.price }],
-        { callback: handleTokenBoughtButton }
+        {
+          callback: handleTokenBoughtButton,
+          intendedBlockchain: blockchain as BlockchainType
+        }
       ))
     ) {
       reactSwal.fire('Success', 'Token purchased', 'success');
     }
   }, [
+    resaleInstance,
     reactSwal,
     resaleData,
-    resaleInstance,
     web3TxHandler,
-    handleTokenBoughtButton
+    handleTokenBoughtButton,
+    blockchain
   ]);
 
   const checkAllSteps = useCallback(() => {
@@ -255,7 +259,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       return <></>;
     }
     // Blockchain is not correct
-    if (blockchain !== currentChain) {
+    if (!correctBlockchain(blockchain)) {
       return (
         <BuySellButton
           handleClick={() => web3Switch(blockchain)}
@@ -342,10 +346,11 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
   }, [
     blockchain,
-    currentChain,
+    correctBlockchain,
     selectedToken,
     tokenData,
     offerData,
+    web3Switch,
     numberTooBigThreshold,
     buyContract,
     disableBuyBtn,

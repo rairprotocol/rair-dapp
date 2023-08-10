@@ -21,7 +21,6 @@ import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import BinanceDiamond from '../../../images/binance-diamond.svg';
 import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
-import { web3Switch } from '../../../utils/switchBlockchain';
 import InputField from '../../common/InputField';
 import {
   TNftMapping,
@@ -41,7 +40,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   const [nftCount, setNFTCount] = useState<number>(0);
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const [nftID, setNFTID] = useState<string>(
     BigNumber.from(contractData?.product?.firstTokenIndex).toString()
@@ -51,7 +50,9 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   const [nftDescription, setNFTDescription] = useState<string>('');
   const [forceRerender, setForceRerender] = useState<boolean>(false);
   const [propertiesArray, setPropertiesArray] = useState<TAttributes[]>([]);
-  const [onMyChain, setOnMyChain] = useState<boolean | undefined>();
+  const [onMyChain, setOnMyChain] = useState<boolean>(
+    correctBlockchain(contractData?.blockchain as BlockchainType)
+  );
   const [files, setFiles] = useState<File>();
   const { programmaticProvider, currentChain } = useSelector<
     RootState,
@@ -128,11 +129,8 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   }, [nftID, nftMapping]);
 
   useEffect(() => {
-    setOnMyChain(
-      contractData &&
-        chainData[contractData.blockchain]?.chainId === currentChain
-    );
-  }, [contractData, programmaticProvider, currentChain]);
+    setOnMyChain(correctBlockchain(contractData?.blockchain as BlockchainType));
+  }, [contractData, programmaticProvider, currentChain, correctBlockchain]);
 
   const onImageDrop = useCallback((acceptedFiles: File[]) => {
     const objectURL = URL.createObjectURL(acceptedFiles[0]);
@@ -390,9 +388,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           forwardFunctions={[
             {
               action: !onMyChain
-                ? () =>
-                    // eslint-disable-next-line
-                    web3Switch(chainData[contractData?.blockchain!]?.chainId!)
+                ? () => web3Switch(contractData?.blockchain as BlockchainType)
                 : pinMetadata,
               label: !onMyChain
                 ? chainData && contractData?.blockchain
