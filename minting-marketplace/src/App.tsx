@@ -351,13 +351,6 @@ function App() {
 									*/}
                 {[
                   {
-                    path: '/demo',
-                    content: DemoMediaUpload,
-                    props: {
-                      contractData: connectUserData
-                    }
-                  },
-                  {
                     path: '/simdogs-splash',
                     content: SimDogsSplashPage
                   },
@@ -476,7 +469,14 @@ function App() {
                       setTabIndex: setTabIndex
                     }
                   },
-
+                  {
+                    path: '/demo',
+                    content: DemoMediaUpload,
+                    requirement:
+                      hotDropsVar === 'true'
+                        ? loggedIn && adminRights
+                        : loggedIn
+                  },
                   {
                     path: '/user/videos',
                     content: VideoManager

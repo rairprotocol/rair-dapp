@@ -37,10 +37,12 @@ const PopUpSettings = ({
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
-  const { adminRights } = useSelector((store) => store.userStore);
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+  const { adminRights, loggedIn } = useSelector<RootState, any>(
+    (store) => store.userStore
+  );
 
   const { logoutUser } = useConnectUser();
 
@@ -244,16 +246,34 @@ const PopUpSettings = ({
                   }}>
                   <SvgUserIcon primaryColor={primaryColor} /> Profile settings
                 </li>
-                {hotdropsVar !== 'true' && (
-                  <li
-                    onClick={() => pushToUploadVideo(2)}
-                    style={{
-                      color:
-                        primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
-                    }}>
-                    <SvgUpload primaryColor={primaryColor} /> Upload video
-                  </li>
-                )}
+                {/* {hotdropsVar !== 'true' && ( */}
+                {hotdropsVar === 'true'
+                  ? loggedIn &&
+                    adminRights && (
+                      <li
+                        onClick={() => pushToUploadVideo(2)}
+                        style={{
+                          color:
+                            primaryColor === 'rhyno'
+                              ? 'rgb(41, 41, 41)'
+                              : 'white'
+                        }}>
+                        <SvgUpload primaryColor={primaryColor} /> Upload video
+                      </li>
+                    )
+                  : loggedIn && (
+                      <li
+                        onClick={() => pushToUploadVideo(2)}
+                        style={{
+                          color:
+                            primaryColor === 'rhyno'
+                              ? 'rgb(41, 41, 41)'
+                              : 'white'
+                        }}>
+                        <SvgUpload primaryColor={primaryColor} /> Upload video
+                      </li>
+                    )}
+                {/* )} */}
                 {/* <li
                   onClick={() => pushToMyItems(2)}
                   style={{
