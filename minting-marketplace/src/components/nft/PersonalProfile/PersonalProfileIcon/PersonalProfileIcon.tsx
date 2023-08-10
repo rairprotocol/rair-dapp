@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
@@ -11,6 +12,7 @@ import { ContractsInitialType } from '../../../../ducks/contracts/contracts.type
 import { getUserStart } from '../../../../ducks/users/actions';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import { defaultAvatar } from '../../../../images';
+import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 
 import cl from './PersonalProfileIcon.module.css';
 
@@ -30,6 +32,9 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (state) => state.userStore
   );
+  const { userAddress } = useParams();
+
+  const [copyState, setCopyState] = useState(false);
 
   const [userName, setUserName] = useState(userData.publicAddress);
   const [userNameNew, setUserNameNew] = useState(userName);
@@ -360,28 +365,57 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
           <>
             {isPage ? (
               <>
-                <span className={cl['profileName' + textColor]}>
-                  {userName && userName.length > 20
-                    ? '@' +
-                      userName.slice(0, 5) +
-                      '...' +
-                      userName.slice(userName.length - 4)
-                    : '@' + userName}
-                </span>
+                <TooltipBox title={'Click to copy your address'}>
+                  <span
+                    onClick={() => {
+                      if (userAddress) {
+                        navigator.clipboard.writeText(userAddress);
+                        setCopyState(true);
+
+                        setTimeout(() => {
+                          setCopyState(false);
+                        }, 3000);
+                      }
+                    }}
+                    className={cl['profileName' + textColor]}>
+                    {userName && userName.length > 20
+                      ? '@' +
+                        userName.slice(0, 5) +
+                        '...' +
+                        userName.slice(userName.length - 4)
+                      : '@' + userName}
+                  </span>
+                </TooltipBox>
               </>
             ) : (
               <>
-                <span className={cl['profileName' + textColor]}>
-                  {userName && userName.length > 15
-                    ? '@' +
-                      userName.slice(0, 5) +
-                      '...' +
-                      userName.slice(length - 4)
-                    : '@' + userName}
-                </span>
+                <TooltipBox title={'Click to copy your address'}>
+                  <span
+                    onClick={() => {
+                      if (userAddress) {
+                        navigator.clipboard.writeText(userAddress);
+                        setCopyState(true);
+
+                        setTimeout(() => {
+                          setCopyState(false);
+                        }, 3000);
+                      }
+                    }}
+                    className={cl['profileName' + textColor]}>
+                    {!copyState
+                      ? userName && userName.length > 15
+                        ? '@' +
+                          userName.slice(0, 5) +
+                          '...' +
+                          userName.slice(length - 4)
+                        : '@' + userName
+                      : 'Copied!'}
+                  </span>
+                </TooltipBox>
                 <i
                   onClick={() => {
                     setEditMode(true);
+                    setCopyState(false);
                     if (setEditModeUpper) {
                       setEditModeUpper(true);
                     }

@@ -105,13 +105,21 @@
 }
 .profileNamewhite {
   color: #ffffff;
-  cursor: default;
+  cursor: pointer;
   font-size: 30px;
+  transition: all 0.2s ease;
 }
 .profileNameblack {
   color: #222021;
-  cursor: default;
+  cursor: pointer;
   font-size: 30px;
+  transition: all 0.2s ease;
+}
+
+.profileNamewhite:hover,
+.profileNameblack:hover {
+  color: grey;
+  transition: all 0.2s ease;
 }
 
 .formEdit {

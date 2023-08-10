@@ -188,6 +188,23 @@
   padding-right: 5px;
 }
 
+.profile-btn-nickname {
+  display: flex;
+  width: 140px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+
+.profile-btn-nickname span {
+  padding: 0 0px 0 2px;
+  font-size: 14px;
+}
+
+.profile-btn-nickname span:hover {
+  color: grey !important;
+}
+
 .profile-buy-button,
 .profile-user-balance {
   height: 100%;
