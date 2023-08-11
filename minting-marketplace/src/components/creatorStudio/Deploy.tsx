@@ -29,8 +29,6 @@ const Factory = () => {
   const [deploying, setDeploying] = useState<boolean>(false);
   const [exchangeData, setExchangeData] = useState({});
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
-
   const { web3TxHandler, web3Switch } = useWeb3Tx();
   const reactSwal = useSwal();
 
@@ -116,14 +114,6 @@ const Factory = () => {
     },
     [web3Switch]
   );
-
-  useEffect(() => {
-    if (hotdropsVar === 'true') {
-      setTitle('Hotdrops Factory');
-    } else {
-      setTitle('Rair Factory');
-    }
-  }, [hotdropsVar]);
 
   return (
     <div className="row my-5 px-0 mx-0">

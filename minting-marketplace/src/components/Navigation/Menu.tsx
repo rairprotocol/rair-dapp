@@ -143,7 +143,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
       showAlert={showAlert}
       selectedChain={selectedChain}
       isSplashPage={isSplashPage}>
-      <Nav primaryColor={primaryColor}>
+      <Nav hotdrops={hotdropsVar} primaryColor={primaryColor}>
         <MobileChoiseNav
           click={click}
           messageAlert={messageAlert}

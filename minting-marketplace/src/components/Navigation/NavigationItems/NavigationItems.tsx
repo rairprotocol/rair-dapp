@@ -26,7 +26,9 @@ export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
 
 export const Nav = styled.nav<IMenuMobileWrapper>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? '#fff' : '#383637'};
+    props.primaryColor === 'rhyno'
+      ? '#fff'
+      : `${props.hotdrops === 'true' ? 'rgb(11 11 11)' : '#383637'}`};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -75,7 +77,9 @@ export const TitleEditProfile = styled.h4`
 
 export const List = styled.ul<IMenuMobileWrapper>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? '#fff' : 'rgb(56, 54, 55)'};
+    props.primaryColor === 'rhyno'
+      ? '#fff'
+      : `${props.hotdrops === 'true' ? 'rgb(11 11 11)' : 'rgb(56, 54, 55)'}`};
   overflow: ${(props) => props.click && 'hidden'};
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;

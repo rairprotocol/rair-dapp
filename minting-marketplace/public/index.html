@@ -2,42 +2,45 @@
 <html lang="en">
   <head>
     <!-- Google Tag Manager -->
-      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-PFTB5D7');</script>
+      <script>
+      if('%REACT_APP_HOTDROPS%' === 'true') {
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PFTB5D7');
+      }
+      </script>
       <!-- End Google Tag Manager -->
       
     <!-- Hotjar Tracking Code for Marketplace --> 
-    <script> (function(h,o,t,j,a,r){ h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)}; h._hjSettings={hjid:3572493,hjsv:6}; a=o.getElementsByTagName('head')[0]; r=o.createElement('script');r.async=1; r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv; a.appendChild(r); })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv='); </script>
+    <script>
+    if('%REACT_APP_HOTDROPS%' === 'true') {
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PFTB5D7');
+    }
+    </script>
     <!-- Hotjar Tracking Code for Marketplace --> 
-    <script defer data-domain="myhotdrops.io" src="https://plausible.io/js/script.js"></script>
+    <script defer data-domain="%REACT_APP_HTML_DATA_DOMAIN%" src="%REACT_APP_HTML_LINK_WINDGET_PLAUSIBLE%"></script>
     <!-- Freshdesk:-->
       <script>
-      window.fwSettings={
-      'widget_id':150000004033
-      };
-      !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}()
+      if('%REACT_APP_HOTDROPS%' === 'true') {
+        window.fwSettings={'widget_id':150000004033}; !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}()
+      }
       </script>
-      <script type='text/javascript' src='https://widget.freshworks.com/widgets/150000004033.js' async defer></script>
+      <script type='text/javascript' src='%REACT_APP_HTML_LINK_WINDGET%' async defer></script>
       <!-- Freshdesk-->
     
     <meta charset="utf-8" />
-    <link rel="icon" href="./favicons/Hotdrops-favicon.ico" />
+    <link rel="icon" href="%REACT_APP_HTML_META_FAVICON_URI%" />
     <meta prefix="og: http://ogp.me/ns#" /> 
-    <title>HotDrops</title>
-    <meta name='author' content='Digital Ownership Encryption' />
-    <meta name="description" content='HotDrops is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content' />
-    <meta property="og:title" content='Hotdrops Technologies' />
-    <meta property="og:description" content='Encrypted, Streaming NFTs' />
-    <meta property="og:image" content='https://hotdrops.live/static/media/hotdrops-default.e7c4e7eb.png' />
-    <meta name="twitter:title" content='HotDrops Technologies' />
-    <meta name="twitter:description" content='HotDrops is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content' />
-    <link rel="icon" href='./favicons/Hotdrops-favicon.ico' />
+    <title>%REACT_APP_HTML_META_TITLE%</title>
+    <meta name='author' content='%REACT_APP_HTML_META_AUTHOR%' />
+    <meta name="description" content='%REACT_APP_HTML_META_DESCRIPTION%' />
+    <meta property="og:title" content='%REACT_APP_HTML_META_TITLE%' />
+    <meta property="og:description" content='%REACT_APP_HTML_META_DESCRIPTION%' />
+    <meta property="og:image" content='%REACT_APP_HTML_META_IMAGE_URL%' />
+    <meta name="twitter:title" content='%REACT_APP_HTML_META_TITLE%' />
+    <meta name="twitter:description" content='%REACT_APP_HTML_META_DESCRIPTION%' />
+    <link rel="icon" href='%REACT_APP_HTML_META_FAVICON_URI%' />
     <link
       rel="apple-touch-icon"
-      href="https://hotdrops.live/static/media/hotdrops-default.e7c4e7eb.png"
+      href="%REACT_APP_HTML_META_IMAGE_URL%"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
