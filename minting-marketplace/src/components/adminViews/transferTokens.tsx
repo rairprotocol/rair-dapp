@@ -27,7 +27,7 @@ const TransferTokens = () => {
     ContractsInitialType
   >((store) => store.contractStore);
 
-  const [traderRole, setTraderRole] = useState<boolean | any | undefined>();
+  const [traderRole, setTraderRole] = useState<boolean | undefined>();
   const [manualAddress, setManualAddress] = useState<boolean>(false);
   const [manualDiamond, setManualDiamond] = useState<boolean>(false);
 
@@ -182,7 +182,7 @@ const TransferTokens = () => {
   }, [getProductNFTs]);
 
   const hasTraderRole = useCallback(async () => {
-    if (contractInstance) {
+    if (contractInstance && !traderRole) {
       // return boolean
       const response = await web3TxHandler(contractInstance, 'hasRole', [
         await contractInstance.TRADER(),
@@ -193,7 +193,7 @@ const TransferTokens = () => {
         setTraderRole(response);
       }
     }
-  }, [contractInstance, currentUserAddress, web3TxHandler]);
+  }, [contractInstance, currentUserAddress, traderRole, web3TxHandler]);
 
   useEffect(() => {
     hasTraderRole();

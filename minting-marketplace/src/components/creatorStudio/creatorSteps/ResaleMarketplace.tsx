@@ -76,7 +76,8 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
       recipient: '',
       percentage: precisionFactor,
       editable: true,
-      message: ''
+      message: '',
+      canBeContract: false
     });
     setCustomPayments(aux);
   };

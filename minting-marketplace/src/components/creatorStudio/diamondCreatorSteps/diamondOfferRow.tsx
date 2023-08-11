@@ -105,6 +105,9 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   }, [range, updateStartingToken, startingToken]);
 
   useEffect(() => {
+    if (!endingToken || !startingToken) {
+      return;
+    }
     const correctCount = BigNumber.from(endingToken).sub(startingToken).add(1);
     if (!_id && simpleMode && !correctCount.eq(allowedTokenCount)) {
       updater(

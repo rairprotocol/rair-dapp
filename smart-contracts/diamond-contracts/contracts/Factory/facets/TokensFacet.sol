@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.19; 
 
-import '../AppStorage.sol';
 import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
+import { FactoryStorage } from "../AppStorage.sol";
+import { AccessControlEnumerable } from "../../common/DiamondStorage/AccessControlEnumerable.sol";
 
 /// @title 	Our Facet creator for tokens
 /// @notice You can use this contract to manage the use of tokens
-contract TokensFacet is AccessControlAppStorageEnumerable {
+contract TokensFacet is AccessControlEnumerable {
 	bytes32 constant OWNER = keccak256("OWNER");
 	bytes32 constant ERC777 = keccak256("ERC777");
 	
@@ -40,16 +41,18 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	/// @param	_erc777Address	Address of the new Token
 	/// @param	_priceToDeploy	Price of deployment for the new Token
 	function acceptNewToken(address _erc777Address, uint _priceToDeploy) public onlyRole(OWNER) {
+		FactoryStorage.Layout storage store = FactoryStorage.layout();
 		grantRole(ERC777, _erc777Address);
-		s.deploymentCostForToken[_erc777Address] = _priceToDeploy;
+		store.deploymentCostForToken[_erc777Address] = _priceToDeploy;
 		emit AcceptedToken(_erc777Address, _priceToDeploy, msg.sender);
 	}
 
 	/// @notice	Removes an address from the list of allowed minters
 	/// @param	_erc777Address	Address of the Token
 	function removeToken(address _erc777Address) public onlyRole(OWNER) {
+		FactoryStorage.Layout storage store = FactoryStorage.layout();
 		revokeRole(ERC777, _erc777Address);
-		s.deploymentCostForToken[_erc777Address] = 0;
+		store.deploymentCostForToken[_erc777Address] = 0;
 		emit RemovedToken(_erc777Address, msg.sender);
 	}
 
@@ -57,6 +60,6 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	/// @param 	erc777 	Contains the facet addresses and function selectors
 	/// @return price 	Shows the price of deployment for the token
 	function getDeploymentCost(address erc777) public view returns (uint price) {
-		price = s.deploymentCostForToken[erc777];
+		price = FactoryStorage.layout().deploymentCostForToken[erc777];
 	}
 }

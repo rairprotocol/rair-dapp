@@ -194,7 +194,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 			uint totalPercentage = s.nodeFee + s.treasuryFee;
 			uint totalFunds = rangeData.rangePrice * totalPercentage / (100 * s.decimalPow);
 			for (uint i = 0; i < splits.length; i++) {
-				require(!isContract(splits[i].recipient), "Minter Marketplace: Contracts can't be recipients of the splits");
+				require(splits[i].canBeContract || !isContract(splits[i].recipient), "Minter Marketplace: Contracts can't be recipients of the splits");
 				uint splitForPercentage = rangeData.rangePrice * splits[i].percentage / (100 * s.decimalPow);
 				require(
 					splitForPercentage > 0,
@@ -244,7 +244,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		uint totalPercentage = s.nodeFee + s.treasuryFee;
 		delete selectedOffer.fees;
 		for (uint i = 0; i < splits_.length; i++) {
-			require(!isContract(splits_[i].recipient), "Minter Marketplace: Contracts can't be recipients of fees");
+			require(splits_[i].canBeContract || !isContract(splits_[i].recipient), "Minter Marketplace: Contracts can't be recipients of fees");
 			require(
 				rangeData.rangePrice * splits_[i].percentage / (100 * s.decimalPow) > 0,
 				"Minter Marketplace: A percentage on the array will result in an empty transfer"

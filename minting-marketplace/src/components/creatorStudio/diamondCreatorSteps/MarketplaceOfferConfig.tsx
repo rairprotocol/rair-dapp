@@ -39,18 +39,23 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
       message: 'Node address',
       recipient: process.env.REACT_APP_NODE_ADDRESS,
       percentage: nodeFee,
+      canBeContract: false,
       editable: false
     },
     {
       message: 'Treasury address',
       recipient: treasuryAddress,
-      percentage: BigNumber.from(treasuryFee),
+      percentage: treasuryFee,
+      canBeContract: false,
       editable: false
     },
     {
       message: 'Creator address (You)',
       recipient: currentUserAddress,
-      percentage: BigNumber.from(95 * Math.pow(10, minterDecimals)),
+      percentage: BigNumber.from(10)
+        .pow(minterDecimals | 3)
+        .mul(95),
+      canBeContract: false,
       editable: true
     }
   ]);
@@ -58,19 +63,20 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     if (!array[index].marketData || !!array[index]._id === false) {
       return;
     }
-    console.info(array[index].marketData);
     setCustomPayments(
       [
         {
           message: 'Node address',
           recipient: process.env.REACT_APP_NODE_ADDRESS,
-          percentage: BigNumber.from(nodeFee),
+          percentage: nodeFee,
+          canBeContract: false,
           editable: false
         },
         {
           message: 'Treasury address',
           recipient: treasuryAddress,
-          percentage: BigNumber.from(treasuryFee),
+          percentage: treasuryFee,
+          canBeContract: false,
           editable: false
         }
       ].concat(
@@ -78,6 +84,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
           recipient: fee.recipient,
           percentage: BigNumber.from(fee.percentage),
           editable: true,
+          canBeContract: false,
           message: 'Data from the marketplace'
         }))
       )
@@ -95,6 +102,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     aux.push({
       recipient: '',
       percentage: BigNumber.from(0),
+      canBeContract: false,
       editable: true
     });
     setCustomPayments(aux);
@@ -238,7 +246,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                         deleter={removePayment}
                         {...{
                           rerender,
-                          minterDecimals: BigNumber.from(minterDecimals),
+                          minterDecimals: BigNumber.from(minterDecimals | 3),
                           marketValuesChanged,
                           setMarketValuesChanged,
                           price: item.price,
@@ -252,17 +260,25 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                 </tbody>
               </table>
             )}
-            <div className="row w-100">
-              <div className="col-12 col-md-10 py-2 text-center">
-                Total: {total / Math.pow(10, minterDecimals)}%
+            {minterDecimals && (
+              <div className="row w-100">
+                <div className="col-12 col-md-10 py-2 text-center">
+                  Total:{' '}
+                  {BigNumber.from(total)
+                    .div(Math.pow(10, minterDecimals | 3))
+                    ?.toString()}
+                  %
+                </div>
+                <button
+                  disabled={BigNumber.from(total).gte(
+                    Math.pow(10, minterDecimals | 3) * 100
+                  )}
+                  onClick={addPayment}
+                  className="col-12 col-md-2 rounded-rair btn btn-stimorol">
+                  <i className="fas fa-plus" /> Add
+                </button>
               </div>
-              <button
-                disabled={total >= 100 * Math.pow(10, minterDecimals)}
-                onClick={addPayment}
-                className="col-12 col-md-2 rounded-rair btn btn-stimorol">
-                <i className="fas fa-plus" /> Add
-              </button>
-            </div>
+            )}
           </details>
         )}
         <hr />

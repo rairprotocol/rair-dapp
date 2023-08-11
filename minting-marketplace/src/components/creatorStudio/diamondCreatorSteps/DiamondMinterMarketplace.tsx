@@ -18,6 +18,7 @@ import {
 import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
+  MINTERHash,
   contractData,
   setStepNumber,
   simpleMode,
@@ -39,7 +40,7 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
     TMarketplaceOfferConfigArrayItem[]
   >([]);
   const [nodeFee, setNodeFee] = useState<BigNumber>(BigNumber.from(0));
-  const [treasuryFee, setTreasuryFee] = useState<number>(0);
+  const [treasuryFee, setTreasuryFee] = useState<BigNumber>(BigNumber.from(0));
   const [treasuryAddress, setTreasuryAddress] = useState<string | undefined>(
     undefined
   );
@@ -69,21 +70,39 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
     if (!diamondMarketplaceInstance) {
       return;
     }
-    const nodeFeeData = await web3TxHandler(
+    if (nodeFee.eq(0) && minterDecimals === 0) {
+      const nodeFeeData = await web3TxHandler(
+        diamondMarketplaceInstance,
+        'getNodeFee'
+      );
+      if (nodeFeeData) {
+        setNodeFee(nodeFeeData.nodeFee);
+        setMinterDecimals(nodeFeeData.decimals);
+      }
+    }
+    if (treasuryFee.eq(0)) {
+      const treasuryFeeData = await web3TxHandler(
+        diamondMarketplaceInstance,
+        'getTreasuryFee'
+      );
+      if (treasuryFeeData) {
+        setTreasuryFee(treasuryFeeData.treasuryFee);
+      }
+    }
+    const treasuryAddress = await web3TxHandler(
       diamondMarketplaceInstance,
-      'getNodeFee'
+      'getTreasuryAddress'
     );
-    setNodeFee(nodeFeeData.nodeFee);
-    setMinterDecimals(nodeFeeData.decimals);
-    const treasuryFeeData = await web3TxHandler(
-      diamondMarketplaceInstance,
-      'getTreasuryFee'
-    );
-    setTreasuryFee(Number(treasuryFeeData.treasuryFee.toString()));
-    setTreasuryAddress(
-      await web3TxHandler(diamondMarketplaceInstance, 'getTreasuryAddress')
-    );
-  }, [diamondMarketplaceInstance, web3TxHandler]);
+    if (treasuryAddress) {
+      setTreasuryAddress(treasuryAddress);
+    }
+  }, [
+    diamondMarketplaceInstance,
+    minterDecimals,
+    nodeFee,
+    treasuryFee,
+    web3TxHandler
+  ]);
 
   useEffect(() => {
     getContractData();
@@ -139,10 +158,11 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
       showConfirmButton: false
     });
     if (
-      await web3TxHandler(contractData.instance, 'grantRole', [
-        await web3TxHandler(contractData.instance, 'MINTER', []),
+      MINTERHash &&
+      (await web3TxHandler(contractData.instance, 'grantRole', [
+        MINTERHash,
         diamondMarketplaceInstance?.address
-      ])
+      ]))
     ) {
       reactSwal.fire({
         title: 'Success',

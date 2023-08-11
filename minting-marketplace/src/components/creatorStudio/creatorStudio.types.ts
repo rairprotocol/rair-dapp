@@ -17,7 +17,7 @@ export interface IMarketplaceOfferConfig {
   index: number;
   nodeFee: BigNumber;
   minterDecimals: number;
-  treasuryFee: number;
+  treasuryFee: BigNumber;
   treasuryAddress: string;
   simpleMode: boolean;
   rerender: () => void;
@@ -37,6 +37,7 @@ export type TListOffers = Pick<
 };
 export type TDiamondMinterMarketplace = Pick<
   TWorkflowContextType,
+  | 'MINTERHash'
   | 'simpleMode'
   | 'setStepNumber'
   | 'gotoNextStep'
@@ -51,6 +52,7 @@ export interface ICustomFeeRow {
   index: number;
   array: TCustomPayments[];
   recipient: string | undefined;
+  canBeContract: boolean;
   deleter: (index: number) => void;
   percentage: BigNumber;
   rerender: () => void;
@@ -89,6 +91,7 @@ export type TCustomPayments = {
   percentage: BigNumber;
   editable: boolean;
   message?: string;
+  canBeContract: boolean;
 };
 
 export type TMarketData = {
@@ -171,6 +174,7 @@ export type TTokenLock = {
 };
 
 export type TWorkflowContextType = {
+  MINTERHash: string | undefined;
   contractData: TContractData | TDiamondContractData | undefined;
   steps: TSteps[];
   setStepNumber: Function;
@@ -273,6 +277,7 @@ export interface IOfferRow {
 }
 
 export interface IListOffers {
+  MINTERHash: string | undefined;
   contractData: TContractData | undefined;
   setStepNumber: Function;
   stepNumber: number;

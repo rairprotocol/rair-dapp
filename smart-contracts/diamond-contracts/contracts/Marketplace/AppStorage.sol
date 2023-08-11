@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 struct feeSplits {
 	address recipient;
+	bool canBeContract;
 	uint percentage;
 }
 

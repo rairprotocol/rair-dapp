@@ -1,4 +1,4 @@
-FROM node:lts as build
+FROM node:16.16.0 as build
 
 #install dependencies
 WORKDIR /usr/src/minting
@@ -7,7 +7,7 @@ RUN npm install
 COPY . /usr/src/minting
 #RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
-FROM node:lts
+FROM node:16.16.0
 WORKDIR /usr/src/minting
 COPY --from=build /usr/src/minting /usr/src/minting
 

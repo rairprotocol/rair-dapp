@@ -22,6 +22,7 @@ import {
 import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const ListOffers: React.FC<IListOffers> = ({
+  MINTERHash,
   contractData,
   setStepNumber,
   stepNumber,
@@ -124,13 +125,13 @@ const ListOffers: React.FC<IListOffers> = ({
   }, [address, onMyChain, contractCreator]);
 
   const fetchMintingStatus = useCallback(async () => {
-    if (!instance || !onMyChain) {
+    if (!instance || !onMyChain || !MINTERHash) {
       return;
     }
     try {
       setHasMinterRole(
         await web3TxHandler(instance, 'hasRole', [
-          await web3TxHandler(instance, 'MINTER', []),
+          MINTERHash,
           minterInstance?.address
         ])
       );
@@ -138,7 +139,7 @@ const ListOffers: React.FC<IListOffers> = ({
       console.error(err);
       setHasMinterRole(false);
     }
-  }, [minterInstance, instance, onMyChain, web3TxHandler]);
+  }, [instance, onMyChain, MINTERHash, web3TxHandler, minterInstance?.address]);
 
   useEffect(() => {
     fetchMintingStatus();
