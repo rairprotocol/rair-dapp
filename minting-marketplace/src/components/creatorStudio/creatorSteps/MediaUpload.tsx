@@ -265,11 +265,12 @@ const MediaUpload: React.FC<IMediaUpload> = ({
           if (success && contractData) {
             const asArray = Object.entries(files);
 
-            const filtered: any = asArray.filter(
-              ([key, value]: any) =>
-                value?.contract === contractData?.product.contract &&
-                value?.product === collectionIndex
-            );
+            const filtered: any = asArray;
+            // .filter(
+            //   ([key, value]: any) =>
+            //     value?.contract === contractData?.product.contract &&
+            //     value?.product === collectionIndex
+            // );
 
             setMediaUploadedList(Object.fromEntries(filtered));
             setLoading(false);
@@ -278,20 +279,14 @@ const MediaUpload: React.FC<IMediaUpload> = ({
           setLoading(false);
         }
       } else {
-        const { success, list, error } = await rFetch(
-          `/api/media/list?userAddress=${currentUserAddress}`
+        const { success, files, error } = await rFetch(
+          `/api/nft/network/${blockchain}/${address}/${collectionIndex}/files`
         );
 
         if (success && contractData) {
-          const asArray = Object.entries(list);
+          const asArray = Object.entries(files);
 
-          const filtered: any = asArray.filter(
-            ([key, value]: any) =>
-              value?.contract === contractData?.product.contract &&
-              value?.product === collectionIndex
-          );
-
-          setMediaUploadedList(Object.fromEntries(filtered));
+          setMediaUploadedList(Object.fromEntries(asArray));
           setLoading(false);
         }
 
