@@ -197,6 +197,8 @@ services:
       REACT_APP_GA_NAME: ${react-app-ga-name}
       REACT_APP_DISABLE_CREATOR_VIEWS: ${react-app-disable-creator-views}
       REACT_APP_HOME_PAGE: /
+      REACT_APP_MATIC_MAIN_DIAMOND_FACTORY: ${matic_mainnet_diamond_factory_address}
+      REACT_APP_MATIC_MAIN_DIAMOND_MARKETPLACE: ${matic_mainnet_diamond_marketplace_address}
     ports:
       - 80:80
     networks:

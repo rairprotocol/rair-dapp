@@ -22,6 +22,7 @@ import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 import LoadingComponent from '../common/LoadingComponent';
+import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
 import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 import CustomShareButton from '../MockUpPage/NftList/NftData/CustomShareButton';
@@ -49,6 +50,7 @@ const UserProfilePage: React.FC = () => {
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+  const [copyState, setCopyState] = useState(false);
   const [userData, setUserData] = useState<UserType | null | undefined>(
     undefined
   );
@@ -197,6 +199,7 @@ const UserProfilePage: React.FC = () => {
             firstName: null,
             lastName: null,
             nickName: `@${userAddress}`,
+            ageVerified: false,
             publicAddress: `${userAddress}`,
             _id: 'none'
           };
@@ -402,19 +405,34 @@ const UserProfilePage: React.FC = () => {
                 </div>
                 <div className="profile-name-box">
                   <>
-                    <span className={`profileName ${textColor}`}>
-                      {(userData &&
-                      userData.nickName &&
-                      userData.nickName.length > 20
-                        ? userData.nickName.slice(0, 5) +
-                          '....' +
-                          userData.nickName.slice(length - 4)
-                        : userData.nickName) ||
-                        (userAddress &&
-                          userAddress.slice(0, 4) +
-                            '....' +
-                            userAddress.slice(length - 4))}
-                    </span>
+                    <TooltipBox title={'Click to copy this address'}>
+                      <span
+                        onClick={() => {
+                          if (userAddress) {
+                            navigator.clipboard.writeText(userAddress);
+                            setCopyState(true);
+
+                            setTimeout(() => {
+                              setCopyState(false);
+                            }, 3000);
+                          }
+                        }}
+                        className={`profileName ${textColor}`}>
+                        {!copyState
+                          ? (userData &&
+                            userData.nickName &&
+                            userData.nickName.length > 20
+                              ? userData.nickName.slice(0, 5) +
+                                '....' +
+                                userData.nickName.slice(length - 4)
+                              : userData.nickName) ||
+                            (userAddress &&
+                              userAddress.slice(0, 4) +
+                                '....' +
+                                userAddress.slice(length - 4))
+                          : 'Copied!'}
+                      </span>
+                    </TooltipBox>
                   </>
                 </div>
               </div>

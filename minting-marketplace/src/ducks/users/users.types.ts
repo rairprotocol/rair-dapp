@@ -30,6 +30,7 @@ export type UserQueryType = {
   nickName: string | null;
   adminRights: boolean;
   superAdmin: boolean;
+  ageVerified: boolean | undefined;
 };
 
 export type UserType = {
@@ -41,6 +42,7 @@ export type UserType = {
   lastName: string | null;
   nickName: string | null;
   background: string | null;
+  ageVerified: boolean | undefined;
   nonce?: string;
   publicAddress: string;
   _id: string;

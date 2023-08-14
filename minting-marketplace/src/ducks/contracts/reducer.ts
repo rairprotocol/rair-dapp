@@ -78,9 +78,9 @@ const contractAddresses: ContractAddressesType = {
     erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
     minterMarketplace: '0x781F15a23506CF28539EA057e3f33008E6339E49',
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
-      '0x9498b23e964760364435C23c793e9352Ff4E2200') as string,
+      '0xeef47e293d01ce29e91707ed2fe8e9b8e3fe75d1') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
-      '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1') as string,
+      '0x5535fe9abda206f6780cc87b4e1fe4733b98bd9c') as string,
     resaleMarketplace: undefined,
     tokenPurchaser: undefined,
     creditHandler: undefined

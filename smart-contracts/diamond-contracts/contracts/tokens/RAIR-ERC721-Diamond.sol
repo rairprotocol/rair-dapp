@@ -27,7 +27,7 @@ contract RAIR_ERC721_Diamond is AccessControlAppStorageEnumerable721, ERC165 {
 	/// @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
 	constructor(string memory name_, address creatorAddress_, uint16 creatorRoyalty_) {
 		s._name = name_;
-		s._symbol = "RAIR";
+		s._symbol = "HOT";
 		
 		s.factoryAddress = msg.sender;
 		s.royaltyFee = creatorRoyalty_;

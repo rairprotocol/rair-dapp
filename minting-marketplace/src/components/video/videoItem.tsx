@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import axios from 'axios';
@@ -17,7 +17,9 @@ import {
 } from '../../axios.responseTypes';
 import store, { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { UserType } from '../../ducks/users/users.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { setUserData } from '../../ducks/users/actions';
+import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import formatDuration from '../../utils/durationUtils';
@@ -47,6 +49,13 @@ const VideoItem: React.FC<IVideoItem> = ({
   const loading = useSelector<RootState, boolean>(
     (state) => state.videosStore.loading
   );
+
+  const dispatch = useDispatch();
+
+  const { userData } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
+
   const navigate = useNavigate();
   const [offerDataInfo, setOfferDataInfo] = useState<TOfferType[]>();
   const oreId = useOreId();
@@ -108,6 +117,28 @@ const VideoItem: React.FC<IVideoItem> = ({
     setModalIsOpen(false);
     setOpenVideoplayer(false);
   }, [setModalIsOpen]);
+
+  const ageVerificationPopUp = () => {
+    reactSwal
+      .fire({
+        title: 'I am over 18',
+        // text: 'I am over 18',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          reactSwal.fire('Thanks!', 'Your answer has been stored.', 'success');
+          updateAgeVerification();
+        } else {
+          setModalIsOpen(false);
+        }
+      });
+  };
 
   const openMintPopUp = () => {
     reactSwal.fire({
@@ -266,6 +297,35 @@ const VideoItem: React.FC<IVideoItem> = ({
     }
   }, [mediaList, item, setDataUser]);
 
+  const updateAgeVerification = useCallback(async () => {
+    if (userData?.publicAddress) {
+      const formData = new FormData();
+      formData.append('ageVerified', JSON.stringify(true));
+      const response = await axios.post<TUserResponse>(
+        `/api/users/${userData?.publicAddress}`,
+        formData,
+        {
+          headers: {
+            Accept: 'multipart/form-data'
+          }
+        }
+      );
+
+      if (response.data.success) {
+        const { success, user } = await rFetch(
+          '/api/v2/auth/me/',
+          undefined,
+          undefined,
+          false
+        );
+
+        if (success) {
+          dispatch(setUserData(user));
+        }
+      }
+    }
+  }, [setDataUser]);
+
   useEffect(() => {
     getInfoUser();
   }, [getInfoUser]);
@@ -277,6 +337,16 @@ const VideoItem: React.FC<IVideoItem> = ({
   useEffect(() => {
     getInfo();
   }, [getInfo]);
+
+  useEffect(() => {
+    if (
+      modalIsOpen &&
+      mediaList[item].ageRestricted === true &&
+      userData?.ageVerified === false
+    ) {
+      ageVerificationPopUp();
+    }
+  }, [modalIsOpen, mediaList, userData]);
 
   return (
     <button

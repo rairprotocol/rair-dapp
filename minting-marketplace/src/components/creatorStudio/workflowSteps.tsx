@@ -55,6 +55,7 @@ const WorkflowSteps: FC = () => {
 
   const [mintingRole, setMintingRole] = useState<boolean>();
   const [traderRole, setTraderRole] = useState<boolean>();
+  const [MINTERHash, setMINTERHash] = useState<string | undefined>(undefined);
 
   const [contractData, setContractData] = useState<TContractData>();
 
@@ -221,7 +222,10 @@ const WorkflowSteps: FC = () => {
 
   const getNFTMetadata = async (blockchain, address, collectionIndex) => {
     const { success, result } = await rFetch(
-      `/api/nft/network/${blockchain}/${address.toLowerCase()}/${collectionIndex}`
+      `/api/nft/network/${blockchain}/${address.toLowerCase()}/${collectionIndex}`,
+      undefined,
+      undefined,
+      false
     );
     if (success) {
       return result;
@@ -233,10 +237,16 @@ const WorkflowSteps: FC = () => {
       return;
     }
     const contractDataResponse = await rFetch(
-      `/api/contracts/network/${blockchain}/${address}`
+      `/api/contracts/network/${blockchain}/${address}`,
+      undefined,
+      undefined,
+      false
     );
     const productDataResponse = await rFetch(
-      `/api/contracts/network/${blockchain}/${address}/products`
+      `/api/contracts/network/${blockchain}/${address}/products`,
+      undefined,
+      undefined,
+      false
     );
     if (productDataResponse.success) {
       contractDataResponse.contract.products = productDataResponse.products;
@@ -248,7 +258,10 @@ const WorkflowSteps: FC = () => {
       false
     );
     const response4 = await rFetch(
-      `/api/contracts/network/${blockchain}/${address}/products/offers`
+      `/api/contracts/network/${blockchain}/${address}/products/offers`,
+      undefined,
+      undefined,
+      false
     );
     if (response4.success) {
       response4.products.forEach((item) => {
@@ -333,41 +346,50 @@ const WorkflowSteps: FC = () => {
     diamondMarketplaceInstance
   ]);
 
-  useEffect(() => {
+  const hasMintingRole = useCallback(async () => {
     if (
-      contractData &&
-      contractData.instance &&
-      !contractData.external &&
-      correctBlockchain(contractData.blockchain as BlockchainType)
+      !contractData?.instance ||
+      contractData.external ||
+      !correctBlockchain(contractData.blockchain as BlockchainType)
     ) {
-      console.info('Asking');
-      (async () => {
-        setMintingRole(
-          await web3TxHandler(contractData.instance, 'hasRole', [
-            await web3TxHandler(contractData.instance, 'MINTER', []),
-            contractData.diamond
-              ? diamondMarketplaceInstance?.address
-              : minterInstance?.address
-          ])
-        );
-        setTraderRole(
-          await web3TxHandler(contractData.instance, 'hasRole', [
-            await contractData.instance.TRADER(),
-            contractData.diamond
-              ? diamondMarketplaceInstance?.address
-              : minterInstance?.address
-          ])
-        );
-      })();
+      return;
     }
+    const MINTER = await web3TxHandler(contractData.instance, 'MINTER');
+    if (!MINTER) {
+      return;
+    }
+    setMINTERHash(MINTER);
+    setMintingRole(
+      await web3TxHandler(contractData.instance, 'hasRole', [
+        MINTER,
+        contractData.diamond
+          ? diamondMarketplaceInstance?.address
+          : minterInstance?.address
+      ])
+    );
+    const TRADER = await web3TxHandler(contractData.instance, 'TRADER');
+    if (!TRADER) {
+      return;
+    }
+    setTraderRole(
+      await web3TxHandler(contractData.instance, 'hasRole', [
+        TRADER,
+        contractData.diamond
+          ? diamondMarketplaceInstance?.address
+          : minterInstance?.address
+      ])
+    );
   }, [
     contractData,
-    diamondMarketplaceInstance,
-    minterInstance,
-    currentChain,
-    web3TxHandler,
-    correctBlockchain
+    correctBlockchain,
+    diamondMarketplaceInstance?.address,
+    minterInstance?.address,
+    web3TxHandler
   ]);
+
+  useEffect(() => {
+    hasMintingRole();
+  }, [hasMintingRole]);
 
   useEffect(() => {
     // Fix this
@@ -401,6 +423,7 @@ const WorkflowSteps: FC = () => {
   }, [steps, currentStep, navigate]);
 
   const initialValue: TWorkflowContextType = {
+    MINTERHash,
     contractData,
     steps,
     setStepNumber: setCurrentStep,

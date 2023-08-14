@@ -121,10 +121,13 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
           diamondFactoryAbi
         );
         if (instance) {
-          const can = await web3TxHandler(instance, 'hasRole', [
-            await web3TxHandler(instance, 'TRADER', []),
-            resaleInstance.address
-          ]);
+          const TRADERHash = await web3TxHandler(instance, 'TRADER');
+          const can =
+            TRADERHash &&
+            (await web3TxHandler(instance, 'hasRole', [
+              TRADERHash,
+              resaleInstance.address
+            ]));
           if (!can) {
             reactSwal.fire(
               'Error',

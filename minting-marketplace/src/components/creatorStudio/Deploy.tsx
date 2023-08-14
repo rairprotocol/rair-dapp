@@ -29,14 +29,11 @@ const Factory = () => {
   const [deploying, setDeploying] = useState<boolean>(false);
   const [exchangeData, setExchangeData] = useState({});
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
-
   const { web3TxHandler, web3Switch } = useWeb3Tx();
   const reactSwal = useSwal();
 
   const {
     currentUserAddress,
-    programmaticProvider,
     factoryInstance,
     erc777Instance,
     diamondFactoryInstance,
@@ -55,48 +52,59 @@ const Factory = () => {
 
   const getExchangeData = useCallback(async () => {
     if (tokenPurchaserInstance) {
-      const [ethPrices, rairPrices] =
-        await tokenPurchaserInstance.getExhangeRates();
+      const [ethPrices, rairPrices] = await web3TxHandler(
+        tokenPurchaserInstance,
+        'getExhangeRates'
+      );
       const exchanges = {};
       ethPrices.forEach((item, index) => {
         exchanges[item] = rairPrices[index];
       });
       setExchangeData(exchanges);
     }
-  }, [tokenPurchaserInstance]);
+  }, [tokenPurchaserInstance, web3TxHandler]);
 
   const getPrice = useCallback(async () => {
-    if (window.ethereum) {
-      setChainId(currentChain);
-    } else if (programmaticProvider) {
-      setChainId(currentChain);
-    }
-    if (factoryInstance && erc777Instance) {
+    setChainId(currentChain);
+    if (factoryInstance && erc777Instance && deploymentPrice.eq(0)) {
       setDeploymentPrice(
-        await factoryInstance.deploymentCostForERC777(erc777Instance.address)
+        await web3TxHandler(factoryInstance, 'deploymentCostForERC777', [
+          erc777Instance.address
+        ])
       );
     }
-    if (erc777Instance && currentUserAddress) {
-      const userBalance = await erc777Instance.balanceOf(currentUserAddress);
+    if (erc777Instance && currentUserAddress && userBalance.eq(0)) {
+      const userBalance = await web3TxHandler(erc777Instance, 'balanceOf', [
+        currentUserAddress
+      ]);
       if (userBalance) {
         getExchangeData();
       }
       setUserBalance(userBalance);
-      setTokenSymbol(await erc777Instance.symbol());
+      setTokenSymbol(await web3TxHandler(erc777Instance, 'symbol'));
     }
-    if (diamondFactoryInstance && erc777Instance) {
+    if (
+      diamondFactoryInstance &&
+      erc777Instance &&
+      deploymentPriceDiamond.eq(0)
+    ) {
       setDeploymentPriceDiamond(
-        await diamondFactoryInstance.getDeploymentCost(erc777Instance.address)
+        await web3TxHandler(diamondFactoryInstance, 'getDeploymentCost', [
+          erc777Instance.address
+        ])
       );
     }
   }, [
-    getExchangeData,
-    currentUserAddress,
+    currentChain,
     factoryInstance,
     erc777Instance,
-    programmaticProvider,
+    deploymentPrice,
+    currentUserAddress,
+    userBalance,
     diamondFactoryInstance,
-    currentChain
+    deploymentPriceDiamond,
+    web3TxHandler,
+    getExchangeData
   ]);
 
   useEffect(() => {
@@ -116,14 +124,6 @@ const Factory = () => {
     },
     [web3Switch]
   );
-
-  useEffect(() => {
-    if (hotdropsVar === 'true') {
-      setTitle('Hotdrops Factory');
-    } else {
-      setTitle('Rair Factory');
-    }
-  }, [hotdropsVar]);
 
   return (
     <div className="row my-5 px-0 mx-0">

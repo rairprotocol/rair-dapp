@@ -160,7 +160,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   }, [currentUserAddress, dispatch]);
 
   return (
-    <List primaryColor={primaryColor} click={click}>
+    <List hotdrops={hotdropsVar} primaryColor={primaryColor} click={click}>
       <div>
         {activeSearch && (
           <>

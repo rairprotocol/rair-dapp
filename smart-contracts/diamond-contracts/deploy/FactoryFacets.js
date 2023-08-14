@@ -3,15 +3,30 @@ const {deployments, ethers} = require('hardhat');
 module.exports = async ({accounts, getUnnamedAccounts}) => {
 	const {deploy} = deployments;
 	const [deployerAddress] = await getUnnamedAccounts();
-	
-	let creatorFacetDeployment = await deploy('creatorFacet', { from: deployerAddress });
-	console.log('CreatorFacet deployed at', creatorFacetDeployment.receipt.contractAddress);
 
-	let ERC777FacetDeployment = await deploy('ERC777ReceiverFacet', { from: deployerAddress });
-	console.log('ERC777 Receiver Facet deployed at', ERC777FacetDeployment.receipt.contractAddress);
-	
-	let tokensFacetDeployment = await deploy('TokensFacet', { from: deployerAddress });
-	console.log('Token Management facet deployed at', tokensFacetDeployment.receipt.contractAddress);
+	let facets = [
+		'creatorFacet',
+		'ERC777ReceiverFacet',
+		'TokensFacet',
+	]
+
+	for await (let facet of facets) {
+		let deployment = await deploy(facet, {
+			from: deployerAddress,
+			waitConfirmations: 6
+		});
+		console.log(`${facet} deployed at ${deployment.receipt.contractAddress}`);
+		if (deployment.newlyDeployed) {
+			try {
+				await hre.run("verify:verify", {
+					address: deployment.receipt.contractAddress,
+					constructorArguments: []
+				});
+			} catch (err) {
+				console.error(err);
+			}
+		}
+	}
 };
 
 module.exports.tags = ['FactoryFacets'];

@@ -12,6 +12,7 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
   index,
   array,
   recipient,
+  canBeContract,
   deleter,
   percentage,
   rerender,
@@ -27,6 +28,9 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
   const precisionFactor = BigNumber.from(10).pow(minterDecimals);
   const [recipientAddress, setRecipientAddress] = useState<string | undefined>(
     recipient
+  );
+  const [canBeContractFlag, setCanBeContractFlag] = useState<boolean>(
+    !!canBeContract
   );
   const [percentageReceived, setPercentageReceived] = useState<BigNumber>(
     BigNumber.from(percentage)
@@ -66,6 +70,17 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
     }
   };
 
+  const updateSmartContractFlag = () => {
+    setCanBeContractFlag(!canBeContractFlag);
+    array[index].canBeContract = !canBeContractFlag;
+    if (rerender) {
+      rerender();
+    }
+    if (!marketValuesChanged && setMarketValuesChanged) {
+      setMarketValuesChanged(true);
+    }
+  };
+
   const calculatedFee = BigNumber.from(100)
     .mul(percentageReceived)
     .div(precisionFactor);
@@ -96,6 +111,19 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
           />
         </div>
         <small>{message}</small>
+        {editable && (
+          <small className="float-end">
+            <input
+              id={`isSmart${index}`}
+              type="checkbox"
+              onChange={() => updateSmartContractFlag()}
+              checked={canBeContractFlag}
+            />
+            <label className="ms-2" htmlFor={`isSmart${index}`}>
+              Address is a smart contract
+            </label>
+          </small>
+        )}
       </th>
       <th className="px-2">
         <div className="w-100 border-stimorol rounded-rair">

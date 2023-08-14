@@ -28,12 +28,6 @@ const WelcomeHeader = ({
     setIsSplashPage(false);
   }, [setIsSplashPage]);
 
-  useEffect(() => {
-    if (hotdropsVar === 'true') {
-      setTitle('HotDrops');
-    }
-  });
-
   return (
     <div className="main-wrapper">
       <MetaTags seoMetaTags={seo} />

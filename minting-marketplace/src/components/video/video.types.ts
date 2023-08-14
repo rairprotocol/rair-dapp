@@ -48,6 +48,7 @@ export type MediaListResponseType = {
     isUnlocked: boolean;
     uploader: string;
     unlockData: any;
+    ageRestricted: boolean | undefined;
   };
 };
 
