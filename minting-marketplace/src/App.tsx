@@ -251,7 +251,7 @@ function App() {
   return (
     <ErrorBoundary fallback={ErrorFallback}>
       <MetaTags seoMetaTags={seo} />
-      {!correctBlockchain(selectedChain) && showAlert && isSplashPage ? (
+      {!correctBlockchain(selectedChain) && showAlert && !isSplashPage ? (
         <AlertMetamask
           selectedChain={selectedChain}
           selectedChainId={selectedChainId}
@@ -274,7 +274,9 @@ function App() {
               renderBtnConnect={renderBtnConnect}
               creatorViewsDisabled={creatorViewsDisabled}
               showAlert={showAlert}
-              selectedChain={selectedChain}
+              selectedChain={
+                correctBlockchain(selectedChain) === true ? '' : true
+              }
               isSplashPage={isSplashPage}
               setTabIndexItems={setTabIndexItems}
               isAboutPage={isAboutPage}
@@ -291,7 +293,9 @@ function App() {
                 creatorViewsDisabled={creatorViewsDisabled}
                 programmaticProvider={programmaticProvider}
                 showAlert={showAlert}
-                selectedChain={selectedChain}
+                selectedChain={
+                  correctBlockchain(selectedChain) === true ? '' : true
+                }
                 setTabIndexItems={setTabIndexItems}
                 isAboutPage={isAboutPage}
               />
@@ -315,7 +319,9 @@ function App() {
           <MainBlockApp
             isSplashPage={isSplashPage}
             showAlert={showAlert}
-            selectedChain={selectedChain}>
+            selectedChain={`${
+              correctBlockchain(selectedChain) === true ? '' : true
+            }`}>
             <div className="col-12 blockchain-switcher" />
             <div className="col-12 mt-3">
               <SentryRoutes>
