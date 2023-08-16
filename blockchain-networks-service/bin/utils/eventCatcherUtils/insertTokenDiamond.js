@@ -3,7 +3,7 @@
 const {
   BigNumber,
 } = require('ethers');
-const { SyncRestriction, LockedTokens, Product, Offer, MintedToken } = require('../../models');
+const { SyncRestriction, Product, Offer, MintedToken } = require('../../models');
 const {
   handleDuplicateKey,
   handleMetadataForToken,
@@ -46,54 +46,25 @@ module.exports = async (
     return undefined;
   }
 
-  // Find the token lock data
-  const foundLock = await LockedTokens.findOne({
+  const offer = await Offer.findOne({
     contract: contract._id,
-    lockIndex: rangeIndex, // For diamonds, lock index = range index = offer index
+    diamondRangeIndex: rangeIndex,
   });
 
-  if (foundLock === null) {
-    // Couldn't find a lock for diamond mint ${erc721Address}:${tokenIndex}`);
-    return undefined;
-  }
-
-  // Find product
   const product = await Product.findOne({
     contract: contract._id,
-    collectionIndexInContract: foundLock.product,
-  });
-  if (!product) {
-    log.error(`404: Couldn't find product for ${contract._id}`);
-    return [undefined];
-  }
-
-  const offerList = await Offer.find({
-    contract: contract._id,
-    product: product.collectionIndexInContract,
+    collectionIndexInContract: offer.product,
   });
 
-  const [foundOffer] = offerList.filter((offer) => BigNumber.from(offer.range[0]).lte(tokenIndex) &&
-            BigNumber.from(offer.range[1]).gte(tokenIndex));
-  if (!foundOffer) {
-    log.error(`404: Couldn't find offer for ${contract._id}`);
-    return [undefined];
-  }
-
-  // Find token
   let foundToken = await MintedToken.findOne({
     contract: contract._id,
     token: tokenIndex,
   });
 
-  // If token doesn't exist, create a new entry
-  if (foundToken === null) {
-    foundToken = new MintedToken({});
-  }
-
   foundToken = await handleMetadataForToken(
     dbModels,
     contract._id,
-    foundLock.product,
+    offer.product,
     tokenIndex,
     foundToken,
   );
@@ -110,19 +81,19 @@ module.exports = async (
   await foundToken?.save().catch(handleDuplicateKey);
 
   // Decrease the amount of copies in the offer
-  if (foundOffer) {
-    foundOffer.soldCopies = BigNumber.from(foundOffer.soldCopies).add(1).toString();
-    await foundOffer.save().catch(handleDuplicateKey);
+  if (offer) {
+    offer.soldCopies = BigNumber.from(offer.soldCopies).add(1).toString();
+    await offer.save().catch(handleDuplicateKey);
   }
 
   // Decrease the amount of copies in the product
   if (product) {
     const allOffersInProduct = await Offer.find({
-      contract: foundOffer.contract,
-      product: foundOffer.product,
+      contract: offer.contract,
+      product: offer.product,
     });
     const totalSoldTokensInProduct = allOffersInProduct
-      .reduce((result, offer) => result + BigInt(offer.soldCopies), 0n);
+      .reduce((result, currentOffer) => result + BigInt(currentOffer.soldCopies), 0n);
     product.soldCopies = totalSoldTokensInProduct.toString();
     await product.save().catch(handleDuplicateKey);
   }
