@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Contract } from 'ethers';
+import { constants, Contract, utils } from 'ethers';
 
 import {
   BlockchainInfoType,
@@ -41,8 +41,9 @@ const TransferTokens = () => {
   const [selectedProduct, setSelectedProducts] = useState<string>('null');
 
   const [ownedTokens, setOwnedTokens] = useState<TTokenData[]>([]);
-  const [tokenId, setTokenId] = useState<number>(0);
+  const [tokenId, setTokenId] = useState<string>('0');
   const [targetAddress, setTargetAddress] = useState<string>('');
+  const [allTokensFilter, setAllTokensFilter] = useState<boolean>(true);
 
   const [contractBlockchain, setContractBlockchain] = useState<
     BlockchainInfoType | undefined
@@ -118,21 +119,21 @@ const TransferTokens = () => {
     }
   };
   const getContractData = useCallback(async () => {
-    setContractInstance(undefined);
-    setSelectedProducts('null');
-    setContractProducts([]);
-    setContractBlockchain(undefined);
-    setTraderRole(undefined);
-    setOwnedTokens([]);
-    setContractData(undefined);
     if (manualAddress) {
       return;
     }
+    setContractInstance(undefined);
+    setContractBlockchain(undefined);
+    setTraderRole(undefined);
     if (selectedContract !== 'null') {
+      setContractData(undefined);
       const response1 = await rFetch(`/api/contracts/${selectedContract}`);
       if (response1.success) {
         setContractData(response1.contract);
       }
+      setSelectedProducts('null');
+      setContractProducts([]);
+      setOwnedTokens([]);
       const response2 = await rFetch(
         `/api/contracts/${selectedContract}/products/offers`
       );
@@ -169,7 +170,7 @@ const TransferTokens = () => {
     }
     if (selectedProduct !== 'null') {
       const response4 = await rFetch(
-        `/api/nft/${selectedContract}/${Number(selectedProduct)}`
+        `/api/nft/${selectedContract}/${selectedProduct.toString()}`
       );
       if (response4.success) {
         setOwnedTokens(response4.result.tokens);
@@ -183,9 +184,13 @@ const TransferTokens = () => {
 
   const hasTraderRole = useCallback(async () => {
     if (contractInstance && !traderRole) {
-      // return boolean
+      const TRADER = await contractInstance.TRADER();
+      if (!TRADER) {
+        setTraderRole(false);
+        return;
+      }
       const response = await web3TxHandler(contractInstance, 'hasRole', [
-        await contractInstance.TRADER(),
+        TRADER,
         currentUserAddress
       ]);
       // eslint-disable-next-line
@@ -200,27 +205,31 @@ const TransferTokens = () => {
   }, [hasTraderRole]);
 
   return (
-    <div className="col-12 row">
-      <BlockChainSwitcher />
-      <button
-        onClick={() => {
-          setManualAddress(false);
-          setSelectedContract('null');
-          setContractData(undefined);
-        }}
-        className="btn col-6 btn-royal-ice">
-        Database
-      </button>
-      <button
-        onClick={() => {
-          setManualAddress(true);
-          setSelectedContract('');
-          setContractData(undefined);
-        }}
-        className="btn col-6 btn-stimorol">
-        Blockchain
-      </button>
-      <div className="col-12 row">
+    <div className="w-100 row px-5">
+      <div className="col-12">
+        <BlockChainSwitcher />
+      </div>
+      <div className="col-12">
+        <button
+          onClick={() => {
+            setManualAddress(false);
+            setSelectedContract('null');
+            setContractData(undefined);
+          }}
+          className="btn col-xs-12 col-md-6 btn-royal-ice">
+          Database
+        </button>
+        <button
+          onClick={() => {
+            setManualAddress(true);
+            setSelectedContract('');
+            setContractData(undefined);
+          }}
+          className="btn col-xs-12 col-md-6 btn-stimorol">
+          Blockchain
+        </button>
+      </div>
+      <div className="col-12">
         {manualAddress === false ? (
           <>
             <InputSelect
@@ -243,7 +252,7 @@ const TransferTokens = () => {
             )}
           </>
         ) : (
-          <>
+          <div className="row">
             <div className="col-12 col-md-10">
               <InputField
                 getter={selectedContract}
@@ -265,7 +274,7 @@ const TransferTokens = () => {
             <div className="col-12">
               <button
                 disabled={
-                  selectedContract === '' ||
+                  !utils.isAddress(selectedContract) ||
                   (contractData &&
                     contractData.contractAddress === selectedContract)
                 }
@@ -274,7 +283,7 @@ const TransferTokens = () => {
                 Connect to address!
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
       <br />
@@ -287,135 +296,149 @@ const TransferTokens = () => {
                 {`Connected to: ${contractData.title} (${contractData.contractAddress})`}
               </div>
             )}
-            <div className="col-12">
-              Your owned tokens:
-              <br />
-              {ownedTokens.map((item, index) => {
-                return (
+            <div className="col-xs-12 col-md-6">
+              <div className="col-12 mx-2">
+                <InputField
+                  getter={tokenId}
+                  setter={setTokenId}
+                  label="Token #"
+                  customClass="form-control"
+                  labelClass="col-12"
+                  type="number"
+                />
+              </div>
+              {ownedTokens.length !== 0 && (
+                <button
+                  className={`col-12 mx-2 btn btn-${
+                    allTokensFilter ? 'royal-ice' : 'stimorol'
+                  }`}
+                  onClick={() => setAllTokensFilter(!allTokensFilter)}>
+                  {allTokensFilter ? 'Minted' : 'Owned'} tokens
+                </button>
+              )}
+              {ownedTokens
+                .filter((item) =>
+                  allTokensFilter
+                    ? item.ownerAddress !== constants.AddressZero
+                    : item.ownerAddress === currentUserAddress
+                )
+                .map((item, index) => {
+                  return (
+                    <button
+                      className={
+                        'btn btn-outline-primary text-white mx-2 col-12'
+                      }
+                      onClick={() => {
+                        setTokenId(item.uniqueIndexInContract);
+                      }}
+                      key={index}>
+                      <small>{item?.offer?.offerName}</small>
+                      <h5>{item?.metadata?.name}</h5>
+                      NFT #{item?.uniqueIndexInContract}
+                      <br />
+                      <small>Owned by {item?.ownerAddress}</small>
+                    </button>
+                  );
+                })}
+            </div>
+            <div className="col-12 col-md-6">
+              <div className="col-12">
+                {contractBlockchain && (
                   <button
-                    className={'btn btn-primary mx-2'}
-                    onClick={() => {
-                      setTokenId(+item.uniqueIndexInContract);
-                    }}
-                    key={index}>
-                    #{item.uniqueIndexInContract}
+                    disabled={currentChain === contractBlockchain.chainId}
+                    className="btn btn-royal-ice"
+                    onClick={() => web3Switch(contractBlockchain.chainId)}>
+                    1.-{' '}
+                    {currentChain === contractBlockchain.chainId
+                      ? 'Connected to'
+                      : 'Switch to'}{' '}
+                    {contractBlockchain.name}
                   </button>
-                );
-              })}
-            </div>
-            <div className="col-12 col-md-6">
-              <InputField
-                getter={tokenId}
-                setter={setTokenId}
-                label="Token #"
-                customClass="form-control"
-                labelClass="col-12"
-                type="number"
-              />
-            </div>
-            <div className="col-12 col-md-6">
-              <InputField
-                getter={targetAddress}
-                setter={setTargetAddress}
-                label="Send to"
-                customClass="form-control"
-                labelClass="col-12"
-              />
-            </div>
-          </div>
-          <br />
-          <br />
-          <hr />
-          <div className="col-12 col-md-6">
-            {contractBlockchain && (
-              <button
-                disabled={!correctBlockchain(contractBlockchain.chainId)}
-                className="btn btn-royal-ice"
-                onClick={() => web3Switch(contractBlockchain.chainId)}>
-                1.-{' '}
-                {correctBlockchain(contractBlockchain.chainId)
-                  ? 'Connected to'
-                  : 'Switch to'}{' '}
-                {contractBlockchain.name}
-              </button>
-            )}
-          </div>
-          <div className="col-12 col-md-6">
-            {contractInstance && (
-              <button
-                disabled={
-                  correctBlockchain(
-                    contractBlockchain?.chainId as BlockchainType
-                  ) || traderRole !== false
-                }
-                className="btn btn-royal-ice"
-                onClick={async () => {
-                  reactSwal.fire({
-                    title: 'Please wait',
-                    html: 'Granting TRADER role',
-                    icon: 'info',
-                    showConfirmButton: false
-                  });
-                  if (
-                    await web3TxHandler(contractInstance, 'grantRole', [
-                      await contractInstance.TRADER(),
-                      currentUserAddress
-                    ])
-                  ) {
-                    reactSwal.fire({
-                      title: 'Success',
-                      html: 'Role granted',
-                      icon: 'success'
-                    });
-                  }
-                }}>
-                2.-{' '}
-                {traderRole === undefined
-                  ? 'Querying roles...'
-                  : traderRole === true
-                  ? 'Already have Trader role'
-                  : 'Grant yourself the Trader role'}
-              </button>
-            )}
-          </div>
-          <hr />
-          <div className="col-12 col-md-12">
-            {contractInstance && (
-              <button
-                disabled={
-                  !correctBlockchain(
-                    contractBlockchain?.chainId as BlockchainType
-                  ) ||
-                  !traderRole ||
-                  targetAddress === '' ||
-                  !contractInstance
-                }
-                className="btn btn-royal-ice"
-                onClick={async () => {
-                  reactSwal.fire({
-                    title: 'Please wait',
-                    html: `Transferring token to ${targetAddress}`,
-                    icon: 'info',
-                    showConfirmButton: false
-                  });
+                )}
+              </div>
+              <div className="col-12">
+                <InputField
+                  getter={targetAddress}
+                  setter={setTargetAddress}
+                  label="Send to"
+                  customClass="form-control"
+                  labelClass="col-12"
+                />
+              </div>
+              <div className="col-12">
+                {contractInstance && (
+                  <button
+                    disabled={
+                      currentChain !== contractBlockchain?.chainId ||
+                      traderRole !== false
+                    }
+                    className="btn btn-royal-ice"
+                    onClick={async () => {
+                      reactSwal.fire({
+                        title: 'Please wait',
+                        html: 'Granting TRADER role',
+                        icon: 'info',
+                        showConfirmButton: false
+                      });
+                      if (
+                        await web3TxHandler(contractInstance, 'grantRole', [
+                          await contractInstance.TRADER(),
+                          currentUserAddress
+                        ])
+                      ) {
+                        reactSwal.fire({
+                          title: 'Success',
+                          html: 'Role granted',
+                          icon: 'success'
+                        });
+                      }
+                    }}>
+                    2.-{' '}
+                    {traderRole === undefined
+                      ? 'Querying roles...'
+                      : traderRole === true
+                      ? 'Already have Trader role'
+                      : 'Grant yourself the Trader role'}
+                  </button>
+                )}
+              </div>
+              <div className="col-12">
+                {contractInstance && (
+                  <button
+                    disabled={
+                      currentChain !== contractBlockchain?.chainId ||
+                      !traderRole ||
+                      !utils.isAddress(targetAddress) ||
+                      !contractInstance
+                    }
+                    className="btn btn-royal-ice"
+                    onClick={async () => {
+                      reactSwal.fire({
+                        title: 'Please wait',
+                        html: `Transferring token to ${targetAddress}`,
+                        icon: 'info',
+                        showConfirmButton: false
+                      });
 
-                  if (
-                    await web3TxHandler(
-                      contractInstance,
-                      'safeTransferFrom(address,address,uint256)',
-                      [currentUserAddress, targetAddress, tokenId]
-                    )
-                  ) {
-                    reactSwal.fire({
-                      title: 'Success',
-                      html: 'Token sent',
-                      icon: 'success'
-                    });
-                  }
-                }}>
-                Transfer #{tokenId} to {targetAddress}
-              </button>
-            )}
+                      if (
+                        await web3TxHandler(
+                          contractInstance,
+                          'safeTransferFrom(address,address,uint256)',
+                          [currentUserAddress, targetAddress, tokenId]
+                        )
+                      ) {
+                        reactSwal.fire({
+                          title: 'Success',
+                          html: 'Token sent',
+                          icon: 'success'
+                        });
+                      }
+                    }}>
+                    Transfer #{tokenId} to {targetAddress}
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </>
       )}
