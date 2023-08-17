@@ -43,7 +43,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     resaleInstance,
     minterInstance,
     diamondMarketplaceInstance,
-    currentChain,
     currentUserAddress
   } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
@@ -86,18 +85,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       }
     }
   }, [selectedToken, setAccountData, tokenData]);
-
-  const disableBuyBtn = useCallback(() => {
-    // Returns true to DISABLE the button
-    // Returs false to ENABLE the button
-    if (!contractData || !offerData?.offerIndex) {
-      return true;
-    } else if (contractData.diamond) {
-      return !offerData.diamondRangeIndex;
-    } else {
-      return !offerData.offerPool;
-    }
-  }, [offerData, contractData]);
 
   const buyContract = useCallback(async () => {
     if (!contractData || !offerData) {
@@ -191,6 +178,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (!contractData) {
       return;
     }
+    setResaleData(undefined);
     const resaleResponse = await rFetch(
       `/api/v2/resales?contract=${contractData._id}&tokenId=${params.tokenId}&status=0`,
       undefined,
@@ -274,10 +262,20 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       const price = numberTooBigThreshold.gte(rawPrice)
         ? '0.000+'
         : formatEther(rawPrice);
+
+      if (
+        !contractData ||
+        !offerData?.offerIndex ||
+        (contractData.diamond
+          ? !offerData.diamondRangeIndex
+          : !offerData.offerPool)
+      ) {
+        return <></>;
+      }
+
       return (
         <BuySellButton
           handleClick={buyContract}
-          disabled={disableBuyBtn()}
           isColorPurple={true}
           title={`Buy ${price} ${blockchain && chainData[blockchain]?.symbol}`}
         />
@@ -352,8 +350,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     offerData,
     web3Switch,
     numberTooBigThreshold,
+    contractData,
     buyContract,
-    disableBuyBtn,
     currentUserAddress,
     resaleData,
     currentUser,
