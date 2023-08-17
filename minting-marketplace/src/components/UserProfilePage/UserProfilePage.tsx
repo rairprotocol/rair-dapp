@@ -118,8 +118,6 @@ const UserProfilePage: React.FC = () => {
           setIsLoading(false);
           return;
         }
-      } else {
-        navigate('/404');
       }
     },
     [userAddress]
@@ -208,8 +206,6 @@ const UserProfilePage: React.FC = () => {
       } else {
         setUserData(null);
       }
-    } else {
-      navigate('/404');
     }
   }, [userAddress]);
 

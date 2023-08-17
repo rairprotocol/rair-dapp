@@ -5,7 +5,7 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 interface IMenuMobileWrapper {
   showAlert?: boolean | undefined | null;
-  selectedChain?: string | null;
+  selectedChain?: any | null;
   primaryColor?: ColorChoice;
   editMode?: boolean;
   click?: boolean;

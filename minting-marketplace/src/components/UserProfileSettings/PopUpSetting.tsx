@@ -103,7 +103,7 @@ const PopUpSettings = ({
 
   const pushToUploadVideo = (tab: number) => {
     setTabIndexItems(tab);
-    navigate('/demo');
+    navigate('/demo/upload');
   };
 
   const pushToFactory = () => {

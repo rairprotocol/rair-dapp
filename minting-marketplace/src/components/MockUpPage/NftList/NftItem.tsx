@@ -205,8 +205,8 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
           style={{
             top: 0,
             position: 'relative',
-            height: '100%',
-            width: '100%',
+            height: 'auto',
+            width: 'auto',
             cursor: 'pointer'
           }}>
           {metaDataProducts?.metadata?.animation_url &&

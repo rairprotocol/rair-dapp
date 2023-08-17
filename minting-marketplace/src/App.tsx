@@ -476,7 +476,7 @@ function App() {
                     }
                   },
                   {
-                    path: '/demo',
+                    path: '/demo/upload',
                     content: DemoMediaUpload,
                     requirement:
                       hotDropsVar === 'true'

@@ -1449,7 +1449,7 @@ select.form-control.rounded-rair:disabled {
 .search-holder-wrapper {
   /* position: fixed; */
   position: absolute;
-  background: #383637;
+  background: rgb(11, 11, 11);
   /* top: 5rem;
   left: 35rem; */
   top: 3rem;
