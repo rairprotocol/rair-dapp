@@ -9,6 +9,7 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { BellIcon, CloseIconMobile, MenuIcon } from '../../images';
 import {
   SocialBox,
@@ -39,7 +40,7 @@ interface IMenuNavigation {
     | ethers.providers.JsonRpcSigner
     | undefined;
   showAlert: boolean | null | undefined;
-  selectedChain: string | null | undefined;
+  selectedChain: any | undefined;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
   isAboutPage: boolean;
@@ -67,6 +68,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   );
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
+  const { correctBlockchain } = useWeb3Tx();
 
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -141,7 +144,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     <MenuMobileWrapper
       className="col-1 rounded burder-menu"
       showAlert={showAlert}
-      selectedChain={selectedChain}
+      selectedChain={!correctBlockchain(selectedChain)}
       isSplashPage={isSplashPage}>
       <Nav hotdrops={hotdropsVar} primaryColor={primaryColor}>
         <MobileChoiseNav

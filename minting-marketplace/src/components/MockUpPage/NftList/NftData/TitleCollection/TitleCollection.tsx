@@ -111,6 +111,10 @@ const TitleCollection: React.FC<ITitleCollection> = ({
 
   useEffect(() => {
     getContractInfo();
+
+    return () => {
+      setExternal(undefined);
+    };
   }, [getContractInfo]);
 
   useEffect(() => {

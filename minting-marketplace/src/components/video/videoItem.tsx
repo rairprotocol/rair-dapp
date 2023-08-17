@@ -121,20 +121,11 @@ const VideoItem: React.FC<IVideoItem> = ({
   const ageVerificationPopUp = () => {
     reactSwal
       .fire({
-        title: 'I am over 18',
-        // text: 'I am over 18',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No'
+        title: 'Sorry Age verification required',
+        icon: 'warning'
       })
       .then((result) => {
-        if (result.isConfirmed) {
-          reactSwal.fire('Thanks!', 'Your answer has been stored.', 'success');
-          updateAgeVerification();
-        } else {
+        if (result.isConfirmed || result.isDismissed) {
           setModalIsOpen(false);
         }
       });

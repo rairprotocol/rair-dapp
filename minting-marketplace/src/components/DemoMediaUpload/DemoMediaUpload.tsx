@@ -180,21 +180,27 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
   }, [currentUserAddress]);
 
   const handleNewUserStatus = useCallback(async () => {
-    const requestContract = await rFetch('/api/contracts/full?itemsPerPage=5');
-    const { success, contracts } = await rFetch(
-      `/api/contracts/full?itemsPerPage=${requestContract.totalNumber || '5'}`
-    );
-
-    if (success) {
-      const contractsFiltered = contracts.filter(
-        (el) => el.user === currentUserAddress
+    if (currentTitleVideo) {
+      const requestContract = await rFetch(
+        '/api/contracts/full?itemsPerPage=5'
+      );
+      const { success, contracts } = await rFetch(
+        `/api/contracts/full?itemsPerPage=${requestContract.totalNumber || '5'}`
       );
 
-      if (contractsFiltered.length === 0) {
-        setNewUserStatus(true);
-      } else {
-        setNewUserStatus(false);
+      if (success) {
+        const contractsFiltered = contracts.filter(
+          (el) => el.user === currentUserAddress
+        );
+
+        if (contractsFiltered.length === 0) {
+          setNewUserStatus(true);
+        } else {
+          setNewUserStatus(false);
+        }
       }
+    } else {
+      setLoading(false);
     }
   }, [currentUserAddress]);
 
