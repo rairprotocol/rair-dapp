@@ -102,7 +102,7 @@ export default function NewVideo({ videoData, selectVideo, videoIdName }) {
         playerRef.current.dispose();
       }
     };
-  }, [videoRef, poster]);
+  }, [videoRef, poster, videoIdName]);
 
   return (
     <video

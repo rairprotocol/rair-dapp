@@ -52,10 +52,12 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   }, [tokenData]);
 
   useEffect(() => {
-    setSelectVideo(productsFromOffer[0]);
+    if (productsFromOffer) {
+      setSelectVideo(productsFromOffer[0]);
+    }
   }, [setSelectVideo, productsFromOffer]);
 
-  if (productsFromOffer.length === 0) {
+  if (productsFromOffer === undefined) {
     return <LoadingComponent />;
   }
 

@@ -101,7 +101,7 @@ export interface INftCollectionPageComponent {
 
 export interface INftUnlockablesPage {
   embeddedParams: TEmbeddedParams | undefined;
-  productsFromOffer: TFileType[];
+  productsFromOffer: TFileType[] | undefined;
   primaryColor: ColorChoice;
   selectedToken: string | undefined;
   tokenData: { [index: string]: TTokenData } | null | undefined;

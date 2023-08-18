@@ -49,7 +49,9 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const [offerData, setOfferData] = useState<TOfferType>();
   const [offerDataInfo, setOfferDataInfo] = useState<TOfferType[]>();
   const [ownerInfo, setOwnerInfo] = useState<TProducts>();
-  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
+  const [productsFromOffer, setProductsFromOffer] = useState<
+    TFileType[] | undefined
+  >(undefined);
   const [showToken, setShowToken] = useState<number>(15);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [someUsersData, setSomeUsersData] = useState<UserType | null>();
@@ -128,6 +130,9 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         return false;
       })
     );
+  }, [blockchain, contract, product]);
+
+  const initialTokenData = useCallback(() => {
     if (tokenData && tokenId) {
       if (tokenData[tokenId]?.offer?.diamond) {
         setSelectedOfferIndex(
@@ -139,7 +144,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         );
       }
     }
-  }, [blockchain, contract, product, tokenId, tokenData]);
+  }, [tokenData, tokenId]);
 
   const getParticularOffer = useCallback(async () => {
     try {
@@ -270,6 +275,10 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       setTokenNumber(undefined);
     }
   }, [tokenData]);
+
+  useEffect(() => {
+    initialTokenData();
+  }, [initialTokenData]);
 
   useEffect(() => {
     return () => {

@@ -68,7 +68,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setSelectVideo(productsFromOffer[0]);
+    if (productsFromOffer) {
+      setSelectVideo(productsFromOffer[0]);
+    }
   }, [setSelectVideo, productsFromOffer]);
 
   const checkUrl = useCallback(() => {
@@ -399,18 +401,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 primaryColor={primaryColor}
               />
             </div>
-            {/* <div className="more-unlockables-button-container">
-              <div className="share-button-linear-border more-unlock">
-                <CustomShareButton
-                  title="More Unlockables"
-                  handleClick={goToUnlockables}
-                  primaryColor={primaryColor}
-                  isCollectionPathExist={false}
-                  moreUnlockablesClassName={'share-button-more-unlock'}
-                />
-              </div>
-            </div> */}
           </>
+        ) : productsFromOffer === undefined ? (
+          <LoadingComponent />
         ) : (
           <div className="description-text">{`This nft doesn't have any unlockable videos`}</div>
         )}

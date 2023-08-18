@@ -1,8 +1,10 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { TFileType } from '../../../../axios.responseTypes';
+import { RootState } from '../../../../ducks';
 import { playImagesColored } from '../../../SplashPage/images/greyMan/grayMan';
-import { ReactComponent as LockWhite } from '../../assets/LockWhite.svg';
+import { MediaListResponseType } from '../../../video/video.types';
 import { TUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
 
 import NftVideoplayer from './NftVideoplayer/NftVideoplayer';
@@ -19,16 +21,46 @@ const UnlockableVideosSingleTokenPage: React.FC<
   primaryColor
 }) => {
   const videosListBlock = useRef<HTMLDivElement>(null);
-  const [selectedItem, setSelectedItem] = useState<TFileType | null>(
-    productsFromOffer[0]
+  const [selectedItem, setSelectedItem] = useState<
+    TFileType | null | undefined
+  >(undefined);
+
+  const [formatedVideoObj, setFormatedVideoObj] = useState(undefined);
+
+  const videos = useSelector<RootState, MediaListResponseType | null>(
+    (store) => store.videosStore.videos
   );
+
+  function renameKeys(obj, newKeys) {
+    const keyValues = Object.keys(obj).map((key) => {
+      const newKey = newKeys[key] || key;
+      return { [newKey]: obj[key] };
+    });
+    return Object.assign({}, ...keyValues);
+  }
+
+  useEffect(() => {
+    if (productsFromOffer && productsFromOffer.length > 0) {
+      let newArray: any = [];
+      productsFromOffer.forEach((item) => {
+        if (item) {
+          newArray = [...newArray, item._id];
+          // newArray.push(item._id);
+        }
+      });
+      const result = renameKeys(productsFromOffer, newArray);
+      setFormatedVideoObj(result);
+    }
+  }, [productsFromOffer]);
 
   useEffect(() => {
     setSelectVideo(selectVideo); // This will always use latest value of count
   }, [setSelectVideo, selectVideo]);
 
   useEffect(() => {
-    setSelectVideo(productsFromOffer[0]);
+    if (productsFromOffer) {
+      setSelectVideo(productsFromOffer[0]);
+    }
   }, [productsFromOffer, setSelectVideo]);
 
   const handleSelectedItem = (itemSelected: TFileType) => {
@@ -36,12 +68,14 @@ const UnlockableVideosSingleTokenPage: React.FC<
   };
   return (
     <div className="unlockable-videos-wrapper" ref={videosListBlock}>
-      {productsFromOffer.length && openVideoplayer ? (
+      {productsFromOffer && productsFromOffer.length && openVideoplayer ? (
         <div className={'video-player-style'}>
-          <NftVideoplayer
-            selectVideo={selectVideo}
-            setSelectVideo={setSelectVideo}
-          />
+          {selectVideo && formatedVideoObj && (
+            <NftVideoplayer
+              selectVideo={formatedVideoObj[selectVideo._id]}
+              setSelectVideo={setSelectVideo}
+            />
+          )}
         </div>
       ) : (
         <div className="unlockables-video-player-container">

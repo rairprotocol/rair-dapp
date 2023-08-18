@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import videojs from 'video.js';
@@ -17,30 +17,33 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
 }) => {
   const mainManifest = 'stream.m3u8';
 
-  const [videoName] = useState<number>(Math.round(Math.random() * 10000));
+  const videoNameRef = useRef<number>(Math.round(Math.random() * 10000));
+
   const [mediaAddress, setMediaAddress] = useState<string>('');
   const requestChallenge = useCallback(async () => {
-    try {
-      const streamAddress = await rFetch('/api/v2/auth/unlock/', {
-        method: 'POST',
-        body: JSON.stringify({
-          type: 'file',
-          fileId: selectVideo?._id
-        }),
-        headers: {
-          'Content-Type': 'application/json'
+    if (selectVideo && videoNameRef) {
+      try {
+        const streamAddress = await rFetch('/api/v2/auth/unlock/', {
+          method: 'POST',
+          body: JSON.stringify({
+            type: 'file',
+            fileId: selectVideo._id
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        if (streamAddress.success) {
+          setMediaAddress(`/stream/${selectVideo?._id}/${mainManifest}`);
+          setTimeout(() => {
+            videojs('vjs-' + videoNameRef.current);
+          }, 1000);
         }
-      });
-      if (streamAddress.success) {
-        setMediaAddress(`/stream/${selectVideo?._id}/${mainManifest}`);
-        setTimeout(() => {
-          videojs('vjs-' + videoName);
-        }, 1000);
+      } catch (requestError) {
+        Swal.fire('NFT required to view this content');
       }
-    } catch (requestError) {
-      Swal.fire('NFT required to view this content');
     }
-  }, [selectVideo, mainManifest, videoName]);
+  }, [selectVideo, mainManifest, videoNameRef.current]);
 
   useEffect(() => {
     requestChallenge();
@@ -51,13 +54,19 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
 
   useEffect(() => {
     setDocumentTitle('Streaming');
-  }, [videoName]);
+  }, [videoNameRef]);
 
   useEffect(() => {
     return () => {
       axios.get<TOnlySuccessResponse>('/api/auth/stream/out');
     };
-  }, [videoName]);
+  }, [videoNameRef]);
+
+  // useEffect(() => {
+  //   return () => {
+  //     setVideoName(Math.round(Math.random() * 10000));
+  //   };
+  // });
 
   if (mediaAddress.length > 0) {
     return (
@@ -66,7 +75,7 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
           <NewVideo
             videoData={mediaAddress}
             selectVideo={selectVideo}
-            videoIdName={videoName}
+            videoIdName={videoNameRef.current}
           />
         </div>
       </>

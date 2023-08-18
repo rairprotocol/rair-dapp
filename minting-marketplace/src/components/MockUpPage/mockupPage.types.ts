@@ -136,7 +136,7 @@ export interface IBuySellButton {
 }
 
 export type TUnlockableVideosSingleTokenPage = {
-  productsFromOffer: TFileType[];
+  productsFromOffer: TFileType[] | undefined;
   selectVideo: TFileType | undefined;
   setSelectVideo: (videoFile: TFileType | undefined) => void;
   openVideoplayer: boolean;
@@ -181,7 +181,7 @@ export interface INftDataPageMain {
   currentUser: string | undefined;
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   product: string | undefined;
-  productsFromOffer: TFileType[];
+  productsFromOffer: TFileType[] | undefined;
   primaryColor: ColorChoice;
   selectedData: TMetadataType | undefined;
   selectedToken: string | undefined;

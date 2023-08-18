@@ -22,6 +22,7 @@ import { setUserData } from '../../ducks/users/actions';
 import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { defaultHotDrops } from '../../images';
 import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -648,13 +649,21 @@ const VideoItem: React.FC<IVideoItem> = ({
                   <div className="modal-content-block-btns">
                     <div className="modal-content-block-buy">
                       {hotDropsVar === 'true' ? (
-                        <img
-                          src={contractData?.tokens?.at(0)?.metadata?.image}
+                        <ImageLazy
+                          src={
+                            contractData?.tokens?.at(0)?.metadata?.image
+                              ? contractData?.tokens?.at(0)?.metadata?.image
+                              : defaultHotDrops
+                          }
                           alt="NFT token powered by Hotdrops"
                         />
                       ) : (
-                        <img
-                          src={contractData?.tokens?.at(0)?.metadata?.image}
+                        <ImageLazy
+                          src={
+                            contractData?.tokens?.at(0)?.metadata?.image
+                              ? contractData?.tokens?.at(0)?.metadata?.image
+                              : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                          }
                           alt="NFT token powered by Rair tech"
                         />
                       )}
