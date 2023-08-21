@@ -125,6 +125,11 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   }
 
   const redirection = () => {
+    /* eslint-disable */
+    console.log('blockchain', blockchain);
+    console.log('contractName', contractName);
+    console.log('collectionIndexInContract', collectionIndexInContract);
+    /* eslint-enable */
     navigate(
       `/collection/${blockchain}/${contractName}/${collectionIndexInContract}/0`
     );

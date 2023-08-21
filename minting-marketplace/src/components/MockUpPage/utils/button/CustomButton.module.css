@@ -1,8 +1,8 @@
 .nftDataPageShowMoreWrapper {
   box-sizing: content-box;
   letter-spacing: 1px;
-  padding: 1px;
-  border-radius: 16px;
+  /* padding: 1px; */
+  border-radius: 6px;
   cursor: pointer;
   background-image: linear-gradient(
     96.34deg,

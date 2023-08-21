@@ -50,7 +50,7 @@ const CustomButton: React.FC<ICustomButton> = ({
           <ShowMoreText
             className={cl.nftDataPageShowMoreText}
             font={font}
-            fontSize={'1.25rem'}
+            fontSize={'1rem'}
             fontColor={'#fff'}>
             {text}
           </ShowMoreText>
@@ -64,7 +64,7 @@ const CustomButton: React.FC<ICustomButton> = ({
           <ShowMoreText
             className={cl.nftDataPageShowMoreText}
             font={font}
-            fontSize={'1.25rem'}
+            fontSize={'1rem'}
             fontColor={'#fff'}>
             {text}
           </ShowMoreText>

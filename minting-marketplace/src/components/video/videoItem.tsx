@@ -47,6 +47,7 @@ const VideoItem: React.FC<IVideoItem> = ({
   const [mintPopUp, setMintPopUp] = useState<boolean>(false);
   const [firstStepPopUp, setFirstStepPopUp] = useState<boolean>(false);
   const [, /* purchaseStatus */ setPurchaseStatus] = useState<boolean>(false);
+  const [offersArray, setOffersArray] = useState<TOfferType[]>([]);
   const loading = useSelector<RootState, boolean>(
     (state) => state.videosStore.loading
   );
@@ -72,7 +73,15 @@ const VideoItem: React.FC<IVideoItem> = ({
 
   const customStyles = {
     overlay: {
-      zIndex: '52'
+      position: 'fixed',
+      display: 'flex',
+      justifyContent: 'center',
+      top: '0',
+      left: '0',
+      width: '100%',
+      height: '100%',
+      zIndex: '1000',
+      overflowY: 'auto'
     },
     content: {
       background: primaryColor === 'rhyno' ? '#F2F2F2' : '#383637',
@@ -81,6 +90,7 @@ const VideoItem: React.FC<IVideoItem> = ({
       right: 'auto',
       bottom: 'auto',
       marginRight: '-50%',
+      marginTop: '3%',
       transform: 'translate(-50%, -50%)',
       display: 'flex',
       flexDirection: 'column',
@@ -92,7 +102,9 @@ const VideoItem: React.FC<IVideoItem> = ({
       border: 'none',
       borderRadius: '16px',
       padding: width < 500 ? '15px' : '20px',
-      overflow: width < 500 ? '' : 'auto'
+      overflow: width < 500 ? '' : 'auto',
+      position: 'absolute',
+      zIndex: '1000'
     }
   };
 
@@ -252,29 +264,31 @@ const VideoItem: React.FC<IVideoItem> = ({
   };
 
   const goToCollectionView = () => {
-    if (offerDataInfo && offerDataInfo.length > 0) {
+    if (offersArray.length > 0) {
+      const productValue = offersArray[0].product;
       navigate(
-        `/collection/${contractData?.blockchain}/${contractData?.contractAddress}/${offerDataInfo[0].product}/0`
+        `/collection/${contractData?.blockchain}/${contractData?.contractAddress}/${productValue}/0`
       );
     }
   };
-
-  // const goToUnlockView = () => {
-  //   navigate(
-  //     `/unlockables/${contractData?.blockchain}/${contractData?.contractAddress}/${mediaList[item]?.product}/0`
-  //   );
-  // };
 
   const getInfo = useCallback(async () => {
     if (mediaList && item) {
       const { data } = await rFetch(
         `/api/v2/files/${mediaList[item]._id}/unlocks`
       );
-      if (data?.offers?.at(0)?.contract?._id) {
-        const { contract } = await rFetch(
-          `/api/v2/contracts/${data.offers[0].contract._id}`
-        );
-        setContractData(contract);
+
+      if (data?.offers && data.offers.length > 0) {
+        const firstOffer = data.offers[0];
+
+        if (firstOffer.contract?._id) {
+          const { contract } = await rFetch(
+            `/api/v2/contracts/${firstOffer.contract._id}`
+          );
+          setOffersArray(data.offers);
+
+          setContractData(contract);
+        }
       }
     }
   }, [mediaList, item, setContractData]);
@@ -421,183 +435,14 @@ const VideoItem: React.FC<IVideoItem> = ({
             style={customStyles}
             contentLabel="Video Modal">
             <div className="modal-content-close-btn-wrapper">
-              {width < 500 && (
-                <div
-                  className={`popup-video-player-mobile-title ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  }`}>
-                  <div className="user-info">
-                    <img
-                      src={dataUser?.avatar ? dataUser.avatar : defaultAvatar}
-                      alt="User Avatar"
-                      style={{ marginRight: '10px' }}
-                    />
-                    <div className="user-name">
-                      <span>
-                        {dataUser?.nickName && dataUser?.nickName.length > 14
-                          ? `${dataUser?.nickName?.slice(
-                              0,
-                              14
-                            )}...${dataUser?.nickName?.slice(length - 5)}`
-                          : dataUser?.nickName}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
               <ModalContentCloseBtn
                 primaryColor={primaryColor}
                 onClick={closeModal}>
                 <i className="fas fa-times" style={{ lineHeight: 'inherit' }} />
               </ModalContentCloseBtn>
             </div>
-            {width < 500 && (
-              <div
-                className="mobile-view-buttons-video"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between'
-                }}>
-                <CustomButton
-                  text={'View Collection'}
-                  width={'160px'}
-                  height={'30px'}
-                  textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
-                  onClick={goToCollectionView}
-                  margin={'0px 0px 0.35rem 0.5rem'}
-                  custom={false}
-                  background={`var(--${
-                    primaryColor === 'charcoal' ? 'charcoal-80' : 'charcoal-40'
-                  })`}
-                />
-                {mediaList[item]?.isUnlocked === false && (
-                  <CustomButton
-                    text={'Upgrade'}
-                    width={'160px'}
-                    height={'30px'}
-                    textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
-                    onClick={() => setFirstStepPopUp(true)}
-                    margin={'0px 0px 0.35rem 0.5rem'}
-                    custom={false}
-                    background={`var(--${
-                      primaryColor === 'charcoal'
-                        ? 'charcoal-80'
-                        : 'charcoal-40'
-                    })`}
-                  />
-                )}
-                <Popup
-                  // className="popup-settings-block"
-                  open={firstStepPopUp}
-                  // position="right center"
-                  onClose={() => {
-                    setFirstStepPopUp(false);
-                  }}>
-                  <div
-                    style={{
-                      width: '85vw',
-                      background: 'rgb(56, 54, 55)',
-                      borderRadius: '12px',
-                      padding: '70px 15px 15px 15px',
-                      position: 'relative'
-                    }}>
-                    <div
-                      style={{
-                        display: 'flex'
-                      }}>
-                      <div
-                        style={{
-                          width: '120px',
-                          height: '35px',
-                          background: 'var(--stimorol)',
-                          fontSize: '16px',
-                          color: '#fff',
-                          position: 'absolute',
-                          top: '0px',
-                          left: '0px',
-                          borderTopLeftRadius: '16px',
-                          borderBottomRightRadius: '16px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          border: `1px solid ${` ${
-                            primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'
-                          }`}`
-                        }}>
-                        Upgrade
-                      </div>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          right: '5px',
-                          top: '5px'
-                        }}>
-                        <ModalContentCloseBtn
-                          primaryColor={primaryColor}
-                          onClick={() => {
-                            setFirstStepPopUp(false);
-                          }}>
-                          <i
-                            className="fas fa-times"
-                            style={{ lineHeight: 'inherit' }}
-                          />
-                        </ModalContentCloseBtn>
-                      </div>
-                    </div>
-                    <div
-                      className={`container-popup-video-player-mobile ${
-                        primaryColor === 'rhyno' ? 'rhyno' : ''
-                      }`}>
-                      <div>
-                        <p>
-                          NFTs unlock exclusive content for this collection.
-                          Purchase pass here or view collection to choose a
-                          unique item.
-                        </p>
-                        {mediaList[item].description && (
-                          <p>{mediaList[item].description}</p>
-                        )}
-                      </div>
-                      <div className="popup-video-player-mint-box">
-                        <CustomButton
-                          onClick={() => {
-                            setMintPopUp(true);
-                          }}
-                          width="161px"
-                          height="48px"
-                          // margin="20px 0 0 0"
-                          text="Mint!"
-                          background={'var(--stimorol)'}
-                          hoverBackground={`rgb(74, 74, 74)`}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </Popup>
-                <Popup
-                  // className="popup-settings-block"
-                  open={mintPopUp}
-                  // position="right center"
-                  onClose={() => {
-                    setMintPopUp(false);
-                  }}>
-                  {offerDataInfo && contractData && (
-                    <MintPopUpCollection
-                      closeModal={() => {
-                        setMintPopUp(false);
-                      }}
-                      blockchain={contractData?.blockchain}
-                      offerDataCol={offerDataInfo}
-                      primaryColor={primaryColor}
-                      contractAddress={contractData?.contractAddress}
-                      setPurchaseStatus={setPurchaseStatus}
-                    />
-                  )}
-                </Popup>
-              </div>
-            )}
             <div
-              className={`text-white modal-content-wrapper-for-video modal-content-wrapper-for-video-${
+              className={`text-white modal-content-wrapper-for-video ${
                 mediaList[item]?.isUnlocked && !owned ? 'unlocked' : 'locked'
               }`}>
               <div className="modal-content-video">
@@ -628,7 +473,6 @@ const VideoItem: React.FC<IVideoItem> = ({
                     </div>
                   </>
                 )}
-
                 {openVideoplayer ? null : mediaList[item]?.isUnlocked ===
                     false && !owned ? (
                   <img
@@ -644,83 +488,216 @@ const VideoItem: React.FC<IVideoItem> = ({
                   />
                 )}
               </div>
-              {width > 500 && (
-                <div className="modal-content-video-choice">
-                  <div className="modal-content-block-btns">
-                    <div className="modal-content-block-buy">
-                      {hotDropsVar === 'true' ? (
-                        <ImageLazy
-                          src={
-                            contractData?.tokens?.at(0)?.metadata?.image
-                              ? contractData?.tokens?.at(0)?.metadata?.image
-                              : defaultHotDrops
-                          }
-                          alt="NFT token powered by Hotdrops"
-                        />
-                      ) : (
-                        <ImageLazy
-                          src={
-                            contractData?.tokens?.at(0)?.metadata?.image
-                              ? contractData?.tokens?.at(0)?.metadata?.image
-                              : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
-                          }
-                          alt="NFT token powered by Rair tech"
-                        />
-                      )}
-                      {mediaList[item]?.isUnlocked === false && (
-                        <CustomButton
-                          text={'Upgrade'}
-                          width={'208px'}
-                          height={'48px'}
-                          textColor={
-                            primaryColor === 'rhyno' ? '#222021' : 'white'
-                          }
-                          onClick={openHelp}
-                          margin={'0px 0px 0.35rem 0.5rem'}
-                          custom={true}
-                          loading={loading}
-                          background={
-                            'linear-gradient(96.34deg,#725bdb,#805fda 10.31%,#8c63da 20.63%,#9867d9 30.94%,#a46bd9 41.25%,#af6fd8 51.56%,#af6fd8 0,#bb73d7 61.25%,#c776d7 70.94%,#d27ad6 80.62%,#dd7ed6 90.31%,#e882d5)'
-                          }
-                        />
-                      )}
+              <div className="title-name-internal-options-wrapper">
+                <div
+                  className={`title-and-username-wrapper-for-video-modal popup-video-player-mobile-title ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}>
+                  <div className="title-of-video">
+                    {mediaList[item] && <h3>{mediaList[item].title}</h3>}
+                  </div>
+                  <div className="user-info">
+                    <img
+                      src={dataUser?.avatar ? dataUser.avatar : defaultAvatar}
+                      alt="User Avatar"
+                      style={{ marginRight: '10px' }}
+                    />
+                    <div className="user-name">
+                      <span>
+                        {dataUser?.nickName && dataUser?.nickName.length > 9
+                          ? `${dataUser?.nickName?.slice(
+                              0,
+                              9
+                            )}...${dataUser?.nickName?.slice(length - 5)}`
+                          : dataUser?.nickName}
+                      </span>
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
-            <span className="text-white mt-5">Unlocked by NFTs from:</span>
-            {mediaList[item]?.unlockData?.offers?.map((offer, index) => (
-              <OfferBuyButton key={index} {...offer} />
-            ))}
-            {modalHelp && mediaList[item]?.isUnlocked === false && (
-              <div className="more-info-wrapper">
-                <span className="more-info-text">
-                  These NFTs unlock this video:
-                </span>
-                <div className="more-info">
-                  {availableToken.length > 0 ? (
-                    availableToken.map((token) => {
-                      return (
+                <div className="favorite-collection-upgrade-wrapper-for-video-modal">
+                  {offersArray.length > 0 && (
+                    <CustomButton
+                      text={'View Collection'}
+                      width={'160px'}
+                      height={'30px'}
+                      margin={'5px'}
+                      textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
+                      onClick={goToCollectionView}
+                      custom={false}
+                      background={`var(--${
+                        primaryColor === 'charcoal'
+                          ? 'charcoal-80'
+                          : 'charcoal-40'
+                      })`}
+                    />
+                  )}
+                  {/* pop up upgrade button  */}
+                  {/* {mediaList[item]?.isUnlocked === false && (
+                    <CustomButton
+                      text={'Upgrade'}
+                      width={'160px'}
+                      height={'30px'}
+                      textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
+                      onClick={() => setFirstStepPopUp(true)}
+                      custom={false}
+                      background={`var(--${
+                        primaryColor === 'charcoal'
+                          ? 'charcoal-80'
+                          : 'charcoal-40'
+                      })`}
+                    />
+                  )}
+                  <Popup
+                    // className="popup-settings-block"
+                    open={firstStepPopUp}
+                    // position="right center"
+                    onClose={() => {
+                      setFirstStepPopUp(false);
+                    }}>
+                    <div
+                      style={{
+                        width: '85vw',
+                        background: 'rgb(56, 54, 55)',
+                        borderRadius: '12px',
+                        padding: '70px 15px 15px 15px',
+                        position: 'relative'
+                      }}>
+                      <div
+                        style={{
+                          display: 'flex'
+                        }}>
                         <div
-                          key={token._id}
-                          className="more-info-unlock-wrapper">
-                          <ImageLazy
-                            src={token.metadata.image}
-                            alt="NFT token powered by Rair Tech"
+                          style={{
+                            width: '120px',
+                            height: '35px',
+                            background: 'var(--stimorol)',
+                            fontSize: '16px',
+                            color: '#fff',
+                            position: 'absolute',
+                            top: '0px',
+                            left: '0px',
+                            borderTopLeftRadius: '16px',
+                            borderBottomRightRadius: '16px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: `1px solid ${` ${
+                              primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'
+                            }`}`
+                          }}>
+                          Upgrade
+                        </div>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            right: '5px',
+                            top: '5px'
+                          }}>
+                          <ModalContentCloseBtn
+                            primaryColor={primaryColor}
+                            onClick={() => {
+                              setFirstStepPopUp(false);
+                            }}>
+                            <i
+                              className="fas fa-times"
+                              style={{ lineHeight: 'inherit' }}
+                            />
+                          </ModalContentCloseBtn>
+                        </div>
+                      </div>
+                      <div
+                        className={`container-popup-video-player-mobile ${
+                          primaryColor === 'rhyno' ? 'rhyno' : ''
+                        }`}>
+                        <div>
+                          <p>
+                            NFTs unlock exclusive content for this collection.
+                            Purchase pass here or view collection to choose a
+                            unique item.
+                          </p>
+                        </div>
+                        <div className="popup-video-player-mint-box">
+                          <CustomButton
+                            onClick={() => {
+                              setMintPopUp(true);
+                            }}
+                            width="161px"
+                            height="48px"
+                            // margin="20px 0 0 0"
+                            text="Mint!"
+                            background={'var(--stimorol)'}
+                            hoverBackground={`rgb(74, 74, 74)`}
                           />
                         </div>
-                      );
-                    })
-                  ) : (
-                    <span className="more-info-text">
-                      In this collection we don&apos;t have any tokens available
-                      for sale, sorry.
-                    </span>
-                  )}
+                      </div>
+                    </div>
+                  </Popup>
+                  <Popup
+                    // className="popup-settings-block"
+                    open={mintPopUp}
+                    // position="right center"
+                    onClose={() => {
+                      setMintPopUp(false);
+                    }}>
+                    {offerDataInfo && contractData && (
+                      <MintPopUpCollection
+                        closeModal={() => {
+                          setMintPopUp(false);
+                        }}
+                        blockchain={contractData?.blockchain}
+                        offerDataCol={offerDataInfo}
+                        primaryColor={primaryColor}
+                        contractAddress={contractData?.contractAddress}
+                        setPurchaseStatus={setPurchaseStatus}
+                      />
+                    )}
+                  </Popup> */}
                 </div>
               </div>
-            )}
+              <div className="video-description-wrapper">
+                <h4>About this collection:</h4>
+                {mediaList[item].description && (
+                  <p>{mediaList[item].description}</p>
+                )}
+              </div>
+              {/* this is the part of the block that has the nfts or some shit  */}
+              {/* <div className="modal-nft-link-wrappers">
+                <span className="text-white mt-5">Unlocked by NFTs from:</span>
+                {mediaList[item]?.unlockData?.offers?.map((offer, index) => (
+                  <OfferBuyButton key={index} {...offer} />
+                ))}
+                {mediaList[item]?.isUnlocked === false && (
+                  <div className="more-info-wrapper">
+                    <span className="more-info-text">
+                      These NFTs unlock this video:
+                    </span>
+                    <div className="more-info">
+                      {availableToken.length > 0 ? (
+                        availableToken.map((token) => {
+                          // eslint-disable-next-line
+                          console.log('token', token);
+                          return (
+                            <div
+                              key={token._id}
+                              className="more-info-unlock-wrapper">
+                              <ImageLazy
+                                src={token.metadata.image}
+                                alt="NFT token powered by Rair Tech"
+                              />
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <span className="more-info-text">
+                          In this collection we don&apos;t have any tokens
+                          available for sale, sorry.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div> */}
+            </div>
           </Modal>
         </>
       </div>
