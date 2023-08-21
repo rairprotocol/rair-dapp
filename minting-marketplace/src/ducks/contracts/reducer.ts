@@ -263,7 +263,8 @@ export default function userStore(
     case types.SET_USER_ADDRESS:
       return {
         ...state,
-        currentUserAddress: action.currentUserAddress
+        currentUserAddress: action.currentUserAddress,
+        currentChain: process.env.REACT_APP_DEFAULT_BLOCKCHAIN as BlockchainType
       };
     case types.SET_PROGRAMMATIC_PROVIDER:
       return {

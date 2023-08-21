@@ -276,7 +276,7 @@ function App() {
               goHome={goHome}
               renderBtnConnect={renderBtnConnect}
               creatorViewsDisabled={creatorViewsDisabled}
-              showAlert={showAlert}
+              showAlert={selectedChain && showAlert}
               selectedChain={correctBlockchain(realChain)}
               isSplashPage={isSplashPage}
               realChainId={realNameChain && realChain}

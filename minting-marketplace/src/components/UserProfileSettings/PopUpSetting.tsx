@@ -9,6 +9,7 @@ import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 
 import EditMode from './EditMode/EditMode';
@@ -34,10 +35,12 @@ const PopUpSettings = ({
   const [triggerState, setTriggerState] = useState();
   const [editMode, setEditMode] = useState(false);
   const [userBalance, setUserBalance] = useState<string>('');
+  const [tokenSymbol, setTokenSymbol] = useState<string>('Loading...');
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const { primaryColor } = useSelector((store) => store.colorStore);
+  const { web3TxHandler } = useWeb3Tx();
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const { adminRights, loggedIn } = useSelector<RootState, any>(
@@ -47,7 +50,7 @@ const PopUpSettings = ({
   const { logoutUser } = useConnectUser();
 
   const { userData } = useSelector((store) => store.userStore);
-  const { erc777Instance, currentUserAddress } = useSelector<
+  const { erc777Instance, currentUserAddress, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
@@ -71,13 +74,15 @@ const PopUpSettings = ({
       const balance = await erc777Instance.provider.getBalance(
         currentUserAddress
       );
+      const symbol = await web3TxHandler(erc777Instance, 'symbol');
 
       const result = utils.formatEther(balance);
       const final = Number(result.toString())?.toFixed(3)?.toString();
 
       setUserBalance(final);
+      setTokenSymbol(symbol);
     }
-  }, [currentUserAddress, erc777Instance]);
+  }, [currentUserAddress, erc777Instance, web3TxHandler]);
 
   useEffect(() => {
     getBalance();
@@ -150,15 +155,15 @@ const PopUpSettings = ({
           className={`profile-buy-button ${
             primaryColor === 'rhyno' ? 'rhyno' : ''
           }`}>
-          AUTH
+          {tokenSymbol}
         </div>
         <div
           className={`profile-user-balance ${
             primaryColor === 'rhyno' ? 'rhyno' : ''
           }`}>
           <div>{userBalance}</div>
-          {window.ethereum && (
-            <img src={chainData[window.ethereum.chainId]?.image} alt="logo" />
+          {chainData[currentChain] && (
+            <img src={chainData[currentChain]?.image} alt="logo" />
           )}
         </div>
         <div
