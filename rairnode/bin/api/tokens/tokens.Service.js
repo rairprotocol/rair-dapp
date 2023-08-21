@@ -1,7 +1,6 @@
 const fs = require('fs');
 const _ = require('lodash');
 const csv = require('csv-parser');
-const { ZeroAddress } = require('ethers');
 const AppError = require('../../utils/errors/AppError');
 const {
   OfferPool,
@@ -701,10 +700,6 @@ exports.createTokensViaCSV = async (req, res, next) => {
                 BigInt(token) >= BigInt(offer.range[0]) &&
                 BigInt(token) <= BigInt(offer.range[1])
               ) {
-                const address = record.publicaddress
-                  ? record.publicaddress
-                  : ZeroAddress;
-                const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
                   .assign({})
                   .omit(_.concat(defaultFields, optionalFields))
@@ -750,7 +745,6 @@ exports.createTokensViaCSV = async (req, res, next) => {
                     updateOne: {
                       filter: mainFields,
                       update: {
-                        ownerAddress: sanitizedOwnerAddress,
                         isURIStoredToBlockchain: false,
                         metadata: {
                           name: textPurify.sanitize(record.name),
