@@ -608,7 +608,7 @@ const NftDataPageMain = ({
                           //     href={item?.value}
                           //   >
                           //     {item?.value.length > 15 ? "..." : ""}
-                          //     {item?.value.substr(
+                          //     {item?.value.slice(
                           //       item?.value.indexOf("\n") + 19
                           //     )}
                           //   </a>

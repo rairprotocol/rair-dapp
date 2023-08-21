@@ -25,7 +25,7 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({
 
         return newNum + 'M';
       } else if (num >= 100000 && num <= 999999) {
-        const str = num.toString().substr(0, 3);
+        const str = num.toString().slice(0, 3);
 
         return str + 'K';
       } else {

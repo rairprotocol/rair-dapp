@@ -1,28 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { utils } from 'ethers';
-import { io } from 'socket.io-client';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import {
-  uploadVideoEnd,
-  uploadVideoStart
-} from '../../../ducks/uploadDemo/action';
 import videoIcon from '../../../images/videoIcon.svg';
-import chainData from '../../../utils/blockchainData';
-import { validateInteger } from '../../../utils/metamaskUtils';
 import { rFetch } from '../../../utils/rFetch';
-import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 import LoadingComponent from '../../common/LoadingComponent';
 import MediaListBox from '../../DemoMediaUpload/MediaListBox/MediaListBox';
 import UploadedListBox from '../../DemoMediaUpload/UploadedListBox/UploadedListBox';
-import { TOfferType } from '../../marketplace/marketplace.types';
-import { IMediaUpload, TCategories, TMediaType } from '../creatorStudio.types';
+import { IMediaUpload, TMediaType } from '../creatorStudio.types';
 
 const MediaUpload: React.FC<IMediaUpload> = ({
   setStepNumber,
@@ -34,41 +24,14 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   );
 
   const { address, collectionIndex, blockchain } = useParams();
-  const dispatch = useDispatch();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [selectedCategory, setSelectedCategory] = useState<
-    string | undefined
-  >();
   const [mediaUploadedList, setMediaUploadedList] = useState<any>([]);
   const [mediaList, setMediaList] = useState<TMediaType[]>([]);
-  const [offerList, setOfferList] = useState<OptionsType[]>([]);
-  const [forceRerender, setForceRerender] = useState<boolean>(false);
-  const [categoryArray, setCategoryArray] = useState<OptionsType[]>([]);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
-  const [thisSessionId, setThisSessionId] = useState<string>('');
-  const [socketMessage, setSocketMessage] = useState<string | undefined>();
-  const [uploadProgress, setUploadProgress] = useState<
-    boolean | number | undefined
-  >(undefined);
-  const [uploading, setUploading] = useState<boolean>(false);
-  const [currentTitleVideo, setCurrentTitleVideo] = useState<string>('');
-  const [newUserStatus, setNewUserStatus] = useState(false);
-
-  const getCategories = useCallback(async () => {
-    const { success, categories } = await rFetch('/api/categories');
-    if (success) {
-      setSelectedCategory(categories[0].name);
-      setCategoryArray(
-        categories.map((item: TCategories) => {
-          return { label: item.name, value: item.name };
-        })
-      );
-    }
-  }, []);
 
   const selectCommonInfo = {
     customClass: 'form-control rounded-rair',
@@ -81,106 +44,6 @@ const MediaUpload: React.FC<IMediaUpload> = ({
     }
   };
 
-  useEffect(() => {
-    getCategories();
-  }, [getCategories]);
-
-  useEffect(() => {
-    const unlocked: OptionsType[] = [
-      {
-        label: 'Unlocked',
-        value: '-1'
-      }
-    ];
-
-    setOfferList(
-      contractData?.product?.offers
-        ? unlocked.concat(
-            contractData?.product?.offers.map((item: TOfferType) => {
-              return {
-                label: `${item.offerName} (${
-                  Number(item.range[1]) - Number(item.range[0]) + 1
-                } tokens for ${utils
-                  .formatEther(
-                    validateInteger(+item.price) ? item.price.toString() : 0
-                  )
-                  .toString()} ${
-                  chainData[contractData.blockchain]?.symbol
-                } each)`,
-                value: contractData.diamond
-                  ? item.diamondRangeIndex
-                  : item.offerIndex
-              };
-            })
-          )
-        : []
-    );
-  }, [contractData]);
-
-  const uploadVideoDemo = async (item, storage) => {
-    dispatch(uploadVideoStart());
-    setCurrentTitleVideo(item.title);
-    setUploadSuccess(false);
-    const formData = new FormData();
-    formData.append('video', item.file);
-    formData.append('title', item.title.slice(0, 29));
-    formData.append('description', item.title);
-    formData.append('storage', storage);
-    if (item.contractAddress && item.productIndex && item.offer) {
-      formData.append('contract', item.contractAddress);
-      formData.append('product', item.productIndex);
-      if (item.offer && item.offer[0].value !== '-1') {
-        formData.append('offer', JSON.stringify([String(item.offer[0].value)]));
-      } else {
-        formData.append('demo', String(item.offer[0].value === '-1'));
-        formData.append('offer', JSON.stringify(['0']));
-      }
-    }
-    if (selectedCategory) {
-      formData.append('category', selectedCategory);
-    }
-    setSocketMessage('');
-    setUploading(true);
-    try {
-      const tokenRequest = await rFetch('/api/v2/upload/token');
-      if (!tokenRequest.success) {
-        setUploading(false);
-        return;
-      }
-      const request = await rFetch(
-        `/ms/api/v1/media/upload${
-          newUserStatus ? '/demo' : ''
-        }?socketSessionId=${thisSessionId}`,
-        // `${process.env.REACT_APP_UPLOAD_PROGRESS_HOST}/ms/api/v1/media/upload${
-        //   newUserStatus ? '/demo' : ''
-        // }?socketSessionId=${thisSessionId}`,
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'x-rair-token': tokenRequest.secret
-          },
-          body: formData
-        }
-      );
-
-      if (request && request.status === 'faild') {
-        setUploading(false);
-        setUploadProgress(false);
-        setUploadSuccess(null);
-        setSocketMessage('');
-        getMediaList();
-      }
-      setUploading(false);
-      getMediaList();
-    } catch (e) {
-      console.error(e);
-      setUploading(false);
-      setSocketMessage('');
-      getMediaList();
-    }
-  };
-
   const onMediaDrop = (media) => {
     let aux: TMediaType[] = [...mediaList];
     aux = aux.concat(
@@ -190,69 +53,26 @@ const MediaUpload: React.FC<IMediaUpload> = ({
           category: 'null',
           title: item.name.slice(0, 29),
           file: item,
-          description: '',
+          description: item.name,
           preview: URL.createObjectURL(item),
           contractAddress: contractData?._id,
           productIndex: contractData?.product.collectionIndexInContract,
-          storage: 'null'
+          storage: 'null',
+          demo: false
         };
       })
     );
     setMediaList(aux);
   };
 
-  const deleter = (index: number) => {
-    const aux = [...mediaList];
-    aux.splice(index, 1);
-    setMediaList(aux);
-  };
-
-  const StringToNumber = useCallback((message) => {
-    const str = message.substr(message.length - 8, 10);
-    const lastString = message.split(' pin');
-    const lastString2 = message.split(' upload');
-    if (
-      lastString2[1] === 'ing to Google Cloud' ||
-      lastString2[1] === 'ing to IPFS'
-    ) {
-      setSocketMessage('uploading to Cloud');
-    }
-
-    const specSymb = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
-    const newStr = str.split('').filter((item) => {
-      if (specSymb.includes(item)) {
-        return item;
-      }
-    });
-    if (isNaN(newStr.join(''))) {
-      if (
-        message === 'uploaded to Google Cloud.' ||
-        message === 'uploaded to IPFS.'
-      ) {
-        dispatch(uploadVideoEnd());
-        setUploadSuccess(true);
-        getMediaList();
-        setUploadProgress(false);
-        setUploadSuccess(null);
-        setSocketMessage('');
-      } else if (
-        lastString[1] === 'ning to Google Cloud.' ||
-        lastString[1] === 'ning to IPFS.'
-      ) {
-        dispatch(uploadVideoEnd());
-        setMediaList((prev) => [
-          ...prev.filter((item) => item.file.name !== lastString[0])
-        ]);
-        setUploading(false);
-        setCurrentTitleVideo('');
-        setSocketMessage('');
-      }
-      return false;
-    } else {
-      return Number(newStr.join(''));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const deleter = useCallback(
+    (index: number) => {
+      const aux = [...mediaList];
+      aux.splice(index, 1);
+      setMediaList(aux);
+    },
+    [mediaList]
+  );
 
   const getMediaList = async () => {
     if (currentUserAddress !== undefined) {
@@ -298,47 +118,8 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   };
 
   useEffect(() => {
-    getCategories();
-    // eslint-disable-next-line
-  }, [getCategories]);
-
-  useEffect(() => {
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
-
-  useEffect(() => {
-    const sessionId = Math.random().toString(36).substr(2, 9);
-    setThisSessionId(sessionId);
-    const so = io();
-    so.emit('init', sessionId);
-    so.on('uploadProgress', (data) => {
-      const { last, message } = data;
-      setSocketMessage(message);
-      if (message) {
-        setUploadProgress(StringToNumber(message));
-      }
-      if (last) {
-        setUploading(false);
-        setUploadSuccess(true);
-        getMediaList();
-      }
-    });
-
-    return () => {
-      so.removeListener('uploadProgress');
-      so.emit('end', sessionId);
-    };
-    //eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    if (uploadSuccess) {
-      getMediaList();
-      setUploading(false);
-      setUploadProgress(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uploadSuccess]);
 
   useEffect(() => {
     if (!currentUserAddress) return;
@@ -408,37 +189,16 @@ const MediaUpload: React.FC<IMediaUpload> = ({
             );
           })
       )}
-      {mediaList.map((item, index, array) => {
+      {mediaList.map((item, index) => {
         return (
-          // <MediaUploadRow
-          //   key={index}
-          //   item={item}
-          //   index={index}
-          //   array={array}
-          //   categoriesArray={categoryArray}
-          //   deleter={() => deleter(index)}
-          //   offerList={offerList}
-          //   rerender={() => setForceRerender(!forceRerender)}
-          // />
           <MediaListBox
-            key={index + item.title}
-            item={item}
+            key={index}
             index={index}
-            mediaList={mediaList}
-            setMediaList={setMediaList}
-            uploadSuccess={uploadSuccess}
-            uploadProgress={uploadProgress}
-            setUploadSuccess={setUploadSuccess}
-            uploading={uploading}
-            uploadVideoDemo={uploadVideoDemo}
+            item={item}
             selectCommonInfo={selectCommonInfo}
             deleter={deleter}
-            currentTitleVideo={currentTitleVideo}
-            socketMessage={socketMessage}
-            setSocketMessage={setSocketMessage}
-            newUserStatus={newUserStatus}
-            address={address}
-            collectionIndex={collectionIndex}
+            rerender={getMediaList}
+            newUserStatus={true}
           />
         );
       })}

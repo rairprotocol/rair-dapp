@@ -15,9 +15,9 @@ const addPin = async (CID, name, socketInstance) => {
 
     log.info(`Pinned to IPFS: ${JSON.stringify(response.data)}`);
 
-    if (!_.isUndefined(socketInstance)) {
+    if (socketInstance) {
       socketInstance.emit('uploadProgress', {
-        message: 'Pinned to IPFS.',
+        message: 'Upload complete',
         last: true,
         done: 100,
       });
@@ -27,7 +27,7 @@ const addPin = async (CID, name, socketInstance) => {
   }
 };
 
-const addFolder = async (pathTo, folderName, socketInstance) => {
+const addFolder = async (pathTo, folderName) => {
   try {
     const files = fs.readdirSync(pathTo);
     const ipfs = ipfsClient(api);
@@ -36,7 +36,6 @@ const addFolder = async (pathTo, folderName, socketInstance) => {
     await ipfs.files.mkdir(ipfsPath, { parents: true });
 
     await Promise.all(_.map(files, (file) => {
-      socketInstance.emit('uploadProgress', { message: `added to ipfs file ${file}`, last: false, part: true });
       const filePath = path.join(pathTo, '/', file);
       const data = fs.readFileSync(filePath);
 

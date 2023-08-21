@@ -42,7 +42,7 @@ const ImportExternalContract = () => {
   );
 
   useEffect(() => {
-    const sessionId = Math.random().toString(36).substr(2, 9);
+    const sessionId = Math.random().toString(36).slice(2, 9);
     setSessionId(sessionId);
     /*
     Disabled until sessions are implemented

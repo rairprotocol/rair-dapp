@@ -32,7 +32,7 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
   ];
 
   useEffect(() => {
-    const sessionId = Math.random().toString(36).substr(2, 9);
+    const sessionId = Math.random().toString(36).slice(2, 9);
     setThisSessionId(sessionId);
     const so = io(`http://localhost:5002`, { transports: ['websocket'] });
 

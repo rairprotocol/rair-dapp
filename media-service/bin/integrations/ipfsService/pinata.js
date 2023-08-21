@@ -22,7 +22,7 @@ const addPin = async (CID, name, socketInstance) => {
 
     if (!_.isUndefined(socketInstance)) {
       socketInstance.emit('uploadProgress', {
-        message: 'Pined to Pinata.',
+        message: 'Stream stored',
         last: true,
         done: 100,
       });

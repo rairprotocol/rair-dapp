@@ -3,11 +3,11 @@ const { ethAddress, mongoId } = require('./reusableCustomTypes');
 
 module.exports = {
     validateMediaData: () => ({
-        contract: mongoId,
-        product: Joi.string(),
-        offer: Joi.array().items(Joi.string()).max(2),
-        category: Joi.string(),
+        offers: Joi.array().items(mongoId),
+        category: mongoId.required(),
         demo: Joi.boolean(),
+        demoEndpoint: Joi.boolean(),
+        publicAddress: ethAddress,
     }),
     addFileFromMediaService: () => ({
         cid: Joi.string(),
@@ -16,9 +16,7 @@ module.exports = {
             uploader: ethAddress.required(),
             encryptionType: Joi.string().required(),
             title: Joi.string(),
-            contract: mongoId.required(),
-            product: Joi.string().required(),
-            offer: Joi.array().items(Joi.string()).max(2),
+            offers: Joi.array().items(mongoId),
             category: mongoId.required(),
             staticThumbnail: Joi.string(),
             animatedThumbnail: Joi.string().allow(''),

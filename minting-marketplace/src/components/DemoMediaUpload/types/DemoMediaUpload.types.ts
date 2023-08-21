@@ -1,4 +1,3 @@
-import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 import { TMediaType } from '../../creatorStudio/creatorStudio.types';
 
 export interface IMediaItemChange {
@@ -18,23 +17,12 @@ export interface IMediaItemChange {
 }
 
 export interface IMediaListBox {
-  item: TMediaType;
   index: number;
+  item: TMediaType;
   newUserStatus: boolean;
-  mediaList: TMediaType[];
-  setMediaList: (arg: TMediaType[]) => void;
-  uploadSuccess: boolean | null;
-  uploadProgress: any;
-  uploading: boolean;
-  uploadVideoDemo: (item: TMediaType, storage: string) => void;
   selectCommonInfo: any;
   deleter: (index: number) => void;
-  currentTitleVideo: string;
-  socketMessage: string | undefined;
-  setUploadSuccess: (arg: boolean | null) => void;
-  setSocketMessage: (arg: string | undefined) => void;
-  collectionIndex?: string;
-  address?: string;
+  rerender?: () => void;
 }
 
 export interface IUploadedListBox {
@@ -49,7 +37,6 @@ export interface IUploadedListBox {
   address?: string;
   collectionIndex?: string;
 }
-
 export interface IAnalyticsPopUp {
   index: number;
   setMediaList: (arg: TMediaType[]) => void;
@@ -63,7 +50,6 @@ export interface IAnalyticsPopUp {
   collectionIndex?: string;
   address?: string;
 }
-
 export interface IPopUpChangeVideo {
   modalIsOpen: boolean;
   closeModal: () => void;

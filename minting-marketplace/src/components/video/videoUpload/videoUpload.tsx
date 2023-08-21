@@ -203,7 +203,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
 
   useEffect(() => {
     async function goSession() {
-      const sessionId = getRandomValues().toString(36).substr(2, 9);
+      const sessionId = getRandomValues().toString(36).slice(2, 9);
       setThisSessionId(sessionId);
       const so = io();
       // const so = io(`http://localhost:5000`, { transports: ["websocket"] });

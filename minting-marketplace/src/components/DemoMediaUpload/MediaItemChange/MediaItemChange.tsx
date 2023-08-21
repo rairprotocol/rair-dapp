@@ -103,9 +103,9 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
         <div>
           <p className="col-12">
             {item.title.length > 15
-              ? item.title.substr(0, 6) +
+              ? item.title.slice(0, 6) +
                 '...' +
-                item.title.substr(item.title.length - 10, 10)
+                item.title.slice(item.title.length - 10, 10)
               : item.title}
           </p>
         </div>
@@ -115,9 +115,9 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
             <>
               <p className="col-12">
                 {item.title.length > 15
-                  ? item.title.substr(0, 6) +
+                  ? item.title.slice(0, 6) +
                     '...' +
-                    item.title.substr(item.title.length - 10, 10)
+                    item.title.slice(item.title.length - 10, 10)
                   : item.title}
               </p>
               {newUserStatus ? (

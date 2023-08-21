@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
 import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 import InputSelect from '../../common/InputSelect';
@@ -24,12 +25,14 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   setMediaUploadedList,
   newUserStatus,
   collectionIndex,
-  address
+  address,
+  rerender
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [contract, setContract] = useState('null');
   const [product, setProduct] = useState('null');
   const [offer, setOffer] = useState('null');
+  const [isDemo, setIsDemo] = useState(false);
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -38,7 +41,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   );
 
   const [contractData, setContractData] = useState({});
-  const [categories, setCategories] = useState<OptionsType[]>([]);
+  const [contractOptions, setContractOptions] = useState<OptionsType[]>([]);
   const [productOptions, setProductOptions] = useState();
   const [offersOptions, setOffersOptions] = useState();
   const [choiceAllOptions, setChoiceAllOptions] =
@@ -109,7 +112,9 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
         newArray[index].contractAddress = contract;
         newArray[index].productIndex = product;
         newArray[index].offer = filteredOffers;
+        newArray[index].demo = isDemo;
         setMediaList(newArray);
+        rerender?.();
 
         const wholeContract = {
           contract: contract,
@@ -205,14 +210,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           })
         : [];
 
-      setProductOptions(
-        [
-          {
-            label: 'None',
-            value: 'None'
-          }
-        ].concat(arrProduct)
-      );
+      setProductOptions(arrProduct);
 
       if (collectionIndex) {
         setProductOptions(arrProduct);
@@ -229,82 +227,65 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
         `/api/contracts/full?itemsPerPage=${request.totalNumber || '5'}`
       );
 
-      let contractsFiltered = contracts.filter((el) => {
-        if (!el.importedBy) {
-          return el.user === currentUserAddress;
+      if (!success) {
+        return;
+      }
+
+      let contractsFiltered = contracts.filter((contract) => {
+        if (address) {
+          return contract.contractAddress === address;
+        }
+        return (
+          contract?.importedBy === currentUserAddress ||
+          contract.user === currentUserAddress
+        );
+      });
+
+      const mapping = {};
+      const options = [];
+      if (contractsFiltered.length === 0) {
+        contractsFiltered = contracts.filter(
+          (el) =>
+            el.contractAddress === '0x571acc173f57c095f1f63b28f823f0f33128a6c4'
+        );
+      }
+      contractsFiltered.forEach((item) => {
+        const offerMapping = {};
+        item.products.offers.forEach((offer) => {
+          offerMapping[
+            offer[item.diamond ? 'diamondRangeIndex' : 'offerIndex']
+          ] = offer;
+        });
+        item.products.offers = offerMapping;
+
+        if (mapping[item._id] !== undefined) {
+          mapping[item._id].products[item.products.collectionIndexInContract] =
+            item.products;
         } else {
-          return el.importedBy === currentUserAddress;
+          const productMapping = {};
+          productMapping[item.products.collectionIndexInContract] =
+            item.products;
+          item.products = productMapping;
+          mapping[item._id] = item;
+          options.push({
+            label: `${item.title} (${chainData[item.blockchain].symbol} ${
+              item.external ? 'External' : item.diamond ? 'Diamond' : 'Classic'
+            })`,
+            value: item._id,
+            blockSync: item.blockSync,
+            blockView: item.blockView
+          });
         }
       });
 
+      setContractData(mapping);
+      setContractOptions(options);
+
       if (address) {
-        contractsFiltered = contracts.filter(
-          (item) => item.contractAddress === address
-        );
-      }
-
-      if (success) {
-        const mapping = {};
-        const options = [];
-        if (contractsFiltered.length === 0) {
-          contractsFiltered = contracts.filter(
-            (el) =>
-              el.contractAddress ===
-              '0x571acc173f57c095f1f63b28f823f0f33128a6c4'
-          );
-        }
-        contractsFiltered.forEach((item) => {
-          const offerMapping = {};
-          item.products.offers.forEach((offer) => {
-            offerMapping[
-              offer[item.diamond ? 'diamondRangeIndex' : 'offerIndex']
-            ] = offer;
-          });
-          item.products.offers = offerMapping;
-
-          if (mapping[item._id] !== undefined) {
-            mapping[item._id].products[
-              item.products.collectionIndexInContract
-            ] = item.products;
-          } else {
-            const productMapping = {};
-            productMapping[item.products.collectionIndexInContract] =
-              item.products;
-            item.products = productMapping;
-            mapping[item._id] = item;
-            options.push({
-              label: `${item.title} (${
-                item.external
-                  ? 'External'
-                  : item.diamond
-                  ? 'Diamond'
-                  : 'Classic'
-              })`,
-              value: item._id,
-              blockSync: item.blockSync,
-              blockView: item.blockView
-            });
-          }
-        });
-
-        setContractData(mapping);
-        setCategories(
-          [
-            {
-              label: 'None',
-              value: 'None'
-            }
-          ].concat(options)
-        );
-
-        if (address) {
-          setCategories(options);
-          setContract(options[0].value);
-        }
+        setContract(options[0].value);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [address, currentUserAddress]);
 
   const getOffers = useCallback(async () => {
     const arrOfferOption =
@@ -326,15 +307,6 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           )
         : [];
 
-    // if (contract === '63bc60fe1f591bd493923c29') {
-    //   setOffersOptions([
-    //     {
-    //       label: 'Unlocked(demo)',
-    //       value: '-1'
-    //     }
-    //   ]);
-    // } else {
-
     if (address && collectionIndex && !Array.isArray(mediaList)) {
       if (fileData.demo) {
         setOffer(-1);
@@ -343,16 +315,17 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
       }
     }
 
-    setOffersOptions(
-      [
-        {
-          label: 'Unlocked(demo)',
-          value: '-1'
-        }
-      ].concat(arrOfferOption)
-    );
+    setOffersOptions(arrOfferOption);
     // }
-  }, [contract, contractData, product]);
+  }, [
+    address,
+    collectionIndex,
+    contract,
+    contractData,
+    fileData,
+    mediaList,
+    product
+  ]);
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -449,7 +422,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
                 setContract(e);
               }}
               placeholder="Select a Contract"
-              options={categories}
+              options={contractOptions}
               disabled={address ? true : false}
               {...selectCommonInfoNFT}
             />
@@ -481,6 +454,20 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
                   options={offersOptions}
                   {...selectCommonInfoNFT}
                 />
+              </>
+            )}
+            {offer !== 'null' && offer !== 'None' && (
+              <>
+                <button
+                  onClick={() => setIsDemo(!isDemo)}
+                  className={`btn btn-${isDemo ? 'stimorol' : 'royal-ice'}`}>
+                  {isDemo ? 'Demo' : 'Unlockable'}
+                </button>
+                <small className={`text-${textColor}`}>
+                  {isDemo
+                    ? 'Anyone will be able to unlock this video'
+                    : `Only NFT owners of the range will be able to unlock the video`}
+                </small>
               </>
             )}
             <button

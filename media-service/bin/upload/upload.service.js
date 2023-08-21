@@ -17,29 +17,8 @@ const AppError = require('../utils/errors/AppError');
 
 const { baseUri } = config.rairnode;
 
-const demoContractAddress = '0x571acc173f57c095f1f63b28f823f0f33128a6c4';
-const demoContractBlockchain = '0x1';
-
 module.exports = {
   hardcodedDemoData: async (req, res, next) => {
-    const contractData = await axios
-      .get(`${baseUri}/api/contracts/network/${demoContractBlockchain}/${demoContractAddress}`)
-      .catch(console.error);
-
-    if (!contractData?.data || contractData?.data?.success === false) {
-      return next(new AppError('Unable to prepare demo data', 400));
-    }
-
-    // Middleware to hardcode the free demo contract to the request's body
-    // Validation will continue as usual with this
-    req.body = {
-      ...req.body,
-      contract: contractData.data.contract._id,
-      product: '0',
-      offer: ['0'],
-      demo: 'true',
-      description: 'demo',
-    };
     req.context = {
       publicDemoOverride: true,
     };
@@ -56,19 +35,6 @@ module.exports = {
     if (!req.user.email) {
       return next(new AppError('Uploading a video with RAIR requires an email registered with our profile settings. Please use the user profile menu in the upper right corner to add your email address to your profile.', 400));
     }
-    // Check that the user hasn't gone over the 3 video limit
-    const userData = await axios
-      .get(`${baseUri}/api/media/list`, {
-        params: {
-          userAddress: req.user.publicAddress,
-          blockchain: '0x1',
-          contractAddress: demoContractAddress.toLowerCase(),
-        },
-      })
-      .catch(console.error);
-    if (userData.data.totalNumber >= 3) {
-      return next(new AppError('You have exceeded the file limit of videos for tier of usage. Please remove existing videos to free up space or contact RAIR support to upgrade your subscription.', 400));
-    }
     return next();
   },
   uploadMedia: async (req, res, next) => {
@@ -76,13 +42,11 @@ module.exports = {
     const {
       title,
       description,
-      contract,
-      product,
-      offer = [],
       category,
       demo = 'false',
       storage = 'gcp',
     } = req.body;
+    let { offers } = req.body;
 
     let publicDemoOverride = false;
     if (req.context) {
@@ -90,7 +54,7 @@ module.exports = {
     }
 
     // Get the user information
-    const { publicAddress, superAdmin } = req.user;
+    const { publicAddress } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
 
@@ -107,27 +71,24 @@ module.exports = {
     const validData = await axios
       .get(`${baseUri}/api/v2/upload/validate`, {
         params: {
-          contract,
-          product,
-          offer,
+          offers,
           category,
           demo,
+          publicAddress,
+          demoEndpoint: publicDemoOverride,
         },
       })
       .catch((error) => error);
 
     if (validData instanceof Error) return next(validData);
 
-    const { foundContract, foundCategory } = validData.data;
-
-    const foundContractId = foundContract._id;
-
-    if (publicDemoOverride === false && foundContract.user !== publicAddress && !superAdmin) {
-      return next(new AppError('Only contract owner is allowed to upload videos', 400));
+    const { ok } = validData.data;
+    if (!ok) {
+      return next(new AppError('Validation failed'));
     }
+    offers = validData.data.offers;
 
     // Get the socket connection from Express app
-
     const io = req.app.get('io');
     const sockets = req.app.get('sockets');
     const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
@@ -148,9 +109,9 @@ module.exports = {
           gcp: 'Google Cloud',
         }[storage];
         socketInstance.emit('uploadProgress', {
-          message: 'File uploaded, processing data...',
+          message: 'File uploaded, processing...',
           last: false,
-          done: 5,
+          done: 10,
         });
         log.info(`Processing: ${req.file.originalname}`);
         log.info(`${req.file.originalname} generating thumbnails`);
@@ -160,37 +121,47 @@ module.exports = {
         // Adds 'duration' to the req.file object
         await getMediaData(req.file);
 
+        socketInstance.emit('uploadProgress', {
+          message: 'Generating thumbnails',
+          last: false,
+          done: 20,
+        });
         // Adds 'thumbnailName' to the req.file object
         // Generates a static webp thumbnail and an animated gif thumbnail
         // ONLY for videos
-        await generateThumbnails(req.file, socketInstance);
+        await generateThumbnails(req.file);
 
         log.info(`${req.file.originalname} converting to stream`);
         socketInstance.emit('uploadProgress', {
-          message: `${req.file.originalname} converting to stream`,
+          message: 'Converting file to stream',
           last: false,
-          done: 11,
+          done: 30,
         });
 
         // Converts the file with FFMPEG
+        // 35% socket update comes from here
         await convertToHLS(
           req.file,
           speed,
           socketInstance,
         );
+        log.info('ffmpeg DONE: converted to stream.');
 
+        socketInstance.emit('uploadProgress', {
+          message: 'Encrypting...',
+          last: false,
+          done: 40,
+        });
+        // % 40, 50 happen inside here
         const { exportedKey, totalEncryptedFiles } = await encryptFolderContents(
           req.file,
           ['ts'],
-          socketInstance,
         );
-
-        log.info('ffmpeg DONE: converted to stream.');
 
         const rairJson = {
           title: textPurify.sanitize(title),
           mainManifest: 'stream.m3u8',
-          author: superAdmin ? foundContract.user : publicAddress,
+          uploader: publicAddress,
           encryptionType: 'aes-256-gcm',
         };
 
@@ -205,8 +176,9 @@ module.exports = {
 
         log.info(`${req.file.originalname} uploading to ${storageName}`);
         socketInstance.emit('uploadProgress', {
-          message: `${req.file.originalname} uploading to ${storageName}`,
+          message: 'Uploading stream',
           last: false,
+          done: 40,
         });
 
         switch (storage) {
@@ -214,7 +186,6 @@ module.exports = {
             cid = await addFolder(
               req.file.destination,
               req.file.destinationFolder,
-              socketInstance,
             );
             defaultGateway = `${config.pinata.gateway}/${cid}`;
             storageLink = _.get(
@@ -255,20 +226,15 @@ module.exports = {
         );
         delete req.file.destination;
 
-        let uploader = publicAddress;
-        if (!publicDemoOverride && superAdmin) {
-          uploader = foundContract.user;
-        }
+        const uploader = publicAddress;
 
         const meta = {
           mainManifest: 'stream.m3u8',
           uploader,
           encryptionType: 'aes-256-gcm',
           title: textPurify.sanitize(title),
-          contract: foundContractId,
-          product,
-          offer: demo === 'false' ? offer : [],
-          category: foundCategory._id,
+          offers,
+          category,
           staticThumbnail: `${
             req.file.type === 'video' ? `${defaultGateway}/` : ''
           }${req.file.staticThumbnail}`,
@@ -278,7 +244,7 @@ module.exports = {
           type: req.file.type,
           extension: req.file.extension,
           duration: req.file.duration,
-          demo: demo === 'true',
+          demo,
           totalEncryptedFiles,
           storage,
           storagePath: storageLink,
@@ -288,17 +254,11 @@ module.exports = {
           meta.description = textPurify.sanitize(description);
         }
 
-        log.info(`${req.file.originalname} uploaded to ${storageName}: ${cid}`);
-        socketInstance.emit('uploadProgress', {
-          message: `uploaded to ${storageName}.`,
-          last: false,
-          done: 90,
-        });
-
         log.info(`${req.file.originalname} storing to DB.`);
         socketInstance.emit('uploadProgress', {
-          message: `${req.file.originalname} storing to database.`,
+          message: 'Storing stream data',
           last: false,
+          done: 60,
         });
 
         const key = { ...exportedKey, key: exportedKey.key.toJSON() };
@@ -313,6 +273,11 @@ module.exports = {
         });
 
         log.info('Key written to vault.');
+        socketInstance.emit('uploadProgress', {
+          message: 'Storing stream data',
+          last: false,
+          done: 70,
+        });
 
         const uploadData = await axios({
           method: 'POST',
@@ -323,24 +288,26 @@ module.exports = {
           },
         }).catch(log.error);
 
-        if (uploadData?.data?.cid) {
+        if (uploadData?.data?.ok) {
           log.info(`${req.file.originalname} stored to DB.`);
           socketInstance.emit('uploadProgress', {
             message: 'Stored to database.',
             last: !!['gcp'].includes(storage),
-            done: ['gcp'].includes(storage) ? 100 : 96,
+            done: ['gcp'].includes(storage) ? 100 : 80,
           });
 
           log.info(`${req.file.originalname} pinning to ${storageName}.`);
           socketInstance.emit('uploadProgress', {
-            message: `${req.file.originalname} pinning to ${storageName}.`,
+            message: 'Storing stream',
             last: false,
+            done: 90,
           });
 
           if (storage === 'ipfs') {
             await addPin(cid, title, socketInstance);
           }
         }
+        return true;
       } catch (e) {
         log.error('An error has occurred encoding the file');
         log.error(e);

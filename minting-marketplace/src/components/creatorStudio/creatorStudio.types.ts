@@ -239,6 +239,7 @@ export type TMediaType = {
   productIndex: string;
   storage: string;
   title: string;
+  demo: boolean;
 };
 
 export type TChoiceAllOptions = {
