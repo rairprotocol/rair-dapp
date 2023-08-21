@@ -36,6 +36,7 @@ const {
   depositCredits,
   withdrawCredits,
   updateMintingOffer,
+  transferredToken,
 } = require('./eventCatcherUtils');
 
 // Smart contract events are mapped to an insertion logic
@@ -65,6 +66,7 @@ const insertionMapping = {
   ProductURIChanged: metadataForProduct,
   TokenURIChanged: metadataForToken,
   ProductCreated: insertCollection,
+  Transfer: transferredToken,
 
   // Classic Marketplace
   AddedOffer: insertOfferPool,

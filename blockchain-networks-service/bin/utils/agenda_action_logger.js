@@ -1,7 +1,7 @@
 const log = require('./logger')(module);
 
 exports.logAgendaActionStart = ({
-  agendaDefinition
+  agendaDefinition,
 }) => {
   log.info(`Agenda action started: ${agendaDefinition}`);
 };

@@ -9,10 +9,10 @@ const { combine, splat, timestamp, printf, label, errors, colorize, metadata } =
 module.exports = (module) => {
   const path = module.filename.split('/').slice(-2).join('/');
   const myFormat = printf(({ level, message, timestamp, stack }) => {
-    let msg = `${ timestamp } [${ level }] : ${ message } `;
+    let msg = `${timestamp} [${level}] : ${message} `;
 
     if (stack && !_.isEmpty(stack)) {
-      msg = `${ msg } - ${ stack }`;
+      msg = `${msg} - ${stack}`;
     }
     return msg;
   });
@@ -26,10 +26,10 @@ module.exports = (module) => {
       splat(),
       timestamp(),
       myFormat,
-      metadata()
+      metadata(),
     ),
     transports: [
-      new transports.Console()
+      new transports.Console(),
     ],
   });
 

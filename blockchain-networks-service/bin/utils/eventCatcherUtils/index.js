@@ -18,6 +18,7 @@ const registerCustomSplits = require('./registerCustomSplits');
 const depositCredits = require('./depositCredits');
 const withdrawCredits = require('./witdrawCredits');
 const updateMintingOffer = require('./updateMintingOffer');
+const transferredToken = require('./transferredToken');
 
 module.exports = {
   updateDiamondRange,
@@ -40,4 +41,5 @@ module.exports = {
   depositCredits,
   withdrawCredits,
   updateMintingOffer,
+  transferredToken,
 };
