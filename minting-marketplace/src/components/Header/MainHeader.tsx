@@ -51,10 +51,12 @@ const MainHeader: React.FC<IMainHeader> = ({
   isSplashPage,
   setTabIndexItems,
   isAboutPage,
-  setTokenNumber
+  setTokenNumber,
+  realChainId
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(true);
   const { primaryColor, headerLogo } = useSelector<RootState, ColorStoreType>(
@@ -177,6 +179,7 @@ const MainHeader: React.FC<IMainHeader> = ({
       showAlert={showAlert}
       isSplashPage={isSplashPage}
       selectedChain={selectedChain}
+      realChainId={realChainId}
       ref={ref}>
       <div>
         <MainLogo

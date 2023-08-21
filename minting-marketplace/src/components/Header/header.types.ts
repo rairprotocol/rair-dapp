@@ -12,6 +12,7 @@ export interface IMainHeader {
   setTabIndexItems: (arg: number) => void;
   isAboutPage: boolean;
   setTokenNumber: (arg: number | undefined) => void;
+  realChainId: string | undefined;
 }
 
 export type TAxiosCollectionData = {

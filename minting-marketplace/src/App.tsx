@@ -251,7 +251,10 @@ function App() {
   return (
     <ErrorBoundary fallback={ErrorFallback}>
       <MetaTags seoMetaTags={seo} />
-      {!correctBlockchain(selectedChain) && showAlert && !isSplashPage ? (
+      {realNameChain &&
+      !correctBlockchain(realChain) &&
+      showAlert &&
+      !isSplashPage ? (
         <AlertMetamask
           selectedChain={selectedChain}
           selectedChainId={selectedChainId}
@@ -274,10 +277,9 @@ function App() {
               renderBtnConnect={renderBtnConnect}
               creatorViewsDisabled={creatorViewsDisabled}
               showAlert={showAlert}
-              selectedChain={
-                correctBlockchain(selectedChain) === true ? '' : true
-              }
+              selectedChain={correctBlockchain(realChain)}
               isSplashPage={isSplashPage}
+              realChainId={realNameChain && realChain}
               setTabIndexItems={setTabIndexItems}
               isAboutPage={isAboutPage}
               setTokenNumber={setTokenNumber}
@@ -285,6 +287,7 @@ function App() {
           ) : (
             !isIframePage && (
               <MenuNavigation
+                realChainId={realNameChain && realChain}
                 isSplashPage={isSplashPage}
                 adminRights={adminRights}
                 primaryColor={primaryColor}
@@ -293,9 +296,7 @@ function App() {
                 creatorViewsDisabled={creatorViewsDisabled}
                 programmaticProvider={programmaticProvider}
                 showAlert={showAlert}
-                selectedChain={
-                  correctBlockchain(selectedChain) === true ? '' : true
-                }
+                selectedChain={correctBlockchain(realChain)}
                 setTabIndexItems={setTabIndexItems}
                 isAboutPage={isAboutPage}
               />

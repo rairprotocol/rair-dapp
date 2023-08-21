@@ -12,6 +12,7 @@ interface IMenuMobileWrapper {
   errors?: FieldErrors | undefined;
   isSplashPage?: boolean;
   hotdrops?: string;
+  realChainId?: string | undefined;
 }
 
 export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
@@ -19,7 +20,10 @@ export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
   position: fixed;
   padding: 0;
   margin-top: ${(props) =>
-    props.showAlert && !props.isSplashPage && props.selectedChain
+    props.realChainId &&
+    props.showAlert &&
+    !props.isSplashPage &&
+    !props.selectedChain
       ? '50px'
       : ''};
 `;

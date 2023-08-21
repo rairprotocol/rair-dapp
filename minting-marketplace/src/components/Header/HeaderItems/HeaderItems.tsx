@@ -8,6 +8,7 @@ interface IHeaderContainerStyled {
   selectedChain?: string | null;
   isSplashPage?: boolean;
   hotdrops?: string;
+  realChainId?: string | undefined;
 }
 
 export const HeaderContainer = styled.div<IHeaderContainerStyled>`
@@ -18,7 +19,10 @@ export const HeaderContainer = styled.div<IHeaderContainerStyled>`
           props.hotdrops && props.hotdrops === 'true' ? '#0a0a0a' : '#383637'
         }`};
   margin-top: ${(props) =>
-    props.showAlert && props.selectedChain && !props.isSplashPage
+    props.realChainId &&
+    props.showAlert &&
+    !props.selectedChain &&
+    !props.isSplashPage
       ? '50px'
       : ''};
 `;
