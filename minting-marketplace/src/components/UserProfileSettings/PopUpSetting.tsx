@@ -155,7 +155,7 @@ const PopUpSettings = ({
           className={`profile-buy-button ${
             primaryColor === 'rhyno' ? 'rhyno' : ''
           }`}>
-          {tokenSymbol}
+          <i className="fas fa-wallet"></i>
         </div>
         <div
           className={`profile-user-balance ${

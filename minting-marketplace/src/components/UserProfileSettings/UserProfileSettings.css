@@ -205,6 +205,14 @@
   color: grey !important;
 }
 
+.profile-buy-button.rhyno i {
+  color: rgb(30, 48, 80) !important;
+}
+
+.profile-buy-button i {
+  color: #fff !important;
+}
+
 .profile-buy-button,
 .profile-user-balance {
   height: 100%;
