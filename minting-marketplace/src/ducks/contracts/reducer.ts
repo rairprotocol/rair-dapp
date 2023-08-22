@@ -261,11 +261,16 @@ export default function userStore(
         };
       }
     case types.SET_USER_ADDRESS:
-      return {
+      // eslint-disable-next-line no-case-declarations
+      const update = {
         ...state,
-        currentUserAddress: action.currentUserAddress,
-        currentChain: process.env.REACT_APP_DEFAULT_BLOCKCHAIN as BlockchainType
+        currentUserAddress: action.currentUserAddress
       };
+      if (action.currentUserAddress === undefined) {
+        update.currentChain = process.env
+          .REACT_APP_DEFAULT_BLOCKCHAIN as BlockchainType;
+      }
+      return update;
     case types.SET_PROGRAMMATIC_PROVIDER:
       return {
         ...state,

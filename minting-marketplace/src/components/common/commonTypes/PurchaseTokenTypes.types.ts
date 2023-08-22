@@ -1,6 +1,7 @@
-import { CSSProperties } from 'react';
+// import { CSSProperties } from 'react';
 
 export interface IAgreementsPropsType {
+  amountOfTokensToPurchase: string;
   presaleMessage: string | React.ReactNode;
   contractAddress?: string;
   requiredBlockchain?: BlockchainType | undefined;
@@ -18,6 +19,7 @@ export interface IAgreementsPropsType {
 }
 
 export interface IPurchaseTokenButtonProps {
+  amountOfTokensToPurchase?: string;
   altButtonFormat?: boolean;
   customButtonClassName?: string;
   customButtonIconClassName?: string;

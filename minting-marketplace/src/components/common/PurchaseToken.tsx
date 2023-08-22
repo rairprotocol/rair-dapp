@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
-import { Contract } from 'ethers';
+import { BigNumber, Contract } from 'ethers';
 import { OreidProvider, useOreId } from 'oreid-react';
 
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
@@ -73,12 +73,26 @@ const findNextToken = async (
   contractInstance: Contract | undefined,
   start: string,
   end: string,
-  product: string
+  product: string,
+  amountOfTokensToPurchase = '1'
 ) => {
-  return await contractInstance?.getNextSequentialIndex(product, start, end);
+  if (BigNumber.from(1).eq(amountOfTokensToPurchase)) {
+    return await contractInstance?.getNextSequentialIndex(product, start, end);
+  } else {
+    const array: string[] = [];
+    for (let i = BigNumber.from(start); i.lt(end); i = i.add(1)) {
+      i = await contractInstance?.getNextSequentialIndex(product, i, end);
+      array.push(i.toString());
+      if (BigNumber.from(array.length).eq(amountOfTokensToPurchase)) {
+        return array;
+      }
+    }
+    return;
+  }
 };
 
 const Agreements: React.FC<IAgreementsPropsType> = ({
+  amountOfTokensToPurchase,
   presaleMessage,
   contractAddress,
   requiredBlockchain,
@@ -158,9 +172,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 
   const purchaseFunction = async (
     minterInstance: Contract | undefined,
-    contractAddress: Contract | undefined,
     offerIndex: string[] | undefined,
-    nextToken: number,
+    nextToken: any,
     price: string,
     diamond = false
   ) => {
@@ -173,36 +186,38 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
       return;
     }
     const args: any[] = [offerIndex?.[0]];
+    let method = 'buyMintingOffer';
     if (!diamond) {
       args.push(offerIndex?.[1]);
+      method = 'buyToken';
     }
-    args.push(nextToken);
-    args.push({
-      value: price
+    if (nextToken.length) {
+      args.push(nextToken);
+      args.push(nextToken.map(() => currentUserAddress));
+      args.push({
+        value: BigNumber.from(price).mul(nextToken.length)
+      });
+      method = 'buyMintingOfferBatch';
+    } else {
+      args.push(nextToken);
+      args.push({
+        value: price
+      });
+    }
+
+    return await web3TxHandler(minterInstance, method, args, {
+      intendedBlockchain: requiredBlockchain as BlockchainType,
+      failureMessage:
+        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
     });
-    return await web3TxHandler(
-      minterInstance,
-      diamond ? 'buyMintingOffer' : 'buyToken',
-      args,
-      {
-        intendedBlockchain: requiredBlockchain as BlockchainType,
-        failureMessage:
-          'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
-      }
-    );
   };
 
   return (
     <div className={`text-${textColor}`}>
-      <div
-        className={`${
-          collection === false || collection === undefined
-            ? 'py-4 w-100 row'
-            : ''
-        }`}>
+      <div className={`${!collection ? 'py-4 w-100 row' : ''}`}>
         <div className="col-12 col-sm-1 d-none d-md-inline" />
         <div className="col-12 col-sm-10 pe-2 pe-md-5">
-          {collection === false || collection === undefined
+          {!collection
             ? [
                 {
                   label: 'I agree to the',
@@ -308,7 +323,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               diamond ? erc721Abi : diamondFactoryAbi
             );
 
-            setButtonMessage('Querying next mintable NFT...');
+            setButtonMessage('Finding mintable NFT...');
 
             let rangeData;
             if (!blockchainOnly) {
@@ -344,15 +359,32 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               contractInstance,
               start,
               end,
-              product
+              product,
+              amountOfTokensToPurchase
             );
 
-            setButtonMessage(`Minting token #${nextToken.toString()}`);
+            if (!nextToken) {
+              reactSwal.fire(
+                'Error',
+                "Couldn't find enough tokens to mint!",
+                'error'
+              );
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
+              return;
+            }
+
+            if (nextToken?.length) {
+              setButtonMessage(`Minting tokens ${nextToken.join(',')}`);
+            } else {
+              setButtonMessage(`Minting token #${nextToken.toString()}`);
+            }
 
             if (
               (
                 await contractInstance?.provider.getBalance(currentUserAddress)
-              )?.lt(price)
+              )?.lt(BigNumber.from(price).mul(amountOfTokensToPurchase))
             ) {
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
@@ -363,7 +395,6 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 
             const purchaseResult = await purchaseFunction(
               diamond ? diamondMarketplaceInstance : minterInstance,
-              contractInstance,
               offerIndex,
               nextToken,
               price,
@@ -400,6 +431,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 };
 
 const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
+  amountOfTokensToPurchase = '1',
   altButtonFormat = false,
   customButtonClassName,
   customButtonIconClassName,
@@ -431,68 +463,43 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   const oreId = useOreId();
 
   const fireAgreementModal = () => {
-    if (collection === true) {
-      reactSwal.fire({
-        html: (
-          <OreidProvider oreId={oreId}>
-            <Provider store={store}>
-              <Agreements
-                {...{
-                  contractAddress,
-                  requiredBlockchain,
-                  connectUserData,
-                  diamond,
-                  offerIndex,
-                  presaleMessage,
-                  customSuccessAction,
-                  blockchainOnly,
-                  databaseOnly,
-                  collection,
-                  setPurchaseStatus,
-                  web3TxHandler
-                }}
-              />
-            </Provider>
-          </OreidProvider>
+    reactSwal.fire({
+      title:
+        collection === true ? (
+          ''
+        ) : (
+          <h1 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h1>
         ),
-        showConfirmButton: false,
-        width: '85vw',
-        customClass: {
-          popup: `bg-${primaryColor} rounded-rair`,
-          title: `text-${textColor}`
-        }
-      });
-    } else {
-      reactSwal.fire({
-        title: <h1 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h1>,
-        html: (
-          <OreidProvider oreId={oreId}>
-            <Provider store={store}>
-              <Agreements
-                {...{
-                  contractAddress,
-                  requiredBlockchain,
-                  connectUserData,
-                  diamond,
-                  offerIndex,
-                  presaleMessage,
-                  customSuccessAction,
-                  blockchainOnly,
-                  databaseOnly,
-                  web3TxHandler
-                }}
-              />
-            </Provider>
-          </OreidProvider>
-        ),
-        showConfirmButton: false,
-        width: '90vw',
-        customClass: {
-          popup: `bg-${primaryColor} rounded-rair`,
-          title: `text-${textColor}`
-        }
-      });
-    }
+      html: (
+        <OreidProvider oreId={oreId}>
+          <Provider store={store}>
+            <Agreements
+              {...{
+                amountOfTokensToPurchase,
+                contractAddress,
+                requiredBlockchain,
+                connectUserData,
+                diamond,
+                offerIndex,
+                presaleMessage,
+                customSuccessAction,
+                blockchainOnly,
+                databaseOnly,
+                collection,
+                setPurchaseStatus,
+                web3TxHandler
+              }}
+            />
+          </Provider>
+        </OreidProvider>
+      ),
+      showConfirmButton: false,
+      width: '87vw',
+      customClass: {
+        popup: `bg-${primaryColor} rounded-rair`,
+        title: `text-${textColor}`
+      }
+    });
   };
 
   if (altButtonFormat) {

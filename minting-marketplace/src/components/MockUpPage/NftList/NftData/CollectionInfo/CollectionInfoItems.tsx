@@ -28,7 +28,7 @@ export const CollectionInfoBody = styled.div<TCollectionInfoBody>`
   @media screen and (max-width: 1024px) {
     &.mint {
       overflow-y: auto;
-      max-height: 70vh;
+      max-height: 80vh;
       width: calc(20rem - 2vw);
 
       .block-item-collection {
