@@ -58,9 +58,12 @@ const ContractDataModal = ({
           .map((contract) => {
             mapping[contract._id] = contract.products;
             return {
-              label: `${contract.title} (${
-                chainData[contract.blockchain].symbol
-              })`,
+              label: `${contract.title} ${
+                contract.blockchain in chainData
+                  ? chainData[contract.blockchain].symbol
+                  : ''
+              }
+              `,
               value: contract._id
             };
           })

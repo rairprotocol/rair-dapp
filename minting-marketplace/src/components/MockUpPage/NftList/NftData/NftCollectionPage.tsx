@@ -407,13 +407,18 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
           <>
             {Object.keys(tokenData).length <= 5 && (
               <>
-                {width > 730 && (
+                <div
+                  style={{
+                    marginTop: '30px'
+                  }}></div>
+                {/* {width > 730 && (
                   <CollectionInfo
                     blockchain={blockchain}
                     offerData={offerDataCol}
                     openTitle={true}
+                    mintToken={false}
                   />
-                )}
+                )} */}
                 <AuthenticityBlock
                   collectionToken={tokenData[0]?.authenticityLink}
                   title={true}

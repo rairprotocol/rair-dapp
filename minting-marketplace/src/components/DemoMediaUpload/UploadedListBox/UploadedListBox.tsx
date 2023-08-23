@@ -200,7 +200,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
             </>
           </button>
         )}
-        {currentContract && (
+        {/* {currentContract && (
           <div className="border-stimorol rounded-rair col-12">
             <PopUpChoiceNFT
               fileData={fileData}
@@ -214,7 +214,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               collectionIndex={collectionIndex}
             />
           </div>
-        )}
+        )} */}
         <button
           onClick={() => removeVideoAlert()}
           disabled={loadDeleting}
