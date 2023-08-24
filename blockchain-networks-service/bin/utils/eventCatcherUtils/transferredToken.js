@@ -1,3 +1,4 @@
+const { constants } = require('ethers');
 const { MintedToken } = require('../../models');
 const { findContractFromAddress } = require('./eventsCommonUtils');
 
@@ -10,6 +11,10 @@ module.exports = async (
   to,
   tokenId,
 ) => {
+  if (from === constants.AddressZero) {
+    return;
+  }
+
   const contract = await findContractFromAddress(
     transactionReceipt.to
       ? transactionReceipt.to

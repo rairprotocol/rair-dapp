@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 const ethers = require('ethers');
-const { Transaction } = require('../../models');
+const { Transaction, Contract } = require('../../models');
 const { getAlchemy } = require('../../utils/alchemySdk');
 const log = require('../../utils/logger')(module);
 const { masterMapping, insertionMapping } = require('../../utils/eventCatcherMapping');
@@ -62,13 +62,19 @@ const getTransaction = async (
 
     // Check if the Transaction comes from the same user that sent the request
     if (transactionReceipt[fromAddressLabel].toLowerCase() !== userAddress) {
-      // Mark it as processed so the transaction can't be sent again
-      newTransaction.processed = true;
-      await newTransaction.save();
-      await Transaction.deleteOne({ _id: newTransaction._id });
-      throw Error(
-        `Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userAddress}`,
-      );
+      // Just in case check if the event comes from an erc721 contract from our database
+      const findContractAddress = Contract.findOne({
+        contractAddress: transactionReceipt[fromAddressLabel].toLowerCase(),
+      });
+      if (!findContractAddress) {
+        // Mark it as processed so the transaction can't be sent again
+        newTransaction.processed = true;
+        await newTransaction.save();
+        await Transaction.deleteOne({ _id: newTransaction._id });
+        throw Error(
+          `Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userAddress}`,
+        );
+      }
     }
 
     // Fill out data from the transaction
