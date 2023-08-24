@@ -108,15 +108,14 @@ const EasyMintRow = ({
               diamond={token.diamond}
               setPurchaseStatus={setPurchaseStatus}
               customSuccessAction={(purchasedTokens) => {
-                const firstPurchasedToken = purchasedTokens[0];
                 Swal.fire(
                   'Success',
-                  `You own token #${purchasedTokens}!`,
+                  `Token${tokensToMint !== '1' ? 's' : ''} purchased!`,
                   'success'
                 ).then((result) => {
                   if (result.isConfirmed || result.isDismissed) {
                     navigate(
-                      `/tokens/${blockchain}/${params.contract}/${params.product}/${firstPurchasedToken}`
+                      `/tokens/${blockchain}/${params.contract}/${params.product}/${purchasedTokens}`
                     );
                   }
                 });
