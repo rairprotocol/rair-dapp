@@ -402,7 +402,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             );
 
             if (purchaseResult && customSuccessAction) {
-              customSuccessAction(nextToken);
+              customSuccessAction(nextToken.length ? nextToken[0] : nextToken);
             }
             setBuyingToken(false);
             if (setPurchaseStatus) {
