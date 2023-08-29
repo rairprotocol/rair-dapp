@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-// const { vaultAppRoleTokenManager, vaultKeyManager } = require('../vault');
 const { OreId } = require('oreid-js');
 const log = require('../utils/logger')(module);
 const { File, User, MediaViewLog, Unlock } = require('../models');
@@ -9,9 +8,16 @@ const { zoomSecret, zoomClientID } = require('../config');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
 const { superAdminInstance } = require('../utils/vaultSuperAdmin');
 
+const chainHashToOreIdMapping = {
+  '0x1': 'eth_main',
+  '0x5': 'eth_goerli',
+  '0x89': 'polygon_main',
+  '0x13881': 'polygon_mumbai',
+};
+
 module.exports = {
   oreIdIdentifier: async (req, res, next) => {
-    const { idToken } = req.body;
+    const { idToken, blockchain } = req.body;
     const oreId = new OreId({
         appId: process.env.ORE_ID_APPID,
         apiKey: process.env.ORE_ID_APIKEY,
@@ -23,7 +29,7 @@ module.exports = {
     });
     await oreId.auth.user.getData();
     const userAccount = oreId.auth.user.data.chainAccounts.find(
-      (account) => account.chainNetwork.includes('eth'),
+      (account) => account.chainNetwork === chainHashToOreIdMapping[blockchain],
     );
     if (!userAccount) {
       next(new AppError('No accounts found'));

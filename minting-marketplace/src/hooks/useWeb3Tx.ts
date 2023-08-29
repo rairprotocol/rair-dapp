@@ -48,11 +48,11 @@ const useWeb3Tx = () => {
 
   const handleWeb3Error = useCallback(
     (errorMessage: any, defaultError: string | undefined = undefined) => {
-      //console.log('Reason:', errorMessage.reason)
-      //console.log('Code', errorMessage.code)
-      //console.log('Error', errorMessage.error)
-      //console.log('Method', errorMessage.method)
-      //console.log('Transaction', errorMessage.transaction);
+      // console.info('Reason:', errorMessage.reason);
+      // console.info('Code', errorMessage.code);
+      // console.info('Error', errorMessage.error);
+      // console.info('Method', errorMessage.method);
+      // console.info('Transaction', errorMessage.transaction);
 
       let cleanError = '';
 

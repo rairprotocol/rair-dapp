@@ -286,7 +286,8 @@ const useConnectUser = () => {
           loginResponse = await rFetch('/api/v2/auth/oreId', {
             method: 'POST',
             body: JSON.stringify({
-              idToken: loginData.idToken
+              idToken: loginData.idToken,
+              blockchain: loginData.blockchain
             }),
             headers: {
               'Content-Type': 'application/json'
@@ -369,6 +370,12 @@ const useConnectUser = () => {
           dispatch(setChainId(blockchain, address));
           dispatch(setLoginType('oreid'));
         } else {
+          if (!window.ethereum.selectedAddress) {
+            // Metamask isn't connected anymore to the page,
+            //  it's unreliable to use the login data in this case
+            dispatch(setLoginProcessStatus(false));
+            return await logoutUser();
+          }
           dispatch(setChainId(window.ethereum.chainId?.toLowerCase()));
           dispatch(setLoginType('metamask'));
         }

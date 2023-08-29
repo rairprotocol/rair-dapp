@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const { customValidator } = require('./helpers');
+const { blockchainNetworks } = require('./reusableCustomTypes');
 
 module.exports = {
     v2Unlock: () => ({
@@ -16,5 +17,6 @@ module.exports = {
     }),
     oreIdValidation: () => ({
         idToken: Joi.string().required(),
+        blockchain: blockchainNetworks.required(),
     }),
 };
