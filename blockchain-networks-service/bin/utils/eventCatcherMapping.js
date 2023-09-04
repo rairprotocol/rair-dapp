@@ -94,7 +94,26 @@ const getContractEvents = (abi, isDiamond = false) => {
   // Generate an interface with the ABI found
   Object.keys(abiInteface.events).forEach((eventSignature) => {
     // Find the one entry in the ABI for the signature
-    const [singleAbi] = abi.filter((item) => item.name === eventSignature.split('(')[0]);
+    const [singleAbi] = abi.filter((item) => {
+      if (item.type !== 'event') {
+        return false;
+      }
+      let fullOperationName = `${item.name}`;
+      item.inputs.forEach((input, index, array) => {
+        let add = '';
+        if (index === 0) {
+          add += '(';
+        }
+        add += input.type;
+        if (index === array.length - 1) {
+          add += ')';
+        } else {
+          add += ',';
+        }
+        fullOperationName = `${fullOperationName}${add}`;
+      });
+      return fullOperationName === eventSignature;
+    });
     if (!singleAbi) {
       console.error(`Couldn't find ABI for signature ${eventSignature}`);
     } else {

@@ -86,58 +86,62 @@ const getTransaction = async (
 
     // Loop over the logs from the transaction
     const result = transactionReceipt.logs.map((event) => {
-      const foundEvents = [];
-      if (event.topic0) {
-        // In case the data comes from the Moralis SDK
-        // Formats the topic data into something ethers can decode
-        event.topics = [event.topic0, event.topic1, event.topic2, event.topic3];
-        // Filters all the null topics
-        event.topics = event.topics.filter((item) => item !== null);
-      }
-      // Loop over the topics of the event
-      event.topics.forEach((item) => {
-        // Using the topic, identify the event)
-        const found = masterMapping[item];
-        if (found) {
-          if (!Object.keys(insertionMapping).includes(found.abi[0].name)) {
-            log.info(
-              'Ignoring event',
-              found.abi[0].name,
-              ', not relevant for syncing',
+      try {
+        const foundEvents = [];
+        if (event.topic0) {
+          // In case the data comes from the Moralis SDK
+          // Formats the topic data into something ethers can decode
+          event.topics = [event.topic0, event.topic1, event.topic2, event.topic3];
+          // Filters all the null topics
+          event.topics = event.topics.filter((item) => item !== null);
+        }
+        // Loop over the topics of the event
+        event.topics.forEach((item) => {
+          // Using the topic, identify the event
+          const found = masterMapping[item];
+          if (found) {
+            if (!Object.keys(insertionMapping).includes(found.abi[0].name)) {
+              log.info(
+                'Ignoring event',
+                found.abi[0].name,
+                ', not relevant for syncing',
+              );
+              return;
+            }
+            const contractInterface = new ethers.utils.Interface(found.abi);
+            log.info(`TRANSACTION CATCHER - Found Event: ${found.signature}`);
+            // console.log('Sig', found.signature, 'Data', event.data, 'Topics', event.topics)
+            const decodedData = contractInterface.decodeEventLog(
+              found.signature,
+              event.data,
+              event.topics,
             );
-            return;
-          }
-          const contractInterface = new ethers.utils.Interface(found.abi);
-          log.info(`TRANSACTION CATCHER - Found Event: ${found.signature}`);
-          // console.log('Sig', found.signature, 'Data', event.data, 'Topics', event.topics)
-          const decodedData = contractInterface.decodeEventLog(
-            found.signature,
-            event.data,
-            event.topics,
-          );
-          if (found.operation) {
-            insertionQueue.push({
-              eventData: found,
-              operation: found.operation,
-              params: [
-                dbModels,
-                network,
-                transactionReceipt,
-                found.diamondEvent,
-                ...decodedData,
-              ],
+            if (found.operation) {
+              insertionQueue.push({
+                eventData: found,
+                operation: found.operation,
+                params: [
+                  dbModels,
+                  network,
+                  transactionReceipt,
+                  found.diamondEvent,
+                  ...decodedData,
+                ],
+              });
+            }
+            foundEvents.push({
+              eventSignature: found.signature,
+              arguments: decodedData,
+              transactionHash: event[transactionHashLabel],
+              blockNumber: event.blockNumber,
             });
           }
-
-          foundEvents.push({
-            eventSignature: found.signature,
-            arguments: decodedData,
-            transactionHash: event[transactionHashLabel],
-            blockNumber: event.blockNumber,
-          });
-        }
-      });
-      return foundEvents;
+        });
+        return foundEvents;
+      } catch (err) {
+        log.error(`Error processing log in event ${transactionHash} ${err}`);
+        return [];
+      }
     });
 
     if (insertionQueue.length > 0) {
@@ -158,7 +162,8 @@ const getTransaction = async (
     }
     return result;
   } catch (err) {
-    throw Error(err);
+    log.error(`Error processing event in hash ${transactionHash} ${err}`);
+    return undefined;
   }
 };
 
