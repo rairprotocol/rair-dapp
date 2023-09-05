@@ -14,6 +14,7 @@ import {
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
+import { defaultHotDrops } from '../../../../../images';
 import InputSelect from '../../../../common/InputSelect';
 import PurchaseTokenButton from '../../../../common/PurchaseToken';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
@@ -144,15 +145,17 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   const [tokenData, setTokenData] = useState<TTokenData[] | null>(null);
   const { width } = useWindowDimensions();
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
   const defaultPhoto =
-    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
+    hotdropsVar === 'true'
+      ? defaultHotDrops
+      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
   const getTokens = async () => {
     const { data } = await axios.get<TNftItemResponse>(
       `/api/nft/network/${params.blockchain}/${params.contract}/${params.product}?fromToken=0&toToken=0`
     );
-    // eslint-disable-next-line no-console
-    console.log('API Response:', data);
 
     setTokenData(data.result.tokens);
   };
