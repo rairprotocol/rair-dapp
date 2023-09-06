@@ -21,6 +21,7 @@ interface IPersonalProfileMyNftTabComponent {
   profile?: boolean;
   getMyNft?: (number: number, page: number) => void;
   showTokensRef?: any;
+  titleSearch: string;
 }
 
 const PersonalProfileMyNftTabComponent: React.FC<
@@ -36,8 +37,10 @@ const PersonalProfileMyNftTabComponent: React.FC<
   getMyNft,
   totalCount,
   isLoading,
-  showTokensRef
+  showTokensRef,
+  titleSearch
 }) => {
+  console.info(filteredData, 'filteredData');
   const { width } = useWindowDimensions();
   const loader = useRef(null);
 
@@ -76,22 +79,26 @@ const PersonalProfileMyNftTabComponent: React.FC<
           (width >= 1250 && width <= 1400 && 'row')
         }`}>
         {filteredData.length > 0 ? (
-          filteredData.map((item, index) => {
-            if (item.contract.blockchain === '0x38') {
-              return null;
-            } else {
-              return (
-                <Collecteditem
-                  key={item._id}
-                  item={item}
-                  index={index}
-                  chainData={chainData}
-                  profile={profile}
-                  defaultImg={defaultImg}
-                />
-              );
-            }
-          })
+          filteredData
+            .filter((el) =>
+              el.metadata.name.toLowerCase().includes(titleSearch.toLowerCase())
+            )
+            .map((item, index) => {
+              if (item.contract.blockchain === '0x38') {
+                return null;
+              } else {
+                return (
+                  <Collecteditem
+                    key={item._id}
+                    item={item}
+                    index={index}
+                    chainData={chainData}
+                    profile={profile}
+                    defaultImg={defaultImg}
+                  />
+                );
+              }
+            })
         ) : (
           <p style={{ color: textColor }}>
             There is no such item with that name

@@ -2,13 +2,20 @@ import React, { useState } from 'react';
 
 import { NftItem } from './../../MockUpPage/NftList/NftItem';
 
-const UserProfileCreated = ({ contractData }) => {
+const UserProfileCreated = ({ contractData, titleSearch }) => {
   const [playing, setPlaying] = useState<null | number>(null);
+
+  const filteredContracts =
+    contractData &&
+    contractData.filter((el) =>
+      el.name.toLowerCase().includes(titleSearch.toLowerCase())
+    );
+
   return (
     <div className="gen">
       <div className={`list-button-wrapper-grid-template`}>
-        {contractData && contractData.length > 0 ? (
-          contractData.map((contractData, index) => {
+        {filteredContracts.length > 0 ? (
+          filteredContracts.map((contractData, index) => {
             if (contractData.cover !== 'none') {
               return (
                 <NftItem

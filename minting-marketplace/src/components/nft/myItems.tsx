@@ -266,6 +266,7 @@ const MyItems: React.FC<IMyItems> = ({
                 chainData={chainData}
                 textColor={textColor}
                 profile={true}
+                titleSearch={''}
               />
             </TabPanel>
             <TabPanel>

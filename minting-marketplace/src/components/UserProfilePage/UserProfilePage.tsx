@@ -520,7 +520,7 @@ const UserProfilePage: React.FC = () => {
                     backgroundColor: `var(--${
                       primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
                     })`,
-                    // color: `var(--${textColor})`,
+                    color: `var(--${textColor})`,
                     borderTopLeftRadius: '0',
                     border: `${
                       primaryColor === 'charcoal'
@@ -553,11 +553,13 @@ const UserProfilePage: React.FC = () => {
                     totalCount={totalCount}
                     isLoading={isLoading}
                     showTokensRef={showTokensRef}
+                    titleSearch={titleSearch}
                   />
                 </TabPanel>
                 <TabPanel>
                   <UserProfileCreated
                     contractData={createdContracts && createdContracts}
+                    titleSearch={titleSearch}
                   />
                 </TabPanel>
                 <TabPanel>

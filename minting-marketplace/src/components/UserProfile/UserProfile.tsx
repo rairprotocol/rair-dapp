@@ -240,6 +240,7 @@ const UserProfile: React.FC<IMyItems> = ({
               defaultImg={defaultImg}
               chainData={chainData}
               textColor={textColor}
+              titleSearch={titleSearch}
             />
           </TabPanel>
           <TabPanel>
