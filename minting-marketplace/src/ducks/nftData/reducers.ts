@@ -10,7 +10,8 @@ const InitialState: InitialNftDataStateType = {
   nftListTotal: undefined,
   itemsPerPage: 20,
   errorMessage: '',
-  tokenData: undefined
+  tokenData: undefined,
+  tokenDataListTotal: undefined
 };
 
 export default function nftDataStore(
@@ -57,7 +58,8 @@ export default function nftDataStore(
       return {
         ...state,
         loading: true,
-        tokenData: undefined
+        tokenData: undefined,
+        tokenDataListTotal: undefined
       };
     }
 
@@ -66,6 +68,14 @@ export default function nftDataStore(
         ...state,
         loading: false,
         tokenData: action.tokenData
+      };
+    }
+
+    case types.SET_TOKEN_DATA_TOTAL_COUNT: {
+      return {
+        ...state,
+        loading: false,
+        tokenDataListTotal: action.tokenDataListTotal
       };
     }
 

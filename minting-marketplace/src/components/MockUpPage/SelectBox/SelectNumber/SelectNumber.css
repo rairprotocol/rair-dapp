@@ -34,7 +34,7 @@
   overflow-x: hidden;
   width: 288px;
   max-height: 456px;
-  z-index: 2;
+  z-index: 1;
 }
 .select-number-box.sold-token {
   background: rgba(113, 36, 255, 0.796) !important;

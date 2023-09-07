@@ -12,6 +12,7 @@ import SellInputButton from './SellInputButton';
 import { TUserResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
@@ -47,6 +48,11 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
+
+  const { tokenDataListTotal } = useSelector<
+    RootState,
+    InitialNftDataStateType
+  >((state) => state.nftDataStore);
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
@@ -358,20 +364,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     resalePurchase,
     accountData
   ]);
-
-  // useEffect(() => {
-  //   if (!MetaMaskOnboarding.isMetaMaskInstalled() || !currentUserAddress) {
-  //     reactSwal.fire({
-  //       imageWidth: 70,
-  //       imageHeight: 'auto',
-  //       imageAlt: 'Custom image',
-  //       imageUrl: defaultLogo,
-  //       title: 'Oops...',
-  //       text: 'Please use the metamask mobile browser to explore further content or Metamask extension for browser.'
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   return (
     <div className="main-tab">

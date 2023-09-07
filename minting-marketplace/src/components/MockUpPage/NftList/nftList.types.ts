@@ -95,7 +95,6 @@ export interface INftCollectionPageComponent {
   offerAllData: TProducts | undefined;
   collectionName: string | undefined;
   showTokensRef: any;
-  setRenderOffers: any;
   tokenNumber: number | undefined;
 }
 

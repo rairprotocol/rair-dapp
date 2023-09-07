@@ -55,7 +55,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   offerAllData,
   collectionName,
   showTokensRef,
-  setRenderOffers,
   tokenNumber
 }) => {
   const { userRd } = useSelector<RootState, TUsersInitialState>(
@@ -154,7 +153,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
           setLoadingBg(false);
           // setBackgroundUser(user.background);
           // setFileUpload(null);
-          // setRenderOffers((prev) => !prev);
         } else {
           setLoadingBg(false);
         }
@@ -189,14 +187,16 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   }, [getBannerInfo]);
 
   useEffect(() => {
-    const option = {
-      root: null,
-      rootMargin: '20px',
-      threshold: 0
-    };
-    const observer = new IntersectionObserver(loadToken, option);
-    if (loader.current) observer.observe(loader.current);
-  }, [loadToken, loader, isLoading]);
+    if (totalCount && showTokensRef.current <= totalCount) {
+      const option = {
+        root: null,
+        rootMargin: '20px',
+        threshold: 0
+      };
+      const observer = new IntersectionObserver(loadToken, option);
+      if (loader.current) observer.observe(loader.current);
+    }
+  }, [loadToken, loader, isLoading, showTokensRef, totalCount]);
 
   useEffect(() => {
     editBackground();

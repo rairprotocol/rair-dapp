@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // import CustomShareButton from './CustomShareButton';
 import EtherscanIconComponent from './EtherscanIconComponent';
@@ -10,9 +11,10 @@ import SingleTokenViewProperties from './SingleTokenViewProperties';
 import { TitleSingleTokenView } from './TitleSingleTokenView';
 import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
 
-import { TFileType } from '../../../../axios.responseTypes';
+import { TFileType, TNftItemResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
+import { setTokenData } from '../../../../ducks/nftData/action';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
 // import useWindowDimensions from '../../../../hooks/useWindowDimensions';
@@ -49,9 +51,11 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   handleTokenBoughtButton,
   setTokenNumber
 }) => {
-  const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
-    (state) => state.nftDataStore
-  );
+  const { tokenData, tokenDataListTotal } = useSelector<
+    RootState,
+    InitialNftDataStateType
+  >((state) => state.nftDataStore);
+  const [serialNumberData, setSerialNumberData] = useState({});
   // const { width } = useWindowDimensions();
   const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
@@ -66,6 +70,28 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     setPlaying((prev) => !prev);
   };
   const dispatch = useDispatch();
+
+  const getAllProduct = useCallback(
+    async () => {
+      if (tokenDataListTotal) {
+        const responseAllProduct = await axios.get<TNftItemResponse>(
+          `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=${tokenDataListTotal}`
+        );
+
+        const tokenMapping = {};
+
+        if (responseAllProduct.data.success && responseAllProduct.data.result) {
+          responseAllProduct.data.result.tokens.forEach((item) => {
+            tokenMapping[item.token] = item;
+          });
+        }
+
+        setSerialNumberData(tokenMapping);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [product, contract, blockchain, dispatch, tokenDataListTotal]
+  );
 
   useEffect(() => {
     if (productsFromOffer) {
@@ -123,15 +149,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     checkUrl();
   }, [checkUrl]);
 
-  /*
-  const goToUnlockables = () => {
-    embeddedParams
-      ? embeddedParams.setMode('unlockables')
-      : navigate(
-          `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
-        );
-  };
-  */
+  // useEffect(() => {
+  //   getAllProduct();
+  // }, [getAllProduct]);
 
   const handlePlayerClick = () => {
     setOpenVideoPlayer(true);
@@ -382,7 +402,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             primaryColor={primaryColor}
           />
         </div>
-        {productsFromOffer && productsFromOffer.length !== 0 ? (
+        {productsFromOffer && productsFromOffer.length > 0 ? (
           <>
             <div
               className="nft-collection nft-collection-video-wrapper"

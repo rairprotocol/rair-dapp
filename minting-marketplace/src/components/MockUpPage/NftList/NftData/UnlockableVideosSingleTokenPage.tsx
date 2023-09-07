@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { TFileType } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import useSwal from '../../../../hooks/useSwal';
 import { playImagesColored } from '../../../SplashPage/images/greyMan/grayMan';
 import { MediaListResponseType } from '../../../video/video.types';
 import { TUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
@@ -25,7 +27,12 @@ const UnlockableVideosSingleTokenPage: React.FC<
     TFileType | null | undefined
   >(undefined);
 
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+
   const [formatedVideoObj, setFormatedVideoObj] = useState(undefined);
+  const reactSwal = useSwal();
 
   const videos = useSelector<RootState, MediaListResponseType | null>(
     (store) => store.videosStore.videos
@@ -82,7 +89,16 @@ const UnlockableVideosSingleTokenPage: React.FC<
           <img
             src={playImagesColored}
             className="unlockables-video-player-circle"
-            onClick={handlePlayerClick}
+            onClick={() => {
+              if (currentUserAddress) {
+                handlePlayerClick();
+              } else {
+                reactSwal.fire({
+                  title: 'Login required',
+                  icon: 'info'
+                });
+              }
+            }}
           />
           <div
             className="unlockables-video-player"

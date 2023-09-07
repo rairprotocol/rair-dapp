@@ -45,6 +45,9 @@ const setTokenDataStart = () =>
 const setTokenData = (tokenData: { [index: string]: TTokenData }) =>
   ({ type: types.SET_TOKEN_DATA, tokenData } as const);
 
+const setTokenDataTotalCount = (tokenDataListTotal) =>
+  ({ type: types.SET_TOKEN_DATA_TOTAL_COUNT, tokenDataListTotal } as const);
+
 export {
   getNftDataError,
   getNftDataStart,
@@ -53,5 +56,6 @@ export {
   getNftListTotalClear,
   setNftData,
   setTokenData,
-  setTokenDataStart
+  setTokenDataStart,
+  setTokenDataTotalCount
 };

@@ -24,7 +24,8 @@ import { setRealChain } from '../../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import {
   setTokenData,
-  setTokenDataStart
+  setTokenDataStart,
+  setTokenDataTotalCount
 } from '../../../../ducks/nftData/action';
 import { UserType } from '../../../../ducks/users/users.types';
 import useConnectUser from '../../../../hooks/useConnectUser';
@@ -58,7 +59,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const [dataForUser, setDataForUser] = useState<TProducts>();
   const [tokenBought, setTokenBought] = useState<boolean>(false);
   const showTokensRef = useRef<number>(20);
-  const [renderOffers, setRenderOffers] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
@@ -100,6 +100,9 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       }
 
       dispatch(setTokenData(tokenMapping));
+      dispatch(
+        setTokenDataTotalCount(responseAllProduct.data.result.totalCount)
+      );
       setTotalCount(responseAllProduct.data.result.totalCount);
       setIsLoading(false);
 
@@ -130,7 +133,8 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         return false;
       })
     );
-  }, [blockchain, contract, product]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blockchain, contract, product, currentUserAddress]);
 
   const initialTokenData = useCallback(() => {
     if (tokenData && tokenId) {
@@ -260,7 +264,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   useEffect(() => {
     getParticularOffer();
-  }, [getParticularOffer, renderOffers]);
+  }, [getParticularOffer]);
 
   useEffect(() => {
     getProductsFromOffer();
@@ -306,7 +310,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         offerAllData={ownerInfo}
         collectionName={collectionName}
         showTokensRef={showTokensRef}
-        setRenderOffers={setRenderOffers}
         tokenNumber={tokenNumber}
       />
     );

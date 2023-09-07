@@ -5,7 +5,8 @@ import {
   getNftListTotalClear,
   setNftData,
   setTokenData,
-  setTokenDataStart
+  setTokenDataStart,
+  setTokenDataTotalCount
 } from './action';
 
 import { TTokenData } from '../../axios.responseTypes';
@@ -17,6 +18,7 @@ export interface InitialNftDataStateType {
   itemsPerPage: number;
   errorMessage: string;
   tokenData: { [index: string]: TTokenData } | undefined;
+  tokenDataListTotal: number | undefined;
 }
 
 export type TNftDataItem = {
@@ -62,6 +64,7 @@ export type TGetNftListTotalClear = ReturnType<typeof getNftListTotalClear>;
 export type TGetNftDataErrorType = ReturnType<typeof getNftDataError>;
 export type TSetTokenDataStart = ReturnType<typeof setTokenDataStart>;
 export type TSetTokenData = ReturnType<typeof setTokenData>;
+export type TSetTokenDataTotalCount = ReturnType<typeof setTokenDataTotalCount>;
 
 export type TNftDataReducerActionType =
   | TGetNftDataStartType
@@ -70,4 +73,5 @@ export type TNftDataReducerActionType =
   | TGetNftListTotalClear
   | TGetNftDataErrorType
   | TSetTokenDataStart
-  | TSetTokenData;
+  | TSetTokenData
+  | TSetTokenDataTotalCount;
