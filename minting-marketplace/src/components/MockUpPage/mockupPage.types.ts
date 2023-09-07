@@ -17,12 +17,12 @@ export interface INftItemForCollectionView {
   embeddedParams?: TEmbeddedParams;
   blockchain: BlockchainType | undefined;
   pict: string | undefined;
-  offerPrice: string[] | undefined;
+  offerPrice?: string[] | undefined;
   index: string;
   metadata: TMetadataType;
   offer: string | undefined;
-  selectedData: TMetadataType | undefined;
-  someUsersData: UserType | null | undefined;
+  selectedData?: TMetadataType | undefined;
+  someUsersData?: UserType | null | undefined;
   userName: string | undefined;
   tokenDataLength?: number;
   playing: string | null;
@@ -30,8 +30,9 @@ export interface INftItemForCollectionView {
   offerItemData?: any;
   setPlaying: (arg: null | string) => void;
   diamond: boolean;
-  offerData: TOfferType[] | undefined;
+  offerData?: TOfferType[] | undefined;
   id: string;
+  item?: any;
 }
 
 export type TParamsNftItemForCollectionView = {

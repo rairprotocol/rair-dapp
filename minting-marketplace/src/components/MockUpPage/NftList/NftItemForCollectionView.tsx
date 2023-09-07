@@ -8,6 +8,7 @@ import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import { getRGBValue } from '../../../utils/determineColorRange';
+import { rFetch } from '../../../utils/rFetch';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 import {
@@ -37,13 +38,15 @@ const NftItemForCollectionViewComponent: React.FC<
   diamond,
   offerData,
   offerItemData,
-  id
+  id,
+  item
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
 
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const ipfsLink = useIPFSImageLink(metadata?.image);
+  const [tokenInfo, setTokenInfo] = useState<any>(null);
 
   const rgbValue = getRGBValue(diamond, offer, offerData, indexId);
 
@@ -124,6 +127,29 @@ const NftItemForCollectionViewComponent: React.FC<
     }
   }
 
+  const getTokenData = useCallback(async () => {
+    if (item) {
+      const response = await rFetch(
+        `/api/v2/tokens/${item._id}`,
+        undefined,
+        undefined,
+        undefined
+      );
+
+      if (response.success) {
+        setTokenInfo(response.tokenData);
+      }
+    }
+  }, [item]);
+
+  const redirectionUserPage = useCallback(() => {
+    if (tokenInfo && tokenInfo.contract && tokenInfo.product) {
+      navigate(
+        `/tokens/${tokenInfo.contract.blockchain}/${tokenInfo.contract.contractAddress}/${tokenInfo.product.collectionIndexInContract}/${tokenInfo.token}`
+      );
+    }
+  }, [navigate, tokenInfo]);
+
   let className = 'col-12 text-start video-wrapper nft-item-collection';
 
   if (tokenDataLength && tokenDataLength < 4) {
@@ -133,6 +159,10 @@ const NftItemForCollectionViewComponent: React.FC<
   useEffect(() => {
     checkUrl();
   }, [checkUrl]);
+
+  useEffect(() => {
+    getTokenData();
+  }, [getTokenData]);
 
   return (
     <>
@@ -148,7 +178,9 @@ const NftItemForCollectionViewComponent: React.FC<
                 isFileUrl === 'jpeg' ||
                 isFileUrl === 'webp'
               )
-                RedirectToMockUp();
+                if (!item) {
+                  RedirectToMockUp();
+                }
             }}
             className="rounded"
             style={{
@@ -366,12 +398,20 @@ const NftItemForCollectionViewComponent: React.FC<
                         alt="Blockchain network"
                       />
                       {/* {checkPrice()} */}
-                      {fullPrice()}
+                      {offerPrice && fullPrice()}
                     </div>
                   </div>
                 </div>
               </div>
-              <div onClick={RedirectToMockUp} className="description-big">
+              <div
+                onClick={() => {
+                  if (item) {
+                    redirectionUserPage();
+                  } else {
+                    RedirectToMockUp();
+                  }
+                }}
+                className="description-big">
                 <div>
                   <img
                     className="blockchain-img"
@@ -380,7 +420,7 @@ const NftItemForCollectionViewComponent: React.FC<
                   />
                 </div>
                 <span className="description description-price description-price-unlockables-page">
-                  {fullPrice()}
+                  {offerPrice && fullPrice()}
                 </span>
                 <span className="description-more">View item</span>
               </div>

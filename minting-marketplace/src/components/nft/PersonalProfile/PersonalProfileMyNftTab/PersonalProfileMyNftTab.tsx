@@ -1,10 +1,9 @@
-import { memo, useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import Collecteditem from './Collecteditem';
 
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import LoadingComponent from '../../../common/LoadingComponent';
+import { NftItemForCollectionView } from '../../../MockUpPage/NftList/NftItemForCollectionView';
 
 import './PersonalProfileMyNftTab.css';
 
@@ -40,8 +39,8 @@ const PersonalProfileMyNftTabComponent: React.FC<
   showTokensRef,
   titleSearch
 }) => {
-  console.info(filteredData, 'filteredData');
   const { width } = useWindowDimensions();
+  const [playing, setPlaying] = useState<null | string>(null);
   const loader = useRef(null);
 
   const loadToken = useCallback(
@@ -84,17 +83,31 @@ const PersonalProfileMyNftTabComponent: React.FC<
               el.metadata.name.toLowerCase().includes(titleSearch.toLowerCase())
             )
             .map((item, index) => {
+              console.info(item, 'item');
               if (item.contract.blockchain === '0x38') {
                 return null;
               } else {
                 return (
-                  <Collecteditem
-                    key={item._id}
+                  <NftItemForCollectionView
+                    id={`collection-view-${index}`}
+                    key={`${
+                      item._id + '-' + item.uniqueIndexInContract + index
+                    }`}
+                    pict={item.metadata.image}
+                    metadata={item.metadata}
                     item={item}
-                    index={index}
-                    chainData={chainData}
-                    profile={profile}
-                    defaultImg={defaultImg}
+                    // offerPrice={offerPrice}
+                    blockchain={item.contract.blockchain}
+                    // selectedData={selectedData}
+                    index={item.token}
+                    indexId={index.toString()}
+                    // offerData={offerDataCol}
+                    offer={item.offer}
+                    // someUsersData={someUsersData}
+                    userName={item.ownerAddress}
+                    setPlaying={setPlaying}
+                    playing={playing}
+                    diamond={item.contract.diamond}
                   />
                 );
               }
