@@ -10,7 +10,7 @@ const { providersMapping } = require('../../utils/speedyNodeProviders');
 const getTransaction = async (
   network,
   transactionHash,
-  userAddress,
+  userData,
   dbModels,
 ) => {
   try {
@@ -61,7 +61,8 @@ const getTransaction = async (
     }
 
     // Check if the Transaction comes from the same user that sent the request
-    if (transactionReceipt[fromAddressLabel].toLowerCase() !== userAddress) {
+    if (!userData.adminRights &&
+        transactionReceipt[fromAddressLabel].toLowerCase() !== userData.userPublicAddress) {
       // Just in case check if the event comes from an erc721 contract from our database
       const findContractAddress = Contract.findOne({
         contractAddress: transactionReceipt[fromAddressLabel].toLowerCase(),
@@ -72,7 +73,7 @@ const getTransaction = async (
         await newTransaction.save();
         await Transaction.deleteOne({ _id: newTransaction._id });
         throw Error(
-          `Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userAddress}`,
+          `Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userData.userPublicAddress}`,
         );
       }
     }
