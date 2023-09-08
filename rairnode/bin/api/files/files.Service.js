@@ -1,6 +1,19 @@
 const { File, MintedToken, Unlock } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 
+exports.isFileOwner = async (req, res, next) => {
+  const { publicAddress, superAdmin } = req.user;
+  const { id } = req.params;
+  const file = await File.findById(id);
+  if (!file) {
+    return next(new AppError('No file found'));
+  }
+  if (file.uploader !== publicAddress && !superAdmin) {
+    return next(new AppError('Cannot manage data'));
+  }
+  return next();
+};
+
 exports.getFiles = async (req, res) => {
   const { query } = req;
   const dataQuery = {

@@ -39,17 +39,19 @@ const VideoManager = () => {
     })();
   }, [selectedFile, refresh]);
 
+  const refreshFileList = useCallback(async () => {
+    const { data, success } = await rFetch('/api/v2/files');
+    if (success) {
+      setUploads(data);
+    }
+  }, []);
+
   useEffect(() => {
     if (!currentUserAddress) {
       return;
     }
-    (async () => {
-      const { data, success } = await rFetch('/api/v2/files');
-      if (success) {
-        setUploads(data);
-      }
-    })();
-  }, [currentUserAddress]);
+    refreshFileList();
+  }, [currentUserAddress, refreshFileList]);
 
   const addRange = async () => {
     await reactSwal.fire({
@@ -82,6 +84,28 @@ const VideoManager = () => {
     },
     [selectedFile, refreshFileData]
   );
+
+  const deleteFile = useCallback(async () => {
+    reactSwal
+      .fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await rFetch(`/api/media/remove/${selectedFile._id}`, {
+            method: 'DELETE'
+          });
+          setSelectedFile({});
+          refreshFileList();
+        }
+      });
+  }, [selectedFile, refreshFileList, reactSwal]);
 
   const updateDemoStatus = useCallback(async () => {
     await updateFile({
@@ -180,6 +204,13 @@ const VideoManager = () => {
                   <small>{selectedFile.duration}</small>
                   <br />
                   <span>{selectedFile.description}</span>
+                  <br />
+                  <br />
+                  <button
+                    onClick={deleteFile}
+                    className="btn btn-outline-danger">
+                    <i className="fa fa-trash" /> Delete
+                  </button>
                 </div>
               </div>
             </div>

@@ -8,6 +8,7 @@ const {
     getFileAndOffer,
     removeFileAndOffer,
     updateFile,
+    isFileOwner,
 } = require('./files.Service');
 const { validation, requireUserSession } = require('../../middleware');
 const { getSpecificContracts } = require('../contracts/contracts.Service');
@@ -24,16 +25,20 @@ router.get(
 );
 router.get(
     '/byID/:id',
+    validation(['fileId'], 'params'),
     getFile,
 );
 router.put(
     '/byId/:id',
+    requireUserSession,
+    validation(['fileId'], 'params'),
     validation(['dbFiles'], 'body'),
+    isFileOwner,
     updateFile,
 );
 router.get(
     '/byCategory/:id',
-    validation(['dbId'], 'params'),
+    validation(['fileId'], 'params'),
     validation(['pagination'], 'query'),
     getFilesByCategory,
 );
@@ -47,7 +52,17 @@ router.get(
 );
 
 router.get('/:id/unlocks', getFileAndOffer);
-router.post('/:id/unlocks', connectFileAndOffer);
-router.delete('/:id/unlocks', removeFileAndOffer);
+router.post(
+    '/:id/unlocks',
+    requireUserSession,
+    isFileOwner,
+    connectFileAndOffer,
+);
+router.delete(
+    '/:id/unlocks',
+    requireUserSession,
+    isFileOwner,
+    removeFileAndOffer,
+);
 
 module.exports = router;

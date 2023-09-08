@@ -9,6 +9,9 @@ module.exports = {
     dbId: () => ({
         id: mongoId,
     }),
+    fileId: () => ({
+        id: Joi.string().required(),
+    }),
     productId: () => ({
         productId: mongoId,
     }),

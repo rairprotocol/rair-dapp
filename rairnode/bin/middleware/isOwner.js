@@ -1,36 +1,23 @@
-const _ = require('lodash');
 const AppError = require('../utils/errors/AppError');
-const log = require('../utils/logger')(module);
 
 module.exports = (Model) => async (req, res, next) => {
   try {
-    const { publicAddress } = req.user;
+    const { publicAddress, superAdmin } = req.user;
     const { mediaId, id } = req.params;
     const itemsToCompare = ['uploader', 'userAddress'];
 
     let foundItem = await Model.findById(mediaId || id);
 
     if (!foundItem) {
-      const message = 'Data not found.';
-
-      log.error(message);
-
-      return next(new AppError(`${message}`, 404));
+      return next(new AppError('Data not found.', 404));
     }
 
     foundItem = foundItem.toObject();
 
-    const owner = _.chain(itemsToCompare)
-      .map((i) => _.get(foundItem, i, null))
-      .includes(publicAddress)
-      .value();
+    const owner = superAdmin || itemsToCompare.map((i) => foundItem[i]).includes(publicAddress);
 
     if (!owner) {
-      const message = 'You don\'t have permission to manage this data.';
-
-      log.error(message);
-
-      return next(new AppError(`${message}`, 403));
+      return next(new AppError('You don\'t have permission to manage this data.', 403));
     }
 
     return next();

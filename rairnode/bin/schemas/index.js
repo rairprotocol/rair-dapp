@@ -59,6 +59,7 @@ const {
 const {
   pagination,
   dbId,
+  fileId,
   productId,
   offerId,
   userId,
@@ -146,6 +147,7 @@ module.exports = {
   // Common schemas
   pagination,
   dbId,
+  fileId,
   productId,
   offerId,
   userId,
