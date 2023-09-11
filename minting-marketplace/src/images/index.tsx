@@ -9,6 +9,7 @@ import avatar from './defaultAvatarProfile.webp';
 import discordIconWhiteNoBorder from './discord-white-no-border.webp';
 import documentIcon from './documentIcon.svg';
 import ethereum from './ethereum-logo.svg';
+import hotdropsDefaultBanner from './hotDrops_defaultBanner.png';
 import defaultHotDropsImg from './hotdrops-default.png';
 import logoHotDropsLight from './HotdropsLogoLight.png';
 import logoHotDrops from './logo-hotdrops.png';
@@ -46,6 +47,7 @@ export const HotDropsLogo = logoHotDrops;
 export const HotDropsLogoLight = logoHotDropsLight;
 export const defaultHotDrops = defaultHotDropsImg;
 export const HotDropsLogoMobile = hotdropsLogoMobile;
+export const hotDropsDefaultBanner = hotdropsDefaultBanner;
 
 // Icons
 export const discrodIconNoBorder = discordIconWhiteNoBorder;

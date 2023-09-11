@@ -43,6 +43,12 @@
   height: 50px;
 }
 
+.user-page-background.hotdrops-bg-default-banner {
+  background: url('./../../images/hotDrops_defaultBanner.png');
+  background-size: cover;
+  background-position: center center;
+}
+
 .bar-wrapper {
   display: flex;
   position: relative;

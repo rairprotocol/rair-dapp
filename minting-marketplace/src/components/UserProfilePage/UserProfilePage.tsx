@@ -337,7 +337,7 @@ const UserProfilePage: React.FC = () => {
           <div
             className={`user-page-background ${primaryColor} ${
               hotdropsVar === 'true' && !userData.background
-                ? 'hotdrops-bg'
+                ? 'hotdrops-bg-default-banner'
                 : ''
             }`}
             style={{
@@ -347,10 +347,11 @@ const UserProfilePage: React.FC = () => {
                   : ''
             }}>
             {userData && !userData.background && (
-              <img
-                src={hotdropsVar === 'true' ? HotDropsLogo : headerLogo}
-                alt="background-logo-default"
-              />
+              <>
+                {hotdropsVar !== 'true' && (
+                  <img src={headerLogo} alt="background-logo-default" />
+                )}
+              </>
             )}
             {currentUserAddress &&
               currentUserAddress &&

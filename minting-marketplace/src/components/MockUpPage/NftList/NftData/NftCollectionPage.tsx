@@ -19,6 +19,7 @@ import {
 } from '../../../../ducks/nftData/action';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
+import { hotDropsDefaultBanner } from '../../../../images';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
@@ -239,7 +240,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                 src={
                   bannerInfo && bannerInfo?.bannerImage
                     ? `${changeIPFSLink(bannerInfo?.bannerImage)}`
-                    : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg'
+                    : hotDropsDefaultBanner
                 }
               />
             )}
