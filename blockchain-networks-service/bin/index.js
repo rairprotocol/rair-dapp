@@ -18,15 +18,17 @@ const {
   vaultAppRoleTokenManager,
 } = require('./vault');
 
+const tasks = require('./tasks');
+const routes = require('./routes/api/v1');
+
 const config = require('./config');
 const redisService = require('./services/redis');
 
 async function main() {
   const connectionString = await getMongoConnectionStringURI({ appSecretManager });
+  // log.info(`Mongo Connection: ${connectionString}`);
 
-  console.log('mongo connection string index', connectionString);
-
-  const _mongoose = await mongoose.connect(
+  await mongoose.connect(
     connectionString,
     {
       useNewUrlParser: true,
@@ -60,24 +62,6 @@ async function main() {
   await redisClient.connect().catch(log.error);
 
   const context = {
-    db: {
-      Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
-      File: _mongoose.model('File', require('./models/file'), 'File'),
-      User: _mongoose.model('User', require('./models/user'), 'User'),
-      Product: _mongoose.model('Product', require('./models/product'), 'Product'),
-      OfferPool: _mongoose.model('OfferPool', require('./models/offerPool'), 'OfferPool'),
-      Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
-      MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
-      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokens'), 'LockedTokens'),
-      Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning'),
-      Task: _mongoose.model('Task', require('./models/task'), 'Task'),
-      SyncRestriction: _mongoose.model('SyncRestriction', require('./models/syncRestriction'), 'SyncRestriction'),
-      Transaction: _mongoose.model('Transaction', require('./models/transaction.js'), 'Transaction'),
-      PastAddress: _mongoose.model('PastAddress', require('./models/pastAddress.js'), 'PastAddress'),
-      ResaleTokenOffer: _mongoose.model('ResaleTokenOffer', require('./models/resaleTokenOffer.js'), 'ResaleTokenOffer'),
-      CustomRoyaltiesSet: _mongoose.model('CustomRoyaltiesSet', require('./models/customRoyaltiesSet.js'), 'CustomRoyaltiesSet'),
-      UserCredit: _mongoose.model('UserCredit', require('./models/userCredit.js'), 'UserCredit'),
-    },
     mongo: _db,
     config,
     redis: {
@@ -88,11 +72,12 @@ async function main() {
   context.redis.redisService = redisService(context);
 
   // run scheduled tasks flow
-  context.agenda = await require('./tasks')(context);
+  context.agenda = await tasks(context);
 
   _.forEach(fs.readdirSync(path.join(__dirname, './tasks')), (file) => {
     if (file !== 'index.js' && path.extname(file) === '.js') {
       const pathToTask = `./tasks/${file}`;
+      // eslint-disable-next-line import/no-dynamic-require, global-require
       require(pathToTask)(context);
     }
   });
@@ -100,14 +85,14 @@ async function main() {
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
   app.use(bodyParser.json());
-  app.use('/api/v1', require('./routes/api/v1')(context));
+  app.use('/api/v1', routes(context));
   app.use((err, req, res, next) => {
     log.error(err);
     res.status(500).json({ success: false, error: true, message: err.message });
   });
 
   app.listen(port, () => {
-    log.info(`Blockchain networks service listening at http://localhost:${port}`);
+    log.info(`Blockchain networks service listening on port ${port}`);
   });
 }
 

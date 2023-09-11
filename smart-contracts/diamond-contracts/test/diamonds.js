@@ -74,7 +74,7 @@ function get (functionNames) {
 }
 
 describe("Diamonds", function () {
-	let owner, addr1, addr2, addr3, addr4, addrs;
+	let owner, addr1, addr2, addr3, addr4, treasuryAddress, nodeAddress, addrs;
 
 	let FactoryDiamondFactory, factoryDiamondInstance;
 	let MarketDiamondFactory, marketDiamondInstance;
@@ -97,6 +97,7 @@ describe("Diamonds", function () {
 
 	let MintingOffersFacetFactory, mintingOfferFacetsInstance;
 	let FeesFacetFactory, feesFacetInstance;
+	let ResaleFacetFactory, resaleFacetInstance;
 
 	let ReceiveEthAttackerFactory, receiveEthAttackerInstance;
 
@@ -110,7 +111,7 @@ describe("Diamonds", function () {
 	})
 	
 	before(async () => {
-		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
+		[owner, addr1, addr2, addr3, addr4, treasuryAddress, nodeAddress, ...addrs] = await ethers.getSigners();	
 		// Nick Mudge's facets
 		DiamondCutFacetFactory = await ethers.getContractFactory("DiamondCutFacet");
 		OwnershipFacetFactory = await ethers.getContractFactory("OwnershipFacet");
@@ -138,6 +139,7 @@ describe("Diamonds", function () {
 		// Marketplace's Facets
 		MintingOffersFacetFactory = await ethers.getContractFactory("MintingOffersFacet");
 		FeesFacetFactory = await ethers.getContractFactory("FeesFacet");
+		ResaleFacetFactory = await ethers.getContractFactory("ResaleFacet");
 
 		// Malicious contracts for testing
 		ReceiveEthAttackerFactory = await ethers.getContractFactory("ReceiveEthAttacker");
@@ -229,6 +231,11 @@ describe("Diamonds", function () {
 
 		it ("Should deploy the Market Minting Offers Facet", async () => {
 			feesFacetInstance = await FeesFacetFactory.deploy();
+			await feesFacetInstance.deployed();
+		});
+
+		it ("Should deploy the Market Minting Offers Facet", async () => {
+			resaleFacetInstance = await ResaleFacetFactory.deploy();
 			await feesFacetInstance.deployed();
 		});
 	});
@@ -389,6 +396,18 @@ describe("Diamonds", function () {
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
 		});
+
+		it ("Should add the Resale facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: resaleFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(resaleFacetInstance, usedSelectorsForMarketplace)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
 	});
 
 
@@ -463,7 +482,7 @@ describe("Diamonds", function () {
 
 		it ("Should not deploy a contract if it receives less than the required amount", async () => {
 			await expect(erc777Instance.send(factoryDiamondInstance.address, priceToDeploy - 1, ethers.utils.toUtf8Bytes('')))
-				.to.be.revertedWith(`RAIR Factory: not enough RAIR tokens to deploy a contract`);
+				.to.be.revertedWith(`HOT Factory: not enough RAIR tokens to deploy a contract`);
 		});
 
 		it ("Should deploy a RAIR contract if it receives ERC777 tokens from an approved address", async() => {
@@ -619,10 +638,10 @@ describe("Diamonds", function () {
 		it ("Should have the RAIR symbol", async () => {
 			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
 			await expect(await erc721Facet.symbol())
-				.to.equal("RAIR");
+				.to.equal("HOT");
 			erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
 			await expect(await erc721Facet.symbol())
-				.to.equal("RAIR");
+				.to.equal("HOT");
 		});
 
 		it ("Should have the user defined name", async () => {
@@ -1309,11 +1328,11 @@ describe("Diamonds", function () {
 
 			it ("Should update the treasury address", async () => {
 				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
-				await expect(await feesFacet.updateTreasuryAddress(addr4.address))
+				await expect(await feesFacet.updateTreasuryAddress(treasuryAddress.address))
 					.to.emit(feesFacet, 'UpdatedTreasuryAddress')
-					.withArgs(addr4.address);
+					.withArgs(treasuryAddress.address);
 				await expect(await feesFacet.getTreasuryAddress())
-					.to.equal(addr4.address);
+					.to.equal(treasuryAddress.address);
 			});
 
 			it ("Should have the default 1% node fee", async () => {
@@ -1355,7 +1374,7 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: addr2.address, percentage: 60000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.be.revertedWith("Minter Marketplace: This Marketplace isn't a Minter!");
 			});
 
@@ -1375,7 +1394,7 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: addr2.address, percentage: 60000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.be.revertedWith("Minter Marketplace: Sender isn't the creator of the contract!");
 			});
 
@@ -1384,7 +1403,7 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
 					{recipient: addr1.address, percentage: 29999},
 					{recipient: addr2.address, percentage: 60000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.be.revertedWith("Minter Marketplace: Offer doesn't have tokens available!");
 			});
 
@@ -1393,7 +1412,7 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 0, [
 					{recipient: addr1.address, percentage: 29999},
 					{recipient: addr2.address, percentage: 60000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.be.revertedWith("Minter Marketplace: Fees don't add up to 100%");
 			});
 
@@ -1405,7 +1424,7 @@ describe("Diamonds", function () {
 					{recipient: addr3.address, percentage: 20000},
 					{recipient: addr4.address, percentage: 20000},
 					{recipient: owner.address, percentage: 27778}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.be.revertedWith("Minter Marketplace: Current fee configuration will result in missing funds");
 			});
 
@@ -1414,7 +1433,7 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 4, [
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: addr2.address, percentage: 60000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.be.revertedWith("RAIR ERC721 Ranges: Range does not exist");
 			});
 		});
@@ -1428,7 +1447,7 @@ describe("Diamonds", function () {
 					{recipient: addr1.address, percentage: 89999},
 					{recipient: addr2.address, percentage: 1}
 				]
-				, true, addr4.address))
+				, true, nodeAddress.address))
 					.to.be.revertedWith("Minter Marketplace: A percentage on the array will result in an empty transfer");
 			});
 
@@ -1439,7 +1458,7 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 0, [
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: receiveEthAttackerInstance.address, percentage: 60000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.be.revertedWith("Minter Marketplace: Contracts can't be recipients of the splits");
 			});
 
@@ -1448,7 +1467,7 @@ describe("Diamonds", function () {
 				await expect(await mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 0, [
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: addr2.address, percentage: 60000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
 					.withArgs(secondDeploymentAddress, 0, 'Second First First 2', 4500, 2, true, 0);
 				/*
@@ -1468,7 +1487,7 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 0, [
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: addr2.address, percentage: 60000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.be.revertedWith("Minter Marketplace: Range already has an offer");
 			});
 
@@ -1478,7 +1497,7 @@ describe("Diamonds", function () {
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: addr3.address, percentage: 30000},
 					{recipient: addr2.address, percentage: 30000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
 					.withArgs(secondDeploymentAddress, 1, 'Second First Second', 3500, 3, true, 1);
 			});
@@ -1487,7 +1506,7 @@ describe("Diamonds", function () {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				await expect(await mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 0, [
 					{recipient: addr2.address, percentage: 90000}
-				], true, addr4.address))
+				], true, nodeAddress.address))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
 					.withArgs(firstDeploymentAddress, 0, 'First First First', 100, 1, true, 2);
 			});
@@ -1504,7 +1523,7 @@ describe("Diamonds", function () {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				let result = await mintingOffersFacet.getOfferInfo(0);
 				await expect(result['mintOffer']['erc721Address']).to.equal(secondDeploymentAddress);
-				await expect(result['mintOffer']['nodeAddress']).to.equal(addr4.address);
+				await expect(result['mintOffer']['nodeAddress']).to.equal(nodeAddress.address);
 				await expect(result['mintOffer']['rangeIndex']).to.equal(0);
 				await expect(result['mintOffer']['fees'].length).to.equal(2);
 				await expect(result['mintOffer']['fees'][0].percentage).to.equal(30000);
@@ -1518,7 +1537,7 @@ describe("Diamonds", function () {
 				let result = await mintingOffersFacet.getOfferInfoForAddress(secondDeploymentAddress, 0);
 				await expect(result['offerIndex']).to.equal(0);
 				await expect(result['mintOffer']['erc721Address']).to.equal(secondDeploymentAddress);
-				await expect(result['mintOffer']['nodeAddress']).to.equal(addr4.address);
+				await expect(result['mintOffer']['nodeAddress']).to.equal(nodeAddress.address);
 				await expect(result['mintOffer']['rangeIndex']).to.equal(0);
 				await expect(result['mintOffer']['fees'].length).to.equal(2);
 				await expect(result['mintOffer']['fees'][0].percentage).to.equal(30000);
@@ -1534,7 +1553,7 @@ describe("Diamonds", function () {
 					[],
 					[],
 					[],
-					addr4.address
+					nodeAddress.address
 				)).to.be.revertedWith("Minter Marketplace: No offers sent!");
 			})
 
@@ -1552,7 +1571,7 @@ describe("Diamonds", function () {
 						{recipient: addr2.address, percentage: 60000}
 					]),
 					[false, false],
-					addr4.address
+					nodeAddress.address
 				))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
 					.withArgs(secondDeploymentAddress, 2, 'Second Second First', 20000, 4, false, 3)
@@ -1568,7 +1587,7 @@ describe("Diamonds", function () {
 					4,
 					[],
 					true,
-					addr4.address
+					nodeAddress.address
 				))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
 					//erc721Address, rangeIndex, rangeName, price, feeSplitsLength, visible, offerIndex);
@@ -1626,13 +1645,15 @@ describe("Diamonds", function () {
 						mintingOffersFacet,
 						addr1,
 						addr2,
-						addr4
+						treasuryAddress,
+						nodeAddress
 					], [
 						0 - (4500),
 						0,
 						(4500 / 100) * 30,
 						(4500 / 100) * 60,
-						(4500 / 100) * 10, // Address 4 is the treasury and the node
+						(4500 / 100) * 5,
+						(4500 / 100) * 5,
 					]);
 			});
 
@@ -1699,13 +1720,15 @@ describe("Diamonds", function () {
 						mintingOffersFacet,
 						addr1,
 						addr2,
-						addr4
+						nodeAddress,
+						treasuryAddress
 					], [
 						0 - (4500 * tokensList.length),
 						0,
 						((4500 * tokensList.length) / 100) * 30,
 						((4500 * tokensList.length) / 100) * 60,
-						((4500 * tokensList.length) / 100) * 10, // Address 4 is the treasury and the node
+						((4500 * tokensList.length) / 100) * 5,
+						((4500 * tokensList.length) / 100) * 5,
 					]);
 
 					/*
@@ -2116,17 +2139,289 @@ describe("Diamonds", function () {
 		});
 	});
 
-	describe("Resale marketplace", () => {
-		it ("Should display the correct 2981 data", async () => {
-			const royaltiesFacet = await ethers.getContractAt('RAIRRoyaltiesFacet', firstDeploymentAddress);
-			const price = 412000000;
-			const data = await royaltiesFacet.royaltyInfo(
-				0,
-				price,
-			);
-			expect(data.receiver).to.equal(owner.address);
-			expect(data.royaltyAmount).to.equal((price * await royaltiesFacet.royaltyFee()) / 100000);
-		})
+	describe("Resale Facet", () => {
+		it ("Shouldn't set up resale configs without the role", async () => {
+			const resaleFacet = await (
+				await ethers.getContractAt(
+					'ResaleFacet',
+					marketDiamondInstance.address
+				)
+			).connect(addr4);
+			await expect(resaleFacet.setPurchaseGracePeriod(1)).to.be.revertedWith(`AccessControl: account ${addr4.address.toLowerCase()} is missing role ${await resaleFacet.MAINTAINER()}`);
+			await expect(resaleFacet.setDecimalPow(2)).to.be.revertedWith(`AccessControl: account ${addr4.address.toLowerCase()} is missing role ${await resaleFacet.MAINTAINER()}`);
+		});
+
+		it ("Shouldn't generate a hash if the marketplace isn't approved", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			await expect(resaleInstance.generateResaleHash(
+				secondDeploymentAddress,	// erc721,
+				addr3.address,				// buyer,
+				owner.address,				// seller,
+				0, 							// token,
+				200000,						// tokenPrice
+				addr4.address				// Node address
+			)).to.be.revertedWith("Resale: Marketplace isn't approved for transfers");
+		});
+
+		it ("Should grant all necessary roles", async () => {
+			const resaleFacet = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			const erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(
+				await resaleFacet.grantRole(
+					await resaleFacet.MAINTAINER(),
+					addr4.address
+				)
+			)
+				.to.emit(resaleFacet, "RoleGranted")
+				.withArgs(await resaleFacet.MAINTAINER(), addr4.address, owner.address);
+			await expect(
+				await resaleFacet.grantRole(
+					await resaleFacet.RESALE_ADMIN(),
+					owner.address
+				)
+			)
+				.to.emit(resaleFacet, "RoleGranted")
+				.withArgs(await resaleFacet.RESALE_ADMIN(), owner.address, owner.address);
+
+			await expect(
+				await erc721Facet.grantRole(
+					await erc721Facet.TRADER(),
+					resaleFacet.address
+				)
+			)
+				.to.emit(erc721Facet, "RoleGranted")
+				.withArgs(await erc721Facet.TRADER(), resaleFacet.address, owner.address);
+		});
+
+		it ("Should set up the resale marketplace data", async () => {
+			const resaleFacet = await (
+				await ethers.getContractAt(
+					'ResaleFacet',
+					marketDiamondInstance.address
+				)
+			).connect(addr4);
+			await expect(await resaleFacet.setPurchaseGracePeriod(120)).not.to.be.reverted;
+			await expect(await resaleFacet.setDecimalPow(3)).not.to.be.reverted;
+		});
+
+		it ("Should generate a hash if the marketplace is approved", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			const erc721Instance = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(
+				await erc721Instance.setApprovalForAll(resaleInstance.address, true)
+			)
+			.to.emit(erc721Instance, "ApprovalForAll")
+			.withArgs(owner.address, resaleInstance.address, true);
+
+			const args = [
+				secondDeploymentAddress,	// erc721,
+				addr3.address,				// buyer,
+				owner.address,				// seller,
+				0, 							// token,
+				200000,						// tokenPrice
+				addr4.address				// Node address
+			]
+
+			await expect(resaleInstance.generateResaleHash(...args)).not.to.be.reverted;
+		});
+
+		it ("Should purchase a token with the generated signature", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			const resaleInstanceAddr3 = await (
+				await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address)
+			).connect(addr3);
+
+			const args = [
+				secondDeploymentAddress,	// erc721,
+				addr3.address,				// buyer,
+				owner.address,				// seller,
+				0, 							// token,
+				200000,						// tokenPrice
+			]
+
+			const hash = await resaleInstance.generateResaleHash(...[...args, nodeAddress.address]);
+
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(hash));
+			await expect(
+				await resaleInstanceAddr3.purchaseTokenOffer(...[...args, nodeAddress.address], signedMessageOwner, {value: 200000})
+			)
+				.to.emit(resaleInstance, 'TokenSold')
+				.withArgs(...args)
+				.changeEtherBalances([
+					addr3,
+					nodeAddress,
+					treasuryAddress,
+					owner
+				], [
+					-200000,
+					10000,
+					10000,
+					180000,
+				])
+		});
+
+		it ("Shouldn't purchase a token twice", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			const resaleInstanceAddr3 = await (
+				await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address)
+			).connect(addr3);
+
+			const args = [
+				secondDeploymentAddress,	// erc721,
+				owner.address,				// buyer,
+				addr3.address,				// seller,
+				0, 							// token,
+				200000,						// tokenPrice
+			]
+
+			const hash = await resaleInstance.generateResaleHash(...[...args, nodeAddress.address]);
+
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(hash));
+			await expect(
+				await resaleInstanceAddr3.purchaseTokenOffer(
+					...args,
+					nodeAddress.address,
+					signedMessageOwner,
+					{value: 200000}
+				)
+			)
+				.to.emit(resaleInstance, 'TokenSold')
+				.withArgs(...args);
+
+			await expect(
+				resaleInstanceAddr3.purchaseTokenOffer(
+					...[...args, nodeAddress.address],
+					signedMessageOwner,
+					{value: 200000}
+				)
+			).to.be.revertedWith("ERC721: transfer from incorrect owner");
+		});
+
+		it ("Shouldn't purchase with wrong information", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			const resaleInstanceAddr3 = await (
+				await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address)
+			).connect(addr3);
+
+			const args = [
+				secondDeploymentAddress,	// erc721,
+				owner.address,				// buyer,
+				addr3.address,				// seller,
+				0, 							// token,
+				200000,						// tokenPrice
+			]
+
+			const hash = await resaleInstance.generateResaleHash(...[...args, addr4.address]);
+
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(hash));
+			await expect(
+				resaleInstanceAddr3.purchaseTokenOffer(
+					secondDeploymentAddress,	// erc721,
+					owner.address,				// buyer,
+					addr2.address,				// seller,
+					0, 							// token,
+					2000,
+					nodeAddress.address,
+					signedMessageOwner,
+					{value: 2000}
+				)
+			)
+				.to.be.revertedWith("Resale: Invalid withdraw request")
+		});
+
+		it ("Shouldn't purchase after 2 minutes", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			const resaleInstanceAddr3 = await (
+				await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address)
+			).connect(addr3);
+
+			const args = [
+				secondDeploymentAddress,	// erc721,
+				addr3.address,				// buyer,
+				owner.address,				// seller,
+				0, 							// token,
+				200000,						// tokenPrice
+				addr4.address				// Node address
+			]
+
+			const hash = await resaleInstance.generateResaleHash(...args);
+
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(hash));
+
+			await time.increase(120);
+
+			await expect(
+				resaleInstanceAddr3.purchaseTokenOffer(...args, signedMessageOwner, {value: 200000})
+			)
+				.to.be.revertedWith("Resale: Invalid withdraw request")
+		});
+
+		it ("Shouldn't set custom royalties if it's not owner", async () => {
+			const resaleInstance = 
+				(await ethers.getContractAt(
+					'ResaleFacet',
+					marketDiamondInstance.address
+				)).connect(addr1);
+			await expect(resaleInstance.setRoyalties(secondDeploymentAddress, [
+				{
+					recipient: addr4.address,
+					percentage: 4000
+				}, {
+					recipient: addr1.address,
+					percentage: 26000
+				}, 
+			])).to.be.revertedWith('Resale: Only the owner of a contract can set custom royalties');
+		});
+
+		it ("Should set custom royalties", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			await expect(await resaleInstance.setRoyalties(secondDeploymentAddress, [
+				{
+					recipient: addr4.address,
+					percentage: 4000
+				}, {
+					recipient: addr1.address,
+					percentage: 26000
+				}, 
+			])).not.to.be.reverted;
+		});
+
+		it ("Should purchase a token and do splits correctly", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			const addr3resaleInstance = resaleInstance.connect(addr3);
+
+			const args = [
+				secondDeploymentAddress,	// erc721,
+				addr3.address,				// buyer,
+				owner.address,				// seller,
+				0, 							// token,
+				200000,						// tokenPrice
+			]
+
+			const hash = await resaleInstance.generateResaleHash(...[...args, nodeAddress.address]);
+
+			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(hash));
+			await expect(
+				await addr3resaleInstance.purchaseTokenOffer(...[...args, nodeAddress.address], signedMessageOwner, {value: 200000})
+			)
+				.to.emit(resaleInstance, 'TokenSold')
+				.withArgs(...args)
+				.changeEtherBalances([
+					addr3,
+					nodeAddress,
+					treasuryAddress,
+					addr4,
+					addr1,
+					owner,
+				], [
+					-200000,
+					10000,
+					10000,
+					8000,
+					52000,
+					120000,
+				])
+		});
 	});
 
 	describe("Loupe Facet", () => {

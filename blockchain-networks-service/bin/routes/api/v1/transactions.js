@@ -17,7 +17,6 @@ module.exports = (context) => {
         network,
         hash,
         verificationData,
-        context.db,
       );
       res.json({ success: result !== undefined, foundEvents: result });
     } catch (e) {

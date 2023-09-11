@@ -5,6 +5,7 @@ const v2 = require('./v2.router');
 const analyticsController = require('../api/analytics/analytics.Controller');
 const creditController = require('../api/credits/credits.Controller');
 const settingsRouter = require('../api/settings/settings.Controller');
+const resalesController = require('../api/resales/resales.Controller');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -21,6 +22,7 @@ module.exports = (context) => {
   router.use('/analytics', analyticsController);
   router.use('/credits', creditController);
   router.use('/settings', settingsRouter);
+  router.use('/resales', resalesController);
 
   // Searches ->
   router.use('/search', searchController);

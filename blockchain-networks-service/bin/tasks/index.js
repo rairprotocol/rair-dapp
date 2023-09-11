@@ -7,7 +7,7 @@ const { Task, Versioning } = require('../models');
 module.exports = async (context) => {
   const db = context.mongo;
 
-  // remove all old sync and sync-contracts tasks
+  // remove any leftover tasks
   await Task.deleteMany();
   // Mark all sync task as Not Running
   await Versioning.updateMany({}, { $set: { running: false } });
@@ -16,13 +16,14 @@ module.exports = async (context) => {
   const agenda = new Agenda({
     defaultLockLifetime: 120000,
     lockLimit: 50,
-    db: { processEvery: '1 seconds', collection: 'Task' },
+    processEvery: '1 seconds',
+    db: { collection: 'Task' },
     mongo: db,
   });
 
   // Agenda listeners for starting, error and processing tasks
   agenda.on('ready', async () => {
-    log.info('Agenda > Started');
+    log.info('Starting agenda');
     await agenda.start();
 
     // cleanup old tasks
@@ -47,12 +48,14 @@ module.exports = async (context) => {
     // start sync processes
     await agenda
       .create('sync')
-      .schedule(moment().utc().add(1, 'minutes').toDate())
+      .schedule(moment().utc().toDate())
+      // .schedule(moment().utc().add(1, 'minutes').toDate())
       .save();
     log.info('Sync tasks will start in a minute!');
   });
 
   agenda.on('error', (err) => {
+    console.error(err);
     log.info('Agenda > Error: ', err);
   });
 
@@ -68,49 +71,35 @@ module.exports = async (context) => {
       Sync Diamond Marketplace Events
     */
     log.info(`Finished task: ${name}!`, data);
+    let nextFunction = '';
     switch (name) {
       case AgendaTaskEnum.SyncContracts:
-        await agenda
-          .create(AgendaTaskEnum.SyncDiamondContracts, data)
-          .schedule(moment().utc().toDate())
-          .save();
+        nextFunction = AgendaTaskEnum.SyncDiamondContracts;
         break;
       case AgendaTaskEnum.SyncDiamondContracts:
-        await agenda
-          .create(AgendaTaskEnum.SyncAll721Events, data)
-          .schedule(moment().utc().toDate())
-          .save();
+        nextFunction = AgendaTaskEnum.SyncAll721Events;
         break;
       case AgendaTaskEnum.SyncAll721Events:
-        await agenda
-          .create(AgendaTaskEnum.SyncAllDiamond721Events, data)
-          .schedule(moment().utc().toDate())
-          .save();
+        nextFunction = AgendaTaskEnum.SyncAllDiamond721Events;
         break;
       case AgendaTaskEnum.SyncAllDiamond721Events:
-        await agenda
-          .create(AgendaTaskEnum.SyncClassicMarketplaceEvents, data)
-          .schedule(moment().utc().toDate())
-          .save();
+        nextFunction = AgendaTaskEnum.SyncClassicMarketplaceEvents;
         break;
       case AgendaTaskEnum.SyncClassicMarketplaceEvents:
-        await agenda
-          .create(AgendaTaskEnum.SyncDiamondMarketplaceEvents, data)
-          .schedule(moment().utc().toDate())
-          .save();
-        break;
-      case AgendaTaskEnum.SyncDiamondMarketplaceEvents:
-        await agenda
-          .create(AgendaTaskEnum.SyncResaleMarketplaceEvents, data)
-          .schedule(moment().utc().toDate())
-          .save();
+        nextFunction = AgendaTaskEnum.SyncDiamondMarketplaceEvents;
         break;
       default:
         break;
     }
 
+    log.info(`Completed task ${name}, scheduling next task: ${nextFunction}`);
+    await agenda
+      .create(nextFunction, data)
+      .schedule(moment().utc().toDate())
+      .save();
+
     log.info(
-      `Agenda [${task.attrs.name}][${
+      `Agenda [${name}][${
         task.attrs._id
       }] > processed with data ${JSON.stringify(data)}. ${additionalInfo}`,
     );

@@ -3,37 +3,43 @@ const { MintedToken } = require('../../models');
 const { findContractFromAddress } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   from,
   to,
   tokenId,
 ) => {
-  if (from === constants.AddressZero) {
-    return;
-  }
-
   const contract = await findContractFromAddress(
-    transactionReceipt.to
-      ? transactionReceipt.to
-      : transactionReceipt.to_address,
-    chainId,
-    transactionReceipt,
+    transactionData.fromAddress,
+    transactionData.network,
+    transactionData.transactionHash,
   );
 
   if (!contract) {
     return;
   }
 
-  await MintedToken.findOneAndUpdate({
+  const filter = {
     contract: contract._id,
     uniqueIndexInContract: tokenId.toString(),
     ownerAddress: from.toLowerCase(),
-  }, {
+  };
+  const update = {
     $set: {
       ownerAddress: to.toLowerCase(),
     },
-  });
+  };
+
+  if (from === constants.AddressZero) {
+    filter.isMinted = false;
+    update.$set.isMinted = true;
+  }
+
+  await MintedToken.findOneAndUpdate(filter, update);
 };

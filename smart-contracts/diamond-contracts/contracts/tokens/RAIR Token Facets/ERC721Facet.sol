@@ -4,10 +4,8 @@ import './AppStorage.sol';
 import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 
-/// @title  This is contract to manage the ERC721 NFT facet 
-/// @notice You can use this contract to administrate ranges, transfers & minting of the tokens
+/// @title  Diamond facet for all ERC721 functions 
 /// @author Juan M. Sanchez M.
-/// @dev 	Notice that this contract is inheriting from AccessControlAppStorageEnumerable721
 contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	using Address for address;
 
@@ -42,7 +40,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	/// @param  operator 	Contains the address of the user approved for move all the tokens
 	/// @param	approved 	Boolean flag to approve or disapprove the operator
 	event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
-	
+
 	/// @notice This function allow us to check the name of the token
 	/// @return string with the name of the token
 	function name() public view returns (string memory) {

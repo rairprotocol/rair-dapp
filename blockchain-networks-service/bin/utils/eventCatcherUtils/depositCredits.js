@@ -14,10 +14,14 @@ const {
 } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   userAddress,
   tokenAddress,
   amount,
@@ -25,14 +29,14 @@ module.exports = async (
 ) => {
   let foundCredits = await UserCredit.findOne({
     userAddress: userAddress.toLowerCase(),
-    blockchain: chainId,
+    blockchain: transactionData.network,
     erc777Address: tokenAddress,
   });
 
   if (!foundCredits) {
     foundCredits = new UserCredit({
       userAddress: userAddress.toLowerCase(),
-      blockchain: chainId,
+      blockchain: transactionData.network,
       erc777Address: tokenAddress,
     });
   }
@@ -43,12 +47,12 @@ module.exports = async (
   foundCredits.amountOnChain = currentCredits.toString();
 
   if (!currentCredits.eq(foundCredits.amountOnChain.toString())) {
-    log.error(`Balance of credits for ${userAddress} in ${chainId}:${tokenAddress} doesn't match on database, have ${foundCredits.amountOnChain.toString()}, blockchain says ${totalTokensDeposited.toString()}`);
+    log.error(`Balance of credits for ${userAddress} in ${transactionData.network}:${tokenAddress} doesn't match on database, have ${foundCredits.amountOnChain.toString()}, blockchain says ${totalTokensDeposited.toString()}`);
   }
 
   const balanceChange = new UserCreditMovement({
     userAddress: userAddress.toLowerCase(),
-    blockchain: chainId,
+    blockchain: transactionData.network,
     erc777Address: tokenAddress,
     balanceChange: amount.toString(),
   });
@@ -58,5 +62,5 @@ module.exports = async (
     .save()
     .catch(handleDuplicateKey);
 
-  return [foundCredits];
+  return foundCredits;
 };

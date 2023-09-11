@@ -66,12 +66,11 @@ module.exports = {
         transactionHash: ethTransaction,
     }),
     dbResales: () => ({
-        operator: ethAddress,
-        contract: mongoId,
-        tokenId: Joi.number(),
+        tokenContract: mongoId,
+        tokenIndex: Joi.number(),
         price: Joi.number(),
-        status: Joi.number(),
-        tradeid: Joi.number(),
+        buyer: ethAddress,
+        seller: ethAddress,
     }),
     dbRoyalties: () => ({
         contract: mongoId,

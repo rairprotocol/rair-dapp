@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { BigNumber, utils } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther, formatUnits } from 'ethers/lib/utils';
 
 import { BuySellButton } from './BuySellButton';
 import SellInputButton from './SellInputButton';
@@ -40,14 +40,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   currentUser,
   handleTokenBoughtButton
 }) => {
-  const {
-    resaleInstance,
-    minterInstance,
-    diamondMarketplaceInstance,
-    currentUserAddress
-  } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
+  const { minterInstance, diamondMarketplaceInstance, currentUserAddress } =
+    useSelector<RootState, ContractsInitialType>(
+      (state) => state.contractStore
+    );
 
   const { tokenDataListTotal } = useSelector<
     RootState,
@@ -146,6 +142,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         'Now, you are the owner of this token',
         'success'
       );
+      handleTokenBoughtButton();
     }
   }, [
     contractData,
@@ -171,7 +168,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [offerData]);
 
   const getResaleData = useCallback(async () => {
-    if (!resaleInstance) {
+    if (!diamondMarketplaceInstance) {
       return;
     }
     const contractResponse = await rFetch(
@@ -186,26 +183,23 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     setResaleData(undefined);
     const resaleResponse = await rFetch(
-      `/api/v2/resales?contract=${contractData._id}&tokenId=${params.tokenId}&status=0`,
-      undefined,
-      undefined,
-      false
+      `/api/resales/open?contract=${params.contract}&blockchain=${params.blockchain}&index=${params.tokenId}`
     );
     if (!resaleResponse.success) {
       return;
     }
-    const [resaleData] = resaleResponse?.data?.doc;
+    const [resaleData] = resaleResponse?.data;
     if (!resaleData) {
       return;
     }
     const userResponse = await rFetch(
-      `/api/v2/users/${resaleData.operator.toLowerCase()}`
+      `/api/v2/users/${resaleData.seller.toLowerCase()}`
     );
     if (userResponse.success) {
-      resaleData.operator = userResponse.user.nickName;
+      resaleData.seller = userResponse.user.nickName;
     }
     setResaleData(resaleData);
-  }, [resaleInstance, params]);
+  }, [diamondMarketplaceInstance, params]);
 
   useEffect(() => {
     getResaleData();
@@ -216,23 +210,72 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [getInfoFromUser]);
 
   const resalePurchase = useCallback(async () => {
-    if (!resaleInstance) {
+    if (!diamondMarketplaceInstance || !tokenData || !params?.tokenId) {
       return;
     }
+    /*
+    const royalties = await diamondMarketplaceInstance.getRoyalties(
+      params.contract
+    );
+    if (royalties) {
+      const readableRoyalties = royalties.map((royalty) => ({
+        address: royalty.recipient,
+        percentage: formatUnits(royalty.percentage, 3)
+      }));
+      // Here is the array of royalties
+      // console.info(readableRoyalties);
+    }
+    */
     const { isConfirmed } = await reactSwal.fire({
-      title: 'Purchase token from user',
-      html: `Currently owned by: ${resaleData.operator}`,
-      icon: 'info',
+      imageUrl: tokenData[params.tokenId].metadata.image,
+      imageHeight: '25vh',
+      title: 'Purchase token',
+      html: <>Currently owned by: {resaleData.seller}</>,
       showCancelButton: true
     });
+    if (!isConfirmed || !selectedToken) {
+      return;
+    }
+    reactSwal.fire({
+      title: 'Please wait',
+      html: 'Preparing transaction',
+      icon: 'info',
+      showConfirmButton: false
+    });
+    const { success, hash } = await rFetch(
+      `/api/resales/purchase/${resaleData._id}`
+    );
+
+    /*
+      address erc721,
+      address buyer,
+      address seller,
+      uint token,
+      uint tokenPrice,
+      address nodeAddress,
+      bytes memory signature
+    */
+
     if (
-      isConfirmed &&
+      success &&
       (await web3TxHandler(
-        resaleInstance,
-        'buyResaleOffer',
-        [resaleData.tradeid, { value: resaleData.price }],
+        diamondMarketplaceInstance,
+        'purchaseTokenOffer',
+        [
+          params.contract, // address erc721,
+          currentUserAddress, // address buyer,
+          tokenData?.[selectedToken]?.ownerAddress, // address seller,
+          params.tokenId, // uint token,
+          resaleData.price, // uint tokenPrice,
+          process.env.REACT_APP_NODE_ADDRESS, // address nodeAddress,
+          hash, // bytes memory signature
+          { value: resaleData.price }
+        ],
         {
-          callback: handleTokenBoughtButton,
+          callback: () => {
+            getResaleData();
+            handleTokenBoughtButton();
+          },
           intendedBlockchain: blockchain as BlockchainType
         }
       ))
@@ -240,12 +283,17 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       reactSwal.fire('Success', 'Token purchased', 'success');
     }
   }, [
-    resaleInstance,
+    diamondMarketplaceInstance,
     reactSwal,
     resaleData,
     web3TxHandler,
     handleTokenBoughtButton,
-    blockchain
+    blockchain,
+    params,
+    currentUserAddress,
+    selectedToken,
+    tokenData,
+    getResaleData
   ]);
 
   const checkAllSteps = useCallback(() => {
@@ -288,6 +336,22 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       );
       // Token is minted
     } else if (selectedToken && tokenData?.[selectedToken]?.isMinted) {
+      if (resaleData) {
+        const price = numberTooBigThreshold.gte(resaleData.price)
+          ? '0.000+'
+          : formatEther(resaleData.price);
+        return (
+          <>
+            <BuySellButton
+              disabled={resaleData.seller === currentUserAddress}
+              isColorPurple={false}
+              handleClick={resalePurchase}
+              title={`Buy ${price} ${chainData[blockchain]?.symbol}`}
+            />
+            <small>Resale offer</small>
+          </>
+        );
+      }
       // Current user is owner of the token
       if (
         tokenData[selectedToken].ownerAddress ===
@@ -298,23 +362,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             currentUser={currentUser}
             tokenData={tokenData}
             selectedToken={selectedToken}
+            refreshResaleData={getResaleData}
           />
         );
         // User is not owner and resale data exists
-      } else if (resaleData) {
-        const price = numberTooBigThreshold.gte(resaleData.price)
-          ? '0.000+'
-          : formatEther(resaleData.price);
-        return (
-          <>
-            <BuySellButton
-              isColorPurple={false}
-              handleClick={resalePurchase}
-              title={`Buy ${price} ${chainData[blockchain]?.symbol}`}
-            />
-            <small>Resale offer</small>
-          </>
-        );
       } else {
         return (
           <div className="container-sell-button-user">
@@ -362,7 +413,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     resaleData,
     currentUser,
     resalePurchase,
-    accountData
+    accountData,
+    getResaleData
   ]);
 
   return (

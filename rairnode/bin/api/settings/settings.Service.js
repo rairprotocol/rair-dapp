@@ -1,3 +1,4 @@
+const { isAddress } = require('ethers');
 const { ServerSetting } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 
@@ -40,6 +41,24 @@ exports.setDemoUploads = async (req, res, next) => {
     });
     return res.json({
         success: true,
+    });
+  } catch (error) {
+    return next(new AppError(error));
+  }
+};
+
+exports.setNodeAddress = async (req, res, next) => {
+  try {
+    const { value } = req.body;
+    if (isAddress(value)) {
+      await ServerSetting.findOneAndUpdate({}, {
+          $set: {
+            nodeAddress: value,
+          },
+      });
+    }
+    return res.json({
+      success: true,
     });
   } catch (error) {
     return next(new AppError(error));

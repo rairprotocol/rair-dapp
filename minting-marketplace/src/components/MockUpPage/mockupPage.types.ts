@@ -122,6 +122,7 @@ export interface ISellButton {
   isInputPriceExist: boolean;
   setIsInputPriceExist: (inputPrice: boolean) => void;
   setInputSellValue: (inputSellValue: string) => void;
+  refreshResaleData: () => void;
 }
 
 export interface ISingleTokenViewProperties {
@@ -174,6 +175,7 @@ export interface ISellInputButton {
   currentUser: string | undefined;
   tokenData: { [index: string]: TTokenData } | null;
   selectedToken: string | undefined;
+  refreshResaleData: () => void;
 }
 
 export interface INftDataPageMain {

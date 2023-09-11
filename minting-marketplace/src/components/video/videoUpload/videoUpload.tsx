@@ -57,6 +57,9 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
   const [, /*collectionIndex*/ setCollectionIndex] = useState({});
   const [, /*offersIndex,*/ setOffersIndex] = useState([]);
   const [, /*networkId*/ setNetworkId] = useState('');
+  const [nodeAddress, setNodeAddress] = useState(
+    process.env.REACT_APP_NODE_ADDRESS
+  );
 
   const [categoryArray, setCategoryArray] = useState([]);
   const getCategories = useCallback(async () => {
@@ -289,7 +292,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     }, true);
   };
 
-  const setServerSetting = async (setting, value) => {
+  const setServerSetting = async (setting: string, value: boolean | string) => {
     const { success } = await rFetch(`/api/settings/${setting}`, {
       method: 'POST',
       body: JSON.stringify({
@@ -575,6 +578,19 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
         className="btn btn-stimorol"
         onClick={() => setServerSetting('demoUploadsEnabled', false)}>
         No
+      </button>
+      <br />
+      Node Address:{' '}
+      <InputField
+        customClass="w-50 rounded-rair text-center"
+        getter={nodeAddress}
+        setter={setNodeAddress}
+        placeholder="Node address"
+      />
+      <button
+        className="btn btn-royal-ice"
+        onClick={() => setServerSetting('nodeAddress', nodeAddress)}>
+        Set
       </button>
       <hr />
       <div className="new">

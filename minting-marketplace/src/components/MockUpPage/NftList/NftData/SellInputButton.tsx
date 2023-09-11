@@ -12,7 +12,8 @@ import { ISellInputButton } from '../../mockupPage.types';
 const SellInputButton: React.FC<ISellInputButton> = ({
   currentUser,
   tokenData,
-  selectedToken
+  selectedToken,
+  refreshResaleData
 }) => {
   const [inputSellValue, setInputSellValue] = useState<string>('');
   const [isInputPriceExist, setIsInputPriceExist] = useState<boolean>(false);
@@ -54,6 +55,7 @@ const SellInputButton: React.FC<ISellInputButton> = ({
         isInputPriceExist={isInputPriceExist}
         setIsInputPriceExist={setIsInputPriceExist}
         setInputSellValue={setInputSellValue}
+        refreshResaleData={refreshResaleData}
       />
     </div>
   );

@@ -11,7 +11,6 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
-// React Redux types
 import setDocumentTitle from '../../utils/setTitle';
 import { ContractType } from '../adminViews/adminView.types';
 import InputField from '../common/InputField';
@@ -20,10 +19,12 @@ const Contracts = () => {
   const dispatch = useDispatch();
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [contractArray, setContractArray] = useState<TContractsArray[]>();
+  const [diamondFilter, setDiamondFilter] = useState<Boolean>(false);
+  const [chainFilter, setChainFilter] = useState<string[]>([]);
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { primaryColor, secondaryColor } = useSelector<
+  const { primaryColor, secondaryColor, textColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -57,29 +58,80 @@ const Contracts = () => {
   return (
     <NavigatorFactory>
       {contractArray && contractArray.length > 0 && (
-        <div className="col-12 search-contracts-factory">
-          <InputField
-            getter={titleSearch}
-            setter={setTitleSearch}
-            placeholder="Search Contracts"
-            customClass="rounded-rair form-control"
-            customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: 'inherit',
-              borderColor: `var(--${secondaryColor}-40)`
-            }}
-            labelClass="text-start w-100"
-          />
-        </div>
+        <>
+          <div className="col-12 search-contracts-factory">
+            <InputField
+              getter={titleSearch}
+              setter={setTitleSearch}
+              placeholder="Contract filter"
+              customClass="rounded-rair form-control"
+              customCSS={{
+                backgroundColor: `var(--${primaryColor})`,
+                color: textColor ? textColor : 'inherit',
+                borderColor: `var(--${secondaryColor}-40)`
+              }}
+              labelClass="text-start w-100"
+            />
+          </div>
+          <div className="col-12">
+            <button
+              onClick={() => setDiamondFilter(!diamondFilter)}
+              className={`col-xs-12 col-md-6 rair-rounded btn btn-${
+                diamondFilter ? 'light' : 'outline-secondary'
+              }`}>
+              <i className="fa fa-gem" /> Only Diamonds
+            </button>
+            {Object.keys(chainData).map((chain, index) => {
+              return (
+                <button
+                  key={index}
+                  onClick={() => {
+                    const aux = [...chainFilter];
+                    if (chainFilter.includes(chain)) {
+                      aux.splice(aux.indexOf(chain), 1);
+                    } else {
+                      aux.push(chain);
+                    }
+                    setChainFilter(aux);
+                  }}
+                  className={`col-xs-12 col-md-6 rair-rounded btn btn-${
+                    chainFilter.includes(chain) ? 'light' : 'outline-secondary'
+                  }`}>
+                  <img
+                    alt={chainData[chain]?.name}
+                    src={chainData[chain]?.image}
+                    style={{ maxHeight: '1.5rem', maxWidth: '1.5rem' }}
+                    className="me-2"
+                  />
+                  <small>{chainData[chain].name}</small>
+                </button>
+              );
+            })}
+          </div>
+        </>
       )}
       {contractArray ? (
         contractArray.length > 0 ? (
           contractArray
-            .filter(
-              (item) =>
-                item.name &&
-                item.name.toLowerCase().includes(titleSearch.toLowerCase())
-            )
+            .filter((item) => {
+              if (
+                titleSearch !== '' &&
+                !item.name.toLowerCase().includes(titleSearch.toLowerCase())
+              ) {
+                return false;
+              }
+              if (diamondFilter && !item.diamond) {
+                return false;
+              }
+              if (
+                chainFilter.length &&
+                item.blockchain &&
+                !chainFilter.includes(item.blockchain)
+              ) {
+                return false;
+              }
+              return true;
+            })
             .map((item, index) => {
               return (
                 <NavLink

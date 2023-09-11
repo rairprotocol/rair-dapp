@@ -1,27 +1,25 @@
-/* eslint-disable no-continue */
-/* eslint-disable no-restricted-syntax */
 const { BigNumber } = require('ethers');
 const log = require('../utils/logger')(module);
-const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { AgendaTaskEnum } = require('../enums/agenda-task');
 const { wasteTime, getTransactionHistory, getLatestBlock } = require('../utils/logUtils');
-const { Contract, Transaction, Versioning } = require('../models');
+const { Contract, Versioning } = require('../models');
+const { processLogEvents } = require('../utils/reusableTransactionHandler');
 
 const lockLifetime = 1000 * 60 * 5;
+const taskName = AgendaTaskEnum.SyncAll721Events;
 
 module.exports = (context) => {
   // This will receive all logs emitted from a contract in a certain timeframe and process them
   // Which is cheaper than the current approach of each event for each contract
   context.agenda.define(
-    AgendaTaskEnum.SyncAll721Events,
+    taskName,
     { lockLifetime },
     async (task, done) => {
       try {
         // Log the start of the task
         await wasteTime(10000);
-        logAgendaActionStart({
-          agendaDefinition: AgendaTaskEnum.SyncAll721Events,
-        });
+        // Log the start of the task
+        log.info(`Agenda action starting: ${taskName}`);
 
         // Extract network hash and task name from the task data
         const { network } = task.attrs.data;
@@ -43,13 +41,13 @@ module.exports = (context) => {
 
         // Get last block parsed from the Versioning collection
         let version = await Versioning.findOne({
-          name: AgendaTaskEnum.SyncAll721Events,
+          name: taskName,
           network,
         });
 
         if (version === null) {
           version = await new Versioning({
-            name: AgendaTaskEnum.SyncAll721Events,
+            name: taskName,
             network,
             number: 0,
             running: false,
@@ -58,7 +56,7 @@ module.exports = (context) => {
 
         if (version.running) {
           return done({
-            reason: `A ${AgendaTaskEnum.SyncAll721Events} process for network ${network} is already running!`,
+            reason: `A ${taskName} process for network ${network} is already running!`,
           });
         }
         version.running = true;
@@ -81,13 +79,17 @@ module.exports = (context) => {
         'Transaction'       Syncs on every file
         */
 
-        // Keep track of the latest block number processed
-        const transactionArray = [];
+        let transactionArray = [];
 
+        // Keep track of the latest block number processed
         const latestBlock = await getLatestBlock(network);
 
         const insertions = {};
 
+        // The contracts don't need to be processed in order
+        // But to prevent any issues with rate limiting, it's recommended that we
+        //  process them serially
+        // eslint-disable-next-line no-restricted-syntax
         for await (const contract of contractsToQuery) {
           try {
             // To avoid rate limiting errors on Alchemy
@@ -96,6 +98,7 @@ module.exports = (context) => {
             if (contract.diamond) {
               // Ignore diamond contracts
               log.info(`[${network}] Ignoring diamonds for now`);
+              // eslint-disable-next-line no-continue
               continue;
             }
 
@@ -115,79 +118,34 @@ module.exports = (context) => {
               contract.lastSyncedBlock,
             );
 
+            // The events HAVE to be processed in order
             // eslint-disable-next-line no-restricted-syntax
             for await (const [event] of processedResult) {
-              if (!event) {
-                continue;
-              }
-              const filteredTransaction = await Transaction.findOne({
-                _id: event.transactionHash,
-                blockchainId: network,
-                processed: true,
-                caught: true,
-              });
-              if (
-                filteredTransaction &&
-                filteredTransaction.caught &&
-                filteredTransaction.toAddress.includes(contract)
-              ) {
-                log.info(
-                  `Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${contract}`,
-                );
-              } else if (event) {
-                if (event.operation) {
-                  // If the log is already on DB, update the address list
-                  if (filteredTransaction) {
-                    filteredTransaction.toAddress.push(contract);
-                    await filteredTransaction.save();
-                  } else if (
-                    !transactionArray.includes(event.transactionHash)
-                  ) {
-                    // Otherwise, push it into the insertion list
-                    transactionArray.push(event.transactionHash);
-                    // And create a DB entry right away
-
-                    await Transaction.updateOne(
-                      {
-                        _id: event.transactionHash,
-                        blockchainId: network,
-                        processed: true,
-                      },
-                      {
-                        $push: { toAddress: contract.contractAddress },
-                      },
-                      { upsert: true },
-                    );
+              const result = await processLogEvents(
+                event,
+                network,
+                contract.contractAddress,
+                transactionArray,
+              );
+              // Result
+              /*
+                transactionArray: [...processedTransactions],
+                insertions: {},
+                lastSuccessfullBlock: 0,
+              */
+              // An undefined value means there was nothing to process from that event
+              if (result) {
+                transactionArray = result.transactionArray;
+                // Keep track of the successful operations for each event
+                Object.keys(result.insertions).forEach((key) => {
+                  if (insertions[key] === undefined) {
+                    insertions[key] = 0;
                   }
-
-                  try {
-                    const documentToInsert = await event.operation(
-                      context.db,
-                      network,
-                      // Make up a transaction data, the logs don't include it
-                      {
-                        transactionHash: event.transactionHash,
-                        to: contract.contractAddress,
-                        blockNumber: event.blockNumber,
-                      },
-                      event.diamondEvent,
-                      ...event.arguments,
-                    );
-
-                    // This used to be for an optimized batch insertion, now it's just for logging
-                    if (insertions[event.eventSignature] === undefined) {
-                      insertions[event.eventSignature] = [];
-                    }
-                    insertions[event.eventSignature].push(documentToInsert);
-                  } catch (err) {
-                    console.error('An error has ocurred!', event);
-                    throw err;
-                  }
+                  insertions[key] += 1;
+                });
+                if (lastSuccessfullBlock < result.lastSuccessfullBlock) {
+                  lastSuccessfullBlock = result.lastSuccessfullBlock;
                 }
-              }
-              // Update the latest successfull block
-              if (lastSuccessfullBlock <= event.blockNumber) {
-                lastSuccessfullBlock = event.blockNumber;
               }
             }
             // Add 1 to the last successful block so the next query to Alchemy excludes it
@@ -206,19 +164,19 @@ module.exports = (context) => {
             break;
           }
         }
-        // Log the number of insertions for each event
-        for await (const sig of Object.keys(insertions)) {
-          if (insertions[sig]?.length > 0) {
+        // Log the number of logs processed
+        Object.keys(insertions).forEach((sig) => {
+          if (insertions[sig] > 0) {
             log.info(
-              `[${network}] Inserted ${insertions[sig]?.length} documents for ${sig}`,
+              `[${network}] Processed ${insertions[sig]} events of ${sig}`,
             );
           }
-        }
+        });
 
         version.running = false;
         await version.save();
 
-        log.info(`Done with ${network}, ${AgendaTaskEnum.SyncAll721Events}`);
+        log.info(`[${network}], ${taskName} complete`);
 
         return done();
       } catch (e) {

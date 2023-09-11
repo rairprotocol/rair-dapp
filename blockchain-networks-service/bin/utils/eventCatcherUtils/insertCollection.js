@@ -1,45 +1,44 @@
-/* eslint-disable consistent-return */
-
+const { Product } = require('../../models');
 const {
   handleDuplicateKey,
   findContractFromAddress,
 } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   collectionIndex,
   collectionName,
   startingToken,
   collectionLength,
 ) => {
   const contract = await findContractFromAddress(
-    transactionReceipt.to
-      ? transactionReceipt.to
-      : transactionReceipt.to_address,
-    chainId,
-    transactionReceipt,
+    transactionData.fromAddress,
+    transactionData.network,
+    transactionData.transactionHash,
   );
 
   if (!contract) {
-    return;
+    return undefined;
   }
 
-  const product = new dbModels.Product({
+  const product = new Product({
     name: collectionName,
     collectionIndexInContract: collectionIndex,
     contract: contract._id,
     copies: collectionLength,
     firstTokenIndex: startingToken,
-    transactionHash: transactionReceipt.transactionHash
-      ? transactionReceipt.transactionHash
-      : transactionReceipt.hash,
-    diamond: diamondEvent,
+    transactionHash: transactionData.transactionHash,
+    diamond: transactionData.diamondEvent,
   })
     .save()
     .catch(handleDuplicateKey);
 
-  return [product];
+  return product;
 };

@@ -10,7 +10,6 @@ const {
   diamondFactoryAbi,
   classicDeprecatedEvents,
   diamondDeprecatedEvents,
-  resaleMarketplaceEvents,
   creditHandlerEvents,
 } = require('../integrations/ethers/contracts');
 
@@ -23,19 +22,16 @@ const {
   insertOfferPool,
   insertOffer,
   insertDiamondOffer,
-  insertLock,
   insertDiamondRange,
   metadataForToken,
   metadataForProduct,
   updateOfferClassic,
   updateDiamondRange,
   metadataForContract,
-  handleResaleOffer,
-  updateResaleOffer,
-  registerCustomSplits,
   depositCredits,
   withdrawCredits,
   updateMintingOffer,
+  sellResaleOffer,
   transferredToken,
 } = require('./eventCatcherUtils');
 
@@ -57,6 +53,7 @@ const insertionMapping = {
   TokenMinted: insertTokenClassic,
   MintedToken: insertTokenDiamond,
   UpdatedMintingOffer: updateMintingOffer,
+  TokenSold: sellResaleOffer,
 
   // Classic Factory
   NewContractDeployed: insertContract,
@@ -71,14 +68,8 @@ const insertionMapping = {
   // Classic Marketplace
   AddedOffer: insertOfferPool,
   AppendedRange: insertOffer,
-  RangeLocked: insertLock,
   UpdatedOffer: updateOfferClassic,
   // SoldOut: null,
-
-  // Resale Marketplace
-  OfferStatusChange: handleResaleOffer,
-  UpdatedOfferPrice: updateResaleOffer,
-  CustomRoyaltiesSet: registerCustomSplits,
 
   // Credit Handler
   ReceivedTokens: depositCredits,
@@ -140,7 +131,6 @@ const masterMapping = {
   ...getContractEvents(classicDeprecatedEvents, false),
   ...getContractEvents(diamondDeprecatedEvents, true),
 
-  ...getContractEvents(resaleMarketplaceEvents, false),
   ...getContractEvents(creditHandlerEvents, true),
 };
 

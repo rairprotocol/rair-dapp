@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-
 const {
   BigNumber,
 } = require('ethers');
@@ -12,25 +10,29 @@ const {
 } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   erc721Address,
   rangeIndex,
   tokenIndex,
-  buyer,
+  // buyer, // We don't track ownership from this event anymore
 ) => {
   // Check if the contract is restricted
   const restrictedContract = await SyncRestriction.findOne({
-    blockchain: chainId,
+    blockchain: transactionData.network,
     contractAddress: erc721Address.toLowerCase(),
     tokens: false,
   }).distinct('contractAddress');
 
   if (restrictedContract?.length > 0) {
     log.error(
-      `[${chainId}] Minted token from ${erc721Address} won't be stored!`,
+      `[${transactionData.network}] Minted token from ${erc721Address} won't be stored!`,
     );
     return undefined;
   }
@@ -38,8 +40,8 @@ module.exports = async (
   // Find the contract data in the DB
   const contract = await findContractFromAddress(
     erc721Address.toLowerCase(),
-    chainId,
-    transactionReceipt,
+    transactionData.network,
+    transactionData.transactionHash,
   );
 
   if (!contract) {
@@ -62,23 +64,11 @@ module.exports = async (
   });
 
   foundToken = await handleMetadataForToken(
-    dbModels,
     contract._id,
     offer.product,
     tokenIndex,
     foundToken,
   );
-
-  // Set all the properties of the minted token
-  foundToken.token = tokenIndex;
-  foundToken.uniqueIndexInContract = tokenIndex.add(product.firstTokenIndex);
-  foundToken.ownerAddress = buyer;
-  foundToken.offer = rangeIndex;
-  foundToken.contract = contract._id;
-  foundToken.isMinted = true;
-
-  // Save the token data
-  await foundToken?.save().catch(handleDuplicateKey);
 
   // Decrease the amount of copies in the offer
   if (offer) {

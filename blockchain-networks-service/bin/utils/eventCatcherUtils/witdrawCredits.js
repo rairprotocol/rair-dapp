@@ -13,17 +13,21 @@ const {
 } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   user,
   token,
   amount,
 ) => {
   const foundCredits = await UserCredit.findOne({
     userAddress: user.toLowerCase(),
-    blockchain: chainId,
+    blockchain: transactionData.network,
     erc777Address: token,
   });
 

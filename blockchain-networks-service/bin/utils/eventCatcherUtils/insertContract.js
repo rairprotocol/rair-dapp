@@ -1,27 +1,26 @@
-/* eslint-disable consistent-return */
-
+const { Contract } = require('../../models');
 const { handleDuplicateKey } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   deployerAddress,
   deploymentIndex,
   deploymentAddress,
   deploymentName = 'UNKNOWN',
 ) => {
-  const transactionHash = transactionReceipt.transactionHash
-    ? transactionReceipt.transactionHash
-    : transactionReceipt.hash;
-
-  const contract = new dbModels.Contract({
-    diamond: diamondEvent,
-    transactionHash,
+  const contract = new Contract({
+    diamond: transactionData.diamondEvent,
+    transactionHash: transactionData.transactionHash,
     title: deploymentName,
     user: deployerAddress,
-    blockchain: chainId,
+    blockchain: transactionData.network,
     contractAddress: deploymentAddress.toLowerCase(),
     lastSyncedBlock: 0,
     external: false,

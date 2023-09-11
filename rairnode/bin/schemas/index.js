@@ -31,6 +31,7 @@ const getFilesByProduct = require('./getFilesByProduct');
 const importContract = require('./importContract');
 const { analyticsParams, analyticsQuery } = require('./analytics');
 const { tokenCreditQuery, tokenCreditWithdraw } = require('./credits');
+const { resaleQuery, resaleUpdate, resaleCreate } = require('./resales');
 // V2 validations
 const {
   dbContracts,
@@ -162,4 +163,8 @@ module.exports = {
   tokenCreditQuery,
   tokenCreditWithdraw,
 
+  // V2 Resales
+  resaleQuery,
+  resaleUpdate,
+  resaleCreate,
 };

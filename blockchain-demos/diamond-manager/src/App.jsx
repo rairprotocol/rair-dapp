@@ -25,7 +25,8 @@ const diamondContracts = {
 		// Import order is important, don't rearrange!
 		facetContracts: [
 			'MintingOffersFacet',
-			'FeesFacet'
+			'FeesFacet',
+			'ResaleFacet'
 		]
 	},
 	Credit: {

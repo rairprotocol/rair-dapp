@@ -1,6 +1,11 @@
 const express = require('express');
 const { requireUserSession, isAdmin } = require('../../middleware');
-const { setMintedTokenResults, createSettingsIfTheyDontExist, setDemoUploads } = require('./settings.Service');
+const {
+  setMintedTokenResults,
+  createSettingsIfTheyDontExist,
+  setDemoUploads,
+  setNodeAddress,
+} = require('./settings.Service');
 
 const router = express.Router();
 
@@ -18,6 +23,14 @@ router.post(
   isAdmin,
   createSettingsIfTheyDontExist,
   setDemoUploads,
+);
+
+router.post(
+  '/nodeAddress',
+  requireUserSession,
+  isAdmin,
+  createSettingsIfTheyDontExist,
+  setNodeAddress,
 );
 
 module.exports = router;

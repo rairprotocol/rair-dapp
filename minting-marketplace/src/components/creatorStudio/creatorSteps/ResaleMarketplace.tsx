@@ -24,9 +24,10 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const { resaleInstance } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { diamondMarketplaceInstance } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
@@ -35,7 +36,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   const [approving, setApproving] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
   const [resaleAddress, setResaleAddress] = useState<string>(
-    resaleInstance?.address || ''
+    diamondMarketplaceInstance?.address || ''
   );
   const [nodeFee, setNodeFee] = useState<BigNumber>(BigNumber.from(0));
   const [treasuryFee, setTreasuryFee] = useState<BigNumber>(BigNumber.from(0));
@@ -48,17 +49,20 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   const [sendingData, setSendingData] = useState<boolean>(false);
 
   const getContractData = useCallback(async () => {
-    if (!resaleInstance) {
+    if (!diamondMarketplaceInstance) {
       return;
     }
-    setNodeFee(await resaleInstance.nodeFee());
-    setTreasuryFee(await resaleInstance.treasuryFee());
-    const feeDecimals = await resaleInstance.feeDecimals();
-    if (feeDecimals !== 0) {
-      setMinterDecimals(feeDecimals);
-      setPrecisionFactor(BigNumber.from(10).pow(feeDecimals));
+    const nodeFeeData = await diamondMarketplaceInstance.getNodeFee();
+    if (nodeFeeData) {
+      setNodeFee(nodeFeeData.nodeFee);
+      setMinterDecimals(nodeFeeData.decimals);
+      setPrecisionFactor(BigNumber.from(10).pow(nodeFeeData.decimals));
     }
-  }, [resaleInstance]);
+    const treasuryFeeData = await diamondMarketplaceInstance.getTreasuryFee();
+    if (treasuryFeeData) {
+      setTreasuryFee(treasuryFeeData.treasuryFee);
+    }
+  }, [diamondMarketplaceInstance]);
 
   useEffect(() => {
     getContractData();
@@ -86,7 +90,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   }, [setStepNumber, stepNumber]);
 
   const setCustomFees = async () => {
-    if (!resaleInstance) {
+    if (!diamondMarketplaceInstance) {
       return;
     }
     setSendingData(true);
@@ -98,10 +102,12 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
         showConfirmButton: false
       });
       if (
-        await web3TxHandler(resaleInstance, 'setCustomRoyalties', [
+        await web3TxHandler(diamondMarketplaceInstance, 'setRoyalties', [
           contractData?.contractAddress,
-          customPayments.map((item) => item.recipient),
-          customPayments.map((item) => item.percentage)
+          customPayments.map((item) => ({
+            recipient: item.recipient,
+            percentage: item.percentage
+          }))
         ])
       ) {
         reactSwal.fire({
@@ -273,7 +279,9 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
               label: 'Set custom fees',
               action: setCustomFees,
               disabled:
-                sendingData || !validatePaymentData() || !resaleInstance,
+                sendingData ||
+                !validatePaymentData() ||
+                !diamondMarketplaceInstance,
               visible: !!customPayments.length
             },
             {

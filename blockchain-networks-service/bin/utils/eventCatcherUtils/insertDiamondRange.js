@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-
 const { Offer } = require('../../models');
 const {
   handleDuplicateKey,
@@ -9,10 +7,14 @@ const {
 } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   productIndex,
   start,
   end,
@@ -23,14 +25,12 @@ module.exports = async (
   rangeIndex,
 ) => {
   const contract = await findContractFromAddress(
-    transactionReceipt.to
-      ? transactionReceipt.to
-      : transactionReceipt.to_address,
-    chainId,
-    transactionReceipt,
+    transactionData.fromAddress,
+    transactionData.network,
+    transactionData.transactionHash,
   );
   if (!contract) {
-    return;
+    return undefined;
   }
   const searchParam = {
     diamondRangeIndex: rangeIndex,
@@ -53,9 +53,7 @@ module.exports = async (
       offerName: name,
       diamond: true,
       diamondRangeIndex: rangeIndex,
-      transactionHash: transactionReceipt.transactionHash
-        ? transactionReceipt.transactionHash
-        : transactionReceipt.hash,
+      transactionHash: transactionData.transactionHash,
     });
     await offer.save().catch(handleDuplicateKey);
 

@@ -1,15 +1,18 @@
-/* eslint-disable consistent-return */
-
+const { Offer, MintedToken, Product } = require('../../models');
 const {
   findContractFromAddress,
   updateMetadataForTokens,
 } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   productId,
   newURI,
   // eslint-disable-next-line no-unused-vars
@@ -19,21 +22,14 @@ module.exports = async (
   // Assume events without this field are old and don't have extension
 ) => {
   const contract = await findContractFromAddress(
-    transactionReceipt.to
-      ? transactionReceipt.to
-      : transactionReceipt.to_address,
-    chainId,
-    transactionReceipt,
+    transactionData.fromAddress,
+    transactionData.network,
+    transactionData.transactionHash,
   );
   if (!contract) {
-    // MB:TODO: can remove in case findContractFromAddress
-    // will throw error insted of returning log to console
-    return;
-    // throw new Error(
-    //   'Contract not fount, terminated metadataForProduct Update...',
-    // );
+    return undefined;
   }
-  const product = await dbModels.Product.findOneAndUpdate(
+  const product = await Product.findOneAndUpdate(
     {
       contract: contract._id,
       collectionIndexInContract: productId,
@@ -44,11 +40,11 @@ module.exports = async (
   // /|\ this is secure as cannot create new document,
   // updates only one field and do not trigger anything
   // MB:CHECK: no offerpools?
-  const foundOffers = await dbModels.Offer.find({
+  const foundOffers = await Offer.find({
     contract: contract._id,
     product: productId,
   }).distinct('offerIndex');
-  const tokens = await dbModels.MintedToken.find({
+  const tokens = await MintedToken.find({
     contract: contract._id,
     offerIndex: { $in: foundOffers },
     metadataURI: 'none',

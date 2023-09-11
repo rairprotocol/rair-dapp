@@ -7,17 +7,14 @@ const insertTokenDiamond = require('./insertTokenDiamond');
 const insertOfferPool = require('./insertOfferPool');
 const insertOffer = require('./insertOffer');
 const insertDiamondOffer = require('./insertDiamondOffer');
-const insertLock = require('./insertLock');
 const insertDiamondRange = require('./insertDiamondRange');
 const metadataForToken = require('./metadataForToken');
 const metadataForProduct = require('./metadataForProduct');
 const metadataForContract = require('./metadataForContract');
-const handleResaleOffer = require('./handleResaleOffer');
-const updateResaleOffer = require('./updateResaleOffer');
-const registerCustomSplits = require('./registerCustomSplits');
 const depositCredits = require('./depositCredits');
 const withdrawCredits = require('./witdrawCredits');
 const updateMintingOffer = require('./updateMintingOffer');
+const sellResaleOffer = require('./sellResaleOffer');
 const transferredToken = require('./transferredToken');
 
 module.exports = {
@@ -30,16 +27,13 @@ module.exports = {
   insertOfferPool,
   insertOffer,
   insertDiamondOffer,
-  insertLock,
   insertDiamondRange,
   metadataForToken,
   metadataForProduct,
   metadataForContract,
-  handleResaleOffer,
-  updateResaleOffer,
-  registerCustomSplits,
   depositCredits,
   withdrawCredits,
   updateMintingOffer,
+  sellResaleOffer,
   transferredToken,
 };

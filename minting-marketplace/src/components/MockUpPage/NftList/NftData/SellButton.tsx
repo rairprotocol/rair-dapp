@@ -16,7 +16,7 @@ import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import chainData from '../../../../utils/blockchainData';
-import { blockchain } from '../../../../utils/infoSplashData/markKohler';
+import { rFetch } from '../../../../utils/rFetch';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISellButton } from '../../mockupPage.types';
@@ -28,26 +28,28 @@ const SellButton: React.FC<ISellButton> = ({
   sellingPrice,
   isInputPriceExist,
   setIsInputPriceExist,
-  setInputSellValue
+  refreshResaleData
+  // setInputSellValue
 }) => {
-  const { resaleInstance, contractCreator, currentUserAddress } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { contractCreator, currentUserAddress, diamondMarketplaceInstance } =
+    useSelector<RootState, ContractsInitialType>(
+      (store) => store.contractStore
+    );
 
-  const { contract, tokenId } = useParams();
+  const { blockchain, contract, tokenId } = useParams();
   const [accountData, setAccountData] = useState<UserType | null>(null);
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain } = useWeb3Tx();
 
   const handleClickSellButton = useCallback(async () => {
     if (
-      !resaleInstance ||
       !contractCreator ||
       !sellingPrice ||
       !blockchain ||
-      !chainData[blockchain]
+      !chainData[blockchain] ||
+      !correctBlockchain(blockchain as BlockchainType) ||
+      !diamondMarketplaceInstance
     ) {
       return;
     }
@@ -63,7 +65,7 @@ const SellButton: React.FC<ISellButton> = ({
     });
     const isApprovedForAll = await web3TxHandler(instance, 'isApprovedForAll', [
       currentUserAddress,
-      resaleInstance.address
+      diamondMarketplaceInstance.address
     ]);
     if (!isApprovedForAll) {
       reactSwal.fire({
@@ -74,7 +76,7 @@ const SellButton: React.FC<ISellButton> = ({
       });
       if (
         await web3TxHandler(instance, 'setApprovalForAll', [
-          resaleInstance.address,
+          diamondMarketplaceInstance.address,
           true
         ])
       ) {
@@ -91,33 +93,39 @@ const SellButton: React.FC<ISellButton> = ({
       icon: 'info',
       showConfirmButton: false
     });
-    if (
-      await web3TxHandler(resaleInstance, 'createResaleOffer', [
-        tokenId,
-        parseEther(sellingPrice),
+    const response = await rFetch(`/api/resales/create`, {
+      method: 'POST',
+      body: JSON.stringify({
         contract,
-        process.env.REACT_APP_NODE_ADDRESS
-      ])
-    ) {
-      reactSwal.fire(
-        'Success',
-        'Your NFT can now be purchased by other users',
-        'success'
-      );
-      setInputSellValue('');
-      setIsInputPriceExist(false);
+        blockchain,
+        index: tokenId,
+        price: parseEther(sellingPrice).toString()
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    });
+    if (response.success) {
+      reactSwal.fire({
+        title: 'Success',
+        html: `Users will be able to purchase your NFT on the marketplace`,
+        icon: 'success'
+      });
+      refreshResaleData();
     }
   }, [
+    blockchain,
     contract,
     contractCreator,
+    correctBlockchain,
     currentUserAddress,
+    diamondMarketplaceInstance,
     reactSwal,
-    resaleInstance,
     sellingPrice,
-    setInputSellValue,
-    setIsInputPriceExist,
     tokenId,
-    web3TxHandler
+    web3TxHandler,
+    refreshResaleData
   ]);
 
   const openInputField = useCallback(() => {

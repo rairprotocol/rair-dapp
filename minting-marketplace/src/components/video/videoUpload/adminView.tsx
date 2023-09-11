@@ -99,10 +99,12 @@ const AdminView = ({
     <div className="hidden-block-wrapper">
       <div className="hidden-contracts-table">
         <table>
-          <tr>
-            <th className="hidden-table-col-one">Hidden</th>
-            <th className="hidden-table-col-two">Show</th>
-          </tr>
+          <thead>
+            <tr>
+              <th className="hidden-table-col-one">Hidden</th>
+              <th className="hidden-table-col-two">Shown</th>
+            </tr>
+          </thead>
           {hiddenContracts &&
             hiddenContracts.map((o) => (
               <tr key={v1()}>

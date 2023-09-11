@@ -6,10 +6,14 @@ const {
 const { Offer } = require('../../models');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   rangeIndex,
   name,
   price,
@@ -17,11 +21,9 @@ module.exports = async (
   lockedTokens,
 ) => {
   const contract = await findContractFromAddress(
-    transactionReceipt.to
-      ? transactionReceipt.to
-      : transactionReceipt.to_address,
-    chainId,
-    transactionReceipt,
+    transactionData.fromAddress,
+    transactionData.network,
+    transactionData.transactionHash,
   );
 
   if (!contract) {
@@ -30,7 +32,7 @@ module.exports = async (
 
   const foundOffer = await Offer.findOne({
     contract: contract._id,
-    diamond: diamondEvent,
+    diamond: transactionData.diamondEvent,
     offerPool: undefined,
     diamondRangeIndex: rangeIndex,
   });

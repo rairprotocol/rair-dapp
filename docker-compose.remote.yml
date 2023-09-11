@@ -56,6 +56,10 @@ services:
       ORE_ID_APPID: ${ore_id_appid}
       ORE_ID_APIKEY: ${ore_id_apikey}
       APP_NAME: ${app_name}
+      GOERLI_DIAMOND_MARKETPLACE_ADDRESS: ${goerli_diamond_marketplace_address}
+      MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mumbai_diamond_marketplace_address}
+      MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mainnet_diamond_marketplace_address}
+      ASTAR_DIAMOND_MARKETPLACE_ADDRESS: ${astar_diamond_marketplace_address}
     ports:
       - 3000:3000
       - 5000:5000

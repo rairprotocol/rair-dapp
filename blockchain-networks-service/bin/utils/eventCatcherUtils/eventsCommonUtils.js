@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 
 const fetch = require('node-fetch');
@@ -36,7 +35,6 @@ const handleDuplicateKey = (err) => {
 };
 
 const handleMetadataForToken = async (
-  dbModels,
   contractId,
   collectionIndex,
   tokenIndex,
@@ -106,18 +104,17 @@ const handleMetadataForToken = async (
 const findContractFromAddress = async (
   address,
   network,
-  transactionReceipt,
+  transactionHash,
 ) => {
   const contract = await Contract.findOne({
     contractAddress: address.toLowerCase(),
     blockchain: network,
   });
   if (contract === null) {
-    // MB:TODO: throw error?
     log.error(
-      `[${network}] Error parsing tx ${transactionReceipt.transactionHash}, couldn't find a contract entry for address ${address}`,
+      `[${network}] Error parsing tx ${transactionHash}, couldn't find a contract entry for address ${address}`,
     );
-    return;
+    return undefined;
   }
   if (contract.blockSync) {
     log.info(

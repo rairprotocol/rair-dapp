@@ -1,5 +1,4 @@
-/* eslint-disable consistent-return */
-
+const { MintedToken } = require('../../models');
 const {
   handleDuplicateKey,
   findContractFromAddress,
@@ -7,23 +6,25 @@ const {
 } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   tokenId,
   newURI,
 ) => {
   const contract = await findContractFromAddress(
-    transactionReceipt.to
-      ? transactionReceipt.to
-      : transactionReceipt.to_address,
-    chainId,
-    transactionReceipt,
+    transactionData.fromAddress,
+    transactionData.network,
+    transactionData.transactionHash,
   );
 
   if (!contract) {
-    return;
+    return undefined;
   }
 
   let fetchedMetadata = {};
@@ -35,7 +36,7 @@ module.exports = async (
       log.error(`Error fetching '${newURI}': ${err}`);
     }
   }
-  const foundToken = await dbModels.MintedToken.findOne({
+  const foundToken = await MintedToken.findOne({
     contract: contract._id,
     uniqueIndexInContract: tokenId.toString(),
   });

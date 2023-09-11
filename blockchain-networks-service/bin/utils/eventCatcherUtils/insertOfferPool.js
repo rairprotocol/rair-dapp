@@ -1,15 +1,18 @@
-/* eslint-disable consistent-return */
-
+const { OfferPool } = require('../../models');
 const {
   handleDuplicateKey,
   findContractFromAddress,
 } = require('./eventsCommonUtils');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   contractAddress,
   productIndex,
   rangesCreated,
@@ -17,28 +20,24 @@ module.exports = async (
 ) => {
   const contract = await findContractFromAddress(
     contractAddress,
-    chainId,
-    transactionReceipt,
+    transactionData.network,
+    transactionData.transactionHash,
   );
 
   if (!contract) {
-    return;
+    return undefined;
   }
 
-  const offerPool = new dbModels.OfferPool({
+  const offerPool = new OfferPool({
     marketplaceCatalogIndex: catalogIndex,
     contract: contract._id,
     product: productIndex,
     rangeNumber: rangesCreated,
-    minterAddress: transactionReceipt.to
-      ? transactionReceipt.to
-      : transactionReceipt.to_address,
-    transactionHash: transactionReceipt.transactionHash
-      ? transactionReceipt.transactionHash
-      : transactionReceipt.hash,
+    minterAddress: transactionData.fromAddress,
+    transactionHash: transactionData.transactionHash,
   })
     .save()
     .catch(handleDuplicateKey);
 
-  return [offerPool];
+  return offerPool;
 };

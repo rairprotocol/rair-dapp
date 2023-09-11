@@ -11,7 +11,6 @@ const getTransaction = async (
   network,
   transactionHash,
   userData,
-  dbModels,
 ) => {
   try {
     // Validate that the processed transaction doesn't exist already in the database
@@ -98,7 +97,7 @@ const getTransaction = async (
         }
         // Loop over the topics of the event
         event.topics.forEach((item) => {
-          // Using the topic, identify the event
+          // Using the topic, identify the event)
           const found = masterMapping[item];
           if (found) {
             if (!Object.keys(insertionMapping).includes(found.abi[0].name)) {
@@ -122,10 +121,12 @@ const getTransaction = async (
                 eventData: found,
                 operation: found.operation,
                 params: [
-                  dbModels,
-                  network,
-                  transactionReceipt,
-                  found.diamondEvent,
+                  {
+                    network,
+                    transactionHash: event.transactionHash,
+                    fromAddress: event.address,
+                    diamondEvent: found.diamondEvent,
+                  },
                   ...decodedData,
                 ],
               });

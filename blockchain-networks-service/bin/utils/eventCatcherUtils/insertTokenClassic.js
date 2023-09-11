@@ -1,5 +1,4 @@
-/* eslint-disable consistent-return */
-
+const { MintedToken, Offer, Product, OfferPool, SyncRestriction } = require('../../models');
 const {
   handleDuplicateKey,
   findContractFromAddress,
@@ -9,25 +8,26 @@ const {
 const insertTokenDiamond = require('./insertTokenDiamond');
 
 module.exports = async (
-  dbModels,
-  chainId,
-  transactionReceipt,
-  diamondEvent,
+  transactionData,
+  // Contains
+  /*
+    network,
+    transactionHash,
+    fromAddress,
+    diamondEvent,
+  */
   ownerAddress,
   contractAddress,
   catalogIndex,
   rangeIndex,
   tokenIndex,
 ) => {
-  if (diamondEvent) {
+  if (transactionData.diamondEvent) {
     // This is a special case of a token minted before the events were renamed
     // The data will be sent to the diamond version of the tokenMinted handler
     // Because even though the names were the same, the signature is different
     const insertResult = await insertTokenDiamond(
-      dbModels,
-      chainId,
-      transactionReceipt,
-      diamondEvent,
+      transactionData,
       // These 4 events are not really what they're called
       ownerAddress, // Argument 0 of the real event is erc721Address
       contractAddress, // Argument 2 of the real event is rangeIndex
@@ -37,8 +37,8 @@ module.exports = async (
     return insertResult;
   }
 
-  const forbiddenContract = await dbModels.SyncRestriction.findOne({
-    blockchain: chainId,
+  const forbiddenContract = await SyncRestriction.findOne({
+    blockchain: transactionData.network,
     contractAddress: contractAddress.toLowerCase(),
     tokens: false,
   }).distinct('contractAddress');
@@ -50,35 +50,35 @@ module.exports = async (
 
   const contract = await findContractFromAddress(
     contractAddress.toLowerCase(),
-    chainId,
-    transactionReceipt,
+    transactionData.network,
+    transactionData.transactionHash,
   );
 
   if (!contract) {
-    return;
+    return undefined;
   }
 
-  const offerPool = await dbModels.OfferPool.findOne({
+  const offerPool = await OfferPool.findOne({
     contract: contract._id,
     marketplaceCatalogIndex: catalogIndex,
   });
 
   if (offerPool === null) {
     log.error("Couldn't find offer pool");
-    return [undefined];
+    return undefined;
   }
 
-  const product = await dbModels.Product.findOne({
+  const product = await Product.findOne({
     contract: contract._id,
     collectionIndexInContract: offerPool.product,
   });
 
   if (!product) {
     log.error(`Couldn't find product for ${contractAddress}`);
-    return [undefined];
+    return undefined;
   }
 
-  const offers = await dbModels.Offer.find({
+  const offers = await Offer.find({
     contract: contract._id,
     offerPool: offerPool.marketplaceCatalogIndex,
   });
@@ -89,21 +89,20 @@ module.exports = async (
 
   if (!foundOffer) {
     log.error("Couldn't find offer!");
-    return [undefined];
+    return undefined;
   }
 
-  let foundToken = await dbModels.MintedToken.findOne({
+  let foundToken = await MintedToken.findOne({
     contract: contract._id,
     offerPool: offerPool.marketplaceCatalogIndex,
     token: tokenIndex,
   });
 
   if (foundToken === null) {
-    foundToken = new dbModels.MintedToken({});
+    foundToken = new MintedToken({});
   }
 
   foundToken = await handleMetadataForToken(
-    dbModels,
     contract._id,
     offerPool.product,
     tokenIndex,
@@ -120,12 +119,12 @@ module.exports = async (
 
   await foundToken.save().catch(handleDuplicateKey);
 
-  const totalSoldTokensOffer = (await dbModels.MintedToken.find({
+  const totalSoldTokensOffer = (await MintedToken.find({
     contract: contract._id,
     offer: foundOffer.offerIndex,
     isMinted: true,
   })).length;
-  const totalSoldTokensProduct = (await dbModels.MintedToken.find({
+  const totalSoldTokensProduct = (await MintedToken.find({
     contract: contract._id,
     product: product.collectionIndexInContract,
     isMinted: true,
