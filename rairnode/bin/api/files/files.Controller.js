@@ -43,11 +43,8 @@ router.get(
     getFilesByCategory,
 );
 router.get(
-    '/:token',
-    validation(['filesForTokenId'], 'params'),
-    getSpecificContracts,
-    getOfferIndexesByContractAndProduct,
-    getOfferPoolByContractAndProduct,
+    '/forToken/:id',
+    validation(['dbId'], 'params'),
     getFilesForToken,
 );
 

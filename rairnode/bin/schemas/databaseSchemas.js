@@ -91,5 +91,6 @@ module.exports = {
         category: mongoId,
         demo: Joi.boolean(),
         ageRestricted: Joi.boolean(),
+        hidden: Joi.boolean(),
     }),
 };

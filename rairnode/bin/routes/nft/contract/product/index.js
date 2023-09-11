@@ -281,6 +281,7 @@ module.exports = (context) => {
             }, {
               'unlockData.offers.product': product,
             }],
+            hidden: { $ne: true },
           },
         }, {
           $project: {

@@ -23,7 +23,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
     (store) => store.colorStore
   );
 
-  const { address, collectionIndex, blockchain } = useParams();
+  const { address, collectionIndex } = useParams();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -77,43 +77,17 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   const getMediaList = async () => {
     if (currentUserAddress !== undefined) {
       setLoading(true);
-      if (contractData?.external) {
-        try {
-          const { success, files } = await rFetch(
-            `/api/nft/network/${blockchain}/${address}/${collectionIndex}/files`
-          );
-          if (success && contractData) {
-            const asArray = Object.entries(files);
-
-            const filtered: any = asArray;
-            // .filter(
-            //   ([key, value]: any) =>
-            //     value?.contract === contractData?.product.contract &&
-            //     value?.product === collectionIndex
-            // );
-
-            setMediaUploadedList(Object.fromEntries(filtered));
-            setLoading(false);
-          }
-        } catch (e) {
-          setLoading(false);
-        }
-      } else {
-        const { success, files, error } = await rFetch(
-          `/api/nft/network/${blockchain}/${address}/${collectionIndex}/files`
+      try {
+        const { success, data } = await rFetch(
+          `/api/v2/files/forToken/${contractData?.nfts?.tokens[0]._id}`
         );
-
         if (success && contractData) {
-          const asArray = Object.entries(files);
-
-          setMediaUploadedList(Object.fromEntries(asArray));
-          setLoading(false);
+          setMediaUploadedList(data.map((unlock) => unlock.file));
         }
-
-        if (error) {
-          setLoading(false);
-        }
+      } catch (e) {
+        setLoading(false);
       }
+      setLoading(false);
     }
   };
 

@@ -235,6 +235,7 @@ module.exports = () => {
           }, {
             demo: true,
           }],
+          hidden: { $ne: true },
         };
 
         if (category.length) {

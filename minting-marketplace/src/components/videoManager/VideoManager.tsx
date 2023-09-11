@@ -119,6 +119,12 @@ const VideoManager = () => {
     });
   }, [updateFile, selectedFile]);
 
+  const updateHiddenStatus = useCallback(async () => {
+    await updateFile({
+      hidden: !selectedFile.hidden
+    });
+  }, [updateFile, selectedFile]);
+
   const deleteUnlock = useCallback(
     async (offerId) => {
       await rFetch(`/api/v2/files/${selectedFile._id}/unlocks`, {
@@ -199,6 +205,11 @@ const VideoManager = () => {
                     {selectedFile.ageRestricted
                       ? 'Age Restricted'
                       : 'NOT Age Restricted'}
+                  </button>
+                  <button
+                    onClick={updateHiddenStatus}
+                    className="btn btn-royal-ice">
+                    {selectedFile.hidden ? 'Hidden' : 'Visible'}
                   </button>
                   <br />
                   <small>{selectedFile.duration}</small>

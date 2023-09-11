@@ -6,6 +6,7 @@ const File = new Schema(
     _id: { type: String, required: true },
     uploader: { type: String },
     // Metadata
+    hidden: { type: Boolean, default: false },
     ageRestricted: { type: Boolean, default: false },
     title: { type: String, required: true, trim: true },
     description: { type: String },
