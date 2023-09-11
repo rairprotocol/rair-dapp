@@ -69,6 +69,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
+  const [tokenFullData, setTokenFullData] = useState<any>(undefined);
   const dispatch = useDispatch();
 
   const getAllProduct = useCallback(
@@ -156,6 +157,23 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const handlePlayerClick = () => {
     setOpenVideoPlayer(true);
   };
+
+  const fetchTokenFullData = useCallback(async () => {
+    const { data } = await axios.get<TNftItemResponse>(
+      `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=1`
+    );
+
+    if (data.success) {
+      const response = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=${data.result.totalCount}`
+      );
+      setTokenFullData(response.data.result.tokens);
+    }
+  }, [blockchain, contract, product, setTokenFullData]);
+
+  useEffect(() => {
+    fetchTokenFullData();
+  }, [fetchTokenFullData]);
 
   useEffect(() => {
     checkSizeImage();
@@ -346,10 +364,10 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               )}
             </div>
           </div>
-          {tokenData && (
+          {tokenFullData && (
             <SerialNumberBuySell
               primaryColor={primaryColor}
-              tokenData={tokenData}
+              tokenData={tokenFullData}
               handleClickToken={handleClickToken}
               setSelectedToken={setSelectedToken}
               totalCount={totalCount}

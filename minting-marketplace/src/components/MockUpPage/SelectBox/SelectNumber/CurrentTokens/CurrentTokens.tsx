@@ -42,7 +42,9 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
             }`,
             border: `${primaryColor === 'rhyno' ? '1px solid #D37AD6' : 'none'}`
           }}
-          className="select-number-popup">
+          className={`select-number-popup ${
+            process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops' : ''
+          }`}>
           <div className="select-number-title">
             <div
               className="backClose-current-tokens backClose-current-tokens-back-sign"
