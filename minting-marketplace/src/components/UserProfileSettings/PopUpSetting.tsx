@@ -7,11 +7,13 @@ import { utils } from 'ethers';
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../ducks/users/users.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 
+import AikonWidget from './AikonWidget/AikonWidget';
 import EditMode from './EditMode/EditMode';
 import defaultPictures from './images/defaultUserPictures.png';
 import {
@@ -54,6 +56,10 @@ const PopUpSettings = ({
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+
+  const { loginType } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const onChangeEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
@@ -155,7 +161,7 @@ const PopUpSettings = ({
           className={`profile-buy-button ${
             primaryColor === 'rhyno' ? 'rhyno' : ''
           }`}>
-          <i className="fas fa-wallet"></i>
+          {loginType === 'oreid' ? <AikonWidget /> : '|'}
         </div>
         <div
           className={`profile-user-balance ${
@@ -306,6 +312,7 @@ const PopUpSettings = ({
                       <SvgFactoryIcon primaryColor={primaryColor} /> Factory
                     </li>
                   )}
+                {/* {loginType === 'oreid' && <AikonWidget />} */}
                 <li
                   onClick={logoutUser}
                   style={{

@@ -23,7 +23,7 @@ import { GlobalModalStateProvider } from './providers/ModalProvider/ModalProvide
 import './index.css';
 
 const oreId = new OreId({
-  appId: 't_00bc5d5b1bde4012af5207c2058e48db',
+  appId: 'p_cb4434e5eb4e42e9862cabd0b305dbd2',
   plugins: { popup: WebPopup() }
 });
 oreId.init();

@@ -2,9 +2,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// React Redux types
 import PopUpSettings from './PopUpSetting';
 
+// React Redux types
 import { setColorScheme } from '../../ducks/colors/actions';
 import { getUserStart } from '../../ducks/users/actions';
 import { SunIcon } from '../../images';
