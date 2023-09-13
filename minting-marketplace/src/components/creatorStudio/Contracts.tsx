@@ -116,6 +116,7 @@ const Contracts = () => {
             .filter((item) => {
               if (
                 titleSearch !== '' &&
+                item.name &&
                 !item.name.toLowerCase().includes(titleSearch.toLowerCase())
               ) {
                 return false;
