@@ -157,6 +157,9 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
     );
     // If there are no new events, stop
     if (processedResult.length === 0) {
+      version.running = false;
+      await version.save();
+      log.info(`[${network}] ${taskName} complete`);
       return done();
     }
 

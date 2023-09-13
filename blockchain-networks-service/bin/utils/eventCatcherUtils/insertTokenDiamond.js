@@ -63,12 +63,16 @@ module.exports = async (
     token: tokenIndex,
   });
 
-  foundToken = await handleMetadataForToken(
-    contract._id,
-    offer.product,
-    tokenIndex,
-    foundToken,
-  );
+  if (foundToken) {
+    foundToken = await handleMetadataForToken(
+      contract._id,
+      offer.product,
+      tokenIndex,
+      foundToken,
+    );
+  } else {
+    log.error(`Cant find tokenid ${tokenIndex} from contract ${contract.blockchain} ${contract.contractAddress}, won't update metadata`);
+  }
 
   // Decrease the amount of copies in the offer
   if (offer) {
