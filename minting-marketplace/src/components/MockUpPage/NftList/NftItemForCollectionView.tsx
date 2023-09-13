@@ -328,7 +328,7 @@ const NftItemForCollectionViewComponent: React.FC<
             <div
               className="description-wrapper pic-description-wrapper wrapper-for-collection-view"
               style={{
-                background: `linear-gradient(0deg, ${rgbValue} 0%, rgba(255,255,255,0) 12%)`
+                background: `linear-gradient(0deg, ${rgbValue} 0%, rgba(34,32,33,0.7357536764705883) 5%, rgba(34,32,33,0.671327906162465) 30%, rgba(255,255,255,0) 100%)`
               }}>
               <div className="description-title">
                 <div

@@ -15,14 +15,14 @@ export function getRGBValue(
       BigNumber.from(indexId).gte(offerData[0].range[0]) &&
       BigNumber.from(indexId).lte(offerData[0].range[1])
     ) {
-      rgbValue = 'rgb(232,130,213)';
+      rgbValue = 'rgba(232,130,213, 1)';
     } else if (
       offerData &&
       offerData[1] &&
       BigNumber.from(indexId).gte(offerData[1].range[0]) &&
       BigNumber.from(indexId).lte(offerData[1].range[1])
     ) {
-      rgbValue = 'rgb(114,91,219)';
+      rgbValue = 'rgba(114,91,219, 1)';
     } else if (
       offerData &&
       offerData.length > 1 &&
@@ -30,15 +30,15 @@ export function getRGBValue(
       BigNumber.from(indexId).gte(offerData[2].range[0]) &&
       BigNumber.from(indexId).lte(offerData[2].range[1])
     ) {
-      rgbValue = 'rgb(25,167,246)';
+      rgbValue = 'rgba(25,167,246, 1)';
     }
   } else {
     if (offer === '0') {
-      rgbValue = 'rgb(232,130,213)';
+      rgbValue = 'rgba(232,130,213, 1)';
     } else if (offer === '1') {
-      rgbValue = 'rgb(114,91,219)';
+      rgbValue = 'rgba(114,91,219, 1)';
     } else {
-      rgbValue = 'rgb(25,167,246)';
+      rgbValue = 'rgba(25,167,246, 1)';
     }
   }
 
