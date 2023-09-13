@@ -65,8 +65,7 @@ const VideoPlayerBySignature: React.FC<IVideoPlayerBySignature> = ({
       try {
         sign = await window.ethereum.request({
           method: 'eth_signTypedData_v4',
-          params: [account, response.data.response],
-          from: account
+          params: [account, response.data.response]
         });
         setSignature(sign);
       } catch (error) {

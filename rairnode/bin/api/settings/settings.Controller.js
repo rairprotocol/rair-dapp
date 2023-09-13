@@ -1,36 +1,35 @@
 const express = require('express');
 const { requireUserSession, isAdmin } = require('../../middleware');
 const {
-  setMintedTokenResults,
   createSettingsIfTheyDontExist,
-  setDemoUploads,
-  setNodeAddress,
+  getServerSettings,
+  setServerSetting,
+  getFeaturedCollection,
 } = require('./settings.Service');
 
 const router = express.Router();
-
-router.post(
-  '/mintedTokenResults',
+router.get(
+  '/',
   requireUserSession,
   isAdmin,
   createSettingsIfTheyDontExist,
-  setMintedTokenResults,
+  getServerSettings,
+);
+
+router.get(
+  '/featured',
+  requireUserSession,
+  isAdmin,
+  createSettingsIfTheyDontExist,
+  getFeaturedCollection,
 );
 
 router.post(
-  '/demoUploadsEnabled',
+  '/:setting',
   requireUserSession,
   isAdmin,
   createSettingsIfTheyDontExist,
-  setDemoUploads,
-);
-
-router.post(
-  '/nodeAddress',
-  requireUserSession,
-  isAdmin,
-  createSettingsIfTheyDontExist,
-  setNodeAddress,
+  setServerSetting,
 );
 
 module.exports = router;

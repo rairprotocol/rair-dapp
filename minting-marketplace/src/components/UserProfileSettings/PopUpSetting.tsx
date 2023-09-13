@@ -10,7 +10,6 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../ducks/users/users.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
-import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 
 import AikonWidget from './AikonWidget/AikonWidget';
@@ -37,12 +36,10 @@ const PopUpSettings = ({
   const [triggerState, setTriggerState] = useState();
   const [editMode, setEditMode] = useState(false);
   const [userBalance, setUserBalance] = useState<string>('');
-  const [tokenSymbol, setTokenSymbol] = useState<string>('Loading...');
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const { web3TxHandler } = useWeb3Tx();
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const { adminRights, loggedIn } = useSelector<RootState, any>(
@@ -80,15 +77,13 @@ const PopUpSettings = ({
       const balance = await erc777Instance.provider.getBalance(
         currentUserAddress
       );
-      const symbol = await web3TxHandler(erc777Instance, 'symbol');
 
       const result = utils.formatEther(balance);
       const final = Number(result.toString())?.toFixed(3)?.toString();
 
       setUserBalance(final);
-      setTokenSymbol(symbol);
     }
-  }, [currentUserAddress, erc777Instance, web3TxHandler]);
+  }, [currentUserAddress, erc777Instance]);
 
   useEffect(() => {
     getBalance();

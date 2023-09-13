@@ -8,7 +8,7 @@ const Product = new Schema(
   {
     name: { type: String, required: true, trim: true },
     collectionIndexInContract: { type: String, required: true }, // used only as productIndex
-    contract: { type: Schema.ObjectId, required: true },
+    contract: { type: Schema.ObjectId, ref: 'Contract', required: true },
     copies: { type: Number, required: true },
     soldCopies: { type: Number, default: 0 },
     sold: { type: Boolean, default: false },

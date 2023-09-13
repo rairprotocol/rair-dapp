@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as ethers from 'ethers';
-import jsonwebtoken from 'jsonwebtoken';
 import Swal from 'sweetalert2';
 
 import {
@@ -202,23 +201,4 @@ const rFetch = async (
   return request;
 };
 
-const isTokenValid = (token: string | undefined) => {
-  if (!token) {
-    return 'no token';
-  }
-
-  const decoded = jsonwebtoken.decode(token);
-  if (!decoded) {
-    return false;
-  }
-  if (
-    typeof decoded !== 'string' &&
-    decoded.exp !== undefined &&
-    decoded?.exp * 1000 > (new Date() as unknown as number)
-  ) {
-    return true;
-  }
-  return false;
-};
-
-export { isTokenValid, /* useRfetch */ rFetch, signIn, signWeb3Message };
+export { /* useRfetch */ rFetch, signIn, signWeb3Message };

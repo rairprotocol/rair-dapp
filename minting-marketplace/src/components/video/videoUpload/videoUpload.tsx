@@ -11,10 +11,10 @@ import {
   // TAuthGetChallengeResponse,
   TUploadSocket
 } from '../../../axios.responseTypes';
-import useSwal from '../../../hooks/useSwal';
 import { getRandomValues } from '../../../utils/getRandomValues';
 import { rFetch } from '../../../utils/rFetch';
 import BlockChainSwitcher from '../../adminViews/BlockchainSwitcher';
+import ServerSettings from '../../adminViews/ServerSettings';
 import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 
@@ -57,9 +57,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
   const [, /*collectionIndex*/ setCollectionIndex] = useState({});
   const [, /*offersIndex,*/ setOffersIndex] = useState([]);
   const [, /*networkId*/ setNetworkId] = useState('');
-  const [nodeAddress, setNodeAddress] = useState(
-    process.env.REACT_APP_NODE_ADDRESS
-  );
 
   const [categoryArray, setCategoryArray] = useState([]);
   const getCategories = useCallback(async () => {
@@ -76,8 +73,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
   // const currentUserAddress = useSelector<RootState, string>(
   //   (state) => state.contractStore.currentUserAddress
   // );
-
-  const reactSwal = useSwal();
 
   useEffect(() => {
     getCategories();
@@ -290,21 +285,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     return selectedOffers.reduce((prev, current) => {
       return prev && current === 'null';
     }, true);
-  };
-
-  const setServerSetting = async (setting: string, value: boolean | string) => {
-    const { success } = await rFetch(`/api/settings/${setting}`, {
-      method: 'POST',
-      body: JSON.stringify({
-        value
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (success) {
-      reactSwal.fire('Success', 'Setting set', 'success');
-    }
   };
 
   return (
@@ -555,43 +535,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
         <hr className="w-100 my-5" />
       </div>
       <hr />
-      <h5>Server Settings</h5>
-      Only return minted tokens on collection page:{' '}
-      <button
-        className="btn btn-royal-ice"
-        onClick={() => setServerSetting('mintedTokenResults', true)}>
-        Yes
-      </button>
-      <button
-        className="btn btn-stimorol"
-        onClick={() => setServerSetting('mintedTokenResults', false)}>
-        No
-      </button>
-      <br />
-      Allow demo page uploads:{' '}
-      <button
-        className="btn btn-royal-ice"
-        onClick={() => setServerSetting('demoUploadsEnabled', true)}>
-        Yes
-      </button>
-      <button
-        className="btn btn-stimorol"
-        onClick={() => setServerSetting('demoUploadsEnabled', false)}>
-        No
-      </button>
-      <br />
-      Node Address:{' '}
-      <InputField
-        customClass="w-50 rounded-rair text-center"
-        getter={nodeAddress}
-        setter={setNodeAddress}
-        placeholder="Node address"
-      />
-      <button
-        className="btn btn-royal-ice"
-        onClick={() => setServerSetting('nodeAddress', nodeAddress)}>
-        Set
-      </button>
+      <ServerSettings {...{ fullContractData }} />
       <hr />
       <div className="new">
         <AdminView
