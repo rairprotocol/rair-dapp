@@ -63,6 +63,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const navigate = useNavigate();
   const myRef = useRef(null);
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS === 'true';
   const [playing, setPlaying] = useState<boolean>(false);
   const [, /*offersIndexesData*/ setOffersIndexesData] =
     useState<TOffersIndexesData[]>();
@@ -392,10 +393,11 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             style={{
               color: `${primaryColor === 'rhyno' ? '#383637' : '#A7A6A6'}`
             }}>
+            {`This ${hotdropsVar ? 'collectable' : 'NFT'}`}{' '}
             {selectedData?.description !== 'none' &&
             selectedData?.description !== 'No description available'
               ? selectedData?.description
-              : "This NFT doesn't have any description"}
+              : "doesn't have a description."}
           </div>
           <div className="properties-title">
             <TitleSingleTokenView
@@ -410,13 +412,15 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             />
           ) : (
             <div className="description-text">
-              This nft doesn&apos;t have any properties
+              {`This ${
+                hotdropsVar ? 'collectable' : 'nft'
+              } doesn't have any properties.`}
             </div>
           )}
         </div>
         <div className="this-nft-unlocks">
           <TitleSingleTokenView
-            title="This NFT unlocks"
+            title={`This ${hotdropsVar ? 'Collectable' : 'NFT'} unlocks`}
             primaryColor={primaryColor}
           />
         </div>
@@ -443,7 +447,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
         ) : productsFromOffer === undefined ? (
           <LoadingComponent />
         ) : (
-          <div className="description-text">{`This nft doesn't have any unlockable videos`}</div>
+          <div className="description-text">{`This ${
+            hotdropsVar ? 'collectable' : 'NFT'
+          } doesn't have any unlockable videos.`}</div>
         )}
       </div>
     </main>
