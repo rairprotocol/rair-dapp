@@ -65,6 +65,13 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const params = useParams<TParamsNftDataCommonLink>();
   const { contract, product, blockchain } = params;
 
+  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+
+  const defaultCollectionBanner =
+    hotdropsVar === 'true'
+      ? hotDropsDefaultBanner
+      : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg';
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const myRef = useRef<HTMLDivElement>(null);
@@ -240,7 +247,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                 src={
                   bannerInfo && bannerInfo?.bannerImage
                     ? `${changeIPFSLink(bannerInfo?.bannerImage)}`
-                    : hotDropsDefaultBanner
+                    : defaultCollectionBanner
                 }
               />
             )}
