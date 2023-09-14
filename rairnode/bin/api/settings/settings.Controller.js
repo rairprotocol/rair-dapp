@@ -18,9 +18,6 @@ router.get(
 
 router.get(
   '/featured',
-  requireUserSession,
-  isAdmin,
-  createSettingsIfTheyDontExist,
   getFeaturedCollection,
 );
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as ethers from 'ethers';
+import { providers } from 'ethers';
 import Swal from 'sweetalert2';
 
 import {
@@ -7,10 +7,10 @@ import {
   TUserResponse
 } from '../axios.responseTypes';
 
-const signIn = async (provider: ethers.providers.StaticJsonRpcProvider) => {
+const signIn = async (provider: providers.StaticJsonRpcProvider) => {
   let currentUser = provider?.getSigner()._address;
   if (!provider && window.ethereum) {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
+    provider = new providers.Web3Provider(window.ethereum);
   }
   if (window.ethereum) {
     const accounts = await window.ethereum.request({
@@ -69,7 +69,7 @@ const signIn = async (provider: ethers.providers.StaticJsonRpcProvider) => {
 };
 
 const signWeb3Message = async (
-  signer: ethers.providers.JsonRpcSigner,
+  signer: providers.JsonRpcSigner,
   userAddress: string | undefined
 ) => {
   try {

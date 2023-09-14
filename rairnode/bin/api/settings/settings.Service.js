@@ -18,7 +18,7 @@ exports.getFeaturedCollection = async (req, res, next) => {
   try {
     const settings = await ServerSetting.findOne({});
     let data = {};
-    if (settings.featuredCollection) {
+    if (settings?.featuredCollection) {
       const collectionData = await Product.findById(settings.featuredCollection);
       if (collectionData) {
         const contractData = await Contract.findById(collectionData.contract);
