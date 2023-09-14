@@ -78,6 +78,22 @@
   border: 2px solid #fff;
 }
 
+.mobileAikonWidget {
+  height: 40px;
+  width: 40px;
+  background: rgb(66, 66, 66);
+  border: 1px solid rgb(234, 234, 234);
+  border-radius: 10px;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease 0s;
+  margin-right: 17px;
+}
+
 @media screen and (max-width: 800px) {
   .col-1.rounded.burder-menu .burder-menu-logo img {
     width: 30px;

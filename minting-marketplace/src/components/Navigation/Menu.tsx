@@ -17,6 +17,7 @@ import {
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
+import AikonWidget from '../UserProfileSettings/AikonWidget/AikonWidget';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
@@ -207,6 +208,17 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                       marginRight={'17px'}>
                       <i className="fas fa-search" aria-hidden="true"></i>
                     </SocialBoxSearch>
+                    {/* this is where the aikon widget should go: */}
+                    <div
+                      className="mobileAikonWidget"
+                      style={{
+                        backgroundColor:
+                          primaryColor === 'rhyno'
+                            ? 'var(--rhyno-20)'
+                            : 'var(----charcoal-80)'
+                      }}>
+                      <AikonWidget />
+                    </div>
                     <NavLink to={`/${currentUserAddress}`}>
                       <UserIconMobile
                         onClick={() => setClick(false)}

@@ -165,7 +165,7 @@ export const SocialMenuMobile = styled.div<ISocialBox>`
   cursor: pointer;
   background: ${(props) =>
     props.primaryColor === 'rhyno' ? '#fff' : '#424242'};
-  border: 0.7px solid #eaeaea;
+  border: 1px solid #eaeaea;
   border-radius: 10px;
   width: 40px;
   height: 40px;
