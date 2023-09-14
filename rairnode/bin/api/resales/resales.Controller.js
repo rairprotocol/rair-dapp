@@ -16,7 +16,6 @@ const router = Router();
 router.get(
     '/open',
     validation(['resaleQuery'], 'query'),
-    requireUserSession,
     openResales,
 );
 router.get(
