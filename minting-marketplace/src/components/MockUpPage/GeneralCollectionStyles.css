@@ -1106,6 +1106,22 @@ img.single-token-block-img {
     justify-content: flex-start;
     width: 588px;
   }
+
+  .collection-background.main-banner
+    .collection-background-main-info
+    .collection-info-product-name {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .collection-background.main-banner
+    .collection-background-main-info
+    .collection-info-contract
+    .collection-info-user
+    img {
+    width: 23px;
+    height: 23px;
+  }
 }
 
 @media screen and (max-width: 750px) {
@@ -1239,6 +1255,30 @@ img.single-token-block-img {
   }
   .category-wrapper {
     width: 300px;
+  }
+
+  .collection-background.main-banner
+    .collection-background-main-info
+    .collection-info-product-name {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .collection-background.main-banner
+    .collection-background-main-info
+    .collection-info-contract
+    .collection-info-user
+    img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .collection-background.main-banner
+    .collection-background-main-info
+    .collection-info-contract
+    .collection-info-user
+    div {
+    font-size: 12px;
   }
 }
 
