@@ -64,7 +64,7 @@ const Contracts = () => {
               getter={titleSearch}
               setter={setTitleSearch}
               placeholder="Contract filter"
-              customClass="rounded-rair form-control"
+              customClass={`rounded-rair form-control contracts-filter-${primaryColor}`}
               customCSS={{
                 backgroundColor: `var(--${primaryColor})`,
                 color: textColor ? textColor : 'inherit',

@@ -2039,6 +2039,11 @@ button.metamask-on-boarding:focus {
   margin: 0.25rem 0;
 }
 
+.search-contracts-factory
+  input.form-control.contracts-filter-charcoal::placeholder {
+  color: rgb(135, 135, 135);
+}
+
 /* media queries all  */
 
 @media screen and (max-width: 1200px) and (min-width: 1025px) {
