@@ -300,8 +300,64 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (!blockchain) {
       return <></>;
     }
+
+    if (!currentUserAddress) {
+      if (
+        selectedToken &&
+        tokenData &&
+        tokenData?.[selectedToken]?.isMinted === true
+      ) {
+        return (
+          <div className="container-sell-button-user">
+            Owned by{' '}
+            <div className="block-user-creator">
+              <ImageLazy
+                src={accountData?.avatar ? accountData.avatar : defaultImage}
+                alt="User Avatar"
+              />
+              {selectedToken && (
+                <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
+                  <h5>
+                    {(accountData &&
+                    accountData.nickName &&
+                    accountData.nickName.length > 20
+                      ? accountData.nickName.slice(0, 5) +
+                        '....' +
+                        accountData.nickName.slice(length - 4)
+                      : accountData && accountData.nickName) ||
+                      (tokenData?.[selectedToken]?.ownerAddress &&
+                        tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
+                          '....' +
+                          tokenData?.[selectedToken]?.ownerAddress.slice(
+                            length - 4
+                          ))}
+                  </h5>
+                </NavLink>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      if (!correctBlockchain(blockchain)) {
+        return (
+          <BuySellButton
+            // handleClick={() => web3Switch(blockchain)}
+            isColorPurple={true}
+            title={`Log in to buy`}
+            disabled={true}
+          />
+        );
+      }
+    }
+
     // Blockchain is not correct
-    if (!correctBlockchain(blockchain)) {
+    if (
+      !correctBlockchain(blockchain) &&
+      selectedToken &&
+      tokenData &&
+      !tokenData?.[selectedToken]?.isMinted === true
+    ) {
       return (
         <BuySellButton
           handleClick={() => web3Switch(blockchain)}
@@ -310,6 +366,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         />
       );
     }
+
     // Blockchain is correct and offer exists
     if (selectedToken && !tokenData?.[selectedToken]?.isMinted && offerData) {
       const rawPrice = BigNumber.from(offerData?.price ? offerData?.price : 0);

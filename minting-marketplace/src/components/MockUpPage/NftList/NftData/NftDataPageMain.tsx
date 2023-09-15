@@ -365,7 +365,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               )}
             </div>
           </div>
-          {tokenFullData && (
+          {tokenFullData === undefined ? (
+            <LoadingComponent />
+          ) : (
             <SerialNumberBuySell
               primaryColor={primaryColor}
               tokenData={tokenFullData}
