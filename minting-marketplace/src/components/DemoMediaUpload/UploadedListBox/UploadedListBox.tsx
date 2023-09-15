@@ -68,10 +68,10 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getCounterVideo = async () => {
-    if (fileData._id) {
+    if (fileData?._id) {
       try {
         const req = await rFetch(
-          `/api/analytics/${fileData._id}?onlyCount=true`,
+          `/api/analytics/${fileData?._id}?onlyCount=true`,
           {
             method: 'GET',
             headers: {
@@ -174,7 +174,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
             src={playImagesColored}
             alt="Button play video"
           />
-          <img className="w-100" src={fileData.animatedThumbnail} />
+          <img className="w-100" src={fileData?.animatedThumbnail} />
         </div>
         <MediaItemChange
           setMediaList={setMediaList}
@@ -183,7 +183,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           mediaList={mediaList}
           uploadSuccess={uploadSuccess}
           textFlag={false}
-          mediaId={fileData._id}
+          mediaId={fileData?._id}
           getMediaList={getMediaList}
           setEditTitleVideo={setEditTitleVideo}
           editTitleVideo={editTitleVideo}
@@ -192,7 +192,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
         {currentContract && (
           <button
             onClick={() => {
-              copyEmbebed(fileData._id, currentContract.contractAddress);
+              copyEmbebed(fileData?._id, currentContract.contractAddress);
             }}
             className="col-12 btn-stimorol btn rounded-rair white">
             <>
@@ -224,7 +224,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           <i className="fas fa-trash" />
         </button>
         {!editTitleVideo && (
-          <AnalyticsPopUp videoId={fileData._id} watchCounter={watchCounter} />
+          <AnalyticsPopUp videoId={fileData?._id} watchCounter={watchCounter} />
         )}
       </div>
       <>
@@ -235,7 +235,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           contentLabel="Video Modal">
           <div className="modal-content-wrapper-for-video demo-pop-up">
             <div className="modal-content-video">
-              {fileData.isUnlocked === false ? (
+              {fileData?.isUnlocked === false ? (
                 <>
                   <TooltipBox enterDelay={200} title="You need to buy an NFT.">
                     <>
@@ -263,7 +263,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               ) : (
                 <img
                   alt="Modal content video thumbnail"
-                  src={`${fileData.staticThumbnail}`}
+                  src={`${fileData?.staticThumbnail}`}
                   className="modal-content-video-thumbnail"
                 />
               )}
@@ -280,7 +280,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
                 </ModalContentCloseBtn>
               </div>
               <div className="modal-content-block-btns">
-                {fileData.isUnlocked === false && (
+                {fileData?.isUnlocked === false && (
                   <div className="modal-content-block-buy"></div>
                 )}
               </div>

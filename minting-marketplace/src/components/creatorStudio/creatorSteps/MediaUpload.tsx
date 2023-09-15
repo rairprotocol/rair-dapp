@@ -75,7 +75,10 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   );
 
   const getMediaList = async () => {
-    if (currentUserAddress !== undefined) {
+    if (
+      currentUserAddress !== undefined &&
+      contractData?.nfts?.tokens?.at(0)?._id
+    ) {
       setLoading(true);
       try {
         const { success, data } = await rFetch(
@@ -148,7 +151,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
             const fileData = mediaUploadedList[item];
             return (
               <UploadedListBox
-                key={fileData.title + index}
+                key={index}
                 fileData={fileData}
                 index={index}
                 setMediaList={setMediaList}

@@ -57,13 +57,16 @@ exports.getFilesForToken = async (req, res, next) => {
     const { id } = req.params;
 
     const token = await MintedToken.findById(id);
-    const offerData = await Offer.find({
-      contract: token.contract,
-      diamondRangeIndex: token.offer,
-    });
-    const files = await Unlock.find({
-      offers: { $all: offerData.map((offer) => offer._id) },
-    }).populate('file');
+    let files = [];
+    if (token) {
+      const offerData = await Offer.find({
+        contract: token.contract,
+        diamondRangeIndex: token.offer,
+      });
+      files = await Unlock.find({
+        offers: { $all: offerData.map((offer) => offer._id) },
+      }).populate('file');
+    }
 
     return res.status(200).json({
       success: true,
