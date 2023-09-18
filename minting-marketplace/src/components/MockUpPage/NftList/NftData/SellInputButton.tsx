@@ -10,7 +10,6 @@ import InputField from '../../../common/InputField';
 import { ISellInputButton } from '../../mockupPage.types';
 
 const SellInputButton: React.FC<ISellInputButton> = ({
-  currentUser,
   tokenData,
   selectedToken,
   refreshResaleData
@@ -48,7 +47,6 @@ const SellInputButton: React.FC<ISellInputButton> = ({
         </div>
       )}
       <SellButton
-        currentUser={currentUser}
         tokenData={tokenData}
         selectedToken={selectedToken}
         sellingPrice={inputSellValue}

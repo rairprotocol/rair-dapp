@@ -108,14 +108,11 @@ export interface ISerialNumberBuySell {
   totalCount: number | undefined;
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
-  primaryColor: ColorChoice;
   textColor: string | undefined;
   offerData: TOfferType | undefined;
-  currentUser: string | undefined;
   handleTokenBoughtButton: () => void;
 }
 export interface ISellButton {
-  currentUser: string | undefined;
   tokenData: { [index: string]: TTokenData } | null;
   selectedToken: string | undefined;
   sellingPrice?: string;
@@ -172,7 +169,6 @@ export type TParamsTitleCollection = {
 };
 
 export interface ISellInputButton {
-  currentUser: string | undefined;
   tokenData: { [index: string]: TTokenData } | null;
   selectedToken: string | undefined;
   refreshResaleData: () => void;
@@ -181,11 +177,9 @@ export interface ISellInputButton {
 export interface INftDataPageMain {
   blockchain: BlockchainType | undefined;
   contract: string | undefined;
-  currentUser: string | undefined;
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   product: string | undefined;
   productsFromOffer: TFileType[] | undefined;
-  primaryColor: ColorChoice;
   selectedData: TMetadataType | undefined;
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;

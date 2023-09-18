@@ -22,7 +22,6 @@ import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISellButton } from '../../mockupPage.types';
 
 const SellButton: React.FC<ISellButton> = ({
-  currentUser,
   tokenData,
   selectedToken,
   sellingPrice,
@@ -161,14 +160,18 @@ const SellButton: React.FC<ISellButton> = ({
   const sellButton = useCallback(() => {
     if (
       selectedToken &&
-      currentUser === tokenData?.[selectedToken]?.ownerAddress &&
+      currentUserAddress === tokenData?.[selectedToken]?.ownerAddress &&
       tokenData?.[selectedToken]?.isMinted
     ) {
       return (
         <BuySellButton
           title={
             isInputPriceExist && sellingPrice
-              ? `Sell for ${sellingPrice} ETH`
+              ? `Sell for ${sellingPrice} ${
+                  blockchain && chainData[blockchain]
+                    ? chainData[blockchain]?.symbol
+                    : ''
+                }`
               : 'Sell'
           }
           handleClick={
@@ -211,7 +214,8 @@ const SellButton: React.FC<ISellButton> = ({
       );
     }
   }, [
-    currentUser,
+    blockchain,
+    currentUserAddress,
     handleClickSellButton,
     openInputField,
     sellingPrice,

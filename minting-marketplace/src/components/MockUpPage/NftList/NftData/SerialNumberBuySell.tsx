@@ -11,6 +11,7 @@ import SellInputButton from './SellInputButton';
 
 import { TUserResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import { UserType } from '../../../../ducks/users/users.types';
@@ -35,15 +36,17 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   totalCount,
   selectedToken,
   setSelectedToken,
-  primaryColor,
   offerData,
-  currentUser,
   handleTokenBoughtButton
 }) => {
   const { minterInstance, diamondMarketplaceInstance, currentUserAddress } =
     useSelector<RootState, ContractsInitialType>(
       (state) => state.contractStore
     );
+
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   const { tokenDataListTotal } = useSelector<
     RootState,
@@ -416,7 +419,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       ) {
         return (
           <SellInputButton
-            currentUser={currentUser}
             tokenData={tokenData}
             selectedToken={selectedToken}
             refreshResaleData={getResaleData}
@@ -468,7 +470,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     buyContract,
     currentUserAddress,
     resaleData,
-    currentUser,
     resalePurchase,
     accountData,
     getResaleData

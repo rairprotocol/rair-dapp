@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 // import CustomShareButton from './CustomShareButton';
@@ -13,8 +13,9 @@ import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
 
 import { TFileType, TNftItemResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import { setTokenData } from '../../../../ducks/nftData/action';
+// import { setTokenData } from '../../../../ducks/nftData/action';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
 // import useWindowDimensions from '../../../../hooks/useWindowDimensions';
@@ -33,10 +34,8 @@ import TitleCollection from './TitleCollection/TitleCollection';
 const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,
   contract,
-  currentUser,
   handleClickToken,
   product,
-  primaryColor,
   productsFromOffer,
   selectedData,
   selectedToken,
@@ -61,7 +60,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const [verticalImage, setVerticalImage] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const myRef = useRef(null);
   const hotdropsVar = process.env.REACT_APP_HOTDROPS === 'true';
   const [playing, setPlaying] = useState<boolean>(false);
@@ -70,6 +69,11 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
+
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
+
   const [tokenFullData, setTokenFullData] = useState<any>(undefined);
   const dispatch = useDispatch();
 
@@ -369,7 +373,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             <LoadingComponent />
           ) : (
             <SerialNumberBuySell
-              primaryColor={primaryColor}
               tokenData={tokenFullData}
               handleClickToken={handleClickToken}
               setSelectedToken={setSelectedToken}
@@ -380,7 +383,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               contract={contract}
               selectedToken={selectedToken}
               textColor={textColor}
-              currentUser={currentUser}
               handleTokenBoughtButton={handleTokenBoughtButton}
             />
           )}

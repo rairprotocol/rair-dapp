@@ -38,7 +38,7 @@ const NftDataExternalLink = () => {
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+  const { textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
@@ -274,7 +274,6 @@ const NftDataExternalLink = () => {
     <NftDataPageMain
       blockchain={neededBlockchain}
       contract={contractOfProduct}
-      currentUser={currentUserAddress}
       handleClickToken={handleClickToken}
       offerPrice={offerPrice}
       offerDataInfo={offer.length > 0 && offer}
@@ -285,7 +284,6 @@ const NftDataExternalLink = () => {
       selectedToken={selectedToken}
       someUsersData={someUsersData}
       setSelectedToken={setSelectedToken}
-      primaryColor={primaryColor}
       productsFromOffer={productsFromOffer}
       product={product}
       handleTokenBoughtButton={handleTokenBoughtButton}
