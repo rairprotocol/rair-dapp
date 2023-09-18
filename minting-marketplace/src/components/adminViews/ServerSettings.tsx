@@ -88,13 +88,13 @@ const ServerSettings = ({ fullContractData }) => {
         <button
           disabled={!!settings?.onlyMintedTokensResult}
           className="btn btn-royal-ice"
-          onClick={() => setServerSetting('mintedTokenResults', true)}>
+          onClick={() => setServerSetting('onlyMintedTokensResult', 'true')}>
           Yes
         </button>
         <button
           disabled={!settings?.onlyMintedTokensResult}
           className="btn btn-stimorol"
-          onClick={() => setServerSetting('mintedTokenResults', false)}>
+          onClick={() => setServerSetting('onlyMintedTokensResult', 'false')}>
           No
         </button>
       </div>
@@ -104,13 +104,13 @@ const ServerSettings = ({ fullContractData }) => {
         <button
           disabled={!!settings?.demoUploadsEnabled}
           className="btn btn-royal-ice"
-          onClick={() => setServerSetting('demoUploadsEnabled', true)}>
+          onClick={() => setServerSetting('demoUploadsEnabled', 'true')}>
           Yes
         </button>
         <button
           disabled={!settings?.demoUploadsEnabled}
           className="btn btn-stimorol"
-          onClick={() => setServerSetting('demoUploadsEnabled', false)}>
+          onClick={() => setServerSetting('demoUploadsEnabled', 'false')}>
           No
         </button>
       </div>
