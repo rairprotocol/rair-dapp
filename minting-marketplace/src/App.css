@@ -1581,7 +1581,6 @@ select.form-control.rounded-rair:disabled {
 }
 .desc-wrapper {
   margin-left: 10px;
-  word-break: break-word;
   /* width: 350px; */
   /* height: 30px; */
   /* overflow: scroll; */

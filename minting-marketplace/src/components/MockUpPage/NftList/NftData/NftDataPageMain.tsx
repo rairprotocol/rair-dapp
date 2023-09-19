@@ -397,11 +397,15 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             style={{
               color: `${primaryColor === 'rhyno' ? '#383637' : '#A7A6A6'}`
             }}>
-            {`This ${hotdropsVar ? 'collectable' : 'NFT'}`}{' '}
             {selectedData?.description !== 'none' &&
-            selectedData?.description !== 'No description available'
-              ? selectedData?.description
-              : "doesn't have a description."}
+            selectedData?.description !== 'No description available' ? (
+              selectedData?.description
+            ) : (
+              <>
+                This {hotdropsVar ? 'collectable' : 'NFT'} doesn&apos;t have a
+                description.
+              </>
+            )}
           </div>
           <div className="properties-title">
             <TitleSingleTokenView

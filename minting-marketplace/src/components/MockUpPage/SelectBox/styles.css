@@ -331,6 +331,7 @@ video::-webkit-media-controls-panel {
   font-weight: 700;
   font-size: 14px;
   line-height: 17.5px;
+  padding: 3px;
 }
 
 .custom-offer-percents {
@@ -361,7 +362,6 @@ video::-webkit-media-controls-panel {
 
 .description-text {
   text-align: start;
-  word-break: break-all;
   font-weight: 400;
   font-size: 16px;
   line-height: 28px;
@@ -597,7 +597,6 @@ video::-webkit-media-controls-panel {
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 40px;
-  word-break: break-word;
 }
 
 /* chrome, safari */

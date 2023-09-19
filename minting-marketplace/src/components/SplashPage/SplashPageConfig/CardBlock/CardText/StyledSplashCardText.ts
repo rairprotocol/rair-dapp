@@ -8,7 +8,6 @@ export const StyledSplashCardText = styled.div<TStyledSplashCardText>`
   font-weight: ${({ fontWeight }) => fontWeight};
   font-family: ${({ fontFamily }) => fontFamily};
   line-height: ${({ lineHeight }) => lineHeight};
-  word-break: break-word;
   margin-bottom: ${({ marginBottom }) => marginBottom || '0px'};
   padding: ${({ padding }) => padding || '0px'};
   text-align: ${({ textAlign }) => textAlign || 'start'};
