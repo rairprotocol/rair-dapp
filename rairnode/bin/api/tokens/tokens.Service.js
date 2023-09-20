@@ -140,7 +140,7 @@ exports.updateTokenCommonMetadata = async (req, res, next) => {
       return next(new AppError('Contract not found.', 404));
     }
 
-    if (user.publicAddress !== foundContract.user) {
+    if (!user.superAdmin && user.publicAddress !== foundContract.user) {
       await cleanStorage(req.files);
       return next(new AppError('This contract not belong to you.', 403));
     }
@@ -354,7 +354,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
         : { offerPool: offerPool.marketplaceCatalogIndex },
     );
 
-    if (user.publicAddress !== contract.user) {
+    if (!user.superAdmin && user.publicAddress !== contract.user) {
       if (_.get(req, 'files.length', false)) {
         await Promise.all(
           _.map(req.files, async (file) => {
@@ -531,7 +531,7 @@ exports.pinMetadataToPinata = async (req, res, next) => {
       /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gm;
     let metadataURI = 'none';
 
-    if (user.publicAddress !== contract.user) {
+    if (!user.superAdmin && user.publicAddress !== contract.user) {
       return next(
         new AppError(
           `You have no permissions for updating token ${token}.`,
@@ -603,7 +603,7 @@ exports.createTokensViaCSV = async (req, res, next) => {
       return next(new AppError('Contract not found.', 404));
     }
 
-    if (user.publicAddress !== foundContract.user) {
+    if (!user.superAdmin && user.publicAddress !== foundContract.user) {
       return next(new AppError('User is not owner of contract', 403));
     }
 
