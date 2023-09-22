@@ -209,6 +209,19 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                       <i className="fas fa-search" aria-hidden="true"></i>
                     </SocialBoxSearch>
                     {/* this is where the aikon widget should go: */}
+                    {currentUserAddress && (
+                      <SocialBox
+                        onClick={() => {
+                          handleMessageAlert('notification');
+                          toggleMenu('nav');
+                        }}
+                        className="social-bell-icon"
+                        width="40px"
+                        height="40px"
+                        marginRight={'17px'}>
+                        <BellIcon primaryColor={primaryColor} />
+                      </SocialBox>
+                    )}
                     <div
                       className="mobileAikonWidget"
                       style={{

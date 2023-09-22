@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-// import { NavLink } from 'react-router-dom';
-// import Popup from 'reactjs-popup';
 import { IMainHeader, TAxiosCollectionData } from './header.types';
 
 import { SvgUserIcon } from '../../components/UserProfileSettings/SettingsIcons/SettingsIcons';
@@ -16,14 +14,12 @@ import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
 import { TUsersInitialState } from '../../ducks/users/users.types';
 import useComponentVisible from '../../hooks/useComponentVisible';
 import useConnectUser from '../../hooks/useConnectUser';
-import { DiscordIcon, InstagramIcon, TwitterIcon } from '../../images';
 //images
 import { headerLogoBlack, headerLogoWhite } from '../../images';
-import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import MainLogo from '../GroupLogos/MainLogo';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
+import PopUpNotification from '../UserProfileSettings/PopUpNotification/PopUpNotification';
 
 import {
   TSearchDataProduct,
@@ -71,10 +67,9 @@ const MainHeader: React.FC<IMainHeader> = ({
     TUsersInitialState
   >((store) => store.userStore);
 
-  const { currentUserAddress, programmaticProvider } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
@@ -355,58 +350,6 @@ const MainHeader: React.FC<IMainHeader> = ({
           }`}
           aria-hidden="true"></i>
       </div>
-
-      {/* <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          className="hotdrops-menu-list">
-          <ul
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              margin: '0'
-            }}>
-            <li
-              style={{
-                marginRight: '30px'
-              }}>
-              <a
-                target="_blank"
-                href="https://www.myhotdrops.com/info"
-                rel="noreferrer">
-                Info
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.myhotdrops.com/collections"
-                target="_blank"
-                rel="noreferrer">
-                Collections
-              </a>
-            </li>
-            <li>
-              <a
-                target="_blank"
-                href="https://www.myhotdrops.com/hotties"
-                rel="noreferrer">
-                Hotties
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://myhotdrops.shop/"
-                target="_blank"
-                rel="noreferrer">
-                Shop
-              </a>
-            </li>
-          </ul>
-        </div> */}
-
       <div className="box-header-info">
         {!loggedIn && (
           <div>
@@ -440,61 +383,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            <>
-              <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
-                {hotdropsVar === 'true' ? (
-                  <a
-                    href="https://discord.com/invite/F4t4c2BQmc"
-                    target={'_blank'}
-                    rel="noreferrer">
-                    <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
-                  </a>
-                ) : (
-                  <a
-                    href="https://discord.gg/pSTbf2yz7V"
-                    target={'_blank'}
-                    rel="noreferrer">
-                    <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
-                  </a>
-                )}
-              </SocialBox>
-              <SocialBox
-                marginRight={'17px'}
-                marginLeft={'17px'}
-                hoverColor={'#1DA1F2'}
-                primaryColor={primaryColor}>
-                {hotdropsVar === 'true' ? (
-                  <a
-                    href="https://twitter.com/myhotdrops"
-                    target={'_blank'}
-                    rel="noreferrer">
-                    <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
-                  </a>
-                ) : (
-                  <a
-                    href="https://twitter.com/rairtech"
-                    target={'_blank'}
-                    rel="noreferrer">
-                    <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
-                  </a>
-                )}
-              </SocialBox>
-              {hotdropsVar === 'true' && (
-                <SocialBox
-                  marginRight={'17px'}
-                  hoverColor={
-                    'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)'
-                  }
-                  primaryColor={primaryColor}>
-                  <a
-                    href="https://www.instagram.com/myhotdropsnft/"
-                    target={'_blank'}
-                    rel="noreferrer">
-                    <InstagramIcon primaryColor={primaryColor} color={'#fff'} />
-                  </a>
-                </SocialBox>
-              )}
-            </>
+            {currentUserAddress && <PopUpNotification />}
 
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}
