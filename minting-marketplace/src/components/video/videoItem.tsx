@@ -442,7 +442,9 @@ const VideoItem: React.FC<IVideoItem> = ({
               </ModalContentCloseBtn>
             </div>
             <div
-              className={`text-white modal-content-wrapper-for-video ${
+              className={`${
+                primaryColor !== 'rhyno' && 'text-white'
+              } modal-content-wrapper-for-video ${
                 mediaList[item]?.isUnlocked && !owned ? 'unlocked' : 'locked'
               }`}>
               <div className="modal-content-video">
