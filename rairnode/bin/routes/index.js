@@ -16,7 +16,6 @@ module.exports = (context) => {
   router.use('/users', require('./users')(context));
   router.use('/contracts', require('./contracts')(context));
   router.use('/nft', require('./nft')(context));
-  router.use('/blockchains', require('./blockchains')(context));
   router.use('/categories', require('./categories')(context));
   router.use('/transaction', require('./transactions')(context));
   router.use('/analytics', analyticsController);

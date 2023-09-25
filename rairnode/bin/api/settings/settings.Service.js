@@ -1,4 +1,4 @@
-const { ServerSetting, Product, Contract, User } = require('../../models');
+const { ServerSetting, Product, Contract, User, Blockchain } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 
 exports.createSettingsIfTheyDontExist = async (req, res, next) => {
@@ -54,6 +54,7 @@ exports.getFeaturedCollection = async (req, res, next) => {
 exports.getServerSettings = async (req, res, next) => {
   try {
     const settings = await ServerSetting.findOne({}).lean();
+    const blockchainSettings = await Blockchain.find({});
     if (settings.featuredCollection) {
       const collectionData = await Product.findById(settings.featuredCollection).lean();
       if (collectionData) {
@@ -67,6 +68,7 @@ exports.getServerSettings = async (req, res, next) => {
     return res.json({
       success: true,
       settings,
+      blockchainSettings,
     });
   } catch (error) {
     return next(new AppError(error));
@@ -85,6 +87,22 @@ exports.setServerSetting = async (req, res, next) => {
     return res.json({
         success: true,
     });
+  } catch (error) {
+    return next(new AppError(error));
+  }
+};
+
+exports.setBlockchainSetting = async (req, res, next) => {
+  try {
+    const { blockchain } = req.params;
+    const { display, sync } = req.body;
+    if (!blockchain) {
+      return res.json({ success: false, message: 'Invalid blockchain' });
+    }
+    await Blockchain.findOneAndUpdate({
+      hash: blockchain,
+    }, { $set: { display, sync } });
+    return res.json({ success: true });
   } catch (error) {
     return next(new AppError(error));
   }

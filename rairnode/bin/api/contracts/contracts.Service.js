@@ -25,11 +25,15 @@ exports.getAllContracts = async (req, res, next) => {
     }
   });
 
+  const foundBlockchain = await Blockchain.find({
+    display: { $ne: false },
+  });
+
   const pipeline = [
     {
         $match: {
             blockView: false,
-            blockchain: { $nin: ['0x61', '0x38'] },
+            blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
             ...clearFilter,
         },
     },
@@ -58,11 +62,14 @@ exports.getContractByCategory = async (req, res, next) => {
   const pageSize = parseInt(itemsPerPage, 10);
   const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
+  const foundBlockchain = await Blockchain.find({
+    display: { $ne: false },
+  });
   const contractList = (await File.find({ category: id })).sort({ title: 1 })
     .map((item) => item.contract);
   const results = await Contract.find({
     _id: { $in: contractList },
-    blockchain: { $nin: ['0x38', '0x61'] },
+    blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
   })
     .skip(skip)
     .limit(pageSize);
@@ -193,18 +200,18 @@ exports.getFullContracts = async (req, res, next) => {
     if (addOffersFlag) {
       options.push(...Contract.lookupOfferAndOfferPoolsAggregationOptions);
     }
-    const foundBlockchain = await Blockchain.find({
-      hash: [...blockchainArr],
-    });
-    if (foundBlockchain.length >= 1) {
-      options.unshift({
-        $match: {
-          blockchain: {
-            $in: [...blockchainArr], $nin: ['0x38', '0x61'],
-          },
-        },
-      });
+    const blockchainFilter = {
+      display: { $ne: false },
+    };
+    if (blockchainArr) {
+      blockchainFilter.hash = [...blockchainArr];
     }
+    const foundBlockchain = await Blockchain.find(blockchainFilter);
+    options.unshift({
+      $match: {
+        blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
+      },
+    });
     if (contractIdArr.length >= 1 && contractIdArr[0] !== '') {
       const optionIds = [];
       contractIdArr.reduce(

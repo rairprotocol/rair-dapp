@@ -211,7 +211,9 @@ module.exports = () => {
 
         const foundUser = await User.findOne({ publicAddress: userAddress });
 
-        const foundBlockchain = await Blockchain.findOne({ hash: blockchain });
+        const foundBlockchain = await Blockchain.findOne({
+          hash: blockchain, display: { $ne: true },
+        });
         const contractQuery = {
           blockView: false,
         };
