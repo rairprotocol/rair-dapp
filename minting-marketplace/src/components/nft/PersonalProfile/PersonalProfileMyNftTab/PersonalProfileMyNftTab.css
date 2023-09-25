@@ -3,3 +3,32 @@
   height: inherit;
   object-fit: cover !important;
 }
+
+.nft-item-sell-buton {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: rgba(34, 32, 33, 0.5);
+  border-radius: 16px;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  border: 1px solid rgb(78, 77, 77);
+  transition: all 0.2s ease;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px);
+}
+
+.nft-item-sell-buton i {
+  /* color: #e882d5; */
+  color: #fff;
+}
+
+.nft-item-sell-buton:hover {
+  background: rgb(34, 32, 33);
+  border: 1px solid rgb(78, 77, 77);
+  transition: all 0.2s ease;
+}

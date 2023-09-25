@@ -83,7 +83,6 @@ const PersonalProfileMyNftTabComponent: React.FC<
               el.metadata.name.toLowerCase().includes(titleSearch.toLowerCase())
             )
             .map((item, index) => {
-              console.info(item, 'item');
               if (item.contract.blockchain === '0x38') {
                 return null;
               } else {

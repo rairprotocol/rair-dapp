@@ -2661,3 +2661,7 @@ body.hotdrops::-webkit-scrollbar-thumb:active {
   max-width: 1200px;
   width: 100%;
 }
+
+div:where(.swal2-container) button:where(.swal2-close):focus {
+  box-shadow: none;
+}

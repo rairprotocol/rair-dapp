@@ -27,7 +27,8 @@ const SellButton: React.FC<ISellButton> = ({
   sellingPrice,
   isInputPriceExist,
   setIsInputPriceExist,
-  refreshResaleData
+  refreshResaleData,
+  item
   // setInputSellValue
 }) => {
   const { contractCreator, currentUserAddress, diamondMarketplaceInstance } =
@@ -35,8 +36,14 @@ const SellButton: React.FC<ISellButton> = ({
       (store) => store.contractStore
     );
 
-  const { blockchain, contract, tokenId } = useParams();
+  let { blockchain, contract, tokenId } = useParams();
   const [accountData, setAccountData] = useState<UserType | null>(null);
+
+  if (!blockchain && !contract && !tokenId) {
+    blockchain = item.contract.blockchain;
+    contract = item.contract.contractAddress;
+    tokenId = item.token;
+  }
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain } = useWeb3Tx();
@@ -134,6 +141,7 @@ const SellButton: React.FC<ISellButton> = ({
   const getInfoFromUser = useCallback(async () => {
     // find user
     if (
+      !item &&
       selectedToken &&
       tokenData?.[selectedToken]?.ownerAddress &&
       utils.isAddress(tokenData?.[selectedToken]?.ownerAddress)
@@ -150,8 +158,21 @@ const SellButton: React.FC<ISellButton> = ({
       } catch (e) {
         setAccountData(null);
       }
+    } else {
+      if (item && utils.isAddress(item.ownerAddress)) {
+        try {
+          const result = await axios
+            .get<TUserResponse>(`/api/users/${item.ownerAddress}`)
+            .then((res) => res.data);
+          if (result.success) {
+            setAccountData(result.user);
+          }
+        } catch (e) {
+          setAccountData(null);
+        }
+      }
     }
-  }, [selectedToken, setAccountData, tokenData]);
+  }, [selectedToken, setAccountData, tokenData, item]);
 
   useEffect(() => {
     getInfoFromUser();
@@ -182,36 +203,53 @@ const SellButton: React.FC<ISellButton> = ({
         />
       );
     } else {
-      return (
-        <div className="container-sell-button-user">
-          Owned by{' '}
-          <div className="block-user-creator">
-            <ImageLazy
-              src={accountData?.avatar ? accountData.avatar : defaultImage}
-              alt="User Avatar"
-            />
-            {selectedToken && (
-              <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
-                <h5>
-                  {(accountData &&
-                  accountData.nickName &&
-                  accountData.nickName.length > 20
-                    ? accountData.nickName.slice(0, 5) +
-                      '....' +
-                      accountData.nickName.slice(length - 4)
-                    : accountData && accountData.nickName) ||
-                    (tokenData?.[selectedToken]?.ownerAddress &&
-                      tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
+      if (item) {
+        return (
+          <BuySellButton
+            title={
+              isInputPriceExist && sellingPrice
+                ? `Sell for ${sellingPrice} ETH`
+                : 'Sell'
+            }
+            handleClick={
+              isInputPriceExist ? handleClickSellButton : openInputField
+            }
+            isColorPurple={false}
+            disabled={isInputPriceExist && !sellingPrice}
+          />
+        );
+      } else {
+        return (
+          <div className="container-sell-button-user">
+            Owned by{' '}
+            <div className="block-user-creator">
+              <ImageLazy
+                src={accountData?.avatar ? accountData.avatar : defaultImage}
+                alt="User Avatar"
+              />
+              {selectedToken && (
+                <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
+                  <h5>
+                    {(accountData &&
+                    accountData.nickName &&
+                    accountData.nickName.length > 20
+                      ? accountData.nickName.slice(0, 5) +
                         '....' +
-                        tokenData?.[selectedToken]?.ownerAddress.slice(
-                          length - 4
-                        ))}
-                </h5>
-              </NavLink>
-            )}
+                        accountData.nickName.slice(length - 4)
+                      : accountData && accountData.nickName) ||
+                      (tokenData?.[selectedToken]?.ownerAddress &&
+                        tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
+                          '....' +
+                          tokenData?.[selectedToken]?.ownerAddress.slice(
+                            length - 4
+                          ))}
+                  </h5>
+                </NavLink>
+              )}
+            </div>
           </div>
-        </div>
-      );
+        );
+      }
     }
   }, [
     blockchain,

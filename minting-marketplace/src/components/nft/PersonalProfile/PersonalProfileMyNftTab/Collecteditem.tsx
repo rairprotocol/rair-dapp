@@ -1,12 +1,29 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router';
 
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import useSwal from '../../../../hooks/useSwal';
+import { BillTransferIcon } from '../../../../images';
 import { rFetch } from '../../../../utils/rFetch';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
+
+import ResaleModal from './ResaleModal/ResaleModal';
 
 const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
   const [tokenInfo, setTokenInfo] = useState<any>(null);
   const navigate = useNavigate();
+  const reactSwal = useSwal();
+
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (state) => state.contractStore
+  );
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
+  const { userAddress } = useParams();
 
   const getTokenData = useCallback(async () => {
     const response = await rFetch(
@@ -38,11 +55,28 @@ const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
       style={{
         cursor: 'pointer'
       }}
-      onClick={() => {
-        redirection();
-      }}
+      // onClick={() => {
+      //   redirection();
+      // }}
       key={index}
       className="nft-item-collection grid-item">
+      {currentUserAddress === userAddress && (
+        <button
+          onClick={() => {
+            console.info(item, 'item');
+            reactSwal.fire({
+              html: <ResaleModal textColor={textColor} item={item} />,
+              showConfirmButton: false,
+              showCloseButton: true,
+              customClass: `resale-pop-up-custom ${
+                primaryColor === 'rhyno' ? 'rhyno' : ''
+              }`
+            });
+          }}
+          className="nft-item-sell-buton">
+          <BillTransferIcon primaryColor={primaryColor} />
+        </button>
+      )}
       <ImageLazy
         className={`my-items-pict ${profile && 'row profile'} zoom-event`}
         src={`${item.metadata.image || defaultImg}`}

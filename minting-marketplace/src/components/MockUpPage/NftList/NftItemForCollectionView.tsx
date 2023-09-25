@@ -1,14 +1,21 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
+import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
+import useSwal from '../../../hooks/useSwal';
+import { BillTransferIcon } from '../../../images';
 import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import { getRGBValue } from '../../../utils/determineColorRange';
 import { rFetch } from '../../../utils/rFetch';
+import ResaleModal from '../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 import {
@@ -43,10 +50,21 @@ const NftItemForCollectionViewComponent: React.FC<
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
+  const store = useStore();
 
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const ipfsLink = useIPFSImageLink(metadata?.image);
   const [tokenInfo, setTokenInfo] = useState<any>(null);
+
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (state) => state.contractStore
+  );
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
+  const { userAddress } = useParams();
+
+  const reactSwal = useSwal();
 
   const rgbValue = getRGBValue(diamond, offer, offerData, indexId);
 
@@ -169,6 +187,28 @@ const NftItemForCollectionViewComponent: React.FC<
       {offer && (
         // <div className="nft-item-collection grid-item">
         <div className="nft-item-collection grid-item" id={id}>
+          <>
+            {item && currentUserAddress === userAddress && (
+              <button
+                onClick={() => {
+                  reactSwal.fire({
+                    html: (
+                      <Provider store={store}>
+                        <ResaleModal textColor={textColor} item={item} />
+                      </Provider>
+                    ),
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                    customClass: `resale-pop-up-custom ${
+                      primaryColor === 'rhyno' ? 'rhyno' : ''
+                    }`
+                  });
+                }}
+                className="nft-item-sell-buton">
+                <BillTransferIcon primaryColor={primaryColor} />
+              </button>
+            )}
+          </>
           <div
             onClick={() => {
               if (
