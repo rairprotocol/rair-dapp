@@ -1,5 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
+const { ObjectId } = require('mongodb');
 const { retrieveMediaInfo, addPin, removePin } = require('../integrations/ipfsService')();
 const {
   validation,
@@ -19,7 +20,6 @@ const {
   User,
   Unlock,
 } = require('../models');
-const { ObjectId } = require('mongodb');
 
 module.exports = () => {
   const router = express.Router();
@@ -28,18 +28,21 @@ module.exports = () => {
    *
    * /api/media/add/{mediaId}:
    *   post:
-   *     description: Register a new piece of media.Optionally provide a decrypt key. Also pins the content in the provided IPFS store
+   *     description: Register a new piece of media.Optionally provide a decrypt key.
+  *                    Also pins the content in the provided IPFS store
    *     produces:
    *       - application/json
    *     parameters:
    *       - in: path
    *         name: mediaId
-   *         description: The IPFS content identifier (CID) for a RAIR compatible media folder. Must contain a rair.json manifest.
+   *         description: The IPFS content identifier (CID) for a RAIR compatible media
+   *                      folder. Must contain a rair.json manifest.
    *         schema:
    *           type: string
    *         required: true
    *     requestBody:
-   *       description: A .key file containing the private key for this media stream in binary encoding
+   *       description: A .key file containing the private key for
+   *                    this media stream in binary encoding
    *       required: false
    *       content:
    *         application/octet-stream:

@@ -6,7 +6,7 @@ const {
   getTransactionHistory,
   getLatestBlock,
 } = require('../utils/logUtils');
-const { Contract, Versioning } = require('../models');
+const { Contract, Versioning, Blockchain } = require('../models');
 const { processLogEvents } = require('../utils/reusableTransactionHandler');
 
 const lockLifetime = 1000 * 60 * 5;
@@ -27,7 +27,11 @@ module.exports = (context) => {
 
         // Extract network hash and task name from the task data
         const { network } = task.attrs.data;
-
+        const blockchainData = await Blockchain.findOne({ hash: network });
+        if (!blockchainData || blockchainData?.sync.toString() === 'false') {
+          log.info(`[${network}] Skipping ${taskName} events, syncing is disabled.`);
+          return done();
+        }
         // Find all diamond contracts from this blockchain
         const contractsToQuery = await Contract.find({
           blockchain: network,

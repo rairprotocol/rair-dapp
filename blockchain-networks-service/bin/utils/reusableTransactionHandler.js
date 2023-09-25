@@ -1,6 +1,6 @@
 const { BigNumber } = require('ethers');
 const { getTransactionHistory, getLatestBlock } = require('./logUtils');
-const { Transaction } = require('../models');
+const { Transaction, Blockchain } = require('../models');
 const log = require('./logger')(module);
 const { Versioning } = require('../models');
 const { blockchain } = require('../config');
@@ -104,6 +104,12 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
 
     // Extract network hash and task name from the task data
     const { network } = job.attrs.data;
+
+    const blockchainData = await Blockchain.findOne({ hash: network });
+    if (!blockchainData || blockchainData?.sync.toString() === 'false') {
+      log.info(`[${network}] Skipping ${taskName} events, syncing is disabled.`);
+      return done();
+    }
 
     // Get network data using the task's blockchain hash
     // This includes minter address and factory address
