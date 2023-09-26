@@ -22,7 +22,8 @@ import {
 import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const ListOffers: React.FC<IListOffers> = ({
-  MINTERHash,
+  mintingRole,
+  checkMarketRoles,
   contractData,
   setStepNumber,
   stepNumber,
@@ -34,7 +35,6 @@ const ListOffers: React.FC<IListOffers> = ({
 
   const [offerList, setOfferList] = useState<TOfferListItem[]>([]);
   const [forceRerender, setForceRerender] = useState<boolean>(false);
-  const [hasMinterRole, setHasMinterRole] = useState<boolean>(false);
   const [instance, setInstance] = useState<ethers.Contract | undefined>();
   const [onMyChain, setOnMyChain] = useState<boolean>(
     correctBlockchain(contractData?.blockchain as BlockchainType)
@@ -124,27 +124,6 @@ const ListOffers: React.FC<IListOffers> = ({
     }
   }, [address, onMyChain, contractCreator]);
 
-  const fetchMintingStatus = useCallback(async () => {
-    if (!instance || !onMyChain || !MINTERHash) {
-      return;
-    }
-    try {
-      setHasMinterRole(
-        await web3TxHandler(instance, 'hasRole', [
-          MINTERHash,
-          minterInstance?.address
-        ])
-      );
-    } catch (err) {
-      console.error(err);
-      setHasMinterRole(false);
-    }
-  }, [instance, onMyChain, MINTERHash, web3TxHandler, minterInstance?.address]);
-
-  useEffect(() => {
-    fetchMintingStatus();
-  }, [fetchMintingStatus]);
-
   const giveMinterRole = async () => {
     if (!instance) {
       return;
@@ -162,7 +141,7 @@ const ListOffers: React.FC<IListOffers> = ({
       ])
     ) {
       reactSwal.fire('Success!', 'You can create offers now!', 'success');
-      fetchMintingStatus();
+      checkMarketRoles();
     }
   };
 
@@ -337,7 +316,7 @@ const ListOffers: React.FC<IListOffers> = ({
                         chainData[contractData?.blockchain]?.name
                       }`
                     }
-                  : hasMinterRole === true
+                  : mintingRole === true
                   ? {
                       action: offerList[0]?.fixed ? appendOffers : createOffers,
                       label: offerList[0]?.fixed
