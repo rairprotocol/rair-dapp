@@ -215,7 +215,7 @@ module.exports = () => {
         const foundUser = await User.findOne({ publicAddress: userAddress });
 
         const blockchainQuery = {
-          display: { $ne: true },
+          display: { $ne: false },
         };
         if (blockchain) {
           blockchainQuery.hash = blockchain;
@@ -225,7 +225,7 @@ module.exports = () => {
         const contractQuery = {
           blockView: false,
         };
-        if (foundBlockchain?.length >= 1) {
+        if (foundBlockchain.length !== undefined) {
           contractQuery.blockchain = { $in: foundBlockchain.map((chain) => chain.hash) };
         }
         if (contractAddress) {
