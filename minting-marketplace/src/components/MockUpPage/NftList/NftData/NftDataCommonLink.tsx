@@ -113,8 +113,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
       setSelectedToken(tokenId);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [product, contract, tokenId, blockchain, dispatch, tokenBought]
+    [product, contract, tokenId, blockchain, dispatch]
   );
 
   const getProductsFromOffer = useCallback(async () => {
@@ -260,7 +259,14 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       }
     }
     getAllProduct(tokenStart.toString(), tokenEnd.toString());
-  }, [getAllProduct, showTokensRef, tokenId, tokenNumber, setTokenNumber]);
+  }, [
+    getAllProduct,
+    showTokensRef,
+    tokenId,
+    tokenNumber,
+    setTokenNumber,
+    tokenBought
+  ]);
 
   useEffect(() => {
     getParticularOffer();

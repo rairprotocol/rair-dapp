@@ -53,17 +53,12 @@ module.exports = async (
     diamondRangeIndex: rangeIndex,
   });
 
-  const product = await Product.findOne({
-    contract: contract._id,
-    collectionIndexInContract: offer.product,
-  });
-
   let foundToken = await MintedToken.findOne({
     contract: contract._id,
     token: tokenIndex,
   });
 
-  if (foundToken) {
+  if (foundToken && offer) {
     foundToken = await handleMetadataForToken(
       contract._id,
       offer.product,
@@ -74,22 +69,26 @@ module.exports = async (
     log.error(`Cant find tokenid ${tokenIndex} from contract ${contract.blockchain} ${contract.contractAddress}, won't update metadata`);
   }
 
-  // Decrease the amount of copies in the offer
   if (offer) {
+    const product = await Product.findOne({
+      contract: contract._id,
+      collectionIndexInContract: offer.product,
+    });
+    // Decrease the amount of copies in the offer
     offer.soldCopies = BigNumber.from(offer.soldCopies).add(1).toString();
     await offer.save().catch(handleDuplicateKey);
-  }
-
-  // Decrease the amount of copies in the product
-  if (product) {
     const allOffersInProduct = await Offer.find({
       contract: offer.contract,
       product: offer.product,
     });
-    const totalSoldTokensInProduct = allOffersInProduct
-      .reduce((result, currentOffer) => result + BigInt(currentOffer.soldCopies), 0n);
-    product.soldCopies = totalSoldTokensInProduct.toString();
-    await product.save().catch(handleDuplicateKey);
+    if (product) {
+      // Decrease the amount of copies in the product
+      const totalSoldTokensInProduct = allOffersInProduct
+        .reduce((result, currentOffer) => result + BigInt(currentOffer.soldCopies), 0n);
+      product.soldCopies = totalSoldTokensInProduct.toString();
+      await product.save().catch(handleDuplicateKey);
+    }
   }
+
   return foundToken;
 };
