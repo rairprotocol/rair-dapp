@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 // React Redux types
 import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 
@@ -127,9 +127,28 @@ function App() {
 
   const { connectUserData, logoutUser } = useConnectUser();
 
+  const { pathname } = useLocation();
+
+  const showAlertHandler = useCallback(() => {
+    setShowAlert(
+      (pathname !== '/' || isSplashPage) &&
+        currentUserAddress &&
+        realNameChain &&
+        !correctBlockchain(realChain)
+    );
+  }, [
+    pathname,
+    isSplashPage,
+    currentUserAddress,
+    realNameChain,
+    correctBlockchain,
+    realChain
+  ]);
+
+  useEffect(() => showAlertHandler(), [showAlertHandler]);
+
   const goHome = () => {
     navigate('/');
-    setShowAlert(false);
     dispatch(getCurrentPageEnd());
     sessionStorage.removeItem('CategoryItems');
     sessionStorage.removeItem('BlockchainItems');
@@ -228,15 +247,6 @@ function App() {
     }
   }, [primaryColor]);
 
-  useEffect(() => {
-    if (!selectedChain) return;
-
-    if (!showAlert) {
-      setShowAlert(true);
-    }
-    //eslint-disable-next-line
-  }, [selectedChain]);
-
   const hotDropsVar = process.env.REACT_APP_HOTDROPS;
 
   useEffect(() => {
@@ -251,32 +261,28 @@ function App() {
   return (
     <ErrorBoundary fallback={ErrorFallback}>
       <MetaTags seoMetaTags={seo} />
-      {realNameChain &&
-      !correctBlockchain(realChain) &&
-      showAlert &&
-      !isSplashPage ? (
+      {showAlert === true && (
         <AlertMetamask
           selectedChain={selectedChain}
           selectedChainId={selectedChainId}
           realNameChain={realNameChain}
           setShowAlert={setShowAlert}
         />
-      ) : null}
+      )}
       <AppContainerFluid
         id="App"
         className="App p-0 container-fluid"
         backgroundImageEffect={backgroundImageEffect}
         textColor={textColor}
         primaryColor={primaryColor}
-        backgroundImage={hotDropsVar === 'true' ? '' : backgroundImage}
-        showAlert={showAlert}>
+        backgroundImage={hotDropsVar === 'true' ? '' : backgroundImage}>
         <div className="row w-100 m-0 p-0">
           {carousel && !isIframePage ? (
             <MainHeader
               goHome={goHome}
               renderBtnConnect={renderBtnConnect}
               creatorViewsDisabled={creatorViewsDisabled}
-              showAlert={selectedChain && showAlert}
+              showAlert={showAlert}
               selectedChain={correctBlockchain(realChain)}
               isSplashPage={isSplashPage}
               realChainId={realNameChain && realChain}

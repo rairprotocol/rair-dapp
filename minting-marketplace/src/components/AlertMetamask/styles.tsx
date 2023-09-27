@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 export const Alert = styled.div`
   width: 100%;
-  height: 50px;
   position: fixed;
   display: flex;
+  padding: 1vh 1vw;
   align-items: center;
   text-align: center;
   justify-content: center;
@@ -18,7 +18,6 @@ export const Alert = styled.div`
     background: #7400af;
   }
   @media (max-width: 500px) {
-    height: 50px;
     font-size: 12px;
   }
 

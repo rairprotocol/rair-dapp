@@ -40,7 +40,6 @@ import './Header.css';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
-  renderBtnConnect,
   creatorViewsDisabled,
   selectedChain,
   showAlert,
