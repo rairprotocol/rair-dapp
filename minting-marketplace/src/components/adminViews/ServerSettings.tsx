@@ -14,18 +14,31 @@ type Settings = {
   featuredCollection?: any;
 };
 
+type BlockchainSetting = {
+  hash: string;
+  display: Boolean;
+  sync: Boolean;
+  name: String;
+  _id: String;
+};
+
 const ServerSettings = ({ fullContractData }) => {
   const [settings, setSettings] = useState<Settings>({});
   const [productOptions, setProductOptions] = useState<OptionsType[]>();
   const [featuredContract, setFeaturedContract] = useState('null');
   const [featuredProduct, setFeaturedProduct] = useState('null');
+  const [blockchainSettings, setBlockchainSettings] = useState<
+    BlockchainSetting[]
+  >([]);
   const [nodeAddress, setNodeAddress] = useState(
     process.env.REACT_APP_NODE_ADDRESS
   );
   const reactSwal = useSwal();
 
   const getServerSettings = useCallback(async () => {
-    const { success, settings } = await rFetch('/api/settings');
+    const { success, settings, blockchainSettings } = await rFetch(
+      '/api/settings'
+    );
     if (success) {
       setSettings(settings);
       if (settings.featuredCollection) {
@@ -35,6 +48,7 @@ const ServerSettings = ({ fullContractData }) => {
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
       }
+      setBlockchainSettings(blockchainSettings);
     }
   }, []);
 
@@ -44,6 +58,25 @@ const ServerSettings = ({ fullContractData }) => {
         method: 'POST',
         body: JSON.stringify({
           value
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (success) {
+        reactSwal.fire('Success', 'Setting set', 'success');
+        getServerSettings();
+      }
+    },
+    [reactSwal, getServerSettings]
+  );
+
+  const setBlockchainSetting = useCallback(
+    async (chain: string, setting: string, value: string) => {
+      const { success } = await rFetch(`/api/settings/${chain}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          [setting]: value
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -159,6 +192,56 @@ const ServerSettings = ({ fullContractData }) => {
           onClick={() => setServerSetting('nodeAddress', nodeAddress)}>
           Set
         </button>
+      </div>
+      <div className="col-12 col-md-6 my-2">
+        Blockchain settings:
+        <br />
+        {blockchainSettings.map((chain, index) => {
+          return (
+            <details className="row" key={index}>
+              <summary className="h5">{chain.name}</summary>
+              <div className="col-12">
+                <span className="me-4">Sync contracts:</span>
+                <button
+                  disabled={!!chain?.sync}
+                  className="btn btn-royal-ice"
+                  onClick={() =>
+                    setBlockchainSetting(chain.hash, 'sync', 'true')
+                  }>
+                  Yes
+                </button>
+                <button
+                  disabled={!chain?.sync}
+                  className="btn btn-stimorol"
+                  onClick={() =>
+                    setBlockchainSetting(chain.hash, 'sync', 'false')
+                  }>
+                  No
+                </button>
+              </div>
+              <div className="col-12">
+                <span className="me-4">Display contracts:</span>
+                <button
+                  disabled={!!chain?.display}
+                  className="btn btn-royal-ice"
+                  onClick={() =>
+                    setBlockchainSetting(chain.hash, 'display', 'true')
+                  }>
+                  Yes
+                </button>
+                <button
+                  disabled={!chain?.display}
+                  className="btn btn-stimorol"
+                  onClick={() =>
+                    setBlockchainSetting(chain.hash, 'display', 'false')
+                  }>
+                  No
+                </button>
+              </div>
+              <hr />
+            </details>
+          );
+        })}
       </div>
     </div>
   );

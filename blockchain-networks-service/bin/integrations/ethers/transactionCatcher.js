@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 const ethers = require('ethers');
-const { Transaction, Contract } = require('../../models');
+const { Transaction, Contract, Blockchain } = require('../../models');
 const { getAlchemy } = require('../../utils/alchemySdk');
 const log = require('../../utils/logger')(module);
 const { masterMapping, insertionMapping } = require('../../utils/eventCatcherMapping');
@@ -13,6 +13,10 @@ const getTransaction = async (
   userData,
 ) => {
   try {
+    const blockchainData = await Blockchain.findOne({ hash: network });
+    if (!blockchainData || blockchainData?.sync.toString() === 'false') {
+      throw Error(`Transaction Verification aborted for ${transactionHash}, this server won't sync ${blockchainData?.name}`);
+    }
     // Validate that the processed transaction doesn't exist already in the database
     const existingTransaction = await Transaction.findOne({
       _id: transactionHash,

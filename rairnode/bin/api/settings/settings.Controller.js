@@ -1,10 +1,11 @@
 const express = require('express');
-const { requireUserSession, isAdmin } = require('../../middleware');
+const { requireUserSession, isAdmin, verifySuperAdmin } = require('../../middleware');
 const {
   createSettingsIfTheyDontExist,
   getServerSettings,
   setServerSetting,
   getFeaturedCollection,
+  setBlockchainSetting,
 } = require('./settings.Service');
 
 const router = express.Router();
@@ -27,6 +28,13 @@ router.post(
   isAdmin,
   createSettingsIfTheyDontExist,
   setServerSetting,
+);
+
+router.put(
+  '/:blockchain',
+  requireUserSession,
+  verifySuperAdmin,
+  setBlockchainSetting,
 );
 
 module.exports = router;

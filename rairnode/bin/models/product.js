@@ -54,7 +54,16 @@ Product.statics = {
           },
       },
       { $unwind: { path: '$contractData' } },
-      { $match: { 'contractData.blockView': false } },
+      {
+        $lookup: {
+            from: 'Blockchain',
+            localField: 'contractData.blockchain',
+            foreignField: 'hash',
+            as: 'blockchainData',
+        },
+      },
+      { $unwind: { path: '$blockchainData' } },
+      { $match: { 'contractData.blockView': false, 'blockchainData.display': { $ne: false } } },
 
       {
         $lookup: {

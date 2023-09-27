@@ -1,5 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
+const { ObjectId } = require('mongodb');
 const AppError = require('../../utils/errors/AppError');
 const {
   validation,
@@ -12,16 +13,16 @@ const {
 } = require('../../integrations/ethers/importContractData');
 const log = require('../../utils/logger')(module);
 const contractRoutes = require('./contract');
-const { Contract, User, File, Blockchain, Category } = require('../../models');
-const { ObjectId } = require('mongodb');
+const { Contract, User, File, Blockchain } = require('../../models');
 
 const getContractsByUser = async (user, res, next) => {
   try {
+    const foundBlockchain = await Blockchain.find({
+      display: { $ne: false },
+    });
     const contractQuery = {
       blockView: false,
-      blockchain: {
-        $nin: ['0x61', '0x38'],
-      },
+      blockchain: foundBlockchain.map((chain) => chain.hash),
     };
     if (user) {
       contractQuery.user = user;
@@ -76,7 +77,7 @@ module.exports = (context) => {
         } = req.query;
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
-        const blockchainArr = blockchain.split(',');
+        const blockchainArr = blockchain === '' ? [] : blockchain.split(',');
 
         const options = [];
 
@@ -217,19 +218,20 @@ module.exports = (context) => {
           },
         );
 
-        const foundBlockchain = await Blockchain.find({
-          hash: [...blockchainArr],
-        });
+        const blockchainFilter = {
+          display: { $ne: false },
+        };
+        if (blockchainArr?.length >= 1) {
+          blockchainFilter.hash = [...blockchainArr];
+        }
+        const foundBlockchain = await Blockchain.find(blockchainFilter);
 
-        if (foundBlockchain.length >= 1) {
-          options.unshift({
-            $match: {
-              blockchain: {
-                $in: [...blockchainArr],
-              },
-            },
-          });
-        } else if (blockchain.length >= 1) {
+        options.unshift({
+          $match: {
+            blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
+          },
+        });
+        if (foundBlockchain.length === 0 && blockchain.length >= 1) {
           return next(new AppError('Invalid blockchain.', 404));
         }
 
