@@ -55,24 +55,30 @@ const ResaleModal = ({ item, textColor }) => {
         'getTreasuryFee'
       );
 
-      const calculation1 = formatUnits(nodeFee.nodeFee, nodeFee.decimals);
-      const calculation2 = formatUnits(
+      const result = await web3TxHandler(
+        diamondMarketplaceInstance,
+        'getRoyalties',
+        [item.contract.contractAddress]
+      );
+
+      const calculationNodeFee = formatUnits(nodeFee.nodeFee, nodeFee.decimals);
+      const calculationTreasuryFee = formatUnits(
         treasuryFee.treasuryFee,
         treasuryFee.decimals
       );
 
+      const calculationGetRoyalties =
+        result.length > 0
+          ? formatUnits(result[0].percentage, nodeFee.decimals)
+          : false;
+
       const objFee = {
-        nodeFee: calculation1,
-        treasuryFee: calculation2
+        nodeFee: calculationNodeFee,
+        treasuryFee: calculationTreasuryFee,
+        creatorFee: calculationGetRoyalties
       };
 
       setCommissionFee(objFee);
-
-      // const result = await web3TxHandler(
-      //   diamondMarketplaceInstance,
-      //   'getRoyalties',
-      //   [item.contract.contractAddress]
-      // );
 
       // console.info(calculation, 'calculation');
     }
@@ -273,22 +279,30 @@ const ResaleModal = ({ item, textColor }) => {
 
       <div className="resale-modal-information">
         <div className="resale-modal-information-title">Summary</div>
-        <div className="resale-modal-information-box">
+        {/* <div className="resale-modal-information-box">
           <div>Listed price</div>
           <div>
             {inputSellValue && correctBlockchain(item.contract.blockchain)
               ? inputSellValue
               : '0'}
           </div>
-        </div>
-        {/* <div className="resale-modal-information-box">
-          <div>Amount to Creator</div>
+        </div> */}
+        <div className="resale-modal-information-box">
+          <div>Amount to creator</div>
           <div>
-            {correctBlockchain(item.contract.blockchain)
+            {/* {correctBlockchain(item.contract.blockchain)
               ? ((Number(inputSellValue) * 0.4) / 100).toFixed(3)
+              : '0'} */}
+            {commissionFee &&
+            commissionFee.creatorFee &&
+            commissionFee.creatorFee.length > 0
+              ? (
+                  (Number(inputSellValue) * Number(commissionFee.creatorFee)) /
+                  100
+                ).toFixed(3)
               : '0'}
           </div>
-        </div> */}
+        </div>
         <div className="resale-modal-information-box">
           <div>Node and treasury:</div>
           {commissionFee && (
@@ -305,10 +319,16 @@ const ResaleModal = ({ item, textColor }) => {
         <div className="resale-modal-information-box">
           <div>Total:</div>
           <div>
-            {correctBlockchain(item.contract.blockchain)
+            {commissionFee && correctBlockchain(item.contract.blockchain)
               ? (
                   Number(inputSellValue) -
-                  (Number(inputSellValue) * 5) / 100
+                  (Number(inputSellValue) *
+                    (Number(commissionFee.creatorFee) +
+                      (Number(commissionFee.nodeFee) +
+                        (commissionFee.treasuryFee
+                          ? Number(commissionFee.treasuryFee)
+                          : 0)))) /
+                    100
                 ).toFixed(3)
               : '0'}
           </div>
