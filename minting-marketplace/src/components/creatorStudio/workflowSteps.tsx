@@ -346,50 +346,49 @@ const WorkflowSteps: FC = () => {
     diamondMarketplaceInstance
   ]);
 
-  const hasMintingRole = useCallback(async () => {
+  const checkMarketRoles = useCallback(async () => {
     if (
       !contractData?.instance ||
       contractData.external ||
-      !correctBlockchain(contractData.blockchain as BlockchainType)
+      !correctBlockchain(contractData.blockchain as BlockchainType) ||
+      !(contractData.diamond ? diamondMarketplaceInstance : minterInstance)
     ) {
       return;
     }
     const MINTER = await web3TxHandler(contractData.instance, 'MINTER');
-    if (!MINTER) {
-      return;
+    if (MINTER) {
+      setMINTERHash(MINTER);
+      setMintingRole(
+        await web3TxHandler(contractData.instance, 'hasRole', [
+          MINTER,
+          contractData.diamond
+            ? diamondMarketplaceInstance?.address
+            : minterInstance?.address
+        ])
+      );
     }
-    setMINTERHash(MINTER);
-    setMintingRole(
-      await web3TxHandler(contractData.instance, 'hasRole', [
-        MINTER,
-        contractData.diamond
-          ? diamondMarketplaceInstance?.address
-          : minterInstance?.address
-      ])
-    );
     const TRADER = await web3TxHandler(contractData.instance, 'TRADER');
-    if (!TRADER) {
-      return;
+    if (TRADER) {
+      setTraderRole(
+        await web3TxHandler(contractData.instance, 'hasRole', [
+          TRADER,
+          contractData.diamond
+            ? diamondMarketplaceInstance?.address
+            : minterInstance?.address
+        ])
+      );
     }
-    setTraderRole(
-      await web3TxHandler(contractData.instance, 'hasRole', [
-        TRADER,
-        contractData.diamond
-          ? diamondMarketplaceInstance?.address
-          : minterInstance?.address
-      ])
-    );
   }, [
     contractData,
     correctBlockchain,
-    diamondMarketplaceInstance?.address,
-    minterInstance?.address,
+    diamondMarketplaceInstance,
+    minterInstance,
     web3TxHandler
   ]);
 
   useEffect(() => {
-    hasMintingRole();
-  }, [hasMintingRole]);
+    checkMarketRoles();
+  }, [checkMarketRoles]);
 
   useEffect(() => {
     // Fix this
@@ -435,6 +434,7 @@ const WorkflowSteps: FC = () => {
     goBack,
     mintingRole,
     traderRole,
+    checkMarketRoles,
     onMyChain,
     correctMinterInstance,
     tokenInstance,

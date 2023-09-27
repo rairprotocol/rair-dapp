@@ -72,9 +72,10 @@ const PopUpNotification = () =>
               className="pop-up-notification"
               style={{
                 backgroundColor: `${
-                  primaryColor === 'rhyno' ? '#acacac' : '#383637'
+                  primaryColor === 'rhyno' ? 'rgb(246 246 246)' : '#383637'
                 }`,
-                border: '1px solid #fff'
+                border: '1px solid #fff',
+                color: `${primaryColor === 'rhyno' && '#000'}`
               }}
               onClick={() => {
                 setOpenModal(false);

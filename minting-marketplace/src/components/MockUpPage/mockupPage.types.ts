@@ -113,13 +113,15 @@ export interface ISerialNumberBuySell {
   handleTokenBoughtButton: () => void;
 }
 export interface ISellButton {
-  tokenData: { [index: string]: TTokenData } | null;
-  selectedToken: string | undefined;
+  currentUser?: string | undefined;
+  tokenData?: { [index: string]: TTokenData } | null;
+  selectedToken?: string | undefined;
   sellingPrice?: string;
   isInputPriceExist: boolean;
   setIsInputPriceExist: (inputPrice: boolean) => void;
   setInputSellValue: (inputSellValue: string) => void;
   refreshResaleData: () => void;
+  item?: any;
 }
 
 export interface ISingleTokenViewProperties {

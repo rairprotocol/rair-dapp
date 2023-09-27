@@ -1480,7 +1480,7 @@ select.form-control.rounded-rair:disabled {
 .search-holder-wrapper {
   /* position: fixed; */
   position: absolute;
-  background: rgb(11, 11, 11);
+  background: rgb(56, 54, 55);
   /* top: 5rem;
   left: 35rem; */
   top: 3rem;
@@ -2660,4 +2660,8 @@ body.hotdrops::-webkit-scrollbar-thumb:active {
 .main {
   max-width: 1200px;
   width: 100%;
+}
+
+div:where(.swal2-container) button:where(.swal2-close):focus {
+  box-shadow: none;
 }

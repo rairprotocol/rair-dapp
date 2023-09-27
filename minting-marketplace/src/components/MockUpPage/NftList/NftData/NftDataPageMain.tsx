@@ -383,7 +383,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               contract={contract}
               selectedToken={selectedToken}
               textColor={textColor}
-              handleTokenBoughtButton={handleTokenBoughtButton}
+              handleTokenBoughtButton={fetchTokenFullData}
             />
           )}
           <div className="properties-title">

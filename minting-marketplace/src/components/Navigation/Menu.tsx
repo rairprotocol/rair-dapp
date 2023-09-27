@@ -214,6 +214,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         onClick={() => {
                           handleMessageAlert('notification');
                           toggleMenu('nav');
+                          handleActiveSearch();
                         }}
                         className="social-bell-icon"
                         width="40px"

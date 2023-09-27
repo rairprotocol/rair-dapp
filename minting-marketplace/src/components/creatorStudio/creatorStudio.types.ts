@@ -175,6 +175,7 @@ export type TTokenLock = {
 
 export type TWorkflowContextType = {
   MINTERHash: string | undefined;
+  checkMarketRoles: () => void;
   contractData: TContractData | TDiamondContractData | undefined;
   steps: TSteps[];
   setStepNumber: Function;
@@ -278,7 +279,8 @@ export interface IOfferRow {
 }
 
 export interface IListOffers {
-  MINTERHash: string | undefined;
+  mintingRole: boolean;
+  checkMarketRoles: () => void;
   contractData: TContractData | undefined;
   setStepNumber: Function;
   stepNumber: number;
