@@ -179,7 +179,7 @@ const MyItems: React.FC<IMyItems> = ({
                   }`
                 }}
                 className="category-button-nft category-button">
-                {width <= 700 ? 'NFT' : 'My NFTs'}
+                {width <= 700 ? 'Created' : 'Created'}
               </Tab>
               <Tab
                 style={{

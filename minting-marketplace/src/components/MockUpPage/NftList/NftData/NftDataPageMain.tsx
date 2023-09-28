@@ -402,7 +402,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               selectedData?.description
             ) : (
               <>
-                This {hotdropsVar ? 'collectable' : 'NFT'} doesn&apos;t have a
+                This {hotdropsVar ? 'collectible' : 'NFT'} doesn&apos;t have a
                 description.
               </>
             )}
@@ -421,14 +421,14 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
           ) : (
             <div className="description-text">
               {`This ${
-                hotdropsVar ? 'collectable' : 'nft'
+                hotdropsVar ? 'collectible' : 'nft'
               } doesn't have any properties.`}
             </div>
           )}
         </div>
         <div className="this-nft-unlocks">
           <TitleSingleTokenView
-            title={`This ${hotdropsVar ? 'Collectable' : 'NFT'} unlocks`}
+            title={`This ${hotdropsVar ? 'collectible' : 'NFT'} unlocks`}
             primaryColor={primaryColor}
           />
         </div>
@@ -456,7 +456,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
           <LoadingComponent />
         ) : (
           <div className="description-text">{`This ${
-            hotdropsVar ? 'collectable' : 'NFT'
+            hotdropsVar ? 'collectible' : 'NFT'
           } doesn't have any unlockable videos.`}</div>
         )}
       </div>

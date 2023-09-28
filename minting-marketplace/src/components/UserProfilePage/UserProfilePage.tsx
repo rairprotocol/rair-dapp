@@ -475,7 +475,7 @@ const UserProfilePage: React.FC = () => {
                     }`
                   }}
                   className="category-button-videos category-button">
-                  {width > 676 ? 'Created' : 'NFT'}
+                  {width > 676 ? 'Created' : 'Created'}
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
