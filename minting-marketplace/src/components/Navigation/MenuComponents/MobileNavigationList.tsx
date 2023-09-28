@@ -26,15 +26,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   primaryColor,
   toggleMenu,
   currentUserAddress,
-  // setTabIndexItems,
-  isSplashPage,
   click
 }) => {
-  // const goToMyItems = (tab: number) => {
-  //   setTabIndexItems(tab);
-  //   toggleMenu();
-  // };
-
   const hotDropsVar = process.env.REACT_APP_HOTDROPS;
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
@@ -100,11 +93,6 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         <NavFooterBox
           className="nav-header-box-mobile"
           primaryColor={primaryColor}>
-          {/* {!isSplashPage && (
-            <li onClick={() => toggleMenu()}>
-              <NavLink to="/about-page">About</NavLink>
-            </li>
-          )} */}
           {hotDropsVar !== 'true' && (
             <li>
               <a
@@ -115,20 +103,6 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               </a>
             </li>
           )}
-          {/* {currentUserAddress && (
-            <li onClick={() => toggleMenu()}>
-              <NavLink to={`/${currentUserAddress}`}>View Profile</NavLink>
-            </li>
-          )} */}
-          {/* {currentUserAddress && (
-            <li
-              onClick={() => {
-                navigator.clipboard.writeText(currentUserAddress);
-                setCopyEth(true);
-              }}>
-              {copyEth ? 'Copied!' : 'Copy your eth address'}
-            </li>
-          )} */}
           {hotDropsVar !== 'true' ? (
             <li>
               <TalkSalesComponent

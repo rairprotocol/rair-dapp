@@ -50,14 +50,13 @@ export const BannerCollection = ({ item, getContractData }) => {
       });
 
       if (response.success) {
-        // setBackgroundUser(user.background);
-        // setFileUpload(null);
         setLoadingBg(false);
         getContractData();
       } else {
         setLoadingBg(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileUpload]);
 
   useEffect(() => {
@@ -94,7 +93,6 @@ export const BannerCollection = ({ item, getContractData }) => {
           className={`col-1 btn btn-${primaryColor} text-start rounded-rair my-1 m-1 banner-collection`}>
           <i className="fas fa-plus" />
           <label className={'inputFile'}>
-            {/* <AddIcon className={'plus'} /> */}
             <input
               className="col-1"
               disabled={loadingBg ? true : false}

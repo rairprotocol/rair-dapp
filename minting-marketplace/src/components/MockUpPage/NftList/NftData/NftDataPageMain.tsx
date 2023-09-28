@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-// import CustomShareButton from './CustomShareButton';
 import EtherscanIconComponent from './EtherscanIconComponent';
 import SerialNumberBuySell from './SerialNumberBuySell';
 import SingleTokenViewProperties from './SingleTokenViewProperties';
@@ -15,10 +13,8 @@ import { TFileType, TNftItemResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-// import { setTokenData } from '../../../../ducks/nftData/action';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
-// import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { ExpandImageIcon } from '../../../../images';
 import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
 import setDocumentTitle from '../../../../utils/setTitle';
@@ -47,20 +43,15 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   someUsersData,
   ownerInfo,
   embeddedParams,
-  handleTokenBoughtButton,
   setTokenNumber
 }) => {
-  const { tokenData, tokenDataListTotal } = useSelector<
-    RootState,
-    InitialNftDataStateType
-  >((state) => state.nftDataStore);
-  const [serialNumberData, setSerialNumberData] = useState({});
-  // const { width } = useWindowDimensions();
+  const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
+    (state) => state.nftDataStore
+  );
   const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const [verticalImage, setVerticalImage] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
-  //const navigate = useNavigate();
   const myRef = useRef(null);
   const hotdropsVar = process.env.REACT_APP_HOTDROPS === 'true';
   const [playing, setPlaying] = useState<boolean>(false);
@@ -76,28 +67,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
 
   const [tokenFullData, setTokenFullData] = useState<any>(undefined);
   const dispatch = useDispatch();
-
-  const getAllProduct = useCallback(
-    async () => {
-      if (tokenDataListTotal) {
-        const responseAllProduct = await axios.get<TNftItemResponse>(
-          `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=${tokenDataListTotal}`
-        );
-
-        const tokenMapping = {};
-
-        if (responseAllProduct.data.success && responseAllProduct.data.result) {
-          responseAllProduct.data.result.tokens.forEach((item) => {
-            tokenMapping[item.token] = item;
-          });
-        }
-
-        setSerialNumberData(tokenMapping);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [product, contract, blockchain, dispatch, tokenDataListTotal]
-  );
 
   useEffect(() => {
     if (productsFromOffer) {
@@ -154,10 +123,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   useEffect(() => {
     checkUrl();
   }, [checkUrl]);
-
-  // useEffect(() => {
-  //   getAllProduct();
-  // }, [getAllProduct]);
 
   const handlePlayerClick = () => {
     setOpenVideoPlayer(true);
@@ -236,6 +201,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     if (selectedToken) {
       setTokenNumber(Number(selectedToken));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToken]);
 
   if (!selectedData?.name) {

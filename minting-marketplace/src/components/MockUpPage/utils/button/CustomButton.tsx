@@ -16,7 +16,6 @@ const CustomButton: React.FC<ICustomButton> = ({
   onClick,
   textColor,
   margin,
-  custom,
   font,
   background,
   hoverBackground,

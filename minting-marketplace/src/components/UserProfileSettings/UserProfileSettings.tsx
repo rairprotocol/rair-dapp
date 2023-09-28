@@ -11,8 +11,6 @@ import { SunIcon } from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 
-import PopUpNotification from './PopUpNotification/PopUpNotification';
-
 import './UserProfileSettings.css';
 
 const UserProfileSettings = ({
@@ -36,10 +34,8 @@ const UserProfileSettings = ({
   return (
     <div
       style={{
-        // position: "absolute",
         display: 'flex',
         alignContent: 'center'
-        // marginRight: '16px'
       }}>
       <div
         style={{
@@ -47,12 +43,6 @@ const UserProfileSettings = ({
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-        {/* {loggedIn && (
-          <PopUpNotification
-            primaryColor={primaryColor}
-            isNotification={true}
-          />
-        )} */}
         <TooltipBox position={'bottom'} title="Switch Theme">
           <SocialBox
             className="social-sun-icon"

@@ -7,7 +7,6 @@ const CustomShareButton: React.FC<ICusmonShareButton> = ({
   title,
   handleClick,
   primaryColor,
-  isCollectionPathExist,
   moreUnlockablesClassName
 }) => {
   const { width } = useWindowDimensions();

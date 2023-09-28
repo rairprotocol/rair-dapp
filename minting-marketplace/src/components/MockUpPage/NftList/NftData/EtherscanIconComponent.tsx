@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Tooltip } from '@mui/material';
 
 import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';

@@ -12,7 +12,6 @@ import { utils } from 'ethers';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { INftItemComponent } from './nftList.types';
-import { SvgKey } from './SvgKey';
 
 import {
   TNftItemResponse,

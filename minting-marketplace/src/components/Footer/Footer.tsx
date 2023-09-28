@@ -7,7 +7,6 @@ import { IFooter } from './footer.types';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import {
   DiscordIcon,
   HotDropsLogo,
@@ -29,17 +28,13 @@ import {
   NavFooterBox
 } from './FooterItems/FooterItems';
 
-const Footer: React.FC<IFooter> = ({ isSplashPage }) => {
+const Footer: React.FC<IFooter> = () => {
   const [emailChimp, setEmailChimp] = useState<string>('');
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
-  );
-
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
   );
 
   const onChangeEmail = (e) => {

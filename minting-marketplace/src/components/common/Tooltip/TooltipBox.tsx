@@ -5,7 +5,6 @@ import { ITooltipBox } from './types';
 export const TooltipBox: React.FC<ITooltipBox> = ({
   title,
   children,
-  position = 'bottom',
   enterDelay
 }) => {
   return (
@@ -13,9 +12,7 @@ export const TooltipBox: React.FC<ITooltipBox> = ({
       disableTouchListener
       enterDelay={enterDelay ? enterDelay : 500}
       leaveDelay={200}
-      title={title}
-      //   position={position}
-    >
+      title={title}>
       {children}
     </Tooltip>
   );

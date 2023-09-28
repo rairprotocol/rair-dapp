@@ -16,7 +16,6 @@ import {
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import AikonWidget from '../UserProfileSettings/AikonWidget/AikonWidget';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -48,9 +47,7 @@ interface IMenuNavigation {
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
-  renderBtnConnect,
   currentUserAddress,
-  programmaticProvider,
   showAlert,
   selectedChain,
   setTabIndexItems,

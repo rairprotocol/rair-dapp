@@ -21,12 +21,7 @@ import {
   SvgUserIcon
 } from './SettingsIcons/SettingsIcons';
 
-const PopUpSettings = ({
-  showAlert,
-  selectedChain,
-  setTabIndexItems,
-  isSplashPage
-}) => {
+const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const settingBlockRef = useRef();
   const navigate = useNavigate();
   const [next, setNext] = useState(false);

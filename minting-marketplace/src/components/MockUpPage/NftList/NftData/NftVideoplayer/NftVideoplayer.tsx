@@ -43,6 +43,7 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
         Swal.fire('NFT required to view this content');
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectVideo, mainManifest, videoNameRef.current]);
 
   useEffect(() => {
@@ -61,12 +62,6 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
       axios.get<TOnlySuccessResponse>('/api/auth/stream/out');
     };
   }, [videoNameRef]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     setVideoName(Math.round(Math.random() * 10000));
-  //   };
-  // });
 
   if (mediaAddress.length > 0) {
     return (

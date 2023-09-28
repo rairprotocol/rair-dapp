@@ -1,36 +1,23 @@
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Popup from 'reactjs-popup';
 import axios from 'axios';
-import { OreidProvider, useOreId } from 'oreid-react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { IVideoItem, TVideoItemContractData } from './video.types';
-import OfferBuyButton from './videoOfferBuy';
 
-import {
-  IOffersResponseType,
-  TTokenData,
-  TUserResponse
-} from '../../axios.responseTypes';
-import store, { RootState } from '../../ducks';
+import { TUserResponse } from '../../axios.responseTypes';
+import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { setUserData } from '../../ducks/users/actions';
 import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { defaultHotDrops } from '../../images';
 import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import { TOfferType } from '../marketplace/marketplace.types';
-import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
-import MintPopUpCollection from '../MockUpPage/NftList/NftData/TitleCollection/MintPopUpCollection/MintPopUpCollection';
-// import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';
@@ -44,23 +31,18 @@ const VideoItem: React.FC<IVideoItem> = ({
   item
   // handleVideoIsUnlocked
 }) => {
-  const [mintPopUp, setMintPopUp] = useState<boolean>(false);
-  const [firstStepPopUp, setFirstStepPopUp] = useState<boolean>(false);
-  const [, /* purchaseStatus */ setPurchaseStatus] = useState<boolean>(false);
+  // const [mintPopUp, setMintPopUp] = useState<boolean>(false);
+  // const [firstStepPopUp, setFirstStepPopUp] = useState<boolean>(false);
+  // const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
   const [offersArray, setOffersArray] = useState<TOfferType[]>([]);
-  const loading = useSelector<RootState, boolean>(
-    (state) => state.videosStore.loading
-  );
-
-  const dispatch = useDispatch();
 
   const { userData } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
 
   const navigate = useNavigate();
-  const [offerDataInfo, setOfferDataInfo] = useState<TOfferType[]>();
-  const oreId = useOreId();
+  // const [offerDataInfo,setOfferDataInfo] = useState<TOfferType[]>();
+  // const oreId = useOreId();
   const [contractData, setContractData] =
     useStateIfMounted<TVideoItemContractData | null>(null);
   const { width } = useWindowDimensions();
@@ -68,8 +50,6 @@ const VideoItem: React.FC<IVideoItem> = ({
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-
-  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
 
   const customStyles = {
     overlay: {
@@ -108,10 +88,9 @@ const VideoItem: React.FC<IVideoItem> = ({
     }
   };
 
-  const availableToken: TTokenData[] = [];
+  // const availableToken: TTokenData[] = [];
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalHelp, setModalHelp] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [owned /*setOwned*/] = useState(false);
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
@@ -121,10 +100,6 @@ const VideoItem: React.FC<IVideoItem> = ({
   const openModal = useCallback(() => {
     setModalIsOpen(true);
   }, [setModalIsOpen]);
-
-  const openHelp = useCallback(() => {
-    setModalHelp((prev) => !prev);
-  }, []);
 
   const closeModal = useCallback(() => {
     setModalIsOpen(false);
@@ -144,124 +119,61 @@ const VideoItem: React.FC<IVideoItem> = ({
       });
   };
 
-  const openMintPopUp = () => {
-    reactSwal.fire({
-      title: (
-        <div>
-          <div
-            style={{
-              width: '120px',
-              height: '35px',
-              background: 'var(--stimorol)',
-              fontSize: '16px',
-              color: '#fff',
-              position: 'absolute',
-              top: '0px',
-              left: '0px',
-              borderTopLeftRadius: '16px',
-              borderBottomRightRadius: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: `1px solid ${` ${
-                primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'
-              }`}`
-            }}>
-            Mint
-          </div>
-        </div>
-      ),
-      html: (
-        <OreidProvider oreId={oreId}>
-          <Provider store={store}>
-            <div
-              className={`container-popup-video-player-mobile ${
-                primaryColor === 'rhyno' ? 'rhyno' : ''
-              }`}>
-              {offerDataInfo && contractData && (
-                <MintPopUpCollection
-                  blockchain={contractData?.blockchain}
-                  offerDataCol={offerDataInfo}
-                  primaryColor={primaryColor}
-                  contractAddress={contractData?.contractAddress}
-                  setPurchaseStatus={setPurchaseStatus}
-                />
-              )}
-            </div>
-          </Provider>
-        </OreidProvider>
-      ),
-      showCloseButton: true,
-      showConfirmButton: false,
-      width: '85vw',
-      customClass: {
-        popup: `bg-${primaryColor} rounded-rair`
-      }
-    });
-  };
-
-  const openUpragePopUp = () => {
-    return (
-      <div>
-        <div
-          className={`container-popup-video-player-mobile ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
-          }`}>
-          <div>
-            <p>
-              NFTs unlock exclusive content for this collection. Purchase pass
-              here or view collection to choose a unique item.
-            </p>
-            {mediaList[item].description && (
-              <p>{mediaList[item].description}</p>
-            )}
-          </div>
-          <div className="popup-video-player-mint-box">
-            <CustomButton
-              onClick={() => {
-                openMintPopUp();
-              }}
-              width="161px"
-              height="48px"
-              // margin="20px 0 0 0"
-              text="Mint!"
-              background={'var(--stimorol)'}
-              hoverBackground={`rgb(74, 74, 74)`}
-            />
-          </div>
-        </div>
-        <Popup
-          // className="popup-settings-block"
-          open={mintPopUp}
-          // position="right center"
-          closeOnDocumentClick
-          onClose={() => {
-            setMintPopUp(false);
-          }}>
-          <div
-            style={{
-              background: 'red',
-              width: '50px',
-              height: '50px'
-            }}>
-            Hello there
-          </div>
-          {offerDataInfo && contractData && (
-            <div>
-              <button onClick={() => setMintPopUp(false)}>Close</button>
-              <MintPopUpCollection
-                blockchain={contractData?.blockchain}
-                offerDataCol={offerDataInfo}
-                primaryColor={primaryColor}
-                contractAddress={contractData?.contractAddress}
-                setPurchaseStatus={setPurchaseStatus}
-              />
-            </div>
-          )}
-        </Popup>
-      </div>
-    );
-  };
+  // const openMintPopUp = () => {
+  //   reactSwal.fire({
+  //     title: (
+  //       <div>
+  //         <div
+  //           style={{
+  //             width: '120px',
+  //             height: '35px',
+  //             background: 'var(--stimorol)',
+  //             fontSize: '16px',
+  //             color: '#fff',
+  //             position: 'absolute',
+  //             top: '0px',
+  //             left: '0px',
+  //             borderTopLeftRadius: '16px',
+  //             borderBottomRightRadius: '16px',
+  //             display: 'flex',
+  //             alignItems: 'center',
+  //             justifyContent: 'center',
+  //             border: `1px solid ${` ${
+  //               primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'
+  //             }`}`
+  //           }}>
+  //           Mint
+  //         </div>
+  //       </div>
+  //     ),
+  //     html: (
+  //       <OreidProvider oreId={oreId}>
+  //         <Provider store={store}>
+  //           <div
+  //             className={`container-popup-video-player-mobile ${
+  //               primaryColor === 'rhyno' ? 'rhyno' : ''
+  //             }`}>
+  //             {offerDataInfo && contractData && (
+  //               <MintPopUpCollection
+  //                 blockchain={contractData?.blockchain}
+  //                 offerDataCol={offerDataInfo}
+  //                 primaryColor={primaryColor}
+  //                 contractAddress={contractData?.contractAddress}
+  //                 setPurchaseStatus={setPurchaseStatus}
+  //               />
+  //             )}
+  //           </div>
+  //         </Provider>
+  //       </OreidProvider>
+  //     ),
+  //     showCloseButton: true,
+  //     showConfirmButton: false,
+  //     width: '85vw',
+  //     customClass: {
+  //       popup: `bg-${primaryColor} rounded-rair`
+  //     }
+  //   });
+  // };
 
   const goToCollectionView = () => {
     if (offersArray.length > 0) {
@@ -303,35 +215,6 @@ const VideoItem: React.FC<IVideoItem> = ({
     }
   }, [mediaList, item, setDataUser]);
 
-  const updateAgeVerification = useCallback(async () => {
-    if (userData?.publicAddress) {
-      const formData = new FormData();
-      formData.append('ageVerified', JSON.stringify(true));
-      const response = await axios.post<TUserResponse>(
-        `/api/users/${userData?.publicAddress}`,
-        formData,
-        {
-          headers: {
-            Accept: 'multipart/form-data'
-          }
-        }
-      );
-
-      if (response.data.success) {
-        const { success, user } = await rFetch(
-          '/api/v2/auth/me/',
-          undefined,
-          undefined,
-          false
-        );
-
-        if (success) {
-          dispatch(setUserData(user));
-        }
-      }
-    }
-  }, [setDataUser]);
-
   useEffect(() => {
     getInfoUser();
   }, [getInfoUser]);
@@ -352,6 +235,7 @@ const VideoItem: React.FC<IVideoItem> = ({
     ) {
       ageVerificationPopUp();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalIsOpen, mediaList, userData]);
 
   return (

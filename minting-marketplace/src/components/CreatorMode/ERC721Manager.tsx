@@ -22,7 +22,7 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
   const [minterApproved, setMinterApproved] = useState<boolean>();
   const [productName, setProductName] = useState<string>('');
   const [productLength, setProductLength] = useState<number>(0);
-  const [existingProductsData, setExistingProductsData] =
+  const [existingProductsData /*setExistingProductsData*/] =
     useState<ProductInfoType[]>();
   const [refetchingFlag, setRefetchingFlag] = useState<boolean>(false);
 

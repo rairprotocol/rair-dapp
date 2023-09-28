@@ -51,7 +51,7 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
             headers: {
               'Content-Type': 'application/json'
             }
-          }).then((res) => {
+          }).then(() => {
             getFavotiteData();
           });
         } catch (e) {

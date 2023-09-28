@@ -14,40 +14,6 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 
-// 	const [start, setStart] = useState(array[index].startingToken);
-// 	const [end, setEnd] = useState(array[index].endingToken);
-// 	const [locked, setLocked] = useState(array[index].countToUnlock);
-
-// 	return <tr>
-// 		<th>
-// 			{!disabled ? <button
-// 				onClick={e => deleter(index)}
-// 				className='btn btn-danger h-50'>
-// 				<i className='fas fa-trash' />
-// 			</button> : ''}
-// 		</th>
-// 		<th>
-// 			#{index + 1}
-// 		</th>
-// 		<th>
-// 			<input className='form-control' type='number' disabled={disabled} value={start} onChange={e => setStart(e.target.value)} />
-// 		</th>
-// 		<th>
-// 			<input className='form-control' type='number' disabled={disabled} value={end} onChange={e => setEnd(e.target.value)} />
-// 		</th>
-// 		<th>
-// 			<input className='form-control' type='number' disabled={disabled} value={locked} onChange={e => setLocked(e.target.value)} />
-// 		</th>
-// 		<th>
-// 			{!disabled ? <button
-// 				onClick={e => locker(productIndex, start, end, locked)}
-// 				className='btn btn-success h-50'>
-// 				<i className='fas fa-lock' />
-// 			</button> : ''}
-// 		</th>
-// 	</tr>
-// }
-
 const RangeManager: React.FC<IRangeManager> = ({
   disabled,
   index,
@@ -224,7 +190,7 @@ const ProductManager: React.FC<IProductManager> = ({
   const [ranges, setRanges] = useState<IRangesType[]>([]);
   const [, /*locks*/ setLocks] = useState<IExistingLock[]>([]);
   const [forceSync, setForceSync] = useState<boolean>(false);
-  const [offerIndex, setOfferIndex] = useState<string>('');
+  const [, /*offerIndex*/ setOfferIndex] = useState<string>('');
 
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
@@ -234,12 +200,6 @@ const ProductManager: React.FC<IProductManager> = ({
     aux.splice(index, 1);
     setRanges(aux);
   };
-
-  /*const lockDeleter = index => {
-		let aux = [...locks];
-		aux.splice(index, 1);
-		setLocks(aux);
-	}*/
 
   const locker = async (
     productIndex: number,

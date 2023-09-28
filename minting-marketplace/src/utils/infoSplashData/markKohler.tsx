@@ -15,13 +15,6 @@ const mainContract: TMainContractType = {
   offerIndex: ['11']
 };
 
-// Code for test contracts
-const testContract: TMainContractType = {
-  contractAddress: '0xdf9067bee90a26f03b777c82213d0785638c23fc',
-  requiredBlockchain: '0x5',
-  offerIndex: ['126']
-};
-
 export const contract = mainContract.contractAddress;
 export const blockchain = mainContract.requiredBlockchain;
 const offerIndex = mainContract.offerIndex;

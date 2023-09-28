@@ -12,7 +12,6 @@ import { TUsersInitialState } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
-import setTitle from '../../utils/setTitle';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 

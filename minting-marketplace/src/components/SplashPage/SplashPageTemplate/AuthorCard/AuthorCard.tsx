@@ -11,7 +11,6 @@ const AuthorCard: React.FC<IAuthorCard> = ({
   splashData,
   toggleCheckList,
   customButtonBlock,
-  connectUserData,
   whatSplashPage
 }) => {
   const {

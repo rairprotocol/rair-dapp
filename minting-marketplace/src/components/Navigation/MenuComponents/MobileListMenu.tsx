@@ -18,13 +18,6 @@ import {
   TSearchDataUser,
   TSearchInitialState
 } from '../../../ducks/search/search.types';
-import useComponentVisible from '../../../hooks/useComponentVisible';
-import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../../images';
-import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import {
-  CommunityBlock,
-  CommunityBoxFooter
-} from '../../Footer/FooterItems/FooterItems';
 import { TAxiosCollectionData } from '../../Header/header.types';
 import ImageCustomForSearch from '../../MockUpPage/utils/image/ImageCustomForSearch';
 
@@ -141,10 +134,6 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
 
   const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTextSearch(e.target.value);
-  };
-
-  const handleClearText = () => {
-    setTextSearch('');
   };
 
   useEffect(() => {
@@ -333,34 +322,6 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
           />
         )}
       </div>
-      {/* <CommunityBlock primaryColor={primaryColor}>
-        <div className="community-text">Join our community</div>
-        <CommunityBoxFooter className="header-mobile-community">
-          <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
-            <a
-              href="https://discord.gg/pSTbf2yz7V"
-              target={'_blank'}
-              rel="noreferrer">
-              <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
-            </a>
-          </SocialBox>
-          <SocialBox
-            marginRight={'17px'}
-            marginLeft={'17px'}
-            hoverColor={'#1DA1F2'}
-            primaryColor={primaryColor}>
-            <a
-              href="https://twitter.com/rairtech"
-              target={'_blank'}
-              rel="noreferrer">
-              <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
-            </a>
-          </SocialBox>
-          <SocialBox hoverColor={'#229ED9'} primaryColor={primaryColor}>
-            <TelegramIcon primaryColor={primaryColor} color={'#fff'} />
-          </SocialBox>
-        </CommunityBoxFooter>
-      </CommunityBlock> */}
     </List>
   );
 };

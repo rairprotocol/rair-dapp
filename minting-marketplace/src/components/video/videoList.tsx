@@ -57,7 +57,7 @@ const VideoList: React.FC<IVideoList> = ({
                   .toLowerCase()
                   .includes(titleSearch.toLowerCase())
               )
-              .map((item, index) => {
+              .map((item) => {
                 return (
                   <VideoItem
                     key={item}
@@ -77,7 +77,7 @@ const VideoList: React.FC<IVideoList> = ({
       <div id="filter-modal-parent">
         <GlobalModal
           parentContainerId={modalParentNode}
-          renderModalContent={(globalModalState) => (
+          renderModalContent={() => (
             <HomePageFilterModal
               className="unlockables-tab"
               isMobileDesign={isMobileDesign}

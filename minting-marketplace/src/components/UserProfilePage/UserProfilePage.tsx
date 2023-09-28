@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
@@ -17,7 +17,7 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { HotDropsLogo, NFTTabIcon, VideoIcon } from '../../images';
+import { VideoIcon } from '../../images';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
@@ -30,7 +30,6 @@ import SharePopUp from '../MockUpPage/NftList/NftData/TitleCollection/SharePopUp
 import { TDiamondTokensType } from '../nft/nft.types';
 import { PersonalProfileMyNftTab } from '../nft/PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab';
 import { PersonalProfileMyVideoTab } from '../nft/PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';
-import NotFound from '../NotFound/NotFound';
 import { TSortChoice } from '../ResalePage/listOffers.types';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -46,7 +45,6 @@ const UserProfilePage: React.FC = () => {
     ColorStoreType
   >((store) => store.colorStore);
   const { userAddress } = useParams();
-  const navigate = useNavigate();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -54,7 +52,7 @@ const UserProfilePage: React.FC = () => {
   const [userData, setUserData] = useState<UserType | null | undefined>(
     undefined
   );
-  const [tokens, setTokens] = useState<TDiamondTokensType[]>([]);
+  const [, /*tokens*/ setTokens] = useState<TDiamondTokensType[]>([]);
   const [collectedTokens, setCollectedTokens] = useState<
     TDiamondTokensType[] | null
   >(null);
@@ -156,27 +154,6 @@ const UserProfilePage: React.FC = () => {
       setCreatedContracts(covers);
     }
   }, [userAddress]);
-
-  const filteredData =
-    tokens &&
-    tokens
-      .filter((item: TDiamondTokensType) => {
-        return item?.title?.toLowerCase()?.includes(titleSearch?.toLowerCase());
-      })
-      .sort((a: TDiamondTokensType, b: TDiamondTokensType) => {
-        if (sortItem === 'up') {
-          if (a.title < b.title) {
-            return -1;
-          }
-        }
-        if (sortItem === 'down') {
-          if (a.title > b.title) {
-            return 1;
-          }
-        }
-
-        return 0;
-      });
 
   const getUserData = useCallback(async () => {
     if (userAddress && utils.isAddress(userAddress)) {
@@ -299,12 +276,6 @@ const UserProfilePage: React.FC = () => {
   }, []);
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
-
-  // useEffect(() => {
-  //   if (userData === null) {
-  //     return <NotFound />;
-  //   }
-  // }, [userData]);
 
   if (userData === undefined) {
     return <LoadingComponent />;

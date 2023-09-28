@@ -29,7 +29,6 @@ const SellButton: React.FC<ISellButton> = ({
   setIsInputPriceExist,
   refreshResaleData,
   item
-  // setInputSellValue
 }) => {
   const { contractCreator, currentUserAddress, diamondMarketplaceInstance } =
     useSelector<RootState, ContractsInitialType>(
@@ -251,6 +250,7 @@ const SellButton: React.FC<ISellButton> = ({
         );
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     blockchain,
     currentUserAddress,

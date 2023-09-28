@@ -1,13 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import videojs from 'video.js';
 
 import { IVideoPlayer } from './video.types';
 
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 
@@ -17,9 +14,6 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
   baseURL,
   setProcessDone = () => false
 }) => {
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
   const [videoName] = useState(Math.round(Math.random() * 10000));
   const [mediaAddress, setMediaAddress] = useState<string>(
     `${baseURL}${mediaId}`

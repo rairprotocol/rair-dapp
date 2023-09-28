@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import { CircularProgress, Tooltip } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 
 import { TAxiosFavoriteData } from '../../../../axios.responseTypes';

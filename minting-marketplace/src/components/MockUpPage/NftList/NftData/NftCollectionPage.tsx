@@ -13,12 +13,8 @@ import {
 } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import {
-  setTokenData,
-  setTokenDataStart
-} from '../../../../ducks/nftData/action';
+import { setTokenData } from '../../../../ducks/nftData/action';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
-import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { hotDropsDefaultBanner } from '../../../../images';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
@@ -34,7 +30,6 @@ import {
 import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
-import CollectionInfo from './CollectionInfo/CollectionInfo';
 import TitleCollection from './TitleCollection/TitleCollection';
 
 import './../../GeneralCollectionStyles.css';
@@ -78,7 +73,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [show, setShow] = useState<boolean>(true);
   const [playing, setPlaying] = useState<null | string>(null);
   const [loadingBg, setLoadingBg] = useState(false);
-  const { width } = useWindowDimensions();
   const loader = useRef(null);
   const [fileUpload, setFileUpload] = useState<any>();
   const [bannerInfo, setBannerInfo] = useState<TProducts>();
@@ -188,6 +182,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     if (tokenData && Object.keys(tokenData).length > 20) {
       window.scroll(0, 0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -214,6 +209,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     return () => {
       showTokensRef.current = 20;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (tokenData === undefined || !tokenData) {
@@ -419,14 +415,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                   style={{
                     marginTop: '30px'
                   }}></div>
-                {/* {width > 730 && (
-                  <CollectionInfo
-                    blockchain={blockchain}
-                    offerData={offerDataCol}
-                    openTitle={true}
-                    mintToken={false}
-                  />
-                )} */}
                 <AuthenticityBlock
                   collectionToken={tokenData[0]?.authenticityLink}
                   title={true}

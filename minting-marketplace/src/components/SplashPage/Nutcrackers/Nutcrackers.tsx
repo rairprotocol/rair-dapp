@@ -119,6 +119,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
 
   useEffect(() => {
     dispatch(setRealChain('0x89'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -12,7 +12,6 @@ import NftVideoplayer from '../../MockUpPage/NftList/NftData/NftVideoplayer/NftV
 import { ModalContentCloseBtn } from '../../MockUpPage/utils/button/ShowMoreItems';
 import { playImagesColored } from '../../SplashPage/images/greyMan/grayMan';
 import MediaItemChange from '../MediaItemChange/MediaItemChange';
-import PopUpChoiceNFT from '../PopUpChoiceNFT/PopUpChoiceNFT';
 import { IUploadedListBox } from '../types/DemoMediaUpload.types';
 
 import AnalyticsPopUp from './AnalyticsPopUp/AnalyticsPopUp';
@@ -24,10 +23,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   mediaList,
   uploadSuccess,
   getMediaList,
-  setUploadSuccess,
-  setMediaUploadedList,
-  address,
-  collectionIndex
+  setUploadSuccess
 }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -200,21 +196,6 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
             </>
           </button>
         )}
-        {/* {currentContract && (
-          <div className="border-stimorol rounded-rair col-12">
-            <PopUpChoiceNFT
-              fileData={fileData}
-              setMediaList={setMediaList}
-              mediaList={mediaList}
-              index={index}
-              setUploadSuccess={setUploadSuccess}
-              titleOfContract={currentContract ? currentContract : 'null'}
-              setMediaUploadedList={setMediaUploadedList}
-              address={address}
-              collectionIndex={collectionIndex}
-            />
-          </div>
-        )} */}
         <button
           onClick={() => removeVideoAlert()}
           disabled={loadDeleting}

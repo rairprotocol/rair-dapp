@@ -28,7 +28,6 @@ import {
   setTokenDataTotalCount
 } from '../../../../ducks/nftData/action';
 import { UserType } from '../../../../ducks/users/users.types';
-import useConnectUser from '../../../../hooks/useConnectUser';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 import {
   INftDataCommonLinkComponent,
@@ -203,18 +202,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     getInfoFromUser();
   }, [getInfoFromUser]);
 
-  //unused-snippet
-  // const onSelect = useCallback(
-  //   (id: string) => {
-  //     tokenData?.forEach((p) => {
-  //       if (p._id === id) {
-  //         setSelectedData(p.metadata);
-  //       }
-  //     });
-  //   },
-  //   [tokenData]
-  // );
-
   const handleClickToken = async (tokenId: string | undefined) => {
     if (embeddedParams && tokenId) {
       embeddedParams.setTokenId(tokenId);
@@ -284,6 +271,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     if (tokenData === undefined || !tokenData) {
       setTokenNumber(undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenData]);
 
   useEffect(() => {
@@ -294,6 +282,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     return () => {
       setTokenNumber(undefined);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (mode === 'collection') {

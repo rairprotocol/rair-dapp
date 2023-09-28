@@ -162,6 +162,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
 
   useEffect(() => {
     getTokens();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

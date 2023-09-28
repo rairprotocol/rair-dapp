@@ -79,9 +79,8 @@ const ResaleModal = ({ item, textColor }) => {
       };
 
       setCommissionFee(objFee);
-
-      // console.info(calculation, 'calculation');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [diamondMarketplaceInstance]);
 
   const getResaleData = useCallback(async () => {
@@ -118,6 +117,7 @@ const ResaleModal = ({ item, textColor }) => {
       }
     }
     setResaleData(resaleData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [diamondMarketplaceInstance]);
 
   const removeResaleOffer = async (tokenId) => {
@@ -128,6 +128,9 @@ const ResaleModal = ({ item, textColor }) => {
         Accept: 'application/json'
       }
     });
+    if (response.success) {
+      return;
+    }
   };
 
   const updateResaleOffer = async (price, id) => {
@@ -279,20 +282,9 @@ const ResaleModal = ({ item, textColor }) => {
 
       <div className="resale-modal-information">
         <div className="resale-modal-information-title">Summary</div>
-        {/* <div className="resale-modal-information-box">
-          <div>Listed price</div>
-          <div>
-            {inputSellValue && correctBlockchain(item.contract.blockchain)
-              ? inputSellValue
-              : '0'}
-          </div>
-        </div> */}
         <div className="resale-modal-information-box">
           <div>Amount to creator</div>
           <div>
-            {/* {correctBlockchain(item.contract.blockchain)
-              ? ((Number(inputSellValue) * 0.4) / 100).toFixed(3)
-              : '0'} */}
             {commissionFee &&
             commissionFee.creatorFee &&
             commissionFee.creatorFee.length > 0

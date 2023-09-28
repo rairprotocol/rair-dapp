@@ -27,10 +27,6 @@ const PersonalProfileMyNftTabComponent: React.FC<
   IPersonalProfileMyNftTabComponent
 > = ({
   filteredData,
-  openModal,
-  setSelectedData,
-  defaultImg,
-  chainData,
   textColor,
   profile,
   getMyNft,

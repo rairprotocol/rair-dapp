@@ -27,7 +27,7 @@ const NftListComponent: React.FC<INftListComponent> = ({
   );
   const { globalModalState } =
     useContext<TGlobalModalContext>(GlobalModalContext);
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const isMobileDesign = width < 1100;
   const modalParentNode = width > 1100 ? 'filter-modal-parent' : 'App';
 
@@ -35,12 +35,6 @@ const NftListComponent: React.FC<INftListComponent> = ({
 
   if (loading) {
     return <LoadingComponent />;
-    //unused-snippet
-    // return (
-    //   <div className="loader-wrapper">
-    //     <div className="load" />
-    //   </div>
-    // );
   }
 
   const defaultImg =
@@ -113,7 +107,7 @@ const NftListComponent: React.FC<INftListComponent> = ({
       <div id="filter-modal-parent">
         <GlobalModal
           parentContainerId={modalParentNode}
-          renderModalContent={(globalModalState) => (
+          renderModalContent={() => (
             <HomePageFilterModal isMobileDesign={isMobileDesign} />
           )}
         />

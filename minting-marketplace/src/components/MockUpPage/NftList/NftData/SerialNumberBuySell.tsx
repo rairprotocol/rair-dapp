@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { BigNumber, utils } from 'ethers';
-import { formatEther, formatUnits } from 'ethers/lib/utils';
+import { formatEther } from 'ethers/lib/utils';
 
 import { BuySellButton } from './BuySellButton';
 import SellInputButton from './SellInputButton';
@@ -13,11 +13,9 @@ import { TUserResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
-import { HotDropsLogoMobile } from '../../../../images';
 import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
@@ -48,21 +46,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     (store) => store.colorStore
   );
 
-  const { tokenDataListTotal } = useSelector<
-    RootState,
-    InitialNftDataStateType
-  >((state) => state.nftDataStore);
-
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const numberTooBigThreshold = BigNumber.from(10000000000);
-
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
-  const defaultLogo =
-    hotdropsVar === 'true'
-      ? HotDropsLogoMobile
-      : 'https://new-dev.rair.tech/static/media/RAIR-Tech-Logo-POWERED-BY-BLACK-2021.abf50c70.webp';
 
   const [accountData, setAccountData] = useState<UserType | null>(null);
   const [contractData, setContractData] = useState<ContractType>();

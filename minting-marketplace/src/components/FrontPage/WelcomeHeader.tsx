@@ -8,8 +8,6 @@ import { TInfoSeo } from '../../ducks/seo/seo.types';
 import MockUpPage from '../MockUpPage/MockUpPage';
 import MetaTags from '../SeoTags/MetaTags';
 
-import setTitle from './../../utils/setTitle';
-
 const WelcomeHeader = ({
   // // seoInformation,
   tabIndex,
@@ -18,7 +16,6 @@ const WelcomeHeader = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   useEffect(() => {
     dispatch(setInfoSEO(InitialState));

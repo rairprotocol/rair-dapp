@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 
 import { TableAuthenticity } from './AuthenticityBlockItems';
 
-import { TTokenData } from '../../../../../axios.responseTypes';
 import { RootState } from '../../../../../ducks';
 import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import { defaultHotDrops } from '../../../../../images';
@@ -51,6 +50,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
     } else {
       setIpfsLink(defaultImg);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedData]);
 
   useEffect(() => {

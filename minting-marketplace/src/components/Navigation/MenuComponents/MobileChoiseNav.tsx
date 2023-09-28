@@ -9,7 +9,6 @@ import { TUsersInitialState } from '../../../ducks/users/users.types';
 import { BellIcon, HotDropsLogoMobile, SunIcon } from '../../../images';
 import {
   SocialBox,
-  SocialBoxSearch,
   UserIconMobile
 } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { SvgUserIcon } from '../../UserProfileSettings/SettingsIcons/SettingsIcons';
@@ -27,9 +26,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   click,
   messageAlert,
   currentUserAddress,
-  handleMessageAlert,
-  activeSearch,
-  handleActiveSearch
+  handleMessageAlert
 }) => {
   const { primaryColor, headerLogoMobile } = useSelector<
     RootState,
@@ -101,12 +98,6 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                 }}>
                 <SunIcon primaryColor={primaryColor} />
               </SocialBox>
-              {/* <SocialBoxSearch
-                primaryColor={primaryColor}
-                onClick={handleActiveSearch}
-                activeSearch={activeSearch}>
-                <i className="fas fa-search" aria-hidden="true"></i>
-              </SocialBoxSearch> */}
             </>
           )}
         </div>

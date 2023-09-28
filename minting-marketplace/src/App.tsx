@@ -225,16 +225,6 @@ function App() {
           spans = p.children;
         } else return;
 
-        // function wheee() {
-        //   for (var i = 0; i < len; i++) {
-        //     spans[i].style.color =
-        //       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-        //   }
-        //   angle+=5;
-        // //   requestAnimationFrame(wheee);
-        // };
-        // setInterval(wheee, 100);
-
         (function wheee() {
           for (let i = 0; i < len; i++) {
             spans[i].style.color =
@@ -253,6 +243,7 @@ function App() {
     if (hotDropsVar === 'true') {
       document.body.classList.add('hotdrops');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const creatorViewsDisabled =
@@ -636,12 +627,6 @@ function App() {
                   {
                     path: '/:userAddress',
                     content: UserProfilePage
-                    // props: {
-                    //   goHome,
-                    //   setIsSplashPage,
-                    //   setTabIndexItems,
-                    //   tabIndexItems
-                    // }
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',
@@ -676,12 +661,6 @@ function App() {
                   {
                     path: '/:userAddress',
                     content: UserProfilePage
-                    // props: {
-                    //   goHome,
-                    //   setIsSplashPage,
-                    //   setTabIndexItems,
-                    //   tabIndexItems
-                    // }
                   },
                   {
                     path: '/thankyou',

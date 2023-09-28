@@ -23,8 +23,6 @@ import {
   TParamsNftItemForCollectionView
 } from '../mockupPage.types';
 
-import { gettingPrice } from './utils/gettingPrice';
-
 const NftItemForCollectionViewComponent: React.FC<
   INftItemForCollectionView
 > = ({
@@ -39,7 +37,6 @@ const NftItemForCollectionViewComponent: React.FC<
   selectedData,
   someUsersData,
   userName,
-  tokenDataLength,
   setPlaying,
   playing,
   diamond,
@@ -108,26 +105,8 @@ const NftItemForCollectionViewComponent: React.FC<
         );
       };
 
-  function checkPrice() {
-    if (offerPrice && offerPrice.length > 0) {
-      const { maxPrice, minPrice } = gettingPrice(offerPrice);
-
-      if (maxPrice === minPrice) {
-        const samePrice = maxPrice;
-        return `${samePrice.slice(0, 4)} ${
-          blockchain && chainData[blockchain]?.symbol
-        }`;
-      }
-      return `${minPrice.slice(0, 4)} – ${maxPrice.slice(0, 5)} ${
-        blockchain && chainData[blockchain]?.symbol
-      }`;
-    }
-  }
-
   function fullPrice() {
     if (offerPrice && offerPrice.length > 0) {
-      const { maxPrice, minPrice } = gettingPrice(offerPrice);
-
       if (offerItemData) {
         const rawPrice = BigNumber.from(
           offerItemData.price ? offerItemData.price : 0
@@ -136,12 +115,6 @@ const NftItemForCollectionViewComponent: React.FC<
 
         return price;
       }
-
-      // if (maxPrice && minPrice) {
-      //   return `${minPrice} – ${maxPrice} ${
-      //     blockchain && chainData[blockchain]?.symbol
-      //   }`;
-      // }
     }
   }
 
@@ -167,12 +140,6 @@ const NftItemForCollectionViewComponent: React.FC<
       );
     }
   }, [navigate, tokenInfo]);
-
-  let className = 'col-12 text-start video-wrapper nft-item-collection';
-
-  if (tokenDataLength && tokenDataLength < 4) {
-    className += ' standartSize';
-  }
 
   useEffect(() => {
     checkUrl();
@@ -309,62 +276,6 @@ const NftItemForCollectionViewComponent: React.FC<
                 src={metadata?.image ? ipfsLink : pict}
               />
             )}
-            {/* {diamond ? (
-              <>
-                {offerData && offerData[0] && (
-                  <>
-                    {BigNumber.from(indexId).gte(offerData[0].range[0]) &&
-                      BigNumber.from(indexId).lte(offerData[0].range[1]) && (
-                        // <SvgKey
-                        //   key={index}
-                        //   color={'#E4476D'}
-                        //   bgColor={'rgba(34, 32, 33, 0.5)'}
-                        // />
-                        <></>
-                      )}
-                  </>
-                )}
-                {offerData && offerData[1] && (
-                  <>
-                    {BigNumber.from(indexId).gte(offerData[1].range[0]) &&
-                      BigNumber.from(indexId).lte(offerData[1].range[1]) && (
-                        // <SvgKey
-                        //   color={'#CCA541'}
-                        //   bgColor={'rgba(34, 32, 33, 0.5)'}
-                        // />
-                        <></>
-                      )}
-                  </>
-                )}
-                {offerData && offerData.length > 1 && (
-                  <>
-                    {offerData[2] &&
-                      BigNumber.from(indexId).gte(offerData[2].range[0]) &&
-                      offerData[2] &&
-                      BigNumber.from(indexId).lte(offerData[2].range[1]) && (
-                        // <SvgKey
-                        //   color={'silver'}
-                        //   bgColor={'rgba(34, 32, 33, 0.5)'}
-                        // />
-                        <></>
-                      )}
-                  </>
-                )}
-              </>
-            ) : (
-              <>
-                {offer.toString() === '0' ? (
-                  // <SvgKey color={'#E4476D'} bgColor={'rgba(34, 32, 33, 0.5)'} />
-                  <></>
-                ) : offer.toString() === '1' ? (
-                  // <SvgKey color={'#CCA541'} bgColor={'rgba(34, 32, 33, 0.5)'} />
-                  <></>
-                ) : (
-                  // <SvgKey color={'silver'} bgColor={'rgba(34, 32, 33, 0.5)'} />
-                  <></>
-                )}
-              </>
-            )} */}
             <div
               className="description-wrapper pic-description-wrapper wrapper-for-collection-view"
               style={{
@@ -437,7 +348,6 @@ const NftItemForCollectionViewComponent: React.FC<
                         src={blockchain && chainData[blockchain]?.image}
                         alt="Blockchain network"
                       />
-                      {/* {checkPrice()} */}
                       {offerPrice && fullPrice()}
                     </div>
                   </div>

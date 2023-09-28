@@ -6,7 +6,6 @@ import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import useSwal from '../../../../hooks/useSwal';
 import { playImagesColored } from '../../../SplashPage/images/greyMan/grayMan';
-import { MediaListResponseType } from '../../../video/video.types';
 import { TUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
 
 import NftVideoplayer from './NftVideoplayer/NftVideoplayer';
@@ -33,10 +32,6 @@ const UnlockableVideosSingleTokenPage: React.FC<
 
   const [formatedVideoObj, setFormatedVideoObj] = useState(undefined);
   const reactSwal = useSwal();
-
-  const videos = useSelector<RootState, MediaListResponseType | null>(
-    (store) => store.videosStore.videos
-  );
 
   function renameKeys(obj, newKeys) {
     const keyValues = Object.keys(obj).map((key) => {

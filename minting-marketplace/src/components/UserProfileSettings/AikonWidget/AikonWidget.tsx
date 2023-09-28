@@ -25,8 +25,8 @@ const AikonWidget: React.FC = () => {
     (key) => oreIdMappingToChainHash[key] === currentChainValue
   );
 
-  const isTestNetwork =
-    mappedChainHash === '0x5' || mappedChainHash === '0x13881';
+  // const isTestNetwork =
+  //   mappedChainHash === '0x5' || mappedChainHash === '0x13881';
 
   const handleBuy = async () => {
     const buyParams = {

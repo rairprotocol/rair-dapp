@@ -17,8 +17,6 @@ import {
   StyledArrowDownIcon,
   StyledArrowUpIcon,
   StyledFilterIcon,
-  StyledPopupArrowDownIcon,
-  StyledPopupArrowUpIcon,
   StyledShevronIcon
 } from './FilteringBlockItems/FilteringBlockItems';
 import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
@@ -55,7 +53,7 @@ const FilteringBlock = ({
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
-  const { globalModalState, globalModaldispatch } =
+  const { globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
 
   const onChangeFilterItem = (item) => {

@@ -63,7 +63,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
             </div>
           </div>
           {items &&
-            items.map((el) => {
+            items.map((el, index) => {
               return (
                 <div
                   className={`select-number-box ${
@@ -80,7 +80,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                     }`,
                     color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`
                   }}
-                  key={el.id}
+                  key={el.id + index}
                   onClick={() => onClickItem(el.token)}>
                   {el.sold ? 'Sold' : el.token}
                 </div>

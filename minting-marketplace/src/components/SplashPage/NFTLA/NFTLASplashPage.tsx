@@ -5,17 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { teamNFTLAarray } from './AboutUsTeam';
 import { ISplashPageProps } from './splashPage.types';
 
-import { TFileType } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import useSwal from '../../../hooks/useSwal';
 import { splashData } from '../../../utils/infoSplashData/nftla';
-import { TVideoPlayerViewSpecialVideoType } from '../../MockUpPage/NftList/nftList.types';
 import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
-import { NFTLA1, NFTLA2, NFTLA3 } from '../images/NFTLA/nftLA';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
@@ -46,7 +43,6 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   // TODO: Until we have a contract it will be commented
-  const [allVideos /*setAllVideos*/] = useState<TFileType[]>([]);
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
@@ -58,32 +54,6 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     useGetProducts(splashData);
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
-
-  const whatSplashPage = 'nftla-page';
-
-  const someAdditionalData: TVideoPlayerViewSpecialVideoType[] = [
-    {
-      urlVideo: 'https://storage.googleapis.com/rair-videos/',
-      mediaIdVideo: 'YOyAaCOt8xrOt-NcvffXR7g0ibX5kJ2w21yGHR1XKOPMEY',
-      videoTime: '02:21.38',
-      videoName: 'NFTs and Hollywood',
-      VideoBg: NFTLA1
-    },
-    {
-      urlVideo: 'https://storage.googleapis.com/rair-videos/',
-      mediaIdVideo: 'Zosxmne0LRAu2TxEMU5A0WMg8-msfHqvxGws9osGnu4yxL',
-      videoTime: '32:00.58',
-      videoName: 'Orange Comet',
-      VideoBg: NFTLA2
-    },
-    {
-      urlVideo: 'https://storage.googleapis.com/rair-videos/',
-      mediaIdVideo: 'pZJJmq9rR6HC1jPxy-RpVvutfTYMtyAGRb2DDnMdTTIlhA',
-      videoTime: '30:46.31',
-      videoName: 'Web 3 Convergence',
-      VideoBg: NFTLA3
-    }
-  ];
 
   useEffect(() => {
     dispatch(
@@ -107,19 +77,6 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     );
     //eslint-disable-next-line
   }, []);
-
-  //temporarily unused-snippet
-  // const getAllVideos = useCallback(async () => {
-  //   const response = await axios.get<TNftFilesResponse>(
-  //     '/api/nft/network/neededBlockchain/neededContract/indexInContract/files'
-  //   );
-  //   setAllVideos(response.data.files);
-  //   setSelectVideo(response.data.files[0]);
-  // }, []);
-
-  // useEffect(() => {
-  //   getAllVideos();
-  // }, [getAllVideos]);
 
   useEffect(() => {
     setIsSplashPage?.(true);

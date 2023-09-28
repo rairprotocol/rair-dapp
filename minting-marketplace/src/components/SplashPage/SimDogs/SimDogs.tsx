@@ -118,7 +118,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   /* UTILITIES FOR NFT PURCHASE */
   const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
-  const ukraineglitchChainId = '0x1';
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);

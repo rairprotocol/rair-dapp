@@ -42,11 +42,7 @@ import {
 } from '../images/splashPageImages/splashPage';
 import NipseyRelease from '../NipseyRelease/NipseyRelease';
 import RoadMap from '../Roadmap/RoadMap';
-import {
-  ISplashPageProps,
-  TMetamaskError,
-  TSplashPageIsActive
-} from '../splashPage.types';
+import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import { Countdown } from '../Timer/CountDown';
 /* importing Components*/

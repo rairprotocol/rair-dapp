@@ -56,7 +56,9 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   }, [setSelectVideo, productsFromOffer]);
 
   const carousel_match = window.matchMedia('(min-width: 900px)');
-  const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
+  const [, /*carousel*/ setCarousel] = useState<boolean>(
+    carousel_match.matches
+  );
   /* UTILITIES FOR NFT PURCHASE */
 
   const { connectUserData } = useConnectUser();
@@ -491,9 +493,3 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 };
 
 export default MarkKohler;
-
-/* <div className="container-about-conference">
-          <button className="btn-enter-summit">
-            ENTER THE SUMMIT (COMING SOON)
-          </button>
-        </div> */
