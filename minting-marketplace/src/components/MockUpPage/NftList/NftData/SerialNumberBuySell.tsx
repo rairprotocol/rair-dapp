@@ -200,6 +200,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [getInfoFromUser]);
 
   const resalePurchase = useCallback(async () => {
+    if (!correctBlockchain(blockchain as BlockchainType)) {
+      web3Switch(blockchain as BlockchainType);
+      return;
+    }
     if (!diamondMarketplaceInstance || !tokenData || !params?.tokenId) {
       return;
     }
@@ -273,6 +277,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       reactSwal.fire('Success', 'Token purchased', 'success');
     }
   }, [
+    web3Switch,
     diamondMarketplaceInstance,
     reactSwal,
     resaleData,
@@ -283,7 +288,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     currentUserAddress,
     selectedToken,
     tokenData,
-    getResaleData
+    getResaleData,
+    correctBlockchain
   ]);
 
   const checkAllSteps = useCallback(() => {
@@ -342,12 +348,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
 
     // Blockchain is not correct
-    if (
-      !correctBlockchain(blockchain) &&
-      selectedToken &&
-      tokenData &&
-      !tokenData?.[selectedToken]?.isMinted === true
-    ) {
+    if (currentUserAddress && !correctBlockchain(blockchain)) {
       return (
         <BuySellButton
           handleClick={() => web3Switch(blockchain)}
