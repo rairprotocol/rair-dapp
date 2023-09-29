@@ -43,7 +43,8 @@ const NftItemForCollectionViewComponent: React.FC<
   offerData,
   offerItemData,
   id,
-  item
+  item,
+  resaleFlag
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
@@ -180,7 +181,7 @@ const NftItemForCollectionViewComponent: React.FC<
         // <div className="nft-item-collection grid-item">
         <div className="nft-item-collection grid-item" id={id}>
           <>
-            {item && currentUserAddress === userAddress && (
+            {item && resaleFlag && currentUserAddress === userAddress && (
               <button
                 onClick={() => {
                   reactSwal.fire({

@@ -91,6 +91,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
                     pict={item.metadata.image}
                     metadata={item.metadata}
                     item={item}
+                    resaleFlag={true}
                     // offerPrice={offerPrice}
                     blockchain={item.contract.blockchain}
                     // selectedData={selectedData}

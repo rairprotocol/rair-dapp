@@ -33,6 +33,7 @@ export interface INftItemForCollectionView {
   offerData?: TOfferType[] | undefined;
   id: string;
   item?: any;
+  resaleFlag?: boolean;
 }
 
 export type TParamsNftItemForCollectionView = {
