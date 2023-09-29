@@ -50,6 +50,7 @@ const NftItemForCollectionViewComponent: React.FC<
   const store = useStore();
 
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
+  const [resalePrice, setResalePrice] = useState<string | undefined>(undefined);
   const ipfsLink = useIPFSImageLink(metadata?.image);
   const [tokenInfo, setTokenInfo] = useState<any>(null);
 
@@ -126,12 +127,36 @@ const NftItemForCollectionViewComponent: React.FC<
         undefined,
         undefined
       );
-
       if (response.success) {
         setTokenInfo(response.tokenData);
       }
     }
   }, [item]);
+
+  const fetchResaleInfo = useCallback(async (item, tokenInfo) => {
+    if (!item) return;
+    const resaleResponse = await rFetch(
+      `/api/resales/open?contract=${tokenInfo.contract.contractAddress}&blockchain=${tokenInfo.contract.blockchain}&index=${tokenInfo.token}`
+    );
+
+    if (resaleResponse.success && resaleResponse.data.length > 0) {
+      const formattedPrice = formatEther(resaleResponse.data[0].price);
+      return formattedPrice;
+    } else {
+      return undefined;
+    }
+  }, []);
+
+  useEffect(() => {
+    const getResalePrice = async () => {
+      if (item && tokenInfo) {
+        const price = await fetchResaleInfo(item, tokenInfo);
+        setResalePrice(price);
+      }
+    };
+
+    getResalePrice();
+  }, [item, tokenInfo, fetchResaleInfo]);
 
   const redirectionUserPage = useCallback(() => {
     if (tokenInfo && tokenInfo.contract && tokenInfo.product) {
@@ -154,7 +179,7 @@ const NftItemForCollectionViewComponent: React.FC<
       {offer && (
         // <div className="nft-item-collection grid-item">
         <div className="nft-item-collection grid-item" id={id}>
-          <>
+          {/* <>
             {item && currentUserAddress === userAddress && (
               <button
                 onClick={() => {
@@ -175,7 +200,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 <BillTransferIcon primaryColor={primaryColor} />
               </button>
             )}
-          </>
+          </> */}
           <div
             onClick={() => {
               if (
@@ -276,6 +301,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 src={metadata?.image ? ipfsLink : pict}
               />
             )}
+
             <div
               className="description-wrapper pic-description-wrapper wrapper-for-collection-view"
               style={{
@@ -348,7 +374,9 @@ const NftItemForCollectionViewComponent: React.FC<
                         src={blockchain && chainData[blockchain]?.image}
                         alt="Blockchain network"
                       />
-                      {offerPrice && fullPrice()}
+                      {resalePrice !== undefined
+                        ? resalePrice
+                        : offerPrice && fullPrice()}
                     </div>
                   </div>
                 </div>
@@ -370,7 +398,9 @@ const NftItemForCollectionViewComponent: React.FC<
                   />
                 </div>
                 <span className="description description-price description-price-unlockables-page">
-                  {offerPrice && fullPrice()}
+                  {resalePrice !== undefined
+                    ? resalePrice
+                    : offerPrice && fullPrice()}
                 </span>
                 <span className="description-more">View item</span>
               </div>

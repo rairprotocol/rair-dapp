@@ -179,7 +179,6 @@ const ResaleModal = ({ item, textColor }) => {
       const resaleResponse = await rFetch(
         `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.token}`
       );
-
       if (resaleResponse.success) {
         setResaleOffer(resaleResponse.data);
         if (resaleResponse.data.length > 0) {
