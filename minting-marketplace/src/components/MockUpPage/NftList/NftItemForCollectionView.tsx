@@ -179,7 +179,7 @@ const NftItemForCollectionViewComponent: React.FC<
       {offer && (
         // <div className="nft-item-collection grid-item">
         <div className="nft-item-collection grid-item" id={id}>
-          {/* <>
+          <>
             {item && currentUserAddress === userAddress && (
               <button
                 onClick={() => {
@@ -200,7 +200,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 <BillTransferIcon primaryColor={primaryColor} />
               </button>
             )}
-          </> */}
+          </>
           <div
             onClick={() => {
               if (
