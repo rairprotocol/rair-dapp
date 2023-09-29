@@ -48,7 +48,7 @@ const ServerSettings = ({ fullContractData }) => {
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
       }
-      setBlockchainSettings(blockchainSettings);
+      setBlockchainSettings(blockchainSettings || []);
     }
   }, []);
 
@@ -196,7 +196,7 @@ const ServerSettings = ({ fullContractData }) => {
       <div className="col-12 col-md-6 my-2">
         Blockchain settings:
         <br />
-        {blockchainSettings.map((chain, index) => {
+        {blockchainSettings?.map((chain, index) => {
           return (
             <details className="row" key={index}>
               <summary className="h5">{chain.name}</summary>
