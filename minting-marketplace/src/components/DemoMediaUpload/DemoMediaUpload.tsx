@@ -125,21 +125,6 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
   };
 
   useEffect(() => {
-    if (width <= 1000) {
-      reactSwal.fire({
-        imageWidth: 70,
-        imageHeight: 'auto',
-        imageAlt: 'Custom image',
-        imageUrl:
-          'https://new-dev.rair.tech/static/media/RAIR-Tech-Logo-POWERED-BY-BLACK-2021.abf50c70.webp',
-        title: 'Oops...',
-        text: 'Our Beta Upload is currently not optimized for mobile, please use a desktop browser for the best experience'
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     handleNewUserStatus();
   }, [handleNewUserStatus]);
 

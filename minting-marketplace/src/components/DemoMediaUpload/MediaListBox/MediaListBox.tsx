@@ -428,22 +428,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
     setUploadSuccess(false);
   }, [setUploadSuccess]);
 
-  useEffect(() => {
-    if (userRd && userRd.email === null) {
-      setSocketMessage('');
-      reactSwal.fire({
-        imageWidth: 70,
-        imageHeight: 'auto',
-        imageAlt: 'Custom image',
-        imageUrl:
-          'https://new-dev.rair.tech/static/media/RAIR-Tech-Logo-POWERED-BY-BLACK-2021.abf50c70.webp',
-        title: 'Oops...',
-        text: `Uploading a video with RAIR requires an email registered with our profile settings. 
-        Please use the user profile menu in the upper right corner to add your email address to your profile.`
-      });
-    }
-  }, [reactSwal, userRd]);
-
   const alertChoiceCloud = useCallback(() => {
     reactSwal.fire({
       title: 'Select video storage location (Cloud or IPFS)',
