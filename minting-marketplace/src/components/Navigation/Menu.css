@@ -94,9 +94,51 @@
   margin-right: 17px;
 }
 
+@media screen and (max-width: 1024px) {
+  .mobileAikonWidget {
+    height: 40px;
+    width: 120px;
+    background: rgb(66, 66, 66);
+    border: 1px solid rgb(234, 234, 234);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease 0s;
+    margin-right: 12px;
+  }
+
+  .mobileAikonWidget .aikon-widget-block {
+    padding-right: 5px;
+  }
+
+  .mobileAikonWidget .profile-user-balance,
+  .profile-buy-button {
+    border: none;
+  }
+
+  .mobileAikonWidget .profile-user-balance {
+    padding: 0 0 0 5px;
+    border-left: 1px solid grey;
+  }
+
+  .mobileAikonWidget .profile-user-balance img {
+    height: 14px;
+  }
+}
+
 @media screen and (max-width: 800px) {
   .col-1.rounded.burder-menu .burder-menu-logo img {
     width: 30px;
     height: auto;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mobileAikonWidget {
+    height: 40px;
+    width: 108px;
+    justify-content: space-evenly;
   }
 }

@@ -7,6 +7,7 @@ import { ethers, utils } from 'ethers';
 import { TUserResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
 import { BellIcon, CloseIconMobile, MenuIcon } from '../../images';
@@ -16,6 +17,7 @@ import {
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import chainData from '../../utils/blockchainData';
 import AikonWidget from '../UserProfileSettings/AikonWidget/AikonWidget';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -47,7 +49,6 @@ interface IMenuNavigation {
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
-  currentUserAddress,
   showAlert,
   selectedChain,
   setTabIndexItems,
@@ -60,17 +61,24 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const [openProfile, setOpenProfile] = useState<boolean>(false);
   const { connectUserData } = useConnectUser();
   // const [loading, setLoading] = useState<boolean>(false);
+  const [userBalance, setUserBalance] = useState<string>('');
   const [activeSearch, setActiveSearch] = useState(false);
   const [messageAlert, setMessageAlert] = useState<string | null>(null);
   const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
+  const { erc777Instance, currentUserAddress, currentChain } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  console.info(userBalance, 'userBalance');
 
   const handleMessageAlert = (pageNav: string) => {
     setMessageAlert(pageNav);
@@ -123,6 +131,19 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     }
   }, [currentUserAddress, setUserData]);
 
+  const getBalance = useCallback(async () => {
+    if (currentUserAddress && erc777Instance?.provider) {
+      const balance = await erc777Instance.provider.getBalance(
+        currentUserAddress
+      );
+
+      const result = utils.formatEther(balance);
+      const final = Number(result.toString())?.toFixed(3)?.toString();
+
+      setUserBalance(final);
+    }
+  }, [currentUserAddress, erc777Instance]);
+
   const onScrollClick = useCallback(() => {
     if (!click) {
       document.body.style.overflow = 'unset';
@@ -136,6 +157,10 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   useEffect(() => {
     getInfoFromUser();
   }, [getInfoFromUser]);
+
+  useEffect(() => {
+    getBalance();
+  }, [getBalance]);
 
   return (
     <MenuMobileWrapper
@@ -202,7 +227,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         toggleMenu('nav');
                       }}
                       activeSearch={activeSearch}
-                      marginRight={'17px'}>
+                      marginRight={'10px'}>
                       <i className="fas fa-search" aria-hidden="true"></i>
                     </SocialBoxSearch>
                     {/* this is where the aikon widget should go: */}
@@ -216,7 +241,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         className="social-bell-icon"
                         width="40px"
                         height="40px"
-                        marginRight={'17px'}>
+                        marginRight={'10px'}>
                         <BellIcon primaryColor={primaryColor} />
                       </SocialBox>
                     )}
@@ -229,12 +254,24 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                             : 'var(----charcoal-80)'
                       }}>
                       <AikonWidget />
+                      <div
+                        className={`profile-user-balance ${
+                          primaryColor === 'rhyno' ? 'rhyno' : ''
+                        }`}>
+                        <div>{userBalance}</div>
+                        {currentChain && chainData[currentChain] && (
+                          <img
+                            src={chainData[currentChain]?.image}
+                            alt="logo"
+                          />
+                        )}
+                      </div>
                     </div>
                     <NavLink to={`/${currentUserAddress}`}>
                       <UserIconMobile
                         onClick={() => setClick(false)}
                         avatar={userData && userData.avatar}
-                        marginRight={'16px'}
+                        marginRight={'10px'}
                         messageAlert={messageAlert}
                         primaryColor={primaryColor}>
                         {userData && !userData.avatar && (

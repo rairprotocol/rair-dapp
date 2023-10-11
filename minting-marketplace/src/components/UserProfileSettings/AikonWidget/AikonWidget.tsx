@@ -49,7 +49,7 @@ const AikonWidget: React.FC = () => {
   };
 
   return (
-    <div onClick={handleBuy}>
+    <div className="aikon-widget-block" onClick={handleBuy}>
       <i className="fas fa-wallet"></i>
     </div>
   );
