@@ -201,7 +201,7 @@
 @media screen and (max-width: 1320px) {
   .col-12.header-master {
     padding: 20px 40px;
-    z-index: 2;
+    z-index: 3;
   }
 }
 
@@ -214,13 +214,13 @@
 @media screen and (max-width: 1100px) {
   .col-12.header-master {
     padding: 20px 20px;
-    z-index: 2;
+    z-index: 3;
   }
 }
 
 @media screen and (max-width: 1024px) {
   .col-12.header-master {
-    z-index: 2;
+    z-index: 3;
   }
 
   button.metamask-on-boarding {
@@ -238,7 +238,7 @@
 
 @media screen and (max-width: 950px) {
   .col-12.header-master {
-    z-index: 2;
+    z-index: 3;
   }
 
   .header-master button.btn-connect-wallet {
@@ -261,7 +261,7 @@
 
 @media screen and (max-width: 470px) {
   .col-12.header-master {
-    z-index: 2;
+    z-index: 3;
   }
 
   button.metamask-on-boarding {

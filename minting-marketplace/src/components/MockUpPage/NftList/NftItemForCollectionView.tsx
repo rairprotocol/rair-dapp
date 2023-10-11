@@ -179,7 +179,29 @@ const NftItemForCollectionViewComponent: React.FC<
     <>
       {offer && (
         // <div className="nft-item-collection grid-item">
-        <div className="nft-item-collection grid-item" id={id}>
+        <div
+          onClick={() => {
+            if (
+              (!resaleFlag && !metadata?.animation_url) ||
+              isFileUrl === 'gif' ||
+              isFileUrl === 'png' ||
+              isFileUrl === 'jpeg' ||
+              isFileUrl === 'webp'
+            ) {
+              RedirectToMockUp();
+            }
+
+            if (item && !resaleFlag && item.isMinted && !resalePrice) {
+              RedirectToMockUp();
+            }
+          }}
+          className="nft-item-collection grid-item"
+          id={id}>
+          {item && !resaleFlag && item.isMinted && !resalePrice && (
+            <div className="nft-item-collection-sold-out">
+              <div className="sold-out-box">Sold out</div>
+            </div>
+          )}
           <>
             {item && resaleFlag && currentUserAddress === userAddress && (
               <button
@@ -211,7 +233,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 isFileUrl === 'jpeg' ||
                 isFileUrl === 'webp'
               )
-                if (!item) {
+                if (!resaleFlag) {
                   RedirectToMockUp();
                 }
             }}
