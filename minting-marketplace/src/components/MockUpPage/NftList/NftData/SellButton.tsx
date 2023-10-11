@@ -187,11 +187,7 @@ const SellButton: React.FC<ISellButton> = ({
         <BuySellButton
           title={
             isInputPriceExist && sellingPrice
-              ? `Sell for ${sellingPrice} ${
-                  blockchain && chainData[blockchain]
-                    ? chainData[blockchain]?.symbol
-                    : ''
-                }`
+              ? `Sell for ${sellingPrice}`
               : 'Sell'
           }
           handleClick={
@@ -207,7 +203,7 @@ const SellButton: React.FC<ISellButton> = ({
           <BuySellButton
             title={
               isInputPriceExist && sellingPrice
-                ? `Sell for ${sellingPrice} ETH`
+                ? `Sell for ${sellingPrice}`
                 : 'Sell'
             }
             handleClick={
