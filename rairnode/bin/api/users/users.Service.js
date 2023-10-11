@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
+const fs = require('fs');
 const _ = require('lodash');
+const path = require('path');
 const config = require('../../config');
 const gcp = require('../../integrations/gcp')(config);
 const log = require('../../utils/logger')(module);
@@ -10,6 +12,50 @@ const eFactory = require('../../utils/entityFactory');
 
 exports.getAllUsers = eFactory.getAll(User);
 exports.getUserById = eFactory.getOne(User);
+
+exports.listUsers = async (req, res, next) => {
+  try {
+    const list = await User.find({}, {
+      email: 1,
+      nickName: 1,
+      publicAddress: 1,
+      creationDate: 1,
+    });
+    return res.json({
+      success: true,
+      data: list,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+exports.exportUsers = async (req, res, next) => {
+  try {
+    const results = await User.find({}, {
+      email: 1,
+      nickName: 1,
+      publicAddress: 1,
+      creationDate: 1,
+    });
+    const delimiter = ';';
+    const stringData = results.reduce((result, item) => {
+        const line = `${item.creationDate.toUTCString()}${delimiter}${item.nickName}${delimiter}${item.publicAddress}${delimiter}${item.email}\n`;
+        return `${result}${line}`;
+    }, `Creation Date${delimiter}Nickname${delimiter}Public Address${delimiter}Email\n`);
+    const fileName = path.join(__dirname, `UserExport-${(new Date()).toUTCString()}.csv`);
+
+    fs.writeFileSync(fileName, stringData);
+
+    await res.download(fileName);
+
+    return setTimeout(() => {
+        fs.rmSync(fileName);
+    }, 2000);
+  } catch (err) {
+    return next(err);
+  }
+};
 
 // for Contract service to enrich data with User Address
 exports.addUserAdressToFilterById = async (req, res, next) => {

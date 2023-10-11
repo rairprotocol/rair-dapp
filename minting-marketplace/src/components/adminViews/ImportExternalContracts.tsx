@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 import { utils } from 'ethers';
 import { isAddress } from 'ethers/lib/utils';
 
@@ -14,6 +15,14 @@ import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
+type userType = {
+  publicAddress: string;
+  nickName: string;
+  creationDate: Date;
+  email: string;
+  _id: string;
+};
+
 const ImportExternalContract = () => {
   const [selectedContract, setSelectedContract] = useState<string>('');
   const [resultData, setResultData] = useState<string>('');
@@ -26,6 +35,7 @@ const ImportExternalContract = () => {
   const [currentTokens /*, setCurrentTokens*/] = useState<number>();
   const [totalTokens /*, setTotalTokens */] = useState<number>();
   const [sessionId, setSessionId] = useState('');
+  const [userList, setUserList] = useState<userType[]>([]);
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
@@ -69,6 +79,17 @@ const ImportExternalContract = () => {
     };
     */
   }, []);
+
+  const getUserData = useCallback(async () => {
+    const { success, data } = await rFetch('/api/v2/users/list');
+    if (success) {
+      setUserList(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    getUserData();
+  }, [getUserData]);
 
   const callImport = async () => {
     if (!validateInteger(limit)) {
@@ -131,7 +152,7 @@ const ImportExternalContract = () => {
 
   return (
     <div className="col-12 row px-5">
-      <h3>Import External Data</h3>
+      <h3>Import non-RAIR Contract</h3>
       <div className="col-12 col-md-6">
         <InputSelect
           getter={selectedBlockchain}
@@ -194,6 +215,56 @@ const ImportExternalContract = () => {
       <br />
       {totalTokens && <progress value={currentTokens} max={totalTokens} />}
       <br />
+      <hr />
+      <div className="row mb-5">
+        <div className="text-start col-10 h4">User data</div>
+        <button
+          onClick={async () => {
+            axios
+              .get('/api/v2/users/export', { responseType: 'blob' })
+              .then((response) => response.data)
+              .then((blob) => {
+                // Create blob link to download
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `template.csv`);
+
+                // Append to html link element page
+                document.body.appendChild(link);
+
+                // Start download
+                link.click();
+
+                // Clean up and remove the link
+                link.parentNode?.removeChild(link);
+              });
+          }}
+          className="col-2 btn btn-primary">
+          Export
+        </button>
+      </div>
+      <table className="table table-dark table-responsive">
+        <thead>
+          <th>Date Created</th>
+          <th>Username</th>
+          <th>Public Address</th>
+          <th>Email</th>
+        </thead>
+        <tbody>
+          {userList.map((user, index) => {
+            console.info(user);
+            return (
+              <tr key={index}>
+                <td>{user.creationDate.toString()}</td>
+                <td>{user.nickName}</td>
+                <td>{user.publicAddress}</td>
+                <td>{user.email}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

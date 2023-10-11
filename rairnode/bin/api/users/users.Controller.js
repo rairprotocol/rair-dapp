@@ -1,24 +1,43 @@
 const express = require('express');
-const { validation, requireUserSession } = require('../../middleware');
-const usersService = require('./users.Service');
+const { validation, requireUserSession, isAdmin } = require('../../middleware');
+const {
+  createUser,
+  getUserByAddress,
+  updateUserByUserAddress,
+  listUsers,
+  exportUsers,
+} = require('./users.Service');
 const upload = require('../../Multer/Config');
 
 const router = express.Router();
 
-router.post('/', validation(['createUser']), usersService.createUser);
+router.get(
+  '/list',
+  requireUserSession,
+  isAdmin,
+  listUsers,
+);
+router.get(
+  '/export',
+  requireUserSession,
+  isAdmin,
+  exportUsers,
+);
+
+router.post('/', validation(['createUser']), createUser);
 
 // Common for the group of routes below validation
 router.use('/:userAddress', validation(['userAddress'], 'params'));
 
 router
   .route('/:publicAddress')
-  .get(usersService.getUserByAddress)
+  .get(getUserByAddress)
   // Was POST in V1, no difference in usage, just standard
   .patch(
     requireUserSession,
     upload.array('files', 2),
     validation(['updateUser']),
-    usersService.updateUserByUserAddress,
+    updateUserByUserAddress,
   );
 
 module.exports = router;
