@@ -53,6 +53,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
 
   const [accountData, setAccountData] = useState<UserType | null>(null);
   const [contractData, setContractData] = useState<ContractType>();
+  const [usdPrice, setUsdPrice] = useState<number | undefined>(undefined);
   const [resaleData, setResaleData] = useState<any>();
   const params = useParams();
 
@@ -77,6 +78,39 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       }
     }
   }, [selectedToken, setAccountData, tokenData]);
+
+  const getUSDcurrency = useCallback(async () => {
+    const currencyCrypto = {
+      '0x250': {
+        blockchainName: 'astar'
+      },
+      '0x89': {
+        blockchainName: 'matic-network'
+      },
+      '0x1': {
+        blockchainName: 'ethereum'
+      }
+    };
+
+    if (
+      currencyCrypto[String(blockchain)] &&
+      currencyCrypto[String(blockchain)].blockchainName
+    ) {
+      const chain = currencyCrypto[String(blockchain)].blockchainName;
+      const { data } = await axios.get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${chain}&vs_currencies=usd`
+      );
+      if (data && chain) {
+        setUsdPrice(data[chain].usd);
+      } else {
+        setUsdPrice(undefined);
+      }
+    }
+  }, [blockchain]);
+
+  useEffect(() => {
+    getUSDcurrency();
+  }, [getUSDcurrency]);
 
   const buyContract = useCallback(async () => {
     if (!contractData || !offerData) {
@@ -365,6 +399,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         ? '0.000+'
         : formatEther(rawPrice);
 
+      const priceForUSD = formatEther(rawPrice);
+
       if (
         !contractData ||
         !offerData?.offerIndex ||
@@ -376,11 +412,20 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       }
 
       return (
-        <BuySellButton
-          handleClick={buyContract}
-          isColorPurple={true}
-          title={`Buy ${price} ${blockchain && chainData[blockchain]?.symbol}`}
-        />
+        <>
+          <BuySellButton
+            handleClick={buyContract}
+            isColorPurple={true}
+            title={`Buy ${price} ${
+              blockchain && chainData[blockchain]?.symbol
+            }`}
+          />
+          {usdPrice && (
+            <div style={{ color: 'grey' }}>
+              ${(Number(priceForUSD) * Number(usdPrice)).toFixed(5)}
+            </div>
+          )}
+        </>
       );
       // Token is minted
     } else if (selectedToken && tokenData?.[selectedToken]?.isMinted) {
@@ -388,6 +433,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         const price = numberTooBigThreshold.gte(resaleData.price)
           ? '0.000+'
           : formatEther(resaleData.price);
+        const priceForUSD = formatEther(resaleData.price);
+
         return (
           <>
             <BuySellButton
@@ -397,6 +444,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               title={`Buy ${price} ${chainData[blockchain]?.symbol}`}
             />
             <small>Resale offer</small>
+            {usdPrice && (
+              <div
+                style={{
+                  color: 'grey'
+                }}>
+                ${(Number(priceForUSD) * Number(usdPrice)).toFixed(5)}
+              </div>
+            )}
           </>
         );
       }
