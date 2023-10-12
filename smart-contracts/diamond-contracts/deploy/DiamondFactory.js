@@ -1,6 +1,7 @@
 const { deployAndVerify } = require('../utilities/deployAndVerify');
 
 module.exports = async ({ getUnnamedAccounts }) => {
+	return;
 	const [deployerAddress] = await getUnnamedAccounts();
 
 	const diamondCutData = await deployAndVerify('DiamondCutFacet', [], deployerAddress);

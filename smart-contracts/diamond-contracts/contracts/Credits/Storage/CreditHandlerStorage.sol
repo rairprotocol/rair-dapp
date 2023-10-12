@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.18;
 
 library CreditHandlerStorage {
     bytes32 internal constant STORAGE_SLOT =

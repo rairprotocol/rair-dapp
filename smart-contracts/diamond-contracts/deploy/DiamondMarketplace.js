@@ -1,18 +1,17 @@
-const {deployments, ethers} = require('hardhat');
+const { deployments } = require('hardhat');
+const { deployAndVerify } = require('../utilities/deployAndVerify');
 
-module.exports = async ({accounts, getUnnamedAccounts}) => {
-	const {deploy, get} = deployments;
-	const [deployerAddress] = await getUnnamedAccounts();
+module.exports = async ({ getUnnamedAccounts }) => {
+	const { get } = deployments;
+	const [ deployerAddress ] = await getUnnamedAccounts();
 
 	let diamondCutFacetDeployment = await get("DiamondCutFacet");
-	//let diamondCutFacetDeployment = await deploy('DiamondCutFacet', { from: deployerAddress });
-	console.log('DiamondCut Facet deployed at', diamondCutFacetDeployment.receipt.contractAddress);
 
-	let diamondMarketplaceDeployment = await deploy('MarketplaceDiamond', {
-		from: deployerAddress,
-		args: [diamondCutFacetDeployment.receipt.contractAddress],
-	})
-	console.log('Diamond Marketplace deployed at', diamondMarketplaceDeployment.receipt.contractAddress);
+	await deployAndVerify(
+		'MarketplaceDiamond',
+		[diamondCutFacetDeployment.receipt.contractAddress],
+		deployerAddress
+	);
 };
 
 module.exports.tags = ['DiamondMarketplace'];

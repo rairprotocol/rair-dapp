@@ -5,29 +5,31 @@ module.exports = async ({getUnnamedAccounts}) => {
 
 	let facets = [
         // Standard Diamond Facets
-        // DiamondCutFacet
+        "DiamondCutFacet",
+		"DiamondLoupeFacet",
+		"OwnershipFacet",
 
         // 721 Facets
-        // "ERC721Facet",
-		// "RAIRMetadataFacet",
-		// "RAIRProductFacet",
-		// "RAIRRangesFacet",
-		// "RAIRRoyaltiesFacet",
+        "ERC721Facet",
+		"RAIRMetadataFacet",
+		"RAIRProductFacet",
+		"RAIRRangesFacet",
+		"RAIRRoyaltiesFacet",
 
         // Factory Facets
-        // 'creatorFacet',
-		// 'ERC777ReceiverFacet',
-		// 'TokensFacet',
+        'creatorFacet',
+		'ERC777ReceiverFacet',
+		'TokensFacet',
 
         // Marketplace Facets
-		// "MintingOffersFacet",
-		// "FeesFacet",
-		"ResaleFacet"
+		"MintingOffersFacet",
+		"FeesFacet",
+		"ResaleFacet",
 
         // Credit Handler Facets
-        // "CreditDeposit",
-		// "CreditQuery",
-		// "CreditWithdraw",
+        "CreditDeposit",
+		"CreditQuery",
+		"CreditWithdraw",
 	]
 
 	for await (let facet of facets) {

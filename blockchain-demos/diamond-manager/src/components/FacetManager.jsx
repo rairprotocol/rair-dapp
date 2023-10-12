@@ -73,9 +73,8 @@ const FacetManager = ({
     const deploymentProcess = async () => {
         let Factory = await new ContractFactory(facet.abi, facet.bytecode, signer);
         let deploymentReceipt = await Factory.deploy();
-        console.log(deploymentReceipt);
         await (await deploymentReceipt).waitForDeployment();
-        console.log(deploymentReceipt.receipt);
+        console.info(deploymentReceipt);
     }
 
     return <div className='col-12'>

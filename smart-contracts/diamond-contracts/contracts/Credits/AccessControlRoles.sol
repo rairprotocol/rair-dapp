@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.19; 
+pragma solidity ^0.8.18; 
 
 abstract contract CreditHandlerRoles {
 	bytes32 public constant WITHDRAW_SIGNER = keccak256("rair.creditConsumer.withdrawSystemSigner");
