@@ -137,7 +137,11 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
       const response = await axios.get<TNftItemResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=${data.result.totalCount}`
       );
-      setTokenFullData(response.data.result.tokens);
+      const mapping = {};
+      response.data.result.tokens.forEach((token) => {
+        mapping[token.token] = token;
+      });
+      setTokenFullData(mapping);
     }
   }, [blockchain, contract, product, setTokenFullData]);
 

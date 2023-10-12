@@ -44,14 +44,14 @@ const NftItemForCollectionViewComponent: React.FC<
   offerItemData,
   id,
   item,
-  resaleFlag
+  resaleFlag,
+  resalePrice
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
   const store = useStore();
 
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
-  const [resalePrice, setResalePrice] = useState<string | undefined>(undefined);
   const ipfsLink = useIPFSImageLink(metadata?.image);
   const [tokenInfo, setTokenInfo] = useState<any>(null);
 
@@ -61,7 +61,8 @@ const NftItemForCollectionViewComponent: React.FC<
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const { userAddress } = useParams();
+
+  const { userAddress, contract, product } = useParams();
 
   const reactSwal = useSwal();
 
@@ -121,7 +122,7 @@ const NftItemForCollectionViewComponent: React.FC<
   }
 
   const getTokenData = useCallback(async () => {
-    if (item) {
+    if (!contract && item) {
       const response = await rFetch(
         `/api/v2/tokens/${item._id}`,
         undefined,
@@ -132,40 +133,26 @@ const NftItemForCollectionViewComponent: React.FC<
         setTokenInfo(response.tokenData);
       }
     }
-  }, [item]);
-
-  const fetchResaleInfo = useCallback(async (item, tokenInfo) => {
-    if (!item) return;
-    const resaleResponse = await rFetch(
-      `/api/resales/open?contract=${tokenInfo.contract.contractAddress}&blockchain=${tokenInfo.contract.blockchain}&index=${tokenInfo.token}`
-    );
-
-    if (resaleResponse.success && resaleResponse.data.length > 0) {
-      const formattedPrice = formatEther(resaleResponse.data[0].price);
-      return formattedPrice;
-    } else {
-      return undefined;
-    }
-  }, []);
-
-  useEffect(() => {
-    const getResalePrice = async () => {
-      if (item && tokenInfo) {
-        const price = await fetchResaleInfo(item, tokenInfo);
-        setResalePrice(price);
-      }
-    };
-
-    getResalePrice();
-  }, [item, tokenInfo, fetchResaleInfo]);
+  }, [item, contract]);
 
   const redirectionUserPage = useCallback(() => {
-    if (tokenInfo && tokenInfo.contract && tokenInfo.product) {
+    const tokenContract =
+      contract ||
+      item?.contract?.contractAddress ||
+      tokenInfo?.contract?.contractAddress;
+    const tokenBlockchain =
+      blockchain ||
+      item?.contract?.blockchain ||
+      tokenInfo?.contract?.blockchain;
+    const tokenProduct =
+      product || tokenInfo?.product?.collectionIndexInContract;
+    const tokenIndex = index || tokenInfo.token;
+    if (tokenContract && tokenBlockchain && tokenProduct && tokenIndex) {
       navigate(
-        `/tokens/${tokenInfo.contract.blockchain}/${tokenInfo.contract.contractAddress}/${tokenInfo.product.collectionIndexInContract}/${tokenInfo.token}`
+        `/tokens/${tokenBlockchain}/${tokenContract}/${tokenProduct}/${tokenIndex}`
       );
     }
-  }, [navigate, tokenInfo]);
+  }, [navigate, tokenInfo, contract, blockchain, product, index, item]);
 
   useEffect(() => {
     checkUrl();

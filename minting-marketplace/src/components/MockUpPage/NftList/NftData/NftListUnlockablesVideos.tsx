@@ -115,7 +115,7 @@ const NftListUnlockablesVideos = ({
           <div
             className="nft-unlockable-videoItem"
             onClick={
-              () => console.info('Cooming soon')
+              () => console.info('Coming soon')
               // navigate(
               //   `/watch/${productsFromOffer._id}/${productsFromOffer.mainManifest}`
               // )

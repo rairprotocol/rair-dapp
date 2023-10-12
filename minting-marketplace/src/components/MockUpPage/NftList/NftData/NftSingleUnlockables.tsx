@@ -41,7 +41,6 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
       if (isDiamond) {
         const key = item.offer.length;
         const value = acc[key];
-        console.info(value, 'value');
 
         if (value) {
           acc[key] = [...value, item];

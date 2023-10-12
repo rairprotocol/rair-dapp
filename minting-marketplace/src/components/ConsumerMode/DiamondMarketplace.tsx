@@ -202,34 +202,20 @@ const DiamondMarketplace = () => {
     if (!diamondMarketplaceInstance) {
       return;
     }
-    const signedTransaction = await web3TxHandler(
-      diamondMarketplaceInstance,
-      'buyMintingOffer',
-      [offerIndex, nextToken, { value: price.toString() }]
-    );
-    if (!signedTransaction) {
-      return;
-    }
     reactSwal.fire({
       title: `Buying token #${nextToken}!`,
       html: 'Sending transaction...',
       icon: 'info',
       showConfirmButton: false
     });
-    console.info(signedTransaction);
-    /*
-    const response =
-      await diamondMarketplaceInstance.provider.waitForTransaction(
-        `0x${signedTransaction.split('==')[0]}`,
-        2
-      );
-    console.info(response);
     if (
-      await web3TxHandler(
-        diamondMarketplaceInstance,'buyMintingOffer',[offerIndex, nextToken, {
-          value: price
-        }]
-      )
+      await web3TxHandler(diamondMarketplaceInstance, 'buyMintingOffer', [
+        offerIndex,
+        nextToken,
+        {
+          value: price.toString()
+        }
+      ])
     ) {
       reactSwal.fire({
         title: 'Success',
@@ -237,7 +223,7 @@ const DiamondMarketplace = () => {
         icon: 'success',
         showConfirmButton: true
       });
-    }*/
+    }
     setTransactionInProgress(false);
   };
 

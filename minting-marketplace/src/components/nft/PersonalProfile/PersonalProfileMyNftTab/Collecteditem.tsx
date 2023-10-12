@@ -63,7 +63,6 @@ const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
       {currentUserAddress === userAddress && (
         <button
           onClick={() => {
-            console.info(item, 'item');
             reactSwal.fire({
               html: <ResaleModal textColor={textColor} item={item} />,
               showConfirmButton: false,

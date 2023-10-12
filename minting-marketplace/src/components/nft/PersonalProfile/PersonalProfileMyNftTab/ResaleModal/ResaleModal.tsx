@@ -100,7 +100,7 @@ const ResaleModal = ({ item, textColor }) => {
       }
       setResaleData(undefined);
       const resaleResponse = await rFetch(
-        `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.token}`
+        `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
       );
       if (!resaleResponse.success) {
         return;
@@ -177,7 +177,7 @@ const ResaleModal = ({ item, textColor }) => {
   const getResalesInfo = useCallback(async () => {
     if (item) {
       const resaleResponse = await rFetch(
-        `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.token}`
+        `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
       );
       if (resaleResponse.success) {
         setResaleOffer(resaleResponse.data);

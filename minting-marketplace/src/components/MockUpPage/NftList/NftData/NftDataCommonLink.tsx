@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import { BigNumber, utils } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 
 import { NftCollectionPage } from './NftCollectionPage';
 import NftDataPageMain from './NftDataPageMain';
@@ -28,6 +29,7 @@ import {
   setTokenDataTotalCount
 } from '../../../../ducks/nftData/action';
 import { UserType } from '../../../../ducks/users/users.types';
+import { rFetch } from '../../../../utils/rFetch';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 import {
   INftDataCommonLinkComponent,
@@ -89,11 +91,23 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       const responseAllProduct = await axios.get<TNftItemResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`
       );
+      const resaleData = await rFetch(
+        `/api/resales/open?contract=${contract}&blockchain=${blockchain}`
+      );
+      const resaleMapping = {};
+      if (resaleData.success) {
+        resaleData.data.forEach((resale) => {
+          resale.price = formatEther(resale.price);
+          resaleMapping[resale.tokenIndex] = resale;
+        });
+      }
 
       const tokenMapping = {};
-
       if (responseAllProduct.data.success && responseAllProduct.data.result) {
         responseAllProduct.data.result.tokens.forEach((item) => {
+          if (resaleMapping[item.uniqueIndexInContract]) {
+            item.resaleData = resaleMapping[item.uniqueIndexInContract];
+          }
           tokenMapping[item.token] = item;
         });
       }

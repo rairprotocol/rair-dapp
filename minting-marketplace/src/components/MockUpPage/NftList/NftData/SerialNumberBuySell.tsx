@@ -192,7 +192,11 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [offerData]);
 
   const getResaleData = useCallback(async () => {
-    if (!diamondMarketplaceInstance) {
+    if (
+      !diamondMarketplaceInstance ||
+      !selectedToken ||
+      !tokenData?.[selectedToken]
+    ) {
       return;
     }
     const contractResponse = await rFetch(
@@ -207,7 +211,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     setResaleData(undefined);
     const resaleResponse = await rFetch(
-      `/api/resales/open?contract=${params.contract}&blockchain=${params.blockchain}&index=${params.tokenId}`
+      `/api/resales/open?contract=${params.contract}&blockchain=${params.blockchain}&index=${tokenData[selectedToken].uniqueIndexInContract}`
     );
     if (!resaleResponse.success) {
       return;
@@ -223,7 +227,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       resaleData.seller = userResponse.user.nickName;
     }
     setResaleData(resaleData);
-  }, [diamondMarketplaceInstance, params]);
+  }, [diamondMarketplaceInstance, params, tokenData, selectedToken]);
 
   useEffect(() => {
     getResaleData();
@@ -283,7 +287,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       address nodeAddress,
       bytes memory signature
     */
-
     if (
       success &&
       (await web3TxHandler(
@@ -293,7 +296,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           params.contract, // address erc721,
           currentUserAddress, // address buyer,
           tokenData?.[selectedToken]?.ownerAddress, // address seller,
-          params.tokenId, // uint token,
+          resaleData.tokenIndex, // uint token,
           resaleData.price, // uint tokenPrice,
           process.env.REACT_APP_NODE_ADDRESS, // address nodeAddress,
           hash, // bytes memory signature

@@ -34,14 +34,9 @@ module.exports = (context) => {
           forSale = '',
         } = req.query;
         const firstToken = (BigInt(fromToken) - 1n).toString();
-        const lastToken = !toToken
-          ? (BigInt(fromToken) + 1n + BigInt(20)).toString()
-          : (BigInt(toToken) + 1n).toString();
+        const tokenLimit = BigInt(firstToken) + (toToken ? BigInt(toToken) : 20n) + 1n;
         let options = {
-          token:
-            lastToken - 1
-              ? { $gt: firstToken, $lt: lastToken }
-              : { $gt: firstToken },
+          token: { $gt: firstToken },
         };
         const filterOptions = {};
         const populateOptions = {
@@ -125,13 +120,12 @@ module.exports = (context) => {
         }
 
         const aggregateOptions = [
-          { $match: {
-            ...options,
-            token:
-                lastToken - 1
-                  ? { $gt: firstToken, $lt: lastToken }
-                  : { $gt: firstToken },
-          } },
+          {
+            $match: {
+              ...options,
+              token: { $gt: firstToken },
+            },
+          },
           {
             $lookup: {
               from: 'Offer',
@@ -166,7 +160,9 @@ module.exports = (context) => {
           .get('tokens', 0)
           .value();
 
-        const tokensSorted = await MintedToken.aggregate(aggregateOptions)
+        const tokensSorted = await MintedToken.aggregate([...aggregateOptions, {
+          $limit: tokenLimit,
+        }])
           .sort(_.assign({}, sortByPrice ? { 'offer.price': Number(sortByPrice) } : {}, sortByToken ? { token: Number(sortByToken) } : {}))
           .collation({ locale: 'en_US', numericOrdering: true });
 

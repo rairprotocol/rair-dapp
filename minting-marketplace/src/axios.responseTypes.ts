@@ -47,6 +47,7 @@ export type TTokenData = {
   token: string;
   uniqueIndexInContract: string;
   _id: string;
+  resaleData?: any;
 };
 
 export type TNftItemResponse = {

@@ -41,20 +41,23 @@ const SellButton: React.FC<ISellButton> = ({
   if (!blockchain && !contract && !tokenId) {
     blockchain = item.contract.blockchain;
     contract = item.contract.contractAddress;
-    tokenId = item.token;
+    tokenId = item.uniqueIndexInContract;
   }
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain } = useWeb3Tx();
 
   const handleClickSellButton = useCallback(async () => {
+    const tokenInformation =
+      item || (selectedToken && tokenData?.[selectedToken]);
     if (
       !contractCreator ||
       !sellingPrice ||
       !blockchain ||
       !chainData[blockchain] ||
       !correctBlockchain(blockchain as BlockchainType) ||
-      !diamondMarketplaceInstance
+      !diamondMarketplaceInstance ||
+      !tokenInformation
     ) {
       return;
     }
@@ -103,7 +106,7 @@ const SellButton: React.FC<ISellButton> = ({
       body: JSON.stringify({
         contract,
         blockchain,
-        index: tokenId,
+        index: tokenInformation.uniqueIndexInContract,
         price: parseEther(sellingPrice).toString()
       }),
       headers: {
@@ -130,7 +133,10 @@ const SellButton: React.FC<ISellButton> = ({
     sellingPrice,
     tokenId,
     web3TxHandler,
-    refreshResaleData
+    refreshResaleData,
+    item,
+    tokenData,
+    selectedToken
   ]);
 
   const openInputField = useCallback(() => {

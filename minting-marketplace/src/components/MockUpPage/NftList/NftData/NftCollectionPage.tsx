@@ -81,7 +81,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     (entries) => {
       const target = entries[0];
       if (target.isIntersecting) {
-        showTokensRef.current = showTokensRef.current * 2;
+        showTokensRef.current = showTokensRef.current + 20;
         getAllProduct('0', showTokensRef.current.toString());
       }
     },
@@ -331,6 +331,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                           setPlaying={setPlaying}
                           playing={playing}
                           diamond={token.offer.diamond}
+                          resalePrice={token?.resaleData?.price}
                         />
                       );
                     } else {
@@ -374,6 +375,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                           setPlaying={setPlaying}
                           playing={playing}
                           diamond={token.offer.diamond}
+                          resalePrice={token?.resaleData?.price}
                         />
                       );
                     } else {
