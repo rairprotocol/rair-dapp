@@ -350,6 +350,7 @@ video::-webkit-media-controls-panel {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 49px;
   padding: 63px 0 12px 0;
@@ -877,6 +878,7 @@ video {
 
   .main-tab {
     margin-bottom: 16px;
+    align-items: flex-start;
   }
 }
 
@@ -1047,6 +1049,15 @@ video {
     margin-bottom: 0px;
   }
 
+  .main-tab .text-sell-button-usd-price {
+    font-size: 14px;
+    right: 65px;
+  }
+
+  .main-tab .nft-btn-sell {
+    margin-bottom: 0;
+  }
+
   .nft-collection-wrapper {
     height: 420px;
     padding: 10px;
@@ -1164,6 +1175,11 @@ video {
 @media screen and (max-device-width: 539px) {
   .main-tab-description-serial-number {
     align-items: flex-start;
+  }
+
+  .main-tab .text-sell-button-usd-price {
+    font-size: 14px;
+    right: 0;
   }
 
   .nft-data-sell-button {
@@ -1353,7 +1369,7 @@ video {
     padding: 40px 0px 0px;
     margin-bottom: 16px;
     align-items: flex-start;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .main-tab-description {

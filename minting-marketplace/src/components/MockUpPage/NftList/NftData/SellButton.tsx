@@ -28,7 +28,8 @@ const SellButton: React.FC<ISellButton> = ({
   isInputPriceExist,
   setIsInputPriceExist,
   refreshResaleData,
-  item
+  item,
+  singleTokenPage
 }) => {
   const { contractCreator, currentUserAddress, diamondMarketplaceInstance } =
     useSelector<RootState, ContractsInitialType>(
@@ -115,11 +116,18 @@ const SellButton: React.FC<ISellButton> = ({
       }
     });
     if (response.success) {
-      reactSwal.fire({
-        title: 'Success',
-        html: `Users will be able to purchase your NFT on the marketplace`,
-        icon: 'success'
-      });
+      reactSwal
+        .fire({
+          title: 'Success',
+          html: `Users will be able to purchase your NFT on the marketplace`,
+          icon: 'success'
+        })
+        .then((result) => {
+          if (singleTokenPage && result.isConfirmed) {
+            console.info(1, '1');
+            location.reload();
+          }
+        });
       refreshResaleData();
     }
   }, [
@@ -136,7 +144,8 @@ const SellButton: React.FC<ISellButton> = ({
     refreshResaleData,
     item,
     tokenData,
-    selectedToken
+    selectedToken,
+    singleTokenPage
   ]);
 
   const openInputField = useCallback(() => {
@@ -200,7 +209,7 @@ const SellButton: React.FC<ISellButton> = ({
             isInputPriceExist ? handleClickSellButton : openInputField
           }
           isColorPurple={false}
-          disabled={isInputPriceExist && !sellingPrice}
+          disabled={(isInputPriceExist && !sellingPrice) || singleTokenPage}
         />
       );
     } else {

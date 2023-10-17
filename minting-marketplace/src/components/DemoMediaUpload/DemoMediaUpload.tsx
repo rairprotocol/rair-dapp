@@ -6,8 +6,6 @@ import WorkflowContext from '../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import useSwal from '../../hooks/useSwal';
-import useWindowDimensions from '../../hooks/useWindowDimensions';
 import videoIcon from '../../images/videoIcon.svg';
 import { rFetch } from '../../utils/rFetch';
 import LoadingComponent from '../common/LoadingComponent';
@@ -27,8 +25,6 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
     (store) => store.contractStore
   );
 
-  const { width } = useWindowDimensions();
-
   const selectCommonInfo = {
     customClass: 'form-control rounded-rair',
     customCSS: {
@@ -46,8 +42,6 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
   const [newUserStatus, setNewUserStatus] = useState(false);
 
   const [loading, setLoading] = useState<boolean>(false);
-
-  const reactSwal = useSwal();
 
   const getMediaList = async () => {
     if (currentUserAddress !== undefined) {

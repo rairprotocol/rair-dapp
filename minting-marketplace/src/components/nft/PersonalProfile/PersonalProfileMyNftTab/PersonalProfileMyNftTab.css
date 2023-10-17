@@ -22,6 +22,12 @@
   backdrop-filter: blur(4px);
 }
 
+.nft-data-content .nft-item-sell-buton {
+  position: absolute;
+  right: 270px;
+  top: 62px;
+}
+
 .nft-item-sell-buton i {
   /* color: #e882d5; */
   color: #fff;
@@ -31,4 +37,27 @@
   background: rgb(34, 32, 33);
   border: 1px solid rgb(78, 77, 77);
   transition: all 0.2s ease;
+}
+
+@media screen and (max-width: 725px) {
+  .nft-data-content .nft-item-sell-buton {
+    right: 210px;
+  }
+}
+
+@media screen and (max-width: 539px) {
+  .nft-data-content .nft-item-sell-buton {
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
+    border-radius: 8px;
+    top: 40px;
+    right: 170px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .nft-data-content .nft-item-sell-buton {
+    top: 32px;
+  }
 }

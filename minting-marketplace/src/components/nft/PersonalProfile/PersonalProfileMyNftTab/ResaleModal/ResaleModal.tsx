@@ -18,7 +18,17 @@ import chainData from './../../../../../utils/blockchainData';
 
 import './ResaleModal.css';
 
-const ResaleModal = ({ item, textColor }) => {
+interface IResaleModal {
+  item: any;
+  textColor: any;
+  singleTokenPage?: boolean;
+}
+
+const ResaleModal: React.FC<IResaleModal> = ({
+  item,
+  textColor,
+  singleTokenPage
+}) => {
   const { diamondMarketplaceInstance, currentUserAddress } = useSelector<
     RootState,
     ContractsInitialType
@@ -147,7 +157,17 @@ const ResaleModal = ({ item, textColor }) => {
     });
 
     if (response.success) {
-      reactSwal.fire('Updated!', 'Your price has been updated.', 'success');
+      reactSwal
+        .fire({
+          title: 'Updated!',
+          html: 'Your price has been updated.',
+          icon: 'success'
+        })
+        .then((result) => {
+          if ((singleTokenPage && result.isConfirmed) || result.dismiss) {
+            location.reload();
+          }
+        });
     }
   };
 
@@ -164,11 +184,13 @@ const ResaleModal = ({ item, textColor }) => {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          reactSwal.fire(
-            'Deleted!',
-            'Your resale offer has been deleted.',
-            'success'
-          );
+          reactSwal
+            .fire('Deleted!', 'Your resale offer has been deleted.', 'success')
+            .then((res) => {
+              if (singleTokenPage && res.isConfirmed) {
+                location.reload();
+              }
+            });
           removeResaleOffer(tokenId);
         }
       });
@@ -274,6 +296,7 @@ const ResaleModal = ({ item, textColor }) => {
               setIsInputPriceExist={setIsInputPriceExist}
               setInputSellValue={setInputSellValue}
               refreshResaleData={getResaleData}
+              singleTokenPage={true}
             />
           )}
         </div>

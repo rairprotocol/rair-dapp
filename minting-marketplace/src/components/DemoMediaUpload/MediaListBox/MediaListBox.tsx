@@ -8,7 +8,6 @@ import {
   uploadVideoEnd,
   uploadVideoStart
 } from '../../../ducks/uploadDemo/action';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useSwal from '../../../hooks/useSwal';
 import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
@@ -292,9 +291,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
   const [categoryOptions, setCategoryOptions] = useState([]);
 
-  const { userRd } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );

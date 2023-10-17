@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
@@ -10,15 +10,17 @@ import { BuySellButton } from './BuySellButton';
 import SellInputButton from './SellInputButton';
 
 import { TUserResponse } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
+import store, { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
+import { BillTransferIcon } from '../../../../images';
 import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
+import ResaleModal from '../../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISerialNumberBuySell } from '../../mockupPage.types';
@@ -35,14 +37,15 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   selectedToken,
   setSelectedToken,
   offerData,
-  handleTokenBoughtButton
+  handleTokenBoughtButton,
+  tokenDataForResale
 }) => {
   const { minterInstance, diamondMarketplaceInstance, currentUserAddress } =
     useSelector<RootState, ContractsInitialType>(
       (state) => state.contractStore
     );
 
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
@@ -424,7 +427,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             }`}
           />
           {usdPrice && (
-            <div style={{ color: 'grey' }}>
+            <div className="text-sell-button-usd-price">
               ${(Number(priceForUSD) * Number(usdPrice)).toFixed(5)}
             </div>
           )}
@@ -448,10 +451,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             />
             <small>Resale offer</small>
             {usdPrice && (
-              <div
-                style={{
-                  color: 'grey'
-                }}>
+              <div className="text-sell-button-usd-price">
                 ${(Number(priceForUSD) * Number(usdPrice)).toFixed(5)}
               </div>
             )}
@@ -504,6 +504,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         );
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     blockchain,
     correctBlockchain,
@@ -548,6 +549,34 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           )}
         </div>
       </div>
+      {tokenData &&
+        selectedToken &&
+        tokenDataForResale &&
+        tokenData?.[selectedToken]?.isMinted &&
+        currentUserAddress === tokenData[selectedToken].ownerAddress && (
+          <button
+            onClick={() => {
+              reactSwal.fire({
+                html: (
+                  <Provider store={store}>
+                    <ResaleModal
+                      textColor={textColor}
+                      singleTokenPage={true}
+                      item={tokenDataForResale}
+                    />
+                  </Provider>
+                ),
+                showConfirmButton: false,
+                showCloseButton: true,
+                customClass: `resale-pop-up-custom ${
+                  primaryColor === 'rhyno' ? 'rhyno' : ''
+                }`
+              });
+            }}
+            className="nft-item-sell-buton">
+            <BillTransferIcon primaryColor={primaryColor} />
+          </button>
+        )}
       <div>{checkAllSteps()}</div>
     </div>
   );

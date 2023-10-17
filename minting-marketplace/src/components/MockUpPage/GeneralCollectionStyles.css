@@ -613,6 +613,12 @@ img.single-token-block-img {
   height: 406px;
 }
 
+.main-tab .text-sell-button-usd-price {
+  position: absolute;
+  color: grey;
+  right: 90px;
+}
+
 @media screen and (max-width: 568px) {
   .wrapper-collection .list-button-wrapper {
     width: 360px;

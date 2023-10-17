@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import { TTokenData } from '../../../../../../axios.responseTypes';
-import { rFetch } from '../../../../../../utils/rFetch';
 import CustomButton from '../../../../utils/button/CustomButton';
 import {
   INftDifferentRarity,

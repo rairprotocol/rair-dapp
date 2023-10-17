@@ -113,6 +113,7 @@ export interface ISerialNumberBuySell {
   textColor: string | undefined;
   offerData: TOfferType | undefined;
   handleTokenBoughtButton: () => void;
+  tokenDataForResale?: any;
 }
 export interface ISellButton {
   currentUser?: string | undefined;
@@ -124,6 +125,7 @@ export interface ISellButton {
   setInputSellValue: (inputSellValue: string) => void;
   refreshResaleData: () => void;
   item?: any;
+  singleTokenPage?: boolean;
 }
 
 export interface ISingleTokenViewProperties {

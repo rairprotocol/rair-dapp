@@ -48,6 +48,7 @@ const SellInputButton: React.FC<ISellInputButton> = ({
       )}
       <SellButton
         tokenData={tokenData}
+        singleTokenPage={true}
         selectedToken={selectedToken}
         sellingPrice={inputSellValue}
         isInputPriceExist={isInputPriceExist}

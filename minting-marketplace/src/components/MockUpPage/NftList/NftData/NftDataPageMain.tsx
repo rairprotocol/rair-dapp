@@ -17,6 +17,7 @@ import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
 import { ExpandImageIcon } from '../../../../images';
 import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
+import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
 import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
@@ -55,6 +56,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const myRef = useRef(null);
   const hotdropsVar = process.env.REACT_APP_HOTDROPS === 'true';
   const [playing, setPlaying] = useState<boolean>(false);
+  const [tokenDataForResale, setTokenDataForResale] = useState<any>(undefined);
   const [, /*offersIndexesData*/ setOffersIndexesData] =
     useState<TOffersIndexesData[]>();
   const handlePlaying = () => {
@@ -67,6 +69,24 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
 
   const [tokenFullData, setTokenFullData] = useState<any>(undefined);
   const dispatch = useDispatch();
+
+  const getTokenData = useCallback(async () => {
+    if (tokenData && selectedToken) {
+      const response = await rFetch(
+        `/api/v2/tokens/${tokenData[selectedToken]._id}`,
+        undefined,
+        undefined,
+        undefined
+      );
+      if (response.success) {
+        setTokenDataForResale(response.tokenData);
+      }
+    }
+  }, [tokenData, selectedToken]);
+
+  useEffect(() => {
+    getTokenData();
+  }, [getTokenData]);
 
   useEffect(() => {
     if (productsFromOffer) {
@@ -233,6 +253,11 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
           someUsersData={someUsersData}
           userName={ownerInfo?.owner}
         />
+        <div
+          style={{
+            position: 'relative'
+          }}
+          className="resale-single-token-view"></div>
         <div className="nft-data-content">
           <div
             className="nft-collection nft-collection-wrapper"
@@ -354,6 +379,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               selectedToken={selectedToken}
               textColor={textColor}
               handleTokenBoughtButton={fetchTokenFullData}
+              tokenDataForResale={tokenDataForResale}
             />
           )}
           <div className="properties-title">
