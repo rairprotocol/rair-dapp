@@ -26,15 +26,19 @@ module.exports = (context) => {
         const { contract, product } = req;
         const {
           fromToken = 0,
-          toToken,
+          toToken = 20,
           sortByToken = '1',
           sortByPrice = '',
           priceFrom = '',
           priceTo = '',
           forSale = '',
         } = req.query;
-        const firstToken = (BigInt(fromToken) - 1n).toString();
-        const tokenLimit = BigInt(firstToken) + (toToken ? BigInt(toToken) : 20n) + 1n;
+        const firstToken = (
+          BigInt(fromToken) > 0
+            ? BigInt(fromToken) - 1n
+            : BigInt(fromToken)
+        ).toString();
+        const tokenLimit = BigInt(firstToken) + BigInt(toToken) || 1n;
         let options = {
           token: { $gt: firstToken },
         };

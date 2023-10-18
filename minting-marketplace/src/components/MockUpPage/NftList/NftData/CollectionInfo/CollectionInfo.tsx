@@ -154,7 +154,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
 
   const getTokens = async () => {
     const { data } = await axios.get<TNftItemResponse>(
-      `/api/nft/network/${params.blockchain}/${params.contract}/${params.product}?fromToken=0&toToken=0`
+      `/api/nft/network/${params.blockchain}/${params.contract}/${params.product}?fromToken=0&toToken=1`
     );
 
     setTokenData(data.result.tokens);
