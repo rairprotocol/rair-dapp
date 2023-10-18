@@ -43,7 +43,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
 
   const handleCopy = async () => {
     if (currentUrl) {
-      window.navigator.clipboard.writeText(currentUrl);
+      navigator.clipboard.writeText(currentUrl);
       closePopUp();
     }
   };
