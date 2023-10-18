@@ -1304,7 +1304,7 @@ select.form-control.rounded-rair:disabled {
 }
 
 .main-wrapper {
-  padding: 40px 120px 0 120px;
+  padding: 0px 120px 0 120px;
   display: flex;
   flex-direction: column;
   align-items: center;

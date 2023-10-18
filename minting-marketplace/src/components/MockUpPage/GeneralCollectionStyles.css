@@ -809,7 +809,7 @@ img.single-token-block-img {
 
 @media screen and (max-width: 1500px) {
   .main-wrapper {
-    padding: 70px 90px 0px 90px;
+    padding: 0px 90px 0px 90px;
   }
 }
 
@@ -1042,6 +1042,10 @@ img.single-token-block-img {
   /* unused-snippet */
   .wrapper-collection,
   #nft-data-page-wrapper {
+  }
+
+  .main-wrapper {
+    padding: 40px 20px 0px 20px !important;
   }
 }
 
@@ -1694,9 +1698,6 @@ p.general-title {
     width: 580px;
     height: 325px;
     margin: 0rem;
-  }
-  .main-wrapper {
-    padding-top: 20px;
   }
   .tree-tab-unlocks,
   .unlockable-video {
