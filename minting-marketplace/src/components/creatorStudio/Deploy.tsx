@@ -144,9 +144,11 @@ const Factory = () => {
         </div>
         <div className="col-12 p-2">
           <InputSelect
-            options={Object.keys(chainData).map((item /*, index, array*/) => {
-              return { label: chainData[item].name, value: item };
-            })}
+            options={Object.keys(chainData)
+              .filter((chain) => chainData[chain].disabled !== true)
+              .map((item) => {
+                return { label: chainData[item].name, value: item };
+              })}
             getter={chainId}
             setter={updateChain}
             placeholder="Please select"

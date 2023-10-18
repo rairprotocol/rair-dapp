@@ -19,6 +19,7 @@ export type TChainItemData = {
   symbol: string;
   oreIdAlias: string | undefined;
   addChainData: TAddChainData;
+  disabled?: Boolean;
 };
 export type TChainData = {
   [key in BlockchainType]?: TChainItemData;

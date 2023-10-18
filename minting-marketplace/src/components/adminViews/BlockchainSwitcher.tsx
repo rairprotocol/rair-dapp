@@ -26,12 +26,14 @@ const bootstrapColorMapping = {
   '0x13881': 'stimorol'
 };
 
-const blockchains: BlockchainInfo[] = Object.keys(chainData).map((chain) => {
-  return {
-    chainData: chainData[chain].addChainData,
-    bootstrapColor: bootstrapColorMapping[chain]
-  };
-});
+const blockchains: BlockchainInfo[] = Object.keys(chainData)
+  .filter((chain) => chainData[chain].disabled !== true)
+  .map((chain) => {
+    return {
+      chainData: chainData[chain].addChainData,
+      bootstrapColor: bootstrapColorMapping[chain]
+    };
+  });
 
 const BlockChainSwitcher = () => {
   const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');

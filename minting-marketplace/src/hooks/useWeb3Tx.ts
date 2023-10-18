@@ -352,6 +352,9 @@ const useWeb3Tx = () => {
           dispatch(setChainId(chainId, oreIdAddress));
           return;
         case 'metamask':
+          if (chainData[chainId]?.disabled) {
+            return;
+          }
           return metamaskSwitch(chainId);
       }
     },

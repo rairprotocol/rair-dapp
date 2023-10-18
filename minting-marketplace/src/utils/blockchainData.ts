@@ -1,13 +1,47 @@
 import { TChainData } from './utils.types';
 
-import {
-  AstarLogo,
-  /*BinanceDiamond,*/
-  EthereumLogo,
-  MaticLogo
-} from '../images';
+import { AstarLogo, BinanceDiamond, EthereumLogo, MaticLogo } from '../images';
 
 const chainData: TChainData = {
+  '0x38': {
+    image: BinanceDiamond,
+    name: 'Binance Mainnet',
+    oreIdAlias: undefined,
+    chainId: '0x38',
+    symbol: 'BNB',
+    addChainData: {
+      chainId: '0x38',
+      chainName: 'Binance Smart Chain Mainnet',
+      nativeCurrency: {
+        name: 'BNB',
+        symbol: 'BNB',
+        decimals: 18
+      },
+      rpcUrls: ['https://bsc-dataseed1.binance.org'],
+      blockExplorerUrls: ['https://www.bscscan.com/']
+    },
+    disabled: true
+  },
+  '0x61': {
+    testnet: true,
+    image: BinanceDiamond,
+    oreIdAlias: undefined,
+    name: 'Binance Testnet',
+    chainId: '0x61',
+    symbol: 'BNB',
+    addChainData: {
+      chainId: '0x61',
+      chainName: 'Binance Testnet',
+      nativeCurrency: {
+        name: 'BNB',
+        symbol: 'BNB',
+        decimals: 18
+      },
+      rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+      blockExplorerUrls: ['https://testnet.bscscan.com/']
+    },
+    disabled: true
+  },
   '0x250': {
     testnet: false,
     image: AstarLogo,
@@ -34,7 +68,7 @@ const chainData: TChainData = {
     chainId: '0x89',
     symbol: 'MATIC',
     addChainData: {
-      chainId: '0x89', // 0x89
+      chainId: '0x89',
       chainName: 'Matic(Polygon) Mainnet',
       nativeCurrency: {
         name: 'Matic Token',

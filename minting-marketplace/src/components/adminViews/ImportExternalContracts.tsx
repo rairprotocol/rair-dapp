@@ -40,12 +40,14 @@ const ImportExternalContract = () => {
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
-  const blockchainOptions = Object.keys(chainData).map((blockchainId) => {
-    return {
-      label: chainData[blockchainId].name,
-      value: blockchainId
-    };
-  });
+  const blockchainOptions = Object.keys(chainData)
+    .filter((chain) => chainData[chain].disabled !== true)
+    .map((blockchainId) => {
+      return {
+        label: chainData[blockchainId].name,
+        value: blockchainId
+      };
+    });
 
   const { contractCreator } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore

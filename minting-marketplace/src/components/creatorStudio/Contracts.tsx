@@ -81,32 +81,36 @@ const Contracts = () => {
               }`}>
               <i className="fa fa-gem" /> Only Diamonds
             </button>
-            {Object.keys(chainData).map((chain, index) => {
-              return (
-                <button
-                  key={index}
-                  onClick={() => {
-                    const aux = [...chainFilter];
-                    if (chainFilter.includes(chain)) {
-                      aux.splice(aux.indexOf(chain), 1);
-                    } else {
-                      aux.push(chain);
-                    }
-                    setChainFilter(aux);
-                  }}
-                  className={`col-xs-12 col-md-6 rair-rounded btn btn-${
-                    chainFilter.includes(chain) ? 'light' : 'outline-secondary'
-                  }`}>
-                  <img
-                    alt={chainData[chain]?.name}
-                    src={chainData[chain]?.image}
-                    style={{ maxHeight: '1.5rem', maxWidth: '1.5rem' }}
-                    className="me-2"
-                  />
-                  <small>{chainData[chain].name}</small>
-                </button>
-              );
-            })}
+            {Object.keys(chainData)
+              .filter((chain) => chainData[chain].disabled !== true)
+              .map((chain, index) => {
+                return (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      const aux = [...chainFilter];
+                      if (chainFilter.includes(chain)) {
+                        aux.splice(aux.indexOf(chain), 1);
+                      } else {
+                        aux.push(chain);
+                      }
+                      setChainFilter(aux);
+                    }}
+                    className={`col-xs-12 col-md-6 rair-rounded btn btn-${
+                      chainFilter.includes(chain)
+                        ? 'light'
+                        : 'outline-secondary'
+                    }`}>
+                    <img
+                      alt={chainData[chain]?.name}
+                      src={chainData[chain]?.image}
+                      style={{ maxHeight: '1.5rem', maxWidth: '1.5rem' }}
+                      className="me-2"
+                    />
+                    <small>{chainData[chain].name}</small>
+                  </button>
+                );
+              })}
           </div>
         </>
       )}
