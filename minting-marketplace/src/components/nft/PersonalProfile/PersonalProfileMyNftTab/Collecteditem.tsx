@@ -39,7 +39,7 @@ const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
   }, [item]);
 
   const redirection = useCallback(() => {
-    if (tokenInfo && tokenInfo.contract && tokenInfo.product) {
+    if (tokenInfo?.contract && tokenInfo?.product?.collectionIndexInContract) {
       navigate(
         `/tokens/${tokenInfo.contract.blockchain}/${tokenInfo.contract.contractAddress}/${tokenInfo.product.collectionIndexInContract}/${tokenInfo.token}`
       );
@@ -55,9 +55,7 @@ const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
       style={{
         cursor: 'pointer'
       }}
-      // onClick={() => {
-      //   redirection();
-      // }}
+      onClick={redirection}
       key={index}
       className="nft-item-collection grid-item">
       {currentUserAddress === userAddress && (

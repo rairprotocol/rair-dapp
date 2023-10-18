@@ -506,18 +506,16 @@ exports.getFullTokenInfo = async (req, res, next) => {
     rangeQuery.offerIndex = tokenData.offer;
   }
   const rangeData = await Offer.findOne(rangeQuery);
-  if (!rangeData) {
-    return next(new AppError('No range information found'));
+  if (rangeData) {
+    tokenData.range = rangeData;
+    const productData = await Product.findOne({
+      contract: tokenData.contract._id,
+      collectionIndexInContract: rangeData.product,
+    });
+    if (productData) {
+      tokenData.product = productData;
+    }
   }
-  tokenData.range = rangeData;
-  const productData = await Product.findOne({
-    contract: tokenData.contract._id,
-    collectionIndexInContract: rangeData.product,
-  });
-  if (!productData) {
-    return next(new AppError('No product information found'));
-  }
-  tokenData.product = productData;
   return res.json({ success: true, tokenData });
 };
 
