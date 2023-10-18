@@ -192,7 +192,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
             .toString()}
           %
           <br />
-          Percentage left for the buyer:{' '}
+          Percentage left for the seller:{' '}
           {BigNumber.from(100)
             .mul(precisionFactor)
             .sub(total.add(nodeFee).add(treasuryFee))
