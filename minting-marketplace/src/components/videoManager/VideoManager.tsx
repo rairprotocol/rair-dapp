@@ -10,6 +10,7 @@ import useSwal from '../../hooks/useSwal';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
+import AnalyticsPopUp from '../DemoMediaUpload/UploadedListBox/AnalyticsPopUp/AnalyticsPopUp';
 
 const VideoManager = () => {
   const [uploads, setUploads] = useState([]);
@@ -190,7 +191,7 @@ const VideoManager = () => {
                   <small>{selectedFile.type}</small>
                   <h3>{selectedFile.title}</h3>
                   <h5>
-                    <i className="fa fa-eye" /> {selectedFile.views}
+                    <AnalyticsPopUp videoId={selectedFile._id} />
                   </h5>
                   <span>{selectedFile?.category?.name}</span>
                   <br />

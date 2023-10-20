@@ -8,15 +8,35 @@ import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 import './AnalyticsPopUp.css';
 
 interface IAnalyticsPopUp {
-  watchCounter: number | null;
   videoId: string;
 }
 
-const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({
-  watchCounter,
-  videoId
-}) => {
+const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({ videoId }) => {
   const reactSwal = useSwal();
+
+  const [watchCounter, setWatchCounter] = useState<number>(0);
+
+  const getCounterVideo = useCallback(async () => {
+    if (videoId) {
+      try {
+        const req = await rFetch(`/api/analytics/${videoId}?onlyCount=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        setWatchCounter(req.totalCount);
+      } catch (e) {
+        console.info(e);
+      }
+    }
+  }, [videoId]);
+
+  useEffect(() => {
+    getCounterVideo();
+  }, [getCounterVideo]);
+
   const CounterDisplay = (num: number | null | undefined) => {
     if (typeof num === 'number') {
       if (num >= 1000000) {
@@ -37,28 +57,22 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({
   };
 
   return (
-    <>
-      <TooltipBox title="Views">
-        <>
-          <button
-            onClick={() => {
-              reactSwal.fire({
-                html: <PopUpContainer videoId={videoId} />,
-                showConfirmButton: false,
-                width: '70vw',
-                customClass: {
-                  popup: `bg-analytics`
-                },
-                showCloseButton: true
-              });
-            }}
-            title="Click to the watch analytics page."
-            className="btn-video-views">
-            {CounterDisplay(watchCounter)}
-          </button>
-        </>
-      </TooltipBox>
-    </>
+    <button
+      className="btn btn-stimorol"
+      onClick={() => {
+        reactSwal.fire({
+          html: <PopUpContainer videoId={videoId} />,
+          showConfirmButton: false,
+          width: '70vw',
+          customClass: {
+            popup: `bg-analytics`
+          },
+          showCloseButton: true
+        });
+      }}
+      title="Click to the watch analytics page.">
+      <i className="fa fa-eye" /> {CounterDisplay(watchCounter)}
+    </button>
   );
 };
 

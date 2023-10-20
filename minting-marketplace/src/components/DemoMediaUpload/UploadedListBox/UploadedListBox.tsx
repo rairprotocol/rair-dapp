@@ -31,7 +31,6 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
 
   const [openVideoplayer, setOpenVideoplayer] = useState<boolean>(false);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  const [watchCounter, setWatchCounter] = useState<number | null>(null);
   const [loadDeleting, setLoadDeleting] = useState(false);
   const [editTitleVideo, setEditTitleVideo] = useState<boolean>(false);
   const [currentContract, setCurrentContract] = useState<any>(null);
@@ -59,27 +58,6 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
       borderRadius: '16px',
       height: 'auto',
       overflow: 'hidden'
-    }
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getCounterVideo = async () => {
-    if (fileData?._id) {
-      try {
-        const req = await rFetch(
-          `/api/analytics/${fileData?._id}?onlyCount=true`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-
-        setWatchCounter(req.totalCount);
-      } catch (e) {
-        console.info(e);
-      }
     }
   };
 
@@ -148,11 +126,6 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
     getCurrentContract();
   }, [getCurrentContract]);
 
-  useEffect(() => {
-    getCounterVideo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modalIsOpen]);
-
   return (
     <div
       className="medialist-box"
@@ -204,9 +177,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           }`}>
           <i className="fas fa-trash" />
         </button>
-        {!editTitleVideo && (
-          <AnalyticsPopUp videoId={fileData?._id} watchCounter={watchCounter} />
-        )}
+        {!editTitleVideo && <AnalyticsPopUp videoId={fileData?._id} />}
       </div>
       <>
         <Modal
