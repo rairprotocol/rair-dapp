@@ -87,9 +87,14 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
         }}
         onClick={handleClick}>
         <ImageLazy
-          className={`my-items-pict ${!userPage && 'row'} zoom-event`}
           src={item.token.metadata.image}
           alt={`My favorite NFT ${item.token.metadata.name}`}
+          cover={true}
+          className={`my-items-pict h-100 w-100 ${
+            !userPage && 'row'
+          } zoom-event zoom-event`}
+          width={'100%'}
+          height={'100%'}
         />
         <div className="w-100 bg-my-items">
           {isCurrentUser && (

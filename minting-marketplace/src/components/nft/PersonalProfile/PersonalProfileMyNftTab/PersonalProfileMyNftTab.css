@@ -1,7 +1,7 @@
 .my-items-pict {
   width: inherit;
   height: inherit;
-  object-fit: cover !important;
+  object-fit: cover;
 }
 
 .nft-item-sell-buton {
