@@ -2,12 +2,15 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BigNumber } from 'ethers';
+import axios from 'axios';
+import { BigNumber, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
+import { TUserResponse } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { UserType } from '../../../ducks/users/users.types';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useSwal from '../../../hooks/useSwal';
 import { BillTransferIcon } from '../../../images';
@@ -51,6 +54,7 @@ const NftItemForCollectionViewComponent: React.FC<
   const navigate = useNavigate();
   const store = useStore();
 
+  const [userInfoMinted, setUserInfoMinted] = useState<UserType | null>(null);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const ipfsLink = useIPFSImageLink(metadata?.image);
   const [tokenInfo, setTokenInfo] = useState<any>(null);
@@ -153,6 +157,20 @@ const NftItemForCollectionViewComponent: React.FC<
       );
     }
   }, [navigate, tokenInfo, contract, blockchain, product, index, item]);
+
+  const getInfoFromUser = useCallback(async () => {
+    // find user
+    if (item && utils.isAddress(item.ownerAddress)) {
+      const result = await axios
+        .get<TUserResponse>(`/api/users/${item.ownerAddress}`)
+        .then((res) => res.data);
+      setUserInfoMinted(result.user);
+    }
+  }, [item]);
+
+  useEffect(() => {
+    getInfoFromUser();
+  }, [getInfoFromUser]);
 
   useEffect(() => {
     checkUrl();
@@ -341,7 +359,31 @@ const NftItemForCollectionViewComponent: React.FC<
                       maxHeight: '40px'
                     }}>
                     <div>
-                      {someUsersData ? (
+                      {item?.isMinted && userInfoMinted ? (
+                        <div className="collection-block-user-creator">
+                          <img
+                            src={
+                              userInfoMinted.avatar
+                                ? userInfoMinted.avatar
+                                : defaultImage
+                            }
+                            alt="User Avatar"
+                          />
+                          <h5 style={{ wordBreak: 'break-all' }}>
+                            {userInfoMinted.nickName
+                              ? userInfoMinted.nickName.length > 16
+                                ? userInfoMinted.nickName.slice(0, 5) +
+                                  '...' +
+                                  userInfoMinted.nickName.slice(
+                                    userInfoMinted.nickName.length - 4
+                                  )
+                                : userInfoMinted.nickName
+                              : userName?.slice(0, 5) +
+                                '....' +
+                                userName?.slice(userName.length - 4)}
+                          </h5>
+                        </div>
+                      ) : someUsersData ? (
                         <div className="collection-block-user-creator">
                           <img
                             src={
