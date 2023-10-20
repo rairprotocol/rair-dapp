@@ -172,6 +172,10 @@
   background: var(--stimorol);
 }
 
+.resale-modal-group-btns .btn-update-resale.disabled-resale-btn {
+  color: var(--charcoal-40);
+}
+
 .resale-modal-group-btns .btn-update-resale:hover {
   background: var(--stimorol-hover);
 }

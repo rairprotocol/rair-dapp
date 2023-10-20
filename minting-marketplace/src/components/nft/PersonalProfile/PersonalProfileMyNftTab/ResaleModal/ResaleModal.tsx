@@ -272,10 +272,13 @@ const ResaleModal: React.FC<IResaleModal> = ({
               <button
                 className={`btn-update-resale ${
                   hotDropsVar === 'true' ? 'hotdrops' : ''
-                }`}
+                } ${!inputSellValue && 'disabled-resale-btn'}`}
                 onClick={() => {
-                  updateResaleOffer(inputSellValue, resaleOffer[0]._id);
-                }}>
+                  if (inputSellValue) {
+                    updateResaleOffer(inputSellValue, resaleOffer[0]._id);
+                  }
+                }}
+                disabled={!inputSellValue}>
                 Update
               </button>{' '}
               <TooltipBox title="Remove offer resale">

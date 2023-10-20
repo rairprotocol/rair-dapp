@@ -205,27 +205,19 @@ const SellButton: React.FC<ISellButton> = ({
               ? `Sell for ${sellingPrice}`
               : 'Sell'
           }
-          handleClick={
-            isInputPriceExist ? handleClickSellButton : openInputField
-          }
+          handleClick={sellingPrice ? handleClickSellButton : openInputField}
           isColorPurple={false}
-          disabled={(isInputPriceExist && !sellingPrice) || singleTokenPage}
+          disabled={!sellingPrice || singleTokenPage}
         />
       );
     } else {
       if (item) {
         return (
           <BuySellButton
-            title={
-              isInputPriceExist && sellingPrice
-                ? `Sell for ${sellingPrice}`
-                : 'Sell'
-            }
-            handleClick={
-              isInputPriceExist ? handleClickSellButton : openInputField
-            }
+            title={sellingPrice ? `Sell for ${sellingPrice}` : 'Sell'}
+            handleClick={sellingPrice ? handleClickSellButton : openInputField}
             isColorPurple={false}
-            disabled={isInputPriceExist && !sellingPrice}
+            disabled={!sellingPrice}
           />
         );
       } else {
