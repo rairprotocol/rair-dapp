@@ -157,7 +157,16 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
       `/api/nft/network/${params.blockchain}/${params.contract}/${params.product}?fromToken=0&toToken=1`
     );
 
-    setTokenData(data.result.tokens);
+    if (data && data.success) {
+      const count = data.result.totalCount;
+      const response = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${params.blockchain}/${params.contract}/${params.product}?fromToken=0&toToken=${count}`
+      );
+
+      if (response.data.success) {
+        setTokenData(response.data.result.tokens);
+      }
+    }
   };
 
   useEffect(() => {
