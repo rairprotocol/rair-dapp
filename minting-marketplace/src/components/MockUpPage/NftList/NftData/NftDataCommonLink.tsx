@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
 import { NftCollectionPage } from './NftCollectionPage';
@@ -200,7 +200,11 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if (neededUserAddress && utils.isAddress(neededUserAddress)) {
+    if (
+      neededUserAddress &&
+      utils.isAddress(neededUserAddress) &&
+      neededUserAddress !== constants.AddressZero
+    ) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${neededUserAddress}`)
         .then((res) => res.data);

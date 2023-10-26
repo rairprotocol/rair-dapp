@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { constants, utils } from 'ethers';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { IVideoItem, TVideoItemContractData } from './video.types';
@@ -206,7 +207,13 @@ const VideoItem: React.FC<IVideoItem> = ({
   }, [mediaList, item, setContractData]);
 
   const getInfoUser = useCallback(async () => {
-    if (mediaList && item && mediaList[item].uploader) {
+    if (
+      mediaList &&
+      item &&
+      mediaList[item].uploader &&
+      utils.isAddress(mediaList[item].uploader) &&
+      mediaList[item].uploader !== constants.AddressZero
+    ) {
       const response = await axios.get<TUserResponse>(
         `/api/users/${mediaList[item].uploader}`
         // `/api/users/${data.data.result.contract.user}`

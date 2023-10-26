@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { utils } from 'ethers';
+import { constants, utils } from 'ethers';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { getUserComplete, getUserError } from './actions';
@@ -11,7 +11,10 @@ export type Params = { publicAddress: string; type: string };
 
 export function* getUser({ publicAddress }: Params) {
   try {
-    if (!utils.isAddress(publicAddress)) {
+    if (
+      !utils.isAddress(publicAddress) ||
+      publicAddress !== constants.AddressZero
+    ) {
       return;
     }
     const response: AxiosResponse<TUserResponse> = yield call(

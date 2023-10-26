@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
+import { constants, utils } from 'ethers';
 import Swal from 'sweetalert2';
 
 import NftDataPageMain from './NftDataPageMain';
@@ -232,7 +233,11 @@ const NftDataExternalLink = () => {
   };
 
   const getInfoFromUser = useCallback(async () => {
-    if (dataForUser) {
+    if (
+      dataForUser &&
+      utils.isAddress(dataForUser) &&
+      dataForUser !== constants.AddressZero
+    ) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${dataForUser}`)
         .then((res) => res.data);

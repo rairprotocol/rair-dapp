@@ -8,7 +8,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Stack } from '@mui/material';
 import { Breadcrumbs, Typography } from '@mui/material';
 import axios from 'axios';
-import { utils } from 'ethers';
+import { constants, utils } from 'ethers';
 import Swal from 'sweetalert2';
 
 import { TContract, TUserResponse } from '../../axios.responseTypes';
@@ -156,7 +156,11 @@ const UserProfilePage: React.FC = () => {
   }, [userAddress]);
 
   const getUserData = useCallback(async () => {
-    if (userAddress && utils.isAddress(userAddress)) {
+    if (
+      userAddress &&
+      utils.isAddress(userAddress) &&
+      userAddress !== constants.AddressZero
+    ) {
       const userAddressChanged = userAddress.toLowerCase();
       setTabIndexItems(0);
       setUserData(undefined);

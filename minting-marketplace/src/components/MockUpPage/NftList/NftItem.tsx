@@ -8,7 +8,7 @@ import React, {
 import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { utils } from 'ethers';
+import { constants, utils } from 'ethers';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { INftItemComponent } from './nftList.types';
@@ -81,7 +81,11 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if (ownerCollectionUser && utils.isAddress(ownerCollectionUser)) {
+    if (
+      ownerCollectionUser &&
+      utils.isAddress(ownerCollectionUser) &&
+      ownerCollectionUser !== constants.AddressZero
+    ) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${ownerCollectionUser}`)
         .then((res) => res.data);

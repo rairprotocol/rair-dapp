@@ -2,7 +2,7 @@ import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import { ethers, utils } from 'ethers';
+import { constants, ethers, utils } from 'ethers';
 
 import { TUserResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
@@ -116,7 +116,11 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if (currentUserAddress && utils.isAddress(currentUserAddress)) {
+    if (
+      currentUserAddress &&
+      utils.isAddress(currentUserAddress) &&
+      currentUserAddress !== constants.AddressZero
+    ) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${currentUserAddress}`)
         .then((res) => {

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { constants, utils } from 'ethers';
 
 import { FavoriteItem, UserFavoriteItemInfo } from './MyFavoriteStyledItems';
 
@@ -35,7 +36,11 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if (item.token.ownerAddress) {
+    if (
+      item.token.ownerAddress &&
+      utils.isAddress(item.token.ownerAddress) &&
+      item.token.ownerAddress !== constants.AddressZero
+    ) {
       await axios
         .get<TUserResponse>(`/api/users/${item.token.ownerAddress}`)
         .then((res) => {

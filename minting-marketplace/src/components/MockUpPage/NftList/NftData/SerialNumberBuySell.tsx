@@ -3,7 +3,7 @@ import { Provider, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
 import { BuySellButton } from './BuySellButton';
@@ -65,7 +65,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (
       selectedToken &&
       tokenData?.[selectedToken]?.ownerAddress &&
-      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress)
+      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress) &&
+      tokenData?.[selectedToken]?.ownerAddress !== constants.AddressZero
     ) {
       try {
         const result = await axios

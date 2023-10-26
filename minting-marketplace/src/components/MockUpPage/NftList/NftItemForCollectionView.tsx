@@ -3,7 +3,7 @@ import ReactPlayer from 'react-player';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
 import { TUserResponse } from '../../../axios.responseTypes';
@@ -161,7 +161,11 @@ const NftItemForCollectionViewComponent: React.FC<
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if (item && utils.isAddress(item.ownerAddress)) {
+    if (
+      item &&
+      utils.isAddress(item.ownerAddress) &&
+      item.ownerAddress !== constants.AddressZero
+    ) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${item.ownerAddress}`)
         .then((res) => res.data);

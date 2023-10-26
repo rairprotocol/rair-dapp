@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import { utils } from 'ethers';
+import { constants, utils } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
 
 import { BuySellButton } from './BuySellButton';
@@ -158,7 +158,8 @@ const SellButton: React.FC<ISellButton> = ({
       !item &&
       selectedToken &&
       tokenData?.[selectedToken]?.ownerAddress &&
-      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress)
+      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress) &&
+      tokenData?.[selectedToken]?.ownerAddress !== constants.AddressZero
     ) {
       try {
         const result = await axios
@@ -173,7 +174,11 @@ const SellButton: React.FC<ISellButton> = ({
         setAccountData(null);
       }
     } else {
-      if (item && utils.isAddress(item.ownerAddress)) {
+      if (
+        item &&
+        utils.isAddress(item.ownerAddress) &&
+        item.ownerAddress !== constants.AddressZero
+      ) {
         try {
           const result = await axios
             .get<TUserResponse>(`/api/users/${item.ownerAddress}`)
