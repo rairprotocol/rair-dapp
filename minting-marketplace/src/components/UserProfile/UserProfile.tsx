@@ -35,8 +35,7 @@ const UserProfile: React.FC<IMyItems> = ({
 }) => {
   const { width } = useWindowDimensions();
   const dispatch = useDispatch();
-  const defaultImg =
-    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
+  const defaultImg = `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
 
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (state) => state.colorStore

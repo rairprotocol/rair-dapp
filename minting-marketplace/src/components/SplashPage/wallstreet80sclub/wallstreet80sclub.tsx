@@ -83,8 +83,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
         description: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW',
         ogDescription: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW',
         twitterDescription: 'FREEMINT. ONLY 1987. EXCLUSIVE ALPHA. MINT NOW',
-        image:
-          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
         favicon: RairFavicon,
         faviconMobile: RairFavicon
       })

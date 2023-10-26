@@ -22,7 +22,7 @@ const MetaTags: React.FC<IMetaTags> = ({ seoMetaTags }) => {
       <link rel="icon" href={seoMetaTags?.favicon} />
       <link
         rel="apple-touch-icon"
-        href="https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
+        href={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
       />
     </Helmet>
   );

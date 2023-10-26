@@ -40,7 +40,7 @@ const NftListComponent: React.FC<INftListComponent> = ({
   const defaultImg =
     process.env.REACT_APP_HOTDROPS === 'true'
       ? defaultHotDrops
-      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
+      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
 
   const filteredData =
     data &&

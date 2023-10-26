@@ -520,9 +520,7 @@ const UserProfilePage: React.FC = () => {
                 <TabPanel>
                   <PersonalProfileMyNftTab
                     filteredData={collectedTokens && collectedTokens}
-                    defaultImg={
-                      'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
-                    }
+                    defaultImg={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
                     chainData={chainData}
                     textColor={textColor}
                     getMyNft={getMyNft}

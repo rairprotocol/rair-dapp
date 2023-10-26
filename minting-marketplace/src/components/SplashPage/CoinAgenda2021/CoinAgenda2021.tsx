@@ -53,8 +53,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
         description: 'BEST OF COINAGENDA 2021',
         ogDescription: 'BEST OF COINAGENDA 2021',
         twitterDescription: 'BEST OF COINAGENDA 2021',
-        image:
-          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
         favicon: favicon_CoinAgenda21,
         faviconMobile: favicon_CoinAgenda21
       })

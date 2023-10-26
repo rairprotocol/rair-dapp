@@ -51,7 +51,7 @@ const OfferItem: React.FC<IOfferItemComponent> = ({
         src={
           metadata.image
             ? metadata.image
-            : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+            : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
         }
         alt={metadata.name}
       />

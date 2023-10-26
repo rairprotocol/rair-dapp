@@ -1,4 +1,4 @@
-const { getBytes, Contract: EthersContract } = require('ethers');
+const { getBytes, Contract: EthersContract, isAddress } = require('ethers');
 const { Alchemy, Wallet } = require('alchemy-sdk');
 const { alchemy } = require('../../config');
 const { ResaleTokenOffer, Contract, MintedToken, ServerSetting } = require('../../models');
@@ -146,10 +146,14 @@ exports.generatePurchaseRequest = async (req, res, next) => {
         if (!process.env.WITHDRAWER_PRIVATE_KEY) {
           return next(new AppError('Cannot process resales at the moment'));
         }
+        const marketAddress = addressMapping[foundOffer.tokenContract.blockchain];
+        if (!isAddress(marketAddress)) {
+            return next(new AppError('Cannot process resales at the moment!'));
+        }
         try {
             const wallet = new Wallet(process.env.WITHDRAWER_PRIVATE_KEY, alchemySdk);
             const diamondMarketplaceInstance = new EthersContract(
-              addressMapping[foundOffer.tokenContract.blockchain],
+              marketAddress,
               diamondMarketplaceAbi,
               wallet,
             );

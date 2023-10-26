@@ -35,7 +35,7 @@ const IframePage = ({
 
   const { origin } = window.location;
 
-  const localImgUrl = `https://rair.mypinata.cloud/ipfs/${videoId}/thumbnail.gif`;
+  const localImgUrl = `${process.env.REACT_APP_IPFS_GATEWAY}${videoId}/thumbnail.gif`;
 
   const devImgUrl = `https://storage.googleapis.com/rair-videos/${videoId}/thumbnail.gif`;
 

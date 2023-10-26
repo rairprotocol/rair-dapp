@@ -139,8 +139,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
         description: '7.907.414.597 Non-Unique NFTs',
         ogDescription: '7.907.414.597 Non-Unique NFTs',
         twitterDescription: '7.907.414.597 Non-Unique NFTs',
-        image:
-          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
         favicon: GreymanFavicon,
         faviconMobile: GreymanFavicon
       })
@@ -769,7 +768,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                   </div>
                   <div className="property-btn-wrapper">
                     <a
-                      href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt"
+                      href={`${process.env.REACT_APP_IPFS_GATEWAY}/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt`}
                       target="_blank"
                       rel="noreferrer">
                       <button className="property-btn">View on IPFS</button>

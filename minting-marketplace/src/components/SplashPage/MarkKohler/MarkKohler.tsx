@@ -140,8 +140,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
         ogDescription: 'THURSDAY DECEMBER 8TH 10AM-6PM ET AN NFT GATED EVENT',
         twitterDescription:
           'THURSDAY DECEMBER 8TH 10AM-6PM ET AN NFT GATED EVENT',
-        image:
-          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
         favicon: KohlerFavicon,
         faviconMobile: KohlerFavicon
       })

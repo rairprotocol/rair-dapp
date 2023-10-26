@@ -325,7 +325,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                       backgroundImage: `url(${
                         selectedData?.image
                           ? selectedData.image
-                          : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                          : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                       })`
                     }}></div>
                 ) : (
@@ -340,7 +340,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                       light={
                         selectedData.image
                           ? selectedData?.image
-                          : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                          : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                       }
                       loop={false}
                       playIcon={
@@ -356,7 +356,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                   src={
                     selectedData?.image
                       ? ipfsLink
-                      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                   }
                   alt="nft token image"
                   className="single-token-block-img"

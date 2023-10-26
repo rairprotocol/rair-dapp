@@ -34,8 +34,7 @@ if (hotDropsVar === 'true') {
       'RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
     ogDescription: 'Encrypted, Streaming NFTs',
     twitterDescription: 'Encrypted, Streaming NFTs',
-    image:
-      'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+    image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
     favicon: RairFavicon,
     faviconMobile: RairFavicon
   };

@@ -431,7 +431,7 @@ const NftDataPageMain = ({
                   light={
                     selectedData.image
                       ? selectedData?.image
-                      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                   }
                   loop={false}
                   onEnded={handlePlaying}
@@ -444,7 +444,7 @@ const NftDataPageMain = ({
                   backgroundImage: `url(${
                     selectedData?.image
                       ? selectedData.image
-                      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                   })`
                 }}></div>
             )}

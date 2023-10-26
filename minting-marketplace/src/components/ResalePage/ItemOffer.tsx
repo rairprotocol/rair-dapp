@@ -207,7 +207,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
             src={
               tokenMetadata?.metadata?.image
                 ? tokenMetadata?.metadata?.image
-                : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
             }
             style={{
               position: 'absolute',

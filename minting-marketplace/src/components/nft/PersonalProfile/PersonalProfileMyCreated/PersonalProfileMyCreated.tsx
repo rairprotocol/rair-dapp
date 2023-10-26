@@ -13,8 +13,7 @@ const PersonalProfileMyCreatedComponent = ({
   setIsCreatedTab,
   tabIndex
 }) => {
-  const defaultImg =
-    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
+  const defaultImg = `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
   const [myContracts, setMyContracts] = useState();
   const [myProducts, setMyProducts] = useStateIfMounted();
   const [load, setLoad] = useState(true);
