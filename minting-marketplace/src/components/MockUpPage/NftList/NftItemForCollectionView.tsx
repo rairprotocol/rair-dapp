@@ -48,7 +48,8 @@ const NftItemForCollectionViewComponent: React.FC<
   id,
   item,
   resaleFlag,
-  resalePrice
+  resalePrice,
+  usdPrice
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
@@ -454,6 +455,18 @@ const NftItemForCollectionViewComponent: React.FC<
                     ? resalePrice
                     : offerPrice && fullPrice()}
                 </span>
+                {usdPrice && (
+                  <span className="description-usd-price-collection-page">
+                    {usdPrice && resalePrice !== undefined
+                      ? `$${(Number(resalePrice) * Number(usdPrice)).toFixed(
+                          4
+                        )}`
+                      : offerPrice &&
+                        `$${(Number(fullPrice()) * Number(usdPrice)).toFixed(
+                          4
+                        )}`}
+                  </span>
+                )}
                 <span className="description-more">View item</span>
               </div>
             </div>

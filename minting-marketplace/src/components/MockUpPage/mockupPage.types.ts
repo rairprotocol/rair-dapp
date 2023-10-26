@@ -35,6 +35,7 @@ export interface INftItemForCollectionView {
   item?: any;
   resaleFlag?: boolean;
   resalePrice?: string;
+  usdPrice?: number;
 }
 
 export type TParamsNftItemForCollectionView = {

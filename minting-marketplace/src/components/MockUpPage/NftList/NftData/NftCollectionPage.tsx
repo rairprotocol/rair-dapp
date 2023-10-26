@@ -76,6 +76,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const loader = useRef(null);
   const [fileUpload, setFileUpload] = useState<any>();
   const [bannerInfo, setBannerInfo] = useState<TProducts>();
+  const [usdPrice, setUsdPrice] = useState<number | undefined>(undefined);
 
   const loadToken = useCallback(
     (entries) => {
@@ -161,6 +162,40 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
       }
     }
   }, [fileUpload, offerAllData, userRd, getBannerInfo]);
+
+  const getUSDcurrency = useCallback(async () => {
+    const currencyCrypto = {
+      '0x250': {
+        blockchainName: 'astar'
+      },
+      '0x89': {
+        blockchainName: 'matic-network'
+      },
+      '0x1': {
+        blockchainName: 'ethereum'
+      }
+    };
+
+    if (
+      blockchain &&
+      currencyCrypto[String(blockchain)] &&
+      currencyCrypto[String(blockchain)].blockchainName
+    ) {
+      const chain = currencyCrypto[String(blockchain)].blockchainName;
+      const { data } = await axios.get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${chain}&vs_currencies=usd`
+      );
+      if (data && chain) {
+        setUsdPrice(data[chain].usd);
+      } else {
+        setUsdPrice(undefined);
+      }
+    }
+  }, [blockchain]);
+
+  useEffect(() => {
+    getUSDcurrency();
+  }, [getUSDcurrency]);
 
   useEffect(() => {
     if (!embeddedParams) {
@@ -332,6 +367,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                           playing={playing}
                           diamond={token.offer.diamond}
                           resalePrice={token?.resaleData?.price}
+                          usdPrice={usdPrice}
                         />
                       );
                     } else {
@@ -376,6 +412,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                           playing={playing}
                           diamond={token.offer.diamond}
                           resalePrice={token?.resaleData?.price}
+                          usdPrice={usdPrice}
                         />
                       );
                     } else {

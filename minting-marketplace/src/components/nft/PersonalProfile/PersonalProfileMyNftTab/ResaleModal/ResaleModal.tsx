@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios';
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
 
 import { RootState } from '../../../../../ducks';
@@ -40,6 +41,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
   const [inputSellValue, setInputSellValue] = useState<string>('');
   const [commissionFee, setCommissionFee] = useState<any>(undefined);
   const reactSwal = useSwal();
+  const [usdPrice, setUsdPrice] = useState<number | undefined>(undefined);
 
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
 
@@ -210,6 +212,41 @@ const ResaleModal: React.FC<IResaleModal> = ({
     }
   }, [item]);
 
+  const getUSDcurrency = useCallback(async () => {
+    const currencyCrypto = {
+      '0x250': {
+        blockchainName: 'astar'
+      },
+      '0x89': {
+        blockchainName: 'matic-network'
+      },
+      '0x1': {
+        blockchainName: 'ethereum'
+      }
+    };
+
+    if (
+      item &&
+      currencyCrypto[String(item.contract.blockchain)] &&
+      currencyCrypto[String(item.contract.blockchain)].blockchainName
+    ) {
+      const chain =
+        currencyCrypto[String(item.contract.blockchain)].blockchainName;
+      const { data } = await axios.get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${chain}&vs_currencies=usd`
+      );
+      if (data && chain) {
+        setUsdPrice(data[chain].usd);
+      } else {
+        setUsdPrice(undefined);
+      }
+    }
+  }, [item]);
+
+  useEffect(() => {
+    getUSDcurrency();
+  }, [getUSDcurrency]);
+
   useEffect(() => {
     getResalesInfo();
   }, [getResalesInfo]);
@@ -305,49 +342,121 @@ const ResaleModal: React.FC<IResaleModal> = ({
         </div>
       )}
 
-      <div className="resale-modal-information">
-        <div className="resale-modal-information-title">Summary</div>
-        <div className="resale-modal-information-box">
-          <div>Amount to creator</div>
-          <div>
-            {commissionFee &&
-            commissionFee.creatorFee &&
-            commissionFee.creatorFee.length > 0
-              ? (
-                  (Number(inputSellValue) * Number(commissionFee.creatorFee)) /
-                  100
-                ).toFixed(3)
-              : '0'}
+      <div>
+        <div className="resale-modal-infotmation-title">
+          <div>Summary</div>
+          <div className="resale-modal-infotmation-subtitle">
+            <div className="resale-modal-infotmation-subtitle-usd">USD</div>
+            <div>
+              <div>{chainData[item.contract.blockchain].symbol}</div>
+            </div>
           </div>
         </div>
-        <div className="resale-modal-information-box">
-          <div>Node and treasury:</div>
-          {commissionFee && (
-            <div>
-              {(
-                (Number(inputSellValue) *
-                  (Number(commissionFee.nodeFee) +
-                    Number(commissionFee.treasuryFee))) /
-                100
-              ).toFixed(3)}
-            </div>
-          )}
-        </div>
-        <div className="resale-modal-information-box">
-          <div>Total:</div>
+        <div className="resale-modal-information amount-titles">
           <div>
-            {commissionFee && correctBlockchain(item.contract.blockchain)
-              ? (
-                  Number(inputSellValue) -
-                  (Number(inputSellValue) *
-                    (Number(commissionFee.creatorFee) +
+            <div className="resale-modal-information-amount-node-total">
+              <div>Amount to creator</div>
+              <div>Node and treasury:</div>
+              <div>Total:</div>
+            </div>
+          </div>
+          <div>
+            <div className="resale-modal-information-box">
+              <div>
+                {' '}
+                $
+                {commissionFee &&
+                usdPrice &&
+                commissionFee.creatorFee &&
+                commissionFee.creatorFee.length > 0
+                  ? (
+                      ((Number(inputSellValue) *
+                        Number(commissionFee.creatorFee)) /
+                        100) *
+                      usdPrice
+                    ).toFixed(2)
+                  : '0'}
+              </div>
+            </div>
+            <div className="resale-modal-information-box">
+              <div>
+                {commissionFee && usdPrice && (
+                  <div>
+                    $
+                    {(
+                      ((Number(inputSellValue) *
+                        (Number(commissionFee.nodeFee) +
+                          Number(commissionFee.treasuryFee))) /
+                        100) *
+                      usdPrice
+                    ).toFixed(2)}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="resale-modal-information-box">
+              <div>
+                $
+                {commissionFee &&
+                usdPrice &&
+                correctBlockchain(item.contract.blockchain)
+                  ? (
+                      (Number(inputSellValue) -
+                        (Number(inputSellValue) *
+                          (Number(commissionFee.creatorFee) +
+                            (Number(commissionFee.nodeFee) +
+                              (commissionFee.treasuryFee
+                                ? Number(commissionFee.treasuryFee)
+                                : 0)))) /
+                          100) *
+                      usdPrice
+                    ).toFixed(2)
+                  : '0'}
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="resale-modal-information-box">
+              <div>
+                {commissionFee &&
+                commissionFee.creatorFee &&
+                commissionFee.creatorFee.length > 0
+                  ? (
+                      (Number(inputSellValue) *
+                        Number(commissionFee.creatorFee)) /
+                      100
+                    ).toFixed(2)
+                  : '0'}
+              </div>
+            </div>
+            <div className="resale-modal-information-box">
+              {commissionFee && (
+                <div>
+                  {(
+                    (Number(inputSellValue) *
                       (Number(commissionFee.nodeFee) +
-                        (commissionFee.treasuryFee
-                          ? Number(commissionFee.treasuryFee)
-                          : 0)))) /
+                        Number(commissionFee.treasuryFee))) /
                     100
-                ).toFixed(3)
-              : '0'}
+                  ).toFixed(2)}
+                </div>
+              )}
+            </div>
+            <div className="resale-modal-information-box">
+              <div>
+                {commissionFee && correctBlockchain(item.contract.blockchain)
+                  ? (
+                      Number(inputSellValue) -
+                      (Number(inputSellValue) *
+                        (Number(commissionFee.creatorFee) +
+                          (Number(commissionFee.nodeFee) +
+                            (commissionFee.treasuryFee
+                              ? Number(commissionFee.treasuryFee)
+                              : 0)))) /
+                        100
+                    ).toFixed(2)
+                  : '0'}
+              </div>
+            </div>
           </div>
         </div>
       </div>

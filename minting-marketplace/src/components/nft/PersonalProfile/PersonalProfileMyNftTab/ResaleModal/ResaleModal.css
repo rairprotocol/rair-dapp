@@ -72,7 +72,39 @@
 .container-resale-modal .resale-modal-information {
   color: #fff;
   padding-top: 10px;
-  margin-top: 15px;
+}
+
+.container-resale-modal .resale-modal-information.amount-titles {
+  display: flex;
+  justify-content: space-between;
+}
+
+.container-resale-modal .resale-modal-information-amount-node-total {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.container-resale-modal .resale-modal-information-amount-node-total div {
+  margin-top: 5px;
+  font-size: 18px;
+}
+
+.container-resale-modal .resale-modal-infotmation-subtitle {
+  display: flex;
+  font-size: 16px;
+}
+
+.container-resale-modal .resale-modal-infotmation-subtitle-usd {
+  margin-right: 50px;
+}
+
+.container-resale-modal .resale-modal-infotmation-title {
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid #4d4d4d;
 }
 

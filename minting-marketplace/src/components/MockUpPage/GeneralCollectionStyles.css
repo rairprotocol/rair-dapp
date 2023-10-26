@@ -575,6 +575,12 @@ img.single-token-block-img {
   width: 100%;
 }
 
+.description-usd-price-collection-page {
+  font-size: 14px;
+  color: rgb(153 152 152);
+  margin-top: 10px;
+}
+
 .pic-description-wrapper:hover {
   justify-content: flex-start;
   transition-duration: 0.5s;
