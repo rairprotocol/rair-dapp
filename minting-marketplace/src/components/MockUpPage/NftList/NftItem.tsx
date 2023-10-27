@@ -136,20 +136,66 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   function checkPrice() {
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
-      return `${samePrice ? samePrice : samePrice} ${
-        blockchain && chainData[blockchain]?.symbol
-      }`;
+      if (samePrice.length > 8) {
+        return `${
+          samePrice
+            ? `${Number(samePrice).toFixed(4)}+`
+            : `${Number(samePrice).toFixed(4)}+`
+        } ${blockchain && chainData[blockchain]?.symbol}`;
+      } else {
+        return `${samePrice ? samePrice : samePrice} ${
+          blockchain && chainData[blockchain]?.symbol
+        }`;
+      }
     }
-    return (
-      <div className="container-nft-fullPrice">
-        <div className="description description-price description-price-unlockables-page">
-          {`${minPrice} – ${maxPrice}`}
+
+    if (maxPrice.length > 8 && minPrice.length < 8) {
+      return (
+        <div className="container-nft-fullPrice">
+          <div className="description description-price description-price-unlockables-page">
+            {`${Number(maxPrice).toFixed(0)}+ – ${minPrice}`}
+          </div>
+          <div className="description description-price description-price-unlockables-page">
+            {`${blockchain && chainData[blockchain]?.symbol}`}
+          </div>
         </div>
-        <div className="description description-price description-price-unlockables-page">
-          {`${blockchain && chainData[blockchain]?.symbol}`}
+      );
+    } else if (maxPrice.length < 8 && minPrice.length > 8) {
+      return (
+        <div className="container-nft-fullPrice">
+          <div className="description description-price description-price-unlockables-page">
+            {`${maxPrice} – ${Number(minPrice).toFixed(3)}+`}
+          </div>
+          <div className="description description-price description-price-unlockables-page">
+            {`${blockchain && chainData[blockchain]?.symbol}`}
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else if (maxPrice.length > 8 && minPrice.length > 8) {
+      return (
+        <div className="container-nft-fullPrice">
+          <div className="description description-price description-price-unlockables-page">
+            {`${Number(maxPrice).toFixed(3)}+ – ${Number(minPrice).toFixed(
+              3
+            )}+`}
+          </div>
+          <div className="description description-price description-price-unlockables-page">
+            {`${blockchain && chainData[blockchain]?.symbol}`}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="container-nft-fullPrice">
+          <div className="description description-price description-price-unlockables-page">
+            {`${maxPrice} – ${minPrice}`}
+          </div>
+          <div className="description description-price description-price-unlockables-page">
+            {`${blockchain && chainData[blockchain]?.symbol}`}
+          </div>
+        </div>
+      );
+    }
   }
 
   function ifPriseSame() {
