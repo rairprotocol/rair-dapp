@@ -116,18 +116,11 @@ const SellButton: React.FC<ISellButton> = ({
       }
     });
     if (response.success) {
-      reactSwal
-        .fire({
-          title: 'Success',
-          html: `Users will be able to purchase your NFT on the marketplace`,
-          icon: 'success'
-        })
-        .then((result) => {
-          if (singleTokenPage && result.isConfirmed) {
-            console.info(1, '1');
-            location.reload();
-          }
-        });
+      reactSwal.fire({
+        title: 'Success',
+        html: `Users will be able to purchase your NFT on the marketplace`,
+        icon: 'success'
+      });
       refreshResaleData();
     }
   }, [
@@ -144,8 +137,7 @@ const SellButton: React.FC<ISellButton> = ({
     refreshResaleData,
     item,
     tokenData,
-    selectedToken,
-    singleTokenPage
+    selectedToken
   ]);
 
   const openInputField = useCallback(() => {

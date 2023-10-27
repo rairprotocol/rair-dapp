@@ -23,12 +23,14 @@ interface IResaleModal {
   item: any;
   textColor: any;
   singleTokenPage?: boolean;
+  reloadFunction?: () => void;
 }
 
 const ResaleModal: React.FC<IResaleModal> = ({
   item,
   textColor,
-  singleTokenPage
+  singleTokenPage,
+  reloadFunction
 }) => {
   const { diamondMarketplaceInstance, currentUserAddress } = useSelector<
     RootState,
@@ -159,17 +161,13 @@ const ResaleModal: React.FC<IResaleModal> = ({
     });
 
     if (response.success) {
-      reactSwal
-        .fire({
-          title: 'Updated!',
-          html: 'Your price has been updated.',
-          icon: 'success'
-        })
-        .then((result) => {
-          if ((singleTokenPage && result.isConfirmed) || result.dismiss) {
-            location.reload();
-          }
-        });
+      reactSwal.fire({
+        title: 'Updated!',
+        html: 'Your price has been updated.',
+        icon: 'success'
+      });
+      getResaleData();
+      reloadFunction && reloadFunction();
     }
   };
 
@@ -186,13 +184,12 @@ const ResaleModal: React.FC<IResaleModal> = ({
       })
       .then((result) => {
         if (result.isConfirmed) {
-          reactSwal
-            .fire('Deleted!', 'Your resale offer has been deleted.', 'success')
-            .then((res) => {
-              if (singleTokenPage && res.isConfirmed) {
-                location.reload();
-              }
-            });
+          reactSwal.fire(
+            'Deleted!',
+            'Your resale offer has been deleted.',
+            'success'
+          );
+          reloadFunction && reloadFunction();
           removeResaleOffer(tokenId);
         }
       });
@@ -335,7 +332,10 @@ const ResaleModal: React.FC<IResaleModal> = ({
               isInputPriceExist={isInputPriceExist}
               setIsInputPriceExist={setIsInputPriceExist}
               setInputSellValue={setInputSellValue}
-              refreshResaleData={getResaleData}
+              refreshResaleData={() => {
+                getResaleData();
+                reloadFunction && reloadFunction();
+              }}
               singleTokenPage={true}
             />
           )}

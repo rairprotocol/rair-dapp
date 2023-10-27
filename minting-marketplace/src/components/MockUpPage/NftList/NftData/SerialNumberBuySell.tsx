@@ -564,6 +564,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
                       textColor={textColor}
                       singleTokenPage={true}
                       item={tokenDataForResale}
+                      reloadFunction={handleTokenBoughtButton}
                     />
                   </Provider>
                 ),

@@ -80,8 +80,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     (store) => store.colorStore
   );
 
-  console.info(userBalance, 'userBalance');
-
   const handleMessageAlert = (pageNav: string) => {
     setMessageAlert(pageNav);
   };
