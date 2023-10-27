@@ -84,17 +84,18 @@ const SellButton: React.FC<ISellButton> = ({
         showConfirmButton: false
       });
       if (
-        await web3TxHandler(instance, 'setApprovalForAll', [
+        !(await web3TxHandler(instance, 'setApprovalForAll', [
           diamondMarketplaceInstance.address,
           true
-        ])
+        ]))
       ) {
-        await reactSwal.fire(
-          'Success',
-          'You can now put your NFTs up for sale',
-          'success'
-        );
+        return;
       }
+      await reactSwal.fire(
+        'Success',
+        'You can now put your NFTs up for sale',
+        'success'
+      );
     }
     reactSwal.fire({
       title: 'Creating resale offer',
