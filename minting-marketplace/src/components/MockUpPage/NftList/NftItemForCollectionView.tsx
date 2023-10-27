@@ -463,11 +463,11 @@ const NftItemForCollectionViewComponent: React.FC<
                   <span className="description-usd-price-collection-page">
                     {usdPrice && resalePrice !== undefined
                       ? `$${(Number(resalePrice) * Number(usdPrice)).toFixed(
-                          4
+                          2
                         )}`
                       : offerPrice &&
                         `$${(Number(fullPrice()) * Number(usdPrice)).toFixed(
-                          4
+                          2
                         )}`}
                   </span>
                 )}

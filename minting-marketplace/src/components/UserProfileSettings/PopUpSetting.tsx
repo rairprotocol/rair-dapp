@@ -78,7 +78,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
 
       if (balance) {
         const result = utils.formatEther(balance);
-        const final = Number(result.toString())?.toFixed(3)?.toString();
+        const final = Number(result.toString())?.toFixed(2)?.toString();
 
         setUserBalance(final);
         setIsLoadingBalance(false);

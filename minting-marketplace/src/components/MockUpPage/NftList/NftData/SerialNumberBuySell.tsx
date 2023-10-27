@@ -429,7 +429,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           />
           {usdPrice && (
             <div className="text-sell-button-usd-price">
-              ${(Number(priceForUSD) * Number(usdPrice)).toFixed(5)}
+              ${(Number(priceForUSD) * Number(usdPrice)).toFixed(2)}
             </div>
           )}
         </>
@@ -453,7 +453,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             <small>Resale offer</small>
             {usdPrice && (
               <div className="text-sell-button-usd-price">
-                ${(Number(priceForUSD) * Number(usdPrice)).toFixed(5)}
+                ${(Number(priceForUSD) * Number(usdPrice)).toFixed(2)}
               </div>
             )}
           </>
