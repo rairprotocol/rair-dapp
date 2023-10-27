@@ -35,9 +35,6 @@ export const BuySellButton: React.FC<IBuySellButton> = ({
               : `linear-gradient(266.26deg, #19A7F6 0%, #4099F1 20%, #548AEB 40%, #617BE6 60%, #6B6BE0 80%, #725BDB 100%)`
             : 'var(--charcoal-60)'
       }}>
-      {hotdropsVar !== 'true' && (
-        <MetamaskFox className="metamask-buy-button" />
-      )}
       <span className="button-buy-sell-text">{title}</span>
     </button>
   );

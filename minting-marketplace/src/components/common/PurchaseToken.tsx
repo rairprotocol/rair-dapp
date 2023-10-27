@@ -409,13 +409,6 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               setPurchaseStatus(false);
             }
           }}>
-          {hotdropsVar !== 'true' && (
-            <img
-              style={{ maxHeight: '7vh' }}
-              src={metaMaskIcon}
-              alt="metamask-logo"
-            />
-          )}
           <wbr />{' '}
           {currentUserAddress
             ? !correctBlockchain(requiredBlockchain as BlockchainType)
@@ -507,9 +500,6 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
       <button
         className={customButtonClassName}
         onClick={handleClick ? handleClick : fireAgreementModal}>
-        {hotdropsVar !== 'true' && (
-          <img className={customButtonIconClassName} src={img} />
-        )}
         <div style={{ color: textColor }} className={customButtonTextClassName}>
           {' '}
           {buttonLabel}{' '}
@@ -522,9 +512,6 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
         <button
           className={customButtonClassName}
           onClick={handleClick ? handleClick : fireAgreementModal}>
-          {img && (
-            <img alt="metamask-logo" className="metamask-logo" src={img} />
-          )}{' '}
           {buttonLabel}
         </button>
       </div>
