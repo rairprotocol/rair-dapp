@@ -11,6 +11,7 @@ import { TUsersInitialState } from '../../ducks/users/users.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
 import chainData from '../../utils/blockchainData';
+import LoadingComponent from '../common/LoadingComponent';
 
 import AikonWidget from './AikonWidget/AikonWidget';
 import EditMode from './EditMode/EditMode';
@@ -31,6 +32,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const [triggerState, setTriggerState] = useState();
   const [editMode, setEditMode] = useState(false);
   const [userBalance, setUserBalance] = useState<string>('');
+  const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
@@ -69,16 +71,21 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
 
   const getBalance = useCallback(async () => {
     if (currentUserAddress && erc777Instance?.provider) {
+      setIsLoadingBalance(true);
       const balance = await erc777Instance.provider.getBalance(
         currentUserAddress
       );
 
-      const result = utils.formatEther(balance);
-      const final = Number(result.toString())?.toFixed(3)?.toString();
+      if (balance) {
+        const result = utils.formatEther(balance);
+        const final = Number(result.toString())?.toFixed(3)?.toString();
 
-      setUserBalance(final);
+        setUserBalance(final);
+        setIsLoadingBalance(false);
+      }
     }
-  }, [currentUserAddress, erc777Instance]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUserAddress, erc777Instance, userData]);
 
   useEffect(() => {
     getBalance();
@@ -157,7 +164,9 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
           className={`profile-user-balance ${
             primaryColor === 'rhyno' ? 'rhyno' : ''
           }`}>
-          <div>{userBalance}</div>
+          <div>
+            {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance}
+          </div>
           {chainData[currentChain] && (
             <img src={chainData[currentChain]?.image} alt="logo" />
           )}

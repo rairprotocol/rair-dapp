@@ -188,6 +188,12 @@
   padding-right: 5px;
 }
 
+.profile-btn .list-wrapper-empty,
+.burder-menu .list-wrapper-empty {
+  margin-top: 0;
+  margin: 0;
+}
+
 .profile-btn-nickname {
   display: flex;
   width: 140px;

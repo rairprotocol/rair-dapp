@@ -18,6 +18,7 @@ import {
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import chainData from '../../utils/blockchainData';
+import LoadingComponent from '../common/LoadingComponent';
 import AikonWidget from '../UserProfileSettings/AikonWidget/AikonWidget';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -63,6 +64,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   // const [loading, setLoading] = useState<boolean>(false);
   const [userBalance, setUserBalance] = useState<string>('');
   const [activeSearch, setActiveSearch] = useState(false);
+  const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [messageAlert, setMessageAlert] = useState<string | null>(null);
   const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
@@ -137,16 +139,21 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
 
   const getBalance = useCallback(async () => {
     if (currentUserAddress && erc777Instance?.provider) {
+      setIsLoadingBalance(true);
       const balance = await erc777Instance.provider.getBalance(
         currentUserAddress
       );
 
-      const result = utils.formatEther(balance);
-      const final = Number(result.toString())?.toFixed(3)?.toString();
+      if (balance) {
+        const result = utils.formatEther(balance);
+        const final = Number(result.toString())?.toFixed(2)?.toString();
 
-      setUserBalance(final);
+        setUserBalance(final);
+        setIsLoadingBalance(false);
+      }
     }
-  }, [currentUserAddress, erc777Instance]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUserAddress, erc777Instance, userData]);
 
   const onScrollClick = useCallback(() => {
     if (!click) {
@@ -262,7 +269,13 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         className={`profile-user-balance ${
                           primaryColor === 'rhyno' ? 'rhyno' : ''
                         }`}>
-                        <div>{userBalance}</div>
+                        <div>
+                          {isLoadingBalance ? (
+                            <LoadingComponent size={12} />
+                          ) : (
+                            userBalance
+                          )}
+                        </div>
                         {currentChain && chainData[currentChain] && (
                           <img
                             src={chainData[currentChain]?.image}
