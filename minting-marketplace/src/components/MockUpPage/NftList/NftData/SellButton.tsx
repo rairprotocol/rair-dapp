@@ -46,9 +46,13 @@ const SellButton: React.FC<ISellButton> = ({
   }
 
   const reactSwal = useSwal();
-  const { web3TxHandler, correctBlockchain } = useWeb3Tx();
+  const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
 
   const handleClickSellButton = useCallback(async () => {
+    if (!correctBlockchain(blockchain as BlockchainType)) {
+      web3Switch(blockchain as BlockchainType);
+      return;
+    }
     const tokenInformation =
       item || (selectedToken && tokenData?.[selectedToken]);
     if (
@@ -128,6 +132,7 @@ const SellButton: React.FC<ISellButton> = ({
     blockchain,
     contract,
     contractCreator,
+    web3Switch,
     correctBlockchain,
     currentUserAddress,
     diamondMarketplaceInstance,

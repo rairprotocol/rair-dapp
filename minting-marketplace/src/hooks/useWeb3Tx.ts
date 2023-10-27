@@ -335,6 +335,9 @@ const useWeb3Tx = () => {
   const web3Switch = useCallback(
     async (chainId: BlockchainType) => {
       if (!currentUserAddress) {
+        // It's necessary that the user logs in because that's how we know
+        //  if we need to switch using Metamask or OreID.
+        reactSwal.fire('Please login');
         return;
       }
       switch (loginType) {
