@@ -16,7 +16,7 @@ import { ContractsInitialType } from '../../../../ducks/contracts/contracts.type
 import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
-import { BillTransferIcon } from '../../../../images';
+import { BillTransferIcon, GrandpaWait } from '../../../../images';
 import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
@@ -148,7 +148,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     });
     reactSwal.fire({
       title: 'Buying token',
-      html: 'Awaiting transaction completion',
+      html: (
+        <>
+          Awaiting transaction completion
+          <div className="wait-minting-token">
+            <img src={`${GrandpaWait}`} alt="waiting minting token" />
+          </div>
+        </>
+      ),
       icon: 'info',
       showConfirmButton: false
     });

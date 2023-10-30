@@ -1310,6 +1310,13 @@ select.form-control.rounded-rair:disabled {
   align-items: center;
 }
 
+.wait-minting-token img {
+  height: 300px;
+  width: auto;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
 .col-12 .rounded .react-player__play-icon {
   position: absolute;
   top: 28px;

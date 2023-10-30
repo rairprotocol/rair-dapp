@@ -3,7 +3,6 @@ import Moment from 'react-moment';
 
 import useSwal from '../../../../hooks/useSwal';
 import { rFetch } from '../../../../utils/rFetch';
-import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 
 import './AnalyticsPopUp.css';
 

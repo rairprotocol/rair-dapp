@@ -11,7 +11,7 @@ import { TUsersInitialState } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import { metaMaskIcon } from '../../images';
+import { GrandpaWait, metaMaskIcon } from '../../images';
 import blockchainData from '../../utils/blockchainData';
 import { getRandomValues } from '../../utils/getRandomValues';
 import { rFetch } from '../../utils/rFetch';
@@ -415,10 +415,18 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               ? `Switch to ${
                   requiredBlockchain && blockchainData[requiredBlockchain]?.name
                 }`
-              : buttonMessage || 'Purchase'
+              : buttonMessage || 'Purchase 123'
             : 'Connect your wallet!'}
         </button>
       </div>
+      {buyingToken && (
+        <div className="wait-minting-token">
+          <div className="wait-minting-token-text">
+            Blockchain in progress.. please wait!
+          </div>
+          <img src={`${GrandpaWait}`} alt="waiting minting token" />
+        </div>
+      )}
     </div>
   );
 };

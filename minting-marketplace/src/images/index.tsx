@@ -9,9 +9,12 @@ import avatar from './defaultAvatarProfile.webp';
 import discordIconWhiteNoBorder from './discord-white-no-border.webp';
 import documentIcon from './documentIcon.svg';
 import ethereum from './ethereum-logo.svg';
+import grandpaGif from './grandpa.gif';
 import hotdropsDefaultBanner from './hotDrops_defaultBanner.png';
 import defaultHotDropsImg from './hotdrops-default.png';
 import logoHotDropsLight from './HotdropsLogoLight.png';
+import kigGif from './kid.gif';
+import lennyGif from './lenny.gif';
 import logoHotDrops from './logo-hotdrops.png';
 import metamaskLogo from './metamask_logo.webp';
 import minTable from './mintable-logo.webp';
@@ -48,6 +51,9 @@ export const HotDropsLogoLight = logoHotDropsLight;
 export const defaultHotDrops = defaultHotDropsImg;
 export const HotDropsLogoMobile = hotdropsLogoMobile;
 export const hotDropsDefaultBanner = hotdropsDefaultBanner;
+export const GrandpaWait = grandpaGif;
+export const LennyWait = lennyGif;
+export const KidWait = kigGif;
 
 // Icons
 export const discrodIconNoBorder = discordIconWhiteNoBorder;
