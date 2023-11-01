@@ -40,7 +40,7 @@ module.exports = (context) => {
         ).toString();
         const tokenLimit = BigInt(firstToken) + BigInt(toToken) || 1n;
         let options = {
-          token: { $gt: firstToken },
+          token: { $gte: firstToken },
         };
         const filterOptions = {};
         const populateOptions = {
@@ -127,7 +127,6 @@ module.exports = (context) => {
           {
             $match: {
               ...options,
-              token: { $gt: firstToken },
             },
           },
           {
@@ -164,11 +163,10 @@ module.exports = (context) => {
           .get('tokens', 0)
           .value();
 
-        const tokensSorted = await MintedToken.aggregate([...aggregateOptions, {
-          $limit: tokenLimit,
-        }])
+        const tokensSorted = await MintedToken.aggregate(aggregateOptions)
           .sort(_.assign({}, sortByPrice ? { 'offer.price': Number(sortByPrice) } : {}, sortByToken ? { token: Number(sortByToken) } : {}))
-          .collation({ locale: 'en_US', numericOrdering: true });
+          .collation({ locale: 'en_US', numericOrdering: true })
+          .limit(tokenLimit);
 
         const tokens = attributesCounter(tokensSorted);
 
