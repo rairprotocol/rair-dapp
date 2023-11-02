@@ -24,13 +24,17 @@ interface IResaleModal {
   textColor: any;
   singleTokenPage?: boolean;
   reloadFunction?: () => void;
+  getMyNft?: (num: number, page: number) => void;
+  totalNft?: any;
 }
 
 const ResaleModal: React.FC<IResaleModal> = ({
   item,
   textColor,
   singleTokenPage,
-  reloadFunction
+  reloadFunction,
+  getMyNft,
+  totalNft
 }) => {
   const { diamondMarketplaceInstance, currentUserAddress } = useSelector<
     RootState,
@@ -168,6 +172,10 @@ const ResaleModal: React.FC<IResaleModal> = ({
       });
       getResaleData();
       reloadFunction && reloadFunction();
+
+      if (!singleTokenPage && totalNft) {
+        getMyNft && getMyNft(Number(totalNft), 1);
+      }
     }
   };
 
@@ -191,6 +199,12 @@ const ResaleModal: React.FC<IResaleModal> = ({
           );
           reloadFunction && reloadFunction();
           removeResaleOffer(tokenId);
+          if (!singleTokenPage && totalNft) {
+            getMyNft && getMyNft(Number(totalNft), 1);
+            if (!singleTokenPage && totalNft) {
+              getMyNft && getMyNft(Number(totalNft), 1);
+            }
+          }
         }
       });
   };

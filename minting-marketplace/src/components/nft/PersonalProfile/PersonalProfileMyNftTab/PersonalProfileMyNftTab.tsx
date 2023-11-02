@@ -104,6 +104,8 @@ const PersonalProfileMyNftTabComponent: React.FC<
                     setPlaying={setPlaying}
                     playing={playing}
                     diamond={item.contract.diamond}
+                    getMyNft={getMyNft}
+                    totalNft={showTokensRef.current}
                   />
                 );
               }

@@ -415,7 +415,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               ? `Switch to ${
                   requiredBlockchain && blockchainData[requiredBlockchain]?.name
                 }`
-              : buttonMessage || 'Purchase 123'
+              : buttonMessage || 'Purchase'
             : 'Connect your wallet!'}
         </button>
       </div>

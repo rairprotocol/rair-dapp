@@ -2,11 +2,14 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
-import { TUserResponse } from '../../../axios.responseTypes';
+import {
+  IOffersResponseType,
+  TUserResponse
+} from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
@@ -18,6 +21,7 @@ import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import { getRGBValue } from '../../../utils/determineColorRange';
 import { rFetch } from '../../../utils/rFetch';
+import { TOfferType } from '../../marketplace/marketplace.types';
 import ResaleModal from '../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
@@ -49,7 +53,9 @@ const NftItemForCollectionViewComponent: React.FC<
   item,
   resaleFlag,
   resalePrice,
-  usdPrice
+  usdPrice,
+  getMyNft,
+  totalNft
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
@@ -59,6 +65,9 @@ const NftItemForCollectionViewComponent: React.FC<
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const ipfsLink = useIPFSImageLink(metadata?.image);
   const [tokenInfo, setTokenInfo] = useState<any>(null);
+  const [offerDataUser, setOfferDataUser] = useState<any>();
+  const [offerPriceUser, setOfferPriceUser] = useState<string[] | undefined>();
+  const [selectedOfferIndexUser, setSelectedOfferIndexUser] = useState<any>();
 
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
@@ -113,7 +122,7 @@ const NftItemForCollectionViewComponent: React.FC<
         );
       };
 
-  function fullPrice() {
+  const fullPrice = () => {
     if (offerPrice && offerPrice.length > 0) {
       if (offerItemData) {
         const rawPrice = BigNumber.from(
@@ -123,8 +132,32 @@ const NftItemForCollectionViewComponent: React.FC<
 
         return price;
       }
+    } else {
+      if (offerPriceUser && offerPriceUser.length > 0) {
+        if (offerDataUser) {
+          if (offerDataUser.price && offerDataUser.price.length) {
+            const rawPrice = BigNumber.from(
+              String(offerDataUser.price) ? String(offerDataUser.price) : 0
+            );
+            const price = rawPrice.lte(100000)
+              ? '0.000+'
+              : formatEther(rawPrice);
+
+            return price;
+          } else {
+            const rawPrice = BigNumber.from(
+              offerDataUser.price ? offerDataUser.price : 0
+            );
+            const price = rawPrice.lte(100000)
+              ? '0.000+'
+              : formatEther(rawPrice);
+
+            return price;
+          }
+        }
+      }
     }
-  }
+  };
 
   const getTokenData = useCallback(async () => {
     if (!contract && item) {
@@ -173,6 +206,107 @@ const NftItemForCollectionViewComponent: React.FC<
     }
   }, [item]);
 
+  const initialTokenData = useCallback(() => {
+    if (item && resaleFlag) {
+      if (item.contract?.diamond) {
+        setSelectedOfferIndexUser(item && item?.offer);
+      } else {
+        setSelectedOfferIndexUser(item && item?.offer);
+      }
+    }
+  }, [item, resaleFlag]);
+
+  const getParticularOffer = useCallback(async () => {
+    if (resaleFlag) {
+      const responseToken = await rFetch(
+        `/api/v2/tokens/${item._id}`,
+        undefined,
+        undefined,
+        undefined
+      );
+
+      if (responseToken.success) {
+        try {
+          const response = await axios.get<IOffersResponseType>(
+            `/api/nft/network/${responseToken.tokenData.contract.blockchain}/${responseToken.tokenData.contract.contractAddress}/${responseToken.tokenData.product.collectionIndexInContract}/offers`
+          );
+
+          const resaleResponse = await rFetch(
+            `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
+          );
+
+          if (response.data.success) {
+            if (resaleResponse.data.length) {
+              const resaleOfferData = response.data.product.offers?.find(
+                (neededOfferIndex) => {
+                  if (neededOfferIndex && neededOfferIndex.diamond) {
+                    return (
+                      neededOfferIndex.diamondRangeIndex ===
+                      selectedOfferIndexUser
+                    );
+                  } else {
+                    return (
+                      neededOfferIndex.offerIndex === selectedOfferIndexUser
+                    );
+                  }
+                }
+              );
+              const mapItem = [resaleOfferData].map((item) => {
+                return {
+                  ...item,
+                  price: resaleResponse.data.map((p) => {
+                    return p.price.toString();
+                  })
+                };
+              });
+              setOfferDataUser(mapItem[0]);
+            } else {
+              setOfferDataUser(
+                response.data.product.offers?.find((neededOfferIndex) => {
+                  if (neededOfferIndex && neededOfferIndex.diamond) {
+                    return (
+                      neededOfferIndex.diamondRangeIndex ===
+                      selectedOfferIndexUser
+                    );
+                  } else {
+                    return (
+                      neededOfferIndex.offerIndex === selectedOfferIndexUser
+                    );
+                  }
+                })
+              );
+            }
+
+            if (resaleResponse.success && resaleResponse.data.length) {
+              setOfferPriceUser(
+                resaleResponse.data.map((p) => {
+                  return p.price.toString();
+                })
+              );
+            } else {
+              setOfferPriceUser(
+                response.data.product.offers?.map((p) => {
+                  return p.price.toString();
+                })
+              );
+            }
+          }
+        } catch (err) {
+          const error = err as AxiosError;
+          console.error(error?.message);
+        }
+      }
+    }
+  }, [item, resaleFlag, selectedOfferIndexUser]);
+
+  useEffect(() => {
+    initialTokenData();
+  }, [initialTokenData]);
+
+  useEffect(() => {
+    getParticularOffer();
+  }, [getParticularOffer]);
+
   useEffect(() => {
     getInfoFromUser();
   }, [getInfoFromUser]);
@@ -219,7 +353,12 @@ const NftItemForCollectionViewComponent: React.FC<
                   reactSwal.fire({
                     html: (
                       <Provider store={store}>
-                        <ResaleModal textColor={textColor} item={item} />
+                        <ResaleModal
+                          textColor={textColor}
+                          item={item}
+                          getMyNft={getMyNft}
+                          totalNft={totalNft}
+                        />
                       </Provider>
                     ),
                     showConfirmButton: false,
@@ -431,9 +570,7 @@ const NftItemForCollectionViewComponent: React.FC<
                         src={blockchain && chainData[blockchain]?.image}
                         alt="Blockchain network"
                       />
-                      {resalePrice !== undefined
-                        ? resalePrice
-                        : offerPrice && fullPrice()}
+                      {fullPrice()}
                     </div>
                   </div>
                 </div>
@@ -455,9 +592,7 @@ const NftItemForCollectionViewComponent: React.FC<
                   />
                 </div>
                 <span className="description description-price description-price-unlockables-page">
-                  {resalePrice !== undefined
-                    ? resalePrice
-                    : offerPrice && fullPrice()}
+                  {fullPrice()}
                 </span>
                 {usdPrice && (
                   <span className="description-usd-price-collection-page">
