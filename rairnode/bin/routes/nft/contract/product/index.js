@@ -32,6 +32,7 @@ module.exports = (context) => {
           priceFrom = '',
           priceTo = '',
           forSale = '',
+          onResale = false,
         } = req.query;
         const firstToken = (
           BigInt(fromToken) > 0
@@ -149,7 +150,26 @@ module.exports = (context) => {
           { $match: filterOptions },
         ];
 
-        const optionsForTotalCount = _.cloneDeep(aggregateOptions);
+        if (onResale.toString() === 'true') {
+          aggregateOptions.push({
+            $lookup: {
+              from: 'ResaleTokenOffer',
+              localField: 'uniqueIndexInContract',
+              foreignField: 'tokenIndex',
+              as: 'resaleData',
+            },
+          }, {
+            $addFields: {
+              resaleData: { $arrayElemAt: ['$resaleData', 0] },
+            },
+          }, {
+            $match: {
+              resaleData: { $exists: true },
+            },
+          });
+        }
+
+        const optionsForTotalCount = [...aggregateOptions];
 
         optionsForTotalCount.shift();
         optionsForTotalCount.unshift({ $match: options });

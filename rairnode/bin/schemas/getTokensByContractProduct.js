@@ -13,4 +13,5 @@ module.exports = () => ({
     .valid('1', '-1'),
   sortByToken: Joi.any()
     .valid('1', '-1'),
+  onResale: Joi.boolean(),
 });
