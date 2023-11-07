@@ -46,13 +46,13 @@ module.exports = (context) => {
 
   router.get(
     '/:userAddress',
-    validation(['pagination'], 'query'),
+    validation(['pagination', 'resaleFlag'], 'query'),
     validation(['userAddress'], 'params'),
     async (req, res, next) => {
       try {
         const { userAddress } = req.params;
 
-        const { itemsPerPage = 10, pageNum = 1 } = req.query;
+        const { itemsPerPage = 10, pageNum = 1, onResale = 'false' } = req.query;
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
@@ -75,6 +75,25 @@ module.exports = (context) => {
                 'contract.blockView': false,
             },
         }];
+
+        if (onResale.toString() === 'true') {
+          pipeline.push({
+            $lookup: {
+              from: 'ResaleTokenOffer',
+              localField: 'uniqueIndexInContract',
+              foreignField: 'tokenIndex',
+              as: 'resaleData',
+            },
+          }, {
+            $addFields: {
+              resaleData: { $arrayElemAt: ['$resaleData', 0] },
+            },
+          }, {
+            $match: {
+              resaleData: { $exists: true },
+            },
+          });
+        }
 
         const result = await MintedToken.aggregate([
           ...pipeline,

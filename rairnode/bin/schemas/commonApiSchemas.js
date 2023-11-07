@@ -24,4 +24,7 @@ module.exports = {
     userAddress: () => ({
         userAddress: ethAddress,
     }),
+    resaleFlag: () => ({
+        onResale: Joi.boolean(),
+    }),
 };
