@@ -594,16 +594,22 @@ const NftItemForCollectionViewComponent: React.FC<
                 <span className="description description-price description-price-unlockables-page">
                   {fullPrice()}
                 </span>
-                {usdPrice && (
+                {usdPrice && offerPrice && (
                   <span className="description-usd-price-collection-page">
                     {usdPrice && resalePrice !== undefined
-                      ? `$${(Number(resalePrice) * Number(usdPrice)).toFixed(
+                      ? (Number(resalePrice) * Number(usdPrice)).toFixed(2) !==
+                        'NaN'
+                        ? `$${(Number(resalePrice) * Number(usdPrice)).toFixed(
+                            2
+                          )}`
+                        : 0.0
+                      : offerPrice &&
+                        (Number(fullPrice()) * Number(usdPrice)).toFixed(2) !==
+                          'NaN'
+                      ? `$${(Number(fullPrice()) * Number(usdPrice)).toFixed(
                           2
                         )}`
-                      : offerPrice &&
-                        `$${(Number(fullPrice()) * Number(usdPrice)).toFixed(
-                          2
-                        )}`}
+                      : 0.0}
                   </span>
                 )}
                 <span className="description-more">View item</span>
