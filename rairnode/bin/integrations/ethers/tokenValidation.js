@@ -1,7 +1,7 @@
 const { JsonRpcProvider, Network, Contract } = require('ethers');
 const log = require('../../utils/logger')(module);
 const config = require('../../config');
-const { classicRAIR721Abi } = require('../smartContracts');
+const { diamondFactoryAbi } = require('../smartContracts');
 
 const astarMainnet = new Network('Astar Mainnet', 0x250);
 const maticTestnet = new Network('Matic Testnet', 0x13881);
@@ -49,8 +49,8 @@ const endpoints = {
   ethereum: process.env.ETHEREUM_MAINNET_RPC,
   '0x5': process.env.ETHEREUM_TESTNET_GOERLI_RPC,
   goerli: process.env.ETHEREUM_TESTNET_GOERLI_RPC,
-  astar: process.env.ASTAR_MAINNET_RPC,
-  '0x250': process.env.ASTAR_MAINNET_RPC,
+  astar: 'https://evm.astar.network', // Temporal solution, Alchemy struggles with calls
+  '0x250': 'https://evm.astar.network',
 };
 
 const getInstance = async (blockchain, contractAddress) => {
@@ -62,7 +62,7 @@ const getInstance = async (blockchain, contractAddress) => {
   }
   const tokenInstance = new Contract(
     contractAddress,
-    classicRAIR721Abi,
+    diamondFactoryAbi,
     provider,
   );
   return tokenInstance;
@@ -96,9 +96,6 @@ async function checkBalanceProduct(
       offerRangeStart,
       offerRangeEnd,
     ];
-    if (specificOptions[blockchain]) {
-      args.push(specificOptions[blockchain]);
-    }
     const result = await tokenInstance.hasTokenInProduct(...args);
     return result;
   } catch (error) {
