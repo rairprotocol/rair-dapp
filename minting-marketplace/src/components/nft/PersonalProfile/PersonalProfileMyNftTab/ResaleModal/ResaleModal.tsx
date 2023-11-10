@@ -61,8 +61,12 @@ const ResaleModal: React.FC<IResaleModal> = ({
     }
   }, [inputSellValue]);
 
-  const testReqeust = useCallback(async () => {
-    if (diamondMarketplaceInstance && item) {
+  const fetchRoyalties = useCallback(async () => {
+    if (
+      diamondMarketplaceInstance &&
+      item &&
+      correctBlockchain(item.contract.blockchain)
+    ) {
       const nodeFee = await web3TxHandler(
         diamondMarketplaceInstance,
         'getNodeFee'
@@ -72,7 +76,6 @@ const ResaleModal: React.FC<IResaleModal> = ({
         diamondMarketplaceInstance,
         'getTreasuryFee'
       );
-
       const result = await web3TxHandler(
         diamondMarketplaceInstance,
         'getRoyalties',
@@ -263,8 +266,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
   }, [getResalesInfo]);
 
   useEffect(() => {
-    testReqeust();
-  }, [testReqeust]);
+    fetchRoyalties();
+  }, [fetchRoyalties]);
 
   return (
     <div className="container-resale-modal">
@@ -298,182 +301,185 @@ const ResaleModal: React.FC<IResaleModal> = ({
           />
         </div>
       ) : (
-        <div className="resale-modal-group-btns">
-          <div className="nft-data-sell-button">
-            <div className="input-sell-container">
-              <InputField
-                type="eth"
-                getter={inputSellValue}
-                setter={setInputSellValue}
-                customClass={`input-sell-value text-${textColor}`}
-                placeholder="Your price"
-              />
-              <CloseIcon
-                className="input-sell-close-icon"
-                fontSize="small"
-                onClick={handleInputClear}
-              />
-            </div>
-          </div>
-          {resaleOffer && resaleOffer.length > 0 ? (
-            <>
-              <button
-                className={`btn-update-resale ${
-                  hotDropsVar === 'true' ? 'hotdrops' : ''
-                } ${!inputSellValue && 'disabled-resale-btn'}`}
-                onClick={() => {
-                  if (inputSellValue) {
-                    updateResaleOffer(inputSellValue, resaleOffer[0]._id);
-                  }
-                }}
-                disabled={!inputSellValue}>
-                Update
-              </button>{' '}
-              <TooltipBox title="Remove offer resale">
-                <button
-                  onClick={() => removeVideoAlert(resaleOffer[0]._id)}
-                  className="btn-remove-resale">
-                  <i className="fas fa-trash"></i>
-                </button>
-              </TooltipBox>
-            </>
-          ) : (
-            <SellButton
-              currentUser={currentUserAddress}
-              // tokenData={[item]}
-              item={item}
-              sellingPrice={inputSellValue}
-              isInputPriceExist={isInputPriceExist}
-              setIsInputPriceExist={setIsInputPriceExist}
-              setInputSellValue={setInputSellValue}
-              refreshResaleData={() => {
-                getResaleData();
-                reloadFunction && reloadFunction();
-              }}
-              singleTokenPage={true}
-            />
-          )}
-        </div>
-      )}
-
-      <div>
-        <div className="resale-modal-infotmation-title">
-          <div>Summary</div>
-          <div className="resale-modal-infotmation-subtitle">
-            <div className="resale-modal-infotmation-subtitle-usd">USD</div>
-            <div>
-              <div>{chainData[item.contract.blockchain].symbol}</div>
-            </div>
-          </div>
-        </div>
-        <div className="resale-modal-information amount-titles">
-          <div>
-            <div className="resale-modal-information-amount-node-total">
-              <div>Amount to creator</div>
-              <div>Node and treasury:</div>
-              <div>Total:</div>
-            </div>
-          </div>
-          <div>
-            <div className="resale-modal-information-box">
-              <div>
-                {' '}
-                $
-                {commissionFee &&
-                usdPrice &&
-                commissionFee.creatorFee &&
-                commissionFee.creatorFee.length > 0
-                  ? (
-                      ((Number(inputSellValue) *
-                        Number(commissionFee.creatorFee)) /
-                        100) *
-                      usdPrice
-                    ).toFixed(2)
-                  : '0'}
+        <>
+          <div className="resale-modal-group-btns">
+            <div className="nft-data-sell-button">
+              <div className="input-sell-container">
+                <InputField
+                  type="eth"
+                  getter={inputSellValue}
+                  setter={setInputSellValue}
+                  customClass={`input-sell-value text-${textColor}`}
+                  placeholder="Your price"
+                />
+                <CloseIcon
+                  className="input-sell-close-icon"
+                  fontSize="small"
+                  onClick={handleInputClear}
+                />
               </div>
             </div>
-            <div className="resale-modal-information-box">
+            {resaleOffer && resaleOffer.length > 0 ? (
+              <>
+                <button
+                  className={`btn-update-resale ${
+                    hotDropsVar === 'true' ? 'hotdrops' : ''
+                  } ${!inputSellValue && 'disabled-resale-btn'}`}
+                  onClick={() => {
+                    if (inputSellValue) {
+                      updateResaleOffer(inputSellValue, resaleOffer[0]._id);
+                    }
+                  }}
+                  disabled={!inputSellValue}>
+                  Update
+                </button>{' '}
+                <TooltipBox title="Remove offer resale">
+                  <button
+                    onClick={() => removeVideoAlert(resaleOffer[0]._id)}
+                    className="btn-remove-resale">
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </TooltipBox>
+              </>
+            ) : (
+              <SellButton
+                currentUser={currentUserAddress}
+                // tokenData={[item]}
+                item={item}
+                sellingPrice={inputSellValue}
+                isInputPriceExist={isInputPriceExist}
+                setIsInputPriceExist={setIsInputPriceExist}
+                setInputSellValue={setInputSellValue}
+                refreshResaleData={() => {
+                  getResaleData();
+                  reloadFunction && reloadFunction();
+                }}
+                singleTokenPage={true}
+              />
+            )}
+          </div>
+
+          <div>
+            <div className="resale-modal-infotmation-title">
+              <div>Summary</div>
+              <div className="resale-modal-infotmation-subtitle">
+                <div className="resale-modal-infotmation-subtitle-usd">USD</div>
+                <div>
+                  <div>{chainData[item.contract.blockchain].symbol}</div>
+                </div>
+              </div>
+            </div>
+            <div className="resale-modal-information amount-titles">
               <div>
-                {commissionFee && usdPrice && (
+                <div className="resale-modal-information-amount-node-total">
+                  <div>Amount to creator</div>
+                  <div>Node and treasury:</div>
+                  <div>Total:</div>
+                </div>
+              </div>
+              <div>
+                <div className="resale-modal-information-box">
+                  <div>
+                    {' '}
+                    $
+                    {commissionFee &&
+                    usdPrice &&
+                    commissionFee.creatorFee &&
+                    commissionFee.creatorFee.length > 0
+                      ? (
+                          ((Number(inputSellValue) *
+                            Number(commissionFee.creatorFee)) /
+                            100) *
+                          usdPrice
+                        ).toFixed(2)
+                      : '0'}
+                  </div>
+                </div>
+                <div className="resale-modal-information-box">
+                  <div>
+                    {commissionFee && usdPrice && (
+                      <div>
+                        $
+                        {(
+                          ((Number(inputSellValue) *
+                            (Number(commissionFee.nodeFee) +
+                              Number(commissionFee.treasuryFee))) /
+                            100) *
+                          usdPrice
+                        ).toFixed(2)}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="resale-modal-information-box">
                   <div>
                     $
-                    {(
-                      ((Number(inputSellValue) *
-                        (Number(commissionFee.nodeFee) +
-                          Number(commissionFee.treasuryFee))) /
-                        100) *
-                      usdPrice
-                    ).toFixed(2)}
+                    {commissionFee &&
+                    usdPrice &&
+                    correctBlockchain(item.contract.blockchain)
+                      ? (
+                          (Number(inputSellValue) -
+                            (Number(inputSellValue) *
+                              (Number(commissionFee.creatorFee) +
+                                (Number(commissionFee.nodeFee) +
+                                  (commissionFee.treasuryFee
+                                    ? Number(commissionFee.treasuryFee)
+                                    : 0)))) /
+                              100) *
+                          usdPrice
+                        ).toFixed(2)
+                      : '0'}
                   </div>
-                )}
-              </div>
-            </div>
-            <div className="resale-modal-information-box">
-              <div>
-                $
-                {commissionFee &&
-                usdPrice &&
-                correctBlockchain(item.contract.blockchain)
-                  ? (
-                      (Number(inputSellValue) -
-                        (Number(inputSellValue) *
-                          (Number(commissionFee.creatorFee) +
-                            (Number(commissionFee.nodeFee) +
-                              (commissionFee.treasuryFee
-                                ? Number(commissionFee.treasuryFee)
-                                : 0)))) /
-                          100) *
-                      usdPrice
-                    ).toFixed(2)
-                  : '0'}
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="resale-modal-information-box">
-              <div>
-                {commissionFee &&
-                commissionFee.creatorFee &&
-                commissionFee.creatorFee.length > 0
-                  ? (
-                      (Number(inputSellValue) *
-                        Number(commissionFee.creatorFee)) /
-                      100
-                    ).toFixed(2)
-                  : '0'}
-              </div>
-            </div>
-            <div className="resale-modal-information-box">
-              {commissionFee && (
-                <div>
-                  {(
-                    (Number(inputSellValue) *
-                      (Number(commissionFee.nodeFee) +
-                        Number(commissionFee.treasuryFee))) /
-                    100
-                  ).toFixed(2)}
                 </div>
-              )}
-            </div>
-            <div className="resale-modal-information-box">
+              </div>
               <div>
-                {commissionFee && correctBlockchain(item.contract.blockchain)
-                  ? (
-                      Number(inputSellValue) -
-                      (Number(inputSellValue) *
-                        (Number(commissionFee.creatorFee) +
+                <div className="resale-modal-information-box">
+                  <div>
+                    {commissionFee &&
+                    commissionFee.creatorFee &&
+                    commissionFee.creatorFee.length > 0
+                      ? (
+                          (Number(inputSellValue) *
+                            Number(commissionFee.creatorFee)) /
+                          100
+                        ).toFixed(2)
+                      : '0'}
+                  </div>
+                </div>
+                <div className="resale-modal-information-box">
+                  {commissionFee && (
+                    <div>
+                      {(
+                        (Number(inputSellValue) *
                           (Number(commissionFee.nodeFee) +
-                            (commissionFee.treasuryFee
-                              ? Number(commissionFee.treasuryFee)
-                              : 0)))) /
+                            Number(commissionFee.treasuryFee))) /
                         100
-                    ).toFixed(2)
-                  : '0'}
+                      ).toFixed(2)}
+                    </div>
+                  )}
+                </div>
+                <div className="resale-modal-information-box">
+                  <div>
+                    {commissionFee &&
+                    correctBlockchain(item.contract.blockchain)
+                      ? (
+                          Number(inputSellValue) -
+                          (Number(inputSellValue) *
+                            (Number(commissionFee.creatorFee) +
+                              (Number(commissionFee.nodeFee) +
+                                (commissionFee.treasuryFee
+                                  ? Number(commissionFee.treasuryFee)
+                                  : 0)))) /
+                            100
+                        ).toFixed(2)
+                      : '0'}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
