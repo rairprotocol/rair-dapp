@@ -16,6 +16,11 @@ import InputSelect from '../../common/InputSelect';
 import LinearProgressWithLabel from '../LinearProgressWithLabel/LinearProgressWithLabel';
 import { IMediaListBox } from '../types/DemoMediaUpload.types';
 
+type Options = {
+  label: string;
+  value: string;
+};
+
 const ContractDataModal = ({
   contract,
   setContract,
@@ -27,17 +32,18 @@ const ContractDataModal = ({
   demo,
   setDemo
 }) => {
-  const [newContract, setNewContract] = useState(contract);
-  const [newProduct, setNewProduct] = useState(product);
+  const [newContract, setNewContract] = useState(contract || 'null');
+  const [newProduct, setNewProduct] = useState(product || 'null');
   const [newOffer, setNewOffer] = useState(offer);
   const [newDemoStatus, setNewDemoStatus] = useState(demo);
 
+  const [contractData, setContractData] = useState<any>({});
+
   const [offerNameMapping, setOfferNameMapping] = useState({});
-  const [offerOptions, setOfferOptions] = useState([]);
-  const [offerMapping, setOfferMapping] = useState({});
-  const [productOptions, setProductOptions] = useState<any>([]);
-  const [productMapping, setProductMapping] = useState({});
-  const [contractOptions, setContractOptions] = useState([]);
+
+  const [offerOptions, setOfferOptions] = useState<Options[]>([]);
+  const [productOptions, setProductOptions] = useState<Options[]>([]);
+  const [contractOptions, setContractOptions] = useState<Options[]>([]);
 
   const reactSwal = useSwal();
 
@@ -51,19 +57,28 @@ const ContractDataModal = ({
       if (!success) {
         return;
       }
-      const mapping = {};
+      const contractMapping = {};
+      contracts.forEach((contract) => {
+        if (!contractMapping[contract._id]) {
+          contract.productArray = [contract.products];
+          delete contract.products;
+          contractMapping[contract._id] = contract;
+        } else {
+          contractMapping[contract._id]?.productArray.push(contract.products);
+        }
+      });
+      setContractData(contractMapping);
       setContractOptions(
-        contracts
-          .map((contract) => {
-            mapping[contract._id] = contract.products;
+        Object.keys(contractMapping)
+          .map((contractId) => {
+            const data = contractMapping[contractId];
             return {
-              label: `${contract.title} ${
-                contract.blockchain in chainData
-                  ? chainData[contract.blockchain].symbol
-                  : ''
-              }
-              `,
-              value: contract._id
+              label: `${data.title} (${
+                data.blockchain in chainData
+                  ? chainData[data.blockchain].symbol
+                  : 'Unknown blockchain'
+              })`,
+              value: contractId
             };
           })
           .sort((a, b) => {
@@ -73,7 +88,6 @@ const ContractDataModal = ({
             return -1;
           })
       );
-      setProductMapping(mapping);
     }
   }, []);
 
@@ -85,27 +99,19 @@ const ContractDataModal = ({
     if (
       !newContract ||
       newContract === 'null' ||
-      Object.keys(productMapping).length === 0
+      contractData[newContract]?.productArray.length === 0
     ) {
       return;
     }
-    const mapping = {};
-    if (productMapping[newContract].length) {
-      console.error(productMapping[newContract]);
-    } else {
-      setProductOptions([
-        {
-          label: productMapping[newContract].name,
-          value:
-            productMapping[newContract].collectionIndexInContract.toString()
-        }
-      ]);
-      mapping[
-        productMapping[newContract].collectionIndexInContract.toString()
-      ] = productMapping[newContract].offers;
-    }
-    setOfferMapping(mapping);
-  }, [newContract, productMapping]);
+    setProductOptions(
+      contractData[newContract]?.productArray.map((product, index: number) => {
+        return {
+          label: product.name,
+          value: index
+        };
+      })
+    );
+  }, [newContract, contractData]);
 
   useEffect(() => {
     setNewProduct('null');
@@ -117,27 +123,24 @@ const ContractDataModal = ({
   }, [getProductList]);
 
   const getOfferList = useCallback(() => {
-    if (
-      !newProduct ||
-      newProduct === 'null' ||
-      Object.keys(offerMapping).length === 0
-    ) {
+    const data = contractData[newContract]?.productArray[newProduct]?.offers;
+    if (!data) {
       return;
     }
-    const mapping = {};
-    if (offerMapping[newProduct]) {
-      setOfferOptions(
-        offerMapping[newProduct].map((offer) => {
-          mapping[offer._id] = offer.offerName;
-          return {
-            label: offer.offerName,
-            value: offer._id
-          };
-        })
-      );
-    }
-    setOfferNameMapping(mapping);
-  }, [newProduct, offerMapping]);
+    const nameMapping = {};
+    data.forEach((offer) => {
+      nameMapping[offer._id] = offer.offerName;
+    });
+    setOfferNameMapping(nameMapping);
+    setOfferOptions(
+      data.map((offer) => {
+        return {
+          label: offer.offerName,
+          value: offer._id
+        };
+      })
+    );
+  }, [contractData, newContract, newProduct]);
 
   useEffect(() => {
     getOfferList();
