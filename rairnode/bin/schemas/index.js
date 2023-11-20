@@ -66,6 +66,7 @@ const {
   userId,
   userAddress,
   resaleFlag,
+  metadataSearch,
 } = require('./commonApiSchemas');
 const {
   fullContracts,
@@ -155,6 +156,7 @@ module.exports = {
   userId,
   userAddress,
   resaleFlag,
+  metadataSearch,
 
   // Contract schemas
   fullContracts,

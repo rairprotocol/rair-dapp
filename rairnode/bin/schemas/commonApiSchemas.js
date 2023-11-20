@@ -27,4 +27,7 @@ module.exports = {
     resaleFlag: () => ({
         onResale: Joi.boolean(),
     }),
+    metadataSearch: () => ({
+        metadataFilters: Joi.string(),
+    }),
 };

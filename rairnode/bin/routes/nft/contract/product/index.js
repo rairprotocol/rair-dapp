@@ -11,16 +11,42 @@ const {
   File,
   Unlock,
   ServerSetting,
+  TokenMetadata,
 } = require('../../../../models');
 const tokenRoutes = require('./token');
+const { processMetadata } = require('../../../../utils/metadataClassify');
+const logger = require('../../../../utils/logger');
 
 module.exports = (context) => {
   const router = express.Router();
 
+  router.get(
+    '/attributes',
+    async (req, res, next) => {
+      try {
+        const { contract, product } = req;
+        let attributes = await TokenMetadata.findOne({
+          contract: contract._id,
+          product,
+        });
+        if (attributes === null || attributes?.attributes?.length === 0) {
+          await processMetadata(contract._id, product);
+          attributes = await TokenMetadata.findOne({
+            contract: contract._id,
+            product,
+          });
+        }
+        return res.json({ success: true, attributes });
+      } catch (err) {
+        return next(err);
+      }
+    },
+  );
+
   // Get minted tokens from a product
   router.get(
     '/',
-    validation(['getTokensByContractProduct', 'resaleFlag'], 'query'),
+    validation(['getTokensByContractProduct', 'resaleFlag', 'metadataSearch'], 'query'),
     async (req, res, next) => {
       try {
         const { contract, product } = req;
@@ -34,6 +60,7 @@ module.exports = (context) => {
           forSale = '',
           onResale = false,
         } = req.query;
+        let { metadataFilters } = req.query;
         const firstToken = (
           BigInt(fromToken) > 0
             ? BigInt(fromToken) - 1n
@@ -167,6 +194,26 @@ module.exports = (context) => {
               resaleData: { $exists: true },
             },
           });
+        }
+
+        if (metadataFilters) {
+          try {
+            metadataFilters = JSON.parse(metadataFilters);
+            aggregateOptions.push({
+              $match: {
+                $or: Object.keys(metadataFilters).map((attr) => ({
+                    'metadata.attributes': {
+                      $elemMatch: {
+                        trait_type: attr,
+                        value: { $in: metadataFilters[attr] },
+                      },
+                    },
+                  })),
+              },
+            });
+          } catch (err) {
+            logger.error(`Error parsing metadata filters ${err}`);
+          }
         }
 
         const optionsForTotalCount = [...aggregateOptions];
