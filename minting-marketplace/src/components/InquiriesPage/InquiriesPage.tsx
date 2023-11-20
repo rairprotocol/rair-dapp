@@ -43,7 +43,7 @@ const InquiriesPage = () => {
           encType="multipart/form-data"
           id="form">
           <>
-            {currentUserAddress ? (
+            {currentUserAddress && userRd ? (
               <>
                 {userRd && !userRd.email && (
                   <>
