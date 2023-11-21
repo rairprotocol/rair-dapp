@@ -68,6 +68,10 @@ const UserProfilePage: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [totalCount, setTotalCount] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [onResale, setOnResale] = useState<boolean>(false);
+  const [isResaleLoading, setIsResaleLoding] = useState<boolean | undefined>(
+    undefined
+  );
 
   const { width } = useWindowDimensions();
 
@@ -84,8 +88,9 @@ const UserProfilePage: React.FC = () => {
     async (number, page) => {
       if (userAddress && utils.isAddress(userAddress)) {
         setIsLoading(true);
+
         const response = await rFetch(
-          `/api/nft/${userAddress}?itemsPerPage=${number}&pageNum=${page}`
+          `/api/nft/${userAddress}?itemsPerPage=${number}&pageNum=${page}&onResale=${onResale}`
         );
         if (response.success) {
           const tokenData: TDiamondTokensType[] = [];
@@ -110,15 +115,18 @@ const UserProfilePage: React.FC = () => {
           setTokens(tokenData);
           setCollectedTokens(newCollectedTokens);
           setIsLoading(false);
+          setIsResaleLoding(false);
         }
 
         if (response.error && response.message) {
           setIsLoading(false);
+          setIsResaleLoding(false);
           return;
         }
       }
     },
-    [userAddress]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [userAddress, onResale, setIsResaleLoding]
   );
 
   const handleNewUserStatus = useCallback(async () => {
@@ -517,18 +525,49 @@ const UserProfilePage: React.FC = () => {
                 />
               </div>
               <div className="user-page-main-tab-block">
+                {tabIndexItems === 0 && (
+                  <div
+                    className={`user-page-filter-btn-block-resale ${
+                      primaryColor === 'rhyno' ? 'rhyno' : ''
+                    }`}
+                    style={{
+                      marginBottom: '20px'
+                    }}>
+                    <button
+                      disabled={isResaleLoading}
+                      onClick={() => {
+                        if (onResale) {
+                          setOnResale(false);
+                          setIsResaleLoding(true);
+                        } else {
+                          setOnResale(true);
+                          setIsResaleLoding(true);
+                        }
+                      }}>
+                      Show resale tokens:{' '}
+                      <span
+                        className={`${hotdropsVar === 'true' && 'hotdrops'}`}>
+                        {onResale ? 'off' : 'show'}
+                      </span>
+                    </button>
+                  </div>
+                )}
                 <TabPanel>
-                  <PersonalProfileMyNftTab
-                    filteredData={collectedTokens && collectedTokens}
-                    defaultImg={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
-                    chainData={chainData}
-                    textColor={textColor}
-                    getMyNft={getMyNft}
-                    totalCount={totalCount}
-                    isLoading={isLoading}
-                    showTokensRef={showTokensRef}
-                    titleSearch={titleSearch}
-                  />
+                  {isResaleLoading ? (
+                    <LoadingComponent />
+                  ) : (
+                    <PersonalProfileMyNftTab
+                      filteredData={collectedTokens && collectedTokens}
+                      defaultImg={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
+                      chainData={chainData}
+                      textColor={textColor}
+                      getMyNft={getMyNft}
+                      totalCount={totalCount}
+                      isLoading={isLoading}
+                      showTokensRef={showTokensRef}
+                      titleSearch={titleSearch}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
                   <UserProfileCreated

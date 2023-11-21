@@ -158,6 +158,55 @@
   justify-content: space-between;
 }
 
+.user-page-filter-btn-block-resale {
+  display: flex;
+}
+
+.user-page-filter-btn-block-resale.rhyno button {
+  background: rgb(250, 250, 250);
+  border: 1px solid var(--rhyno);
+  color: #2d2d2d;
+}
+
+.user-page-filter-btn-block-resale.rhyno button:hover {
+  background: var(--rhyno-60);
+}
+
+.user-page-filter-btn-block-resale.rhyno button:active,
+.user-page-filter-btn-block-resale.rhyno button:focus {
+  background: var(--rhyno-transparent);
+}
+
+.user-page-filter-btn-block-resale button {
+  background: var(--charcoal);
+  border: none;
+  border-radius: 12px;
+  padding: 5px 15px;
+  color: #fff;
+  border: 1px solid var(--charcoal-90);
+}
+
+.user-page-filter-btn-block-resale button:disabled {
+  color: grey !important;
+}
+
+.user-page-filter-btn-block-resale button:hover {
+  background: var(--charcoal-80);
+}
+
+.user-page-filter-btn-block-resale button:active,
+.user-page-filter-btn-block-resale button:focus {
+  background: var(--charcoal-90);
+}
+
+.user-page-filter-btn-block-resale button span.hotdrops {
+  color: var(--hot-drops);
+}
+
+.user-page-filter-btn-block-resale button span {
+  color: var(--bubblegum);
+}
+
 @media screen and (max-width: 1280px) {
   .user-page-background.rhyno,
   .user-page-background.charcoal {
