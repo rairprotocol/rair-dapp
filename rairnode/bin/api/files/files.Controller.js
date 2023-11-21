@@ -11,9 +11,6 @@ const {
     isFileOwner,
 } = require('./files.Service');
 const { validation, requireUserSession } = require('../../middleware');
-const { getSpecificContracts } = require('../contracts/contracts.Service');
-const { getOfferIndexesByContractAndProduct } = require('../offers/offers.Service');
-const { getOfferPoolByContractAndProduct } = require('../../offerPools/offerPools.Service');
 
 const router = express.Router();
 
