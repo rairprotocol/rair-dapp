@@ -184,6 +184,17 @@ module.exports = (context) => {
               localField: 'uniqueIndexInContract',
               foreignField: 'tokenIndex',
               as: 'resaleData',
+              let: {
+                tokenContract: '$tokenContract',
+              },
+              pipeline: [{
+                $match: {
+                  $expr: {
+                    $eq: ['$$tokenContract', '$contract'],
+                  },
+                  buyer: { $exists: false },
+                },
+              }],
             },
           }, {
             $addFields: {
