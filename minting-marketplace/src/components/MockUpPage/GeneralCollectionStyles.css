@@ -579,6 +579,13 @@ img.single-token-block-img {
   font-size: 14px;
   color: rgb(153 152 152);
   margin-top: 10px;
+  background: linear-gradient(
+    0deg,
+    rgba(34, 32, 33, 0.737) 50%,
+    rgba(34, 32, 33, 0.67) 100%
+  );
+  padding: 2px 9px;
+  border-radius: 10px;
 }
 
 .pic-description-wrapper:hover {
