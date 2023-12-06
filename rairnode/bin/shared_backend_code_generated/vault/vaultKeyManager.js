@@ -87,7 +87,7 @@ class VaultKeyManager {
       return data;
     } catch (err) {
       const errMessage = 'Error reading key from Vault';
-      console.log(errMessage, err.response.statusText);
+      console.log(errMessage, err?.response?.statusText);
       if (!this.preventThrowingErrors) {
         throw new Error(errMessage);
       }
