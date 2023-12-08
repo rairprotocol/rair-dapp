@@ -38,6 +38,7 @@ export interface INftItemForCollectionView {
   usdPrice?: number;
   getMyNft?: any;
   totalNft?: any;
+  metadataFilter?: boolean;
 }
 
 export type TParamsNftItemForCollectionView = {
@@ -161,6 +162,8 @@ export interface ITitleCollection {
   currentUser?: UserType;
   offerDataCol?: TOfferType[] | undefined;
   connectUserData?: any;
+  collectionAttributes?: any;
+  toggleMetadataFilter?: any;
 }
 export interface ICusmonShareButton {
   title: string;

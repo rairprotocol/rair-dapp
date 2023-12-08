@@ -37,7 +37,9 @@ const FilteringBlock = ({
   setFilterText,
   setFilterCategoriesText,
   click,
-  setClick
+  setClick,
+  metadataFilter,
+  setMetadataFilter
 }: any) => {
   const [filterPopUp, setFilterPopUp] = useState(false);
   const [, /*filterItem*/ setFilterItem] = useState('Filters');
@@ -63,11 +65,16 @@ const FilteringBlock = ({
 
   const onChangeFilterPopUp = () => {
     // setFilterPopUp((prev) => !prev);
+
     setFilterClose((prev) => !prev);
     globalModaldispatch({
       type: GLOBAL_MODAL_ACTIONS.TOGLE_IS_MODAL_OPEN,
       payload: null
     });
+  };
+
+  const toggleMetadataFilter = () => {
+    setFilterClose((prev) => !prev);
   };
 
   const onChangeSortPopUp = () => {
@@ -224,35 +231,70 @@ const FilteringBlock = ({
         <>
           {hotdropsVar !== 'true' && (
             <div ref={filterRef} className="select-filters-wrapper">
-              <SelectFiltersItem
-                className={`select-filters ${
-                  hotdropsVar === 'true' ? 'hotdrops-hover' : ''
-                }`}
-                onClick={onChangeFilterPopUp}
-                filterPopUp={filterPopUp}
-                textColor={textColor}
-                primaryColor={primaryColor}>
-                <div className="select-filters-title">
-                  {width > 1101 ? (
-                    <>
-                      {filterCloseText ? (
-                        <StyledFilterIcon
-                          filterPopUp={filterPopUp}></StyledFilterIcon>
-                      ) : (
-                        <CloseIcon
-                          style={{
-                            marginRight: '5px'
-                          }}
-                        />
-                      )}
-                    </>
-                  ) : (
-                    <StyledFilterIcon
-                      filterPopUp={filterPopUp}></StyledFilterIcon>
-                  )}
-                  {width > 700 && <span>Filters</span>}
-                </div>
-              </SelectFiltersItem>
+              {setMetadataFilter ? (
+                <SelectFiltersItem
+                  className={`select-filters ${
+                    hotdropsVar === 'true' ? 'hotdrops-hover' : ''
+                  }`}
+                  onClick={() => {
+                    setMetadataFilter();
+                    setFilterClose((prev) => !prev);
+                  }}
+                  filterPopUp={filterPopUp}
+                  textColor={textColor}
+                  primaryColor={primaryColor}>
+                  <div className="select-filters-title">
+                    {width > 1101 ? (
+                      <>
+                        {filterCloseText ? (
+                          <StyledFilterIcon
+                            filterPopUp={filterPopUp}></StyledFilterIcon>
+                        ) : (
+                          <CloseIcon
+                            style={{
+                              marginRight: '5px'
+                            }}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <StyledFilterIcon
+                        filterPopUp={filterPopUp}></StyledFilterIcon>
+                    )}
+                    {width > 700 && <span>Filters</span>}
+                  </div>
+                </SelectFiltersItem>
+              ) : (
+                <SelectFiltersItem
+                  className={`select-filters ${
+                    hotdropsVar === 'true' ? 'hotdrops-hover' : ''
+                  }`}
+                  onClick={onChangeFilterPopUp}
+                  filterPopUp={filterPopUp}
+                  textColor={textColor}
+                  primaryColor={primaryColor}>
+                  <div className="select-filters-title">
+                    {width > 1101 ? (
+                      <>
+                        {filterCloseText ? (
+                          <StyledFilterIcon
+                            filterPopUp={filterPopUp}></StyledFilterIcon>
+                        ) : (
+                          <CloseIcon
+                            style={{
+                              marginRight: '5px'
+                            }}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <StyledFilterIcon
+                        filterPopUp={filterPopUp}></StyledFilterIcon>
+                    )}
+                    {width > 700 && <span>Filters</span>}
+                  </div>
+                </SelectFiltersItem>
+              )}
 
               {filterPopUp && (
                 <SelectFiltersPopUp

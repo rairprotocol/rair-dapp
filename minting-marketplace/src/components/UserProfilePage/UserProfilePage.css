@@ -207,6 +207,48 @@
   color: var(--bubblegum);
 }
 
+.userpage-filter-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 40px;
+}
+
+.userpage-filter-btn {
+  height: 48px;
+  width: 170px;
+  display: flex;
+  justify-content: center;
+  border-radius: 12px;
+  align-items: center;
+  border: 1px solid rgb(78, 77, 77);
+  background-color: rgb(34, 32, 33);
+  color: #fff;
+}
+
+.userpage-filter-btn:disabled {
+  background: var(--stimorol-click);
+}
+
+.userpage-filter-btn.rhyno {
+  border: 1px solid var(--rhyno);
+  background-color: rgb(250, 250, 250);
+  color: #000;
+}
+
+.userpage-filter-btn.rhyno:hover {
+  background-color: var(--rhyno-60);
+}
+
+.userpage-filter-btn:hover {
+  background-color: var(--charcoal-60);
+}
+
+.userpage-filter-btn.active,
+.userpage-filter-btn.rhyno.active {
+  background-color: var(--bubblegum);
+}
+
 @media screen and (max-width: 1280px) {
   .user-page-background.rhyno,
   .user-page-background.charcoal {

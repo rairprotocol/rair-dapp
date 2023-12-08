@@ -5,7 +5,10 @@ import { useLocation, useParams } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
 import { RootState } from '../../../../../ducks';
-import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import {
+  ColorChoice,
+  ColorStoreType
+} from '../../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import chainData from '../../../../../utils/blockchainData';
 import { rFetch } from '../../../../../utils/rFetch';
@@ -20,7 +23,9 @@ import {
 } from '../../../mockupPage.types';
 import CustomButton from '../../../utils/button/CustomButton';
 import CustomShareButton from '../CustomShareButton';
+import SingleTokenViewProperties from '../SingleTokenViewProperties';
 
+import FilterMetadataTokens from './FilterMetadataTokens/FilterMetadataTokens';
 import MintPopUpCollection from './MintPopUpCollection/MintPopUpCollection';
 import SharePopUp from './SharePopUp/SharePopUp';
 
@@ -31,11 +36,13 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   userName,
   someUsersData,
   selectedData,
-  offerDataCol
+  offerDataCol,
+  collectionAttributes,
+  toggleMetadataFilter
 }) => {
   const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
-  const primaryColor = useSelector<RootState, ColorChoice>(
-    (state) => state.colorStore.primaryColor
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
   );
   const [mintPopUp, setMintPopUp] = useState<boolean>(false);
   const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
@@ -48,6 +55,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   const [open, setOpen] = useState<boolean>(false);
   const [isCollectionPathExist, setIsCollectionPathExist] =
     useState<boolean>(false);
+  const [triggerState, setTriggerState] = useState<any>(false);
 
   const { width } = useWindowDimensions();
 
@@ -96,6 +104,25 @@ const TitleCollection: React.FC<ITitleCollection> = ({
     }
   }, [offerDataCol, contractData]);
 
+  const percentToRGB = (percent: string) => {
+    const percentNumber = parseInt(percent);
+    if (percentNumber) {
+      if (percentNumber < 15) {
+        return '#95F619';
+      } else if (15 <= percentNumber && percentNumber < 35) {
+        return '#F6ED19';
+      } else {
+        return '#F63419';
+      }
+    }
+  };
+
+  const toUpper = (string: string) => {
+    if (string) {
+      return string[0].toUpperCase() + string.slice(1);
+    }
+  };
+
   const getContractInfo = useCallback(async () => {
     if (blockchain && contract) {
       const response = await rFetch(
@@ -119,7 +146,8 @@ const TitleCollection: React.FC<ITitleCollection> = ({
 
   useEffect(() => {
     findCollectionPathExist();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -271,14 +299,6 @@ const TitleCollection: React.FC<ITitleCollection> = ({
           </div>
         </div>
       </div>
-      {isCollectionPathExist &&
-        selectedData &&
-        selectedData.description !== 'none' &&
-        selectedData.description !== 'No description available' && (
-          <div className="block-collection-desc">
-            {selectedData.description}
-          </div>
-        )}
     </div>
   );
 };

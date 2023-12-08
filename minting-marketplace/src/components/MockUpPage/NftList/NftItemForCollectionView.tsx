@@ -55,7 +55,8 @@ const NftItemForCollectionViewComponent: React.FC<
   resalePrice,
   usdPrice,
   getMyNft,
-  totalNft
+  totalNft,
+  metadataFilter
 }) => {
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
@@ -121,7 +122,7 @@ const NftItemForCollectionViewComponent: React.FC<
       }
     : () => {
         navigate(
-          `/tokens/${blockchain}/${params.contract}/${params.product}/${index}`
+          `/tokens/${blockchain}/${params.contract}/${params.product}/${item.token}`
         );
       };
 
@@ -379,7 +380,9 @@ const NftItemForCollectionViewComponent: React.FC<
               RedirectToMockUp();
             }
           }}
-          className="nft-item-collection grid-item"
+          className={`nft-item-collection grid-item ${
+            metadataFilter && 'with-modal'
+          }`}
           id={id}>
           {item && !resaleFlag && item.isMinted && !resalePrice && (
             <div className="nft-item-collection-sold-out">

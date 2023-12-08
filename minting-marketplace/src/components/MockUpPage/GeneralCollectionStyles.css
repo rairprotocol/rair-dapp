@@ -15,6 +15,26 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   justify-content: space-between;
   grid-gap: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.wrapper-collection .list-button-wrapper-grid-template.with-modal {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  padding-right: 10px;
+  transition: all 0.2s ease;
+  height: 100%;
+}
+
+.list-button-wrapper-grid-template.with-modal {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  padding-right: 10px;
+  transition: all 0.2s ease;
+}
+
+.user-page-main-tab-block .list-button-wrapper-grid-template.with-modal {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  padding-right: 10px;
+  transition: all 0.2s ease;
 }
 
 .nft-item-collection {
@@ -363,6 +383,38 @@ img.single-token-block-img {
   display: flex;
   flex-direction: row;
   width: 1200px;
+}
+
+.wrapper-collection .container-search {
+  width: 100%;
+}
+
+.wrapper-collection .container-search input {
+  border-top-left-radius: 12px !important;
+}
+
+.filter-metadata-collection-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filter-collection-attributes-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  max-height: 250px;
+  overflow: auto;
+}
+
+.filter-collection-attributes-container div {
+  margin: 5px 0;
+}
+
+.filter-metadata-collection-container .properties-data {
+  margin-bottom: 10px;
 }
 
 .svg-key-style {

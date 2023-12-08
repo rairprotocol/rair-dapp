@@ -72,6 +72,7 @@ const UserProfilePage: React.FC = () => {
   const [isResaleLoading, setIsResaleLoding] = useState<boolean | undefined>(
     undefined
   );
+  const [metadataFilter, setMetadataFilter] = useState<boolean>(false);
 
   const { width } = useWindowDimensions();
 
@@ -521,53 +522,30 @@ const UserProfilePage: React.FC = () => {
                   primaryColor={primaryColor}
                   setSortItem={setSortItem}
                   sortItem={sortItem}
-                  isFilterShow={false}
+                  isFilterShow={currentUserAddress === userAddress}
+                  metadataFilter={metadataFilter}
+                  setMetadataFilter={() => setMetadataFilter((prev) => !prev)}
                 />
               </div>
               <div className="user-page-main-tab-block">
-                {tabIndexItems === 0 && (
-                  <div
-                    className={`user-page-filter-btn-block-resale ${
-                      primaryColor === 'rhyno' ? 'rhyno' : ''
-                    }`}
-                    style={{
-                      marginBottom: '20px'
-                    }}>
-                    <button
-                      disabled={isResaleLoading}
-                      onClick={() => {
-                        if (onResale) {
-                          setOnResale(false);
-                          setIsResaleLoding(true);
-                        } else {
-                          setOnResale(true);
-                          setIsResaleLoding(true);
-                        }
-                      }}>
-                      Show resale tokens:{' '}
-                      <span
-                        className={`${hotdropsVar === 'true' && 'hotdrops'}`}>
-                        {onResale ? 'off' : 'show'}
-                      </span>
-                    </button>
-                  </div>
-                )}
                 <TabPanel>
-                  {isResaleLoading ? (
-                    <LoadingComponent />
-                  ) : (
-                    <PersonalProfileMyNftTab
-                      filteredData={collectedTokens && collectedTokens}
-                      defaultImg={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
-                      chainData={chainData}
-                      textColor={textColor}
-                      getMyNft={getMyNft}
-                      totalCount={totalCount}
-                      isLoading={isLoading}
-                      showTokensRef={showTokensRef}
-                      titleSearch={titleSearch}
-                    />
-                  )}
+                  <PersonalProfileMyNftTab
+                    filteredData={collectedTokens && collectedTokens}
+                    defaultImg={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
+                    chainData={chainData}
+                    textColor={textColor}
+                    getMyNft={getMyNft}
+                    totalCount={totalCount}
+                    isLoading={isLoading}
+                    showTokensRef={showTokensRef}
+                    titleSearch={titleSearch}
+                    primaryColor={primaryColor}
+                    isResaleLoading={isResaleLoading}
+                    setIsResaleLoding={setIsResaleLoding}
+                    setOnResale={setOnResale}
+                    onResale={onResale}
+                    metadataFilter={metadataFilter}
+                  />
                 </TabPanel>
                 <TabPanel>
                   <UserProfileCreated

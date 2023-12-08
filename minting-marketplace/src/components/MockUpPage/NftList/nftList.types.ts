@@ -84,7 +84,11 @@ export interface INftCollectionPageComponent {
   tokenData: { [index: string]: TTokenData } | null | undefined;
   totalCount: number | undefined;
   offerPrice: string[] | undefined;
-  getAllProduct: (fromToken: string, toToken: string) => Promise<void>;
+  getAllProduct: (
+    fromToken: string,
+    toToken: string,
+    attributes: any
+  ) => Promise<void>;
   showToken: number;
   setShowToken: (token: number) => void;
   isLoading: boolean;

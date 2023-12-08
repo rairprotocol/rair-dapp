@@ -12,13 +12,17 @@ import {
   TProducts
 } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { setTokenData } from '../../../../ducks/nftData/action';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import { hotDropsDefaultBanner } from '../../../../images';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
+import InputField from '../../../common/InputField';
 import LoadingComponent from '../../../common/LoadingComponent';
+import { HomePageModalFilter } from '../../../GlobalModal/FilterModal/HomePAgeModal';
+import FilteringBlock from '../../FilteringBlock/FilteringBlock';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import CustomButton from '../../utils/button/CustomButton';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
@@ -30,6 +34,8 @@ import {
 import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
+import FilterMetadataTokens from './TitleCollection/FilterMetadataTokens/FilterMetadataTokens';
+import MetadataAttributesProperties from './TitleCollection/FilterMetadataTokens/MetadataAttrPropertyItems/MetadataAttributes';
 import TitleCollection from './TitleCollection/TitleCollection';
 
 import './../../GeneralCollectionStyles.css';
@@ -59,6 +65,18 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
 
   const params = useParams<TParamsNftDataCommonLink>();
   const { contract, product, blockchain } = params;
+  const [metadataFilter, setMetadataFilter] = useState<boolean>(false);
+  const [newAttr, setNewAttr] = useState<any>();
+  const [selectedAttributeValues, setSelectedAttributeValues] =
+    useState<any>(undefined);
+
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
+
+  const toggleMetadataFilter = () => {
+    setMetadataFilter((prev) => !prev);
+  };
 
   const hotdropsVar = process.env.REACT_APP_HOTDROPS;
 
@@ -77,13 +95,60 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [fileUpload, setFileUpload] = useState<any>();
   const [bannerInfo, setBannerInfo] = useState<TProducts>();
   const [usdPrice, setUsdPrice] = useState<number | undefined>(undefined);
+  const [titleSearch, setTitleSearch] = useState('');
+  const [sortItem, setSortItem] = useState();
+  const [titleSearchAttributes, setTitleSearchAttributes] = useState('');
+
+  const filteredDataAttributes =
+    selectedAttributeValues &&
+    selectedAttributeValues.map((item) => {
+      if (item.values.length) {
+        const result = item.values.filter((el) =>
+          el.value.toLowerCase().includes(titleSearchAttributes.toLowerCase())
+        );
+
+        return { ...item, values: result };
+      }
+      return item;
+    });
+
+  const filteredData =
+    tokenData &&
+    Object.values(tokenData).length &&
+    Object.values(tokenData)
+      .filter((item) => {
+        return item.metadata.name
+          .toLowerCase()
+          .includes(titleSearch.toLowerCase());
+      })
+      .sort((a, b) => {
+        if (sortItem === 'up') {
+          if (a.metadata.name < b.metadata.name) {
+            return 1;
+          }
+        }
+
+        if (sortItem === 'down') {
+          if (a.metadata.name > b.metadata.name) {
+            return -1;
+          }
+        }
+
+        return 0;
+      });
+
+  const toUpper = (string: string) => {
+    if (string) {
+      return string[0].toUpperCase() + string.slice(1);
+    }
+  };
 
   const loadToken = useCallback(
     (entries) => {
       const target = entries[0];
       if (target.isIntersecting) {
         showTokensRef.current = showTokensRef.current + 20;
-        getAllProduct('0', showTokensRef.current.toString());
+        getAllProduct('0', showTokensRef.current.toString(), undefined);
       }
     },
     [getAllProduct, showTokensRef]
@@ -97,6 +162,28 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const goBack = () => {
     navigate('/');
   };
+
+  const getAttributes = useCallback(async () => {
+    const { data } = await axios.get<any>(
+      `/api/nft/network/${blockchain}/${contract}/${product}/attributes`
+    );
+    if (data.success) {
+      const result = data.attributes.attributes.map((item) => {
+        const newEl = item.values.map((val) => {
+          return {
+            value: val,
+            active: false
+          };
+        });
+        return { ...item, values: newEl };
+      });
+      setNewAttr(result);
+    }
+  }, [blockchain, contract, product]);
+
+  useEffect(() => {
+    getAttributes();
+  }, [getAttributes, collectionName]);
 
   const getBannerInfo = useCallback(async () => {
     try {
@@ -247,9 +334,45 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (!metadataFilter) {
+      setSelectedAttributeValues(undefined);
+    }
+  }, [metadataFilter, setSelectedAttributeValues]);
+
   if (tokenData === undefined || !tokenData) {
     return <LoadingComponent />;
   }
+
+  const selectedAttributeValuesFunction = (selectedAttributeValues) => {
+    if (selectedAttributeValues) {
+      const condition: any = [];
+      const result: any =
+        selectedAttributeValues &&
+        selectedAttributeValues.length &&
+        selectedAttributeValues.reduce((acc, item) => {
+          const { name, values } = item;
+          const newValue = values.filter((el) => el.active);
+
+          acc[name] = newValue.map((el) => el.value);
+          return acc;
+        }, {});
+
+      if (result) {
+        for (const el in result) {
+          if (result[el].length === 0) {
+            condition.push(false);
+          } else {
+            condition.push(true);
+          }
+        }
+      }
+
+      return condition.some((element) => element === true);
+    } else {
+      return false;
+    }
+  };
 
   return (
     <>
@@ -309,7 +432,57 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             someUsersData={someUsersData}
             userName={offerAllData?.owner}
             offerDataCol={offerDataCol}
+            toggleMetadataFilter={toggleMetadataFilter}
           />
+          <div className="container-search">
+            <InputField
+              getter={titleSearch}
+              setter={setTitleSearch}
+              placeholder={'Search tokens'}
+              customCSS={{
+                backgroundColor: `var(--${
+                  primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
+                })`,
+                color: `var(--${textColor})`,
+                borderTopLeftRadius: '0',
+                border: `${
+                  primaryColor === 'charcoal'
+                    ? 'solid 1px var(--charcoal-80)'
+                    : 'solid 1px var(--rhyno)'
+                } `
+              }}
+              customClass="form-control input-styled border-top-radius-tablet search-mobile"
+            />
+            <div className="nft-form-control-icon">
+              <i
+                className={`fas fa-search fa-lg fas-custom ${
+                  process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-color'
+                }`}
+                aria-hidden="true"></i>
+              <FilteringBlock
+                click={metadataFilter}
+                setIsClick={setMetadataFilter}
+                isFilterShow={true}
+                textColor={textColor}
+                primaryColor={primaryColor}
+                metadataFilter={metadataFilter}
+                setMetadataFilter={toggleMetadataFilter}
+                // categoryClick={categoryClick}
+                // setCategoryClick={setCategoryClick}
+                // blockchainClick={blockchainClick}
+                // setBlockchainClick={setBlockchainClick}
+                sortItem={sortItem}
+                // setBlockchain={setBlockchain}
+                // setCategory={setCategory}
+                setSortItem={setSortItem}
+                setIsShow={setMetadataFilter}
+                // setIsShowCategories={setIsShowCategories}
+                // setFilterText={setFilterText}
+                // setFilterCategoriesText={setFilterCategoriesText}
+              />
+            </div>
+          </div>
+
           {tokenDataFiltered.length > 0 ? (
             <div className="filter__btn__wrapper">
               {show ? (
@@ -331,7 +504,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               justifyContent: 'center'
             }}>
             {/* <div className={'list-button-wrapper'}> */}
-            <div className={'list-button-wrapper-grid-template'}>
+            <div
+              className={`list-button-wrapper-grid-template ${
+                metadataFilter && 'with-modal'
+              }`}>
               {tokenDataFiltered.length > 0
                 ? tokenDataFiltered.map((token, index) => {
                     if (
@@ -374,44 +550,40 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                       return null;
                     }
                   })
-                : Object.keys(tokenData).length > 0
-                ? Object.keys(tokenData).map((index) => {
-                    const token = tokenData[index];
+                : filteredData && filteredData.length > 0
+                ? filteredData.map((item, index) => {
                     if (
-                      token.metadata.image &&
-                      token.metadata.image !== 'undefined'
+                      item.metadata.image &&
+                      item.metadata.image !== 'undefined'
                     ) {
                       return (
                         <NftItemForCollectionView
                           id={`collection-view-${index}`}
                           key={`${
-                            token._id +
-                            '-' +
-                            token.uniqueIndexInContract +
-                            index
+                            item._id + '-' + item.uniqueIndexInContract + index
                           }`}
                           pict={offerAllData?.cover}
-                          metadata={token.metadata}
+                          metadata={item.metadata}
                           offerPrice={offerPrice}
                           blockchain={blockchain}
                           selectedData={selectedData}
                           index={String(index)}
                           offerData={offerDataCol}
-                          item={token}
-                          indexId={index}
-                          offerItemData={token.offer}
+                          item={item}
+                          indexId={index.toString()}
+                          offerItemData={item.offer}
                           offer={
-                            token.offer.diamond
-                              ? token.offer.diamondRangeIndex
-                              : token.offer.offerIndex
+                            item.offer.diamond
+                              ? item.offer.diamondRangeIndex
+                              : item.offer.offerIndex
                           }
                           someUsersData={someUsersData}
                           userName={offerAllData?.owner}
                           tokenDataLength={Object.keys(tokenData).length}
                           setPlaying={setPlaying}
                           playing={playing}
-                          diamond={token.offer.diamond}
-                          resalePrice={token?.resaleData?.price}
+                          diamond={item.offer.diamond}
+                          resalePrice={item?.resaleData?.price}
                           usdPrice={usdPrice}
                         />
                       );
@@ -432,6 +604,109 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                     );
                   })}
             </div>
+            {metadataFilter && (
+              <div id="filter-modal-parent">
+                <HomePageModalFilter
+                  style={{
+                    background: 'var(--charcoal-90)'
+                  }}
+                  id="home-page-modal-filter"
+                  className={`filter-modal-wrapper`}>
+                  <h6
+                    style={{
+                      textTransform: 'uppercase'
+                    }}>
+                    Traits ({newAttr.length})
+                  </h6>
+                  <div className="filter-metadata-collection-container">
+                    {newAttr &&
+                      newAttr.map((item, index) => {
+                        return (
+                          <FilterMetadataTokens
+                            setSelectedAttributeValues={
+                              setSelectedAttributeValues
+                            }
+                            selectedAttributeValues={selectedAttributeValues}
+                            key={index}
+                            selectedData={item}
+                            index={index}
+                            textColor={textColor}
+                          />
+                        );
+                      })}
+                  </div>
+                  <div
+                    style={{
+                      width: '100%'
+                    }}>
+                    <input
+                      value={titleSearchAttributes}
+                      onChange={(e) => setTitleSearchAttributes(e.target.value)}
+                      style={{
+                        border: '1px solid #666666',
+                        width: '100%',
+                        borderRadius: '12px',
+                        padding: '5px 10px',
+                        background: 'none',
+                        outline: 'none',
+                        color: 'white'
+                      }}
+                      placeholder="Search..."
+                    />
+                  </div>
+                  <MetadataAttributesProperties
+                    filteredDataAttributes={filteredDataAttributes}
+                    setSelectedAttributeValues={setSelectedAttributeValues}
+                  />
+                  {primaryColor && (
+                    <div
+                      className="filter-modal-btn-container"
+                      style={{
+                        marginTop: '10px'
+                      }}>
+                      <button
+                        onClick={() => {
+                          getAllProduct(
+                            '0',
+                            showTokensRef.current.toString(),
+                            undefined
+                          );
+                          setSelectedAttributeValues(undefined);
+                        }}
+                        className={`modal-filtering-button clear-btn`}>
+                        Clear all
+                      </button>
+                      <button
+                        className="modal-filtering-button apply-btn"
+                        disabled={
+                          !selectedAttributeValuesFunction(
+                            selectedAttributeValues
+                          )
+                        }
+                        onClick={() => {
+                          getAllProduct(
+                            '0',
+                            showTokensRef.current.toString(),
+                            selectedAttributeValues &&
+                              selectedAttributeValues.length &&
+                              selectedAttributeValues.reduce((acc, item) => {
+                                const { name, values } = item;
+                                const newValue = values.filter(
+                                  (el) => el.active
+                                );
+
+                                acc[name] = newValue.map((el) => el.value);
+                                return acc;
+                              }, {})
+                          );
+                        }}>
+                        Apply
+                      </button>
+                    </div>
+                  )}
+                </HomePageModalFilter>
+              </div>
+            )}
           </div>
           {isLoading && (
             <div className="progress-token">
