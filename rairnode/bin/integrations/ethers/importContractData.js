@@ -152,6 +152,7 @@ module.exports = {
       price: '0',
       range: [0, contractMetadata.totalSupply],
       offerName: contractMetadata.name,
+      diamondRangeIndex: 0,
       transactionHash: 'UNKNOWN - External Import',
     });
 
