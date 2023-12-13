@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const { OreId } = require('oreid-js');
 const log = require('../utils/logger')(module);
-const { File, User, MediaViewLog, Unlock } = require('../models');
+const { File, User, MediaViewLog, Unlock, ServerSetting } = require('../models');
 const AppError = require('../utils/errors/AppError');
 const { zoomSecret, zoomClientID } = require('../config');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
@@ -64,9 +64,10 @@ module.exports = {
       if (userData === null) {
         return next(new AppError('User not found.', 404));
       }
+      const { superAdmins } = await ServerSetting.findOne({});
       userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
-      userData.superAdmin = await superAdminInstance
-        .hasSuperAdminRights(userData.publicAddress);
+      userData.superAdmin = superAdmins.includes(userData.publicAddress);
+      // await superAdminInstance.hasSuperAdminRights(userData.publicAddress);
       userData.oreId = req?.metaAuth?.oreId;
       req.session.userData = userData;
 

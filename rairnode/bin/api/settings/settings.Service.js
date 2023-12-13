@@ -79,6 +79,9 @@ exports.setServerSetting = async (req, res, next) => {
   try {
     const { value } = req.body;
     const { setting } = req.params;
+    if (setting === 'superAdmins' && !req?.user?.superAdmin) {
+      return next(new AppError('Cannot modify super admins'));
+    }
     const update = {};
     update[setting] = value;
     await ServerSetting.findOneAndUpdate({}, {

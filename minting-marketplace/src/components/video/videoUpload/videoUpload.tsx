@@ -135,7 +135,9 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     }
   }, []);
 
-  useEffect(getFullContractData, [getFullContractData]);
+  useEffect(() => {
+    getFullContractData();
+  }, [getFullContractData]);
 
   const getProduct = useCallback(async () => {
     setProductOptions(
@@ -176,16 +178,17 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     );
   }, [contract, fullContractData, product]);
 
-  useEffect(() => {
-    async function isOffersGet() {
-      if (product !== 'null') {
-        setSelectedOffers(['null']);
-        const offers = await getOffers();
-        setCountOfSelects(offers?.length - 1);
-      }
+  const isOffersGet = useCallback(async () => {
+    if (product !== 'null') {
+      setSelectedOffers(['null']);
+      const offers = await getOffers();
+      setCountOfSelects(offers?.length - 1);
     }
+  }, [product, getOffers]);
+
+  useEffect(() => {
     isOffersGet();
-  }, [product, contract, getOffers]);
+  }, [isOffersGet]);
 
   useEffect(() => {
     if (selectsData) {
@@ -199,24 +202,25 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
     }
   }, [selectsData, offer, offersData, setOffersIndex]);
 
-  useEffect(() => {
-    async function goSession() {
-      const sessionId = getRandomValues().toString(36).slice(2, 9);
-      setThisSessionId(sessionId);
-      const so = io();
-      // const so = io(`http://localhost:5000`, { transports: ["websocket"] });
-      setSocket(so);
-      // so.on("connect", data => {
-      //   console.log('Connected !');
-      // });
-      so.emit('init', sessionId);
+  const goSession = useCallback(async () => {
+    const sessionId = getRandomValues().toString(36).slice(2, 9);
+    setThisSessionId(sessionId);
+    const so = io();
+    // const so = io(`http://localhost:5000`, { transports: ["websocket"] });
+    setSocket(so);
+    // so.on("connect", data => {
+    //   console.log('Connected !');
+    // });
+    so.emit('init', sessionId);
 
-      return () => {
-        so.emit('end', sessionId);
-      };
-    }
-    goSession();
+    return () => {
+      so.emit('end', sessionId);
+    };
   }, []);
+
+  useEffect(() => {
+    goSession();
+  }, [goSession]);
 
   if (socket) {
     socket.removeListener('uploadProgress');

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { isAddress } from 'ethers/lib/utils';
 
 import useSwal from '../../hooks/useSwal';
 import chainData from '../../utils/blockchainData';
@@ -30,6 +31,7 @@ const ServerSettings = ({ fullContractData }) => {
   const [blockchainSettings, setBlockchainSettings] = useState<
     BlockchainSetting[]
   >([]);
+  const [superAdmins, setSuperAdmins] = useState<string[]>([]);
   const [nodeAddress, setNodeAddress] = useState(
     process.env.REACT_APP_NODE_ADDRESS
   );
@@ -47,10 +49,23 @@ const ServerSettings = ({ fullContractData }) => {
         );
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
+        setSuperAdmins(settings.superAdmins);
       }
       setBlockchainSettings(blockchainSettings || []);
     }
   }, []);
+
+  const modifySuperAdminAddress = (index) => (value) => {
+    const aux = [...superAdmins];
+    aux[index] = value;
+    setSuperAdmins(aux);
+  };
+
+  const deleteSuperAdminAddress = (index) => {
+    const aux = [...superAdmins];
+    aux.splice(index, 1);
+    setSuperAdmins(aux);
+  };
 
   const setServerSetting = useCallback(
     async (setting, value) => {
@@ -64,7 +79,7 @@ const ServerSettings = ({ fullContractData }) => {
         }
       });
       if (success) {
-        reactSwal.fire('Success', 'Setting set', 'success');
+        reactSwal.fire('Success', 'Setting updated', 'success');
         getServerSettings();
       }
     },
@@ -113,11 +128,10 @@ const ServerSettings = ({ fullContractData }) => {
   }, [featuredContract, fullContractData]);
 
   return (
-    <div className="row w-100 p-5 mx-5">
+    <div className="row text-start w-100 p-5 mx-5">
       <h5>Server Settings</h5>
-      <div className="col-12 col-md-6 my-2">
-        Only return minted tokens on collection page:
-        <br />
+      <div className="col-12 px-5 text-start my-3">
+        <h3>Only return minted tokens on collection page:</h3>
         <button
           disabled={!!settings?.onlyMintedTokensResult}
           className="btn btn-royal-ice"
@@ -131,9 +145,8 @@ const ServerSettings = ({ fullContractData }) => {
           No
         </button>
       </div>
-      <div className="col-12 col-md-6 my-2">
-        Allow demo page uploads:
-        <br />
+      <div className="col-12 px-5 text-start my-2">
+        <h3>Allow demo page uploads:</h3>
         <button
           disabled={!!settings?.demoUploadsEnabled}
           className="btn btn-royal-ice"
@@ -147,55 +160,62 @@ const ServerSettings = ({ fullContractData }) => {
           No
         </button>
       </div>
-      <div className="col-12 col-md-6 px-5 my-2">
-        <InputSelect
-          customClass="rounded-rair form-control"
-          label="Featured banner"
-          placeholder="Select a contract"
-          getter={featuredContract}
-          setter={setFeaturedContract}
-          options={Object.keys(fullContractData).map((contract) => {
-            return {
-              label: `${fullContractData[contract].title} (${
-                chainData[fullContractData[contract].blockchain]?.symbol
-              })`,
-              value: contract
-            };
-          })}
-        />
-        <InputSelect
-          customClass="rounded-rair form-control"
-          placeholder="Select a product"
-          getter={featuredProduct}
-          setter={setFeaturedProduct}
-          options={productOptions}
-        />
+      <div className="col-12 px-5 my-2">
+        <h3>Featured banner</h3>
+        <div className="row">
+          <div className="col-12 col-md-6">
+            <InputSelect
+              customClass="rounded-rair form-control"
+              placeholder="Select a contract"
+              getter={featuredContract}
+              setter={setFeaturedContract}
+              options={Object.keys(fullContractData).map((contract) => {
+                return {
+                  label: `${fullContractData[contract].title} (${
+                    chainData[fullContractData[contract].blockchain]?.symbol
+                  })`,
+                  value: contract
+                };
+              })}
+            />
+          </div>
+          <div className="col-12 col-md-6">
+            <InputSelect
+              customClass="rounded-rair form-control"
+              placeholder="Select a product"
+              getter={featuredProduct}
+              setter={setFeaturedProduct}
+              options={productOptions}
+            />
+          </div>
+        </div>
         <button
+          disabled={featuredProduct === 'null' || featuredContract === 'null'}
           className="btn btn-stimorol"
-          onClick={() =>
-            setServerSetting('featuredCollection', featuredProduct)
-          }>
-          Set Featured Contract
+          onClick={() => {
+            if (featuredProduct !== 'null' && featuredContract !== 'null') {
+              setServerSetting('featuredCollection', featuredProduct);
+            }
+          }}>
+          Set Featured Banner Info
         </button>
       </div>
-      <div className="col-12 col-md-6 px-5 my-2">
+      <div className="col-12 px-5 my-2">
+        <h3>Node address</h3>
         <InputField
           customClass="rounded-rair form-control"
-          label="Node Address"
           getter={nodeAddress}
           setter={setNodeAddress}
           placeholder="Node address"
         />
-        <br />
         <button
           className="btn btn-royal-ice"
           onClick={() => setServerSetting('nodeAddress', nodeAddress)}>
           Set
         </button>
       </div>
-      <div className="col-12 col-md-6 my-2">
-        Blockchain settings:
-        <br />
+      <div className="col-12 px-5 col-md-6 my-2">
+        <h3>Blockchain settings:</h3>
         {blockchainSettings?.map((chain, index) => {
           return (
             <details className="row" key={index}>
@@ -242,6 +262,53 @@ const ServerSettings = ({ fullContractData }) => {
             </details>
           );
         })}
+      </div>
+      <div className="col-12 text-end col-md-6 px-5 my-2">
+        <h3>Super admins:</h3>
+        {superAdmins.map((user, index) => {
+          return (
+            <div key={index} className="row">
+              <InputField
+                customClass="rounded-rair text-center col-12 col-md-10"
+                getter={user}
+                setter={modifySuperAdminAddress(index)}
+                type="text"
+              />
+              <button
+                className="btn col-12 col-md-2 btn-danger"
+                onClick={() => {
+                  deleteSuperAdminAddress(index);
+                }}>
+                {' '}
+                Delete{' '}
+              </button>
+            </div>
+          );
+        })}
+        <button
+          className="btn float-start btn-stimorol"
+          onClick={() => {
+            const result = superAdmins.reduce((result, user) => {
+              return result && isAddress(user);
+            }, true);
+            if (result) {
+              setServerSetting(
+                'superAdmins',
+                superAdmins.map((userAddress) => userAddress.toLowerCase())
+              );
+            }
+          }}>
+          {' '}
+          Set Super Admins{' '}
+        </button>
+        <button
+          className="btn btn-success"
+          onClick={() => {
+            modifySuperAdminAddress(superAdmins.length)('');
+          }}>
+          {' '}
+          Add{' '}
+        </button>
       </div>
     </div>
   );

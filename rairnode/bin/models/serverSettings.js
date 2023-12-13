@@ -11,6 +11,8 @@ const ServerSetting = new Schema({
   featuredCollection: { type: Schema.ObjectId, ref: 'Product', default: undefined },
   // Used to generate resale offers
   nodeAddress: { type: String, required: false, default: '' },
+  // User addresses with super admin rights
+  superAdmins: [{ type: String, required: false }],
 }, { versionKey: false, timestamps: false });
 
 module.exports = ServerSetting;
