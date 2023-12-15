@@ -306,7 +306,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
             <div className="nft-data-sell-button">
               <div className="input-sell-container">
                 <InputField
-                  type="eth"
+                  type="number"
                   getter={inputSellValue}
                   setter={setInputSellValue}
                   customClass={`input-sell-value text-${textColor}`}
