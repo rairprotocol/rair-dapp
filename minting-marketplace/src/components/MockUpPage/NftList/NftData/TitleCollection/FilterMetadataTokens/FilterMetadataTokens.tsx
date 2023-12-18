@@ -10,13 +10,7 @@ const FilterMetadataTokens = ({
   selectedAttributeValues
 }) => {
   return (
-    <div
-      className="properties-data"
-      style={{
-        display: 'flex',
-        maxHeight: '250px',
-        overflow: 'auto'
-      }}>
+    <div className="properties-data">
       {selectedData && (
         <>
           <MetadataItem

@@ -118,11 +118,7 @@ const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
                     {`${toUpper(item?.value.toString().toLowerCase())}`}
                   </div>
                 )}
-                <div
-                  className="custom-offer-percents-percent"
-                  style={{
-                    color: percentToRGB(item?.percentage)
-                  }}>
+                <div className="custom-offer-percents-percent">
                   {item.percentage}
                 </div>
               </div>

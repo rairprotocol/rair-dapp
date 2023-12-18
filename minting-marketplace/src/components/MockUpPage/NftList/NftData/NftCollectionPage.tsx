@@ -16,12 +16,15 @@ import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { setTokenData } from '../../../../ducks/nftData/action';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { hotDropsDefaultBanner } from '../../../../images';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
 import InputField from '../../../common/InputField';
 import LoadingComponent from '../../../common/LoadingComponent';
+import { MobileCloseBtn } from '../../../GlobalModal/FilterModal/FilterModalIcons';
 import { HomePageModalFilter } from '../../../GlobalModal/FilterModal/HomePAgeModal';
+import { MobileHeaderBlock } from '../../../GlobalModal/FilterModal/MobileHeaderBlock';
 import FilteringBlock from '../../FilteringBlock/FilteringBlock';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import CustomButton from '../../utils/button/CustomButton';
@@ -62,6 +65,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
+
+  const { width } = useWindowDimensions();
+  const isMobileDesign = width < 820;
 
   const params = useParams<TParamsNftDataCommonLink>();
   const { contract, product, blockchain } = params;
@@ -459,27 +465,51 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                   process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-color'
                 }`}
                 aria-hidden="true"></i>
-              <FilteringBlock
-                click={metadataFilter}
-                setIsClick={setMetadataFilter}
-                isFilterShow={true}
-                textColor={textColor}
-                primaryColor={primaryColor}
-                metadataFilter={metadataFilter}
-                setMetadataFilter={toggleMetadataFilter}
-                // categoryClick={categoryClick}
-                // setCategoryClick={setCategoryClick}
-                // blockchainClick={blockchainClick}
-                // setBlockchainClick={setBlockchainClick}
-                sortItem={sortItem}
-                // setBlockchain={setBlockchain}
-                // setCategory={setCategory}
-                setSortItem={setSortItem}
-                setIsShow={setMetadataFilter}
-                // setIsShowCategories={setIsShowCategories}
-                // setFilterText={setFilterText}
-                // setFilterCategoriesText={setFilterCategoriesText}
-              />
+              {isMobileDesign ? (
+                <FilteringBlock
+                  click={metadataFilter}
+                  setIsClick={setMetadataFilter}
+                  isFilterShow={true}
+                  textColor={textColor}
+                  primaryColor={primaryColor}
+                  metadataFilter={metadataFilter}
+                  setMetadataFilter={toggleMetadataFilter}
+                  // categoryClick={categoryClick}
+                  // setCategoryClick={setCategoryClick}
+                  // blockchainClick={blockchainClick}
+                  // setBlockchainClick={setBlockchainClick}
+                  sortItem={sortItem}
+                  // setBlockchain={setBlockchain}
+                  // setCategory={setCategory}
+                  setSortItem={setSortItem}
+                  setIsShow={setMetadataFilter}
+                  // setIsShowCategories={setIsShowCategories}
+                  // setFilterText={setFilterText}
+                  // setFilterCategoriesText={setFilterCategoriesText}
+                />
+              ) : (
+                <FilteringBlock
+                  click={metadataFilter}
+                  setIsClick={setMetadataFilter}
+                  isFilterShow={true}
+                  textColor={textColor}
+                  primaryColor={primaryColor}
+                  metadataFilter={metadataFilter}
+                  setMetadataFilter={toggleMetadataFilter}
+                  // categoryClick={categoryClick}
+                  // setCategoryClick={setCategoryClick}
+                  // blockchainClick={blockchainClick}
+                  // setBlockchainClick={setBlockchainClick}
+                  sortItem={sortItem}
+                  // setBlockchain={setBlockchain}
+                  // setCategory={setCategory}
+                  setSortItem={setSortItem}
+                  setIsShow={setMetadataFilter}
+                  // setIsShowCategories={setIsShowCategories}
+                  // setFilterText={setFilterText}
+                  // setFilterCategoriesText={setFilterCategoriesText}
+                />
+              )}
             </div>
           </div>
 
@@ -607,11 +637,22 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             {metadataFilter && (
               <div id="filter-modal-parent">
                 <HomePageModalFilter
-                  style={{
-                    background: 'var(--charcoal-90)'
-                  }}
+                  isMobileDesign={isMobileDesign}
+                  primaryColor={primaryColor}
                   id="home-page-modal-filter"
-                  className={`filter-modal-wrapper`}>
+                  className={`filter-modal-wrapper ${
+                    metadataFilter && 'with-modal'
+                  }`}>
+                  {isMobileDesign && (
+                    <MobileHeaderBlock className="mobile-close-btn-container">
+                      <span className="filter-header">Filters</span>
+                      <button
+                        className="mobile-close-btn"
+                        onClick={toggleMetadataFilter}>
+                        <MobileCloseBtn className="" />
+                      </button>
+                    </MobileHeaderBlock>
+                  )}
                   <h6
                     style={{
                       textTransform: 'uppercase'
@@ -672,6 +713,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                             undefined
                           );
                           setSelectedAttributeValues(undefined);
+                          if (isMobileDesign) {
+                            setMetadataFilter(false);
+                          }
                         }}
                         className={`modal-filtering-button clear-btn`}>
                         Clear all
@@ -699,6 +743,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                                 return acc;
                               }, {})
                           );
+                          if (isMobileDesign) {
+                            setMetadataFilter(false);
+                          }
                         }}>
                         Apply
                       </button>

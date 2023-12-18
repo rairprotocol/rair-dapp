@@ -430,7 +430,7 @@ const UserProfilePage: React.FC = () => {
             <Tabs
               selectedIndex={tabIndexItems}
               onSelect={(index) => setTabIndexItems(index)}>
-              <TabList className="category-wrapper">
+              <TabList className="category-wrapper userpage">
                 <Tab
                   selectedClassName={`search-tab-selected-${
                     primaryColor === 'rhyno' ? 'default' : 'dark'
@@ -515,17 +515,20 @@ const UserProfilePage: React.FC = () => {
                   }}
                   customClass="form-control input-styled user-search"
                 />
-                <i
-                  className="fas fa-search fa-lg fas-custom"
-                  aria-hidden="true"></i>
-                <FilteringBlock
-                  primaryColor={primaryColor}
-                  setSortItem={setSortItem}
-                  sortItem={sortItem}
-                  isFilterShow={currentUserAddress === userAddress}
-                  metadataFilter={metadataFilter}
-                  setMetadataFilter={() => setMetadataFilter((prev) => !prev)}
-                />
+
+                <div className="nft-form-control-icon">
+                  <i
+                    className="fas fa-search fa-lg fas-custom"
+                    aria-hidden="true"></i>
+                  <FilteringBlock
+                    primaryColor={primaryColor}
+                    setSortItem={setSortItem}
+                    sortItem={sortItem}
+                    isFilterShow={currentUserAddress === userAddress}
+                    metadataFilter={metadataFilter}
+                    setMetadataFilter={() => setMetadataFilter((prev) => !prev)}
+                  />
+                </div>
               </div>
               <div className="user-page-main-tab-block">
                 <TabPanel>
@@ -545,6 +548,7 @@ const UserProfilePage: React.FC = () => {
                     setOnResale={setOnResale}
                     onResale={onResale}
                     metadataFilter={metadataFilter}
+                    setMetadataFilter={setMetadataFilter}
                   />
                 </TabPanel>
                 <TabPanel>

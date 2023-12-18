@@ -1,13 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import useWindowDimensions from '../../../../../../hooks/useWindowDimensions';
+import { TooltipBox } from '../../../../../common/Tooltip/TooltipBox';
+
 const MetadataItem = ({
   index,
-  textColor,
   item,
   setSelectedAttributeValues,
-  selectedAttributeValues
+  selectedAttributeValues,
+  textColor
 }) => {
   const [checkName, setCheckName] = useState<boolean>(false);
+
+  const { width } = useWindowDimensions();
+  const isMobileDesign = width < 540;
 
   const toggleMetadata = useCallback(() => {
     if (selectedAttributeValues && selectedAttributeValues.length) {
@@ -51,14 +57,7 @@ const MetadataItem = ({
       onClick={toggleMetadata}
       className={`custom-desc-to-offer nft-data-page-main-properties filter-metadata-block-titleCollection ${
         checkName && 'activeMetadata'
-      }`}
-      style={{
-        color: textColor,
-        width: 120,
-        height: 48,
-        padding: 0,
-        cursor: 'pointer'
-      }}>
+      }`}>
       <div
         className="custom-offer-percents"
         style={{
@@ -66,12 +65,18 @@ const MetadataItem = ({
           alignItems: 'center',
           flexDirection: 'column'
         }}>
-        <div className="text-bold">{item.name}</div>
-        <div
-          className="custom-offer-percents-percent"
-          style={{
-            color: '#fff'
-          }}>
+        <div className="text-bold">
+          {item.name.length > 8 && !isMobileDesign ? (
+            <>
+              <TooltipBox title={item.name}>
+                {`${item.name.slice(0, 6)}...`}
+              </TooltipBox>
+            </>
+          ) : (
+            `${item.name}`
+          )}
+        </div>
+        <div className="custom-offer-percents-percent">
           {item.values.length}
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
+import useWindowDimensions from '../../../../../../../hooks/useWindowDimensions';
 import { TooltipBox } from '../../../../../../common/Tooltip/TooltipBox';
 
 const MetadataAttributesPropertyItem = ({
@@ -9,6 +10,8 @@ const MetadataAttributesPropertyItem = ({
   setSelectedAttributeValues,
   filteredDataAttributes
 }) => {
+  const { width } = useWindowDimensions();
+  const isMobileDesign = width < 540;
   const [activeMetadata, setActiveMetadata] = useState<boolean>(false);
 
   const clickProperty = useCallback(() => {
@@ -36,15 +39,11 @@ const MetadataAttributesPropertyItem = ({
   return (
     <div
       onClick={clickProperty}
-      style={{
-        width: '110px',
-        height: '48px'
-      }}
       className={`custom-desc-to-offer nft-data-page-main-properties filter-metadata-block-titleCollection ${
         activeMetadata && 'activeMetadata'
       }`}
       key={index}>
-      {item.value.length > 7 ? (
+      {item.value.length > 7 && !isMobileDesign ? (
         <>
           <TooltipBox title={item.value}>
             {`${item.value.slice(0, 4)}...(${quantity})`}

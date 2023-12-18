@@ -118,6 +118,26 @@
   margin-right: 0px;
 }
 
+.wrapper-collection
+  .custom-desc-to-offer.nft-data-page-main-properties.filter-metadata-block-titleCollection {
+  width: 110px;
+  height: 48px;
+}
+
+.properties-data
+  .custom-desc-to-offer.nft-data-page-main-properties.filter-metadata-block-titleCollection {
+  width: 110px;
+  cursor: pointer;
+  padding: 0px;
+  height: 48px;
+}
+
+.wrapper-collection .properties-data {
+  display: flex;
+  max-height: 250px;
+  overflow: auto;
+}
+
 .wrapper-collection .nft-item-collection:nth-child(1n + 1) {
   /* margin-left: 24px; */
 }
@@ -215,6 +235,22 @@
   height: 30px;
   border-radius: 50%;
   margin-right: 10px;
+}
+
+.with-modal-userpage {
+  position: fixed;
+  border: none;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  padding: 15px 50px;
+  overflow: auto;
+  font-size: 20px;
+  background-color: var(--charcoal-90);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }
 
 .collection-background.main-banner:hover {
@@ -398,6 +434,8 @@ img.single-token-block-img {
   flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 20px;
+  max-height: 250px;
+  overflow: auto;
 }
 
 .filter-collection-attributes-container {
@@ -822,6 +860,10 @@ img.single-token-block-img {
   .list-button-wrapper-grid-template {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+
+  .wrapper-collection .list-button-wrapper-grid-template.with-modal {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
 }
 
 @media screen and (max-width: 1260px) {
@@ -839,9 +881,14 @@ img.single-token-block-img {
   .category-wrapper {
     width: 894px;
   }
-  .container-search,
-  .my-items-bar-wrapper,
+
+  .category-wrapper.userpage,
   .bar-wrapper {
+    width: 100%;
+  }
+
+  .container-search,
+  .my-items-bar-wrapper {
     width: 894px;
   }
   .list-button-wrapper {
@@ -985,6 +1032,10 @@ img.single-token-block-img {
 
   .list-button-wrapper.tree-tab-unlocks {
     width: 100%;
+  }
+
+  .wrapper-collection .list-button-wrapper-grid-template.with-modal {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
@@ -1469,6 +1520,31 @@ p.general-title {
   }
 }
 
+@media screen and (max-width: 820px) {
+  .filter-collection-attributes-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0px, 1fr));
+    grid-gap: 1rem;
+  }
+  .wrapper-collection
+    .custom-desc-to-offer.nft-data-page-main-properties.filter-metadata-block-titleCollection {
+    width: 100%;
+    font-size: 18px;
+  }
+
+  .properties-data
+    .custom-desc-to-offer.nft-data-page-main-properties.filter-metadata-block-titleCollection {
+    width: 100%;
+    font-size: 18px;
+  }
+
+  .wrapper-collection .filter-metadata-collection-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0px, 1fr));
+    grid-gap: 1rem;
+  }
+}
+
 @media screen and (max-width: 700px) {
   .tree-tab-unlocks .unlockable-video {
     width: 384px;
@@ -1656,6 +1732,17 @@ p.general-title {
   .collection-background img {
     height: 15.75rem;
   }
+
+  .filter-collection-attributes-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0px, 1fr));
+    grid-gap: 1rem;
+  }
+  .wrapper-collection
+    .custom-desc-to-offer.nft-data-page-main-properties.filter-metadata-block-titleCollection {
+    width: 100%;
+    font-size: 18px;
+  }
 }
 
 @media screen and (max-width: 540px) {
@@ -1676,6 +1763,40 @@ p.general-title {
 
   i.fas-custom {
     top: 0.85rem;
+  }
+
+  .filter-collection-attributes-container {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0px, 1fr));
+    grid-gap: 1rem;
+  }
+  .wrapper-collection
+    .custom-desc-to-offer.nft-data-page-main-properties.filter-metadata-block-titleCollection {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .wrapper-collection .filter-metadata-collection-container {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0px, 1fr));
+    grid-gap: 0.5rem;
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .wrapper-collection
+    .filter-metadata-collection-container
+    .properties-data
+    .custom-desc-to-offer.nft-data-page-main-properties.filter-metadata-block-titleCollection {
+    height: 40px;
+  }
+
+  .wrapper-collection
+    .filter-metadata-collection-container
+    .properties-data
+    .custom-desc-to-offer.nft-data-page-main-properties.filter-metadata-block-titleCollection
+    .text-bold {
+    padding: 1px;
   }
 }
 

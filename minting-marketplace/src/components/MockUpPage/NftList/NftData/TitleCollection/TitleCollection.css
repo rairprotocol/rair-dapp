@@ -205,13 +205,16 @@
   transition: all ease 0.3s;
 }
 
-.custom-desc-to-offer.filter-metadata-block-titleCollection:hover {
+.custom-desc-to-offer.filter-metadata-block-titleCollection.activeMetadata {
   cursor: pointer;
-  background: var(--bubblegum-hover);
+  background: var(--bubblegum);
 }
 
-.custom-desc-to-offer.filter-metadata-block-titleCollection.activeMetadata {
-  background: var(--bubblegum);
+@media screen and (min-width: 820px) {
+  .custom-desc-to-offer.filter-metadata-block-titleCollection:hover {
+    cursor: pointer;
+    background: var(--bubblegum);
+  }
 }
 
 .custom-desc-to-offer.filter-metadata-block-titleCollection:active,

@@ -1,6 +1,11 @@
 //@ts-nocheck
 import styled from 'styled-components';
 
+type THomePageModalFilter = {
+  primaryColor?: ColorChoice;
+  isMobileDesign?: boolean;
+};
+
 // export const HomePageModalFilter = styled.div((props) => {
 //   const bgc = props?.primaryColor?.includes('charcoal')
 //     ? 'charcoal-90'
@@ -29,7 +34,7 @@ import styled from 'styled-components';
 //       };
 // });
 
-export const HomePageModalFilter = styled.div`
+export const HomePageModalFilter = styled.div<THomePageModalFilter>`
   @media screen and (min-width: 1100px) {
     &.filter-modal-wrapper.unlockables-tab {
       width: 384px;

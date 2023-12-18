@@ -133,6 +133,22 @@ button:disabled.clear-btn {
   cursor: pointer;
 }
 
+.user-page-main-tab-block .filter-modal-wrapper.with-modal {
+  height: 100%;
+}
+
+@media screen and (max-width: 820px) {
+  .wrapper-collection .filter-modal-wrapper.with-modal {
+    height: 100%;
+  }
+
+  .wrapper-collection .filter-modal-wrapper .apply-btn,
+  .wrapper-collection .filter-modal-wrapper .clear-btn {
+    width: 150px;
+    height: 48px;
+  }
+}
+
 @media screen and (max-width: 400px) {
   .filter-modal-wrapper {
     padding: 24px 24px 24px 24px !important;

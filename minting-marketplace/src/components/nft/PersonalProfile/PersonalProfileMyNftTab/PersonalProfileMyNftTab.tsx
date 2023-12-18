@@ -4,7 +4,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import LoadingComponent from '../../../common/LoadingComponent';
+import { MobileCloseBtn } from '../../../GlobalModal/FilterModal/FilterModalIcons';
 import { HomePageModalFilter } from '../../../GlobalModal/FilterModal/HomePAgeModal';
+import { MobileHeaderBlock } from '../../../GlobalModal/FilterModal/MobileHeaderBlock';
 import { NftItemForCollectionView } from '../../../MockUpPage/NftList/NftItemForCollectionView';
 
 import './PersonalProfileMyNftTab.css';
@@ -29,6 +31,7 @@ interface IPersonalProfileMyNftTabComponent {
   onResale?: boolean;
   setIsResaleLoding?: any;
   metadataFilter?: boolean;
+  setMetadataFilter?: any;
 }
 
 const PersonalProfileMyNftTabComponent: React.FC<
@@ -47,18 +50,22 @@ const PersonalProfileMyNftTabComponent: React.FC<
   setOnResale,
   onResale,
   setIsResaleLoding,
-  metadataFilter
+  metadataFilter,
+  setMetadataFilter
 }) => {
   const { width } = useWindowDimensions();
   const [playing, setPlaying] = useState<null | string>(null);
   const loader = useRef(null);
 
+  const isMobileDesign = width < 1100;
+
   const toggleFilterDropdown = () => {
     setOnResale && setOnResale((prev) => !prev);
     setIsResaleLoding && setIsResaleLoding(true);
+    if (isMobileDesign) {
+      setMetadataFilter(false);
+    }
   };
-
-  const isMobileDesign = width < 1100;
 
   const loadToken = useCallback(
     (entries) => {
@@ -153,11 +160,24 @@ const PersonalProfileMyNftTabComponent: React.FC<
         {metadataFilter && primaryColor && (
           <div id="filter-modal-parent">
             <HomePageModalFilter
+              isMobileDesign={isMobileDesign}
               style={{
                 background: 'var(--charcoal-90)'
               }}
               id="home-page-modal-filter"
-              className={`filter-modal-wrapper`}>
+              className={`filter-modal-wrapper ${
+                isMobileDesign && metadataFilter && 'with-modal'
+              }`}>
+              {isMobileDesign && (
+                <MobileHeaderBlock className="mobile-close-btn-container">
+                  <span className="filter-header">Filters</span>
+                  <button
+                    className="mobile-close-btn"
+                    onClick={() => setMetadataFilter((prev) => !prev)}>
+                    <MobileCloseBtn className="" />
+                  </button>
+                </MobileHeaderBlock>
+              )}
               <div
                 className="dropdown-option-wrapper"
                 key={Math.random() * 1_000_000}>
