@@ -49,8 +49,8 @@ const ServerSettings = ({ fullContractData }) => {
         );
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
-        setSuperAdmins(settings.superAdmins);
       }
+      setSuperAdmins(settings?.superAdmins);
       setBlockchainSettings(blockchainSettings || []);
     }
   }, []);
