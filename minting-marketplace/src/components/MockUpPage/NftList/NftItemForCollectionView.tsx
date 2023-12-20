@@ -127,8 +127,11 @@ const NftItemForCollectionViewComponent: React.FC<
       };
 
   const fullPrice = () => {
-    if (offerPrice && offerPrice.length > 0) {
-      if (offerItemData) {
+    if (offerPrice) {
+      if (resalePrice) {
+        return resalePrice;
+      }
+      if (offerPrice.length > 0 && offerItemData) {
         const rawPrice = BigNumber.from(
           offerItemData.price ? offerItemData.price : 0
         );

@@ -134,6 +134,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
                         // offerPrice={offerPrice}
                         blockchain={item.contract.blockchain}
                         // selectedData={selectedData}
+                        resalePrice={item?.resaleData?.price}
                         index={item.token}
                         indexId={index.toString()}
                         // offerData={offerDataCol}
