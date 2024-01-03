@@ -1,10 +1,9 @@
-const { getBytes, Contract: EthersContract, isAddress } = require('ethers');
-const { Alchemy, Wallet } = require('alchemy-sdk');
-const { alchemy } = require('../../config');
+const { getBytes, isAddress } = require('ethers');
 const { ResaleTokenOffer, Contract, MintedToken, ServerSetting } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const log = require('../../utils/logger')(module);
 const { diamondMarketplaceAbi } = require('../../integrations/smartContracts');
+const { getInstance, getContractRunner } = require('../../integrations/ethers/contractInstances');
 
 const addressMapping = {
     '0x5': process.env.GOERLI_DIAMOND_MARKETPLACE_ADDRESS,
@@ -138,11 +137,6 @@ exports.generatePurchaseRequest = async (req, res, next) => {
         if (!foundOffer?.tokenContract?.blockchain) {
           return next(new AppError('No resale offer found'));
         }
-        const config = {
-          apiKey: alchemy.apiKey,
-          network: alchemy.networkMapping[foundOffer.tokenContract.blockchain],
-        };
-        const alchemySdk = new Alchemy(config);
         if (!process.env.WITHDRAWER_PRIVATE_KEY) {
           return next(new AppError('Cannot process resales at the moment'));
         }
@@ -151,11 +145,17 @@ exports.generatePurchaseRequest = async (req, res, next) => {
             return next(new AppError('Cannot process resales at the moment!'));
         }
         try {
-            const wallet = new Wallet(process.env.WITHDRAWER_PRIVATE_KEY, alchemySdk);
-            const diamondMarketplaceInstance = new EthersContract(
-              marketAddress,
-              diamondMarketplaceAbi,
-              wallet,
+            const wallet = await getContractRunner(
+                foundOffer.tokenContract.blockchain,
+                foundOffer.tokenContract.blockchain === '0x250',
+                true,
+            );
+            const diamondMarketplaceInstance = await getInstance(
+                foundOffer.tokenContract.blockchain,
+                marketAddress,
+                diamondMarketplaceAbi,
+                foundOffer.tokenContract.blockchain === '0x250',
+                true,
             );
             const saleHash = await diamondMarketplaceInstance.generateResaleHash(
                 foundOffer.tokenContract.contractAddress,
