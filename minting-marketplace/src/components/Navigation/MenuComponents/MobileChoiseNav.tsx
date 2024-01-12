@@ -37,7 +37,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
     (state) => state.userStore
   );
 
-  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotDropsVar = import.meta.env.VITE_HOTDROPS;
 
   return (
     <div className="burder-menu-logo">

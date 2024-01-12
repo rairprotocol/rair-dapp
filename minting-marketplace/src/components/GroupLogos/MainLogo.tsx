@@ -16,7 +16,7 @@ const MainLogo: React.FC<IMainLogo> = ({
   return (
     <>
       <MainLogoContaier>
-        {process.env.REACT_APP_HOTDROPS === 'true' ? (
+        {import.meta.env.VITE_HOTDROPS === 'true' ? (
           <img
             className="logo-hotdrops-image"
             onClick={() => goHome()}

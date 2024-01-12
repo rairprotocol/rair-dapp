@@ -23,14 +23,16 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
     (store) => store.colorStore.primaryColor
   );
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const [authCollection, setAuthCollection] = useState<string>();
   const [ipfsLink, setIpfsLink] = useState<string>('');
   const defaultImg =
     hotdropsVar === 'true'
       ? defaultHotDrops
-      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
+      : `${
+          import.meta.env.VITE_IPFS_GATEWAY
+        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
 
   const generateUrlColection = useCallback(() => {
     if (collectionToken) {

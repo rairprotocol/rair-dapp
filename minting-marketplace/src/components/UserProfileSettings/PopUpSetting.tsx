@@ -34,7 +34,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const [userBalance, setUserBalance] = useState<string>('');
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { primaryColor } = useSelector((store) => store.colorStore);
 
@@ -72,9 +72,8 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const getBalance = useCallback(async () => {
     if (currentUserAddress && erc777Instance?.provider) {
       setIsLoadingBalance(true);
-      const balance = await erc777Instance.provider.getBalance(
-        currentUserAddress
-      );
+      const balance =
+        await erc777Instance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -300,7 +299,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                   }}>
                   <SvgItemsIcon primaryColor={primaryColor} /> My Items
                 </li> */}
-                {process.env.REACT_APP_DISABLE_CREATOR_VIEWS !== 'true' &&
+                {import.meta.env.VITE_DISABLE_CREATOR_VIEWS !== 'true' &&
                   adminRights && (
                     <li
                       onClick={pushToFactory}

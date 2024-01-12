@@ -31,7 +31,7 @@ import {
 const Footer: React.FC<IFooter> = () => {
   const [emailChimp, setEmailChimp] = useState<string>('');
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -61,7 +61,7 @@ const Footer: React.FC<IFooter> = () => {
             primaryColor={primaryColor}>
             <FooterImage className="footer-img-hotdrops">
               <NavLink to="/">
-                {process.env.REACT_APP_HOTDROPS === 'true' ? (
+                {import.meta.env.VITE_HOTDROPS === 'true' ? (
                   <img
                     className="logo-hotdrops-image"
                     alt="Rair Tech"
@@ -139,7 +139,7 @@ const Footer: React.FC<IFooter> = () => {
             <ul>
               <li>
                 © {new Date().getFullYear()}
-                {process.env.REACT_APP_HOTDROPS === 'true'
+                {import.meta.env.VITE_HOTDROPS === 'true'
                   ? ' HotDrops'
                   : ' Rairtech'}{' '}
                 . All rights reserved

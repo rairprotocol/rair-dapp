@@ -2,6 +2,11 @@ import { TOfferType } from './components/marketplace/marketplace.types';
 import { MediaListResponseType } from './components/video/video.types';
 import { UserType } from './ducks/users/users.types';
 
+export type BackendResponse = {
+  success: boolean;
+  message: string;
+};
+
 export type TUserResponse = {
   success: boolean;
   user: UserType | null;

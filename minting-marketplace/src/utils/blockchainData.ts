@@ -1,3 +1,6 @@
+import { Network } from 'alchemy-sdk';
+import { astar, goerli, mainnet, polygon, polygonMumbai } from 'viem/chains';
+
 import { TChainData } from './utils.types';
 
 import { AstarLogo, BinanceDiamond, EthereumLogo, MaticLogo } from '../images';
@@ -20,7 +23,9 @@ const chainData: TChainData = {
       rpcUrls: ['https://bsc-dataseed1.binance.org'],
       blockExplorerUrls: ['https://www.bscscan.com/']
     },
-    disabled: true
+    disabled: true,
+    viem: undefined,
+    alchemy: undefined
   },
   '0x61': {
     testnet: true,
@@ -40,7 +45,9 @@ const chainData: TChainData = {
       rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
       blockExplorerUrls: ['https://testnet.bscscan.com/']
     },
-    disabled: true
+    disabled: true,
+    viem: undefined,
+    alchemy: undefined
   },
   '0x250': {
     testnet: false,
@@ -59,7 +66,9 @@ const chainData: TChainData = {
       },
       rpcUrls: ['https://evm.astar.network'],
       blockExplorerUrls: ['https://blockscout.com/astar']
-    }
+    },
+    viem: astar,
+    alchemy: Network.ASTAR_MAINNET
   },
   '0x89': {
     image: MaticLogo,
@@ -77,7 +86,9 @@ const chainData: TChainData = {
       },
       rpcUrls: ['https://polygon-rpc.com/'],
       blockExplorerUrls: ['https://polygonscan.com/']
-    }
+    },
+    viem: polygon,
+    alchemy: Network.MATIC_MAINNET
   },
   '0x13881': {
     testnet: true,
@@ -96,7 +107,9 @@ const chainData: TChainData = {
       },
       rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
       blockExplorerUrls: ['https://mumbai.polygonscan.com/']
-    }
+    },
+    viem: polygonMumbai,
+    alchemy: Network.MATIC_MUMBAI
   },
   '0x1': {
     image: EthereumLogo,
@@ -109,7 +122,9 @@ const chainData: TChainData = {
       chainName: 'Mainnet (Ethereum)',
       rpcUrls: ['https://eth.llamarpc.com'],
       blockExplorerUrls: ['https://etherscan.io/']
-    }
+    },
+    viem: mainnet,
+    alchemy: Network.ETH_MAINNET
   },
   '0x5': {
     testnet: true,
@@ -123,7 +138,9 @@ const chainData: TChainData = {
       chainName: 'Goerli (Ethereum)',
       rpcUrls: ['https://ethereum-goerli.publicnode.com'],
       blockExplorerUrls: ['https://goerli.etherscan.io/']
-    }
+    },
+    viem: goerli,
+    alchemy: Network.ETH_GOERLI
   }
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import axios from 'axios';
 import { providers } from 'ethers';
 import Swal from 'sweetalert2';
@@ -63,47 +64,78 @@ const signIn = async (provider: providers.StaticJsonRpcProvider) => {
   if (!success) {
     return;
   }
-  const signer = provider.getSigner();
-  const loginResponse = await signWeb3Message(signer, currentUser);
+  const loginResponse = await signWeb3Message(currentUser);
   return loginResponse?.success;
 };
 
 const signWeb3Message = async (
-  signer: providers.JsonRpcSigner,
-  userAddress: string | undefined
+  userAddress?: string,
+  method: 'programmatic' | 'metamask' | 'web3auth' = 'metamask',
+  signTypedData?: any,
+  ownerAddress?: string
 ) => {
   try {
     const responseData = await axios.post<TAuthGetChallengeResponse>(
       `/api/auth/get_challenge/`,
       {
         userAddress,
-        intent: 'login'
+        intent: 'login',
+        ownerAddress
       }
     );
-
     const { response } = responseData.data;
-    let ethResponse;
-    const ethRequest = {
-      method: 'eth_signTypedData_v4',
-      params: [userAddress, response],
-      from: userAddress
-    };
-    if (window.ethereum) {
-      ethResponse = await window.ethereum.request(ethRequest);
-    } else if (signer) {
-      const parsedResponse = JSON.parse(response);
 
-      // EIP712Domain is added automatically by Ethers.js!
-      const { /*EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
-      ethResponse = await signer._signTypedData(
-        parsedResponse.domain,
-        revisedTypes,
-        parsedResponse.message
-      );
-    } else {
-      await Swal.fire('Error', "Can't sign messages", 'error');
-      return;
+    // Prepare signed message response
+    let ethResponse;
+
+    switch (method) {
+      case 'programmatic':
+        if (signTypedData) {
+          const parsedResponse = JSON.parse(response);
+          ethResponse = await signTypedData(
+            parsedResponse.domain,
+            parsedResponse.types,
+            parsedResponse.message
+          );
+        }
+        break;
+      case 'metamask':
+        if (window.ethereum) {
+          const ethRequest = {
+            method: 'eth_signTypedData_v4',
+            params: [userAddress, response],
+            from: userAddress
+          };
+          ethResponse = await window?.ethereum?.request(ethRequest);
+        }
+        break;
+      case 'web3auth':
+        if (signTypedData) {
+          const parsedResponse = JSON.parse(response);
+          ethResponse = await signTypedData(parsedResponse);
+        }
+        const loginResponse = await rFetch('/api/v2/auth/loginSmartAccount', {
+          method: 'POST',
+          body: JSON.stringify({
+            MetaMessage: JSON.parse(response).message.challenge,
+            MetaSignature: ethResponse,
+            userAddress
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const { success, user } = loginResponse;
+        if (!success) {
+          Swal.fire('Error', `Web3Login failed`, 'error');
+          return;
+        }
+        return { success, user };
+      default:
+        await Swal.fire('Error', "Can't sign messages", 'error');
+        return;
     }
+
     if (ethResponse) {
       const loginResponse = await rFetch('/api/v2/auth/login', {
         method: 'POST',
@@ -119,7 +151,7 @@ const signWeb3Message = async (
       const { success, user } = loginResponse;
 
       if (!success) {
-        Swal.fire('Error', ``, 'error');
+        Swal.fire('Error', `Login failed`, 'error');
         return;
       }
       return { success, user };

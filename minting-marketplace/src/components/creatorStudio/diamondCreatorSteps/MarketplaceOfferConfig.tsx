@@ -37,7 +37,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
   const [customPayments, setCustomPayments] = useState<TCustomPayments[]>([
     {
       message: 'Node address',
-      recipient: process.env.REACT_APP_NODE_ADDRESS,
+      recipient: import.meta.env.VITE_NODE_ADDRESS,
       percentage: nodeFee,
       canBeContract: false,
       editable: false
@@ -67,7 +67,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
       [
         {
           message: 'Node address',
-          recipient: process.env.REACT_APP_NODE_ADDRESS,
+          recipient: import.meta.env.VITE_NODE_ADDRESS,
           percentage: nodeFee,
           canBeContract: false,
           editable: false

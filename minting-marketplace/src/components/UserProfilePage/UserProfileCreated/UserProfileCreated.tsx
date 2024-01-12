@@ -24,7 +24,9 @@ const UserProfileCreated = ({ contractData, titleSearch }) => {
                   pict={
                     contractData.cover
                       ? contractData.cover
-                      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
+                      : `${
+                          import.meta.env.VITE_IPFS_GATEWAY
+                        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                   }
                   contractName={contractData.contract}
                   price={contractData.offerData.map((p) => String(p.price))}

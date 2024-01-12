@@ -38,9 +38,11 @@ const NftListComponent: React.FC<INftListComponent> = ({
   }
 
   const defaultImg =
-    process.env.REACT_APP_HOTDROPS === 'true'
+    import.meta.env.VITE_HOTDROPS === 'true'
       ? defaultHotDrops
-      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
+      : `${
+          import.meta.env.VITE_IPFS_GATEWAY
+        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
 
   const filteredData =
     data &&

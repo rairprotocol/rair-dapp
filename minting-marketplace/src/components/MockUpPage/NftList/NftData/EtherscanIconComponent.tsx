@@ -6,8 +6,8 @@ import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import chainData from '../../../../utils/blockchainData';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
-import { ReactComponent as EtherscanDark } from '../../assets/EtherscanDark.svg';
-import { ReactComponent as EtherscanLight } from '../../assets/EtherscanLight.svg';
+import EtherscanDark from '../../assets/EtherscanDark.svg?react';
+import EtherscanLight from '../../assets/EtherscanLight.svg?react';
 import { IEtherscanIconComponent } from '../../mockupPage.types';
 import LikeButton from '../LikeButton/LikeButton';
 
@@ -26,7 +26,7 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
     (store) => store.contractStore
   );
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   return (
     <>

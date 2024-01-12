@@ -355,9 +355,9 @@ button:disabled.hotdrops-bg {
 }
 
 .btn-charcoal {
-  color: white;
-  background-color: var(--charcoal);
-  border-color: var(--charcoal-60);
+  color: white !important;
+  background-color: var(--charcoal) !important;
+  border-color: var(--charcoal-60) !important;
 }
 
 .btn-charcoal:hover {
@@ -440,8 +440,8 @@ button:disabled.hotdrops-bg {
 }
 
 .btn-stimorol {
-  color: white;
-  background: var(--stimorol);
+  color: white !important;
+  background: var(--stimorol) !important;
 }
 
 .btn-stimorol:hover {

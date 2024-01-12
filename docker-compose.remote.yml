@@ -189,12 +189,12 @@ services:
       context: minting-marketplace
       dockerfile: Dockerfile
     environment:
-      REACT_APP_SENTRY_ENABLED: ${sentry_enabled}
-      REACT_APP_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
-      REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
-      REACT_APP_SENTRY_RELEASE: ${sentry_release}
-      REACT_APP_MATIC_MAIN_DIAMOND_FACTORY: ${matic_mainnet_diamond_factory_address}
-      REACT_APP_MATIC_MAIN_DIAMOND_MARKETPLACE: ${matic_mainnet_diamond_marketplace_address}
+      VITE_SENTRY_ENABLED: ${sentry_enabled}
+      VITE_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
+      VITE_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
+      VITE_SENTRY_RELEASE: ${sentry_release}
+      VITE_MATIC_MAIN_DIAMOND_FACTORY: ${matic_mainnet_diamond_factory_address}
+      VITE_MATIC_MAIN_DIAMOND_MARKETPLACE: ${matic_mainnet_diamond_marketplace_address}
     ports:
       - 80:3001
     networks:

@@ -5,6 +5,8 @@ import { updateTokenMetadataError } from './actions';
 import { TUpdateTokenMetadata } from './metadata.types';
 import * as types from './types';
 
+import { BackendResponse } from '../../axios.responseTypes';
+
 export function* updateTokenMetadata({ url, formData }) {
   try {
     axios
@@ -22,6 +24,8 @@ export function* updateTokenMetadata({ url, formData }) {
       });
   } catch (errors) {
     const error = errors as AxiosError;
+    const errorData: BackendResponse = error?.response?.data as BackendResponse;
+
     if (error.response !== undefined) {
       if (error.response.status === 404) {
         const errorDirec = 'This address does not exist';
@@ -30,7 +34,7 @@ export function* updateTokenMetadata({ url, formData }) {
         const errorServer = 'Sorry. an internal server problem has occurred';
         yield put(updateTokenMetadataError(errorServer));
       } else {
-        yield put(updateTokenMetadataError(error.response.data.message));
+        yield put(updateTokenMetadataError(errorData.message));
       }
     } else {
       const errorConex = 'Connection error!';

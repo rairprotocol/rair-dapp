@@ -299,9 +299,9 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 src={
                   metaDataProducts?.metadata?.image
                     ? metaDataProducts?.metadata?.image
-                    : process.env.REACT_APP_HOTDROPS === 'true'
-                    ? defaultHotDrops
-                    : pict
+                    : import.meta.env.VITE_HOTDROPS === 'true'
+                      ? defaultHotDrops
+                      : pict
                 }
               />
             ) : (
@@ -320,9 +320,9 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                     light={
                       metaDataProducts.metadata?.image
                         ? metaDataProducts.metadata?.image
-                        : process.env.REACT_APP_HOTDROPS === 'true'
-                        ? defaultHotDrops
-                        : pict
+                        : import.meta.env.VITE_HOTDROPS === 'true'
+                          ? defaultHotDrops
+                          : pict
                     }
                     style={{
                       position: 'absolute',
@@ -347,9 +347,9 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               src={
                 metaDataProducts?.metadata?.image
                   ? ipfsLink
-                  : process.env.REACT_APP_HOTDROPS === 'true'
-                  ? defaultHotDrops
-                  : pict
+                  : import.meta.env.VITE_HOTDROPS === 'true'
+                    ? defaultHotDrops
+                    : pict
               }
               alt={collectionName}
               cover={true}

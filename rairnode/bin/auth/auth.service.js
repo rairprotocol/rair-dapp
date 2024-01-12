@@ -6,7 +6,7 @@ const { File, User, MediaViewLog, Unlock, ServerSetting } = require('../models')
 const AppError = require('../utils/errors/AppError');
 const { zoomSecret, zoomClientID } = require('../config');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
-const { superAdminInstance } = require('../utils/vaultSuperAdmin');
+// const { superAdminInstance } = require('../utils/vaultSuperAdmin');
 
 const chainHashToOreIdMapping = {
   '0x1': 'eth_main',

@@ -29,7 +29,7 @@ const EditMode = ({
   const oreId = useOreId();
   const reactSwal = useSwal();
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
   const { currentUserAddress } = useSelector((store) => store.contractStore);

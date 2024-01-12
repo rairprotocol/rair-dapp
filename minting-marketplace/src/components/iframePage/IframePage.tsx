@@ -35,7 +35,9 @@ const IframePage = ({
 
   const { origin } = window.location;
 
-  const localImgUrl = `${process.env.REACT_APP_IPFS_GATEWAY}${videoId}/thumbnail.gif`;
+  const localImgUrl = `${
+    import.meta.env.VITE_IPFS_GATEWAY
+  }${videoId}/thumbnail.gif`;
 
   const devImgUrl = `https://storage.googleapis.com/rair-videos/${videoId}/thumbnail.gif`;
 

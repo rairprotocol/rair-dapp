@@ -35,7 +35,7 @@ const EasyMintRow = ({
   setPurchaseStatus,
   mintToken
 }) => {
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
   const [tokensToMint, setTokensToMint] = useState('1');
   const remainingCopies = token.copies - token.soldCopies;
   const navigate = useNavigate();
@@ -145,12 +145,14 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   const [tokenData, setTokenData] = useState<TTokenData[] | null>(null);
   const { width } = useWindowDimensions();
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const defaultPhoto =
     hotdropsVar === 'true'
       ? defaultHotDrops
-      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
+      : `${
+          import.meta.env.VITE_IPFS_GATEWAY
+        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
 
   const getTokens = async () => {
     const { data } = await axios.get<TNftItemResponse>(

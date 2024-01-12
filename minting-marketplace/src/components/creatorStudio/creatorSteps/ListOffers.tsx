@@ -156,16 +156,15 @@ const ListOffers: React.FC<IListOffers> = ({
       showConfirmButton: false
     });
     if (
-      (await web3TxHandler(minterInstance, 'addOffer', [
+      await web3TxHandler(minterInstance, 'addOffer', [
         instance.address,
         collectionIndex,
         offerList.map((item) => item.starts),
         offerList.map((item) => item.ends),
         offerList.map((item) => item.price),
         offerList.map((item) => item.name),
-        process.env.REACT_APP_NODE_ADDRESS
-      ]),
-      undefined)
+        import.meta.env.VITE_NODE_ADDRESS
+      ])
     ) {
       reactSwal.fire({
         title: 'Success!',
@@ -312,28 +311,29 @@ const ListOffers: React.FC<IListOffers> = ({
                   ? {
                       action: () =>
                         web3Switch(contractData?.blockchain as BlockchainType),
-                      label: `Switch to ${
-                        chainData[contractData?.blockchain]?.name
-                      }`
+                      label: `Switch to ${chainData[contractData?.blockchain]
+                        ?.name}`
                     }
                   : mintingRole === true
-                  ? {
-                      action: offerList[0]?.fixed ? appendOffers : createOffers,
-                      label: offerList[0]?.fixed
-                        ? 'Append to offer'
-                        : 'Create new offers',
-                      disabled:
-                        offerList.filter((item) => item.fixed !== true)
-                          .length === 0 ||
-                        offerList.length === 0 ||
-                        !validateTokenIndexes() ||
-                        validPrice ||
-                        emptyNames
-                    }
-                  : {
-                      action: giveMinterRole,
-                      label: 'Connect to Minter Marketplace'
-                    },
+                    ? {
+                        action: offerList[0]?.fixed
+                          ? appendOffers
+                          : createOffers,
+                        label: offerList[0]?.fixed
+                          ? 'Append to offer'
+                          : 'Create new offers',
+                        disabled:
+                          offerList.filter((item) => item.fixed !== true)
+                            .length === 0 ||
+                          offerList.length === 0 ||
+                          !validateTokenIndexes() ||
+                          validPrice ||
+                          emptyNames
+                      }
+                    : {
+                        action: giveMinterRole,
+                        label: 'Connect to Minter Marketplace'
+                      },
                 {
                   label: 'Continue',
                   action: gotoNextStep

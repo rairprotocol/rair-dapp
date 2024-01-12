@@ -10,7 +10,7 @@ import './NotificationPage.css';
 
 const NotificationPage = ({ headerLogo, primaryColor }) => {
   const currentName =
-    process.env.REACT_APP_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
+    import.meta.env.VITE_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
 
   return (
     <div className="wrapper-notification">

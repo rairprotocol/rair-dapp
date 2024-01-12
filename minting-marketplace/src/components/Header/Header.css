@@ -93,7 +93,7 @@
   border-radius: 12px;
   width: 200px;
   height: 45px;
-  background: #bb73d7;
+  background: #bb73d7 !important;
   font-size: 18px;
   font-weight: 700;
   color: white;

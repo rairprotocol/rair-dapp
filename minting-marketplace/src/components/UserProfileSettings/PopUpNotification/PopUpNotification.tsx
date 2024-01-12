@@ -18,7 +18,7 @@ const PopUpNotification = () =>
   // props was - isNotification
   {
     const currentName =
-      process.env.REACT_APP_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
+      import.meta.env.VITE_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
     const [openModal, setOpenModal] = useState(false);
     const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
       RootState,

@@ -61,7 +61,6 @@ const UserProfileSettings = ({
             style={{
               marginRight: '12px',
               display: 'flex',
-              alignItems: 'center',
               justifyContent: 'center',
               alignItems: 'center'
             }}

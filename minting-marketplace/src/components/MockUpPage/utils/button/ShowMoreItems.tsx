@@ -13,7 +13,7 @@ export const ShowMoreContainer = styled.div<TShowMoreContainer>`
   color: ${(props) => props.textColor};
   margin: ${(props) => props.margin};
   background: ${(props) =>
-    process.env.REACT_APP_HOTDROPS === 'true'
+    import.meta.env.VITE_HOTDROPS === 'true'
       ? 'var(--hot-drops-gradient)'
       : props.background};
   pointer-events: ${(props) => (props.loading === 'true' ? 'none' : 'auto')};
@@ -34,14 +34,14 @@ export const ShowMoreItem = styled.div<TShowMoreItem>`
     props.background
       ? 'none'
       : props.primaryColor === 'rhyno'
-      ? '#F2F2F2'
-      : '#434343'};
+        ? '#F2F2F2'
+        : '#434343'};
   padding: ${(props) => props.padding};
   transition-duration: 0.5s;
   &:hover {
     transition-duration: 0.5s;
     background: ${(props) =>
-      process.env.REACT_APP_HOTDROPS === 'true'
+      import.meta.env.VITE_HOTDROPS === 'true'
         ? 'var(--hot-drops-click)'
         : props.hoverBackground};
   }

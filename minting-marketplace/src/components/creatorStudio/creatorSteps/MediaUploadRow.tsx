@@ -250,7 +250,9 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
                 return;
               }
               const response = await rFetch(
-                `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
+                `${
+                  import.meta.env.VITE_UPLOAD_PROGRESS_HOST
+                }/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
                 {
                   method: 'POST',
                   headers: {

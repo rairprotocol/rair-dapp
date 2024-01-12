@@ -70,7 +70,7 @@ const MainHeader: React.FC<IMainHeader> = ({
     (store) => store.contractStore
   );
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
@@ -356,7 +356,7 @@ const MainHeader: React.FC<IMainHeader> = ({
               <button
                 // disabled={!loginProcess}
                 className={`btn btn-${primaryColor} btn-connect-wallet ${
-                  process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
+                  import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
                 }`}
                 onClick={() => connectUserData()}>
                 {loginProcess ? 'Please wait...' : 'Connect'}

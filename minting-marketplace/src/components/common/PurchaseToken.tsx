@@ -110,7 +110,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   const [buyingToken, setBuyingToken] = useState<boolean>(false);
   const [buttonMessage, setButtonMessage] = useState<string>('');
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const reactSwal = useSwal();
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
@@ -457,7 +457,7 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { web3TxHandler } = useWeb3Tx();
   const reactSwal = useSwal();

@@ -379,7 +379,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
         });
         const request = await rFetch(
           `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
-          // `${process.env.REACT_APP_UPLOAD_PROGRESS_HOST}/ms/api/v1/media/upload${
+          // `${import.meta.env.VITE_UPLOAD_PROGRESS_HOST}/ms/api/v1/media/upload${
           //   newUserStatus ? '/demo' : ''
           // }?socketSessionId=${thisSessionId}`,
           {

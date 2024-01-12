@@ -5,6 +5,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 // React Redux types
 import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 
+import { RootState } from './ducks';
 // import * as ethers from 'ethers';
 // import * as colorTypes from './ducks/colors/types';
 // logos for About Page
@@ -68,9 +69,12 @@ import NotificationPage from './components/UserProfileSettings/NotificationPage/
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
 import VideoManager from './components/videoManager/VideoManager';
+import { ColorStoreType } from './ducks/colors/colorStore.types';
 import { setChainId } from './ducks/contracts/actions';
+import { ContractsInitialType } from './ducks/contracts/contracts.types';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setAdminRights } from './ducks/users/actions';
+import { TUsersInitialState } from './ducks/users/users.types';
 import useConnectUser from './hooks/useConnectUser';
 import useWeb3Tx from './hooks/useWeb3Tx';
 import {
@@ -78,15 +82,16 @@ import {
   MainBlockApp
 } from './styled-components/nft/AppContainer';
 import { detectBlockchain } from './utils/blockchainData';
-import getInformationGoogleAnalytics from './utils/googleAnalytics';
+// import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
 // views
 import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 /* Track a page view */
-const analytics = getInformationGoogleAnalytics();
-analytics.page();
+// const analytics = getInformationGoogleAnalytics();
+// analytics.page();
 
 const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
@@ -104,13 +109,15 @@ function App() {
     minterInstance,
     factoryInstance,
     programmaticProvider
-  } = useSelector((store) => store.contractStore);
+  } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
   const [isAboutPage, setIsAboutPage] = useState<boolean>(false);
   const { selectedChain, realNameChain, selectedChainId } = detectBlockchain(
     currentChain,
     realChain
   );
-  const seo = useSelector((store) => store.seoStore);
+  const seo = useSelector<RootState>((store) => store.seoStore);
   const carousel_match = window.matchMedia('(min-width: 1025px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [tabIndex, setTabIndex] = useState(0);
@@ -120,8 +127,10 @@ function App() {
 
   // Redux
   const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
-    useSelector((store) => store.colorStore);
-  const { adminRights, loggedIn } = useSelector((store) => store.userStore);
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const { adminRights, loggedIn } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const { correctBlockchain } = useWeb3Tx();
 
@@ -182,7 +191,7 @@ function App() {
 
   useEffect(() => {
     // setTitle('Welcome');
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.NODE_ENV === 'development') {
       window.gotoRouteBackdoor = navigate;
       window.adminAccessBackdoor = (boolean) => {
         dispatch(setAdminRights(boolean));
@@ -237,7 +246,7 @@ function App() {
     }
   }, [primaryColor]);
 
-  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotDropsVar = import.meta.env.VITE_HOTDROPS;
 
   useEffect(() => {
     if (hotDropsVar === 'true') {
@@ -247,7 +256,7 @@ function App() {
   }, []);
 
   const creatorViewsDisabled =
-    process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
+    import.meta.env.VITE_DISABLE_CREATOR_VIEWS === 'true';
 
   return (
     <ErrorBoundary fallback={ErrorFallback}>
@@ -434,9 +443,9 @@ function App() {
                   }
                 ].map((item, index) => {
                   // If the path is set as the Home Page, render it as the default path (/)
-                  const isHome = item.path === process.env.REACT_APP_HOME_PAGE;
+                  const isHome = item.path === import.meta.env.VITE_HOME_PAGE;
 
-                  if (process.env.REACT_APP_HOME_PAGE !== '/' && !isHome) {
+                  if (import.meta.env.VITE_HOME_PAGE !== '/' && !isHome) {
                     return <Fragment key={Math.random() + index}></Fragment>;
                   }
 
@@ -466,7 +475,7 @@ function App() {
                   {
                     path: '/',
                     content: WelcomeHeader,
-                    requirement: process.env.REACT_APP_HOME_PAGE === '/',
+                    requirement: import.meta.env.VITE_HOME_PAGE === '/',
                     props: {
                       setIsSplashPage,
                       tabIndex: tabIndex,
@@ -680,8 +689,7 @@ function App() {
                       tokenNumber
                     },
                     requirement:
-                      process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                      'true'
+                      import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
                   },
                   {
                     path: '/collection/:blockchain/:contract/:product/:tokenId',
@@ -691,8 +699,7 @@ function App() {
                       tokenNumber
                     },
                     requirement:
-                      process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                      'true'
+                      import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
                   },
                   {
                     path: '/unlockables/:blockchain/:contract/:product/:tokenId',
@@ -702,8 +709,7 @@ function App() {
                       tokenNumber
                     },
                     requirement:
-                      process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                      'true'
+                      import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
                   },
 
                   {

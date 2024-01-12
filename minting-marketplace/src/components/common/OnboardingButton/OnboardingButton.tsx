@@ -20,7 +20,7 @@ export function OnboardingButton() {
 
   const dappUrl = window.location.host;
   const metamaskAppDeepLink = 'https://metamask.app.link/dapp/' + dappUrl;
-  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotDropsVar = import.meta.env.VITE_HOTDROPS;
 
   const isMobileDevice = useCallback(() => {
     if (

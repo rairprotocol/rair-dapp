@@ -207,7 +207,9 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
             src={
               tokenMetadata?.metadata?.image
                 ? tokenMetadata?.metadata?.image
-                : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
+                : `${
+                    import.meta.env.VITE_IPFS_GATEWAY
+                  }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
             }
             style={{
               position: 'absolute',
@@ -272,8 +274,8 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
                 {currentChain !== contractData?.blockchain
                   ? 'Switch network'
                   : operatorIsUser
-                  ? 'Cannot purchase your own offer'
-                  : 'Purchase'}
+                    ? 'Cannot purchase your own offer'
+                    : 'Purchase'}
               </button>
             </div>
           </div>

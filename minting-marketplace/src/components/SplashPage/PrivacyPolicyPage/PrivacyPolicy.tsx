@@ -12,7 +12,7 @@ const PrivacyPolicyComponent: React.FC<IPrivacyPolicyComponent> = ({
   }, [setIsSplashPage]);
 
   const currentName =
-    process.env.REACT_APP_HOTDROPS === 'true' ? 'HotDrops' : 'Rair';
+    import.meta.env.VITE_HOTDROPS === 'true' ? 'HotDrops' : 'Rair';
 
   return (
     <div className={cl.main}>

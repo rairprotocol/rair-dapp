@@ -74,7 +74,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     ContractsInitialType
   >((state) => state.contractStore);
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -138,9 +138,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const getBalance = useCallback(async () => {
     if (currentUserAddress && erc777Instance?.provider) {
       setIsLoadingBalance(true);
-      const balance = await erc777Instance.provider.getBalance(
-        currentUserAddress
-      );
+      const balance =
+        await erc777Instance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);

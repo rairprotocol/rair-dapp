@@ -18,7 +18,7 @@ const mainContract: TMainContractType = {
   requiredBlockchain: '0x1',
   offerIndex: ['0', '1']
 };
-// By setting REACT_APP_TEST_CONTRACTS
+// By setting VITE_TEST_CONTRACTS
 const testContract: TMainContractType = {
   contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
   requiredBlockchain: '0x5',
@@ -46,7 +46,7 @@ export const splashData: TSplashDataType = {
     // OPTIONAL: Image on the purchase button
     img: metaMaskIcon,
     // Contract address
-    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ...(import.meta.env.VITE_TEST_CONTRACTS === 'true'
       ? testContract
       : mainContract),
     // Custom style for the button

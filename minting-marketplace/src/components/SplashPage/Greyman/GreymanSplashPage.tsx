@@ -139,7 +139,9 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
         description: '7.907.414.597 Non-Unique NFTs',
         ogDescription: '7.907.414.597 Non-Unique NFTs',
         twitterDescription: '7.907.414.597 Non-Unique NFTs',
-        image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
+        image: `${
+          import.meta.env.VITE_IPFS_GATEWAY
+        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
         favicon: GreymanFavicon,
         faviconMobile: GreymanFavicon
       })
@@ -613,8 +615,8 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                           {window.ethereum?.chainId !== GreymanChainId
                             ? 'Switch network'
                             : currentUserAddress
-                            ? 'PURCHASE'
-                            : 'Connect your wallet!'}
+                              ? 'PURCHASE'
+                              : 'Connect your wallet!'}
                         </button>
                       </div>
                     </div>
@@ -768,7 +770,9 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                   </div>
                   <div className="property-btn-wrapper">
                     <a
-                      href={`${process.env.REACT_APP_IPFS_GATEWAY}/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt`}
+                      href={`${
+                        import.meta.env.VITE_IPFS_GATEWAY
+                      }/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt`}
                       target="_blank"
                       rel="noreferrer">
                       <button className="property-btn">View on IPFS</button>

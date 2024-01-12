@@ -35,7 +35,9 @@ const UserProfile: React.FC<IMyItems> = ({
 }) => {
   const { width } = useWindowDimensions();
   const dispatch = useDispatch();
-  const defaultImg = `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
+  const defaultImg = `${
+    import.meta.env.VITE_IPFS_GATEWAY
+  }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
 
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (state) => state.colorStore

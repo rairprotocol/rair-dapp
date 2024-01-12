@@ -13,6 +13,7 @@ const { validation, requireUserSession } = require('../middleware');
 const { generateJWT, getMeetingInvite } = require('../integrations/zoom/zoomController');
 const log = require('../utils/logger')(module);
 const { File, MediaViewLog, User, Contract } = require('../models');
+const { isAddress } = require('ethers');
 
 // TODO: remove ARTIFACT
 

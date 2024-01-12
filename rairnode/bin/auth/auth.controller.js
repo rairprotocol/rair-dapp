@@ -1,5 +1,5 @@
 const express = require('express');
-const { validateChallengeV2 } = require('../integrations/ethers/web3Signature');
+const { validateChallengeV2, validateWeb3AuthOwner } = require('../integrations/ethers/web3Signature');
 const {
     authToZoom,
     loginFromSignature,
@@ -16,6 +16,12 @@ router.post(
     '/login/',
     validation(['web3Validation'], 'body'),
     validateChallengeV2,
+    loginFromSignature,
+);
+router.post(
+    '/loginSmartAccount',
+    validation(['web3Validation'], 'body'),
+    validateWeb3AuthOwner,
     loginFromSignature,
 );
 router.post(

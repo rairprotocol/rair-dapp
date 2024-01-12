@@ -32,11 +32,11 @@ export const testContract: TMainContractType = {
 };
 
 export const contract =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+  import.meta.env.VITE_TEST_CONTRACTS === 'true'
     ? testContract.contractAddress
     : mainContract.contractAddress;
 export const blockchain =
-  process.env.REACT_APP_TEST_CONTRACTS === 'true'
+  import.meta.env.VITE_TEST_CONTRACTS === 'true'
     ? testContract.requiredBlockchain
     : mainContract.requiredBlockchain;
 
@@ -86,7 +86,7 @@ export const splashData: TSplashDataType = {
   purchaseButton: {
     buttonComponent: PurchaseTokenButton,
     img: metaMaskIcon,
-    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
+    ...(import.meta.env.VITE_TEST_CONTRACTS === 'true'
       ? testContract
       : mainContract),
     presaleMessage: '',

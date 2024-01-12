@@ -128,11 +128,11 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
       await web3TxHandler(diamondMarketplaceInstance, 'addMintingOfferBatch', [
         contractData?.contractAddress,
         filteredOffers?.map((item) => item.diamondRangeIndex),
-        filteredOffers?.map((item) =>
-          item.customSplits?.filter((split) => split.editable)
+        filteredOffers?.map(
+          (item) => item.customSplits?.filter((split) => split.editable)
         ),
         filteredOffers?.map((item) => item.marketData.visible),
-        process.env.REACT_APP_NODE_ADDRESS
+        import.meta.env.VITE_NODE_ADDRESS
       ])
     ) {
       reactSwal.fire({

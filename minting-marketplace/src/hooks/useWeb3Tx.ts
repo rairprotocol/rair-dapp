@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { LightSmartContractAccount } from '@alchemy/aa-accounts';
+import { AccountSigner } from '@alchemy/aa-ethers';
 import {
   BigNumber,
   Contract,
@@ -8,6 +10,7 @@ import {
 } from 'ethers';
 import { JSONObject } from 'oreid-js';
 import { useOreId } from 'oreid-react';
+import { encodeFunctionData } from 'viem';
 
 import useSwal from './useSwal';
 
@@ -21,17 +24,16 @@ import { rFetch } from '../utils/rFetch';
 const confirmationsRequired = 2;
 
 const useWeb3Tx = () => {
-  const { currentChain, currentUserAddress } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { currentChain, currentUserAddress, programmaticProvider } =
+    useSelector<RootState, ContractsInitialType>(
+      (store) => store.contractStore
+    );
   const { loginType } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
   const oreId = useOreId();
   const reactSwal = useSwal();
   const dispatch = useDispatch();
-
   const handleReceipt = useCallback(
     async (transactionHash: string, callback?: (() => void) | undefined) => {
       try {
@@ -158,6 +160,70 @@ const useWeb3Tx = () => {
       return paramsValidation;
     },
     [handleReceipt, handleWeb3Error]
+  );
+
+  const web3AuthCall = useCallback(
+    async (
+      contract: Contract,
+      method: string,
+      args: any[],
+      options: {
+        failureMessage?: string;
+        callback?: () => void;
+        intendedBlockchain: BlockchainType;
+      }
+    ) => {
+      if (!currentUserAddress || !programmaticProvider) {
+        return;
+      }
+      const methodFound = Object.keys(contract.interface.functions).find(
+        (item) => item.includes(`${method}(`)
+      );
+      if (
+        methodFound &&
+        contract.interface.functions[methodFound].stateMutability === 'view'
+      ) {
+        // If the method is a view function, query the info directly through Ethers
+        return await contract[method](...args);
+      }
+      const fragment = contract.interface.fragments.find((fragment) => {
+        return fragment.name === method;
+      });
+      let transactionValue: bigint = BigInt(0);
+      if (args.at(-1).value) {
+        transactionValue = BigInt(args.pop().value);
+      }
+      const uoCallData = encodeFunctionData({
+        abi: [fragment],
+        functionName: method,
+        args: args
+      });
+      const userOperation = await (
+        programmaticProvider as AccountSigner<LightSmartContractAccount>
+      )
+        .sendUserOperation({
+          target: contract.address as `0x${string}`,
+          data: uoCallData,
+          value: transactionValue
+        })
+        .catch((err) => {
+          reactSwal.fire('Error', err.details, 'error');
+        });
+      if (!userOperation?.hash) {
+        return false;
+      }
+      try {
+        const txHash = await (
+          programmaticProvider as any
+        ).waitForUserOperationTransaction(userOperation.hash);
+        handleReceipt(txHash, options?.callback);
+        return true;
+      } catch (err: any) {
+        console.info(err);
+        reactSwal.fire('Error', err.toString(), 'error');
+      }
+    },
+    [currentUserAddress, programmaticProvider, handleReceipt, reactSwal]
   );
 
   const oreIdCall = useCallback(
@@ -318,6 +384,8 @@ const useWeb3Tx = () => {
           return oreIdCall(contract, method, args, options);
         case 'metamask':
           return metamaskCall(contract, method, args, options);
+        case 'web3auth':
+          return web3AuthCall(contract, method, args, options);
         default:
           reactSwal.fire('Error', 'Please login', 'error');
       }
@@ -328,7 +396,8 @@ const useWeb3Tx = () => {
       loginType,
       metamaskCall,
       oreIdCall,
-      reactSwal
+      reactSwal,
+      web3AuthCall
     ]
   );
 

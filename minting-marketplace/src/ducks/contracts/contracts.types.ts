@@ -1,3 +1,5 @@
+import { LightSmartContractAccount } from '@alchemy/aa-accounts';
+import { AccountSigner } from '@alchemy/aa-ethers';
 import { ethers } from 'ethers';
 
 import {
@@ -36,7 +38,10 @@ export type ContractsInitialType = {
   creditHandlerInstance: ethers.Contract | undefined;
   currentChain: BlockchainType | undefined;
   currentUserAddress: string | undefined;
-  programmaticProvider: ethers.Wallet | undefined;
+  programmaticProvider:
+    | ethers.Wallet
+    | AccountSigner<LightSmartContractAccount>
+    | undefined;
   contractCreator:
     | undefined
     | ((

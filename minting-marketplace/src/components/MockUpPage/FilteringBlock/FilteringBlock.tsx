@@ -53,7 +53,7 @@ const FilteringBlock = ({
   const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
   const { width /*height*/ } = useWindowDimensions();
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
@@ -143,7 +143,7 @@ const FilteringBlock = ({
         <SelectSortItem
           onClick={onChangeSortPopUp}
           className={`select-sort ${
-            process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-hover' : ''
+            import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-hover' : ''
           }`}
           primaryColor={primaryColor}
           textColor={textColor}

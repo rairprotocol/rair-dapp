@@ -653,13 +653,13 @@ const NftItemForCollectionViewComponent: React.FC<
                               ).toFixed(2)}`
                             : 0.0
                           : offerPrice &&
-                            (Number(fullPrice()) * Number(usdPrice)).toFixed(
-                              2
-                            ) !== 'NaN'
-                          ? `$${(
-                              Number(fullPrice()) * Number(usdPrice)
-                            ).toFixed(2)}`
-                          : 0.0}
+                              (Number(fullPrice()) * Number(usdPrice)).toFixed(
+                                2
+                              ) !== 'NaN'
+                            ? `$${(
+                                Number(fullPrice()) * Number(usdPrice)
+                              ).toFixed(2)}`
+                            : 0.0}
                       </span>
                     )
                   : usdPriceResale && (

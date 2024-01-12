@@ -111,7 +111,7 @@ const Factory = () => {
   }, [getPrice]);
 
   const updateChain = useCallback(
-    async (chainId) => {
+    async (chainId: BlockchainType) => {
       if (chainId !== undefined) {
         setChainId(chainId);
         web3Switch(chainId);

@@ -169,7 +169,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
               {counterOverride || (
                 <div className="property-btn-wrapper">
                   {/* <a
-                                href={`${process.env.REACT_APP_IPFS_GATEWAY}/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt`}
+                                href={`${import.meta.env.VITE_IPFS_GATEWAY}/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt`}
                                 target="_blank" rel="noreferrer"
                             > */}
                   {ipftButton ? (

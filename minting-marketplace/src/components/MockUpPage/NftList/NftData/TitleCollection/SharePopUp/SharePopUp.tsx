@@ -25,7 +25,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
   const [copySuccess /*setCopySuccess*/] = useState<string>('Copy link');
   const currentUrl = document.location.href;
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const headerLogo = useSelector<RootState, string>(
     (store) => store.colorStore.headerLogo
@@ -85,7 +85,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
               <FacebookShareButton
                 className="share-copy-link network__share-button"
                 url={currentUrl}
-                quote={'Rair tech'}
+                // quote={'Rair tech'}
                 style={{ display: 'flex' }}>
                 <ListItemAvatar>
                   <FacebookRoundedIcon

@@ -388,8 +388,8 @@ const NftDataPageMain = ({
               e.offerIndex === '0'
                 ? 'Ultra Rair'
                 : e.offerIndex === '1'
-                ? 'Rair'
-                : 'Common',
+                  ? 'Rair'
+                  : 'Common',
             id: index,
             copies: e.copies,
             soldCopies: e.soldCopies,
@@ -431,7 +431,9 @@ const NftDataPageMain = ({
                   light={
                     selectedData.image
                       ? selectedData?.image
-                      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
+                      : `${
+                          import.meta.env.VITE_IPFS_GATEWAY
+                        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                   }
                   loop={false}
                   onEnded={handlePlaying}
@@ -444,7 +446,9 @@ const NftDataPageMain = ({
                   backgroundImage: `url(${
                     selectedData?.image
                       ? selectedData.image
-                      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
+                      : `${
+                          import.meta.env.VITE_IPFS_GATEWAY
+                        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                   })`
                 }}></div>
             )}

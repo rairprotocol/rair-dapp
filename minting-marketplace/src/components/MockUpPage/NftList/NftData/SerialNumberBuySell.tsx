@@ -227,7 +227,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (!resaleResponse.success) {
       return;
     }
-    const [resaleData] = resaleResponse?.data;
+    const resaleData = resaleResponse?.data?.[0];
     if (!resaleData) {
       return;
     }
@@ -309,7 +309,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           tokenData?.[selectedToken]?.ownerAddress, // address seller,
           resaleData.tokenIndex, // uint token,
           resaleData.price, // uint tokenPrice,
-          process.env.REACT_APP_NODE_ADDRESS, // address nodeAddress,
+          import.meta.env.VITE_NODE_ADDRESS, // address nodeAddress,
           hash, // bytes memory signature
           { value: resaleData.price }
         ],

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
-import { ReactComponent as ArrowDown } from '../../../assets/ArrowDown.svg';
-import { ReactComponent as ArrowUp } from '../../../assets/ArrowUp.svg';
+import ArrowDown from '../../../assets/ArrowDown.svg?react';
+import ArrowUp from '../../../assets/ArrowUp.svg?react';
 import { ICurrentTokensComponent } from '../../selectBox.types';
 
 const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
@@ -43,7 +43,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
             border: `${primaryColor === 'rhyno' ? '1px solid #D37AD6' : 'none'}`
           }}
           className={`select-number-popup ${
-            process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops' : ''
+            import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops' : ''
           }`}>
           <div className="select-number-title">
             <div
@@ -69,7 +69,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                   className={`select-number-box ${
                     selectedToken === el.token ? 'selected-box' : ''
                   } ${el.sold ? 'sold-token' : ''} ${
-                    process.env.REACT_APP_HOTDROPS === 'true'
+                    import.meta.env.VITE_HOTDROPS === 'true'
                       ? 'hotdrops-border'
                       : ''
                   }`}

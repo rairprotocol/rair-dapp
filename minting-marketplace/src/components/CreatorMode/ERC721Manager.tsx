@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { LightSmartContractAccount } from '@alchemy/aa-accounts';
+import { AccountSigner } from '@alchemy/aa-ethers';
 import * as ethers from 'ethers';
 
 import ProductManager from './CollectionManager';
@@ -32,6 +34,9 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
     );
 
   const refreshData = useCallback(async () => {
+    if (!erc721Instance) {
+      return;
+    }
     setRefetchingFlag(true);
     setMinterApproved(
       await erc721Instance?.hasRole(
@@ -42,7 +47,7 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
     const tokInfo: ITokenInfo = {
       name: await erc721Instance?.name(),
       symbol: await erc721Instance?.symbol(),
-      balance: (await erc721Instance?.balanceOf(currentUserAddress)).toString(),
+      balance: (await erc721Instance.balanceOf(currentUserAddress)).toString(),
       address: erc721Instance?.address
     };
     setTokenInfo(tokInfo);
@@ -56,8 +61,11 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
   }, [erc721Instance, refreshData]);
 
   useEffect(() => {
-    let signer: ethers.Wallet | ethers.providers.JsonRpcSigner | undefined =
-      programmaticProvider;
+    let signer:
+      | AccountSigner<LightSmartContractAccount>
+      | ethers.Wallet
+      | ethers.providers.JsonRpcSigner
+      | undefined = programmaticProvider;
     if (window.ethereum) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       signer = provider.getSigner(0);

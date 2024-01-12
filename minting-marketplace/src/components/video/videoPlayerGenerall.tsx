@@ -20,7 +20,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
   );
 
   //https://storage.googleapis.com/rair-videos/
-  //process.env.REACT_APP_IPFS_GATEWAY
+  //import.meta.env.VITE_IPFS_GATEWAY
 
   const requestChallenge = useCallback(async () => {
     setProcessDone(true);

@@ -581,58 +581,61 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                     }
                   })
                 : filteredData && filteredData.length > 0
-                ? filteredData.map((item, index) => {
-                    if (
-                      item.metadata.image &&
-                      item.metadata.image !== 'undefined'
-                    ) {
+                  ? filteredData.map((item, index) => {
+                      if (
+                        item.metadata.image &&
+                        item.metadata.image !== 'undefined'
+                      ) {
+                        return (
+                          <NftItemForCollectionView
+                            id={`collection-view-${index}`}
+                            key={`${
+                              item._id +
+                              '-' +
+                              item.uniqueIndexInContract +
+                              index
+                            }`}
+                            pict={offerAllData?.cover}
+                            metadata={item.metadata}
+                            offerPrice={offerPrice}
+                            blockchain={blockchain}
+                            selectedData={selectedData}
+                            index={String(index)}
+                            offerData={offerDataCol}
+                            item={item}
+                            indexId={index.toString()}
+                            offerItemData={item.offer}
+                            offer={
+                              item.offer.diamond
+                                ? item.offer.diamondRangeIndex
+                                : item.offer.offerIndex
+                            }
+                            someUsersData={someUsersData}
+                            userName={offerAllData?.owner}
+                            tokenDataLength={Object.keys(tokenData).length}
+                            setPlaying={setPlaying}
+                            playing={playing}
+                            diamond={item.offer.diamond}
+                            resalePrice={item?.resaleData?.price}
+                            usdPrice={usdPrice}
+                          />
+                        );
+                      } else {
+                        return null;
+                      }
+                    })
+                  : Array.from(new Array(10)).map((item, index) => {
                       return (
-                        <NftItemForCollectionView
-                          id={`collection-view-${index}`}
-                          key={`${
-                            item._id + '-' + item.uniqueIndexInContract + index
-                          }`}
-                          pict={offerAllData?.cover}
-                          metadata={item.metadata}
-                          offerPrice={offerPrice}
-                          blockchain={blockchain}
-                          selectedData={selectedData}
-                          index={String(index)}
-                          offerData={offerDataCol}
-                          item={item}
-                          indexId={index.toString()}
-                          offerItemData={item.offer}
-                          offer={
-                            item.offer.diamond
-                              ? item.offer.diamondRangeIndex
-                              : item.offer.offerIndex
-                          }
-                          someUsersData={someUsersData}
-                          userName={offerAllData?.owner}
-                          tokenDataLength={Object.keys(tokenData).length}
-                          setPlaying={setPlaying}
-                          playing={playing}
-                          diamond={item.offer.diamond}
-                          resalePrice={item?.resaleData?.price}
-                          usdPrice={usdPrice}
+                        <Skeleton
+                          key={index}
+                          className={'skeloton-product'}
+                          variant="rectangular"
+                          width={283}
+                          height={280}
+                          style={{ borderRadius: 20 }}
                         />
                       );
-                    } else {
-                      return null;
-                    }
-                  })
-                : Array.from(new Array(10)).map((item, index) => {
-                    return (
-                      <Skeleton
-                        key={index}
-                        className={'skeloton-product'}
-                        variant="rectangular"
-                        width={283}
-                        height={280}
-                        style={{ borderRadius: 20 }}
-                      />
-                    );
-                  })}
+                    })}
             </div>
             {metadataFilter && (
               <div id="filter-modal-parent">
@@ -798,7 +801,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               }}
               onClick={() => goBack()}
               className="arrow-back">
-              {process.env.REACT_APP_HOTDROPS === 'true' ? (
+              {import.meta.env.VITE_HOTDROPS === 'true' ? (
                 <i className="fas fa-arrow-alt-circle-left hotdrops-color"></i>
               ) : (
                 <i className="fas fa-arrow-alt-circle-left"></i>

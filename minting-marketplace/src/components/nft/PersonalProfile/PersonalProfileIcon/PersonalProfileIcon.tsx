@@ -5,7 +5,10 @@ import AddIcon from '@mui/icons-material/Add';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 
-import { TUserResponse } from '../../../../axios.responseTypes';
+import {
+  BackendResponse,
+  TUserResponse
+} from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
@@ -179,13 +182,16 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
         onChangeEditMode();
       } catch (err) {
         const error = err as AxiosError;
+
+        const errorData: BackendResponse = error?.response
+          ?.data as BackendResponse;
         if (
-          error.response?.data.message ===
+          errorData.message ===
           `Plan executor error during findAndModify :: caused by :: E11000 duplicate key error collection: rair-db.User index: nickName_1 dup key: { nickName: "@${userName}" }`
         ) {
           Swal.fire('Info', `The name ${userName} already exists`, 'question');
         } else {
-          Swal.fire('Info', `The ${error.response?.data.message} `, 'question');
+          Swal.fire('Info', `The ${errorData.message} `, 'question');
         }
       }
     },

@@ -51,7 +51,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
 
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
 
-  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotDropsVar = import.meta.env.VITE_HOTDROPS;
 
   const handleInputClear = useCallback(() => {
     if (inputSellValue) {

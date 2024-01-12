@@ -1,10 +1,10 @@
 const NodeCache = require('node-cache');
 const { isAddress } = require('ethers');
 const { recoverTypedSignature } = require('@metamask/eth-sig-util');
-const { v4: uuidv4 } = require('uuid');
-const { createHmac } = require('crypto');
+const { createHmac, randomUUID } = require('crypto');
+const AppError = require('../../utils/errors/AppError');
 
-const secret = uuidv4();
+const secret = randomUUID();
 
 const cache = new NodeCache({
   stdTTL: 600,
@@ -33,21 +33,17 @@ const getMessageConfig = {
   },
 };
 
-// Validates that a challenge is correct.
-async function checkChallenge(challenge, sig) {
+const recoverUserFromSignature = async (challenge, signature) => {
   const { domain, message, domainData } = getMessageConfig;
-
   // recoverTypedSignature expects the message's contents to be
   //    the same, this includes the description of the action,
   //    which is why the description is stored in cache using the hash as key
 
-  // The user's address has 32 characters, the hash has 64, it will never clash
-
+  // The user's address has 32 characters, the hash has 64, it will never clash in cache
   const messageData = {
     challenge,
     description: cache.get(challenge),
   };
-
   const data = {
     types: {
       EIP712Domain: domain,
@@ -57,30 +53,35 @@ async function checkChallenge(challenge, sig) {
     primaryType: 'Challenge',
     message: messageData,
   };
-
   const recovered = await recoverTypedSignature({
     data,
-    signature: sig,
+    signature,
     version: 'V4',
   });
+  return recovered;
+};
 
+// Validates that a challenge is correct.
+async function checkChallenge(challenge, sig) {
+  const recovered = await recoverUserFromSignature(challenge, sig);
   const storedChallenge = cache.get(recovered.toLowerCase());
-
   if (storedChallenge === challenge) {
     cache.del(recovered);
     cache.del(challenge);
+    cache.set(`${recovered}secret`);
     return recovered;
   }
   return false;
 }
 
-function createChallenge(address, customDescription) {
+function createChallenge(address, customDescription, userSecret) {
   const hash = createHmac('sha256', secret)
-    .update(address + uuidv4())
+    .update(address + randomUUID())
     .digest('hex');
 
   cache.set(address.toLowerCase(), hash);
   cache.set(hash, customDescription);
+  cache.set(`${address}secret`, userSecret);
 
   const { domain, message, domainData } = getMessageConfig;
 
@@ -127,26 +128,48 @@ module.exports = {
         };
         req.metaAuth = json;
       } else {
-        next(new Error('Invalid Ethereum address passed to ethers'));
+        return next(new AppError('Invalid user address'));
       }
     }
-    next();
+    return next();
   },
   generateChallengeV2: (req, res, next) => {
-    const address = req.body.userAddress;
-    if (isAddress(address)) {
-      const challenge = createChallenge(address, req.metaAuth.customDescription);
-      const json = { challenge };
-      req.metaAuth = json;
-      next();
+    const { userAddress, ownerAddress } = req.body;
+    if (!req.metaAuth.customDescription || !isAddress(userAddress)) {
+      return next(new AppError('Error in signature description'));
     }
+    const challenge = createChallenge(
+      userAddress,
+      req.metaAuth.customDescription,
+      ownerAddress,
+    );
+    const json = { challenge };
+    req.metaAuth = json;
+    return next();
   },
   validateChallenge: async (req, res, next) => {
     req.metaAuth = await validateChallenge(req, 'params');
-    next();
+    return next();
+  },
+  validateWeb3AuthOwner: async (req, res, next) => {
+    const { MetaSignature, MetaMessage, userAddress } = req.body;
+    if (!MetaSignature || !MetaMessage || !userAddress) {
+      return next(new AppError('Error in web3Auth login'));
+    }
+    const recovered = await recoverUserFromSignature(MetaMessage, MetaSignature);
+    const storedOwner = cache.get(`${userAddress}secret`);
+    if (recovered?.toLowerCase() === storedOwner?.toLowerCase()) {
+      cache.del(userAddress.toLowerCase());
+      cache.del(MetaMessage);
+      cache.del(`${userAddress}secret`);
+      req.metaAuth = { recovered: userAddress };
+    } else {
+      req.metaAuth = undefined;
+    }
+    return next();
   },
   validateChallengeV2: async (req, res, next) => {
     req.metaAuth = await validateChallenge(req, 'body');
-    next();
+    return next();
   },
 };

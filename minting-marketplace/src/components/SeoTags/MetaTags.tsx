@@ -22,7 +22,9 @@ const MetaTags: React.FC<IMetaTags> = ({ seoMetaTags }) => {
       <link rel="icon" href={seoMetaTags?.favicon} />
       <link
         rel="apple-touch-icon"
-        href={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
+        href={`${
+          import.meta.env.VITE_IPFS_GATEWAY
+        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
       />
     </Helmet>
   );

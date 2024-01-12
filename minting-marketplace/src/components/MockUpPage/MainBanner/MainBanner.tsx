@@ -7,7 +7,7 @@ import { ImageLazy } from '../ImageLazy/ImageLazy';
 import { changeIPFSLink } from '../NftList/utils/changeIPFSLink';
 
 const MainBanner = ({ mainBannerInfo }) => {
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const navigate = useNavigate();
 
@@ -30,8 +30,8 @@ const MainBanner = ({ mainBannerInfo }) => {
           mainBannerInfo && mainBannerInfo?.collectionBanner
             ? `${changeIPFSLink(mainBannerInfo?.collectionBanner)}`
             : hotdropsVar === 'true'
-            ? hotDropsDefaultBanner
-            : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg'
+              ? hotDropsDefaultBanner
+              : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg'
         }
       />
       {mainBannerInfo && (

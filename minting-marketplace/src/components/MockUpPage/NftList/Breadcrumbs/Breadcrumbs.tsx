@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
-import { ReactComponent as SingleTokenHome } from '../../assets/singleTokenHome.svg';
+import SingleTokenHome from '../../assets/singleTokenHome.svg?react';
 import { TParamsBreadcrumbsComponent } from '../../mockupPage.types';
 import { IBreadcrumbsComponent } from '../nftList.types';
 

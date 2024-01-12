@@ -134,9 +134,7 @@ const PopUpContainer = (videoId) => {
               analyticsVideo.map((el) => {
                 return (
                   <div key={el.createdAt} className="box-collapse-info">
-                    <div>
-                      <Moment format="DD/MM/YY HH:mm A" date={el.createdAt} />
-                    </div>
+                    <div>{el.createdAt.toString()}</div>
                     <div>{el.userAddress}</div>
                   </div>
                 );

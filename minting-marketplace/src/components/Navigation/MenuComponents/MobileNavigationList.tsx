@@ -28,7 +28,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   currentUserAddress,
   click
 }) => {
-  const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotDropsVar = import.meta.env.VITE_HOTDROPS;
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
 

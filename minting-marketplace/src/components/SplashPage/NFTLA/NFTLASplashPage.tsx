@@ -69,7 +69,9 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           'Claim your NFT to unlock encrypted streams from the NFTLA conference',
         twitterDescription:
           'Claim your NFT to unlock encrypted streams from the NFTLA conference',
-        image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
+        image: `${
+          import.meta.env.VITE_IPFS_GATEWAY
+        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
         favicon: NFTfavicon,
         faviconMobile: NFTfavicon
       })

@@ -51,7 +51,9 @@ const OfferItem: React.FC<IOfferItemComponent> = ({
         src={
           metadata.image
             ? metadata.image
-            : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
+            : `${
+                import.meta.env.VITE_IPFS_GATEWAY
+              }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
         }
         alt={metadata.name}
       />

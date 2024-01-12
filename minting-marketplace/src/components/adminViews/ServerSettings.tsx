@@ -33,19 +33,18 @@ const ServerSettings = ({ fullContractData }) => {
   >([]);
   const [superAdmins, setSuperAdmins] = useState<string[]>([]);
   const [nodeAddress, setNodeAddress] = useState(
-    process.env.REACT_APP_NODE_ADDRESS
+    import.meta.env.VITE_NODE_ADDRESS
   );
   const reactSwal = useSwal();
 
   const getServerSettings = useCallback(async () => {
-    const { success, settings, blockchainSettings } = await rFetch(
-      '/api/settings'
-    );
+    const { success, settings, blockchainSettings } =
+      await rFetch('/api/settings');
     if (success) {
       setSettings(settings);
       if (settings.featuredCollection) {
         setNodeAddress(
-          settings?.nodeAddress || process.env.REACT_APP_NODE_ADDRESS
+          settings?.nodeAddress || import.meta.env.VITE_NODE_ADDRESS
         );
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
@@ -171,9 +170,9 @@ const ServerSettings = ({ fullContractData }) => {
               setter={setFeaturedContract}
               options={Object.keys(fullContractData).map((contract) => {
                 return {
-                  label: `${fullContractData[contract].title} (${
-                    chainData[fullContractData[contract].blockchain]?.symbol
-                  })`,
+                  label: `${fullContractData[contract].title} (${chainData[
+                    fullContractData[contract].blockchain
+                  ]?.symbol})`,
                   value: contract
                 };
               })}

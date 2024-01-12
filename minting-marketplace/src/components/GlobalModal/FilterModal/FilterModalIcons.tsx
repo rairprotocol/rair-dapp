@@ -157,9 +157,10 @@ export const StyledCategoryItemIcon = styled(CategoryItemIcon)`
 `;
 export const StyledClearButton = styled.button`
   background-color: var(
-    --${(props) => (props.primaryColor === 'rhyno' ? 'charcoal-80' : 'rhyno')}
+    --${(props) => (props.primaryColor.includes('charcoal') ? 'charcoal-80' : 'rhyno')}
   );
-  color: ${(props) => (props.primaryColor === 'rhyno' ? 'white' : '#585858')};
+  color: ${(props) =>
+    props.primaryColor.includes('charcoal') ? 'white' : '#585858'};
 `;
 // export const SelectFiltersPopUp = styled.div`
 //   background-color: var(--${(props) => props.primaryColor});

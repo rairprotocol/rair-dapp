@@ -3,7 +3,7 @@ import { CircularProgress } from '@mui/material';
 const LoadingComponent = ({ size = 100 }) => {
   return (
     <div className="list-wrapper-empty">
-      {process.env.REACT_APP_HOTDROPS === 'true' ? (
+      {import.meta.env.VITE_HOTDROPS === 'true' ? (
         <CircularProgress
           sx={{ color: 'var(--hot-drops-light)' }}
           size={size}

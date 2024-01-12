@@ -21,10 +21,17 @@ const OfferSelector = ({ fileId }) => {
         return;
       }
       setContractOptions(
-        result.map((contract) => ({
-          label: `${contract.title} (${chainData[contract.blockchain].symbol})`,
-          value: contract._id
-        }))
+        result
+          .map((contract) => ({
+            label: `${contract.title} (${
+              chainData[contract.blockchain].symbol
+            })`,
+            value: contract._id
+          }))
+          .sort((a, b) => {
+            if (a.label < b.label) return 1;
+            return -1;
+          })
       );
     })();
   }, []);

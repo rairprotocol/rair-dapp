@@ -9,6 +9,8 @@ import {
 import { TGetDataAllStart, TSearchDataResponseType } from './search.types';
 import * as types from './types';
 
+import { BackendResponse } from '../../axios.responseTypes';
+
 export function* getAllInformationFromSearch(
   titleSearchDemo: TGetDataAllStart
 ) {
@@ -38,6 +40,7 @@ export function* getAllInformationFromSearch(
   } catch (errors) {
     const error = errors as AxiosError;
     console.error(error, 'error from sagas');
+    const errorData: BackendResponse = error?.response?.data as BackendResponse;
 
     if (error.response !== undefined) {
       if (error.response.status === 404) {
@@ -47,7 +50,7 @@ export function* getAllInformationFromSearch(
         const errorServer = 'Sorry. an internal server problem has occurred';
         yield put(getDataAllEmpty(errorServer));
       } else {
-        yield put(getDataAllEmpty(error.response.data.message));
+        yield put(getDataAllEmpty(errorData.message));
       }
     } else {
       const errorConnection = 'Nothing can fiend error!';

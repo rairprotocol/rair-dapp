@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { LightSmartContractAccount } from '@alchemy/aa-accounts';
+import { AccountSigner } from '@alchemy/aa-ethers';
 import * as ethers from 'ethers';
 
 import { IConsumerMode, TOfferDataType } from './creatorAndConsumerModes.types';
@@ -25,8 +27,11 @@ const ConsumerMode: React.FC<IConsumerMode> = () => {
 
   const fetchData = useCallback(async () => {
     setRefetchingFlag(true);
-    let signer: ethers.providers.JsonRpcSigner | ethers.Wallet | undefined =
-      programmaticProvider;
+    let signer:
+      | AccountSigner<LightSmartContractAccount>
+      | ethers.providers.JsonRpcSigner
+      | ethers.Wallet
+      | undefined = programmaticProvider;
     if (window.ethereum) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       signer = provider.getSigner(0);

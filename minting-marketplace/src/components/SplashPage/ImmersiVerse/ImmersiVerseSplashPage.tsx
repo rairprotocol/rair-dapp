@@ -80,7 +80,9 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
           'Claim your NFT to unlock encrypted streams from the ImmersiverseATX event',
         twitterDescription:
           'Claim your NFT to unlock encrypted streams from the ImmersiverseATX event',
-        image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
+        image: `${
+          import.meta.env.VITE_IPFS_GATEWAY
+        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
         favicon: favion_Immersil,
         faviconMobile: favion_Immersil
       })

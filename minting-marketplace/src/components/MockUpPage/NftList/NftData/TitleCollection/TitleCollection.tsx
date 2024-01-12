@@ -15,7 +15,7 @@ import { rFetch } from '../../../../../utils/rFetch';
 import { ContractType } from '../../../../adminViews/adminView.types';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
 import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
-import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
+import EtherScanCollectionLogo from '../../../assets/EtherScanCollectionLogo.svg?react';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
 import {
   ITitleCollection,
@@ -272,7 +272,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               rel="noreferrer">
               <div
                 className={`etherscan-icon ${
-                  process.env.REACT_APP_HOTDROPS === 'true'
+                  import.meta.env.VITE_HOTDROPS === 'true'
                     ? 'hotdrops-border'
                     : ''
                 }`}>

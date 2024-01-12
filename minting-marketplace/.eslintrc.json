@@ -26,6 +26,9 @@
   "settings": {
       "import/resolver": {
           "typescript": {}
+      },
+      "react": {
+        "version": "detect"
       }
   },
   "rules": {
@@ -34,6 +37,9 @@
           "always"
       ],
       "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "no-unsafe-optional-chaining": "warn",
+      "no-constant-condition": "warn",
       "react/react-in-jsx-scope": "off",
       "no-mixed-spaces-and-tabs": "off",
       "@typescript-eslint/ban-ts-comment": "off",

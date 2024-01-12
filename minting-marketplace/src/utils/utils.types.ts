@@ -1,3 +1,5 @@
+import { ChainConfig } from 'viem/_types/types/chain';
+
 export type TNativeCurrency = {
   name: string;
   symbol: string;
@@ -8,8 +10,8 @@ export type TAddChainData = {
   chainId: BlockchainType;
   chainName: string;
   nativeCurrency?: TNativeCurrency;
-  rpcUrls?: Array<string>;
-  blockExplorerUrls?: Array<string>;
+  rpcUrls: Array<string>;
+  blockExplorerUrls: Array<string>;
 };
 export type TChainItemData = {
   testnet?: boolean;
@@ -19,7 +21,9 @@ export type TChainItemData = {
   symbol: string;
   oreIdAlias: string | undefined;
   addChainData: TAddChainData;
-  disabled?: Boolean;
+  disabled?: boolean;
+  viem?: ChainConfig;
+  alchemy?: string;
 };
 export type TChainData = {
   [key in BlockchainType]?: TChainItemData;

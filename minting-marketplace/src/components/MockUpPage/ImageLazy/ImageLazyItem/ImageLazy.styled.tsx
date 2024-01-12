@@ -26,8 +26,10 @@ export const Image = styled.img<ILazyImageItem>`
   }
   &.has-error {
     max-width: -webkit-fill-available;
-    content: url(${process.env.REACT_APP_HOTDROPS === 'true'
+    content: url(${import.meta.env.VITE_HOTDROPS === 'true'
       ? defaultHotDrops
-      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`});
+      : `${
+          import.meta.env.VITE_IPFS_GATEWAY
+        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`});
   }
 `;

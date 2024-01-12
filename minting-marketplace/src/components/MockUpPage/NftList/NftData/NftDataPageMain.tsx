@@ -20,7 +20,7 @@ import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
-import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
+import PlayCircle from '../../assets/PlayCircle.svg?react';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { INftDataPageMain, TOffersIndexesData } from '../../mockupPage.types';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
@@ -54,7 +54,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const [verticalImage, setVerticalImage] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const myRef = useRef(null);
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS === 'true';
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS === 'true';
   const [playing, setPlaying] = useState<boolean>(false);
   const [tokenDataForResale, setTokenDataForResale] = useState<any>(undefined);
   const [, /*offersIndexesData*/ setOffersIndexesData] =
@@ -209,8 +209,8 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               e.offerIndex === '0'
                 ? 'Ultra Rair'
                 : e.offerIndex === '1'
-                ? 'Rair'
-                : 'Common',
+                  ? 'Rair'
+                  : 'Common',
             id: index,
             copies: e.copies,
             soldCopies: e.soldCopies,
@@ -325,7 +325,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                       backgroundImage: `url(${
                         selectedData?.image
                           ? selectedData.image
-                          : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
+                          : `${
+                              import.meta.env.VITE_IPFS_GATEWAY
+                            }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                       })`
                     }}></div>
                 ) : (
@@ -340,7 +342,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                       light={
                         selectedData.image
                           ? selectedData?.image
-                          : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
+                          : `${
+                              import.meta.env.VITE_IPFS_GATEWAY
+                            }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                       }
                       loop={false}
                       playIcon={
@@ -356,7 +360,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                   src={
                     selectedData?.image
                       ? ipfsLink
-                      : `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
+                      : `${
+                          import.meta.env.VITE_IPFS_GATEWAY
+                        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
                   }
                   alt="nft token image"
                   className="single-token-block-img"

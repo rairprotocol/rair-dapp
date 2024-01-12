@@ -25,7 +25,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   const [totalPage, setTotalPages] = useState<number>();
   const [totalPageVideo, setTotalPagesVideo] = useState<number>();
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const pagesArray: number[] = [];
   if (whatPage && whatPage === 'nft' && totalPage) {

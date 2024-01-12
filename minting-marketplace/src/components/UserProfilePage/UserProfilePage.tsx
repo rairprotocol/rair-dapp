@@ -288,7 +288,7 @@ const UserProfilePage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   if (userData === undefined) {
     return <LoadingComponent />;

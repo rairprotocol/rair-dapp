@@ -4,7 +4,7 @@ import * as types from './types';
 import HotDropsFavicon from '../../components/MockUpPage/assets/Hotdrops-favicon.ico';
 import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
 
-const hotDropsVar = process.env.REACT_APP_HOTDROPS;
+const hotDropsVar = import.meta.env.VITE_HOTDROPS;
 
 export let InitialState: TInfoSeo;
 
@@ -34,7 +34,9 @@ if (hotDropsVar === 'true') {
       'RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
     ogDescription: 'Encrypted, Streaming NFTs',
     twitterDescription: 'Encrypted, Streaming NFTs',
-    image: `${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
+    image: `${
+      import.meta.env.VITE_IPFS_GATEWAY
+    }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
     favicon: RairFavicon,
     faviconMobile: RairFavicon
   };

@@ -10,7 +10,7 @@ import {
 import * as types from './types';
 import { TUpdataVideoParams } from './videosDucks.types';
 
-import { TMediaList } from '../../axios.responseTypes';
+import { BackendResponse, TMediaList } from '../../axios.responseTypes';
 
 export type TParamsVideosSaga = {
   type: string;
@@ -40,6 +40,8 @@ export function* getVideos({ params }: TParamsVideosSaga) {
   } catch (error) {
     const errors = error as AxiosError;
     yield put(setLoading(false));
+    const errorData: BackendResponse = errors?.response
+      ?.data as BackendResponse;
 
     if (errors.response !== undefined) {
       if (errors.response.status === 404) {
@@ -49,7 +51,7 @@ export function* getVideos({ params }: TParamsVideosSaga) {
         const errorServer = 'Sorry. an internal server problem has occurred';
         yield put(getListVideosError(errorServer));
       } else {
-        yield put(getListVideosError(errors.response.data.message));
+        yield put(getListVideosError(errorData.message));
       }
     } else {
       const errorConex = 'Connection error!';

@@ -19,7 +19,7 @@ import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 
 import './videoUpload.css';
-// const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
+// const UPLOAD_PROGRESS_HOST = import.meta.env.VITE_UPLOAD_PROGRESS_HOST;
 
 //TODO: alternative env
 // const hostname = window.location.hostname;
@@ -115,8 +115,8 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
                 item.external
                   ? 'External'
                   : item.diamond
-                  ? 'Diamond'
-                  : 'Classic'
+                    ? 'Diamond'
+                    : 'Classic'
               })`,
               value: item._id,
               blockSync: item.blockSync,
@@ -480,7 +480,9 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
               }
               axios
                 .post<TUploadSocket>(
-                  `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
+                  `${
+                    import.meta.env.VITE_UPLOAD_PROGRESS_HOST
+                  }/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
                   formData,
                   {
                     headers: {

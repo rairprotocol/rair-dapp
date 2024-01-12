@@ -83,7 +83,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     (store) => store.userStore
   );
 
-  const hotdropsVar = process.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
@@ -281,7 +281,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
           <div className="nft-form-control-icon">
             <i
               className={`fas fa-search fa-lg fas-custom ${
-                process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-color'
+                import.meta.env.VITE_HOTDROPS === 'true' && 'hotdrops-color'
               }`}
               aria-hidden="true"></i>
             <FilteringBlock
@@ -314,7 +314,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
                   className={`clear-filter ${
                     primaryColor === 'rhyno' ? 'rhyno' : ''
                   } ${
-                    process.env.REACT_APP_HOTDROPS === 'true'
+                    import.meta.env.VITE_HOTDROPS === 'true'
                       ? 'hotdrops-bg'
                       : ''
                   }`}
@@ -328,7 +328,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
                 className={`clear-filter filter-category ${
                   primaryColor === 'rhyno' ? 'rhyno' : ''
                 } ${
-                  process.env.REACT_APP_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
+                  import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
                 }`}
                 onClick={() => clearCategoriesFilter()}>
                 {filterCategoriesText}
@@ -358,7 +358,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
                   className={`clear-filter ${
                     primaryColor === 'rhyno' ? 'rhyno' : ''
                   } ${
-                    process.env.REACT_APP_HOTDROPS === 'true'
+                    import.meta.env.VITE_HOTDROPS === 'true'
                       ? 'hotdrops-bg'
                       : ''
                   }`}
