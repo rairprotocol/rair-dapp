@@ -98,7 +98,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
   return (
     <MediaItemContainer
       editTitleVideo={editTitleVideo}
-      className="col-12 media-item-title">
+      className="media-item-title">
       {textFlag ? (
         <div>
           <p className="col-12">
