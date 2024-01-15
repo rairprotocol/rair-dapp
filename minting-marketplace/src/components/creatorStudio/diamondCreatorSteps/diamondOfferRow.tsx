@@ -203,97 +203,136 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   };
 
   return (
-    <div className="col-12 row">
-      <button
-        disabled
-        className={`col-12 col-md-1 btn btn-${primaryColor} rounded-rair`}>
-        {/* <i style={{ color: `${randColor}` }} className="fas fa-key h1" /> */}
-      </button>
-      <div className="col-12 col-md-11 row">
-        <div className={`col-12 col-md-11 px-2`}>
-          Range name:
-          <div className={`${disabledClass} w-100 mb-2`}>
-            <InputField
-              getter={itemName}
-              setter={(value) => updater('offerName', setItemName, value)}
-              customClass="form-control rounded-rair"
-              customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
-                color: 'inherit',
-                borderColor: `var(--${secondaryColor}-40)`
-              }}
-            />
-          </div>
+    <div className="col-12 row px-5">
+      <div className={`col-12 col-md-11 px-2`}>
+        Range name:
+        <div className={`${disabledClass} w-100 mb-2`}>
+          <InputField
+            getter={itemName}
+            setter={(value) => updater('offerName', setItemName, value)}
+            customClass="form-control rounded-rair"
+            customCSS={{
+              backgroundColor: `var(--${primaryColor})`,
+              color: 'inherit',
+              borderColor: `var(--${secondaryColor}-40)`
+            }}
+          />
         </div>
-        <div className={`col-12 col-md-1 pt-4 px-0`}>
-          {_id ? (
-            <button
-              onClick={updateRange}
-              disabled={!valuesChanged}
-              className={`btn w-100 btn-${
-                valuesChanged ? 'stimorol' : 'success'
-              } rounded-rair`}>
-              {valuesChanged ? 'Update' : 'Saved'}
-            </button>
-          ) : (
-            <button
-              onClick={deleter}
-              className="btn w-100 btn-danger rounded-rair">
-              <i className="fas fa-trash" />
-            </button>
-          )}
+      </div>
+      <div className={`col-12 col-md-1 pt-4 px-0`}>
+        {_id ? (
+          <button
+            onClick={updateRange}
+            disabled={!valuesChanged}
+            className={`btn w-100 btn-${
+              valuesChanged ? 'stimorol' : 'success'
+            } rounded-rair`}>
+            {valuesChanged ? 'Update' : 'Saved'}
+          </button>
+        ) : (
+          <button
+            onClick={deleter}
+            className="btn w-100 btn-danger rounded-rair">
+            <i className="fas fa-trash" />
+          </button>
+        )}
+      </div>
+      <div className={`col-12 col-md-4`}>
+        Starting token:
+        <div className={`${!_id && disabledClass} w-100`}>
+          <InputField
+            disabled={true}
+            getter={startingToken}
+            setter={updateStartingToken}
+            type="number"
+            min={0}
+            customClass="form-control rounded-rair"
+            customCSS={{
+              backgroundColor: `var(--${primaryColor})`,
+              color: 'inherit',
+              borderColor: `var(--${secondaryColor}-40)`
+            }}
+          />
         </div>
-        <div className={`col-12 col-md-4`}>
-          Starting token:
-          <div className={`${!_id && disabledClass} w-100`}>
-            <InputField
-              disabled={true}
-              getter={startingToken}
-              setter={updateStartingToken}
-              type="number"
-              min={0}
-              customClass="form-control rounded-rair"
-              customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
-                color: 'inherit',
-                borderColor: `var(--${secondaryColor}-40)`
-              }}
-            />
-          </div>
+      </div>
+      <div className={`col-12 col-md-4`}>
+        Ending token:
+        {!_id && (
+          <button
+            onClick={() => updateEndingToken(String(maxCopies))}
+            className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+            Max
+          </button>
+        )}
+        <div className={`${!_id && disabledClass} w-100`}>
+          <InputField
+            getter={endingToken}
+            setter={updateEndingToken}
+            customClass="form-control rounded-rair"
+            disabled={!!_id}
+            type="number"
+            min={+startingToken}
+            max={maxCopies}
+            customCSS={{
+              backgroundColor: `var(--${primaryColor})`,
+              color: 'inherit',
+              borderColor: `var(--${secondaryColor}-40)`
+            }}
+          />
         </div>
-        <div className={`col-12 col-md-4`}>
-          Ending token:
+      </div>
+      <div className={`col-12 col-md-4`}>
+        Range price:
+        <div className={`${disabledClass} w-100`}>
+          <InputField
+            getter={individualPrice}
+            setter={(value) => updater('price', setIndividualPrice, value)}
+            type="number"
+            customClass="form-control rounded-rair"
+            customCSS={{
+              backgroundColor: `var(--${primaryColor})`,
+              color: 'inherit',
+              borderColor: `var(--${secondaryColor}-40)`
+            }}
+          />
+        </div>
+        {validateInteger(individualPrice) && (
+          <small>
+            {utils
+              .formatEther(!individualPrice ? 0 : individualPrice.toString())
+              .toString()}{' '}
+            {blockchainSymbol}
+          </small>
+        )}
+      </div>
+      {!simpleMode && (
+        <div className={`col-12 col-md-6`}>
+          Tokens allowed to mint:
           {!_id && (
             <button
-              onClick={() => updateEndingToken(String(maxCopies))}
+              onClick={() =>
+                updater(
+                  'tokensAllowed',
+                  setAllowedTokenCount,
+                  BigNumber.from(endingToken)
+                    .sub(startingToken)
+                    .add(1)
+                    .toString()
+                )
+              }
               className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
               Max
             </button>
           )}
-          <div className={`${!_id && disabledClass} w-100`}>
-            <InputField
-              getter={endingToken}
-              setter={updateEndingToken}
-              customClass="form-control rounded-rair"
-              disabled={!!_id}
-              type="number"
-              min={+startingToken}
-              max={maxCopies}
-              customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
-                color: 'inherit',
-                borderColor: `var(--${secondaryColor}-40)`
-              }}
-            />
-          </div>
-        </div>
-        <div className={`col-12 col-md-4`}>
-          Range price:
           <div className={`${disabledClass} w-100`}>
             <InputField
-              getter={individualPrice}
-              setter={(value) => updater('price', setIndividualPrice, value)}
+              getter={allowedTokenCount}
+              setter={(value) =>
+                updater('tokensAllowed', setAllowedTokenCount, value)
+              }
               type="number"
+              min={0}
+              max={Number(endingToken) - Number(startingToken) + 1}
               customClass="form-control rounded-rair"
               customCSS={{
                 backgroundColor: `var(--${primaryColor})`,
@@ -302,92 +341,46 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
               }}
             />
           </div>
-          {validateInteger(individualPrice) && (
-            <small>
-              {utils
-                .formatEther(!individualPrice ? 0 : individualPrice.toString())
-                .toString()}{' '}
-              {blockchainSymbol}
-            </small>
-          )}
         </div>
-        {!simpleMode && (
-          <div className={`col-12 col-md-6`}>
-            Tokens allowed to mint:
-            {!_id && (
-              <button
-                onClick={() =>
-                  updater(
-                    'tokensAllowed',
-                    setAllowedTokenCount,
-                    BigNumber.from(endingToken)
-                      .sub(startingToken)
-                      .add(1)
-                      .toString()
-                  )
-                }
-                className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
-                Max
-              </button>
-            )}
-            <div className={`${disabledClass} w-100`}>
-              <InputField
-                getter={allowedTokenCount}
-                setter={(value) =>
-                  updater('tokensAllowed', setAllowedTokenCount, value)
-                }
-                type="number"
-                min={0}
-                max={Number(endingToken) - Number(startingToken) + 1}
-                customClass="form-control rounded-rair"
-                customCSS={{
-                  backgroundColor: `var(--${primaryColor})`,
-                  color: 'inherit',
-                  borderColor: `var(--${secondaryColor}-40)`
-                }}
-              />
-            </div>
+      )}
+      {!simpleMode && (
+        <div className={`col-12 col-md-6`}>
+          Minted tokens needed before trades are unlocked:
+          {!_id && (
+            <button
+              onClick={() =>
+                updater(
+                  'lockedTokens',
+                  setLockedTokenCount,
+                  BigNumber.from(endingToken)
+                    .sub(startingToken)
+                    .add(1)
+                    .toString()
+                )
+              }
+              className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+              Max
+            </button>
+          )}
+          <div className={`${disabledClass} w-100`}>
+            <InputField
+              getter={lockedTokenCount}
+              setter={(value) =>
+                updater('lockedTokens', setLockedTokenCount, value)
+              }
+              type="number"
+              min={0}
+              max={Number(endingToken) - Number(startingToken) + 1}
+              customClass="form-control rounded-rair"
+              customCSS={{
+                backgroundColor: `var(--${primaryColor})`,
+                color: 'inherit',
+                borderColor: `var(--${secondaryColor}-40)`
+              }}
+            />
           </div>
-        )}
-        {!simpleMode && (
-          <div className={`col-12 col-md-6`}>
-            Minted tokens needed before trades are unlocked:
-            {!_id && (
-              <button
-                onClick={() =>
-                  updater(
-                    'lockedTokens',
-                    setLockedTokenCount,
-                    BigNumber.from(endingToken)
-                      .sub(startingToken)
-                      .add(1)
-                      .toString()
-                  )
-                }
-                className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
-                Max
-              </button>
-            )}
-            <div className={`${disabledClass} w-100`}>
-              <InputField
-                getter={lockedTokenCount}
-                setter={(value) =>
-                  updater('lockedTokens', setLockedTokenCount, value)
-                }
-                type="number"
-                min={0}
-                max={Number(endingToken) - Number(startingToken) + 1}
-                customClass="form-control rounded-rair"
-                customCSS={{
-                  backgroundColor: `var(--${primaryColor})`,
-                  color: 'inherit',
-                  borderColor: `var(--${secondaryColor}-40)`
-                }}
-              />
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
       <hr className="my-4" />
     </div>
   );
