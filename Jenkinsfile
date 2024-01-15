@@ -79,11 +79,32 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
+                    --dockerfile Dockerfile.prod-hotdrops \
                     --context ./minting-marketplace/ \
                     --verbosity debug \
                     --cleanup \
-                    --destination rairtechinc/minting-network:latest \
+                    --destination rairtechinc/minting-network:latest-hotdrops \
+                    --destination rairtechinc/minting-network:_${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push minting-marketplace Beta version') {
+          when {
+            not { branch 'dev'}
+          }
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile.prod-beta \
+                    --context ./minting-marketplace/ \
+                    --verbosity debug \
+                    --cleanup \
+                    --destination rairtechinc/minting-network:latest-beta \
                     --destination rairtechinc/minting-network:${GIT_COMMIT}
                 '''
               }
@@ -138,12 +159,31 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
+                    --dockerfile Dockerfile.prod-hotdrops \
+                    --context ./minting-marketplace/ \
+                    --verbosity debug \
+                    --cleanup \
+                    --destination rairtechinc/minting-network:_${GIT_COMMIT} \
+                    --destination rairtechinc/minting-network:${GIT_BRANCH}_hotdrops.${BUILD_ID}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push dev minting-marketplace Beta version') {
+          when { branch 'dev'}
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile.prod-beta \
                     --context ./minting-marketplace/ \
                     --verbosity debug \
                     --cleanup \
                     --destination rairtechinc/minting-network:${GIT_COMMIT} \
-                    --destination rairtechinc/minting-network:${GIT_BRANCH}_2.${BUILD_ID}
+                    --destination rairtechinc/minting-network:${GIT_BRANCH}_beta.${BUILD_ID}
                 '''
               }
 
