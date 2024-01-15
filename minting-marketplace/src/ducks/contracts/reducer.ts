@@ -148,6 +148,8 @@ export default function userStore(
             );
             signer = provider.getSigner(action.oreIdAddress);
           }
+        } else if (state.programmaticProvider) {
+          signer = state.programmaticProvider;
         } else if (window.ethereum) {
           const provider = new ethers.providers.Web3Provider(
             window.ethereum,
@@ -190,8 +192,6 @@ export default function userStore(
             }
           });
           signer = provider.getSigner(0);
-        } else if (state.programmaticProvider) {
-          signer = state.programmaticProvider;
         } else {
           return {
             ...state,

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { BigNumber, Contract } from 'ethers';
-import { OreidProvider, useOreId } from 'oreid-react';
 
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
@@ -11,7 +10,7 @@ import { TUsersInitialState } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import { GrandpaWait, metaMaskIcon } from '../../images';
+import { GrandpaWait } from '../../images';
 import blockchainData from '../../utils/blockchainData';
 import { getRandomValues } from '../../utils/getRandomValues';
 import { rFetch } from '../../utils/rFetch';
@@ -310,9 +309,6 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
-              if (loginType !== 'oreid') {
-                reactSwal.close();
-              }
               return;
             }
 
@@ -461,7 +457,6 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
 
   const { web3TxHandler } = useWeb3Tx();
   const reactSwal = useSwal();
-  const oreId = useOreId();
 
   const fireAgreementModal = () => {
     reactSwal.fire({
@@ -472,27 +467,25 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
           <h1 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h1>
         ),
       html: (
-        <OreidProvider oreId={oreId}>
-          <Provider store={store}>
-            <Agreements
-              {...{
-                amountOfTokensToPurchase,
-                contractAddress,
-                requiredBlockchain,
-                connectUserData,
-                diamond,
-                offerIndex,
-                presaleMessage,
-                customSuccessAction,
-                blockchainOnly,
-                databaseOnly,
-                collection,
-                setPurchaseStatus,
-                web3TxHandler
-              }}
-            />
-          </Provider>
-        </OreidProvider>
+        <Provider store={store}>
+          <Agreements
+            {...{
+              amountOfTokensToPurchase,
+              contractAddress,
+              requiredBlockchain,
+              connectUserData,
+              diamond,
+              offerIndex,
+              presaleMessage,
+              customSuccessAction,
+              blockchainOnly,
+              databaseOnly,
+              collection,
+              setPurchaseStatus,
+              web3TxHandler
+            }}
+          />
+        </Provider>
       ),
       showConfirmButton: false,
       width: '87vw',

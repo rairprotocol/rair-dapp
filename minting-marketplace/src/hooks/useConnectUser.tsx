@@ -6,7 +6,6 @@ import {
   getDefaultLightAccountFactoryAddress,
   LightSmartContractAccount
 } from '@alchemy/aa-accounts';
-import { AlchemyProvider } from '@alchemy/aa-alchemy';
 import { AccountSigner, EthersProviderAdapter } from '@alchemy/aa-ethers';
 import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import { Alchemy } from 'alchemy-sdk';
