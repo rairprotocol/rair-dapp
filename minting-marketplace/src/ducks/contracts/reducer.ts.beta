@@ -25,9 +25,9 @@ const contractAddresses: ContractAddressesType = {
     factory: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
     erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
     minterMarketplace: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
-    diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0x556a3Db6d800AAA56f8B09E476793c5100705Db5') as string,
-    diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0x92FBe344513e108B581170E73CFA352B729E47EA') as string,
     resaleMarketplace: undefined,
     tokenPurchaser: undefined,
@@ -38,9 +38,9 @@ const contractAddresses: ContractAddressesType = {
     factory: '0xfaB4B835fBFC671c15e2fDe237c625e82612893F',
     erc777: '0x5b01aBE2DCfaa4C9c80ccE87223c8e21D7Fc9845',
     minterMarketplace: '0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD',
-    diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0xA2c57691b8DF0D8479f5f888c69346363D23a49F') as string,
-    diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0xaCb13B4c527eD6237f7DB6E95Ef71929d1e13DD6') as string,
     resaleMarketplace: '0x166eD118F380dDFe1F4FD3ccc7D2C5CaeCf0AE96',
     tokenPurchaser: undefined,
@@ -51,9 +51,9 @@ const contractAddresses: ContractAddressesType = {
     factory: '0x12EF5310499318C90C55077241137Db52189b036',
     erc777: '0x4e6a5B076730954d80e55dDb2d2e7E732B5bAb70',
     minterMarketplace: '0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5',
-    diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0xEF85370b8F136E2F28eA904bF0dA5acac3D1d74f') as string,
-    diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0x6B3c06b39Aa1ADe73c625b184326d4837c7a2b64') as string,
     resaleMarketplace: '0x73eDc2F5Fc3F895Dfc6aE8a580a5969640260b79',
     tokenPurchaser: '0x9dCbe7021803eBb3153412Ed719A2d0B887afB8e' as string,
@@ -64,9 +64,9 @@ const contractAddresses: ContractAddressesType = {
     factory: '0x72639374fC9e4eec25839080763025A1d3E710EC',
     erc777: '0x1AeAb89553233D1045b506e8DCBFa3df76E18896',
     minterMarketplace: '0x4594D508cDa05D016571082d467889f4629e1f56',
-    diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0xbB236Ce48dDCb58adB8665E220FE976bA5d080a5') as string,
-    diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0') as string,
     resaleMarketplace: '0x0F08c99070fbebDa7E324596d95635d30D414070',
     tokenPurchaser: undefined,
@@ -77,9 +77,9 @@ const contractAddresses: ContractAddressesType = {
     factory: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
     erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
     minterMarketplace: '0x781F15a23506CF28539EA057e3f33008E6339E49',
-    diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0x9498b23e964760364435C23c793e9352Ff4E2200') as string,
-    diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
+    diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1') as string,
     resaleMarketplace: undefined,
     tokenPurchaser: undefined,
@@ -118,7 +118,7 @@ const InitialState: ContractsInitialType = {
   diamondMarketplaceInstance: undefined,
   tokenPurchaserInstance: undefined,
   creditHandlerInstance: undefined,
-  currentChain: process.env.REACT_APP_DEFAULT_BLOCKCHAIN as BlockchainType,
+  currentChain: import.meta.env.VITE_DEFAULT_BLOCKCHAIN as BlockchainType,
   currentUserAddress: undefined,
   programmaticProvider: undefined,
   contractCreator: undefined,
@@ -148,6 +148,8 @@ export default function userStore(
             );
             signer = provider.getSigner(action.oreIdAddress);
           }
+        } else if (state.programmaticProvider) {
+          signer = state.programmaticProvider;
         } else if (window.ethereum) {
           const provider = new ethers.providers.Web3Provider(
             window.ethereum,
@@ -161,7 +163,7 @@ export default function userStore(
               response
               // provider
             }) => {
-              if (process.env.REACT_APP_LOG_WEB3 === 'true') {
+              if (import.meta.env.VITE_LOG_WEB3 === 'true') {
                 console.info(
                   response ? 'Receiving response to' : 'Sending request',
                   request.method
@@ -190,8 +192,6 @@ export default function userStore(
             }
           });
           signer = provider.getSigner(0);
-        } else if (state.programmaticProvider) {
-          signer = state.programmaticProvider;
         } else {
           return {
             ...state,
@@ -267,8 +267,8 @@ export default function userStore(
         currentUserAddress: action.currentUserAddress
       };
       if (action.currentUserAddress === undefined) {
-        update.currentChain = process.env
-          .REACT_APP_DEFAULT_BLOCKCHAIN as BlockchainType;
+        update.currentChain = import.meta.env
+          .VITE_DEFAULT_BLOCKCHAIN as BlockchainType;
       }
       return update;
     case types.SET_PROGRAMMATIC_PROVIDER:
