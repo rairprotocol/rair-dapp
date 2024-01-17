@@ -386,14 +386,18 @@ const useConnectUser = () => {
             );
             if (firstTimeLogin) {
               const userData = await loginData.alchemyProvider.userDetails();
+              const availableData = {};
+              if (userData.email) {
+                availableData.email = userData.email;
+                availableData.nickName = userData.email?.split('@')?.[0];
+              }
+              if (userData.name && !userData.name.includes('@')) {
+                availableData.firstName = userData.name.split(' ')?.[0];
+                availableData.lastName = userData.name.split(' ')?.[0];
+              }
               const newUserResponse = await axios.patch(
                 `/api/v2/users/${loginData.userAddress.toLowerCase()}`,
-                {
-                  email: userData.email,
-                  nickName: userData.email,
-                  firstName: userData.name.split(' ')?.[0],
-                  lastName: userData.name.split(' ')?.[1]
-                }
+                availableData
               );
               user = newUserResponse.data.user;
             }
