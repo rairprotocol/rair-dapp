@@ -1000,6 +1000,7 @@ i.fas-custom {
   margin-bottom: -1rem;
   font-weight: lighter;
   transform: scale(0.7);
+  left: 0.5rem;
 }
 
 /* for videoUpload */

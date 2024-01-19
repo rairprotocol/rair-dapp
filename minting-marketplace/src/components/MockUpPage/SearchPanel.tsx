@@ -274,7 +274,8 @@ const SearchPanel: React.FC<ISearchPanel> = ({
                 primaryColor === 'charcoal'
                   ? 'solid 1px var(--charcoal-80)'
                   : 'solid 1px var(--rhyno)'
-              } `
+              } `,
+              paddingLeft: '2rem'
             }}
             customClass="form-control input-styled border-top-radius-tablet search-mobile"
           />

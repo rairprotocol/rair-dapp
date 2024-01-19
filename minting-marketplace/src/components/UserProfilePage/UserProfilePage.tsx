@@ -511,7 +511,8 @@ const UserProfilePage: React.FC = () => {
                       primaryColor === 'charcoal'
                         ? 'solid 1px var(--charcoal-80)'
                         : 'solid 1px var(--rhyno)'
-                    } `
+                    } `,
+                    paddingLeft: '2rem'
                   }}
                   customClass="form-control input-styled user-search"
                 />
