@@ -354,7 +354,6 @@ const MainHeader: React.FC<IMainHeader> = ({
           <div>
             {isAboutPage ? null : (
               <button
-                // disabled={!loginProcess}
                 className={`btn btn-${primaryColor} btn-connect-wallet ${
                   import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
                 }`}

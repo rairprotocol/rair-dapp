@@ -444,6 +444,10 @@ button:disabled.hotdrops-bg {
   background: var(--stimorol) !important;
 }
 
+.btn.btn-stimorol.hotdrops-bg {
+  background: var(--hot-drops-gradient) !important;
+}
+
 .btn-stimorol:hover {
   color: white;
   background: var(--stimorol-hover);

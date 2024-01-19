@@ -58,7 +58,7 @@ const useConnectUser = () => {
       (store) => store.contractStore
     );
 
-  const hotdropsVar = import.meta.env.REACT_APP_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const reactSwal = useSwal();
   const navigate = useNavigate();
@@ -214,8 +214,11 @@ const useConnectUser = () => {
                 <OnboardingButton />
               ) : (
                 <button
-                  className={`btn btn-stimorol ${
-                    hotdropsVar === 'true' ? 'hotdrops-bg' : ''
+                  style={{
+                    color: '#fff'
+                  }}
+                  className={`btn ${
+                    hotdropsVar === 'true' ? 'hotdrops-bg' : 'btn-stimorol'
                   }`}
                   onClick={() => resolve('metamask')}>
                   Web3

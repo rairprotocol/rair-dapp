@@ -99,6 +99,10 @@
   color: white;
 }
 
+.header-master button.btn-connect-wallet.hotdrops-bg {
+  background: var(--hot-drops-gradient) !important;
+}
+
 .header-master .admin-panel-btn {
   transition: all 0.2s ease;
   cursor: pointer;
