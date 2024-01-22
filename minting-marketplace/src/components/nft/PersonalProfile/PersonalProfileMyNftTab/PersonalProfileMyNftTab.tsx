@@ -106,8 +106,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
         ) : (
           <div
             className={`list-button-wrapper-grid-template ${
-              (profile && 'row profile') ||
-              (width >= 1250 && width <= 1400 && 'row')
+              profile && 'row profile'
             } ${metadataFilter ? 'with-modal' : ''}`}>
             {filteredData.length > 0 ? (
               filteredData
