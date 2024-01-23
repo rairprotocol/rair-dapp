@@ -47,11 +47,9 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
         </h2>
       ),
       html: (
-        <OreidProvider oreId={oreId}>
-          <Provider store={store}>
-            <InquiriesPage />
-          </Provider>
-        </OreidProvider>
+        <Provider store={store}>
+          <InquiriesPage />
+        </Provider>
       ),
       showConfirmButton: false,
       width: '85vw',
