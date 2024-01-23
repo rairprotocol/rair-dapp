@@ -25,6 +25,10 @@ export const SelectFiltersItem = styled.div`
       : 'solid 1px var(--rhyno)'};
   border: ${(props: TSelectFiltersItemStyled) =>
     props.filterPopUp ? '1px solid #E882D5' : ''};
+
+  &.disabled {
+    color: grey;
+  }
 `;
 
 export const FiltersTitleIcon = styled.i`

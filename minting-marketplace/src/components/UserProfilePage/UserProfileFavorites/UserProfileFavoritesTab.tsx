@@ -71,10 +71,7 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
 
   return (
     <div className="gen">
-      <div
-        className={`list-button-wrapper-grid-template ${
-          width >= 1250 && width <= 1400 && 'row'
-        } favorite`}>
+      <div className={`list-button-wrapper-grid-template favorite`}>
         {userFavotites && userFavotites.result.length > 0 ? (
           userFavotites.result &&
           userFavotites.result

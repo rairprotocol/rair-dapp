@@ -528,6 +528,7 @@ const UserProfilePage: React.FC = () => {
                     isFilterShow={currentUserAddress === userAddress}
                     metadataFilter={metadataFilter}
                     setMetadataFilter={() => setMetadataFilter((prev) => !prev)}
+                    tabIndexItems={tabIndexItems}
                   />
                 </div>
               </div>

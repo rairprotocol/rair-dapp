@@ -39,7 +39,8 @@ const FilteringBlock = ({
   click,
   setClick,
   metadataFilter,
-  setMetadataFilter
+  setMetadataFilter,
+  tabIndexItems
 }: any) => {
   const [filterPopUp, setFilterPopUp] = useState(false);
   const [, /*filterItem*/ setFilterItem] = useState('Filters');
@@ -235,10 +236,12 @@ const FilteringBlock = ({
                 <SelectFiltersItem
                   className={`select-filters ${
                     hotdropsVar === 'true' ? 'hotdrops-hover' : ''
-                  }`}
+                  } ${tabIndexItems && tabIndexItems !== 0 && 'disabled'}`}
                   onClick={() => {
-                    setMetadataFilter();
-                    setFilterClose((prev) => !prev);
+                    if (tabIndexItems === 0) {
+                      setMetadataFilter();
+                      setFilterClose((prev) => !prev);
+                    }
                   }}
                   filterPopUp={filterPopUp}
                   textColor={textColor}
@@ -247,14 +250,14 @@ const FilteringBlock = ({
                     {width > 1101 ? (
                       <>
                         {filterCloseText ? (
-                          <StyledFilterIcon
-                            filterPopUp={filterPopUp}></StyledFilterIcon>
-                        ) : (
                           <CloseIcon
                             style={{
                               marginRight: '5px'
                             }}
                           />
+                        ) : (
+                          <StyledFilterIcon
+                            filterPopUp={filterPopUp}></StyledFilterIcon>
                         )}
                       </>
                     ) : (
