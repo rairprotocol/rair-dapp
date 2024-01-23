@@ -18,6 +18,7 @@ interface IMenuMobileWrapper {
 export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
   z-index: 50;
   position: fixed;
+  width: 100%;
   padding: 0;
   margin-top: ${(props) =>
     props.realChainId &&
@@ -231,13 +232,17 @@ export const RightSideMenu = styled.div`
     width: 90px;
     height: 40px;
     box-shadow: inset 0px 3.11351px 3.11351px rgba(74, 74, 74, 0.25);
-    background: #bb73d7;
+    background: #bb73d7 !important;
     border: 1px solid #f1b4e6;
     border-radius: 10px;
     margin-right: 16px;
     font-size: 12px;
     font-weight: 700;
     color: #fff !important;
+
+    &.hotdrops-bg {
+      background: var(--hot-drops) !important;
+    }
 
     display: flex;
     align-items: center;
