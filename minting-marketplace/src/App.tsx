@@ -271,7 +271,7 @@ function App() {
       )}
       <AppContainerFluid
         id="App"
-        className="App p-0 container-fluid"
+        className={`App p-0 container-fluid ${primaryColor}`}
         backgroundImageEffect={backgroundImageEffect}
         textColor={textColor}
         primaryColor={primaryColor}

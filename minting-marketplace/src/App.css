@@ -193,9 +193,17 @@ li {
   list-style: none;
 }
 
-a {
+a:link {
   text-decoration: none;
   color: inherit;
+}
+
+.App.rhyno a {
+  color: #000;
+}
+
+.App.charcoal a {
+  color: #fff;
 }
 
 a:focus,
