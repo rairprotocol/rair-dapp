@@ -134,6 +134,11 @@ const useWeb3Tx = () => {
       }
     ) => {
       let paramsValidation: ContractTransaction;
+      if (
+        (await contract.provider.getNetwork()).chainId !== Number(currentChain)
+      ) {
+        return;
+      }
       if (!contract[method]) {
         console.error(`Error calling function ${method}, no method found`);
         return false;
@@ -159,7 +164,7 @@ const useWeb3Tx = () => {
       }
       return paramsValidation;
     },
-    [handleReceipt, handleWeb3Error]
+    [handleReceipt, handleWeb3Error, currentChain]
   );
 
   const web3AuthCall = useCallback(
@@ -427,7 +432,7 @@ const useWeb3Tx = () => {
           if (chainData[chainId]?.disabled) {
             return;
           }
-          return metamaskSwitch(chainId);
+          return await metamaskSwitch(chainId);
       }
     },
     [currentUserAddress, dispatch, hasOreIdSupport, loginType, reactSwal]
