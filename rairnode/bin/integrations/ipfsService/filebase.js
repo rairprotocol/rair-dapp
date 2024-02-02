@@ -6,7 +6,6 @@ const {
 const path = require('path');
 const { execSync } = require('child_process');
 const fs = require('fs');
-const AppError = require('../../utils/errors/AppError');
 const log = require('../../utils/logger')(module);
 
 const bucketName = process.env.FILEBASE_BUCKET;
@@ -58,6 +57,7 @@ module.exports = {
         } catch (err) {
             log.error(`Error pinning to IPFS from Filebase: ${err.message}`);
         }
+        return undefined;
     },
     removePin: async (CID) => {
         try {
@@ -85,16 +85,19 @@ module.exports = {
             const { cid } = await s3Upload(folderName, fileContent, true);
             return cid;
         } catch (error) {
-            return new AppError(error);
+            log.error(error);
         }
+        return undefined;
     },
     addMetadata: async (data, name) => {
         try {
             const { cid } = await s3Upload(name, data);
             return cid;
         } catch (error) {
-            return new AppError("Can't store file in Filebase.", 500);
+            log.error(error);
+            log.error("Can't store metadata in Filebase.");
         }
+        return undefined;
     },
     addFile: async (pathTo, name) => {
         try {
@@ -102,7 +105,9 @@ module.exports = {
             const { cid } = await s3Upload(name, fileContent);
             return cid;
         } catch (error) {
-            return new AppError("Can't store file in Filebase.", 500);
+            log.error(error);
+            log.error("Can't store file in Filebase.");
         }
+        return undefined;
     },
 };

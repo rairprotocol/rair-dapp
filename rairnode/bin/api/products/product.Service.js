@@ -26,6 +26,12 @@ exports.setProductBanner = async (req, res, next) => {
       return next(new AppError('Invalid Product ID'));
     }
     const ipfsHash = await addFile(req.file.destination, req.file.filename);
+    if (!ipfsHash) {
+      return res.json({
+        success: false,
+        message: 'Error uploading file',
+      });
+    }
     foundProduct.bannerImage = `https://ipfs.io/ipfs/${ipfsHash}`;
     foundProduct.save();
     return res.json({
