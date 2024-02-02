@@ -5,7 +5,8 @@ COPY VERSION /
 
 #install dependencies
 WORKDIR /usr/src/rairnode
-COPY package*.json ./
+COPY package.json ./
+RUN npm install -g npm@latest
 RUN npm install
 COPY . /usr/src/rairnode
 #RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache

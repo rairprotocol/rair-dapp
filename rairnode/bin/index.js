@@ -76,7 +76,7 @@ async function main() {
 
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({limit: '50mb'}));
   app.use(cookieParser());
   app.set('trust proxy', 1);
   app.use(

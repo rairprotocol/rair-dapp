@@ -88,6 +88,7 @@ export type TFileKeyType = {
 
 export type TFileType = {
   animatedThumbnail: string;
+  ageRestricted?: boolean;
   author: string;
   uploader: string;
   category: string;

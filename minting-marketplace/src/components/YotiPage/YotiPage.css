@@ -1,0 +1,36 @@
+.yoti-bg-color {
+  background: #2d9fff;
+}
+
+.yoti-container {
+  background: #2d9fff;
+  color: #fff;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.btn-yoti-verify {
+  background: #d9d9d9;
+  color: #000;
+  width: 165px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  border: none;
+  font-size: 25px;
+  transition: all 0.2s ease;
+}
+
+button.btn-yoti-verify:hover {
+  background: #fff;
+}
+
+button.btn-yoti-verify:focus,
+button.btn-yoti-verify:active {
+  background: #d3d3d3;
+}

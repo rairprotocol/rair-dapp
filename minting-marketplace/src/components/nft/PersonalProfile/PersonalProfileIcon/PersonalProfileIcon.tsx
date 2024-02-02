@@ -12,9 +12,10 @@ import {
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { getUserStart } from '../../../../ducks/users/actions';
+import { getUserStart, setUserData } from '../../../../ducks/users/actions';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
-import { defaultAvatar } from '../../../../images';
+import { defaultAvatar, VerifiedIcon } from '../../../../images';
+import { rFetch } from '../../../../utils/rFetch';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 
 import cl from './PersonalProfileIcon.module.css';
@@ -174,6 +175,17 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
           setOriginalPhotoValue(user.avatar);
           setNewPhotoValue(user.avatar);
 
+          const { success, user: userInfoData } = await rFetch(
+            '/api/v2/auth/me/',
+            undefined,
+            undefined,
+            false
+          );
+
+          if (success) {
+            dispatch(setUserData(userInfoData));
+          }
+
           dispatch({
             type: 'GET_USER_START',
             publicAddress: currentUserAddress
@@ -259,12 +271,19 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
     <div className={`${cl.root} ${editMode ? cl.editMode : ''}`}>
       {newPhotoValue ? (
         !editMode ? (
-          <div className={cl.profileIconPicWrapper}>
+          <div
+            style={{
+              position: 'relative'
+            }}
+            className={cl.profileIconPicWrapper}>
             <img
               className={cl.profileIconPic}
               alt="User Avatar"
               src={originalPhotoValue}
             />
+            {userData && userData.ageVerified && (
+              <img className={cl.verifiedIcon} src={VerifiedIcon} />
+            )}
           </div>
         ) : isPhotoUpdate ? (
           <div className={cl.profileIconPicWrapper}>

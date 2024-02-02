@@ -24,6 +24,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@getyoti/react-face-capture": "^2.0.0",
     "@metamask/onboarding": "^1.0.1",
     "@metamask/providers": "^14.0.2",
     "@mui/icons-material": "^5.14.18",
@@ -37,8 +38,8 @@
     "@types/uuid": "^9.0.7",
     "@walletconnect/sign-client": "^2.10.6",
     "@walletconnect/utils": "^2.11.0",
-    "@web3auth/base": "^7.2.0",
-    "@web3auth/modal": "^7.2.0",
+    "@web3auth/base": "^7.3.1",
+    "@web3auth/modal": "^7.3.1",
     "alchemy-sdk": "^3.1.0",
     "analytics": "^0.8.9",
     "axios": "^1.6.2",
@@ -69,6 +70,7 @@
     "react-share": "^5.0.3",
     "react-slick": "^0.29.0",
     "react-tabs": "^6.0.2",
+    "react-webcam": "^7.2.0",
     "reactjs-popup": "^2.0.6",
     "redux": "^4.2.1",
     "redux-saga": "^1.2.3",
@@ -99,7 +101,7 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "typescript": "^5.3.3",
-    "vite": "^5.0.7",
-    "vite-plugin-node-polyfills": "^0.17.0"
+    "vite": "^5.0.11",
+    "vite-plugin-node-polyfills": "^0.19.0"
   }
 }

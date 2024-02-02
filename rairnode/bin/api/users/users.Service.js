@@ -9,9 +9,58 @@ const { cleanStorage, textPurify } = require('../../utils/helpers');
 const { User } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const eFactory = require('../../utils/entityFactory');
+const { RequestBuilder, Payload } = require('yoti');
 
 exports.getAllUsers = eFactory.getAll(User);
 exports.getUserById = eFactory.getOne(User);
+
+exports.yotiVerify = async (req, res, next) => {
+  try {
+    const { YOTI_CLIENT_ID } = process.env;
+    const { image } = req.body;
+
+    if (!YOTI_CLIENT_ID || !image) {
+      return res.json({
+        success: false,
+        message: 'Cannot process age verification'
+      });
+    }
+
+    const data = {
+      img: image,
+      threshold: 25,
+      operator: "OVER",
+      metadata: {        
+        "device": "unknown"
+      }
+    };
+
+    const request = new RequestBuilder()
+      .withBaseUrl('https://api.yoti.com/ai/v1')
+      .withPemFilePath(path.join(__dirname, '../../', 'integrations', 'yoti', 'hotdrops.pem'))
+      .withEndpoint('/age-antispoofing-verify')
+      .withPayload(new Payload(data))
+      .withMethod('POST')
+      .withHeader('X-Yoti-Auth-Id', YOTI_CLIENT_ID)
+      .build();
+  
+    const response = await request.execute();
+
+    if (response.parsedResponse.age.age_check === "pass") {
+      await User.findByIdAndUpdate(req.user._id, {$set: {
+        ageVerified: true
+      }});
+      req.session.userData.ageVerified = true;
+    }
+
+    return res.json({
+      success: true,
+      data: response.parsedResponse
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
 
 exports.listUsers = async (req, res, next) => {
   try {

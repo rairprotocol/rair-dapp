@@ -1,11 +1,13 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Provider, useSelector, useStore } from 'react-redux';
 
 import { TFileType } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import { playImagesColored } from '../../../SplashPage/images/greyMan/grayMan';
+import YotiPage from '../../../YotiPage/YotiPage';
 import { TUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
 
 import NftVideoplayer from './NftVideoplayer/NftVideoplayer';
@@ -29,6 +31,11 @@ const UnlockableVideosSingleTokenPage: React.FC<
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+  const store = useStore();
+
+  const { userData } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const [formatedVideoObj, setFormatedVideoObj] = useState(undefined);
   const reactSwal = useSwal();
@@ -40,6 +47,36 @@ const UnlockableVideosSingleTokenPage: React.FC<
     });
     return Object.assign({}, ...keyValues);
   }
+
+  const ageVerificationPopUp = useCallback(() => {
+    if (
+      selectVideo &&
+      selectVideo?.ageRestricted === true &&
+      userData?.ageVerified === false
+    ) {
+      reactSwal.fire({
+        html: (
+          <Provider store={store}>
+            <YotiPage setOpenVideoplayer={setOpenVideoPlayer} />
+          </Provider>
+        ),
+        showConfirmButton: false,
+        width: '750px',
+        customClass: {
+          popup: `yoti-bg-color`
+        }
+      });
+    } else {
+      handlePlayerClick();
+    }
+  }, [
+    selectVideo,
+    userData?.ageVerified,
+    reactSwal,
+    store,
+    setOpenVideoPlayer,
+    handlePlayerClick
+  ]);
 
   useEffect(() => {
     if (productsFromOffer && productsFromOffer.length > 0) {
@@ -86,7 +123,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
             className="unlockables-video-player-circle"
             onClick={() => {
               if (currentUserAddress) {
-                handlePlayerClick();
+                ageVerificationPopUp();
               } else {
                 reactSwal.fire({
                   title: 'Login required',

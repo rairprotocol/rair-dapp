@@ -6,6 +6,7 @@ const {
   updateUserByUserAddress,
   listUsers,
   exportUsers,
+  yotiVerify
 } = require('./users.Service');
 const upload = require('../../Multer/Config');
 
@@ -22,6 +23,12 @@ router.get(
   requireUserSession,
   isAdmin,
   exportUsers,
+);
+
+router.post(
+  '/verify-age',
+  requireUserSession,
+  yotiVerify
 );
 
 router.post('/', validation(['createUser']), createUser);

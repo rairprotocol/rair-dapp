@@ -29,10 +29,13 @@ import rairTechLogoBlue from './rairLogo_blue.webp';
 import rairTechLogoBlack from './rairTechLogoBlack.webp';
 import rairTechLogoWhite from './rairTechLogoWhite.webp';
 import rarible from './rarible-logo.webp';
+import verifiedIcon from './verify-icon.png';
+import yotiLogo from './yoti-logo.png';
 
 // images
 export const bgLogoBlack = blackBg;
 export const bgLogoWhite = whiteBg;
+export const VerifiedIcon = verifiedIcon;
 export const headerLogoWhiteMobile = logoWhiteMobile;
 export const headerLogoBlackMobile = logoBlackMobile;
 export const headerLogoBlack = rairTechLogoBlack;
@@ -54,6 +57,7 @@ export const hotDropsDefaultBanner = hotdropsDefaultBanner;
 export const GrandpaWait = grandpaGif;
 export const LennyWait = lennyGif;
 export const KidWait = kigGif;
+export const YotiLogo = yotiLogo;
 
 // Icons
 export const discrodIconNoBorder = discordIconWhiteNoBorder;

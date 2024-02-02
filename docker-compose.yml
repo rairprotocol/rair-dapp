@@ -68,6 +68,7 @@ services:
       AWS_ACCESS_KEY_ID: ${filebase_access_key}
       AWS_SECRET_ACCESS_KEY: ${filebase_secret_access_key}
       FILEBASE_BUCKET: ${filebase_bucket}
+      YOTI_CLIENT_ID: ${yoti_client_id}
     ports:
       - 3000:3000
       - 5000:5000

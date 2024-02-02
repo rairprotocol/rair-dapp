@@ -10,7 +10,12 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
-import { BellIcon, CloseIconMobile, MenuIcon } from '../../images';
+import {
+  BellIcon,
+  CloseIconMobile,
+  MenuIcon,
+  VerifiedIcon
+} from '../../images';
 import {
   SocialBox,
   SocialBoxSearch,
@@ -60,6 +65,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [openProfile, setOpenProfile] = useState<boolean>(false);
+  const { userData: userDataInfo } = useSelector<RootState, TUsersInitialState>(
+    (state) => state.userStore
+  );
   const { connectUserData } = useConnectUser();
   // const [loading, setLoading] = useState<boolean>(false);
   const [userBalance, setUserBalance] = useState<string>('');
@@ -281,18 +289,36 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         )}
                       </div>
                     </div>
-                    <NavLink to={`/${currentUserAddress}`}>
-                      <UserIconMobile
-                        onClick={() => setClick(false)}
-                        avatar={userData && userData.avatar}
-                        marginRight={'10px'}
-                        messageAlert={messageAlert}
-                        primaryColor={primaryColor}>
-                        {userData && !userData.avatar && (
-                          <SvgUserIcon width={'22.5px'} height={'22.5px'} />
+                    <div
+                      style={{
+                        position: 'relative'
+                      }}>
+                      <NavLink to={`/${currentUserAddress}`}>
+                        {userDataInfo && userDataInfo.ageVerified && (
+                          <img
+                            style={{
+                              position: 'absolute',
+                              width: 20,
+                              height: 20,
+                              top: '-5px',
+                              left: '45%'
+                            }}
+                            src={VerifiedIcon}
+                            alt="verified icon"
+                          />
                         )}
-                      </UserIconMobile>
-                    </NavLink>
+                        <UserIconMobile
+                          onClick={() => setClick(false)}
+                          avatar={userData && userData.avatar}
+                          marginRight={'10px'}
+                          messageAlert={messageAlert}
+                          primaryColor={primaryColor}>
+                          {userData && !userData.avatar && (
+                            <SvgUserIcon width={'22.5px'} height={'22.5px'} />
+                          )}
+                        </UserIconMobile>
+                      </NavLink>
+                    </div>
                   </>
                 )}
               </div>

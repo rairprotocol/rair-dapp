@@ -10,6 +10,7 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../ducks/users/users.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
+import { VerifiedIcon } from '../../images';
 import chainData from '../../utils/blockchainData';
 import LoadingComponent from '../common/LoadingComponent';
 
@@ -202,6 +203,19 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             <SvgUserIcon />
           )}
         </div>
+        {userData && userData.ageVerified && (
+          <img
+            style={{
+              position: 'absolute',
+              width: 20,
+              height: 20,
+              top: '-1px',
+              left: '45%'
+            }}
+            src={VerifiedIcon}
+            alt="verified icon"
+          />
+        )}
         <div
           style={{
             display: 'flex',

@@ -61,6 +61,15 @@
   margin-left: 5.875rem;
   border-radius: 1rem;
 }
+
+.verifiedIcon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: -10px;
+  right: -10px;
+}
+
 .profileIconPic {
   width: 8.625rem;
   height: 8.625rem;
@@ -336,6 +345,13 @@
   .root.editMode {
     margin-left: 4rem;
     margin-top: -2rem;
+  }
+
+  .verifiedIcon {
+    top: 20px;
+    width: 30px;
+    height: 30px;
+    right: 10px;
   }
 }
 

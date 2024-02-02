@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useSelector } from 'react-redux';
+import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { constants, utils } from 'ethers';
+import { OreidProvider, useOreId } from 'oreid-react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { IVideoItem, TVideoItemContractData } from './video.types';
@@ -14,6 +15,7 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { YotiLogo } from '../../images';
 import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -24,6 +26,7 @@ import CustomButton from '../MockUpPage/utils/button/CustomButton';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';
 import { playImagesColored } from '../SplashPage/images/greyMan/grayMan';
 import defaultAvatar from '../UserProfileSettings/images/defaultUserPictures.png';
+import YotiPage from '../YotiPage/YotiPage';
 
 Modal.setAppElement('#root');
 
@@ -98,6 +101,8 @@ const VideoItem: React.FC<IVideoItem> = ({
   const [dataUser, setDataUser] = useStateIfMounted<UserType | null>(null);
   const reactSwal = useSwal();
 
+  const store = useStore();
+
   const openModal = useCallback(() => {
     setModalIsOpen(true);
   }, [setModalIsOpen]);
@@ -107,18 +112,28 @@ const VideoItem: React.FC<IVideoItem> = ({
     setOpenVideoplayer(false);
   }, [setModalIsOpen]);
 
-  const ageVerificationPopUp = () => {
-    reactSwal
-      .fire({
-        title: 'Sorry Age verification required',
-        icon: 'warning'
-      })
-      .then((result) => {
-        if (result.isConfirmed || result.isDismissed) {
-          setModalIsOpen(false);
+  const ageVerificationPopUp = useCallback(() => {
+    if (
+      modalIsOpen &&
+      mediaList[item].ageRestricted === true &&
+      userData?.ageVerified === false
+    ) {
+      reactSwal.fire({
+        html: (
+          <Provider store={store}>
+            <YotiPage setOpenVideoplayer={setOpenVideoplayer} />
+          </Provider>
+        ),
+        showConfirmButton: false,
+        width: '750px',
+        customClass: {
+          popup: `yoti-bg-color`
         }
       });
-  };
+    } else {
+      setOpenVideoplayer(true);
+    }
+  }, [modalIsOpen, mediaList, item, userData?.ageVerified, reactSwal, store]);
 
   // const openMintPopUp = () => {
   //   reactSwal.fire({
@@ -234,16 +249,16 @@ const VideoItem: React.FC<IVideoItem> = ({
     getInfo();
   }, [getInfo]);
 
-  useEffect(() => {
-    if (
-      modalIsOpen &&
-      mediaList[item].ageRestricted === true &&
-      userData?.ageVerified === false
-    ) {
-      ageVerificationPopUp();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modalIsOpen, mediaList, userData]);
+  // useEffect(() => {
+  //   if (
+  //     modalIsOpen &&
+  //     mediaList[item].ageRestricted === true &&
+  //     userData?.ageVerified === false
+  //   ) {
+  //     ageVerificationPopUp();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [modalIsOpen, mediaList, userData]);
 
   return (
     <button
@@ -357,7 +372,7 @@ const VideoItem: React.FC<IVideoItem> = ({
                     <div className="modal-content-play-image-container">
                       <div>
                         <img
-                          onClick={() => setOpenVideoplayer(true)}
+                          onClick={() => ageVerificationPopUp()}
                           className={'modal-content-play-image'}
                           src={playImagesColored}
                           alt="Button play video"

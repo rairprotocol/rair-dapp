@@ -69,6 +69,7 @@ import NotificationPage from './components/UserProfileSettings/NotificationPage/
 // import setTitle from './utils/setTitle';
 import FileUpload from './components/video/videoUpload/videoUpload';
 import VideoManager from './components/videoManager/VideoManager';
+import YotiPage from './components/YotiPage/YotiPage';
 import { ColorStoreType } from './ducks/colors/colorStore.types';
 import { setChainId } from './ducks/contracts/actions';
 import { ContractsInitialType } from './ducks/contracts/contracts.types';
@@ -423,6 +424,10 @@ function App() {
                   {
                     path: '/slidelock',
                     content: SlideLock
+                  },
+                  {
+                    path: '/yoti-page',
+                    content: YotiPage
                   },
                   {
                     path: '/about-page',
