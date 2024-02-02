@@ -40,7 +40,8 @@ const FilteringBlock = ({
   setClick,
   metadataFilter,
   setMetadataFilter,
-  tabIndexItems
+  tabIndexItems,
+  colletionPage
 }: any) => {
   const [filterPopUp, setFilterPopUp] = useState(false);
   const [, /*filterItem*/ setFilterItem] = useState('Filters');
@@ -230,99 +231,101 @@ const FilteringBlock = ({
         </div>
       ) : (
         <>
-          {hotdropsVar !== 'true' && (
-            <div ref={filterRef} className="select-filters-wrapper">
-              {setMetadataFilter ? (
-                <SelectFiltersItem
-                  className={`select-filters ${
-                    hotdropsVar === 'true' ? 'hotdrops-hover' : ''
-                  } ${tabIndexItems && tabIndexItems !== 0 && 'disabled'}`}
-                  onClick={() => {
-                    if (tabIndexItems === 0) {
-                      setMetadataFilter();
-                      setFilterClose((prev) => !prev);
-                    }
-                  }}
-                  filterPopUp={filterPopUp}
-                  textColor={textColor}
-                  primaryColor={primaryColor}>
-                  <div className="select-filters-title">
-                    {width > 1101 ? (
-                      <>
-                        {filterCloseText ? (
-                          <CloseIcon
-                            style={{
-                              marginRight: '5px'
-                            }}
-                          />
-                        ) : (
-                          <StyledFilterIcon
-                            filterPopUp={filterPopUp}></StyledFilterIcon>
-                        )}
-                      </>
-                    ) : (
-                      <StyledFilterIcon
-                        filterPopUp={filterPopUp}></StyledFilterIcon>
-                    )}
-                    {width > 700 && <span>Filters</span>}
-                  </div>
-                </SelectFiltersItem>
-              ) : (
-                <SelectFiltersItem
-                  className={`select-filters ${
-                    hotdropsVar === 'true' ? 'hotdrops-hover' : ''
-                  }`}
-                  onClick={onChangeFilterPopUp}
-                  filterPopUp={filterPopUp}
-                  textColor={textColor}
-                  primaryColor={primaryColor}>
-                  <div className="select-filters-title">
-                    {width > 1101 ? (
-                      <>
-                        {filterCloseText ? (
-                          <StyledFilterIcon
-                            filterPopUp={filterPopUp}></StyledFilterIcon>
-                        ) : (
-                          <CloseIcon
-                            style={{
-                              marginRight: '5px'
-                            }}
-                          />
-                        )}
-                      </>
-                    ) : (
-                      <StyledFilterIcon
-                        filterPopUp={filterPopUp}></StyledFilterIcon>
-                    )}
-                    {width > 700 && <span>Filters</span>}
-                  </div>
-                </SelectFiltersItem>
-              )}
+          <div ref={filterRef} className="select-filters-wrapper">
+            {setMetadataFilter ? (
+              <SelectFiltersItem
+                className={`select-filters ${
+                  hotdropsVar === 'true' ? 'hotdrops-hover' : ''
+                } ${tabIndexItems && tabIndexItems !== 0 && 'disabled'}`}
+                onClick={() => {
+                  if (tabIndexItems === 0) {
+                    setMetadataFilter();
+                    setFilterClose((prev) => !prev);
+                  }
+                  if (colletionPage) {
+                    setMetadataFilter();
+                    setFilterClose((prev) => !prev);
+                  }
+                }}
+                filterPopUp={filterPopUp}
+                textColor={textColor}
+                primaryColor={primaryColor}>
+                <div className="select-filters-title">
+                  {width > 1101 ? (
+                    <>
+                      {filterCloseText ? (
+                        <CloseIcon
+                          style={{
+                            marginRight: '5px'
+                          }}
+                        />
+                      ) : (
+                        <StyledFilterIcon
+                          filterPopUp={filterPopUp}></StyledFilterIcon>
+                      )}
+                    </>
+                  ) : (
+                    <StyledFilterIcon
+                      filterPopUp={filterPopUp}></StyledFilterIcon>
+                  )}
+                  {width > 700 && <span>Filters</span>}
+                </div>
+              </SelectFiltersItem>
+            ) : (
+              <SelectFiltersItem
+                className={`select-filters ${
+                  hotdropsVar === 'true' ? 'hotdrops-hover' : ''
+                }`}
+                onClick={onChangeFilterPopUp}
+                filterPopUp={filterPopUp}
+                textColor={textColor}
+                primaryColor={primaryColor}>
+                <div className="select-filters-title">
+                  {width > 1101 ? (
+                    <>
+                      {filterCloseText ? (
+                        <StyledFilterIcon
+                          filterPopUp={filterPopUp}></StyledFilterIcon>
+                      ) : (
+                        <CloseIcon
+                          style={{
+                            marginRight: '5px'
+                          }}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <StyledFilterIcon
+                      filterPopUp={filterPopUp}></StyledFilterIcon>
+                  )}
+                  {width > 700 && <span>Filters</span>}
+                </div>
+              </SelectFiltersItem>
+            )}
 
-              {filterPopUp && (
-                <SelectFiltersPopUp
-                  className="select-filters-popup"
-                  primaryColor={primaryColor}>
-                  <div
-                    onClick={() => {
-                      onChangeFilterItem('Price');
-                      setIsOpenBlockchain(true);
-                    }}
-                    className="select-filters-item">
-                    Blockchain
-                  </div>
-                  <div
-                    onClick={() => {
-                      onChangeFilterItem('Metadata');
-                      setIsOpenCategories(true);
-                    }}
-                    className="select-filters-item">
-                    Categories
-                  </div>
-                </SelectFiltersPopUp>
-              )}
-            </div>
-          )}
+            {filterPopUp && (
+              <SelectFiltersPopUp
+                className="select-filters-popup"
+                primaryColor={primaryColor}>
+                <div
+                  onClick={() => {
+                    onChangeFilterItem('Price');
+                    setIsOpenBlockchain(true);
+                  }}
+                  className="select-filters-item">
+                  Blockchain
+                </div>
+                <div
+                  onClick={() => {
+                    onChangeFilterItem('Metadata');
+                    setIsOpenCategories(true);
+                  }}
+                  className="select-filters-item">
+                  Categories
+                </div>
+              </SelectFiltersPopUp>
+            )}
+          </div>
         </>
       )}
     </>

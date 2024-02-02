@@ -57,7 +57,7 @@ const MetadataItem = ({
       onClick={toggleMetadata}
       className={`custom-desc-to-offer nft-data-page-main-properties filter-metadata-block-titleCollection ${
         checkName && 'activeMetadata'
-      }`}>
+      } ${import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops' : ''}`}>
       <div
         className="custom-offer-percents"
         style={{

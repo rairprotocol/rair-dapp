@@ -41,7 +41,7 @@ const MetadataAttributesPropertyItem = ({
       onClick={clickProperty}
       className={`custom-desc-to-offer nft-data-page-main-properties filter-metadata-block-titleCollection ${
         activeMetadata && 'activeMetadata'
-      }`}
+      } ${import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops' : ''}`}
       key={index}>
       {item.value.length > 7 && !isMobileDesign ? (
         <>

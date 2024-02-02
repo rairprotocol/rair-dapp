@@ -288,7 +288,9 @@ const SearchPanel: React.FC<ISearchPanel> = ({
             <FilteringBlock
               click={click}
               setIsClick={setClick}
-              isFilterShow={true}
+              isFilterShow={
+                import.meta.env.VITE_HOTDROPS === 'true' ? false : true
+              }
               textColor={textColor}
               primaryColor={primaryColor}
               categoryClick={categoryClick}

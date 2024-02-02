@@ -10,7 +10,10 @@ const FilterMetadataTokens = ({
   selectedAttributeValues
 }) => {
   return (
-    <div className="properties-data">
+    <div
+      className={`properties-data ${
+        import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops' : ''
+      }`}>
       {selectedData && (
         <>
           <MetadataItem

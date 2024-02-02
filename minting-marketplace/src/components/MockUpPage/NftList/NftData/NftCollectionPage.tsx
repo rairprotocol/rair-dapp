@@ -484,6 +484,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                   // setCategory={setCategory}
                   setSortItem={setSortItem}
                   setIsShow={setMetadataFilter}
+                  colletionPage={true}
                   // setIsShowCategories={setIsShowCategories}
                   // setFilterText={setFilterText}
                   // setFilterCategoriesText={setFilterCategoriesText}
@@ -497,6 +498,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                   primaryColor={primaryColor}
                   metadataFilter={metadataFilter}
                   setMetadataFilter={toggleMetadataFilter}
+                  colletionPage={true}
                   // categoryClick={categoryClick}
                   // setCategoryClick={setCategoryClick}
                   // blockchainClick={blockchainClick}
@@ -725,7 +727,11 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                         Clear all
                       </button>
                       <button
-                        className="modal-filtering-button apply-btn"
+                        className={`modal-filtering-button apply-btn ${
+                          import.meta.env.VITE_HOTDROPS === 'true'
+                            ? 'hotdrops'
+                            : ''
+                        }`}
                         disabled={
                           !selectedAttributeValuesFunction(
                             selectedAttributeValues

@@ -17,6 +17,10 @@
   border: none;
 }
 
+.apply-btn.hotdrops {
+  background: var(--hot-drops-light);
+}
+
 button:disabled.clear-btn {
   background: rgb(74, 74, 74);
   color: grey;
@@ -24,6 +28,10 @@ button:disabled.clear-btn {
 
 button:disabled.apply-btn {
   background: var(--stimorol-click);
+}
+
+button:disabled.apply-btn.hotdrops {
+  background: var(--hot-drops);
 }
 
 button:disabled.apply-btn:hover,
