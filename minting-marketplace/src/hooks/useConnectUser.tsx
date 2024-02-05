@@ -136,7 +136,9 @@ const useConnectUser = () => {
         ticker: chainInformation.symbol,
         tickerName: chainInformation.name
       },
-      web3AuthNetwork: 'sapphire_devnet'
+      web3AuthNetwork: chainInformation.testnet
+        ? 'sapphire_devnet'
+        : 'sapphire_mainnet'
     });
 
     await web3AuthSigner.authenticate({
