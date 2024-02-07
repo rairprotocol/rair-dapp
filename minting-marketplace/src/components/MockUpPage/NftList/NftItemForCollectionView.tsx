@@ -16,12 +16,12 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { UserType } from '../../../ducks/users/users.types';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useSwal from '../../../hooks/useSwal';
+import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { BillTransferIcon } from '../../../images';
 import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import { getRGBValue } from '../../../utils/determineColorRange';
 import { rFetch } from '../../../utils/rFetch';
-import { TOfferType } from '../../marketplace/marketplace.types';
 import ResaleModal from '../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
@@ -72,6 +72,9 @@ const NftItemForCollectionViewComponent: React.FC<
   const [usdPriceResale, setUsdPriceResale] = useState<number | undefined>(
     undefined
   );
+
+  const { width } = useWindowDimensions();
+  const isMobileDesign = width < 600;
 
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
@@ -535,10 +538,13 @@ const NftItemForCollectionViewComponent: React.FC<
                     alignItems: 'flex-start'
                   }}>
                   {metadata?.name === 'none' && '#' + index}
-                  {metadata?.name !== 'none' && metadata?.name.slice(0, 22)}
-                  {metadata?.name !== 'none' && metadata?.name.length > 22
-                    ? '...'
-                    : ''}
+                  {metadata?.name !== 'none' &&
+                  isMobileDesign &&
+                  metadata?.name.length > 16
+                    ? metadata?.name.slice(0, 16) + '...'
+                    : metadata?.name.length > 22
+                      ? metadata?.name.slice(0, 22) + '...'
+                      : metadata?.name}
                   <div
                     className="brief-infor-nftItem"
                     style={{

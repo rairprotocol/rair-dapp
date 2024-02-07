@@ -1748,6 +1748,16 @@ p.general-title {
   }
 }
 
+@media screen and (max-width: 600px) {
+  .wrapper-collection .nft-item-collection .description-title {
+    line-height: 20px;
+  }
+
+  .wrapper-collection .nft-item-collection .collection-block-price {
+    font-size: 10px;
+  }
+}
+
 @media screen and (max-width: 540px) {
   .category-wrapper {
     width: 100%;

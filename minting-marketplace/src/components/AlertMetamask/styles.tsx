@@ -4,7 +4,7 @@ export const Alert = styled.div`
   width: 100%;
   position: fixed;
   display: flex;
-  padding: 1vh 1vw;
+  padding: 1.3vh 1vw;
   align-items: center;
   text-align: center;
   justify-content: center;
