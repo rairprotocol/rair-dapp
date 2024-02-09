@@ -49,6 +49,9 @@ const ResaleModal: React.FC<IResaleModal> = ({
   const reactSwal = useSwal();
   const [usdPrice, setUsdPrice] = useState<number | undefined>(undefined);
 
+  const xMIN = Number(0.0001);
+  const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
+
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
 
   const hotDropsVar = import.meta.env.VITE_HOTDROPS;
@@ -311,6 +314,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   setter={setInputSellValue}
                   customClass={`input-sell-value text-${textColor}`}
                   placeholder="Your price"
+                  min={Number(xMIN)}
+                  max={Number(yMAX)}
                 />
                 <CloseIcon
                   className="input-sell-close-icon"
@@ -324,13 +329,23 @@ const ResaleModal: React.FC<IResaleModal> = ({
                 <button
                   className={`btn-update-resale ${
                     hotDropsVar === 'true' ? 'hotdrops' : ''
-                  } ${!inputSellValue && 'disabled-resale-btn'}`}
+                  } ${
+                    !inputSellValue ||
+                    Number(inputSellValue) < Number(xMIN) ||
+                    Number(inputSellValue) > Number(yMAX)
+                      ? 'disabled-resale-btn'
+                      : ''
+                  }`}
                   onClick={() => {
                     if (inputSellValue) {
                       updateResaleOffer(inputSellValue, resaleOffer[0]._id);
                     }
                   }}
-                  disabled={!inputSellValue}>
+                  disabled={
+                    !inputSellValue ||
+                    Number(inputSellValue) < Number(xMIN) ||
+                    Number(inputSellValue) > Number(yMAX)
+                  }>
                   Update
                 </button>{' '}
                 <TooltipBox title="Remove offer resale">
@@ -397,24 +412,27 @@ const ResaleModal: React.FC<IResaleModal> = ({
                 </div>
                 <div className="resale-modal-information-box">
                   <div>
-                    {commissionFee && usdPrice && (
-                      <div>
-                        $
-                        {(
-                          ((Number(inputSellValue) *
-                            (Number(commissionFee.nodeFee) +
-                              Number(commissionFee.treasuryFee))) /
-                            100) *
-                          usdPrice
-                        ).toFixed(2)}
-                      </div>
-                    )}
+                    {inputSellValue.length <= 10 &&
+                      commissionFee &&
+                      usdPrice && (
+                        <div>
+                          $
+                          {(
+                            ((Number(inputSellValue) *
+                              (Number(commissionFee.nodeFee) +
+                                Number(commissionFee.treasuryFee))) /
+                              100) *
+                            usdPrice
+                          ).toFixed(2)}
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="resale-modal-information-box">
                   <div>
                     $
-                    {commissionFee &&
+                    {inputSellValue.length <= 10 &&
+                    commissionFee &&
                     usdPrice &&
                     correctBlockchain(item.contract.blockchain)
                       ? (
@@ -435,7 +453,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
               <div>
                 <div className="resale-modal-information-box">
                   <div>
-                    {commissionFee &&
+                    {inputSellValue.length <= 10 &&
+                    commissionFee &&
                     commissionFee.creatorFee &&
                     commissionFee.creatorFee.length > 0
                       ? (
@@ -447,7 +466,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   </div>
                 </div>
                 <div className="resale-modal-information-box">
-                  {commissionFee && (
+                  {inputSellValue.length <= 10 && commissionFee && (
                     <div>
                       {(
                         (Number(inputSellValue) *
@@ -460,7 +479,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
                 </div>
                 <div className="resale-modal-information-box">
                   <div>
-                    {commissionFee &&
+                    {inputSellValue.length <= 10 &&
+                    commissionFee &&
                     correctBlockchain(item.contract.blockchain)
                       ? (
                           Number(inputSellValue) -

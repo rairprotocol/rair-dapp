@@ -39,6 +39,9 @@ const SellButton: React.FC<ISellButton> = ({
   let { blockchain, contract, tokenId } = useParams();
   const [accountData, setAccountData] = useState<UserType | null>(null);
 
+  const xMIN = Number(0.0001);
+  const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
+
   if (!blockchain && !contract && !tokenId) {
     blockchain = item.contract.blockchain;
     contract = item.contract.contractAddress;
@@ -210,7 +213,12 @@ const SellButton: React.FC<ISellButton> = ({
           }
           handleClick={sellingPrice ? handleClickSellButton : openInputField}
           isColorPurple={false}
-          disabled={!sellingPrice || singleTokenPage}
+          disabled={
+            !sellingPrice ||
+            singleTokenPage ||
+            Number(sellingPrice) < Number(xMIN) ||
+            Number(sellingPrice) > Number(yMAX)
+          }
         />
       );
     } else {
@@ -220,7 +228,11 @@ const SellButton: React.FC<ISellButton> = ({
             title={sellingPrice ? `Sell for ${sellingPrice}` : 'Sell'}
             handleClick={sellingPrice ? handleClickSellButton : openInputField}
             isColorPurple={false}
-            disabled={!sellingPrice}
+            disabled={
+              !sellingPrice ||
+              Number(sellingPrice) < Number(xMIN) ||
+              Number(sellingPrice) > Number(yMAX)
+            }
           />
         );
       } else {

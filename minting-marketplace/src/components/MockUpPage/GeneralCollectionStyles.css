@@ -394,6 +394,10 @@ img.single-token-block-img {
   justify-content: space-between;
 }
 
+.resale-modal-group-btns .nft-data-sell-button {
+  width: 40%;
+}
+
 .brief-info-nftItem {
   display: flex;
   width: 100%;
