@@ -154,7 +154,7 @@ exports.generatePurchaseRequest = async (req, res, next) => {
                 foundOffer.tokenContract.blockchain,
                 marketAddress,
                 diamondMarketplaceAbi,
-                foundOffer.tokenContract.blockchain === '0x250',
+                true,
                 true,
             );
             const saleHash = await diamondMarketplaceInstance.generateResaleHash(

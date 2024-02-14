@@ -35,7 +35,7 @@
     "@rair/eth-auth": "^0.2.0",
     "@rair/hls-server": "^0.2.1",
     "@sentry/node": "^7.5.0",
-    "alchemy-sdk": "^2.8.2",
+    "alchemy-sdk": "^3.1.2",
     "axios": "^0.21.0",
     "body-parser": "^1.20.2",
     "connect-redis": "^6.1.3",
