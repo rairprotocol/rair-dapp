@@ -17,7 +17,7 @@ import { UserType } from '../../../ducks/users/users.types';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useSwal from '../../../hooks/useSwal';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
-import { BillTransferIcon } from '../../../images';
+import { BillTransferIcon, defaultHotDrops } from '../../../images';
 import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import { getRGBValue } from '../../../utils/determineColorRange';
@@ -366,6 +366,14 @@ const NftItemForCollectionViewComponent: React.FC<
     getTokenData();
   }, [getTokenData]);
 
+  const displayImage = metadata?.image_thumbnail
+    ? metadata.image_thumbnail
+    : ipfsLink
+      ? ipfsLink
+      : import.meta.env.VITE_HOTDROPS === 'true'
+        ? defaultHotDrops
+        : pict;
+
   return (
     <>
       {offer && (
@@ -482,7 +490,7 @@ const NftItemForCollectionViewComponent: React.FC<
                   width={'100%'}
                   height={'100%'}
                   alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
-                  src={metadata?.image ? metadata?.image : pict}
+                  src={displayImage}
                 />
               ) : (
                 <div
@@ -496,7 +504,7 @@ const NftItemForCollectionViewComponent: React.FC<
                     onClick={() => toggleVideoPlay()}
                     alt="metadata?.name === 'none' ? 'NFT token' : metadata?.name"
                     url={`${checkIPFSanimation(metadata?.animation_url)}`}
-                    light={metadata?.image ? metadata?.image : pict}
+                    light={displayImage}
                     style={{
                       // position: 'absolute',
                       bottom: 0,
@@ -519,7 +527,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 width={'100%'}
                 height={'100%'}
                 alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
-                src={metadata?.image ? ipfsLink : pict}
+                src={displayImage}
               />
             )}
 

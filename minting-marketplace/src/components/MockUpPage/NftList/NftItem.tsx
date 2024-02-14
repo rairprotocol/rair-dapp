@@ -227,6 +227,14 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
     getInfoFromUser();
   }, [getInfoFromUser]);
 
+  const displayImage = metaDataProducts?.metadata?.image_thumbnail
+    ? metaDataProducts.metadata.image_thumbnail
+    : ipfsLink
+      ? ipfsLink
+      : import.meta.env.VITE_HOTDROPS === 'true'
+        ? defaultHotDrops
+        : pict;
+
   return (
     <>
       <div
@@ -296,13 +304,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 height={'282px'}
                 alt={collectionName}
                 cover={true}
-                src={
-                  metaDataProducts?.metadata?.image
-                    ? metaDataProducts?.metadata?.image
-                    : import.meta.env.VITE_HOTDROPS === 'true'
-                      ? defaultHotDrops
-                      : pict
-                }
+                src={displayImage}
               />
             ) : (
               <div
@@ -317,13 +319,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                     url={`${checkIPFSanimation(
                       metaDataProducts.metadata?.animation_url
                     )}`}
-                    light={
-                      metaDataProducts.metadata?.image
-                        ? metaDataProducts.metadata?.image
-                        : import.meta.env.VITE_HOTDROPS === 'true'
-                          ? defaultHotDrops
-                          : pict
-                    }
+                    light={displayImage}
                     style={{
                       position: 'absolute',
                       bottom: 0,
@@ -344,13 +340,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               className="col-12 h-100 w-100 zoom-event"
               width={'282px'}
               height={'282px'}
-              src={
-                metaDataProducts?.metadata?.image
-                  ? ipfsLink
-                  : import.meta.env.VITE_HOTDROPS === 'true'
-                    ? defaultHotDrops
-                    : pict
-              }
+              src={displayImage}
               alt={collectionName}
               cover={true}
             />

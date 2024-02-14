@@ -9,6 +9,7 @@ const Metadata = new Schema(
       required: true,
       default: process.env.DEFAULT_PRODUCT_COVER,
     },
+    image_thumbnail: { type: String, required: false },
     image_data: { type: String, required: false },
     artist: { type: String, default: 'none' },
     external_url: { type: String, default: 'none' },

@@ -27,6 +27,7 @@ export type TAttributes = {
 export type TCheckMetadataOnBlockchain = {
   attributes?: TAttributes[];
   image: string;
+  image_thumbnail?: string;
   name: string;
 };
 export type TMetadataType = TCheckMetadataOnBlockchain & {
