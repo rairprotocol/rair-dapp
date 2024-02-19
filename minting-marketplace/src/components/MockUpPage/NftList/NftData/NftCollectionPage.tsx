@@ -37,6 +37,7 @@ import {
 import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
+import ClearMetadataBox from './TitleCollection/FilterMetadataTokens/ClearMetadataBox/ClearMetadataBox';
 import FilterMetadataTokens from './TitleCollection/FilterMetadataTokens/FilterMetadataTokens';
 import MetadataAttributesProperties from './TitleCollection/FilterMetadataTokens/MetadataAttrPropertyItems/MetadataAttributes';
 import TitleCollection from './TitleCollection/TitleCollection';
@@ -286,6 +287,22 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     }
   }, [blockchain]);
 
+  const getResetTokens = useCallback(() => {
+    getAllProduct(
+      '0',
+      showTokensRef.current.toString(),
+      selectedAttributeValues &&
+        selectedAttributeValues.length &&
+        selectedAttributeValues.reduce((acc, item) => {
+          const { name, values } = item;
+          const newValue = values.filter((el) => el.active);
+
+          acc[name] = newValue.map((el) => el.value);
+          return acc;
+        }, {})
+    );
+  }, [getAllProduct, selectedAttributeValues, showTokensRef]);
+
   useEffect(() => {
     getUSDcurrency();
   }, [getUSDcurrency]);
@@ -515,7 +532,11 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               )}
             </div>
           </div>
-
+          <ClearMetadataBox
+            filteredDataAttributes={filteredDataAttributes}
+            setSelectedAttributeValues={setSelectedAttributeValues}
+            getResetTokens={getResetTokens}
+          />
           {tokenDataFiltered.length > 0 ? (
             <div className="filter__btn__wrapper">
               {show ? (
