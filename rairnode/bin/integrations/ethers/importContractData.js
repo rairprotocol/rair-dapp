@@ -4,6 +4,7 @@ const fetch = require('node-fetch');
 const log = require('../../utils/logger')(module);
 const { Contract, Product, Offer, OfferPool, MintedToken } = require('../../models');
 const { alchemy } = require('../../config');
+const { processMetadata } = require('../../utils/metadataClassify');
 
 // Contract ABIs
 // The RAIR721 contract is still an ERC721 compliant contract,
@@ -195,6 +196,7 @@ module.exports = {
       await product.save();
       await offer.save();
       await offerPool.save();
+      await processMetadata(contract._id, product.collectionIndexInContract);
 
       return {
         success: true,
