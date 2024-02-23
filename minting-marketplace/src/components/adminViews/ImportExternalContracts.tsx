@@ -21,6 +21,7 @@ type userType = {
   creationDate: Date;
   email: string;
   _id: string;
+  blocked: string;
 };
 
 const ImportExternalContract = () => {
@@ -248,6 +249,7 @@ const ImportExternalContract = () => {
       </div>
       <table className="table table-dark table-responsive">
         <thead>
+          <th />
           <th>Date Created</th>
           <th>Username</th>
           <th>Public Address</th>
@@ -255,9 +257,28 @@ const ImportExternalContract = () => {
         </thead>
         <tbody>
           {userList.map((user, index) => {
-            console.info(user);
             return (
               <tr key={index}>
+                <td>
+                  <button
+                    onClick={async () => {
+                      await rFetch(`/api/v2/users/${user.publicAddress}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({
+                          blocked: !user.blocked
+                        }),
+                        headers: {
+                          'content-type': 'application/json'
+                        }
+                      });
+                      getUserData();
+                    }}
+                    className={`btn btn-${
+                      user.blocked ? 'success' : 'danger'
+                    }`}>
+                    {user.blocked ? 'Unban' : 'Ban'}
+                  </button>
+                </td>
                 <td>{user.creationDate.toString()}</td>
                 <td>{user.nickName}</td>
                 <td>{user.publicAddress}</td>

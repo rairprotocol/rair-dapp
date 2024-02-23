@@ -7,6 +7,7 @@ const AppError = require('../utils/errors/AppError');
 const { zoomSecret, zoomClientID } = require('../config');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
 // const { superAdminInstance } = require('../utils/vaultSuperAdmin');
+const fs = require('fs');
 
 const chainHashToOreIdMapping = {
   '0x1': 'eth_main',
@@ -64,6 +65,23 @@ module.exports = {
       if (userData === null) {
         return next(new AppError('User not found.', 404));
       }
+
+      // Check OFAC blocklist
+      // Read the file content
+      const content = fs.readFileSync(
+        './bin/integrations/ofac/sanctioned_addresses_ETH.json',
+        'utf8'
+      );
+      const ofacBlocklist = JSON.parse(content).map(address => address.toLowerCase());
+      if (ofacBlocklist.includes(ethAddress)) {
+        await User.findByIdAndUpdate(userData._id, {$set: {blocked: true}});
+        userData.blocked = true;
+      }
+      if (userData.blocked) {
+        log.error(`Blocked user tried to login: ${ethAddress}`);
+        return next(new AppError('Authentication failed.', 403));
+      }
+
       const { superAdmins } = await ServerSetting.findOne({});
       userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
       userData.superAdmin = superAdmins.includes(userData.publicAddress);

@@ -20,6 +20,7 @@ const User = new Schema(
     },
     nonce: { type: String, default: () => nanoid(), select: false },
     creationDate: { type: Date, default: Date.now },
+    blocked: { type: Boolean, default: false },
   },
   { versionKey: false },
 );

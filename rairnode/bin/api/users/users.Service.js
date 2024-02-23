@@ -69,6 +69,7 @@ exports.listUsers = async (req, res, next) => {
       nickName: 1,
       publicAddress: 1,
       creationDate: 1,
+      blocked: 1
     });
     return res.json({
       success: true,
@@ -158,7 +159,7 @@ exports.updateUserByUserAddress = async (req, res, next) => {
       return next(new AppError('User not found.', 404));
     }
 
-    if (publicAddress !== user.publicAddress) {
+    if (publicAddress !== user.publicAddress && !user.superAdmin) {
       return next(new AppError(`You have no permissions for updating user ${publicAddress}.`, 403));
     }
 
