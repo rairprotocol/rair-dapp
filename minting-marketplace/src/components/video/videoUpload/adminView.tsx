@@ -137,7 +137,7 @@ const AdminView = ({
                 getter={item}
                 setter={(e) => selectContract(e, index)}
                 placeholder="Select contract that needs to be hidden"
-                options={options}
+                options={options.filter((el) => !el.blockView && !el.blockSync)}
               />
               <div className="hidden-options-wrapper">
                 <button
