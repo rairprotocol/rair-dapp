@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import Swal from 'sweetalert2';
+import { stringToHex } from 'viem';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
@@ -65,7 +66,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
       await web3TxHandler(erc777Instance, 'send', [
         creditHandlerInstance?.address,
         tokenAmount,
-        utils.toUtf8Bytes('RAIR Credit Deposit')
+        stringToHex('RAIR Credit Deposit')
       ])
     ) {
       Swal.fire(

@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LightSmartContractAccount } from '@alchemy/aa-accounts';
+import { SendUserOperationResult } from '@alchemy/aa-core';
 import { AccountSigner } from '@alchemy/aa-ethers';
 import {
   BigNumber,
@@ -167,6 +168,36 @@ const useWeb3Tx = () => {
     [handleReceipt, handleWeb3Error, currentChain]
   );
 
+  const verifyAAUserOperation = useCallback(
+    async (
+      userOperation: SendUserOperationResult,
+      options: {
+        failureMessage?: string;
+        callback?: () => void;
+        intendedBlockchain: BlockchainType;
+      }
+    ) => {
+      try {
+        const txHash = await (
+          programmaticProvider as any
+        ).waitForUserOperationTransaction(userOperation.hash);
+        handleReceipt(txHash, options?.callback);
+        return true;
+      } catch (err: any) {
+        const stringified = err.toString();
+        if (
+          stringified.includes('Failed to find transaction for User Operation')
+        ) {
+          reactSwal.fire('Please wait', 'Verifying user operation', 'info');
+          return await verifyAAUserOperation(userOperation, options);
+        }
+        console.info(err);
+        reactSwal.fire('Error', err.toString(), 'error');
+      }
+    },
+    []
+  );
+
   const web3AuthCall = useCallback(
     async (
       contract: Contract,
@@ -217,16 +248,7 @@ const useWeb3Tx = () => {
       if (!userOperation?.hash) {
         return false;
       }
-      try {
-        const txHash = await (
-          programmaticProvider as any
-        ).waitForUserOperationTransaction(userOperation.hash);
-        handleReceipt(txHash, options?.callback);
-        return true;
-      } catch (err: any) {
-        console.info(err);
-        reactSwal.fire('Error', err.toString(), 'error');
-      }
+      return await verifyAAUserOperation(userOperation, options);
     },
     [currentUserAddress, programmaticProvider, handleReceipt, reactSwal]
   );

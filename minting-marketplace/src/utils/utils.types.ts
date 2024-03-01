@@ -1,4 +1,4 @@
-import { ChainConfig } from 'viem/_types/types/chain';
+import { Chain } from 'viem';
 
 export type TNativeCurrency = {
   name: string;
@@ -22,7 +22,7 @@ export type TChainItemData = {
   oreIdAlias: string | undefined;
   addChainData: TAddChainData;
   disabled?: boolean;
-  viem?: ChainConfig;
+  viem?: Chain;
   alchemy?: string;
 };
 export type TChainData = {

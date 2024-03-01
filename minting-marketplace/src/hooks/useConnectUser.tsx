@@ -500,6 +500,7 @@ const useConnectUser = () => {
       dispatch(setLoginType(undefined));
       dispatch(setLogInStatus(false));
       dispatch(setUserData(undefined));
+      dispatch(setProgrammaticProvider(undefined));
       navigate('/');
     }
   }, [dispatch, navigate, oreId, loginType]);

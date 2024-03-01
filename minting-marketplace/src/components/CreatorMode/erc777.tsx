@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as ethers from 'ethers';
+import { stringToHex } from 'viem';
 
 import { IErc777Data, IERC777Manager } from './creatorMode.types';
 
@@ -94,7 +95,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
                   await web3TxHandler(erc777Instance, 'send', [
                     targetAddress,
                     targetValue,
-                    ethers.utils.toUtf8Bytes('')
+                    stringToHex('')
                   ])
                 ) {
                   reactSwal.fire('Success', 'Tokens sent', 'success');

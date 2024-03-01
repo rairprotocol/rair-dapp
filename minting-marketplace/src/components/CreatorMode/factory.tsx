@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
+import { stringToHex } from 'viem';
 
 import { IFactoryManager } from './creatorMode.types';
 
@@ -28,9 +29,8 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
 
   const refreshData = useCallback(async () => {
     setRefetchingFlag(true);
-    const tokenCount = await factoryInstance?.getContractCountOf(
-      currentUserAddress
-    );
+    const tokenCount =
+      await factoryInstance?.getContractCountOf(currentUserAddress);
     const tokens: string[] = [];
     for (let i = 0; i < tokenCount; i++) {
       tokens.push(
@@ -96,7 +96,7 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
                 await web3TxHandler(erc777Instance, 'send', [
                   factoryInstance?.address,
                   tokensRequired,
-                  utils.toUtf8Bytes(erc721Name)
+                  stringToHex(erc721Name)
                 ])
               ) {
                 reactSwal.fire({

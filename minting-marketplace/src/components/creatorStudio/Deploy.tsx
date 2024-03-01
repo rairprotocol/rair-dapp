@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
+import { stringToHex } from 'viem';
 
 import CreditManager from './CreditManager';
 import NavigatorFactory from './NavigatorFactory';
@@ -199,7 +200,7 @@ const Factory = () => {
                 const success = await web3TxHandler(erc777Instance, 'send', [
                   factoryInstance?.address,
                   deploymentPrice,
-                  utils.toUtf8Bytes(contractName)
+                  stringToHex(contractName)
                 ]);
                 setDeploying(false);
                 if (success) {
@@ -247,7 +248,7 @@ const Factory = () => {
                 const success = await web3TxHandler(erc777Instance, 'send', [
                   diamondFactoryInstance.address,
                   deploymentPriceDiamond,
-                  utils.toUtf8Bytes(contractName)
+                  stringToHex(contractName)
                 ]);
                 setDeploying(false);
                 if (success) {
