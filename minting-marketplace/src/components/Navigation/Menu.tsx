@@ -235,32 +235,40 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               <div className="social-media">
                 {!messageAlert && (
                   <>
-                    <SocialBoxSearch
-                      primaryColor={primaryColor}
-                      hotdrops={hotdropsVar}
-                      onClick={() => {
-                        handleActiveSearch();
-                        toggleMenu('nav');
-                      }}
-                      activeSearch={activeSearch}
-                      marginRight={'10px'}>
-                      <i className="fas fa-search" aria-hidden="true"></i>
-                    </SocialBoxSearch>
-                    {/* this is where the aikon widget should go: */}
-                    {currentUserAddress && (
-                      <SocialBox
-                        onClick={() => {
-                          handleMessageAlert('notification');
-                          toggleMenu('nav');
-                          handleActiveSearch();
-                        }}
-                        className="social-bell-icon"
-                        width="40px"
-                        height="40px"
-                        marginRight={'10px'}>
-                        <BellIcon primaryColor={primaryColor} />
-                      </SocialBox>
-                    )}
+                    <>
+                      {click && (
+                        <>
+                          <SocialBoxSearch
+                            primaryColor={primaryColor}
+                            hotdrops={hotdropsVar}
+                            onClick={() => {
+                              handleActiveSearch();
+                              toggleMenu('nav');
+                            }}
+                            activeSearch={activeSearch}
+                            marginRight={'10px'}>
+                            <i className="fas fa-search" aria-hidden="true"></i>
+                          </SocialBoxSearch>
+                          {/* this is where the aikon widget should go: */}
+                          {currentUserAddress && userBalance.length < 7 && (
+                            <>
+                              <SocialBox
+                                onClick={() => {
+                                  handleMessageAlert('notification');
+                                  toggleMenu('nav');
+                                  handleActiveSearch();
+                                }}
+                                className="social-bell-icon"
+                                width="40px"
+                                height="40px"
+                                marginRight={'10px'}>
+                                <BellIcon primaryColor={primaryColor} />
+                              </SocialBox>
+                            </>
+                          )}
+                        </>
+                      )}
+                    </>
                     <div
                       className="mobileAikonWidget"
                       style={{

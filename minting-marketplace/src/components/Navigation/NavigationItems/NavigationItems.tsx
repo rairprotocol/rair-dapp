@@ -43,6 +43,10 @@ export const Nav = styled.nav<IMenuMobileWrapper>`
   position: ${(props) => (props.editMode ? 'fixed' : 'reletive')};
   margin-top: ${(props) =>
     props.showAlert && props.selectedChain ? '50px' : ''};
+
+  @media screen and (max-width: 400px) {
+    padding: 22px 20px;
+  }
 `;
 
 export const ListItem = styled.li<IMenuMobileWrapper>`

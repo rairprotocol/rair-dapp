@@ -97,7 +97,8 @@
 @media screen and (max-width: 1024px) {
   .mobileAikonWidget {
     height: 40px;
-    width: 120px;
+    width: auto;
+    padding: 0 10px;
     background: rgb(66, 66, 66);
     border: 1px solid rgb(234, 234, 234);
     border-radius: 10px;
@@ -138,7 +139,16 @@
 @media screen and (max-width: 500px) {
   .mobileAikonWidget {
     height: 40px;
-    width: 108px;
+    width: auto;
+    padding: 0 10px;
     justify-content: space-evenly;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .mobileAikonWidget {
+    height: 35px;
+    width: auto;
+    padding: 0 10px;
   }
 }

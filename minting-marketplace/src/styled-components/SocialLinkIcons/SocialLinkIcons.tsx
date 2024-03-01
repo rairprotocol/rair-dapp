@@ -94,6 +94,11 @@ export const SocialBox = styled.div<ISocialBox>`
       fill: #fff;
     }
   }
+
+  @media screen and (max-width: 400px) {
+    width: 35px;
+    height: 35px;
+  }
 `;
 
 export const SocialBoxSearch = styled.div<ISocialBox>`
@@ -109,8 +114,8 @@ export const SocialBoxSearch = styled.div<ISocialBox>`
         ? 'var(--hot-drops-gradient)'
         : 'var(--stimorol)'
       : props.primaryColor === 'rhyno'
-      ? '#ffffff'
-      : '#424242'};
+        ? '#ffffff'
+        : '#424242'};
   border: ${(props) => (props.activeSearch ? 'none' : '1px solid #eaeaea')};
   cursor: pointer;
   transition: all 0.2s ease;
@@ -136,6 +141,11 @@ export const SocialBoxSearch = styled.div<ISocialBox>`
     font-weight: 400;
     transition: all 0.3s ease;
   }
+
+  @media screen and (max-width: 400px) {
+    width: 35px;
+    height: 35px;
+  }
 `;
 
 export const UserIconMobile = styled.div<ISocialBox>`
@@ -154,11 +164,16 @@ export const UserIconMobile = styled.div<ISocialBox>`
     props.messageAlert === 'profile' && props.primaryColor === 'rhyno'
       ? '1px solid #000'
       : props.messageAlert === 'profile'
-      ? '1px solid #D0D0D0'
-      : 'none'};
+        ? '1px solid #D0D0D0'
+        : 'none'};
 
   margin-right: ${(props) => props.marginRight};
   margin-left: ${(props) => props.marginLeft};
+
+  @media screen and (max-width: 400px) {
+    width: 35px;
+    height: 35px;
+  }
 `;
 
 export const SocialMenuMobile = styled.div<ISocialBox>`
@@ -172,4 +187,9 @@ export const SocialMenuMobile = styled.div<ISocialBox>`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 400px) {
+    width: 35px;
+    height: 35px;
+  }
 `;

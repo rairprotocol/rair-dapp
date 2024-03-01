@@ -15,14 +15,14 @@ export const TalkSalesButton = styled.button<ITalkSalesButton>`
     props.currentUserAddress
       ? '79.5px'
       : props.isAboutPage && props.isAboutPage
-      ? '72px'
-      : '84px'};
+        ? '72px'
+        : '84px'};
   right: ${(props) =>
     props.currentUserAddress && props.adminPanel
       ? '163px'
       : props.currentUserAddress && !props.adminPanel
-      ? '131px'
-      : '120px'};
+        ? '131px'
+        : '120px'};
   background: var(--royal-ice);
   border: none;
   color: #fff;
@@ -62,8 +62,8 @@ export const TalkSalesButton = styled.button<ITalkSalesButton>`
       props.currentUserAddress && props.adminPanel
         ? '83px'
         : props.currentUserAddress && !props.adminPanel
-        ? '51px'
-        : '40px'};
+          ? '51px'
+          : '40px'};
   }
 
   @media screen and (max-width: 1100px) {
@@ -71,7 +71,7 @@ export const TalkSalesButton = styled.button<ITalkSalesButton>`
       props.currentUserAddress && props.adminPanel
         ? '63px'
         : props.currentUserAddress && !props.adminPanel
-        ? '31px'
-        : '20px'};
+          ? '31px'
+          : '20px'};
   }
 `;
