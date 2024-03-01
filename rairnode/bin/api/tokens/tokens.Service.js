@@ -15,6 +15,7 @@ const { addPin, addFile, addMetadata, removePin } =
 const log = require('../../utils/logger')(module);
 const { textPurify, cleanStorage } = require('../../utils/helpers');
 const eFactory = require('../../utils/entityFactory');
+const { processMetadata } = require('../../utils/metadataClassify');
 
 const { pinata } = config;
 
@@ -776,12 +777,13 @@ exports.createTokensViaCSV = async (req, res, next) => {
       try {
         const bulkWriteResult = await MintedToken.bulkWrite(forUpdate, { ordered: false });
         if (bulkWriteResult.ok) {
-          updatedDocuments = bulkWriteResult.nModified;
+          updatedDocuments = bulkWriteResult.modifiedCount;
         }
       } catch (err) {
         log.error(err);
       }
     }
+    await processMetadata(foundContract._id, foundProduct.collectionIndexInContract);
     return res.json({ success: true, updatedDocuments });
   } catch (err) {
     return next(err);
