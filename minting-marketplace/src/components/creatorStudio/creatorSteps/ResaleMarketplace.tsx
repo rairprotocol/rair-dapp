@@ -183,6 +183,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           <br />
           Treasury Fee:
           {BigNumber.from(treasuryFee).div(precisionFactor).toString()}
+          %
           <br />
           Total:{' '}
           {total
