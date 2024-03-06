@@ -44,7 +44,8 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   someUsersData,
   ownerInfo,
   embeddedParams,
-  setTokenNumber
+  setTokenNumber,
+  getProductsFromOffer
 }) => {
   const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
     (state) => state.nftDataStore
@@ -162,7 +163,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
         mapping[token.token] = token;
       });
       setTokenFullData(mapping);
+      getProductsFromOffer();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain, contract, product, setTokenFullData]);
 
   useEffect(() => {

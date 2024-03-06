@@ -205,6 +205,7 @@ export interface INftDataPageMain {
   embeddedParams?: TEmbeddedParams | undefined;
   handleTokenBoughtButton: () => void;
   setTokenNumber: (arg: undefined | number) => void;
+  getProductsFromOffer: () => void;
 }
 
 export type TOffersIndexesData = {

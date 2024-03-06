@@ -362,6 +362,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         offerDataInfo={offerDataInfo}
         handleTokenBoughtButton={handleTokenBoughtButton}
         setTokenNumber={setTokenNumber}
+        getProductsFromOffer={getProductsFromOffer}
       />
     );
   } else {

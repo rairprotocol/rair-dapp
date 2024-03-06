@@ -67,7 +67,15 @@ const UnlockableVideosSingleTokenPage: React.FC<
         }
       });
     } else {
-      handlePlayerClick();
+      if (selectVideo?.isUnlocked) {
+        handlePlayerClick();
+      } else {
+        reactSwal.fire({
+          title: 'Info!',
+          html: 'This video is available for NFT owner',
+          icon: 'info'
+        });
+      }
     }
   }, [
     selectVideo,
