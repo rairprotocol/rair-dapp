@@ -52,7 +52,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
     if (
       selectVideo &&
       selectVideo?.ageRestricted === true &&
-      userData?.ageVerified === false
+      (userData?.ageVerified === false || !userData?.ageVerified)
     ) {
       reactSwal.fire({
         html: (

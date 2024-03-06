@@ -4,7 +4,6 @@ import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { constants, utils } from 'ethers';
-import { OreidProvider, useOreId } from 'oreid-react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { IVideoItem, TVideoItemContractData } from './video.types';
@@ -12,10 +11,10 @@ import { IVideoItem, TVideoItemContractData } from './video.types';
 import { TUserResponse } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { YotiLogo } from '../../images';
 import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -42,6 +41,10 @@ const VideoItem: React.FC<IVideoItem> = ({
 
   const { userData } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
+  );
+
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
   );
 
   const navigate = useNavigate();
@@ -116,7 +119,7 @@ const VideoItem: React.FC<IVideoItem> = ({
     if (
       modalIsOpen &&
       mediaList[item].ageRestricted === true &&
-      userData?.ageVerified === false
+      (userData?.ageVerified === false || !userData?.ageVerified)
     ) {
       reactSwal.fire({
         html: (
@@ -134,62 +137,6 @@ const VideoItem: React.FC<IVideoItem> = ({
       setOpenVideoplayer(true);
     }
   }, [modalIsOpen, mediaList, item, userData?.ageVerified, reactSwal, store]);
-
-  // const openMintPopUp = () => {
-  //   reactSwal.fire({
-  //     title: (
-  //       <div>
-  //         <div
-  //           style={{
-  //             width: '120px',
-  //             height: '35px',
-  //             background: 'var(--stimorol)',
-  //             fontSize: '16px',
-  //             color: '#fff',
-  //             position: 'absolute',
-  //             top: '0px',
-  //             left: '0px',
-  //             borderTopLeftRadius: '16px',
-  //             borderBottomRightRadius: '16px',
-  //             display: 'flex',
-  //             alignItems: 'center',
-  //             justifyContent: 'center',
-  //             border: `1px solid ${` ${
-  //               primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'
-  //             }`}`
-  //           }}>
-  //           Mint
-  //         </div>
-  //       </div>
-  //     ),
-  //     html: (
-  //       <OreidProvider oreId={oreId}>
-  //         <Provider store={store}>
-  //           <div
-  //             className={`container-popup-video-player-mobile ${
-  //               primaryColor === 'rhyno' ? 'rhyno' : ''
-  //             }`}>
-  //             {offerDataInfo && contractData && (
-  //               <MintPopUpCollection
-  //                 blockchain={contractData?.blockchain}
-  //                 offerDataCol={offerDataInfo}
-  //                 primaryColor={primaryColor}
-  //                 contractAddress={contractData?.contractAddress}
-  //                 setPurchaseStatus={setPurchaseStatus}
-  //               />
-  //             )}
-  //           </div>
-  //         </Provider>
-  //       </OreidProvider>
-  //     ),
-  //     showCloseButton: true,
-  //     showConfirmButton: false,
-  //     width: '85vw',
-  //     customClass: {
-  //       popup: `bg-${primaryColor} rounded-rair`
-  //     }
-  //   });
-  // };
 
   const goToCollectionView = () => {
     if (offersArray.length > 0) {
@@ -248,17 +195,6 @@ const VideoItem: React.FC<IVideoItem> = ({
   useEffect(() => {
     getInfo();
   }, [getInfo]);
-
-  // useEffect(() => {
-  //   if (
-  //     modalIsOpen &&
-  //     mediaList[item].ageRestricted === true &&
-  //     userData?.ageVerified === false
-  //   ) {
-  //     ageVerificationPopUp();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [modalIsOpen, mediaList, userData]);
 
   return (
     <button
@@ -372,7 +308,16 @@ const VideoItem: React.FC<IVideoItem> = ({
                     <div className="modal-content-play-image-container">
                       <div>
                         <img
-                          onClick={() => ageVerificationPopUp()}
+                          onClick={() => {
+                            if (currentUserAddress) {
+                              ageVerificationPopUp();
+                            } else {
+                              reactSwal.fire({
+                                title: 'Login required',
+                                icon: 'info'
+                              });
+                            }
+                          }}
                           className={'modal-content-play-image'}
                           src={playImagesColored}
                           alt="Button play video"
@@ -439,127 +384,6 @@ const VideoItem: React.FC<IVideoItem> = ({
                       })`}
                     />
                   )}
-                  {/* pop up upgrade button  */}
-                  {/* {mediaList[item]?.isUnlocked === false && (
-                    <CustomButton
-                      text={'Upgrade'}
-                      width={'160px'}
-                      height={'30px'}
-                      textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
-                      onClick={() => setFirstStepPopUp(true)}
-                      custom={false}
-                      background={`var(--${
-                        primaryColor === 'charcoal'
-                          ? 'charcoal-80'
-                          : 'charcoal-40'
-                      })`}
-                    />
-                  )}
-                  <Popup
-                    // className="popup-settings-block"
-                    open={firstStepPopUp}
-                    // position="right center"
-                    onClose={() => {
-                      setFirstStepPopUp(false);
-                    }}>
-                    <div
-                      style={{
-                        width: '85vw',
-                        background: 'rgb(56, 54, 55)',
-                        borderRadius: '12px',
-                        padding: '70px 15px 15px 15px',
-                        position: 'relative'
-                      }}>
-                      <div
-                        style={{
-                          display: 'flex'
-                        }}>
-                        <div
-                          style={{
-                            width: '120px',
-                            height: '35px',
-                            background: 'var(--stimorol)',
-                            fontSize: '16px',
-                            color: '#fff',
-                            position: 'absolute',
-                            top: '0px',
-                            left: '0px',
-                            borderTopLeftRadius: '16px',
-                            borderBottomRightRadius: '16px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            border: `1px solid ${` ${
-                              primaryColor === 'rhyno' ? '#2d2d2d' : '#fff'
-                            }`}`
-                          }}>
-                          Upgrade
-                        </div>
-                        <div
-                          style={{
-                            position: 'absolute',
-                            right: '5px',
-                            top: '5px'
-                          }}>
-                          <ModalContentCloseBtn
-                            primaryColor={primaryColor}
-                            onClick={() => {
-                              setFirstStepPopUp(false);
-                            }}>
-                            <i
-                              className="fas fa-times"
-                              style={{ lineHeight: 'inherit' }}
-                            />
-                          </ModalContentCloseBtn>
-                        </div>
-                      </div>
-                      <div
-                        className={`container-popup-video-player-mobile ${
-                          primaryColor === 'rhyno' ? 'rhyno' : ''
-                        }`}>
-                        <div>
-                          <p>
-                            NFTs unlock exclusive content for this collection.
-                            Purchase pass here or view collection to choose a
-                            unique item.
-                          </p>
-                        </div>
-                        <div className="popup-video-player-mint-box">
-                          <CustomButton
-                            onClick={() => {
-                              setMintPopUp(true);
-                            }}
-                            width="161px"
-                            height="48px"
-                            // margin="20px 0 0 0"
-                            text="Mint!"
-                            background={'var(--stimorol)'}
-                            hoverBackground={`rgb(74, 74, 74)`}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </Popup>
-                  <Popup
-                    // className="popup-settings-block"
-                    open={mintPopUp}
-                    // position="right center"
-                    onClose={() => {
-                      setMintPopUp(false);
-                    }}>
-                    {offerDataInfo && contractData && (
-                      <MintPopUpCollection
-                        closeModal={() => {
-                          setMintPopUp(false);
-                        }}
-                        blockchain={contractData?.blockchain}
-                        offerDataCol={offerDataInfo}
-                        primaryColor={primaryColor}
-                        contractAddress={contractData?.contractAddress}
-                        setPurchaseStatus={setPurchaseStatus}
-                      />
-                    )}
-                  </Popup> */}
                 </div>
               </div>
               <div className="video-description-wrapper">
@@ -568,43 +392,6 @@ const VideoItem: React.FC<IVideoItem> = ({
                   <p>{mediaList[item].description}</p>
                 )}
               </div>
-              {/* this is the part of the block that has the nfts or some shit  */}
-              {/* <div className="modal-nft-link-wrappers">
-                <span className="text-white mt-5">Unlocked by NFTs from:</span>
-                {mediaList[item]?.unlockData?.offers?.map((offer, index) => (
-                  <OfferBuyButton key={index} {...offer} />
-                ))}
-                {mediaList[item]?.isUnlocked === false && (
-                  <div className="more-info-wrapper">
-                    <span className="more-info-text">
-                      These NFTs unlock this video:
-                    </span>
-                    <div className="more-info">
-                      {availableToken.length > 0 ? (
-                        availableToken.map((token) => {
-                          // eslint-disable-next-line
-                          console.log('token', token);
-                          return (
-                            <div
-                              key={token._id}
-                              className="more-info-unlock-wrapper">
-                              <ImageLazy
-                                src={token.metadata.image}
-                                alt="NFT token powered by Rair Tech"
-                              />
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <span className="more-info-text">
-                          In this collection we don&apos;t have any tokens
-                          available for sale, sorry.
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div> */}
             </div>
           </Modal>
         </>
