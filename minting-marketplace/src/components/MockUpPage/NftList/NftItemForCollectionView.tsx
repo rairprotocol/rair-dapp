@@ -53,7 +53,6 @@ const NftItemForCollectionViewComponent: React.FC<
   item,
   resaleFlag,
   resalePrice,
-  usdPrice,
   getMyNft,
   totalNft,
   metadataFilter
@@ -69,16 +68,14 @@ const NftItemForCollectionViewComponent: React.FC<
   const [offerDataUser, setOfferDataUser] = useState<any>();
   const [offerPriceUser, setOfferPriceUser] = useState<string[] | undefined>();
   const [selectedOfferIndexUser, setSelectedOfferIndexUser] = useState<any>();
-  const [usdPriceResale, setUsdPriceResale] = useState<number | undefined>(
-    undefined
-  );
 
   const { width } = useWindowDimensions();
   const isMobileDesign = width < 600;
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
+  const { currentUserAddress, coingeckoRates } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -308,43 +305,6 @@ const NftItemForCollectionViewComponent: React.FC<
       }
     }
   }, [item, resaleFlag, selectedOfferIndexUser]);
-
-  const getUSDcurrency = useCallback(async () => {
-    if (resaleFlag) {
-      const currencyCrypto = {
-        '0x250': {
-          blockchainName: 'astar'
-        },
-        '0x89': {
-          blockchainName: 'matic-network'
-        },
-        '0x1': {
-          blockchainName: 'ethereum'
-        }
-      };
-
-      if (
-        blockchain &&
-        currencyCrypto[String(blockchain)] &&
-        currencyCrypto[String(blockchain)].blockchainName
-      ) {
-        const chain = currencyCrypto[String(blockchain)].blockchainName;
-        const { data } = await axios.get(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${chain}&vs_currencies=usd`
-        );
-        if (data && chain) {
-          setUsdPriceResale(data[chain].usd);
-        } else {
-          setUsdPriceResale(undefined);
-        }
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain, resaleFlag, resalePrice]);
-
-  useEffect(() => {
-    getUSDcurrency();
-  }, [getUSDcurrency]);
 
   useEffect(() => {
     initialTokenData();
@@ -654,41 +614,32 @@ const NftItemForCollectionViewComponent: React.FC<
                 <span className="description description-price description-price-unlockables-page">
                   {fullPrice()}
                 </span>
-                {!resaleFlag
-                  ? usdPrice &&
-                    offerPrice && (
-                      <span className="description-usd-price-collection-page">
-                        {usdPrice && resalePrice !== undefined
-                          ? (Number(resalePrice) * Number(usdPrice)).toFixed(
-                              2
-                            ) !== 'NaN'
-                            ? `$${(
-                                Number(resalePrice) * Number(usdPrice)
-                              ).toFixed(2)}`
-                            : 0.0
-                          : offerPrice &&
-                              (Number(fullPrice()) * Number(usdPrice)).toFixed(
-                                2
-                              ) !== 'NaN'
-                            ? `$${(
-                                Number(fullPrice()) * Number(usdPrice)
-                              ).toFixed(2)}`
-                            : 0.0}
-                      </span>
-                    )
-                  : usdPriceResale && (
-                      <span className="description-usd-price-collection-page">
-                        {usdPriceResale &&
-                        fullPrice() !== '0.000+' &&
-                        (Number(fullPrice()) * Number(usdPriceResale)).toFixed(
-                          2
-                        ) !== 'NaN'
+                {coingeckoRates &&
+                  blockchain &&
+                  !!coingeckoRates[blockchain] && (
+                    <span className="description-usd-price-collection-page">
+                      {resaleFlag
+                        ? (
+                            Number(resalePrice) *
+                            Number(coingeckoRates[blockchain])
+                          ).toFixed(2) !== 'NaN'
                           ? `$${(
-                              Number(fullPrice()) * Number(usdPriceResale)
+                              Number(resalePrice) *
+                              Number(coingeckoRates[blockchain])
+                            ).toFixed(2)}`
+                          : 0.0
+                        : fullPrice() !== '0.000+' &&
+                            (
+                              Number(fullPrice()) *
+                              Number(coingeckoRates[blockchain])
+                            ).toFixed(2) !== 'NaN'
+                          ? `$${(
+                              Number(fullPrice()) *
+                              Number(coingeckoRates[blockchain])
                             ).toFixed(2)}`
                           : 0.0}
-                      </span>
-                    )}
+                    </span>
+                  )}
                 <span className="description-more">View item</span>
               </div>
             </div>

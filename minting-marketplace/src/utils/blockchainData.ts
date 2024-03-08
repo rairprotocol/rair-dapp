@@ -25,7 +25,8 @@ const chainData: TChainData = {
     },
     disabled: true,
     viem: undefined,
-    alchemy: undefined
+    alchemy: undefined,
+    coingecko: undefined
   },
   '0x61': {
     testnet: true,
@@ -47,7 +48,8 @@ const chainData: TChainData = {
     },
     disabled: true,
     viem: undefined,
-    alchemy: undefined
+    alchemy: undefined,
+    coingecko: undefined
   },
   '0x250': {
     testnet: false,
@@ -68,7 +70,8 @@ const chainData: TChainData = {
       blockExplorerUrls: ['https://blockscout.com/astar']
     },
     viem: astar,
-    alchemy: Network.ASTAR_MAINNET
+    alchemy: Network.ASTAR_MAINNET,
+    coingecko: 'astar'
   },
   '0x89': {
     image: MaticLogo,
@@ -88,7 +91,8 @@ const chainData: TChainData = {
       blockExplorerUrls: ['https://polygonscan.com/']
     },
     viem: polygon,
-    alchemy: Network.MATIC_MAINNET
+    alchemy: Network.MATIC_MAINNET,
+    coingecko: 'matic-network'
   },
   '0x13881': {
     testnet: true,
@@ -109,7 +113,8 @@ const chainData: TChainData = {
       blockExplorerUrls: ['https://mumbai.polygonscan.com/']
     },
     viem: polygonMumbai,
-    alchemy: Network.MATIC_MUMBAI
+    alchemy: Network.MATIC_MUMBAI,
+    coingecko: undefined
   },
   '0x1': {
     image: EthereumLogo,
@@ -124,7 +129,8 @@ const chainData: TChainData = {
       blockExplorerUrls: ['https://etherscan.io/']
     },
     viem: mainnet,
-    alchemy: Network.ETH_MAINNET
+    alchemy: Network.ETH_MAINNET,
+    coingecko: 'ethereum'
   },
   '0x5': {
     testnet: true,
@@ -140,7 +146,8 @@ const chainData: TChainData = {
       blockExplorerUrls: ['https://goerli.etherscan.io/']
     },
     viem: goerli,
-    alchemy: Network.ETH_GOERLI
+    alchemy: Network.ETH_GOERLI,
+    coingecko: undefined
   }
 };
 

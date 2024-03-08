@@ -24,6 +24,7 @@ export type TChainItemData = {
   disabled?: boolean;
   viem?: Chain;
   alchemy?: string;
+  coingecko?: string;
 };
 export type TChainData = {
   [key in BlockchainType]?: TChainItemData;

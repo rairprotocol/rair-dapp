@@ -21,6 +21,7 @@ import { RootState } from '../ducks';
 import { getTokenComplete, getTokenStart } from '../ducks/auth/actions';
 import {
   setChainId,
+  setCoingeckoRates,
   setProgrammaticProvider,
   setUserAddress
 } from '../ducks/contracts/actions';
@@ -43,6 +44,27 @@ const oreIdMappingToChainHash = {
   eth_goerli: '0x5' as BlockchainType,
   polygon_main: '0x89' as BlockchainType,
   polygon_mumbai: '0x13881' as BlockchainType
+};
+
+const getCoingeckoRates = async () => {
+  const { data } = await axios.get(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(chainData)
+      .filter((chain) => chainData[chain].coingecko)
+      .map((chain) => chainData[chain].coingecko)
+      .join(',')}&vs_currencies=usd`
+  );
+  if (data) {
+    const rateData = {};
+    Object.keys(chainData).forEach((chain) => {
+      if (chainData[chain].coingecko) {
+        rateData[chain] = data[chainData[chain].coingecko].usd;
+        console.info(rateData[chain]);
+      } else {
+        rateData[chain] = 0;
+      }
+    });
+    return rateData;
+  }
 };
 
 const useConnectUser = () => {
@@ -304,6 +326,8 @@ const useConnectUser = () => {
       return;
     }
 
+    dispatchStack.push(setCoingeckoRates(await getCoingeckoRates()));
+
     dispatchStack.push(
       setChainId(
         loginData.blockchain,
@@ -475,6 +499,7 @@ const useConnectUser = () => {
           dispatch(setChainId(window.ethereum.chainId?.toLowerCase()));
           dispatch(setLoginType('metamask'));
         }
+        dispatch(setCoingeckoRates(await getCoingeckoRates()));
         dispatch(setUserData(user));
         dispatch(setUserAddress(user.publicAddress));
         dispatch(getUserComplete(user));

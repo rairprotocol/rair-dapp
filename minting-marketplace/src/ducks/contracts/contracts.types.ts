@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 
 import {
   setChainId,
+  setCoingeckoRates,
   setProgrammaticProvider,
   setRealChain,
   setUserAddress
@@ -50,6 +51,7 @@ export type ContractsInitialType = {
       ) => ethers.Contract | undefined);
   realChain: BlockchainType | undefined;
   web3Provider?: undefined | ethers.providers.Web3Provider;
+  coingeckoRates?: { [key: string]: number };
 };
 
 export type ContractContents = {
@@ -73,9 +75,11 @@ export type SetProgrammaticProvider = ReturnType<
   typeof setProgrammaticProvider
 >;
 export type SetRealChain = ReturnType<typeof setRealChain>;
+export type SetCoingeckoRates = ReturnType<typeof setCoingeckoRates>;
 
 export type ContractsActionsType =
   | SetChainId
   | SetUserAddress
   | SetProgrammaticProvider
-  | SetRealChain;
+  | SetRealChain
+  | SetCoingeckoRates;

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
-import axios from 'axios';
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
 
 import { RootState } from '../../../../../ducks';
@@ -36,10 +35,10 @@ const ResaleModal: React.FC<IResaleModal> = ({
   getMyNft,
   totalNft
 }) => {
-  const { diamondMarketplaceInstance, currentUserAddress } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
+  const { diamondMarketplaceInstance, currentUserAddress, coingeckoRates } =
+    useSelector<RootState, ContractsInitialType>(
+      (state) => state.contractStore
+    );
 
   const [resaleData, setResaleData] = useState<any>();
   const [resaleOffer, setResaleOffer] = useState<any>(undefined);
@@ -47,7 +46,6 @@ const ResaleModal: React.FC<IResaleModal> = ({
   const [inputSellValue, setInputSellValue] = useState<string>('');
   const [commissionFee, setCommissionFee] = useState<any>(undefined);
   const reactSwal = useSwal();
-  const [usdPrice, setUsdPrice] = useState<number | undefined>(undefined);
 
   const xMIN = Number(0.0001);
   const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
@@ -229,41 +227,6 @@ const ResaleModal: React.FC<IResaleModal> = ({
     }
   }, [item]);
 
-  const getUSDcurrency = useCallback(async () => {
-    const currencyCrypto = {
-      '0x250': {
-        blockchainName: 'astar'
-      },
-      '0x89': {
-        blockchainName: 'matic-network'
-      },
-      '0x1': {
-        blockchainName: 'ethereum'
-      }
-    };
-
-    if (
-      item &&
-      currencyCrypto[String(item.contract.blockchain)] &&
-      currencyCrypto[String(item.contract.blockchain)].blockchainName
-    ) {
-      const chain =
-        currencyCrypto[String(item.contract.blockchain)].blockchainName;
-      const { data } = await axios.get(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${chain}&vs_currencies=usd`
-      );
-      if (data && chain) {
-        setUsdPrice(data[chain].usd);
-      } else {
-        setUsdPrice(undefined);
-      }
-    }
-  }, [item]);
-
-  useEffect(() => {
-    getUSDcurrency();
-  }, [getUSDcurrency]);
-
   useEffect(() => {
     getResalesInfo();
   }, [getResalesInfo]);
@@ -398,14 +361,14 @@ const ResaleModal: React.FC<IResaleModal> = ({
                     {' '}
                     $
                     {commissionFee &&
-                    usdPrice &&
+                    coingeckoRates &&
                     commissionFee.creatorFee &&
                     commissionFee.creatorFee.length > 0
                       ? (
                           ((Number(inputSellValue) *
                             Number(commissionFee.creatorFee)) /
                             100) *
-                          usdPrice
+                          coingeckoRates[item.contract.blockchain]
                         ).toFixed(2)
                       : '0'}
                   </div>
@@ -414,7 +377,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   <div>
                     {inputSellValue.length <= 10 &&
                       commissionFee &&
-                      usdPrice && (
+                      coingeckoRates && (
                         <div>
                           $
                           {(
@@ -422,7 +385,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                               (Number(commissionFee.nodeFee) +
                                 Number(commissionFee.treasuryFee))) /
                               100) *
-                            usdPrice
+                            coingeckoRates[item.contract.blockchain]
                           ).toFixed(2)}
                         </div>
                       )}
@@ -433,7 +396,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                     $
                     {inputSellValue.length <= 10 &&
                     commissionFee &&
-                    usdPrice &&
+                    coingeckoRates &&
                     correctBlockchain(item.contract.blockchain)
                       ? (
                           (Number(inputSellValue) -
@@ -444,7 +407,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                                     ? Number(commissionFee.treasuryFee)
                                     : 0)))) /
                               100) *
-                          usdPrice
+                          coingeckoRates[item.contract.blockchain]
                         ).toFixed(2)
                       : '0'}
                   </div>
