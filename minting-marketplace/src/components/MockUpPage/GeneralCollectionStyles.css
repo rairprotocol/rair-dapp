@@ -1403,7 +1403,7 @@ img.single-token-block-img {
     margin: 0;
   }
   .main-wrapper {
-    padding: 35px 10px 35px 10px;
+    padding: 0px;
   }
   .container-search {
     width: 300px;
@@ -1965,6 +1965,14 @@ p.general-title {
 
   .unlockable-video {
     margin-bottom: 20px !important;
+  }
+
+  .main-wrapper {
+    padding: 0px !important;
+  }
+
+  .container-fluid .mt-3 {
+    margin-top: 0px !important;
   }
 }
 
