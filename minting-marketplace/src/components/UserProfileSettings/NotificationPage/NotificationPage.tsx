@@ -1,6 +1,9 @@
 //@ts-nocheck
 import React from 'react';
+import { useSelector } from 'react-redux';
 
+import store, { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { HotDropsLogo } from '../../../images';
 
 import IconRemove from './images/icon-remove.png';
@@ -8,9 +11,12 @@ import IconRemove from './images/icon-remove.png';
 // import { useSelector } from 'react-redux';
 import './NotificationPage.css';
 
-const NotificationPage = ({ headerLogo, primaryColor }) => {
+const NotificationPage = () => {
   const currentName =
     import.meta.env.VITE_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
+  const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   return (
     <div className="wrapper-notification">
@@ -31,10 +37,7 @@ const NotificationPage = ({ headerLogo, primaryColor }) => {
             <div className="notification-left">
               <div className="dot-notification" />
               <div className="notification-img">
-                <img
-                  src={currentName === 'HotDrops' ? HotDropsLogo : headerLogo}
-                  alt="Rair Tech"
-                />
+                <img src={headerLogo} alt="Rair Tech" />
               </div>
               <div className="text-notification">
                 <div className="title-notif">

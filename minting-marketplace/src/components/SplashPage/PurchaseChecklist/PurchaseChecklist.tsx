@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { IPurchaseChecklist } from '../splashPage.types';
 
 const PurchaseChecklist: React.FC<IPurchaseChecklist> = ({
@@ -11,7 +10,7 @@ const PurchaseChecklist: React.FC<IPurchaseChecklist> = ({
   nameSplash,
   backgroundColor
 }) => {
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
 

@@ -70,6 +70,11 @@ import NotificationPage from './components/UserProfileSettings/NotificationPage/
 import FileUpload from './components/video/videoUpload/videoUpload';
 import VideoManager from './components/videoManager/VideoManager';
 import YotiPage from './components/YotiPage/YotiPage';
+import {
+  setCustomColors,
+  setCustomLogosDark,
+  setCustomLogosLight
+} from './ducks/colors/actions';
 import { ColorStoreType } from './ducks/colors/colorStore.types';
 import { setChainId } from './ducks/contracts/actions';
 import { ContractsInitialType } from './ducks/contracts/contracts.types';
@@ -85,6 +90,7 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 // import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
+import { rFetch } from './utils/rFetch';
 // views
 import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
 
@@ -258,6 +264,41 @@ function App() {
 
   const creatorViewsDisabled =
     import.meta.env.VITE_DISABLE_CREATOR_VIEWS === 'true';
+
+  const loadLogos = useCallback(async () => {
+    const { success, settings } = await rFetch('/api/settings/theme');
+    if (success) {
+      dispatch(
+        setCustomColors({
+          primary: settings.darkModePrimary,
+          secondary: settings.darkModeSecondary,
+          text: settings.darkModeText,
+          primaryButton: settings.buttonPrimaryColor,
+          fadeButton: settings.buttonFadeColor,
+          secondaryButton: settings.buttonSecondaryColor
+        })
+      );
+
+      if (settings.darkModeMobileLogo && settings.lightModeMobileLogo) {
+        dispatch(
+          setCustomLogosDark({
+            mobile: settings.darkModeMobileLogo,
+            desktop: settings.darkModeBannerLogo
+          })
+        );
+        dispatch(
+          setCustomLogosLight({
+            mobile: settings.lightModeMobileLogo,
+            desktop: settings.lightModeBannerLogo
+          })
+        );
+      }
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    loadLogos();
+  }, []);
 
   return (
     <ErrorBoundary fallback={ErrorFallback}>

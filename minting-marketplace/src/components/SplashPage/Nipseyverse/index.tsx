@@ -9,7 +9,7 @@ import { teamNipseyverseArray } from './AboutUsTeam';
 import { TProductResponseType } from '../../../axios.responseTypes';
 import { erc721Abi } from '../../../contracts/index';
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
@@ -36,7 +36,6 @@ import {
   NftMobile_2,
   NipseyBg,
   Pods,
-  RairTechMobile,
   UnlockableVideo,
   VideoPresent
 } from '../images/splashPageImages/splashPage';
@@ -174,9 +173,10 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     }));
   }
 
-  const primaryColor = useSelector<RootState, ColorChoice>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor, headerLogoMobile } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await axios.get<TProductResponseType>(
@@ -645,7 +645,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
               </div>
               <div className="owner-box">
                 <div className="owner-img">
-                  <img src={RairTechMobile} alt="Rair Tech" />
+                  <img src={headerLogoMobile} alt="Rair Tech" />
                 </div>
                 <div className="owner-title-mobile">
                   <h5>RAIR Technologies</h5>

@@ -37,7 +37,7 @@
   z-index: 1;
 }
 .select-number-box.sold-token {
-  background: rgba(113, 36, 255, 0.796) !important;
+  background: rgba(113, 36, 255, 0.796);
 }
 .select-number-box.sold-token:hover::after {
   content: attr(data-title);
@@ -75,7 +75,7 @@
 }
 
 .select-number-popup .selected-box {
-  background: #d37ad6 !important;
+  background: #d37ad6;
   color: #fff;
 }
 

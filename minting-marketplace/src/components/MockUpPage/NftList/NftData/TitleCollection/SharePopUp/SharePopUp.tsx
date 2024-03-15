@@ -11,7 +11,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
 import { RootState } from '../../../../../../ducks';
-import { HotDropsLogoMobile } from '../../../../../../images';
+import { ColorStoreType } from '../../../../../../ducks/colors/colorStore.types';
 import { ISharePopUp } from '../../../../mockupPage.types';
 
 import './SharePopUp.css';
@@ -19,17 +19,17 @@ import './SharePopUp.css';
 const SharePopUp: React.FC<ISharePopUp> = ({
   onClose,
   selectedValue,
-  open,
-  primaryColor
+  open
 }) => {
   const [copySuccess /*setCopySuccess*/] = useState<string>('Copy link');
   const currentUrl = document.location.href;
 
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
-  const headerLogo = useSelector<RootState, string>(
-    (store) => store.colorStore.headerLogo
-  );
+  const { headerLogo, primaryColor, textColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -52,17 +52,21 @@ const SharePopUp: React.FC<ISharePopUp> = ({
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle
         style={{
-          background: `${
-            primaryColor === 'rhyno' ? '#e3e4e6' : 'rgb(56, 54, 55)'
+          backgroundColor: `${
+            primaryColor === '#dedede'
+              ? 'var(--rhyno-40)'
+              : `color-mix(in srgb, ${primaryColor} 40%, #888888)`
           }`,
-          color: `${primaryColor === 'rhyno' ? 'black' : 'white'}`
+          color: textColor
         }}>
         Share
       </DialogTitle>
       <List
         style={{
-          background: `${
-            primaryColor === 'rhyno' ? '#e3e4e6' : 'rgb(56, 54, 55)'
+          backgroundColor: `${
+            primaryColor === '#dedede'
+              ? 'var(--rhyno-40)'
+              : `color-mix(in srgb, ${primaryColor} 40%, #888888)`
           }`
         }}
         sx={{ pt: 0 }}>
@@ -70,14 +74,11 @@ const SharePopUp: React.FC<ISharePopUp> = ({
           <ListItemAvatar>
             <img
               style={{ width: 30, height: 'auto', marginLeft: '10px' }}
-              src={hotdropsVar === 'true' ? HotDropsLogoMobile : headerLogo}
+              src={headerLogo}
               alt="Rair Tech"
             />
           </ListItemAvatar>
-          <ListItemText
-            style={{ color: `${primaryColor === 'rhyno' ? 'black' : 'white'}` }}
-            primary={copySuccess}
-          />
+          <ListItemText style={{ color: textColor }} primary={copySuccess} />
         </ListItem>
         {hotdropsVar !== 'true' && (
           <>
@@ -94,7 +95,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
                 </ListItemAvatar>
                 <ListItemText
                   style={{
-                    color: `${primaryColor === 'rhyno' ? 'black' : 'white'}`
+                    color: textColor
                   }}
                   primary="Share on Facebook"
                 />
@@ -111,7 +112,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
                 </ListItemAvatar>
                 <ListItemText
                   style={{
-                    color: `${primaryColor === 'rhyno' ? 'black' : 'white'}`
+                    color: textColor
                   }}
                   primary="Share on Twitter"
                 />

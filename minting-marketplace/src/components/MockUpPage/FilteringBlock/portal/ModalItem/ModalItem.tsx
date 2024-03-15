@@ -4,6 +4,7 @@ import { utils } from 'ethers';
 
 import { erc721Abi } from '../../../../../contracts';
 import { RootState } from '../../../../../ducks';
+import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
@@ -33,6 +34,10 @@ const ModalItem: React.FC<IModalItem> = ({
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
     );
+  const { textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const instance = contractCreator?.(selectedData?.contractAddress, erc721Abi);
   const [onMyChain, setOnMyChain] = useState<boolean>(
     correctBlockchain(selectedData?.blockchain as BlockchainType)
@@ -202,7 +207,11 @@ const ModalItem: React.FC<IModalItem> = ({
               </span>
             ) : (
               <button
-                className="btn btn-stimorol"
+                className="btn rair-button"
+                style={{
+                  background: primaryButtonColor,
+                  color: textColor
+                }}
                 onClick={() => {
                   if (onMyChain && resaleInstance) {
                     if (isApproved === false) {
@@ -219,8 +228,8 @@ const ModalItem: React.FC<IModalItem> = ({
                     ? isApproved === undefined
                       ? 'Please wait...'
                       : isApproved
-                      ? 'Sell'
-                      : 'Approve the marketplace for this token'
+                        ? 'Sell'
+                        : 'Approve the marketplace for this token'
                     : 'The marketplace is not available for this blockchain'
                   : `Switch to ${
                       selectedData?.blockchain &&

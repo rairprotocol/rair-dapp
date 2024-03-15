@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { teamCoinAgendaArray } from './AboutUsTeam';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
@@ -63,7 +62,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
     //eslint-disable-next-line
   }, []);
 
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
 

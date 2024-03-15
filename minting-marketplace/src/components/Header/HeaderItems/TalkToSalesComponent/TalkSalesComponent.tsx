@@ -54,7 +54,9 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
       showConfirmButton: false,
       width: '85vw',
       customClass: {
-        popup: `bg-${primaryColor} rounded-rair`
+        popup: `bg-${
+          primaryColor === '#dedede' ? 'rhyno' : 'charcoal'
+        } rounded-rair`
       }
     });
   };

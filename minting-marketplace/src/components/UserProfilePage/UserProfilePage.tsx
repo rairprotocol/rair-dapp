@@ -239,9 +239,7 @@ const UserProfilePage: React.FC = () => {
         sx={{ fontSize: 'x-large' }}
       />
     </NavLink>,
-    <Typography
-      key="3"
-      color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
+    <Typography key="3" color={textColor}>
       {(userData && userData.nickName && userData.nickName.length > 20
         ? userData.nickName.slice(0, 5) +
           '....' +
@@ -319,7 +317,9 @@ const UserProfilePage: React.FC = () => {
             </Stack>
           </div>
           <div
-            className={`user-page-background ${primaryColor} ${
+            className={`user-page-background ${
+              primaryColor === '#dedede' ? 'rhyno' : 'charcoal'
+            } ${
               hotdropsVar === 'true' && !userData.background
                 ? 'hotdrops-bg-default-banner'
                 : ''
@@ -433,14 +433,14 @@ const UserProfilePage: React.FC = () => {
               <TabList className="category-wrapper userpage">
                 <Tab
                   selectedClassName={`search-tab-selected-${
-                    primaryColor === 'rhyno' ? 'default' : 'dark'
+                    primaryColor === '#dedede' ? 'default' : 'dark'
                   }`}
                   style={{
                     backgroundColor: `${
-                      primaryColor === 'rhyno' ? '#fafafa' : '#222021'
+                      primaryColor === '#dedede' ? '#fafafa' : '#222021'
                     }`,
                     border: `1px solid ${
-                      primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
+                      primaryColor === '#dedede' ? 'var(--rhyno)' : '#4E4D4D'
                     }`
                   }}
                   className="category-button-nft category-button">
@@ -448,14 +448,14 @@ const UserProfilePage: React.FC = () => {
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
-                    primaryColor === 'rhyno' ? 'default' : 'dark'
+                    primaryColor === '#dedede' ? 'default' : 'dark'
                   }`}
                   style={{
                     backgroundColor: `${
-                      primaryColor === 'rhyno' ? '#fafafa' : '#222021'
+                      primaryColor === '#dedede' ? '#fafafa' : '#222021'
                     }`,
                     border: `1px solid ${
-                      primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
+                      primaryColor === '#dedede' ? 'var(--rhyno)' : '#4E4D4D'
                     }`
                   }}
                   className="category-button-videos category-button">
@@ -463,14 +463,14 @@ const UserProfilePage: React.FC = () => {
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
-                    primaryColor === 'rhyno' ? 'default' : 'dark'
+                    primaryColor === '#dedede' ? 'default' : 'dark'
                   }`}
                   style={{
                     backgroundColor: `${
-                      primaryColor === 'rhyno' ? '#fafafa' : '#222021'
+                      primaryColor === '#dedede' ? '#fafafa' : '#222021'
                     }`,
                     border: `1px solid ${
-                      primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
+                      primaryColor === '#dedede' ? 'var(--rhyno)' : '#4E4D4D'
                     }`
                   }}
                   className="category-button-videos category-button">
@@ -478,14 +478,14 @@ const UserProfilePage: React.FC = () => {
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
-                    primaryColor === 'rhyno' ? 'default' : 'dark'
+                    primaryColor === '#dedede' ? 'default' : 'dark'
                   }`}
                   style={{
                     backgroundColor: `${
-                      primaryColor === 'rhyno' ? '#fafafa' : '#222021'
+                      primaryColor === '#dedede' ? '#fafafa' : '#222021'
                     }`,
                     border: `1px solid ${
-                      primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
+                      primaryColor === '#dedede' ? 'var(--rhyno)' : '#4E4D4D'
                     }`
                   }}
                   className="category-button-videos category-button">
@@ -502,15 +502,17 @@ const UserProfilePage: React.FC = () => {
                   setter={setTitleSearch}
                   placeholder={'Search...'}
                   customCSS={{
-                    backgroundColor: `var(--${
-                      primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
-                    })`,
+                    backgroundColor: `${
+                      primaryColor === '#dedede'
+                        ? `var(--rhyno)`
+                        : `color-mix(in srgb, ${primaryColor} 50%, #aaaaaa)`
+                    }`,
                     color: `var(--${textColor})`,
                     borderTopLeftRadius: '0',
                     border: `${
-                      primaryColor === 'charcoal'
-                        ? 'solid 1px var(--charcoal-80)'
-                        : 'solid 1px var(--rhyno)'
+                      primaryColor === '#dedede'
+                        ? 'solid 1px var(--rhyno)'
+                        : `solid 1px color-mix(in srgb, ${primaryColor}, #888888)`
                     } `,
                     paddingLeft: '2rem'
                   }}
@@ -520,6 +522,20 @@ const UserProfilePage: React.FC = () => {
                 <div className="nft-form-control-icon">
                   <i
                     className="fas fa-search fa-lg fas-custom"
+                    style={{
+                      color:
+                        import.meta.env.VITE_HOTDROPS === 'true'
+                          ? `${
+                              textColor === '#FFF' || textColor === 'black'
+                                ? '#F95631'
+                                : textColor
+                            }`
+                          : `${
+                              textColor === '#FFF' || textColor === 'black'
+                                ? '#E882D5'
+                                : textColor
+                            }`
+                    }}
                     aria-hidden="true"></i>
                   <FilteringBlock
                     primaryColor={primaryColor}

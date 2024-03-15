@@ -13,6 +13,7 @@ import {
 
 import { abi } from '../../contracts/RAIR_ERC721.json';
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
 const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
@@ -32,6 +33,10 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
     useSelector<RootState, ContractsInitialType>(
       (state) => state.contractStore
     );
+  const { textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const refreshData = useCallback(async () => {
     if (!erc721Instance) {
@@ -128,7 +133,11 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
               onClick={() => {
                 erc721Instance.createProduct(productName, productLength);
               }}
-              className="btn btn-royal-ice">
+              style={{
+                background: secondaryButtonColor,
+                color: textColor
+              }}
+              className="btn rair-button">
               Create {productLength} tokens under product {productName}
             </button>
           </div>

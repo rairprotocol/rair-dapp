@@ -222,7 +222,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                 <div>
                   {isAboutPage ? null : (
                     <button
-                      className={`btn btn-${primaryColor} btn-connect-wallet-mobile ${
+                      style={{ backgroundColor: primaryColor }}
+                      className={`btn btn-connect-wallet-mobile ${
                         hotdropsVar === 'true' ? 'hotdrops-bg' : ''
                       }`}
                       onClick={() => connectUserData()}>

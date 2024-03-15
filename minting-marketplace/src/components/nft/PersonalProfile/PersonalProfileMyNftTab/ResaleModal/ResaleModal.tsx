@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
 
 import { RootState } from '../../../../../ducks';
+import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
@@ -39,6 +40,11 @@ const ResaleModal: React.FC<IResaleModal> = ({
     useSelector<RootState, ContractsInitialType>(
       (state) => state.contractStore
     );
+
+  const { primaryColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [resaleData, setResaleData] = useState<any>();
   const [resaleOffer, setResaleOffer] = useState<any>(undefined);
@@ -236,7 +242,13 @@ const ResaleModal: React.FC<IResaleModal> = ({
   }, [fetchRoyalties]);
 
   return (
-    <div className="container-resale-modal">
+    <div
+      className="container-resale-modal"
+      style={{
+        backgroundColor: `${
+          primaryColor === '#dedede' ? 'rgb(222, 222, 222)' : `${primaryColor}`
+        }`
+      }}>
       <div className="resale-modal-image">
         {item && item.metadata && (
           <ImageLazy src={item.metadata.image} alt={item.metadata.name} />
@@ -290,9 +302,22 @@ const ResaleModal: React.FC<IResaleModal> = ({
             {resaleOffer && resaleOffer.length > 0 ? (
               <>
                 <button
+                  style={{
+                    color: textColor,
+                    background: `${
+                      primaryColor === '#dedede'
+                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                          ? 'var(--hot-drops)'
+                          : 'linear-gradient(to right, #e882d5, #725bdb)'
+                        : import.meta.env.VITE_HOTDROPS === 'true'
+                          ? primaryButtonColor ===
+                            'linear-gradient(to right, #e882d5, #725bdb)'
+                            ? 'var(--hot-drops)'
+                            : primaryButtonColor
+                          : primaryButtonColor
+                    }`
+                  }}
                   className={`btn-update-resale ${
-                    hotDropsVar === 'true' ? 'hotdrops' : ''
-                  } ${
                     !inputSellValue ||
                     Number(inputSellValue) < Number(xMIN) ||
                     Number(inputSellValue) > Number(yMAX)

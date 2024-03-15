@@ -6,6 +6,7 @@ import { stringToHex } from 'viem';
 import { IFactoryManager } from './creatorMode.types';
 
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -23,6 +24,10 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+  const { textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
@@ -106,7 +111,11 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
                 });
               }
             }}
-            className="btn btn-royal-ice">
+            style={{
+              background: secondaryButtonColor,
+              color: textColor
+            }}
+            className="btn rair-button">
             Buy an ERC721 contract for {utils.formatEther(tokensRequired)}{' '}
             {tokenSymbol} tokens!
           </button>
@@ -137,7 +146,11 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
                     });
                   }
                 }}
-                className="btn btn-royal-ice">
+                style={{
+                  background: secondaryButtonColor,
+                  color: textColor
+                }}
+                className="btn rair-button">
                 Accept new token into the Master Factory
               </button>
             </>

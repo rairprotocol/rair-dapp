@@ -21,9 +21,10 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   gotoNextStep,
   goBack
 }) => {
-  const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { textColor, primaryColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const { diamondMarketplaceInstance } = useSelector<
     RootState,
     ContractsInitialType
@@ -234,7 +235,11 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           </div>
           <button
             disabled={!utils.isAddress(resaleAddress) || approving}
-            className="btn col-12 btn-stimorol"
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="btn col-12 rair-button"
             onClick={async () => {
               setApproving(true);
               reactSwal.fire({

@@ -64,16 +64,18 @@ const ContractDetails = () => {
     } else {
       // Try diamonds
       const instance = contractCreator?.(address, diamondFactoryAbi);
-      const productCount = Number(
-        (await instance?.getProductCount()).toString()
-      );
-      setIsDiamond(true);
-      setData({
-        title: await instance?.name(),
-        contractAddress: address,
-        blockchain: currentChain,
-        products: Array(productCount)
-      });
+      if (instance) {
+        const productCount = Number(
+          (await instance.getProductCount()).toString()
+        );
+        setIsDiamond(true);
+        setData({
+          title: await instance?.name(),
+          contractAddress: address,
+          blockchain: currentChain,
+          products: Array(productCount)
+        });
+      }
     }
   }, [address, blockchain, contractCreator, currentChain]);
 
@@ -103,7 +105,7 @@ const ContractDetails = () => {
               label="New Collection name"
               customClass="rounded-rair form-control"
               customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
+                backgroundColor: primaryColor,
                 color: 'inherit',
                 borderColor: `var(--${secondaryColor}-40)`
               }}
@@ -121,7 +123,7 @@ const ContractDetails = () => {
               min={0}
               customClass="rounded-rair form-control"
               customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
+                backgroundColor: primaryColor,
                 color: 'inherit',
                 borderColor: `var(--${secondaryColor}-40)`
               }}
@@ -130,7 +132,9 @@ const ContractDetails = () => {
           </div>
           <div
             className="col-12 p-3 mt-5 rounded-rair"
-            style={{ border: '1.3px dashed var(--charcoal-80)' }}>
+            style={{
+              border: `1.3px dashed color-mix(in srgb, ${primaryColor}, #888888)`
+            }}>
             Contract Information: <br />
             <ul className="col-12 mt-3 px-4 text-start">
               <li className="row">

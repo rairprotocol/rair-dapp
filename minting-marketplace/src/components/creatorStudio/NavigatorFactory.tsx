@@ -12,40 +12,45 @@ const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
   const { factoryInstance } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   return (
     <div className="row px-0 mx-0">
       <div className="col-xl-3 col-lg-1 col-md-1 d-none d-md-inline-block" />
       <div
         className={`col ${
-          primaryColor === 'rhyno' ? 'bg' : `bg-${primaryColor}`
+          primaryColor === '#dedede'
+            ? 'bg'
+            : `bg-${primaryColor === '#dedede' ? 'rhyno' : 'charcoal'}`
         } rounded-lg py-5`}
         style={{
-          color: `var(--charcoal${primaryColor === 'rhyno' ? '' : '-40'})`
+          color: `var(--charcoal${primaryColor === '#dedede' ? '' : '-40'})`
         }}>
         <h5>Factory</h5>
         <span>{factoryInstance?.address}</span>
         <div className="row">
           <div className="col-6 p-2">
             <NavLink
-              className={({ isActive }) => {
-                return `btn btn-${
-                  isActive ? 'stimorol' : primaryColor
-                } w-100 rounded-rair`;
-              }}
+              style={({ isActive }) => ({
+                color: textColor,
+                background: isActive ? primaryButtonColor : primaryColor,
+                border: `solid 1px ${textColor}`
+              })}
+              className="btn rair-button w-100 rounded-rair"
               to="/creator/deploy">
               Deploy
             </NavLink>
           </div>
           <div className="col-6 p-2">
             <NavLink
-              className={({ isActive }) => {
-                return `btn btn-${
-                  isActive ? 'stimorol' : primaryColor
-                } w-100 rounded-rair`;
-              }}
+              style={({ isActive }) => ({
+                color: textColor,
+                background: isActive ? primaryButtonColor : primaryColor,
+                border: `solid 1px ${textColor}`
+              })}
+              className="btn rair-button w-100 rounded-rair"
               to="/creator/contracts">
               My Contracts
             </NavLink>

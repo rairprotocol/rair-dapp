@@ -4,7 +4,9 @@ import { TAuthenticityStyled } from '../../nftList.types';
 
 export const TableAuthenticity = styled.div<TAuthenticityStyled>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? 'rgb(189, 189, 189)' : '#383637'};
+    props.primaryColor === '#dedede'
+      ? 'rgb(189, 189, 189)'
+      : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
   border-radius: 16px;
   padding-top: 10px;
   margin-top: 24px;
@@ -14,13 +16,17 @@ export const TableAuthenticity = styled.div<TAuthenticityStyled>`
 
   .authenticity-box:nth-child(2):hover {
     background: ${(props) =>
-      props.primaryColor === 'rhyno' ? '#b1b1b1' : '#2D2B2C'};
+      props.primaryColor === '#dedede'
+        ? '#b1b1b1'
+        : `color-mix(in srgb, ${props.primaryColor} 20%, #888888)`};
     cursor: pointer;
   }
 
   .authenticity-box:nth-child(3):hover {
     background: ${(props) =>
-      props.primaryColor === 'rhyno' ? '#b1b1b1' : '#2D2B2C'};
+      props.primaryColor === '#dedede'
+        ? '#b1b1b1'
+        : `color-mix(in srgb, ${props.primaryColor} 30%, #888888)`};
     border-end-end-radius: 16px;
     border-end-start-radius: 16px;
     cursor: pointer;
@@ -32,7 +38,7 @@ export const TableAuthenticity = styled.div<TAuthenticityStyled>`
     height: 48px;
 
     background: ${(props) =>
-      props.primaryColor === 'rhyno'
+      props.primaryColor === '#dedede'
         ? '#939393'
         : 'linear-gradient(0deg, #4E4D4D, #4E4D4D)'};
     border-radius: 16px;
@@ -44,12 +50,13 @@ export const TableAuthenticity = styled.div<TAuthenticityStyled>`
   }
 
   .authenticity-box .block-arrow {
-    color: ${(props) => (props.primaryColor === 'rhyno' ? 'white' : '#E882D5')};
+    color: ${(props) =>
+      props.primaryColor === 'rhyno' ? '#dedede' : '#E882D5'};
 
     width: 48px;
     height: 48px;
     background: ${(props) =>
-      props.primaryColor === 'rhyno'
+      props.primaryColor === '#dedede'
         ? '#939393'
         : 'linear-gradient(0deg, #4E4D4D, #4E4D4D)'};
     border-radius: 16px;
@@ -60,6 +67,6 @@ export const TableAuthenticity = styled.div<TAuthenticityStyled>`
 
   .nftDataPageTest-a-hover:hover {
     color: ${(props) =>
-      props.primaryColor === 'rhyno' ? '' : 'var(--bubblegum)'};
+      props.primaryColor === '#dedede' ? '' : 'var(--bubblegum)'};
   }
 `;

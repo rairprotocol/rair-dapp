@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
-
 interface IInquireItems {
-  primaryColor: ColorChoice;
+  primaryColor: string;
+  background?: any;
 }
 
 export const InquireWrapper = styled.div<IInquireItems>`
@@ -13,7 +12,8 @@ export const InquireWrapper = styled.div<IInquireItems>`
     font-weight: 700;
     font-size: 32px;
     line-height: 28px;
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#222021' : '#fff')};
+    color: ${(props) =>
+      props.primaryColor === '#dedede' ? '#222021' : '#fff'};
     margin-bottom: 38px;
   }
 
@@ -26,12 +26,14 @@ export const InquireContainer = styled.div<IInquireItems>`
   max-width: 700px;
   margin: 0 auto;
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? '#f2f2f2' : '#383637'};
+    props.primaryColor === '#dedede'
+      ? 'var(--rhyno-60)'
+      : `color-mix(in srgb, ${props.primaryColor} 40%, #888888)`};
   border-radius: 16px;
   padding: 35px;
 
   input {
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '222021' : '#fff')};
+    color: ${(props) => (props.primaryColor === '#dedede' ? '222021' : '#fff')};
   }
 
   span.field-error-message {
@@ -86,11 +88,11 @@ export const InquireField = styled.div<IInquireItems>`
     button:first-child {
       margin-right: 136px;
       color: ${(props) =>
-        props.primaryColor === 'rhyno' ? '#363435' : '#fff'};
+        props.primaryColor === '#dedede' ? '#363435' : '#fff'};
     }
 
     button:last-child {
-      background: var(--stimorol);
+      background: ${(props) => `${props.background}`};
     }
   }
 
@@ -191,7 +193,7 @@ export const InquireSelect = styled.select<IInquireItems>`
   border-radius: 16px;
   background: none;
   font-size: 14px;
-  color: ${(props) => (props.primaryColor === 'rhyno' ? '#222021' : '#fff')};
+  color: ${(props) => (props.primaryColor === '#dedede' ? '#222021' : '#fff')};
   appearance: none;
 
   &::after {
@@ -224,7 +226,7 @@ export const InquireLabel = styled.label<IInquireItems>`
   }
 
   font-size: 16px;
-  color: ${(props) => (props.primaryColor === 'rhyno' ? '#363435' : '#fff')};
+  color: ${(props) => (props.primaryColor === '#dedede' ? '#363435' : '#fff')};
   line-height: 20px;
 
   @media screen and (max-width: 800px) {

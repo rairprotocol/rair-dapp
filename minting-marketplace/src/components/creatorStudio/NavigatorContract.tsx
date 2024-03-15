@@ -13,9 +13,10 @@ const NavigatorContract: React.FC<INavigatorContract> = ({
   contractName,
   contractBlockchain
 }) => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   return (
     <div className="row px-0 mx-0">
       <div className="col-xl-3 col-lg-1 col-md-1 d-none d-md-inline-block" />
@@ -33,22 +34,24 @@ const NavigatorContract: React.FC<INavigatorContract> = ({
         <div className="row">
           <div className="col-6 p-2">
             <NavLink
-              className={({ isActive }) => {
-                return `btn btn-${
-                  isActive ? 'stimorol' : primaryColor
-                } w-100 rounded-rair`;
-              }}
+              style={({ isActive }) => ({
+                color: textColor,
+                background: isActive ? primaryButtonColor : primaryColor,
+                border: `solid 1px ${textColor}`
+              })}
+              className="btn rair-button w-100 rounded-rair"
               to={`/creator/contract/${contractBlockchain}/${contractAddress}/createCollection`}>
               Create New Collection
             </NavLink>
           </div>
           <div className="col-6 p-2">
             <NavLink
-              className={({ isActive }) => {
-                return `btn btn-${
-                  isActive ? 'stimorol' : primaryColor
-                } w-100 rounded-rair`;
-              }}
+              style={({ isActive }) => ({
+                color: textColor,
+                background: isActive ? primaryButtonColor : primaryColor,
+                border: `solid 1px ${textColor}`
+              })}
+              className="btn rair-button w-100 rounded-rair"
               to={`/creator/contract/${contractBlockchain}/${contractAddress}/listCollections`}>
               Existing Collections
             </NavLink>

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { teamUkraineArray } from './AboutUsTeam';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
@@ -56,7 +55,7 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [soldCopies, setSoldCopies] = useState<number>(0);
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const { currentChain, minterInstance } = useSelector<
@@ -104,15 +103,15 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
   const getAllProduct = useCallback(async () => {
-    if (loggedIn) {
+    if (loggedIn && minterInstance && splashData.purchaseButton?.offerIndex) {
       if (
         currentChain === splashData.purchaseButton?.requiredBlockchain &&
         splashData.purchaseButton?.offerIndex
       ) {
         setSoldCopies(
           (
-            await minterInstance?.getOfferRangeInfo(
-              ...splashData.purchaseButton?.offerIndex
+            await minterInstance.getOfferRangeInfo(
+              ...splashData.purchaseButton.offerIndex
             )
           ).tokensAllowed.toString()
         );

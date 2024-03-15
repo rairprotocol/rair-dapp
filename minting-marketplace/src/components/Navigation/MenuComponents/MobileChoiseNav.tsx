@@ -6,7 +6,7 @@ import { RootState } from '../../../ducks';
 import { setColorScheme } from '../../../ducks/colors/actions';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
-import { BellIcon, HotDropsLogoMobile, SunIcon } from '../../../images';
+import { BellIcon, SunIcon } from '../../../images';
 import {
   SocialBox,
   UserIconMobile
@@ -36,8 +36,6 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (state) => state.userStore
   );
-
-  const hotDropsVar = import.meta.env.VITE_HOTDROPS;
 
   return (
     <div className="burder-menu-logo">
@@ -92,7 +90,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                 onClick={() => {
                   dispatch(
                     setColorScheme(
-                      primaryColor === 'rhyno' ? 'charcoal' : 'rhyno'
+                      primaryColor === '#dedede' ? 'charcoal' : 'rhyno'
                     )
                   );
                 }}>
@@ -103,10 +101,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
         </div>
       ) : (
         <NavLink to="/">
-          <img
-            src={hotDropsVar === 'true' ? HotDropsLogoMobile : headerLogoMobile}
-            alt="Rair Tech"
-          />
+          <img src={headerLogoMobile} alt="Rair Tech" />
         </NavLink>
       )}
     </div>

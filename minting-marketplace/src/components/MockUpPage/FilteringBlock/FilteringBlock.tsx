@@ -1,7 +1,10 @@
 //@ts-nocheck
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
 
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import {
   GlobalModalContext,
@@ -25,8 +28,6 @@ import ModalCategories from './portal/ModalCategories/ModalCategories';
 import './FilteringBlock.css';
 
 const FilteringBlock = ({
-  primaryColor,
-  textColor,
   sortItem,
   setSortItem,
   isFilterShow,
@@ -50,6 +51,11 @@ const FilteringBlock = ({
 
   const [sortPopUp, setSortPopUp] = useState(false);
   const sortRef = useRef();
+
+  const { primaryColor, secondaryColor, textColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [isOpenCategories, setIsOpenCategories] = useState(false);
   const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
@@ -139,6 +145,8 @@ const FilteringBlock = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalModaldispatch]);
 
+  console.info(textColor, 'textColor');
+
   return (
     <>
       <div ref={sortRef} className="select-sort-wrapper">
@@ -149,16 +157,21 @@ const FilteringBlock = ({
           }`}
           primaryColor={primaryColor}
           textColor={textColor}
+          secondaryColor={secondaryColor}
           sortPopUp={sortPopUp}>
           <div className="select-sort-title">
             <div className="title-left">
               <div className="arrows-sort">
                 <StyledArrowUpIcon
+                  textColor={textColor}
                   sortItem={sortItem}
+                  primaryColor={primaryColor}
                   className="fas fa-arrow-up"
                 />
                 <StyledArrowDownIcon
+                  textColor={textColor}
                   sortItem={sortItem}
+                  primaryColor={primaryColor}
                   className="fas fa-arrow-down"
                 />
               </div>
@@ -174,10 +187,16 @@ const FilteringBlock = ({
                   <StyledShevronIcon
                     className="fas fa-chevron-down"
                     rotate="true"
+                    primaryColor={primaryColor}
+                    textColor={textColor}
                   />
                 ) : (
                   // <i className="fas fa-chevron-down"></i>
-                  <StyledShevronIcon className="fas fa-chevron-up" />
+                  <StyledShevronIcon
+                    className="fas fa-chevron-up"
+                    primaryColor={primaryColor}
+                    textColor={textColor}
+                  />
                 )}
               </div>
             )}
@@ -185,10 +204,9 @@ const FilteringBlock = ({
         </SelectSortItem>
         {sortPopUp && (
           <SelectSortPopUp
-            className={`select-sort-title-pop-up ${
-              primaryColor.includes('charcoal') ? 'dark-theme' : 'light-theme'
-            }`}
+            className={`select-sort-title-pop-up`}
             primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
             textColor={textColor}>
             {
               <div className="sort-popup-home-page">
@@ -249,7 +267,8 @@ const FilteringBlock = ({
                 }}
                 filterPopUp={filterPopUp}
                 textColor={textColor}
-                primaryColor={primaryColor}>
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}>
                 <div className="select-filters-title">
                   {width > 1101 ? (
                     <>
@@ -261,11 +280,15 @@ const FilteringBlock = ({
                         />
                       ) : (
                         <StyledFilterIcon
+                          primaryColor={primaryColor}
+                          textColor={textColor}
                           filterPopUp={filterPopUp}></StyledFilterIcon>
                       )}
                     </>
                   ) : (
                     <StyledFilterIcon
+                      primaryColor={primaryColor}
+                      textColor={textColor}
                       filterPopUp={filterPopUp}></StyledFilterIcon>
                   )}
                   {width > 700 && <span>Filters</span>}

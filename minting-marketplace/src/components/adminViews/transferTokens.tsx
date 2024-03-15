@@ -12,6 +12,7 @@ import BlockChainSwitcher from './BlockchainSwitcher';
 import { TTokenData } from '../../axios.responseTypes';
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -26,6 +27,10 @@ const TransferTokens = () => {
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
+  const { primaryButtonColor, textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [traderRole, setTraderRole] = useState<boolean | undefined>();
   const [manualAddress, setManualAddress] = useState<boolean>(false);
@@ -216,7 +221,11 @@ const TransferTokens = () => {
             setSelectedContract('null');
             setContractData(undefined);
           }}
-          className="btn col-xs-12 col-md-6 btn-royal-ice">
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}
+          className="btn col-xs-12 col-md-6 rair-button">
           Database
         </button>
         <button
@@ -225,7 +234,11 @@ const TransferTokens = () => {
             setSelectedContract('');
             setContractData(undefined);
           }}
-          className="btn col-xs-12 col-md-6 btn-stimorol">
+          className="col-12 col-md-6 btn rair-button"
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}>
           Blockchain
         </button>
       </div>
@@ -265,9 +278,13 @@ const TransferTokens = () => {
             <div className="col-12 col-md-2 pt-4">
               <button
                 onClick={() => setManualDiamond(!manualDiamond)}
-                className={`btn btn-${
-                  manualDiamond ? 'royal-ice' : 'stimorol'
-                }`}>
+                style={{
+                  color: textColor,
+                  background: manualDiamond
+                    ? secondaryButtonColor
+                    : primaryButtonColor
+                }}
+                className="btn rair-button">
                 {manualDiamond ? 'Diamond' : 'Classic'} Contract
               </button>
             </div>
@@ -309,9 +326,13 @@ const TransferTokens = () => {
               </div>
               {ownedTokens.length !== 0 && (
                 <button
-                  className={`col-12 mx-2 btn btn-${
-                    allTokensFilter ? 'royal-ice' : 'stimorol'
-                  }`}
+                  style={{
+                    color: textColor,
+                    background: manualDiamond
+                      ? secondaryButtonColor
+                      : primaryButtonColor
+                  }}
+                  className={'col-12 mx-2 btn rair-button'}
                   onClick={() => setAllTokensFilter(!allTokensFilter)}>
                   {allTokensFilter ? 'Minted' : 'Owned'} tokens
                 </button>
@@ -346,7 +367,11 @@ const TransferTokens = () => {
                 {contractBlockchain && (
                   <button
                     disabled={currentChain === contractBlockchain.chainId}
-                    className="btn btn-royal-ice"
+                    className="btn rair-button"
+                    style={{
+                      background: secondaryButtonColor,
+                      color: textColor
+                    }}
                     onClick={() => web3Switch(contractBlockchain.chainId)}>
                     1.-{' '}
                     {currentChain === contractBlockchain.chainId
@@ -372,7 +397,11 @@ const TransferTokens = () => {
                       currentChain !== contractBlockchain?.chainId ||
                       traderRole !== false
                     }
-                    className="btn btn-royal-ice"
+                    className="btn rair-button"
+                    style={{
+                      background: secondaryButtonColor,
+                      color: textColor
+                    }}
                     onClick={async () => {
                       reactSwal.fire({
                         title: 'Please wait',
@@ -397,8 +426,8 @@ const TransferTokens = () => {
                     {traderRole === undefined
                       ? 'Querying roles...'
                       : traderRole === true
-                      ? 'Already have Trader role'
-                      : 'Grant yourself the Trader role'}
+                        ? 'Already have Trader role'
+                        : 'Grant yourself the Trader role'}
                   </button>
                 )}
               </div>
@@ -411,7 +440,11 @@ const TransferTokens = () => {
                       !utils.isAddress(targetAddress) ||
                       !contractInstance
                     }
-                    className="btn btn-royal-ice"
+                    className="btn rair-button"
+                    style={{
+                      background: secondaryButtonColor,
+                      color: textColor
+                    }}
                     onClick={async () => {
                       reactSwal.fire({
                         title: 'Please wait',

@@ -5,10 +5,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
 import { RootState } from '../../../../../ducks';
-import {
-  ColorChoice,
-  ColorStoreType
-} from '../../../../../ducks/colors/colorStore.types';
+import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import chainData from '../../../../../utils/blockchainData';
 import { rFetch } from '../../../../../utils/rFetch';
@@ -23,9 +20,7 @@ import {
 } from '../../../mockupPage.types';
 import CustomButton from '../../../utils/button/CustomButton';
 import CustomShareButton from '../CustomShareButton';
-import SingleTokenViewProperties from '../SingleTokenViewProperties';
 
-import FilterMetadataTokens from './FilterMetadataTokens/FilterMetadataTokens';
 import MintPopUpCollection from './MintPopUpCollection/MintPopUpCollection';
 import SharePopUp from './SharePopUp/SharePopUp';
 
@@ -36,14 +31,17 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   userName,
   someUsersData,
   selectedData,
-  offerDataCol,
-  collectionAttributes,
-  toggleMetadataFilter
+  offerDataCol
+  // collectionAttributes,
+  // toggleMetadataFilter
 }) => {
   const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
+  console.info(primaryButtonColor, 'primaryButtonColor');
+
   const [mintPopUp, setMintPopUp] = useState<boolean>(false);
   const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
   const [contractData, setContractData] = useState<ContractType>();
@@ -55,7 +53,6 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   const [open, setOpen] = useState<boolean>(false);
   const [isCollectionPathExist, setIsCollectionPathExist] =
     useState<boolean>(false);
-  const [triggerState, setTriggerState] = useState<any>(false);
 
   const { width } = useWindowDimensions();
 
@@ -213,7 +210,16 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                       // margin="20px 0 0 0"
                       text="Mint!"
                       background={`${
-                        purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
+                        primaryColor === '#dedede'
+                          ? import.meta.env.VITE_HOTDROPS === 'true'
+                            ? 'var(--hot-drops)'
+                            : 'linear-gradient(to right, #e882d5, #725bdb)'
+                          : import.meta.env.VITE_HOTDROPS === 'true'
+                            ? primaryButtonColor ===
+                              'linear-gradient(to right, #e882d5, #725bdb)'
+                              ? 'var(--hot-drops)'
+                              : primaryButtonColor
+                            : primaryButtonColor
                       }`}
                       hoverBackground={`${
                         purchaseStatus ? 'rgb(74, 74, 74)' : ''
@@ -233,7 +239,16 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                       // margin="20px 0 0 0"
                       text="Mint!"
                       background={`${
-                        purchaseStatus ? 'rgb(74, 74, 74)' : 'var(--stimorol)'
+                        primaryColor === '#dedede'
+                          ? import.meta.env.VITE_HOTDROPS === 'true'
+                            ? 'var(--hot-drops)'
+                            : 'linear-gradient(to right, #e882d5, #725bdb)'
+                          : import.meta.env.VITE_HOTDROPS === 'true'
+                            ? primaryButtonColor ===
+                              'linear-gradient(to right, #e882d5, #725bdb)'
+                              ? 'var(--hot-drops)'
+                              : primaryButtonColor
+                            : primaryButtonColor
                       }`}
                       hoverBackground={`${
                         purchaseStatus ? 'rgb(74, 74, 74)' : ''

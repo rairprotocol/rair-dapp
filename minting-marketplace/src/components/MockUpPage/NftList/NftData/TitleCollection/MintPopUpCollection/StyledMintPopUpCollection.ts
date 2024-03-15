@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../../../../../ducks/colors/colorStore.types';
-
 interface IMintPopUpCollectionContainer {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export const MintPopUpCollectionContainer = styled.div<IMintPopUpCollectionContainer>`

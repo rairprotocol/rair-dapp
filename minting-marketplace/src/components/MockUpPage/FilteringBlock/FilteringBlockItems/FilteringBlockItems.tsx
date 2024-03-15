@@ -14,17 +14,17 @@ import {
 } from '../filteringBlock.types';
 
 export const SelectFiltersItem = styled.div`
-  background-color: var(
-    --${(props: TSelectFiltersItemStyled) => (props.primaryColor === 'charcoal' ? 'charcoal-90' : 'rhyno-40')}
-  );
+  background-color: ${(props: TSelectFiltersItemStyled) =>
+    props.primaryColor === '#dedede'
+      ? 'var(--rhyno-40)'
+      : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
   color: ${(props: TSelectFiltersItemStyled) =>
     props.filterPopUp ? '#fff' : `var(--${props.textColor})`};
-  border: ${(props: TSelectFiltersItemStyled) =>
-    props.primaryColor === 'charcoal'
-      ? 'solid 1px var(--charcoal-80)'
-      : 'solid 1px var(--rhyno)'};
-  border: ${(props: TSelectFiltersItemStyled) =>
-    props.filterPopUp ? '1px solid #E882D5' : ''};
+  border: solid 1px
+    ${(props: TSelectFiltersItemStyled) =>
+      props.secondaryColor === '#dedede'
+        ? 'var(--rhyno-40)'
+        : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
 
   &.disabled {
     color: grey;
@@ -37,23 +37,24 @@ export const FiltersTitleIcon = styled.i`
 `;
 
 export const SelectFiltersPopUp = styled.div`
-  background-color: var(
-    --${(props: TSelectFiltersPopUpStyled) => props.primaryColor}
+  background-color: 
+    ${(props: TSelectFiltersPopUpStyled) =>
+      props.primaryColor === '#dedede' ? 'var(--rhyno)' : props.primaryColor}
   );
   z-index: 100;
 `;
 
 export const SelectSortItem = styled.div`
-  background-color: var(
-    --${(props: TSelectSortItemStyled) => (props.primaryColor.includes('charcoal') ? 'charcoal-90' : 'rhyno-40')}
-  );
-  color: var(--${(props: TSelectSortItemStyled) => props.textColor});
-  border: ${(props: TSelectSortItemStyled) =>
-    props.primaryColor.includes('charcoal')
-      ? 'solid 1px var(--charcoal-80)'
-      : 'solid 1px var(--rhyno)'};
-  border: ${(props: TSelectSortItemStyled) =>
-    props.sortPopUp ? '1px solid #E882D5' : ''};
+  background-color: ${(props: TSelectSortItemStyled) =>
+    props.primaryColor === '#dedede'
+      ? 'var(--rhyno-40)'
+      : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
+  color: ${(props: TSelectSortItemStyled) => props.textColor};
+  border: solid 1px
+    ${(props: TSelectSortItemStyled) =>
+      props.secondaryColor === '#dedede'
+        ? 'var(--rhyno-40)'
+        : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
 `;
 
 export const SortArrowUpIcon = styled.i`
@@ -67,17 +68,19 @@ export const SortArrowDownIcon = styled.i`
 `;
 
 export const SelectSortPopUp = styled.div`
-  background-color: var(
-    --${(props: TSelectSortPopUpStyled) => props.primaryColor}
-  );
-  color: var(--${(props: TSelectSortPopUpStyled) => props.textColor});
+  background-color: ${(props: TSelectSortPopUpStyled) =>
+    props.primaryColor === '#dedede'
+      ? 'var(--rhyno)'
+      : `color-mix(in srgb, ${props.primaryColor}, #2d2d2d)`};
+  color: ${(props: TSelectSortPopUpStyled) => props.textColor};
   &:after {
     content: '';
     width: 20px;
     height: 20px;
-    background-color: var(
-      --${(props) => (props.primaryColor.includes('charcoal') ? 'charcoal' : 'rhyno')}
-    );
+    background-color: ${(props) =>
+      props.primaryColor === '#dedede'
+        ? 'var(--rhyno)'
+        : `color-mix(in srgb, ${props.primaryColor}, #2d2d2d)`};
     position: absolute;
     transform: rotate(45deg);
     bottom: 63px;
@@ -97,10 +100,18 @@ export const StyledFilterIcon = styled(FilterIconNew)`
   path {
     stroke: ${(props: TFiltersTitleIconStyled) =>
       import.meta.env.VITE_HOTDROPS === 'true'
-        ? '#F95631'
+        ? `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#F95631'
+              : props.textColor
+          }`
         : props.filterPopUp
           ? '#fff'
-          : '#E882D5'};
+          : `${
+              props.textColor === '#FFF' || props.textColor === 'black'
+                ? '#E882D5'
+                : props.textColor
+            }`};
   }
   margin-right: 8px;
 `;
@@ -109,9 +120,17 @@ export const StyledArrowUpIcon = styled(ArrowUp)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
       import.meta.env.VITE_HOTDROPS === 'true'
-        ? '#F95631'
+        ? `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#F95631'
+              : props.textColor
+          }`
         : props.sortItem === 'up'
-          ? '#E882D5'
+          ? `${
+              props.textColor === '#FFF' || props.textColor === 'black'
+                ? '#E882D5'
+                : props.textColor
+            }`
           : '#A7A6A6'};
   }
 `;
@@ -119,25 +138,69 @@ export const StyledArrowDownIcon = styled(ArrowDown)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
       import.meta.env.VITE_HOTDROPS === 'true'
-        ? '#F95631'
-        : props.sortItem === 'down'
-          ? '#E882D5'
-          : '#A7A6A6'};
+        ? `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#F95631'
+              : props.textColor
+          }`
+        : props.sortItem === 'down' &&
+          `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#E882D5'
+              : props.textColor
+          }`};
   }
 `;
 
 export const StyledShevronIcon = styled(SimpleFilterArrow)`
   transform: ${(props: TStyledShevronIconStyled) =>
     props.rotate ? 'rotate(-180deg)' : ''};
+
+  path {
+    stroke: ${(props) =>
+      import.meta.env.VITE_HOTDROPS === 'true'
+        ? `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#F95631'
+              : props.textColor
+          }`
+        : `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#E882D5'
+              : props.textColor
+          }`};
+  }
 `;
 
 export const StyledPopupArrowUpIcon = styled(ArrowUp)`
   path {
-    stroke: #e882d5;
+    stroke: ${(props: TSortArrowUpIconStyled) =>
+      import.meta.env.VITE_HOTDROPS === 'true'
+        ? `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#F95631'
+              : props.textColor
+          }`
+        : `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#E882D5'
+              : props.textColor
+          }`};
   }
 `;
 export const StyledPopupArrowDownIcon = styled(ArrowDown)`
   path {
-    stroke: #e882d5;
+    stroke: ${(props: TSortArrowUpIconStyled) =>
+      import.meta.env.VITE_HOTDROPS === 'true'
+        ? `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#F95631'
+              : props.textColor
+          }`
+        : `${
+            props.textColor === '#FFF' || props.textColor === 'black'
+              ? '#E882D5'
+              : props.textColor
+          }`};
   }
 `;

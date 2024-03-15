@@ -61,7 +61,7 @@
 
 .header-master .main-search input.input-search-black:hover,
 .header-master .main-search input.input-search-black:focus {
-  background: rgb(76, 80, 92);
+  background: #fffa;
 }
 
 .header-master .main-search.hidden {
@@ -93,10 +93,10 @@
   border-radius: 12px;
   width: 200px;
   height: 45px;
-  background: #bb73d7 !important;
+  /* background: #bb73d7 !important; */
   font-size: 18px;
   font-weight: 700;
-  color: white;
+  /* color: white; */
 }
 
 .header-master button.btn-connect-wallet.hotdrops-bg {
@@ -177,9 +177,6 @@
 .container-admin-panel .col-12.py-3 {
   text-align: center;
   width: 70px;
-}
-
-.container-admin-panel .col-12.py-3 a {
 }
 
 .hotdrops-menu-list {

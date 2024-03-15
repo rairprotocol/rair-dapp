@@ -1,13 +1,10 @@
-import {
-  BackgroundBlendModeType,
-  ColorChoice
-} from '../../ducks/colors/colorStore.types';
+import { BackgroundBlendModeType } from '../../ducks/colors/colorStore.types';
 
 export interface IAppContainerFluidStyled {
   backgroundImageEffect: {
     backgroundBlendMode: BackgroundBlendModeType | undefined;
   };
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   backgroundImage: string;
   textColor: string;
 }

@@ -18,7 +18,7 @@ const CustomShareButton: React.FC<ICusmonShareButton> = ({
       } ${import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-border' : ''}`}
       style={{
         background: `${
-          primaryColor === 'rhyno' ? '#F5F5F5' : 'var(--charcoal)'
+          primaryColor === '#dedede' ? '#F5F5F5' : 'var(--charcoal)'
         }`,
         color: `${primaryColor === 'rhyno' ? 'var(--charcoal)' : '#FFFFFF'}`,
         minWidth: `${width >= 500 ? '161px' : '124px'}`

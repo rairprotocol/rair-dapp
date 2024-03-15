@@ -1,10 +1,9 @@
 import { Pagination } from '@mui/material';
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 interface IPaginationBoxStyled {
-  primarycolor: ColorChoice;
+  primarycolor: string;
+  primaryButtonColor?: any;
 }
 
 export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
@@ -14,13 +13,25 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
         -webkit-transition: all 0.2s ease;
         transition: all 0.2s ease;
         color: ${(props) =>
-          props.primarycolor === 'rhyno' ? '#2d2d2d' : '#fff'};
+          props.primarycolor === '#dedede' ? '#2d2d2d' : '#fff'};
         border-radius: 9.5px;
         border: 1px solid
-          ${(props) => (props.primarycolor === 'rhyno' ? '#2d2d2d' : '#fff')};
+          ${(props) => (props.primarycolor === '#dedede' ? '#2d2d2d' : '#fff')};
 
         &.Mui-selected {
-          background: var(--stimorol);
+          background: ${(props) =>
+            `${
+              props.primarycolor === '#dedede'
+                ? import.meta.env.VITE_HOTDROPS === 'true'
+                  ? 'var(--hot-drops)'
+                  : 'linear-gradient(to right, #e882d5, #725bdb)'
+                : import.meta.env.VITE_HOTDROPS === 'true'
+                  ? props.primaryButtonColor ===
+                    'linear-gradient(to right, #e882d5, #725bdb)'
+                    ? 'var(--hot-drops)'
+                    : props.primaryButtonColor
+                  : props.primaryButtonColor
+            }`};
           color: #fff;
           border: none;
           -webkit-box-shadow: 0px 0px 7px 0.4px #b278a7;
@@ -28,13 +39,25 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
           box-shadow: 0px 0px 7px 0.4px #b278a7;
         }
         &:hover {
-          background: var(--stimorol);
+          background: ${(props) =>
+            `${
+              props.primarycolor === '#dedede'
+                ? import.meta.env.VITE_HOTDROPS === 'true'
+                  ? 'var(--hot-drops)'
+                  : 'linear-gradient(to right, #e882d5, #725bdb)'
+                : import.meta.env.VITE_HOTDROPS === 'true'
+                  ? props.primaryButtonColor ===
+                    'linear-gradient(to right, #e882d5, #725bdb)'
+                    ? 'var(--hot-drops)'
+                    : props.primaryButtonColor
+                  : props.primaryButtonColor
+            }`};
           color: #fff;
         }
       }
       div {
         color: ${(props) =>
-          props.primarycolor === 'rhyno' ? '#2d2d2d' : '#fff'};
+          props.primarycolor === '#dedede' ? '#2d2d2d' : '#fff'};
       }
     }
   }

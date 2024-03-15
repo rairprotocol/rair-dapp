@@ -105,14 +105,7 @@ const PopUpNotification = () =>
                 <div className="box-notification">
                   <div className="dot-notification" />
                   <div className="notification-img">
-                    <img
-                      src={
-                        currentName === 'HotDrops'
-                          ? HotDropsLogo
-                          : headerLogoMobile
-                      }
-                      alt="Rair Tech"
-                    />
+                    <img src={headerLogoMobile} alt="Rair Tech" />
                   </div>
                   <div className="text-notification">
                     <div className="title-notif">

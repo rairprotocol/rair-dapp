@@ -15,9 +15,10 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
   const { adminRights, loggedIn } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, secondaryColor, textColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   return (
     <>
@@ -26,7 +27,11 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
         open={adminPanel}
         closeOnDocumentClick
         onClose={() => setAdminPanel(false)}>
-        <div className="container-admin-panel">
+        <div
+          style={{
+            backgroundColor: primaryColor
+          }}
+          className="container-admin-panel">
           {adminPanel &&
             adminRights === true &&
             !creatorViewsDisabled &&
@@ -86,7 +91,8 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                 return (
                   <div
                     key={index}
-                    className={`col-12 py-3 btn-${primaryColor}`}>
+                    style={{ color: textColor }}
+                    className={`col-12 py-3 btn-light`}>
                     <NavLink
                       className={({ isActive }) => {
                         return `py-3 ${

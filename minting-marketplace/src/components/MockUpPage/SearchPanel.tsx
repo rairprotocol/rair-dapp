@@ -12,6 +12,7 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { ISearchPanel } from './mockupPage.types';
 
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import {
   getNftDataStart,
   getNftDataStartWithParams
@@ -42,12 +43,7 @@ import {
 import { NftList } from './NftList/NftList';
 import PaginationBox from './PaginationBox/PaginationBox';
 
-const SearchPanel: React.FC<ISearchPanel> = ({
-  primaryColor,
-  textColor,
-  tabIndex,
-  setTabIndex
-}) => {
+const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const [videoUnlocked, setVideoUnlocked] = useState<boolean>(false);
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [sortItem, setSortItem] = useState<TSortChoice | undefined>();
@@ -76,6 +72,8 @@ const SearchPanel: React.FC<ISearchPanel> = ({
   const totalNumberVideo = useSelector<RootState, number | undefined>(
     (store) => store.videosStore.totalNumberVideo
   );
+  const { primaryColor, textColor, secondaryColor, primaryButtonColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const videos = useSelector<RootState, MediaListResponseType | null>(
     (store) => store.videosStore.videos
   );
@@ -225,33 +223,17 @@ const SearchPanel: React.FC<ISearchPanel> = ({
         <TabList className="category-wrapper">
           <Tab
             selectedClassName={`search-tab-selected-${
-              primaryColor === 'rhyno' ? 'default' : 'dark'
+              primaryColor === '#dedede' ? 'default' : 'dark'
             }`}
-            className="category-button-nft category-button"
-            style={{
-              border: `${
-                primaryColor === 'charcoal'
-                  ? 'solid 1px var(--charcoal-80)'
-                  : 'solid 1px var(--rhyno)'
-              } `
-            }}>
+            className="category-button-nft category-button">
             {hotdropsVar === 'true' ? 'Collectible' : 'NFT'}
           </Tab>
           <Tab
             onClick={() => {
               clearPagesForVideo();
             }}
-            style={{
-              backgroundColor: ``,
-              color: `var(--${textColor})`,
-              border: `${
-                primaryColor === 'charcoal'
-                  ? 'solid 1px var(--charcoal-80)'
-                  : 'solid 1px var(--rhyno)'
-              } `
-            }}
             selectedClassName={`search-tab-selected-${
-              primaryColor === 'rhyno' ? 'default' : 'dark'
+              primaryColor === '#dedede' ? 'default' : 'dark'
             }`}
             className="category-button-videos category-button">
             Videos
@@ -265,25 +247,37 @@ const SearchPanel: React.FC<ISearchPanel> = ({
               tabIndex === 0 ? 'Search collections' : 'Search videos'
             }`}
             customCSS={{
-              backgroundColor: `var(--${
-                primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
-              })`,
-              color: `var(--${textColor})`,
+              backgroundColor:
+                primaryColor === '#dedede'
+                  ? 'var(--rhyno-40)'
+                  : `color-mix(in srgb, ${primaryColor} 90%, #888888)`,
+              color: textColor,
               borderTopLeftRadius: '0',
-              border: `${
-                primaryColor === 'charcoal'
-                  ? 'solid 1px var(--charcoal-80)'
-                  : 'solid 1px var(--rhyno)'
-              } `,
+              borderColor:
+                primaryColor === '#dedede'
+                  ? 'var(--rhyno)'
+                  : `color-mix(in srgb, ${secondaryColor}, #888888)`,
               paddingLeft: '2rem'
             }}
             customClass="form-control input-styled border-top-radius-tablet search-mobile"
           />
           <div className="nft-form-control-icon">
             <i
-              className={`fas fa-search fa-lg fas-custom ${
-                import.meta.env.VITE_HOTDROPS === 'true' && 'hotdrops-color'
-              }`}
+              className={`fas fa-search fa-lg fas-custom`}
+              style={{
+                color:
+                  import.meta.env.VITE_HOTDROPS === 'true'
+                    ? `${
+                        textColor === '#FFF' || textColor === 'black'
+                          ? '#F95631'
+                          : textColor
+                      }`
+                    : `${
+                        textColor === '#FFF' || textColor === 'black'
+                          ? '#E882D5'
+                          : textColor
+                      }`
+              }}
               aria-hidden="true"></i>
             <FilteringBlock
               click={click}
@@ -314,13 +308,22 @@ const SearchPanel: React.FC<ISearchPanel> = ({
               return (
                 <button
                   key={Math.random() * 1_000_000}
-                  className={`clear-filter ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  } ${
-                    import.meta.env.VITE_HOTDROPS === 'true'
-                      ? 'hotdrops-bg'
-                      : ''
-                  }`}
+                  style={{
+                    background: `${
+                      primaryColor === '#dedede'
+                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                          ? 'var(--hot-drops)'
+                          : 'linear-gradient(to right, #e882d5, #725bdb)'
+                        : import.meta.env.VITE_HOTDROPS === 'true'
+                          ? primaryButtonColor ===
+                            'linear-gradient(to right, #e882d5, #725bdb)'
+                            ? 'var(--hot-drops)'
+                            : primaryButtonColor
+                          : primaryButtonColor
+                    }`,
+                    color: textColor
+                  }}
+                  className={`clear-filter`}
                   onClick={() => clearSelected(filterItemText)}>
                   {filterItemText}
                 </button>
@@ -328,11 +331,22 @@ const SearchPanel: React.FC<ISearchPanel> = ({
             })}
             {isShowCategories ? (
               <button
-                className={`clear-filter filter-category ${
-                  primaryColor === 'rhyno' ? 'rhyno' : ''
-                } ${
-                  import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
-                }`}
+                className={`clear-filter filter-category`}
+                style={{
+                  background: `${
+                    primaryColor === '#dedede'
+                      ? import.meta.env.VITE_HOTDROPS === 'true'
+                        ? 'var(--hot-drops)'
+                        : 'linear-gradient(to right, #e882d5, #725bdb)'
+                      : import.meta.env.VITE_HOTDROPS === 'true'
+                        ? primaryButtonColor ===
+                          'linear-gradient(to right, #e882d5, #725bdb)'
+                          ? 'var(--hot-drops)'
+                          : primaryButtonColor
+                        : primaryButtonColor
+                  }`,
+                  color: textColor
+                }}
                 onClick={() => clearCategoriesFilter()}>
                 {filterCategoriesText}
               </button>
@@ -358,13 +372,22 @@ const SearchPanel: React.FC<ISearchPanel> = ({
               return (
                 <button
                   key={Math.random() * 1_000_000}
-                  className={`clear-filter ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  } ${
-                    import.meta.env.VITE_HOTDROPS === 'true'
-                      ? 'hotdrops-bg'
-                      : ''
-                  }`}
+                  className={`clear-filter`}
+                  style={{
+                    background: `${
+                      primaryColor === '#dedede'
+                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                          ? 'var(--hot-drops)'
+                          : 'linear-gradient(to right, #e882d5, #725bdb)'
+                        : import.meta.env.VITE_HOTDROPS === 'true'
+                          ? primaryButtonColor ===
+                            'linear-gradient(to right, #e882d5, #725bdb)'
+                            ? 'var(--hot-drops)'
+                            : primaryButtonColor
+                          : primaryButtonColor
+                    }`,
+                    color: textColor
+                  }}
                   onClick={() => clearSelected(filterItemText)}>
                   {filterItemText}
                 </button>

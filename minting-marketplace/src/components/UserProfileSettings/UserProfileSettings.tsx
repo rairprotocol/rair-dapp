@@ -50,7 +50,9 @@ const UserProfileSettings = ({
             marginRight={'17px'}
             onClick={() => {
               dispatch(
-                setColorScheme(primaryColor === 'rhyno' ? 'charcoal' : 'rhyno')
+                setColorScheme(
+                  primaryColor === '#dedede' ? 'charcoal' : 'rhyno'
+                )
               );
             }}>
             <SunIcon primaryColor={primaryColor} color={'#fff'} />

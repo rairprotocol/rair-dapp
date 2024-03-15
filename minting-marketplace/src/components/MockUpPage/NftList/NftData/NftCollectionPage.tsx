@@ -77,9 +77,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [selectedAttributeValues, setSelectedAttributeValues] =
     useState<any>(undefined);
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const toggleMetadataFilter = () => {
     setMetadataFilter((prev) => !prev);
@@ -428,15 +429,16 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               setter={setTitleSearch}
               placeholder={'Search tokens'}
               customCSS={{
-                backgroundColor: `var(--${
-                  primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
-                })`,
+                background:
+                  primaryColor === '#dedede'
+                    ? `var(--rhyno-40)`
+                    : `color-mix(in srgb, ${primaryColor} 50%, #aaaaaa)`,
                 color: `var(--${textColor})`,
                 borderTopLeftRadius: '0',
                 border: `${
-                  primaryColor === 'charcoal'
-                    ? 'solid 1px var(--charcoal-80)'
-                    : 'solid 1px var(--rhyno)'
+                  primaryColor === '#dedede'
+                    ? 'solid 1px var(--rhyno)'
+                    : `solid 1px color-mix(in srgb, ${primaryColor}, #888888)`
                 } `,
                 paddingLeft: '2rem'
               }}
@@ -444,9 +446,21 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             />
             <div className="nft-form-control-icon">
               <i
-                className={`fas fa-search fa-lg fas-custom ${
-                  process.env.REACT_APP_HOTDROPS === 'true' && 'hotdrops-color'
-                }`}
+                className={`fas fa-search fa-lg fas-custom`}
+                style={{
+                  color:
+                    import.meta.env.VITE_HOTDROPS === 'true'
+                      ? `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#F95631'
+                            : textColor
+                        }`
+                      : `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#E882D5'
+                            : textColor
+                        }`
+                }}
                 aria-hidden="true"></i>
               {isMobileDesign ? (
                 <FilteringBlock
@@ -711,11 +725,22 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                         Clear all
                       </button>
                       <button
-                        className={`modal-filtering-button apply-btn ${
-                          import.meta.env.VITE_HOTDROPS === 'true'
-                            ? 'hotdrops'
-                            : ''
-                        }`}
+                        style={{
+                          color: textColor,
+                          background: `${
+                            primaryColor === '#dedede'
+                              ? import.meta.env.VITE_HOTDROPS === 'true'
+                                ? 'var(--hot-drops)'
+                                : 'linear-gradient(to right, #e882d5, #725bdb)'
+                              : import.meta.env.VITE_HOTDROPS === 'true'
+                                ? primaryButtonColor ===
+                                  'linear-gradient(to right, #e882d5, #725bdb)'
+                                  ? 'var(--hot-drops)'
+                                  : primaryButtonColor
+                                : primaryButtonColor
+                          }`
+                        }}
+                        className={`modal-filtering-button apply-btn`}
                         disabled={
                           !selectedAttributeValuesFunction(
                             selectedAttributeValues

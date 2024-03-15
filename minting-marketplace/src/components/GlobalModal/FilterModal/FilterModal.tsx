@@ -7,6 +7,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   MobileCloseBtn,
@@ -20,6 +21,8 @@ import {
 import { HomePageModalFilter } from './HomePAgeModal';
 import { MobileHeaderBlock } from './MobileHeaderBlock';
 
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 // import { IFilterModal } from '.';
 import {
   GlobalModalContext,
@@ -93,6 +96,12 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   const [selectedCategoriesItems, setSelectedCategories] = useState<
     Array<TOption | undefined>
   >([]);
+
+  const { textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
+
   const {
     primaryColor,
     setBlockchain,
@@ -106,6 +115,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
     setFilterText,
     setIsShow
   } = globalModalState;
+
   const setIsBChOpen = () => {
     if (isBlockchainExpand) {
       setIsBlockchainOpen(!isBlockchainExpand);
@@ -576,7 +586,22 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
           disabled={!selectedBchItems && !selectedCatItems}
           className={`modal-filtering-button apply-btn ${
             isMobileDesign ? 'mobile-filter-apply-btn' : ''
-          } ${import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-bg' : ''}`}
+          }`}
+          style={{
+            color: textColor,
+            background: `${
+              primaryColor === '#dedede'
+                ? import.meta.env.VITE_HOTDROPS === 'true'
+                  ? 'var(--hot-drops)'
+                  : 'linear-gradient(to right, #e882d5, #725bdb)'
+                : import.meta.env.VITE_HOTDROPS === 'true'
+                  ? primaryButtonColor ===
+                    'linear-gradient(to right, #e882d5, #725bdb)'
+                    ? 'var(--hot-drops)'
+                    : primaryButtonColor
+                  : primaryButtonColor
+            }`
+          }}
           onClick={() => onFilterApply(selectedBchItems, selectedCatItems)}>
           Apply
         </button>

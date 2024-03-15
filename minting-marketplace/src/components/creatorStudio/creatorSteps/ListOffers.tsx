@@ -295,7 +295,9 @@ const ListOffers: React.FC<IListOffers> = ({
           </div>
           <div
             className="col-12 mt-3 p-5 text-center rounded-rair"
-            style={{ border: 'dashed 2px var(--charcoal-80)' }}>
+            style={{
+              border: `dashed 2px color-mix(in srgb, ${primaryColor}, #888888)`
+            }}>
             First Token: {contractData?.product?.firstTokenIndex}, Last Token:{' '}
             {Number(contractData?.product?.firstTokenIndex) +
               contractData?.product?.copies -

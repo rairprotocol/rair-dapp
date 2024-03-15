@@ -12,10 +12,7 @@ export const ShowMoreContainer = styled.div<TShowMoreContainer>`
   height: ${(props) => props.height};
   color: ${(props) => props.textColor};
   margin: ${(props) => props.margin};
-  background: ${(props) =>
-    import.meta.env.VITE_HOTDROPS === 'true'
-      ? 'var(--hot-drops-gradient)'
-      : props.background};
+  background: ${(props) => props.background};
   pointer-events: ${(props) => (props.loading === 'true' ? 'none' : 'auto')};
   @media screen and (max-width: 659px) and (min-width: 410px) {
     margin: 0.5rem;

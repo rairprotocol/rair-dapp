@@ -10,9 +10,10 @@ const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
   backwardFunction,
   backwardDisabled
 }) => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   if (!forwardFunctions && !backwardFunction) {
     return <></>;
@@ -26,7 +27,7 @@ const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
           primaryColor === 'rhyno' ? 'bg' : `bg-${primaryColor}`
         } py-4`}>
         <div style={{ position: 'relative' }}>
-          <div className="btn" style={{ color: `var(--${primaryColor})` }}>
+          <div className="btn" style={{ color: primaryColor }}>
             {
               // Makes room for the other buttons
               '_'
@@ -63,9 +64,13 @@ const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
                       key={index}
                       className="border-stimorol rounded-rair btn p-0 mx-2">
                       <button
-                        style={{ border: 'none' }}
+                        style={{
+                          border: 'none',
+                          background: primaryButtonColor,
+                          color: textColor
+                        }}
                         disabled={item.disabled}
-                        className="btn rounded-rair btn-stimorol"
+                        className="btn rounded-rair rair-button"
                         onClick={item.action}>
                         {item.label ? item.label : 'Proceed'}
                       </button>

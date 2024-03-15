@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import Teammate from './Teammate';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { ITeamMeetComponentCommon } from '../splashPage.types';
 
 const TeamMeetComponentCommon: React.FC<ITeamMeetComponentCommon> = ({
@@ -12,7 +11,7 @@ const TeamMeetComponentCommon: React.FC<ITeamMeetComponentCommon> = ({
   className,
   arraySplash
 }) => {
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (state) => state.colorStore.primaryColor
   );
   return (

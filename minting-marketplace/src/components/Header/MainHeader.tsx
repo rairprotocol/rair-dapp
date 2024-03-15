@@ -54,9 +54,8 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(true);
-  const { primaryColor, headerLogo } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, headerLogo, primaryButtonColor, textColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { connectUserData } = useConnectUser();
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
     (store) => store.allInformationFromSearch
@@ -213,6 +212,13 @@ const MainHeader: React.FC<IMainHeader> = ({
         )}
         {isComponentVisible && (
           <div
+            style={{
+              background: `${
+                primaryColor === '#dedede'
+                  ? '#fff'
+                  : `color-mix(in srgb, ${primaryColor}, #888888)`
+              }`
+            }}
             className={`search-holder-wrapper ${
               primaryColor === 'rhyno' ? 'rhyno' : ''
             }`}>
@@ -344,9 +350,21 @@ const MainHeader: React.FC<IMainHeader> = ({
             aria-hidden="true"></i>
         )}
         <i
-          className={`fas fa-search ${
-            hotdropsVar === 'true' && 'hotdrops-color'
-          }`}
+          className={`fas fa-search`}
+          style={{
+            color:
+              import.meta.env.VITE_HOTDROPS === 'true'
+                ? `${
+                    textColor === '#FFF' || textColor === 'black'
+                      ? '#F95631'
+                      : textColor
+                  }`
+                : `${
+                    textColor === '#FFF' || textColor === 'black'
+                      ? '#E882D5'
+                      : textColor
+                  }`
+          }}
           aria-hidden="true"></i>
       </div>
       <div className="box-header-info">
@@ -354,9 +372,22 @@ const MainHeader: React.FC<IMainHeader> = ({
           <div>
             {isAboutPage ? null : (
               <button
-                className={`btn btn-${primaryColor} btn-connect-wallet ${
-                  import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-bg' : ''
-                }`}
+                className="btn rair-button btn-connect-wallet"
+                style={{
+                  background: `${
+                    primaryColor === '#dedede'
+                      ? import.meta.env.VITE_HOTDROPS === 'true'
+                        ? 'var(--hot-drops)'
+                        : 'linear-gradient(to right, #e882d5, #725bdb)'
+                      : import.meta.env.VITE_HOTDROPS === 'true'
+                        ? primaryButtonColor ===
+                          'linear-gradient(to right, #e882d5, #725bdb)'
+                          ? 'var(--hot-drops)'
+                          : primaryButtonColor
+                        : primaryButtonColor
+                  }`,
+                  color: textColor
+                }}
                 onClick={() => connectUserData()}>
                 {loginProcess ? 'Please wait...' : 'Connect'}
               </button>

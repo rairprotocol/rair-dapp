@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import useSwal from '../../hooks/useSwal';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import InputSelect from '../common/InputSelect';
@@ -11,6 +14,13 @@ const OfferSelector = ({ fileId }) => {
 
   const [offerOptions, setOfferOptions] = useState([]);
   const [selectedOffers, setSelectedOffers] = useState<string[]>([]);
+
+  const reactSwal = useSwal();
+
+  const { textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   useEffect(() => {
     (async () => {
@@ -80,7 +90,7 @@ const OfferSelector = ({ fileId }) => {
       }
     });
     if (data.success) {
-      Swal.close();
+      reactSwal.close();
     }
   }, [fileId, selectedOffers]);
 
@@ -114,7 +124,13 @@ const OfferSelector = ({ fileId }) => {
       )}
       <br />
       {selectedOffers.length > 0 && (
-        <button onClick={sendOffers} className="btn float-end btn-royal-ice">
+        <button
+          onClick={sendOffers}
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}
+          className="btn float-end rair-button">
           Add Offer
         </button>
       )}

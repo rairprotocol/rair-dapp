@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { teamNFTNYCArray } from './AboutUsTeam';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
@@ -40,7 +39,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const { splashData } = useNFTNYC(connectUserData);

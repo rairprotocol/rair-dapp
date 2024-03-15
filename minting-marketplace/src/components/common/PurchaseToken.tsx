@@ -122,9 +122,10 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const { loginType } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
@@ -284,9 +285,11 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
                 (!privacyPolicy || !termsOfUse)
             )
           }
-          className={`btn my-4 btn-stimorol rounded-rair col-12 col-sm-8 col-md-4 ${
-            hotdropsVar === 'true' ? 'hotdrops-bg' : ''
-          }`}
+          className="col-12 col-sm-8 col-md-4 rounded-rair my-4 btn rair-button"
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
           onClick={async () => {
             setBuyingToken(true);
             if (setPurchaseStatus) {
@@ -450,9 +453,10 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
 }) => {
   const { connectUserData } = useConnectUser();
   const store = useStore();
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { web3TxHandler } = useWeb3Tx();
@@ -511,7 +515,20 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
     return (
       <div className={customWrapperClassName}>
         <button
-          className={customButtonClassName}
+          style={{
+            background: `${
+              primaryColor === '#dedede'
+                ? import.meta.env.VITE_HOTDROPS === 'true'
+                  ? 'var(--hot-drops)'
+                  : 'linear-gradient(to right, #e882d5, #725bdb)'
+                : import.meta.env.VITE_HOTDROPS === 'true'
+                  ? primaryButtonColor ===
+                    'linear-gradient(to right, #e882d5, #725bdb)'
+                    ? 'var(--hot-drops)'
+                    : primaryButtonColor
+                  : primaryButtonColor
+            }`
+          }}
           onClick={handleClick ? handleClick : fireAgreementModal}>
           {buttonLabel}
         </button>

@@ -3,7 +3,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import MobileEditProfile from './MobileEditProfile';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { UserType } from '../../../ducks/users/users.types';
 
 import defaultPictures from './../../UserProfileSettings/images/defaultUserPictures.png';
@@ -15,7 +14,7 @@ import {
 } from './../NavigationItems/NavigationItems';
 
 interface IMobileProfileInfo {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   click: boolean;
   toggleOpenProfile: () => void;
   userData: UserType | null;

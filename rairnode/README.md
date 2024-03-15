@@ -137,7 +137,10 @@ Provide ability to make some specific actions on the platform
           * [x] /:productId - return one found by ID [see details here](readme/current/v2/products/get_product_by_id.md)
           * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme/current/v2/products/get_products_by_user_adress.md)
       * [x] /upload/file - POST- create file with media data si database [see details here](readme/current/v2/upload/add_file_after_upload_media.md)
-      * [x] /upload/validate - GET - get validate data for upload video [see details here](readme/current/v2/upload/get_validate_data_for_upload.md)
+      * [x] /upload/
+          * [x] /validate - GET - get validate data for upload video [see details here](readme/current/v2/upload/get_validate_data_for_upload.md)
+          * [x] /token - GET - Get a one-time-use secret from the backend to upload files to the media service [see details here](readme/current/v2/upload/get_secret_token_to_upload.md)
+          * [x] /:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft_v2.md)
       * [x] /verify - GET - return  verify User with rightAdmin for uploading media [see details here](readme/current/v2/verify/get_verify_user_for_upload_media.md)
           * [x] /:productId - return one found by ID [see details here](readme/get_product_by_id.md)
           * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme/current/v2/products/get_products_by_user_adress.md)

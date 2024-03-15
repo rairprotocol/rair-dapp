@@ -1,4 +1,3 @@
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
 import { UserType } from '../../../ducks/users/users.types';
 import { TOfferType } from '../../marketplace/marketplace.types';
@@ -56,7 +55,7 @@ export type TVideoPlayerViewSpecialVideoType = {
 };
 
 export type TAuthenticityStyled = {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 };
 
 export interface INftDataCommonLinkComponent {
@@ -105,7 +104,7 @@ export interface INftCollectionPageComponent {
 export interface INftUnlockablesPage {
   embeddedParams: TEmbeddedParams | undefined;
   productsFromOffer: TFileType[] | undefined;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   selectedToken: string | undefined;
   tokenData: { [index: string]: TTokenData } | null | undefined;
   someUsersData: UserType | null | undefined;
@@ -117,7 +116,7 @@ export interface INftSingleUnlockables {
   embeddedParams: TEmbeddedParams | undefined;
   productsFromOffer: TFileType[];
   setTokenDataFiltered: (filteredData: any) => void;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   setSelectVideo: (selectedVideo: TFileType) => void;
   isDiamond: undefined | boolean;
 }
@@ -156,7 +155,7 @@ export interface ICollectionInfo {
 }
 
 export type TCollectionInfoBody = {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 };
 
 export interface ICustomButton {
@@ -190,7 +189,7 @@ export type TShowMoreItem = {
   textColor: string | undefined;
   background?: string | undefined;
   border?: string | undefined;
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   onClick?: () => void;
   font?: string;
   bacground?: string;
@@ -205,7 +204,7 @@ export type TShowMoreText = {
 };
 
 export type TModalContentCloseBtnStyled = {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 };
 
 export interface INftDifferentRarity {
@@ -227,7 +226,7 @@ export type TSplashPageSetSelectedVideoArgs = {
 
 export interface IVideoPlayerView {
   productsFromOffer: TFileType[];
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   selectVideo: TFileType | undefined;
   setSelectVideo: (
     selectedVideo: any /*TFileType | TSplashPageSetSelectedVideoArgs*/

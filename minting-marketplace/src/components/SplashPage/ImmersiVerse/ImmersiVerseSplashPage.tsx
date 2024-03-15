@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { teamImmersiverseArray } from './AboutUsTeam';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { DocumentIcon, metaMaskIcon } from '../../../images';
@@ -58,7 +57,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
     policy: false,
     use: false
   });
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);

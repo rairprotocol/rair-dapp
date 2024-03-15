@@ -11,9 +11,10 @@ const useSwal = () => {
   );
   const reactSwal = withReactContent(
     Swal.mixin({
+      background: primaryColor,
+      color: textColor,
       customClass: {
-        popup: `bg-${primaryColor} rounded-rair`,
-        title: `text-${textColor}`,
+        popup: `rounded-rair`,
         htmlContainer: `text-${textColor}`
       }
     })

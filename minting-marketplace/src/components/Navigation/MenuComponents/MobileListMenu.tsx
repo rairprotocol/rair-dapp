@@ -6,7 +6,6 @@ import axios from 'axios';
 import MobileNavigationList from './MobileNavigationList';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import {
   getDataAllClear,
@@ -27,7 +26,7 @@ interface IMobileListMenu {
   click: boolean;
   messageAlert: string | null;
   activeSearch: boolean;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   setMessageAlert;
   toggleMenu: (otherPage?: string | undefined) => void;
   setTabIndexItems: (arg: number) => void;

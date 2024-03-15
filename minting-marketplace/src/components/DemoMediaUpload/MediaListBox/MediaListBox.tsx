@@ -46,6 +46,10 @@ const ContractDataModal = ({
   const [contractOptions, setContractOptions] = useState<Options[]>([]);
 
   const reactSwal = useSwal();
+  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const getContractData = useCallback(async () => {
     const request = await rFetch('/api/contracts/full?itemsPerPage=5');
@@ -178,7 +182,14 @@ const ContractDataModal = ({
           />
           <br />
           <button
-            className={`btn btn-${newDemoStatus ? 'royal-ice' : 'stimorol'}`}
+            style={{
+              color: textColor,
+              background: newDemoStatus
+                ? secondaryButtonColor
+                : primaryButtonColor,
+              border: `solid 1px ${textColor}`
+            }}
+            className={'btn rair-button'}
             onClick={() => setNewDemoStatus(!newDemoStatus)}>
             {newDemoStatus ? 'Demo' : 'Unlockable'}
           </button>
@@ -197,7 +208,11 @@ const ContractDataModal = ({
         Close <i className="fas fa-times" />
       </button>
       <button
-        className="btn btn-stimorol float-end"
+        className="btn rair-button float-end"
+        style={{
+          background: primaryButtonColor,
+          color: textColor
+        }}
         onClick={() => {
           setContract(newContract);
           setProduct(newProduct);
@@ -224,7 +239,10 @@ const BasicDataModal = ({
   const [newTitle, setNewTitle] = useState<string>(title);
   const [newDescription, setNewDescription] = useState<string>(description);
   const [newCategory, setNewCategory] = useState(category);
-
+  const { textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const reactSwal = useSwal();
   return (
     <>
@@ -256,7 +274,11 @@ const BasicDataModal = ({
         Close <i className="fas fa-times" />
       </button>
       <button
-        className="btn btn-stimorol float-end"
+        className="btn rair-button float-end"
+        style={{
+          background: primaryButtonColor,
+          color: textColor
+        }}
         onClick={() => {
           setTitle(newTitle);
           setDescription(newDescription);
@@ -294,9 +316,10 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
   const [categoryOptions, setCategoryOptions] = useState([]);
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const store = useStore();
   const reactSwal = useSwal();
   const dispatch = useDispatch();
@@ -433,12 +456,20 @@ const MediaListBox: React.FC<IMediaListBox> = ({
       html: (
         <div className="container-choice-clouds">
           <button
-            className="btn-stimorol btn"
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="rair-button btn"
             onClick={() => uploadVideo('gcp')}>
             Cloud
           </button>
           <button
-            className="btn-stimorol btn"
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="rair-button btn"
             onClick={() => uploadVideo('ipfs')}>
             IPFS
           </button>
@@ -454,7 +485,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
     <div
       className="medialist-box"
       style={{
-        backgroundColor: `var(--${primaryColor}-80)`,
+        backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
         color: textColor,
         borderRadius: '15px',
         marginTop: '20px'
@@ -493,10 +524,11 @@ const MediaListBox: React.FC<IMediaListBox> = ({
         {uploadProgress > 0 ? (
           <button
             style={{
-              background: 'none',
-              outline: 'none'
+              outline: 'none',
+              background: primaryButtonColor,
+              color: textColor
             }}
-            className={`btn-stimorol btn rounded-rair white`}>
+            className={`rair-button btn rounded-rair white`}>
             {socketMessage}
             <br />
             <LinearProgressWithLabel value={uploadProgress} />
@@ -508,7 +540,11 @@ const MediaListBox: React.FC<IMediaListBox> = ({
               offer === 'null' ||
               (newUserStatus ? !newUserStatus : uploading && !uploadSuccess)
             }
-            className="btn-stimorol btn rounded-rair white">
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="rair-button btn rounded-rair white">
             <>
               {uploading && !uploadSuccess ? (
                 <>{socketMessage !== '' ? socketMessage : '...Loading'}</>
@@ -554,7 +590,11 @@ const MediaListBox: React.FC<IMediaListBox> = ({
                 showConfirmButton: false
               });
             }}
-            className={`btn btn-stimorol rounded-rair`}>
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className={`btn rair-button rounded-rair`}>
             {offerName === '' ? (
               <>Select offer</>
             ) : (

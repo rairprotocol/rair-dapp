@@ -61,7 +61,7 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
   const selectCommonInfo = {
     customClass: 'form-control rounded-rair',
     customCSS: {
-      backgroundColor: `var(--${primaryColor}-80)`,
+      backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
       color: textColor
     },
     optionCSS: {
@@ -96,7 +96,10 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
 
   return (
     <div
-      style={{ backgroundColor: `var(--${primaryColor}-80)`, color: textColor }}
+      style={{
+        backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
+        color: textColor
+      }}
       // className="p-0 rounded-rair d-flex align-items-center my-3 col-12 row mx-0"
       className="medialist-box">
       <div className="mediaitem-block col-12">
@@ -157,7 +160,7 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
               setter={updateMediaTitle}
               customClass="mb-0 form-control rounded-rair"
               customCSS={{
-                backgroundColor: `var(--${primaryColor}-80)`,
+                backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
                 color: textColor ? textColor : ''
               }}
             />

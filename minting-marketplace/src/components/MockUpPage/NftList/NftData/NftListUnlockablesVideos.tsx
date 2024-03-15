@@ -1,7 +1,8 @@
-//@ts-nocheck
-//unused-component
-import React from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 // import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
 const NftListUnlockablesVideos = ({
@@ -9,8 +10,7 @@ const NftListUnlockablesVideos = ({
   // contract,
   // product,
   productsFromOffer,
-  selectedData,
-  primaryColor
+  selectedData
   // selectedToken,
 }) => {
   const navigate = useNavigate();
@@ -18,6 +18,10 @@ const NftListUnlockablesVideos = ({
   const partOfVideo = productsFromOffer?.length
     ? productsFromOffer.slice(0, 2)
     : 0;
+
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   return (
     <div className="nftlist-unlockable-videos">
@@ -93,14 +97,7 @@ const NftListUnlockablesVideos = ({
                     <p>{v?.title}</p>{' '}
                   </div>
                   <div>
-                    <p
-                      style={{
-                        color: `${
-                          primaryColor === 'rhyno' ? 'black' : '#A7A6A6'
-                        }`
-                      }}>
-                      {v?.duration}
-                    </p>
+                    <p style={{ color: textColor }}>{v?.duration}</p>
                   </div>
                 </div>
               </div>

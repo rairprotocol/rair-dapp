@@ -5,7 +5,6 @@ import { v1 } from 'uuid';
 import { teamVaporVerseArray } from './AboutUsTeam';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
@@ -64,7 +63,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const carousel_match = window.matchMedia('(min-width: 630px)');

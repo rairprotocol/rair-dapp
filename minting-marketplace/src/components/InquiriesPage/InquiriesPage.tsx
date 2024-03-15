@@ -16,9 +16,10 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 
 const InquiriesPage = () => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const { currentUserAddress } = useSelector((store) => store.contractStore);
 
@@ -216,7 +217,22 @@ const InquiriesPage = () => {
                       type="button">
                       Reset
                     </InquireButton>
-                    <InquireButton type="submit">Submit</InquireButton>
+                    <InquireButton
+                      background={`${
+                        primaryColor === '#dedede'
+                          ? import.meta.env.VITE_HOTDROPS === 'true'
+                            ? 'var(--hot-drops)'
+                            : 'linear-gradient(to right, #e882d5, #725bdb)'
+                          : import.meta.env.VITE_HOTDROPS === 'true'
+                            ? primaryButtonColor ===
+                              'linear-gradient(to right, #e882d5, #725bdb)'
+                              ? 'var(--hot-drops)'
+                              : primaryButtonColor
+                            : primaryButtonColor
+                      }`}
+                      type="submit">
+                      Submit
+                    </InquireButton>
                   </div>
                 </InquireField>
               </>

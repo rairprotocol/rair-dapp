@@ -12,7 +12,6 @@ import {
   TTokenData
 } from '../../../../../axios.responseTypes';
 import { RootState } from '../../../../../ducks';
-import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { defaultHotDrops } from '../../../../../images';
 import InputSelect from '../../../../common/InputSelect';
@@ -138,7 +137,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   setPurchaseStatus,
   closeModal
 }) => {
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const params = useParams<TParamsNftItemForCollectionView>();
@@ -179,7 +178,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   return (
     <div
       className={`wrapper-collection-info ${mintToken ? 'mint' : ''} ${
-        primaryColor === 'rhyno' ? 'rhyno' : ''
+        primaryColor === '#dedede' ? 'rhyno' : ''
       }`}>
       {openTitle && <div className="collection-info-head">Collection Info</div>}
       <div className="contianer-collection-info">

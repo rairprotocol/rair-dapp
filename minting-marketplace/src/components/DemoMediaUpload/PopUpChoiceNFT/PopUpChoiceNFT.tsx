@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
 import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
@@ -33,9 +34,8 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   const [product, setProduct] = useState('null');
   const [offer, setOffer] = useState('null');
   const [isDemo, setIsDemo] = useState(false);
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor, secondaryButtonColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -43,14 +43,14 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   const [contractData, setContractData] = useState({});
   const [contractOptions, setContractOptions] = useState<OptionsType[]>([]);
   const [productOptions, setProductOptions] = useState();
-  const [offersOptions, setOffersOptions] = useState();
+  const [offersOptions, setOffersOptions] = useState<OptionsType[]>();
   const [choiceAllOptions, setChoiceAllOptions] =
     useState<TChoiceAllOptions | null>(null);
 
   const selectCommonInfoNFT = {
     customClass: 'form-control rounded-rair',
     customCSS: {
-      backgroundColor: `var(--${primaryColor}-80)`,
+      backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
       color: textColor
     },
     optionCSS: {
@@ -105,7 +105,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   }, [setModalIsOpen, choiceAllOptions]);
 
   const handleChoiceOffer = useCallback(async () => {
-    if (offer && contract !== 'None') {
+    if (offer && contract !== 'None' && offersOptions) {
       const filteredOffers = offersOptions.filter((el) => el.value === offer);
       if (Array.isArray(mediaList)) {
         const newArray = mediaList;
@@ -358,7 +358,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           <div
             style={{
               ...selectCommonInfoNFT,
-              backgroundColor: `var(--${primaryColor}-80)`,
+              backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
               marginTop: 0,
               cursor: 'unset'
             }}
@@ -373,8 +373,8 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
               {titleOfContract
                 ? titleOfContract.title
                 : choiceAllOptions !== null
-                ? choiceAllOptions.offer[0].label
-                : 'Unlocked(demo)'}
+                  ? choiceAllOptions.offer[0].label
+                  : 'Unlocked(demo)'}
             </div>
           </div>
         </div>
@@ -385,7 +385,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           <div
             style={{
               ...selectCommonInfoNFT,
-              backgroundColor: `var(--${primaryColor}-80)`,
+              backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
               marginTop: 0,
               cursor: 'pointer'
             }}
@@ -400,8 +400,8 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
               {titleOfContract
                 ? titleOfContract.title
                 : choiceAllOptions !== null
-                ? choiceAllOptions.offer[0].label
-                : 'Select a Contract'}
+                  ? choiceAllOptions.offer[0].label
+                  : 'Select a Contract'}
             </div>
           </div>
         </div>
@@ -460,7 +460,14 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
               <>
                 <button
                   onClick={() => setIsDemo(!isDemo)}
-                  className={`btn btn-${isDemo ? 'stimorol' : 'royal-ice'}`}>
+                  style={{
+                    color: textColor,
+                    background: isDemo
+                      ? primaryButtonColor
+                      : secondaryButtonColor,
+                    border: `solid 1px ${textColor}`
+                  }}
+                  className="btn rair-button">
                   {isDemo ? 'Demo' : 'Unlockable'}
                 </button>
                 <small className={`text-${textColor}`}>
@@ -474,9 +481,11 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
               onClick={() => handleChoiceOffer()}
               disabled={offer === 'null' || offer === 'None'}
               style={{
-                marginTop: 20
+                marginTop: 20,
+                background: primaryButtonColor,
+                color: textColor
               }}
-              className="col-12 btn-stimorol btn rounded-rair white">
+              className="col-12 rair-button btn rounded-rair white">
               <>{titleOfContract ? 'Update' : 'Submit'}</>
             </button>
           </>

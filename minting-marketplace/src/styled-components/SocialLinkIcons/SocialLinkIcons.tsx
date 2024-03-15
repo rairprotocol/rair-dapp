@@ -1,11 +1,9 @@
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
-
 interface ISocialBox {
   width?: string;
   height?: string;
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   marginRight?: string;
   marginLeft?: string;
   hoverColor?: string;
@@ -22,7 +20,7 @@ export const SocialBox = styled.div<ISocialBox>`
   height: ${(props) => (props.height ? props.height : '32px')};
   border-radius: 10.5px;
   border: 1px solid
-    ${(props) => (props.primaryColor === 'rhyno' ? '#D0D0D0' : '#fff')};
+    ${(props) => (props.primaryColor === '#dedede' ? '#D0D0D0' : '#fff')};
 
   display: flex;
   justify-content: center;
@@ -45,20 +43,22 @@ export const SocialBox = styled.div<ISocialBox>`
 
   &.social-sun-icon {
     background: ${(props) =>
-      props.primaryColor === 'rhyno' ? '#383637' : '#fff'};
+      props.primaryColor === '#dedede' ? '#383637' : '#fff'};
     border: ${(props) =>
-      props.primaryColor === 'rhyno' ? '1px solid #E882D5' : 'none'};
+      props.primaryColor === '#dedede' ? '1px solid #E882D5' : 'none'};
   }
 
   &.social-bell-icon {
     background: none;
     border: ${(props) =>
-      props.primaryColor === 'rhyno' ? '1px solid #fff' : '1px solid #D0D0D0'};
+      props.primaryColor === '#dedede'
+        ? '1px solid #fff'
+        : '1px solid #D0D0D0'};
 
     svg path {
       fill: ${(props) =>
         props.notification
-          ? props.primaryColor === 'rhyno'
+          ? props.primaryColor === '#dedede'
             ? '#383637'
             : '#fff'
           : 'none'};
@@ -67,7 +67,7 @@ export const SocialBox = styled.div<ISocialBox>`
 
   &.social-sun-icon:hover {
     border: ${(props) =>
-      props.primaryColor === 'rhyno'
+      props.primaryColor === '#dedede'
         ? '1px solid #383637'
         : '1px solid #E882D5'};
 
@@ -113,7 +113,7 @@ export const SocialBoxSearch = styled.div<ISocialBox>`
       ? props.hotdrops === 'true'
         ? 'var(--hot-drops-gradient)'
         : 'var(--stimorol)'
-      : props.primaryColor === 'rhyno'
+      : props.primaryColor === '#dedede'
         ? '#ffffff'
         : '#424242'};
   border: ${(props) => (props.activeSearch ? 'none' : '1px solid #eaeaea')};
@@ -161,7 +161,7 @@ export const UserIconMobile = styled.div<ISocialBox>`
   align-items: center;
   cursor: pointer;
   border: ${(props) =>
-    props.messageAlert === 'profile' && props.primaryColor === 'rhyno'
+    props.messageAlert === 'profile' && props.primaryColor === '#dedede'
       ? '1px solid #000'
       : props.messageAlert === 'profile'
         ? '1px solid #D0D0D0'
@@ -179,7 +179,7 @@ export const UserIconMobile = styled.div<ISocialBox>`
 export const SocialMenuMobile = styled.div<ISocialBox>`
   cursor: pointer;
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? '#fff' : '#424242'};
+    props.primaryColor === '#dedede' ? '#fff' : '#424242'};
   border: 1px solid #eaeaea;
   border-radius: 10px;
   width: 40px;

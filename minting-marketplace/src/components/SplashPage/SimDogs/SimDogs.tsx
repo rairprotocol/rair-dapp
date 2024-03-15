@@ -8,7 +8,6 @@ import { BackStorySimDogs } from './InformationText';
 import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
 import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
@@ -111,7 +110,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 
   const customButtonBlock = <CustomButtonBlock splashData={splashData} />;
 
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
 

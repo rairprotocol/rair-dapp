@@ -43,10 +43,8 @@ const Factory = () => {
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { primaryColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, secondaryColor, primaryButtonColor, textColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { adminRights } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
@@ -145,7 +143,7 @@ const Factory = () => {
             label="Contract name"
             customClass="rounded-rair form-control"
             customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
+              backgroundColor: primaryColor,
               color: 'inherit',
               borderColor: `var(--${secondaryColor}-40)`
             }}
@@ -165,7 +163,7 @@ const Factory = () => {
             label="Contract's Blockchain"
             customClass="rounded-rair form-control"
             customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
+              backgroundColor: primaryColor,
               color: 'inherit',
               borderColor: `var(--${secondaryColor}-40)`
             }}
@@ -185,7 +183,11 @@ const Factory = () => {
                 deploying ||
                 !erc777Instance
               }
-              className="btn btn-stimorol col-12 rounded-rair"
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              className="btn rair-button col-12 rounded-rair"
               onClick={async () => {
                 if (!erc777Instance) {
                   return;
@@ -233,7 +235,11 @@ const Factory = () => {
                 diamondFactoryInstance === undefined ||
                 !erc777Instance
               }
-              className="btn btn-stimorol col-12 rounded-rair mt-3"
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              className="btn rair-button col-12 rounded-rair mt-3"
               onClick={async () => {
                 if (!erc777Instance) {
                   return;
@@ -279,7 +285,11 @@ const Factory = () => {
           Object.keys(exchangeData).map((ethPrice, index) => {
             return (
               <button
-                className="btn btn-stimorol col-12 mt-3 rounded-rair"
+                style={{
+                  background: primaryButtonColor,
+                  color: textColor
+                }}
+                className="btn rair-button col-12 mt-3 rounded-rair"
                 key={index}
                 onClick={async () => {
                   reactSwal.fire({

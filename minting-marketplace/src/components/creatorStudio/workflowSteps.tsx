@@ -73,9 +73,10 @@ const WorkflowSteps: FC = () => {
 
   const [simpleMode, setSimpleMode] = useState<boolean>(true);
 
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [steps, setSteps] = useState<TSteps[]>([]);
 
@@ -473,7 +474,9 @@ const WorkflowSteps: FC = () => {
                       <button
                         onClick={goBack}
                         style={{ border: 'none' }}
-                        className={`btn rounded-rair w-100 btn-${primaryColor}`}>
+                        className={`btn rounded-rair w-100 btn-${
+                          primaryColor === '#dedede' ? 'rhyno' : 'charcoal'
+                        }`}>
                         <i className="fas fa-arrow-left" /> Back
                       </button>
                     </div>
@@ -517,7 +520,11 @@ const WorkflowSteps: FC = () => {
                                 background: `var(--${
                                   currentStep >= index
                                     ? 'bubblegum'
-                                    : primaryColor
+                                    : `${
+                                        primaryColor === '#dedede'
+                                          ? 'rhyno'
+                                          : 'charcoal'
+                                      }`
                                 })`,
                                 height: '1.7rem',
                                 width: '1.7rem',
@@ -541,18 +548,28 @@ const WorkflowSteps: FC = () => {
                       <div className="col-12 col-md-6 text-end">
                         <button
                           onClick={() => navigateRoute()}
-                          className={`btn btn-${
-                            simpleMode ? 'stimorol' : primaryColor
-                          } rounded-rair col-12 col-md-6`}>
+                          style={{
+                            color: textColor,
+                            background: simpleMode
+                              ? primaryButtonColor
+                              : primaryColor,
+                            border: `solid 1px ${textColor}`
+                          }}
+                          className="btn rair-button rounded-rair col-12 col-md-6">
                           Simple
                         </button>
                       </div>
                       <div className="col-12 col-md-6 text-start mb-3">
                         <button
                           onClick={() => setSimpleMode(false)}
-                          className={`btn btn-${
-                            simpleMode ? primaryColor : 'stimorol'
-                          } rounded-rair col-12 col-md-6`}>
+                          style={{
+                            color: textColor,
+                            background: !simpleMode
+                              ? primaryButtonColor
+                              : primaryColor,
+                            border: `solid 1px ${textColor}`
+                          }}
+                          className={`btn rair-button rounded-rair col-12 col-md-6`}>
                           Advanced
                         </button>
                       </div>

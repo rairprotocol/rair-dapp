@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
 
-import { RootState } from '../../../ducks';
+import store, { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
@@ -29,6 +30,10 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
     );
+  const { textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const [marketValuesChanged, setMarketValuesChanged] =
     useState<boolean>(false);
   const reactSwal = useSwal();
@@ -136,9 +141,12 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
           {item._id && item.diamondRangeIndex && item.offerIndex && (
             <button
               disabled={updateAvailable || enabled}
-              className={`btn col-12 btn-${
-                updateAvailable ? 'success' : 'stimorol'
-              }`}
+              style={{
+                color: textColor,
+                background: updateAvailable ? 'green' : primaryButtonColor,
+                border: `solid 1px ${textColor}`
+              }}
+              className="btn col-12 rair-button"
               onClick={async () => {
                 if (!diamondMarketplaceInstance) {
                   return;
@@ -274,7 +282,11 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                     Math.pow(10, minterDecimals | 3) * 100
                   )}
                   onClick={addPayment}
-                  className="col-12 col-md-2 rounded-rair btn btn-stimorol">
+                  style={{
+                    background: primaryButtonColor,
+                    color: textColor
+                  }}
+                  className="col-12 col-md-2 rounded-rair btn rair-button">
                   <i className="fas fa-plus" /> Add
                 </button>
               </div>

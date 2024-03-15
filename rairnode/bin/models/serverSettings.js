@@ -13,6 +13,20 @@ const ServerSetting = new Schema({
   nodeAddress: { type: String, required: false, default: '' },
   // User addresses with super admin rights
   superAdmins: [{ type: String, required: false }],
+  // Light mode and dark mode colors for background
+  darkModePrimary: { type: String, required: false },
+  darkModeSecondary: { type: String, required: false },
+  darkModeText: { type: String, required: false },
+  // Logo images
+  darkModeBannerLogo: { type: String, required: false },
+  darkModeMobileLogo: { type: String, required: false },
+  // Mobile logo images
+  lightModeBannerLogo: { type: String, required: false },
+  lightModeMobileLogo: { type: String, required: false },
+  // Button
+  buttonPrimaryColor: { type: String, required: false },
+  buttonFadeColor: { type: String, required: false },
+  buttonSecondaryColor: { type: String, required: false },
 }, { versionKey: false, timestamps: false });
 
 module.exports = ServerSetting;

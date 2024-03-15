@@ -7,7 +7,6 @@ import { teamRAIRBasicArray } from './AboutUsTeam';
 
 import { TNftFilesResponse } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
@@ -53,7 +52,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const { splashData } = useSplashData(connectUserData);
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const reactSwal = useSwal();

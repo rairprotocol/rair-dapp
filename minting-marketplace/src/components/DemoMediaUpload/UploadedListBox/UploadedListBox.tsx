@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import useSwal from '../../../hooks/useSwal';
 import { copyEmbebed } from '../../../utils/copyEmbed';
 import { rFetch } from '../../../utils/rFetch';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
@@ -25,9 +25,11 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   getMediaList,
   setUploadSuccess
 }) => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
+  const rSwal = useSwal();
 
   const [openVideoplayer, setOpenVideoplayer] = useState<boolean>(false);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
@@ -81,20 +83,22 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   };
 
   const removeVideoAlert = () => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
-        deleterUploaded(fileData._id);
-      }
-    });
+    rSwal
+      .fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          rSwal.fire('Deleted!', 'Your file has been deleted.', 'success');
+          deleterUploaded(fileData._id);
+        }
+      });
   };
 
   const getCurrentContract = useCallback(async () => {
@@ -131,7 +135,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
       className="medialist-box"
       key={index}
       style={{
-        backgroundColor: `var(--${primaryColor}-80)`,
+        backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
         color: textColor,
         borderRadius: '15px',
         marginTop: '20px'
@@ -163,10 +167,12 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
             onClick={() => {
               copyEmbebed(fileData?._id, currentContract.contractAddress);
             }}
-            className="col-12 btn-stimorol btn rounded-rair white">
-            <>
-              <i className="fas fa-check" /> Copy embed code{' '}
-            </>
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="rair-button btn rounded-rair white">
+            <i className="fas fa-check" /> Copy embed code
           </button>
         )}
         <button

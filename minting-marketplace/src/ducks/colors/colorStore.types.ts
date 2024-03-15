@@ -1,6 +1,10 @@
-import { setColorScheme } from './actions';
+import {
+  setColorScheme,
+  setCustomColors,
+  setCustomLogosDark,
+  setCustomLogosLight
+} from './actions';
 
-export type ColorChoice = 'charcoal' | 'rhyno';
 export type BackgroundBlendModeType =
   | 'difference'
   | 'exclusion'
@@ -19,9 +23,9 @@ export type BackgroundBlendModeType =
   | 'darken'
   | 'lighten';
 
-export type ColorStoreType = {
-  primaryColor: ColorChoice;
-  secondaryColor: ColorChoice;
+export type ColorSchemaType = {
+  primaryColor: string;
+  secondaryColor: string;
   headerLogo: string;
   headerLogoMobile: string;
   textColor: string | undefined;
@@ -30,11 +34,22 @@ export type ColorStoreType = {
     backgroundBlendMode: BackgroundBlendModeType | undefined;
   };
 };
+export type ColorStoreType = ColorSchemaType & {
+  primaryButtonColor: string;
+  secondaryButtonColor: string;
+};
 
 export type SchemaType = {
-  [key: string]: ColorStoreType;
+  [key: string]: ColorSchemaType;
 };
 
 export type SetColorSchemeType = ReturnType<typeof setColorScheme>;
+export type SetCustomColorsType = ReturnType<typeof setCustomColors>;
+export type SetCustomLogosDarkType = ReturnType<typeof setCustomLogosDark>;
+export type SetCustomLogosLightType = ReturnType<typeof setCustomLogosLight>;
 
-export type ColorStoreActionsType = SetColorSchemeType;
+export type ColorStoreActionsType =
+  | SetColorSchemeType
+  | SetCustomColorsType
+  | SetCustomLogosDarkType
+  | SetCustomLogosLightType;

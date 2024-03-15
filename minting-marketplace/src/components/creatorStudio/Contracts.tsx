@@ -24,10 +24,8 @@ const Contracts = () => {
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { primaryColor, secondaryColor, textColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, secondaryColor, textColor, primaryButtonColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const fetchContracts = useCallback(async () => {
     const response = await rFetch('/api/contracts', undefined, {
@@ -66,7 +64,7 @@ const Contracts = () => {
               placeholder="Contract filter"
               customClass={`rounded-rair form-control contracts-filter-${primaryColor}`}
               customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
+                backgroundColor: primaryColor,
                 color: textColor ? textColor : 'inherit',
                 borderColor: `var(--${secondaryColor}-40)`
               }}
@@ -144,7 +142,7 @@ const Contracts = () => {
                   key={index}
                   style={{
                     position: 'relative',
-                    backgroundColor: `var(--${primaryColor}-80)`
+                    backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`
                   }}
                   className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
                   {item?.blockchain && (
@@ -182,14 +180,20 @@ const Contracts = () => {
             })
         ) : (
           <div
-            style={{ border: '1.3px dashed var(--charcoal-80)' }}
+            style={{
+              border: `1.3px dashed color-mix(in srgb, ${primaryColor}, #888888)`
+            }}
             className="rounded-rair p-5">
             <h5 className="mt-5">
               It seems, you have not deployed any contracts yet
             </h5>
             <NavLink
               to="/creator/deploy"
-              className="btn btn-stimorol mb-5 mt-3">
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              className="btn rair-button mb-5 mt-3">
               Deploy
             </NavLink>
           </div>

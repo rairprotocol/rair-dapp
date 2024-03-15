@@ -4,13 +4,12 @@ import {
   TProducts,
   TTokenData
 } from '../../axios.responseTypes';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { UserType } from '../../ducks/users/users.types';
 import { TOfferType } from '../marketplace/marketplace.types';
 
 export interface ITitleSingleTokenView {
   title: string;
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export interface INftItemForCollectionView {
@@ -95,7 +94,7 @@ export interface ISharePopUp {
   onClose: (value: number) => void;
   selectedValue: number;
   open: boolean;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   selectedData?: TMetadataType | undefined;
 }
 
@@ -151,7 +150,7 @@ export type TUnlockableVideosSingleTokenPage = {
   openVideoplayer: boolean;
   setOpenVideoPlayer: (value: boolean) => void;
   handlePlayerClick: () => void;
-  primaryColor: ColorChoice;
+  primaryColor: string;
 };
 
 export interface ITitleCollection {
@@ -168,7 +167,7 @@ export interface ITitleCollection {
 export interface ICusmonShareButton {
   title: string;
   handleClick: () => void;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   isCollectionPathExist?: boolean;
   moreUnlockablesClassName?: string;
 }
@@ -223,7 +222,7 @@ export type TSwitchEthereumChainArgs = {
 };
 
 export interface ISearchPanel {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   textColor: string | undefined;
   tabIndex: number;
   setTabIndex: (index: number) => void;

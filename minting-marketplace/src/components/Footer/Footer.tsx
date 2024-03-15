@@ -33,9 +33,8 @@ const Footer: React.FC<IFooter> = () => {
 
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
-  const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { headerLogo, primaryColor, textColor, primaryButtonColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const onChangeEmail = (e) => {
     setEmailChimp(e.target.value);
@@ -61,19 +60,7 @@ const Footer: React.FC<IFooter> = () => {
             primaryColor={primaryColor}>
             <FooterImage className="footer-img-hotdrops">
               <NavLink to="/">
-                {import.meta.env.VITE_HOTDROPS === 'true' ? (
-                  <img
-                    className="logo-hotdrops-image"
-                    alt="Rair Tech"
-                    src={
-                      primaryColor === 'rhyno'
-                        ? HotDropsLogoLight
-                        : HotDropsLogo
-                    }
-                  />
-                ) : (
-                  <img src={headerLogo} alt="Rair Tech" />
-                )}
+                <img src={headerLogo} alt="Rair Tech" />
               </NavLink>
             </FooterImage>
             <NavFooter className="footer-nav-hotdrops">
@@ -203,7 +190,7 @@ const Footer: React.FC<IFooter> = () => {
               </div>
               <NavFooter>
                 <NavFooterBox primaryColor={primaryColor}>
-                  <h4>Company</h4>
+                  <h4 style={{ color: textColor }}>Company</h4>
                   <li>
                     <a
                       href="https://etherscan.io/token/0xe3fFbD303ccC7733e501713aAF06E46312B22D3E"
@@ -235,7 +222,25 @@ const Footer: React.FC<IFooter> = () => {
                     onChange={onChangeEmail}
                     required
                   />
-                  <button type="submit">Sign up</button>
+                  <button
+                    style={{
+                      color: textColor,
+                      background: `${
+                        primaryColor === '#dedede'
+                          ? import.meta.env.VITE_HOTDROPS === 'true'
+                            ? 'var(--hot-drops)'
+                            : 'linear-gradient(to right, #e882d5, #725bdb)'
+                          : import.meta.env.VITE_HOTDROPS === 'true'
+                            ? primaryButtonColor ===
+                              'linear-gradient(to right, #e882d5, #725bdb)'
+                              ? 'var(--hot-drops)'
+                              : primaryButtonColor
+                            : primaryButtonColor
+                      }`
+                    }}
+                    type="submit">
+                    Sign up
+                  </button>
                   <div
                     style={{
                       position: 'absolute',

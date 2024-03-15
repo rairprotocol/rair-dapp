@@ -6,6 +6,7 @@ import { isAddress } from 'ethers/lib/utils';
 
 import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -53,6 +54,10 @@ const ImportExternalContract = () => {
   const { contractCreator } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+  const { primaryButtonColor, secondaryButtonColor, textColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   useEffect(() => {
     const sessionId = Math.random().toString(36).slice(2, 9);
@@ -196,7 +201,11 @@ const ImportExternalContract = () => {
       <div className="col-12 col-md-3 pt-4 px-0 mx-0">
         <button
           disabled={!contractCreator || !isAddress(selectedContract)}
-          className="btn btn-royal-ice w-100"
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}
+          className="btn rair-button w-100"
           onClick={tryToGetCreator}>
           Try to get owner address
         </button>
@@ -210,7 +219,11 @@ const ImportExternalContract = () => {
           selectedBlockchain === 'null' ||
           !utils.isAddress(selectedContract)
         }
-        className="btn btn-stimorol col-12">
+        className="btn rair-button col-12"
+        style={{
+          background: primaryButtonColor,
+          color: textColor
+        }}>
         {sendingData ? 'Please wait...' : 'Import Contract!'}
       </button>
       <hr />

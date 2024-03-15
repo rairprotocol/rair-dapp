@@ -132,7 +132,7 @@ const AdminView = ({
               <InputSelect
                 customClass="form-control input-select-custom-style"
                 customCSS={reusableStyle}
-                // labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
+                // labelCSS={{ backgroundColor: primaryColor }}
                 label="Select contract that needs to be hidden"
                 getter={item}
                 setter={(e) => selectContract(e, index)}

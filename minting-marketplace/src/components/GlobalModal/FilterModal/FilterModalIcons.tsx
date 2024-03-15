@@ -125,34 +125,39 @@ export const MobileCloseBtn = ({ className }) => (
 );
 
 export const StyledBlockchainIcon = styled(BlockchainIcon)`
-  stroke: var(
-    --${(props) => (props.primaryColor.includes('charcoal') ? 'rhyno-40' : 'charcoal-90')}
-  );
+  stroke: ${(props) =>
+    props.primaryColor.includes('rhyno')
+      ? 'var(--rhyno-40)'
+      : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
 `;
 export const StyledCategoryIcon = styled(CategoryIcon)`
-  stroke: var(
-    --${(props) => (props.primaryColor.includes('charcoal') ? 'rhyno-40' : 'charcoal-90')}
-  );
+  stroke: ${(props) =>
+    props.primaryColor.includes('rhyno')
+      ? 'var(--rhyno-40)'
+      : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
 `;
 export const StyledChevronDownIcon = styled(ChevronDownIcon)`
   path {
-    stroke: var(
-      --${(props) => (props.primaryColor.includes('charcoal') ? 'rhyno-40' : 'charcoal-90')}
-    );
+    stroke: ${(props) =>
+      props.primaryColor.includes('rhyno')
+        ? 'var(--rhyno-40)'
+        : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
   }
 `;
 export const StyledChevronUPIcon = styled(ChevronUPIcon)`
   path {
-    stroke: var(
-      --${(props) => (props.primaryColor.includes('charcoal') ? 'rhyno-40' : 'charcoal-90')}
-    );
+    stroke: ${(props) =>
+      props.primaryColor.includes('rhyno')
+        ? 'var(--rhyno-40)'
+        : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
   }
 `;
 export const StyledCategoryItemIcon = styled(CategoryItemIcon)`
   path {
-    stroke: var(
-      --${(props) => (props.primaryColor.includes('charcoal') ? 'rhyno-40' : 'charcoal-90')}
-    );
+    stroke: ${(props) =>
+      props.primaryColor.includes('rhyno')
+        ? 'var(--rhyno-40)'
+        : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
   }
 `;
 export const StyledClearButton = styled.button`

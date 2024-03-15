@@ -1,11 +1,10 @@
 import React from 'react';
 
 import { TFileType } from '../../axios.responseTypes';
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
 
 export interface INumberedCircle {
   index: number;
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export interface ISplashPageProps {
@@ -269,11 +268,11 @@ export interface IShowVideoToLoggedInUsers {
 }
 
 export interface INotCommercial {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export interface ITokenLeftGreyman {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   soldCopies?: string;
   copies?: string;
 }
@@ -327,7 +326,7 @@ export interface ITeammate {
   url: string;
   name: string;
   desc: string[];
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   socials?: TSocialsItem[];
   chain?: string | null;
   arraySplash?: TArraySplashType;
@@ -335,16 +334,16 @@ export interface ITeammate {
 
 export interface ITeammateDesc {
   desc: string[];
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   arraySplash?: TArraySplashType;
 }
 
 export interface INotCommercialGeneric {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export interface ITokenLeft {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   DiscordIcon: string;
   copies?: number;
   soldCopies?: number;
@@ -352,7 +351,7 @@ export interface ITokenLeft {
 
 export interface IUnlockVideos {
   unlockableVideo: string;
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export type TVideoArrType = {
@@ -366,7 +365,7 @@ export interface IUnlockVideoItem {
   nameVideo: string;
   timeVideo: string;
   unlockableVideo: string;
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export interface IExclusiveNft {
@@ -386,7 +385,7 @@ export interface INipseyRelease {
 }
 
 export interface INotCommercialTemplate {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   NFTName: string | undefined;
 }
 
@@ -429,7 +428,7 @@ export interface INFTImages {
 }
 
 export interface ITokenLeftTemplate {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   soldCopies: number;
   counterData?: TCounterData;
   ipftButton?: any; //type is unclear
@@ -486,7 +485,7 @@ export type TUseGetProductsReturn = [
 ];
 
 export interface INotCommercialTemplate2 {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   NFTName: string;
 }
 

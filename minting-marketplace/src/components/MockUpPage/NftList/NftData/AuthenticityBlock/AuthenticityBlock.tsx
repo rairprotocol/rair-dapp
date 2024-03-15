@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { TableAuthenticity } from './AuthenticityBlockItems';
 
 import { RootState } from '../../../../../ducks';
-import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
 import { defaultHotDrops } from '../../../../../images';
 import { IAuthenticityBlock } from '../../nftList.types';
 
@@ -19,8 +19,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
   collectionToken,
   selectedData
 }) => {
-  const primaryColor = useSelector<RootState, ColorChoice>(
-    (store) => store.colorStore.primaryColor
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
   );
 
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
@@ -89,11 +89,25 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                           </span>
                           Etherscan transaction
                         </div>
-                        <div
-                          className={`block-arrow ${
-                            hotdropsVar === 'true' ? 'hotdrops-color' : ''
-                          }`}>
-                          <i className="fas fa-arrow-right"></i>
+                        <div className={`block-arrow`}>
+                          <i
+                            className="fas fa-arrow-right"
+                            style={{
+                              color:
+                                import.meta.env.VITE_HOTDROPS === 'true'
+                                  ? `${
+                                      textColor === '#FFF' ||
+                                      textColor === 'black'
+                                        ? '#F95631'
+                                        : textColor
+                                    }`
+                                  : `${
+                                      textColor === '#FFF' ||
+                                      textColor === 'black'
+                                        ? '#E882D5'
+                                        : textColor
+                                    }`
+                            }}></i>
                         </div>
                       </a>
                     )}
@@ -118,7 +132,22 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                 Etherscan transaction
               </div>
               <div className="block-arrow">
-                <i className="fas fa-arrow-right"></i>
+                <i
+                  className="fas fa-arrow-right"
+                  style={{
+                    color:
+                      import.meta.env.VITE_HOTDROPS === 'true'
+                        ? `${
+                            textColor === '#FFF' || textColor === 'black'
+                              ? '#F95631'
+                              : textColor
+                          }`
+                        : `${
+                            textColor === '#FFF' || textColor === 'black'
+                              ? '#E882D5'
+                              : textColor
+                          }`
+                  }}></i>
               </div>
             </a>
           </div>
@@ -139,7 +168,22 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
               className={`block-arrow ${
                 hotdropsVar === 'true' ? 'hotdrops-color' : ''
               }`}>
-              <i className="fas fa-arrow-right"></i>
+              <i
+                className="fas fa-arrow-right"
+                style={{
+                  color:
+                    import.meta.env.VITE_HOTDROPS === 'true'
+                      ? `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#F95631'
+                            : textColor
+                        }`
+                      : `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#E882D5'
+                            : textColor
+                        }`
+                }}></i>
             </div>
           </a>
         </div>

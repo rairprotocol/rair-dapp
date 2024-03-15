@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 interface IPopUpVideoChangeBox {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export const PopUpVideoChangeBox = styled.div<IPopUpVideoChangeBox>`
@@ -21,7 +19,7 @@ export const PopUpVideoChangeBox = styled.div<IPopUpVideoChangeBox>`
     background: ${(props) =>
       props.primaryColor === 'rhyno'
         ? 'var(--rhyno-80)'
-        : 'var(--charcoal-80)'};
+        : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
     color: ${(props) =>
       props.primaryColor === 'rhyno' ? '#000 !important' : '#fff !important'};
   }
@@ -30,6 +28,6 @@ export const PopUpVideoChangeBox = styled.div<IPopUpVideoChangeBox>`
     background: ${(props) =>
       props.primaryColor === 'rhyno'
         ? 'var(--rhyno-80)'
-        : 'var(--charcoal-80)'};
+        : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
   }
 `;

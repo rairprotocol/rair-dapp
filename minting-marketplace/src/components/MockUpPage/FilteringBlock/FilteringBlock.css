@@ -295,10 +295,6 @@ select.select-price option {
   font-size: 16px;
 }
 
-.title-right-arrow {
-  color: #e882d5;
-}
-
 .modal-item-metadata {
   height: auto !important;
 }

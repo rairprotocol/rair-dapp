@@ -78,6 +78,16 @@
   );
 }
 
+.rair-button:hover {
+  filter: brightness(110%);
+}
+.rair-button:active {
+  filter: brightness(120%);
+}
+.rair-button:active {
+  filter: brightness(80%);
+}
+
 body {
   font-family: 'Plus Jakarta Text' !important;
 }
@@ -405,90 +415,6 @@ button:disabled.hotdrops-bg {
   color: white;
   background-color: var(--charcoal);
   border-color: var(--charcoal);
-}
-
-.btn-royal-ice {
-  color: white;
-  background: var(--royal-ice);
-}
-
-.btn-royal-ice:hover {
-  color: white;
-  background: var(--royal-ice-hover);
-}
-
-.btn-check:focus + .btn-royal-ice,
-.btn-royal-ice:focus {
-  color: white;
-  background: var(--royal-ice-hover);
-  box-shadow: 0 0 0 0.25rem white;
-}
-
-.btn-check:active + .btn-royal-ice,
-.btn-check:checked + .btn-royal-ice,
-.btn-royal-ice.active,
-.btn-royal-ice:active,
-.show > .btn-royal-ice.dropdown-toggle {
-  color: white;
-  background: var(--royal-ice-click);
-}
-
-.btn-check:active + .btn-royal-ice:focus,
-.btn-check:checked + .btn-royal-ice:focus,
-.btn-royal-ice.active:focus,
-.btn-royal-ice:active:focus,
-.show > .btn-royal-ice.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.25rem white;
-}
-
-.btn-royal-ice.disabled,
-.btn-royal-ice:disabled {
-  color: white;
-  background: var(--royal-ice-click);
-}
-
-.btn-stimorol {
-  color: white !important;
-  background: var(--stimorol) !important;
-}
-
-.btn.btn-stimorol.hotdrops-bg {
-  background: var(--hot-drops-gradient) !important;
-}
-
-.btn-stimorol:hover {
-  color: white;
-  background: var(--stimorol-hover);
-}
-
-.btn-check:focus + .btn-stimorol,
-.btn-stimorol:focus {
-  color: white;
-  background: var(--stimorol-hover);
-  box-shadow: 0 0 0 0.25rem white;
-}
-
-.btn-check:active + .btn-stimorol,
-.btn-check:checked + .btn-stimorol,
-.btn-stimorol.active,
-.btn-stimorol:active,
-.show > .btn-stimorol.dropdown-toggle {
-  color: white;
-  background: var(--stimorol-click);
-}
-
-.btn-check:active + .btn-stimorol:focus,
-.btn-check:checked + .btn-stimorol:focus,
-.btn-stimorol.active:focus,
-.btn-stimorol:active:focus,
-.show > .btn-stimorol.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.25rem white;
-}
-
-.btn-stimorol.disabled,
-.btn-stimorol:disabled {
-  color: white;
-  background: var(--stimorol-click);
 }
 
 .bg-rhyno {
@@ -1500,7 +1426,6 @@ select.form-control.rounded-rair:disabled {
 .search-holder-wrapper {
   /* position: fixed; */
   position: absolute;
-  background: rgb(56, 54, 55);
   /* top: 5rem;
   left: 35rem; */
   top: 3rem;

@@ -54,7 +54,7 @@ const VideoItem: React.FC<IVideoItem> = ({
     useStateIfMounted<TVideoItemContractData | null>(null);
   const { width } = useWindowDimensions();
 
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
@@ -280,7 +280,24 @@ const VideoItem: React.FC<IVideoItem> = ({
               <ModalContentCloseBtn
                 primaryColor={primaryColor}
                 onClick={closeModal}>
-                <i className="fas fa-times" style={{ lineHeight: 'inherit' }} />
+                <i
+                  className="fas fa-times"
+                  style={{
+                    lineHeight: 'inherit',
+                    color:
+                      import.meta.env.VITE_HOTDROPS === 'true'
+                        ? `${
+                            textColor === '#FFF' || textColor === 'black'
+                              ? '#F95631'
+                              : textColor
+                          }`
+                        : `${
+                            textColor === '#FFF' || textColor === 'black'
+                              ? '#E882D5'
+                              : textColor
+                          }`
+                  }}
+                />
               </ModalContentCloseBtn>
             </div>
             <div

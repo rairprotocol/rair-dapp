@@ -2,10 +2,8 @@
 
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 interface IItemRankContainerStyled {
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   showItems?: boolean;
 }
 

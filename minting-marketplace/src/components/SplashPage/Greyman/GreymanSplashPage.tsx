@@ -8,7 +8,6 @@ import { teamGreymanArray } from './AboutUsTeam';
 
 import { diamondFactoryAbi } from '../../../contracts/index';
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
@@ -118,7 +117,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   const GraymanSplashPageTESTNET = '0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6';
   const GreymanChainId = '0x89';
   const offerIndexInMarketplace = '2';
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);

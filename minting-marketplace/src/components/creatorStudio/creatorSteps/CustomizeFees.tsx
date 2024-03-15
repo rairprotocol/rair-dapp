@@ -60,7 +60,7 @@ const CustomPayRateRow: React.FC<ICustomPayRateRow> = ({
             getter={receiverAddress}
             setter={updateReceiver}
             customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
+              backgroundColor: primaryColor,
               color: 'inherit',
               borderColor: `var(--${secondaryColor}-40)`
             }}
@@ -78,7 +78,7 @@ const CustomPayRateRow: React.FC<ICustomPayRateRow> = ({
             getter={percentageReceived}
             setter={updatePercentage}
             customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
+              backgroundColor: primaryColor,
               color: 'inherit',
               borderColor: `var(--${secondaryColor}-40)`
             }}

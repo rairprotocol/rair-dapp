@@ -1,8 +1,7 @@
 import { TDiamondTokensType } from '../../nft/nft.types';
 
-import { ColorChoice } from './../../../ducks/colors/colorStore.types';
 export interface IFilteringBlock {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   textColor?: string;
   sortItem: TSortChoice | undefined;
   setSortItem: (item: TSortChoice) => void;
@@ -33,40 +32,48 @@ export type TSelectFiltersItemStyled = {
   primaryColor: string;
   filterPopUp: boolean;
   textColor?: string;
+  secondaryColor?: string;
 };
 
 export type TFiltersTitleIconStyled = {
   filterPopUp: boolean;
   className?: string;
+  primaryColor: string;
+  textColor?: string;
 };
 
 export type TSelectFiltersPopUpStyled = {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 };
 
 export type TSelectSortItemStyled = {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   textColor?: string;
   sortPopUp: boolean;
+  secondaryColor: string;
 };
 
 export type TSortArrowUpIconStyled = {
   sortItem?: TSortChoice;
+  primaryColor: string;
+  textColor?: string;
 };
 
 export type TSelectSortPopUpStyled = {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   textColor?: string;
 };
 
 export type TModalContentPictureStyled = {
   picture: string;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   defaultImg: string;
 };
 
 export type TStyledShevronIconStyled = {
   rotate?: string;
+  primaryColor: string;
+  textColor?: string;
 };
 
 export type TModalCategoriesItem = {
@@ -128,7 +135,7 @@ export interface IModalItem {
   setIsCreatedTab: (value: boolean) => void;
   selectedData: TDiamondTokensType | undefined;
   defaultImg: string;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   isCreatedTab: boolean;
 }
 

@@ -1,4 +1,3 @@
-import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { UserType } from '../../ducks/users/users.types';
 
 import { TMetadataType } from './../../axios.responseTypes';
@@ -87,7 +86,7 @@ export type TWhatPage = 'nft' | 'video';
 export interface IPaginationBox {
   changePage: (currentPage: number) => void;
   currentPage: number;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   totalPageForPagination: number | undefined;
   whatPage: TWhatPage;
 }

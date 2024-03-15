@@ -31,10 +31,13 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { primaryColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const {
+    primaryColor,
+    secondaryColor,
+    primaryButtonColor,
+    textColor,
+    secondaryButtonColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const getCredits = useCallback(async () => {
     if (!erc777Instance || !currentUserAddress) {
@@ -166,7 +169,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
         type="string"
         customClass="rounded-rair form-control mb-3"
         customCSS={{
-          backgroundColor: `var(--${primaryColor})`,
+          backgroundColor: primaryColor,
           color: 'inherit',
           borderColor: `var(--${secondaryColor}-40)`
         }}
@@ -174,13 +177,21 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
       <div className="col-12">
         <button
           disabled={!erc777Instance || !creditHandlerInstance}
-          className="btn btn-royal-ice rounded-rair col-6"
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}
+          className="btn rair-button rounded-rair col-6"
           onClick={sendTokens}>
           Purchase {formatEther(tokenAmount)} {tokenSymbol} credits
         </button>
         <button
           disabled={!erc777Instance || !creditHandlerInstance}
-          className="btn btn-stimorol rounded-rair col-6"
+          className="btn rair-button rounded-rair col-6"
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
           onClick={tryWithdraw}>
           Withdraw {formatEther(tokenAmount)} {tokenSymbol} credits
         </button>

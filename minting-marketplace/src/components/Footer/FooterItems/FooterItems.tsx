@@ -1,23 +1,19 @@
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 type TFooterMainStyled = {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   messageAlert?: string;
   hotdrops?: string;
+  textColor?: any;
 };
 
 export const FooterMain = styled.footer<TFooterMainStyled>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno'
+    props.primaryColor === '#dedede'
       ? '#fff'
-      : `${
-          props.hotdrops && props.hotdrops === 'true'
-            ? '#0a0a0a'
-            : 'rgba(56, 54, 55, 0.9)'
-        }`};
+      : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
   padding: 40px 120px 25px 120px;
+  color: ${(props) => props.textColor};
 
   border-top: 1px solid
     ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
@@ -89,7 +85,8 @@ export const FooterBoxJoin = styled.div``;
 
 export const CommunityBlock = styled.div<TFooterMainStyled>`
   .community-text {
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props) =>
+      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
   }
 
   &.footer-community-hotdrops a {
@@ -98,7 +95,8 @@ export const CommunityBlock = styled.div<TFooterMainStyled>`
   }
 
   &.footer-community-hotdrops h3 {
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props) =>
+      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
     text-transform: uppercase;
     margin-bottom: 20px;
   }
@@ -191,7 +189,8 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
   }
 
   &.footer-nav-item-hotdrop h3 {
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props) =>
+      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
     text-transform: uppercase;
     margin-bottom: 20px;
   }
@@ -201,12 +200,13 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
     line-height: 20px;
     margin-bottom: 14px;
     color: ${(props) =>
-      props.primaryColor === 'rhyno' ? '#725BDB' : '#AA9DE9'};
+      props.primaryColor === '#dedede' ? '#725BDB' : '#AA9DE9'};
   }
 
   li {
     font-size: 14px;
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props) =>
+      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
     justify-content: center;
     display: flex;
   }
@@ -235,7 +235,7 @@ export const FooterTextRairTech = styled.div<TFooterMainStyled>`
       font-size: 14px;
       line-height: 28px;
       color: ${(props) =>
-        props.primaryColor === 'rhyno' ? '#7A797A' : '#A7A6A6'};
+        props.primaryColor === '#dedede' ? '#7A797A' : '#A7A6A6'};
     }
     li:nth-child(2) {
       margin: 0 32px;
@@ -259,25 +259,26 @@ export const FooterEmailBlock = styled.div<TFooterMainStyled>`
   h4 {
     font-size: 16px;
     line-height: 20px;
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props) =>
+      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
   }
 
   .footer-send-email {
     margin-top: 14px;
     padding: 8px 4px 8px 16px;
     border: 1px solid
-      ${(props) => (props.primaryColor === 'rhyno' ? '#DEDEDE' : '#666666')};
+      ${(props) => (props.primaryColor === '#dedede' ? '#DEDEDE' : '#666666')};
     border-radius: 13px;
     input {
       background: none;
       border: none;
       outline: none;
-      color: ${(props) => (props.primaryColor === 'rhyno' ? '#000' : '#fff')};
+      color: ${(props) => (props.primaryColor === '#dedede' ? '#000' : '#fff')};
     }
 
     input::placeholder {
       color: ${(props) =>
-        props.primaryColor === 'rhyno' ? '#7A797A' : '#fff'};
+        props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
     }
 
     button {

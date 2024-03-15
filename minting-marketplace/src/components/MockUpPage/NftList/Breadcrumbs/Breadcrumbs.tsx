@@ -9,7 +9,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { RootState } from '../../../../ducks';
-import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import SingleTokenHome from '../../assets/singleTokenHome.svg?react';
 import { TParamsBreadcrumbsComponent } from '../../mockupPage.types';
 import { IBreadcrumbsComponent } from '../nftList.types';
@@ -24,8 +24,8 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
     ? embeddedParams
     : params;
   const navigate = useNavigate();
-  const primaryColor = useSelector<RootState, ColorChoice>(
-    (store) => store.colorStore.primaryColor
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
   );
 
   function handleClick(event: MouseEvent) {
@@ -50,17 +50,77 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
       return (
         <div
           className="nft-home-icon"
-          onClick={() => {
-            embeddedParams.setMode('collection');
+          style={{
+            color:
+              import.meta.env.VITE_HOTDROPS === 'true'
+                ? `${
+                    textColor === '#FFF' || textColor === 'black'
+                      ? '#F95631'
+                      : textColor
+                  }`
+                : `${
+                    textColor === '#FFF' || textColor === 'black'
+                      ? '#E882D5'
+                      : textColor
+                  }`
           }}>
-          <SingleTokenHome width={24} height={24} />
+          <SingleTokenHome
+            style={{
+              fill:
+                import.meta.env.VITE_HOTDROPS === 'true'
+                  ? `${
+                      textColor === '#FFF' || textColor === 'black'
+                        ? '#F95631'
+                        : textColor
+                    }`
+                  : `${
+                      textColor === '#FFF' || textColor === 'black'
+                        ? '#E882D5'
+                        : textColor
+                    }`
+            }}
+            width={24}
+            height={24}
+          />
         </div>
       );
     } else {
       return (
         <NavLink to="/">
-          <div className="nft-home-icon">
-            <SingleTokenHome width={24} height={24} />
+          <div
+            style={{
+              color:
+                import.meta.env.VITE_HOTDROPS === 'true'
+                  ? `${
+                      textColor === '#FFF' || textColor === 'black'
+                        ? '#F95631'
+                        : textColor
+                    }`
+                  : `${
+                      textColor === '#FFF' || textColor === 'black'
+                        ? '#E882D5'
+                        : textColor
+                    }`
+            }}
+            className="nft-home-icon">
+            <SingleTokenHome
+              style={{
+                fill:
+                  import.meta.env.VITE_HOTDROPS === 'true'
+                    ? `${
+                        textColor === '#FFF' || textColor === 'black'
+                          ? '#F95631'
+                          : textColor
+                      }`
+                    : `${
+                        textColor === '#FFF' || textColor === 'black'
+                          ? '#E882D5'
+                          : textColor
+                      }`
+              }}
+              width={24}
+              height={24}
+            />
           </div>
         </NavLink>
       );
@@ -119,9 +179,7 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
           onClick={goToSingleView}>
           Single Token
         </Link>,
-        <Typography
-          key="3"
-          color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
+        <Typography key="3" color={textColor}>
           Unlockables Content
         </Typography>
       ];

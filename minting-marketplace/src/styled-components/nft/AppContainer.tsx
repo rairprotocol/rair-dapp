@@ -11,11 +11,11 @@ export const AppContainerFluid = styled.div<IAppContainerFluidStyled>`
   min-height: 100vh;
   position: relative;
   background-color: ${(props) =>
-    props.primaryColor === 'rhyno'
+    props.primaryColor === '#dedede'
       ? '#fafafa'
       : props.backgroundImage === ''
-      ? '#000'
-      : 'var(--' + props.primaryColor + ')'};
+        ? '#000'
+        : props.primaryColor};
   color: ${(props) => props.textColor};
   background-image: url(${(props) => props.backgroundImage});
   background-position: center top;

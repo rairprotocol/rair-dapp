@@ -113,7 +113,7 @@ const ListCollections = () => {
                     to={`/creator/contract/${blockchain}/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`}
                     style={{
                       position: 'relative',
-                      backgroundColor: `var(--${primaryColor}-80)`
+                      backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`
                     }}
                     className={`col-10 btn btn-${primaryColor} text-start rounded-rair my-1`}>
                     {item.diamond && <i className="fas fa-gem" />} {item.name}

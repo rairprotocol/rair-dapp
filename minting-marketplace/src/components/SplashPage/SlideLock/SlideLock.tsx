@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { teamSlideLockArray } from './AboutUsTeam';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { InitialState } from '../../../ducks/seo/reducers';
@@ -53,7 +52,7 @@ const SlideLock: React.FC<ISplashPageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [soldCopies, setSoldCopies] = useState<number>(0);
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const { loggedIn } = useSelector<RootState, TUsersInitialState>(
@@ -83,12 +82,12 @@ const SlideLock: React.FC<ISplashPageProps> = ({
   }, [carousel_match.matches]);
 
   const getAllProduct = useCallback(async () => {
-    if (loggedIn) {
+    if (loggedIn && minterInstance && splashData.purchaseButton?.offerIndex) {
       if (currentChain === splashData.purchaseButton?.requiredBlockchain) {
         setSoldCopies(
           (
-            await minterInstance?.getOfferRangeInfo(
-              ...(splashData?.purchaseButton?.offerIndex || [])
+            await minterInstance.getOfferRangeInfo(
+              ...(splashData.purchaseButton?.offerIndex || [])
             )
           ).tokensAllowed.toString()
         );

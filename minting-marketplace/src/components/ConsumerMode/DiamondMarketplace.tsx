@@ -27,6 +27,11 @@ const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({
   const [batchArray, setBatchArray] = useState<TAux[]>([]);
   const [rerender, setRerender] = useState<boolean>(false);
 
+  const { primaryButtonColor, textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
+
   const addRecipient = () => {
     if (batchArray.length >= +max) {
       return;
@@ -82,13 +87,21 @@ const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({
         );
       })}
       <button
-        className="btn btn-royal-ice"
+        className="btn rair-button"
+        style={{
+          background: secondaryButtonColor,
+          color: textColor
+        }}
         disabled={batchArray.length >= +max}
         onClick={addRecipient}>
         Add
       </button>
       <button
-        className="btn btn-stimorol"
+        className="btn rair-button"
+        style={{
+          background: primaryButtonColor,
+          color: textColor
+        }}
         onClick={() =>
           batchMint(
             batchArray.map((item) => item.tokenIndex),
@@ -103,6 +116,11 @@ const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({
 
 const TokenSelector: React.FC<ITokenSelector> = ({ buyCall, max, min }) => {
   const [tokenId, setTokenId] = useState<string>(min);
+
+  const { textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   return (
     <details>
@@ -124,7 +142,11 @@ const TokenSelector: React.FC<ITokenSelector> = ({ buyCall, max, min }) => {
         onClick={() => {
           buyCall(tokenId);
         }}
-        className="btn btn-royal-ice">
+        style={{
+          background: secondaryButtonColor,
+          color: textColor
+        }}
+        className="btn rair-button">
         Buy token #{tokenId}
       </button>
     </details>
@@ -148,10 +170,13 @@ const DiamondMarketplace = () => {
   const store = useStore();
   const oreId = useOreId();
 
-  const { primaryColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const {
+    primaryColor,
+    secondaryColor,
+    textColor,
+    secondaryButtonColor,
+    primaryButtonColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const fetchDiamondData = useCallback(async () => {
     if (!diamondMarketplaceInstance) {
@@ -276,7 +301,11 @@ const DiamondMarketplace = () => {
       </div>
       {treasuryAddress === constants.AddressZero && (
         <button
-          className="btn btn-stimorol"
+          className="btn rair-button"
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
           onClick={async () => {
             if (!diamondMarketplaceInstance) {
               return;
@@ -347,9 +376,11 @@ const DiamondMarketplace = () => {
                 );
                 await mintTokenCall(offer.offerIndex, nextToken, offer.price);
               }}
-              className={`btn my-2 py-0 btn-${
-                offer.visible ? 'stimorol' : 'danger'
-              }`}>
+              style={{
+                color: textColor,
+                background: offer.visible ? primaryButtonColor : 'red'
+              }}
+              className={'btn my-2 py-0 rair-button'}>
               {offer.visible
                 ? 'Buy the first available token'
                 : 'Not for sale!'}
@@ -407,7 +438,11 @@ const DiamondMarketplace = () => {
                     }
                   });
                 }}
-                className="btn btn-royal-ice py-0">
+                style={{
+                  background: secondaryButtonColor,
+                  color: textColor
+                }}
+                className="btn rair-button py-0">
                 More options
               </button>
             )}

@@ -36,7 +36,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   const selectCommonInfo = {
     customClass: 'form-control rounded-rair',
     customCSS: {
-      backgroundColor: `var(--${primaryColor}-80)`,
+      backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
       color: textColor
     },
     optionCSS: {
@@ -113,7 +113,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
               <div
                 {...getRootProps()}
                 style={{
-                  border: 'dashed 1px var(--charcoal-80)',
+                  border: `dashed 1px color-mix(in srgb, ${primaryColor}, #888888)`,
                   position: 'relative'
                 }}
                 className="w-100 h-100 rounded-rair col-6 text-center mb-3 p-5">

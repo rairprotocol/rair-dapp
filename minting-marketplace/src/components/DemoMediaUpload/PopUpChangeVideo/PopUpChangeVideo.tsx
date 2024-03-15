@@ -23,9 +23,10 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
   mediaList,
   index
 }) => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [desc, setDesc] = useState(item.description);
   const [title, setTitle] = useState(item.title);
@@ -116,7 +117,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
   const selectCommonInfoNFT = {
     customClass: 'form-control rounded-rair',
     customCSS: {
-      backgroundColor: `var(--${primaryColor}-80)`,
+      backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
       color: textColor
     },
     optionCSS: {
@@ -214,9 +215,11 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
             onClick={() => updateVideoData()}
             disabled={title === '' || desc === '' || itemCategory === ''}
             style={{
-              marginTop: 30
+              marginTop: 30,
+              background: primaryButtonColor,
+              color: textColor
             }}
-            className="col-12 btn-stimorol btn rounded-rair white">
+            className="col-12 rair-button btn rounded-rair white">
             Update
           </button>
         </PopUpVideoChangeBox>

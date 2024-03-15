@@ -103,9 +103,7 @@ const MyItems: React.FC<IMyItems> = ({
         sx={{ fontSize: 'x-large' }}
       />
     </NavLink>,
-    <Typography
-      key="3"
-      color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
+    <Typography key="3" color={textColor}>
       Personal profile
     </Typography>
   ];
@@ -236,13 +234,15 @@ const MyItems: React.FC<IMyItems> = ({
                 placeholder={'Search...'}
                 customCSS={{
                   backgroundColor: `var(--${
-                    primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
+                    primaryColor === 'charcoal'
+                      ? `color-mix(in srgb, ${primaryColor}, #aaaaaa)`
+                      : `rhyno-40`
                   })`,
                   color: `var(--${textColor})`,
                   borderTopLeftRadius: '0',
                   border: `${
                     primaryColor === 'charcoal'
-                      ? 'solid 1px var(--charcoal-80)'
+                      ? `solid 1px color-mix(in srgb, ${primaryColor}, #888888)`
                       : 'solid 1px var(--rhyno)'
                   } `
                 }}

@@ -226,14 +226,14 @@ export const BellIcon = ({ primaryColor }) => {
       xmlns="http://www.w3.org/2000/svg">
       <path
         d="M14.3333 6.40096C14.3333 4.96853 13.7714 3.59478 12.7712 2.5819C11.771 1.56903 10.4145 1 9 1C7.58551 1 6.22896 1.56903 5.22876 2.5819C4.22857 3.59478 3.66667 4.96853 3.66667 6.40096C3.66667 12.7021 1 14.5024 1 14.5024H17C17 14.5024 14.3333 12.7021 14.3333 6.40096Z"
-        stroke={primaryColor === 'rhyno' ? '#D0D0D0' : '#fff'}
+        stroke={primaryColor === '#dedede' ? '#D0D0D0' : '#fff'}
         strokeWidth="1.3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M10.5375 18.1016C10.3812 18.3744 10.1569 18.6008 9.887 18.7583C9.61712 18.9157 9.31114 18.9985 8.99969 18.9985C8.68824 18.9985 8.38226 18.9157 8.11238 18.7583C7.8425 18.6008 7.61819 18.3744 7.46191 18.1016"
-        stroke={primaryColor === 'rhyno' ? '#D0D0D0' : '#fff'}
+        stroke={primaryColor === '#dedede' ? '#D0D0D0' : '#fff'}
         strokeWidth="1.3"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -311,13 +311,13 @@ export const CloseIconMobile = ({ primaryColor }) => {
       xmlns="http://www.w3.org/2000/svg">
       <path
         d="M4.78516 20.584L20.9507 5.15275"
-        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        stroke={primaryColor === '#dedede' ? '#222021' : 'white'}
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M20.9502 20.584L4.78463 5.15275"
-        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        stroke={primaryColor === '#dedede' ? '#222021' : 'white'}
         strokeWidth="2"
         strokeLinecap="round"
       />
@@ -335,28 +335,28 @@ export const ExpandImageIcon = ({ primaryColor }) => {
       xmlns="http://www.w3.org/2000/svg">
       <path
         d="M1 14V17C1 17.5304 1.21071 18.0391 1.58579 18.4142C1.96086 18.7893 2.46957 19 3 19H6"
-        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        stroke={primaryColor === '#dedede' ? '#222021' : 'white'}
         strokeWidth="1.3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M1 6V3C1 2.46957 1.21071 1.96086 1.58579 1.58579C1.96086 1.21071 2.46957 0.999999 3 0.999999H6"
-        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        stroke={primaryColor === '#dedede' ? '#222021' : 'white'}
         strokeWidth="1.3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M19 14V17C19 17.5304 18.7893 18.0391 18.4142 18.4142C18.0391 18.7893 17.5304 19 17 19H14"
-        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        stroke={primaryColor === '#dedede' ? '#222021' : 'white'}
         strokeWidth="1.3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M19 6V3C19 2.46957 18.7893 1.96086 18.4142 1.58579C18.0391 1.21071 17.5304 0.999999 17 0.999999H14"
-        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        stroke={primaryColor === '#dedede' ? '#222021' : 'white'}
         strokeWidth="1.3"
         strokeLinecap="round"
         strokeLinejoin="round"

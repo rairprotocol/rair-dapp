@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { ShowMoreContainer, ShowMoreItem, ShowMoreText } from './ShowMoreItems';
 
 import { RootState } from '../../../../ducks';
-import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import { ICustomButton } from '../../NftList/nftList.types';
 
 import cl from './CustomButton.module.css';
@@ -22,7 +21,7 @@ const CustomButton: React.FC<ICustomButton> = ({
   padding,
   loading = false
 }) => {
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
 

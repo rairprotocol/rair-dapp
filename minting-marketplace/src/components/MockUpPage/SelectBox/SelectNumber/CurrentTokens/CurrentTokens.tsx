@@ -1,5 +1,8 @@
 import React, { memo } from 'react';
+import { useSelector } from 'react-redux';
 
+import { RootState } from '../../../../../ducks';
+import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
 import ArrowDown from '../../../assets/ArrowDown.svg?react';
 import ArrowUp from '../../../assets/ArrowUp.svg?react';
 import { ICurrentTokensComponent } from '../../selectBox.types';
@@ -16,6 +19,10 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   onClickItem,
   numberRef
 }) => {
+  const { textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   return (
     <>
       <div ref={numberRef} className="select-number-container">
@@ -23,8 +30,10 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
           onClick={handleIsOpen}
           className="select-field"
           style={{
-            background: `${
-              primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
+            backgroundColor: `${
+              primaryColor === '#dedede'
+                ? 'var(--rhyno-40)'
+                : `color-mix(in srgb, ${primaryColor} 40%, #888888)`
             }`
           }}>
           <div className="number-item">{selectedToken}</div>
@@ -37,8 +46,10 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
         <div
           style={{
             display: `${isOpen ? 'flex' : 'none'}`,
-            background: `${
-              primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
+            backgroundColor: `${
+              primaryColor === '#dedede'
+                ? 'var(--rhyno-40)'
+                : `color-mix(in srgb, ${primaryColor} 40%, #888888)`
             }`,
             border: `${primaryColor === 'rhyno' ? '1px solid #D37AD6' : 'none'}`
           }}
@@ -68,15 +79,20 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                 <div
                   className={`select-number-box ${
                     selectedToken === el.token ? 'selected-box' : ''
-                  } ${el.sold ? 'sold-token' : ''} ${
-                    import.meta.env.VITE_HOTDROPS === 'true'
-                      ? 'hotdrops-border'
-                      : ''
-                  }`}
+                  } ${el.sold ? 'sold-token' : ''}`}
                   data-title={` #${el.token}`}
                   style={{
                     background: `${
-                      primaryColor === 'rhyno' ? '#7A797A' : 'grey'
+                      primaryColor === '#dedede'
+                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                          ? 'var(--hot-drops)'
+                          : 'linear-gradient(to right, #e882d5, #725bdb)'
+                        : import.meta.env.VITE_HOTDROPS === 'true'
+                          ? primaryButtonColor ===
+                            'linear-gradient(to right, #e882d5, #725bdb)'
+                            ? 'var(--hot-drops)'
+                            : primaryButtonColor
+                          : primaryButtonColor
                     }`,
                     color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`
                   }}

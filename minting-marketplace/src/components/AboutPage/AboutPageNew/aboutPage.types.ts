@@ -1,7 +1,5 @@
 import { ReactNode } from 'react';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 export interface IAboutPageNew {
   headerLogoBlack?: string;
   headerLogoWhite?: string;
@@ -10,7 +8,7 @@ export interface IAboutPageNew {
 
 export interface IMainBlock {
   Metamask: string;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   termsText: string;
   purchaseButton: ReactNode;
   RairLogo?: string;
@@ -19,20 +17,20 @@ export interface IMainBlock {
 export interface IStreamsAbout {
   Metamask: any;
   purchaseButton: ReactNode;
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
 }
 
 export interface IRoadMap {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   RairLogo?: string;
 }
 
 export interface ILeftTokenAbout {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export interface IRairOffer {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export interface IMobileCarouselNfts {

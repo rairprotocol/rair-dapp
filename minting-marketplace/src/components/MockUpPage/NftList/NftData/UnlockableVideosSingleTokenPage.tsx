@@ -209,7 +209,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
                       backgroundColor:
                         primaryColor === 'rhyno'
                           ? '#f8f8f8'
-                          : 'var(--charcoal-80)'
+                          : `color-mix(in srgb, ${primaryColor}, #888888)`
                     }}>
                     <div
                       className="single-list-video-info-title"

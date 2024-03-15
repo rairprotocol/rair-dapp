@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 interface IHeaderContainerStyled {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   showAlert?: boolean;
   selectedChain?: string | null;
   isSplashPage?: boolean;
@@ -13,11 +11,9 @@ interface IHeaderContainerStyled {
 
 export const HeaderContainer = styled.div<IHeaderContainerStyled>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno'
+    props.primaryColor === '#dedede'
       ? '#fff'
-      : `${
-          props.hotdrops && props.hotdrops === 'true' ? '#0a0a0a' : '#383637'
-        }`};
+      : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
   margin-top: ${(props) =>
     props.realChainId &&
     props.showAlert &&

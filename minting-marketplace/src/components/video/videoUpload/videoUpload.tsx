@@ -281,7 +281,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
   };
 
   const reusableStyle = {
-    backgroundColor: `var(--${primaryColor})`,
+    backgroundColor: primaryColor,
     color: `var(--${textColor})`
   };
 
@@ -306,7 +306,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
           <InputField
             customClass="form-control input-select-custom-style"
             customCSS={reusableStyle}
-            labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
             label="Title"
             placeholder="Please input a title"
             getter={title}
@@ -318,7 +317,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
             label="Description"
             customClass="form-control input-select-custom-style"
             customCSS={reusableStyle}
-            labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
             placeholder="Please input a description"
             getter={description}
             setter={setDescription}
@@ -328,7 +326,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
           <InputSelect
             customClass="form-control input-select-custom-style"
             customCSS={reusableStyle}
-            labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
             label="Category"
             getter={category}
             setter={setCategory}
@@ -340,7 +337,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
           <InputSelect
             customClass="form-control input-select-custom-style"
             customCSS={reusableStyle}
-            labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
             label="Storage"
             getter={storage}
             setter={setStorage}
@@ -355,7 +351,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
           <InputSelect
             customClass="form-control input-select-custom-style"
             customCSS={reusableStyle}
-            labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
             label="Contract"
             getter={contract}
             setter={(e) => {
@@ -375,7 +370,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
             <InputSelect
               customClass="form-control input-select-custom-style"
               customCSS={reusableStyle}
-              labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
               label="Product"
               getter={product}
               setter={(e) => {
@@ -401,7 +395,6 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
                   <InputSelect
                     customClass="form-control input-select-custom-style"
                     customCSS={reusableStyle}
-                    labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
                     label={key === '0' ? 'Offers' : ''}
                     getter={selectedOffers[key]}
                     setter={(value) => handleOffer(key, value)}
@@ -525,7 +518,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
           style={{
             marginTop: '20px',
             width: '67%',
-            backgroundColor: `var(--${primaryColor})`
+            backgroundColor: primaryColor
           }}>
           <div
             className="progress-bar"

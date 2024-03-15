@@ -17,9 +17,10 @@ const PaginationBox: React.FC<IPaginationBox> = ({
     (store) => store.nftDataStore.itemsPerPage
   );
 
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [page, setPage] = useState<number>(currentPage);
   const [totalPage, setTotalPages] = useState<number>();
@@ -87,15 +88,16 @@ const PaginationBox: React.FC<IPaginationBox> = ({
           pagesArray.length > 0 && (
             <PaginationBoxStyled
               primarycolor={primaryColor}
-              className={
-                primaryColor === 'rhyno'
-                  ? `pagination-white ${
-                      hotdropsVar === 'true' ? 'hotdrops-color' : ''
-                    }`
-                  : `pagination-black ${
-                      hotdropsVar === 'true' ? 'hotdrops-color' : ''
-                    }`
-              }
+              primaryButtonColor={primaryButtonColor}
+              // className={
+              //   primaryColor === '#dedede'
+              //     ? `pagination-white ${
+              //         hotdropsVar === 'true' ? 'hotdrops-color' : ''
+              //       }`
+              //     : `pagination-black ${
+              //         hotdropsVar === 'true' ? 'hotdrops-color' : ''
+              //       }`
+              // }
               count={pagesArray.length}
               page={page}
               onChange={handlePage}

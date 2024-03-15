@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { TUnlockableVideosSingleTokenPage } from '../../MockUpPage/mockupPage.types';
 import { TSplashDataType } from '../splashPage.types';
 
@@ -162,7 +161,7 @@ export type TSplashVideoWrapper = {
 export type TUnlockableVideosWrapper = TUnlockableVideosSingleTokenPage;
 
 export type TStyledUnlockableVideosWrapper = {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 };
 
 export type TSplashVideoText = {

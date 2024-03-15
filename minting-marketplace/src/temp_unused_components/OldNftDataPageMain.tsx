@@ -21,6 +21,7 @@ import { gettingPrice } from '../components/MockUpPage/NftList/utils/gettingPric
 import ItemRank from '../components/MockUpPage/SelectBox/ItemRank';
 import SelectNumber from '../components/MockUpPage/SelectBox/SelectNumber/SelectNumber';
 import { RootState } from '../ducks';
+import { ColorStoreType } from '../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 // import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
 import { setShowSidebarTrue } from '../ducks/metadata/actions';
@@ -31,7 +32,6 @@ import setDocumentTitle from '../utils/setTitle';
 
 const NftDataPageMain = ({
   // setTokenData,
-
   blockchain,
   contract,
   currentUser,
@@ -39,13 +39,11 @@ const NftDataPageMain = ({
   handleClickToken,
   product,
   productsFromOffer,
-  primaryColor,
   selectedData,
   selectedToken,
   setSelectedToken,
   tokenData,
   totalCount,
-  textColor,
   offerData,
   offerDataInfo,
   offerPrice,
@@ -57,6 +55,10 @@ const NftDataPageMain = ({
   const { minterInstance } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const [playing, setPlaying] = useState(false);
   const [offersIndexesData, setOffersIndexesData] = useState();
 
@@ -242,16 +244,17 @@ const NftDataPageMain = ({
     }
     return (
       <button
-        className="btn rounded-rair btn-stimorol nft-btn-stimorol"
+        className="btn rounded-rair rair-button nft-btn-stimorol"
         disabled={!offerData?.offerPool}
+        style={{
+          background: primaryButtonColor,
+          color: textColor
+        }}
         onClick={
           correctBlockchain(blockchain)
             ? buyContract
             : () => web3Switch(blockchain)
-        }
-        style={{
-          color: `var(--${textColor})`
-        }}>
+        }>
         Purchase •{' '}
         {utils
           .formatEther(price !== Infinity && price !== undefined ? price : 0)
@@ -708,7 +711,6 @@ const NftDataPageMain = ({
                 <NftListUnlockablesVideos
                   productsFromOffer={productsFromOffer}
                   selectedData={selectedData}
-                  primaryColor={primaryColor}
                 />
                 {/* {productsFromOffer && productsFromOffer.length !== 0 ? (
                   <CustomButton

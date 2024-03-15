@@ -6,6 +6,7 @@ import { stringToHex } from 'viem';
 import { IErc777Data, IERC777Manager } from './creatorMode.types';
 
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -20,6 +21,10 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+  const { textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
@@ -101,7 +106,11 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
                   reactSwal.fire('Success', 'Tokens sent', 'success');
                 }
               }}
-              className="btn btn-royal-ice">
+              style={{
+                background: secondaryButtonColor,
+                color: textColor
+              }}
+              className="btn rair-button">
               Transfer {ethers.utils.formatEther(targetValue).toString()}{' '}
               {erc777Data.symbol} to {targetAddress}!
             </button>

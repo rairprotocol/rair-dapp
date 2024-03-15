@@ -204,7 +204,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
             style={{
               maxWidth: '1600px',
               margin: 'auto',
-              backgroundColor: `var(--${primaryColor})`,
+              backgroundColor: primaryColor,
               borderRadius: '16px',
               padding: '24px 0'
             }}>

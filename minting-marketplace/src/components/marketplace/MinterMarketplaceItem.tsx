@@ -17,10 +17,8 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
   index,
   colWidth
 }) => {
-  const { primaryColor, secondaryColor, textColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((state) => state.colorStore);
+  const { primaryColor, secondaryColor, textColor, secondaryButtonColor } =
+    useSelector<RootState, ColorStoreType>((state) => state.colorStore);
   const { currentChain } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
@@ -92,7 +90,11 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
               });
             }
           }}
-          className="btn btn-royal-ice py-0">
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}
+          className="btn rair-button py-0">
           {onMyChain ? (
             <>Buy</>
           ) : (

@@ -1,12 +1,10 @@
 import { FieldErrors } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 interface IMenuMobileWrapper {
   showAlert?: boolean | undefined | null;
   selectedChain?: any | null;
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   editMode?: boolean;
   click?: boolean;
   errors?: FieldErrors | undefined;
@@ -31,7 +29,7 @@ export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
 
 export const Nav = styled.nav<IMenuMobileWrapper>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno'
+    props.primaryColor === '#dedede'
       ? '#fff'
       : `${props.hotdrops === 'true' ? 'rgb(11 11 11)' : '#383637'}`};
   display: flex;
@@ -59,7 +57,7 @@ export const ListItem = styled.li<IMenuMobileWrapper>`
   width: 100%;
   &:hover {
     background: ${(props) =>
-      props.primaryColor === 'rhyno' ? 'rgb(211, 210, 211)' : '#383637'};
+      props.primaryColor === '#dedede' ? 'rgb(211, 210, 211)' : '#383637'};
   }
 
   .burger-menu-logout,
@@ -86,7 +84,7 @@ export const TitleEditProfile = styled.h4`
 
 export const List = styled.ul<IMenuMobileWrapper>`
   background: ${(props) =>
-    props.primaryColor === 'rhyno'
+    props.primaryColor === '#dedede'
       ? '#fff'
       : `${props.hotdrops === 'true' ? 'rgb(11 11 11)' : 'rgb(56, 54, 55)'}`};
   overflow: ${(props) => props.click && 'hidden'};
@@ -145,7 +143,9 @@ export const ListEditProfileMode = styled.div<IMenuMobileWrapper>`
   padding: 20px;
   height: 100%;
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? 'rgb(201, 201, 201)' : 'rgb(56, 54, 55)'};
+    props.primaryColor === '#dedede'
+      ? 'rgb(201, 201, 201)'
+      : 'rgb(56, 54, 55)'};
   position: fixed;
   width: 100%;
   transition: 0.5s all ease;
@@ -320,7 +320,8 @@ export const MobileProfileField = styled.div<IMenuMobileWrapper>`
     border: 1px solid
       ${(props) => (props.errors && props.errors ? '#F63419' : '#19a7f6')};
     background: none;
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props) =>
+      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
     padding: 8px 12px;
     border-radius: 12px;
     width: 80vw;
@@ -361,7 +362,8 @@ export const MobileProfileBtnWrapper = styled.div<IMenuMobileWrapper>`
   button:last-child {
     background: none;
     border: 1px solid #19a7f6;
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props) =>
+      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
   }
 
   button:last-child:hover {

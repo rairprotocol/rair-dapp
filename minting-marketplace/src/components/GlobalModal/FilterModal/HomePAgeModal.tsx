@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 
 type THomePageModalFilter = {
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   isMobileDesign?: boolean;
 };
 
@@ -34,6 +34,8 @@ type THomePageModalFilter = {
 //       };
 // });
 
+//`color-mix(in srgb, ${props.primaryColor}, #888888)`
+
 export const HomePageModalFilter = styled.div<THomePageModalFilter>`
   @media screen and (min-width: 1100px) {
     &.filter-modal-wrapper.unlockables-tab {
@@ -43,9 +45,6 @@ export const HomePageModalFilter = styled.div<THomePageModalFilter>`
 
   padding: 24px 16px 16px 16px;
   ${(props) => {
-    const bgc = props?.primaryColor?.includes('charcoal')
-      ? 'charcoal-90'
-      : 'rhyno-40';
     return !props.isMobileDesign
       ? `width: 280px;
    border-radius: 16px;
@@ -53,7 +52,12 @@ export const HomePageModalFilter = styled.div<THomePageModalFilter>`
    transition: 0.5s
    padding: 24px 16px 16px 16px;
    padding: 24px 16px 16px 16px;
-   background-color: var(--${bgc});
+   background-color: ${
+     props.primaryColor === '#dedede'
+       ? 'var(--rhyno-40)'
+       : `color-mix(in srgb, ${props.primaryColor} 40%, #888888)`
+   };
+   
   `
       : `
         position: fixed;
@@ -66,7 +70,7 @@ export const HomePageModalFilter = styled.div<THomePageModalFilter>`
         padding: 15px 50px;
         overflow: auto;
         font-size: 20px;
-        background-color: var(--${bgc});
+        background-color: ${props.primaryColor};
         transition: 0.5s`;
   }}
 `;

@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../../ducks';
-import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import chainData from '../../../../utils/blockchainData';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
@@ -18,7 +17,7 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
   blockchain,
   currentTokenId
 }) => {
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (state) => state.colorStore.primaryColor
   );
 

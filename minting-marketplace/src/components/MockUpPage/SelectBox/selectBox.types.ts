@@ -1,6 +1,3 @@
-import { TTokenData } from '../../../axios.responseTypes';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 export interface IListOfTokensComponent {
   blockchain: BlockchainType | undefined;
   contract: string | undefined;
@@ -9,7 +6,7 @@ export interface IListOfTokensComponent {
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
   onClickItem: (element: string | undefined) => void;
   product: string | undefined;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   setSelectedToken: (tokenId: string | undefined) => void;
   selectedToken: string | undefined;
   setIsOpen: (isOpen: boolean) => void;
@@ -17,7 +14,7 @@ export interface IListOfTokensComponent {
 }
 
 export interface ICurrentTokensComponent {
-  primaryColor: ColorChoice;
+  primaryColor: string;
   items: SelectNumberItem[];
   isBack?: boolean;
   isOpen: boolean;

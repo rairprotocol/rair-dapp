@@ -6,7 +6,6 @@ import { teamNFTLAarray } from './AboutUsTeam';
 import { ISplashPageProps } from './splashPage.types';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setInfoSEO } from '../../../ducks/seo/actions';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import useSwal from '../../../hooks/useSwal';
@@ -43,7 +42,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useDispatch();
   const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   // TODO: Until we have a contract it will be commented
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
   const reactSwal = useSwal();

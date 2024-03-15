@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import LoadingComponent from '../../../common/LoadingComponent';
 import { MobileCloseBtn } from '../../../GlobalModal/FilterModal/FilterModalIcons';
@@ -25,7 +24,7 @@ interface IPersonalProfileMyNftTabComponent {
   getMyNft?: (number: number, page: number) => void;
   showTokensRef?: any;
   titleSearch: string;
-  primaryColor?: ColorChoice;
+  primaryColor?: string;
   isResaleLoading?: boolean;
   setOnResale?: any;
   onResale?: boolean;
@@ -162,7 +161,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
             <HomePageModalFilter
               isMobileDesign={isMobileDesign}
               style={{
-                background: 'var(--charcoal-90)'
+                background: `color-mix(in srgb, ${primaryColor}, #aaaaaa)`
               }}
               id="home-page-modal-filter"
               className={`filter-modal-wrapper ${

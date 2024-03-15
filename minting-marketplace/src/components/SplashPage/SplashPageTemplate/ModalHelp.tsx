@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../ducks';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { IModalHelp } from '../splashPage.types';
 
 const ModalHelp: React.FC<IModalHelp> = ({
@@ -13,7 +12,7 @@ const ModalHelp: React.FC<IModalHelp> = ({
   backgroundColor,
   templateOverride
 }) => {
-  const primaryColor = useSelector<RootState, ColorChoice>(
+  const primaryColor = useSelector<RootState, string>(
     (store) => store.colorStore.primaryColor
   );
 

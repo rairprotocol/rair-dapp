@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { Provider, useSelector, useStore } from 'react-redux';
 import { formatEther } from 'ethers/lib/utils';
 
 import OfferSelector from './OfferSelector';
 
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import chainData from '../../utils/blockchainData';
@@ -22,6 +23,10 @@ const VideoManager = () => {
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const reactSwal = useSwal();
 
@@ -54,11 +59,17 @@ const VideoManager = () => {
     refreshFileList();
   }, [currentUserAddress, refreshFileList]);
 
+  const store = useStore();
+
   const addRange = async () => {
     await reactSwal.fire({
       showConfirmButton: false,
       title: 'Adding range',
-      html: <OfferSelector fileId={selectedFile._id} />
+      html: (
+        <Provider store={store}>
+          <OfferSelector fileId={selectedFile._id} />
+        </Provider>
+      )
     });
     setRefresh(!refresh);
   };
@@ -197,19 +208,31 @@ const VideoManager = () => {
                   <br />
                   <button
                     onClick={updateDemoStatus}
-                    className="btn btn-royal-ice">
+                    style={{
+                      background: secondaryButtonColor,
+                      color: textColor
+                    }}
+                    className="btn rair-button">
                     {selectedFile.demo ? 'Demo' : 'Unlockable'}
                   </button>
                   <button
                     onClick={updateAgeRestriction}
-                    className="btn btn-stimorol">
+                    style={{
+                      background: primaryButtonColor,
+                      color: textColor
+                    }}
+                    className="btn rair-button">
                     {selectedFile.ageRestricted
                       ? 'Age Restricted'
                       : 'NOT Age Restricted'}
                   </button>
                   <button
                     onClick={updateHiddenStatus}
-                    className="btn btn-royal-ice">
+                    style={{
+                      background: secondaryButtonColor,
+                      color: textColor
+                    }}
+                    className="btn rair-button">
                     {selectedFile.hidden ? 'Hidden' : 'Visible'}
                   </button>
                   <br />
@@ -259,7 +282,13 @@ const VideoManager = () => {
                 );
               })}
             <br />
-            <button onClick={addRange} className="btn float-end btn-stimorol">
+            <button
+              onClick={addRange}
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              className="btn float-end rair-button">
               Add range{' '}
             </button>
           </>

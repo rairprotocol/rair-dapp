@@ -10,6 +10,7 @@ import {
 
 import { minterAbi } from '../../contracts';
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -41,6 +42,10 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
   const { contractCreator } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
+  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
@@ -108,21 +113,25 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
     <>
       <div className="row w-100 px-0 mx-0">
         <button
-          className={`btn col-${batchMode ? '2' : '9'} btn-royal-ice`}
+          className={`btn col-${batchMode ? '2' : '9'} rair-button`}
           style={{
             border: 'none',
             borderTopRightRadius: '0px',
-            borderBottomRightRadius: '0px'
+            borderBottomRightRadius: '0px',
+            background: secondaryButtonColor,
+            color: textColor
           }}
           onClick={() => setBatchMode(false)}>
           Buy one Token
         </button>
         <button
-          className={'btn col btn-stimorol'}
+          className={'btn col rair-button'}
           style={{
             border: 'none',
             borderTopLeftRadius: '0px',
-            borderBottomLeftRadius: '0px'
+            borderBottomLeftRadius: '0px',
+            background: primaryButtonColor,
+            color: textColor
           }}
           onClick={() => setBatchMode(true)}>
           Buy multiple tokens
@@ -168,7 +177,11 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                   reactSwal.close();
                 }
               }}
-              className="btn btn-stimorol col-8">
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              className="btn rair-button col-8">
               Buy token #{tokenIndex} for {utils.formatEther(price)}
             </button>
             <div className="col-2" />
@@ -181,7 +194,11 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
             <button
               disabled={rows.length > Number(end) - Number(start)}
               onClick={addRow}
-              className="col-2 btn btn-royal-ice">
+              style={{
+                background: secondaryButtonColor,
+                color: textColor
+              }}
+              className="col-2 btn rair-button">
               Add <i className="fas fa-plus" />
             </button>
             <div className="col">
@@ -209,7 +226,11 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                 <button
                   disabled={batchPage === 0}
                   onClick={() => setBatchPage(batchPage - 1)}
-                  className="btn col-12 col-md-3 btn-royal-ice">
+                  style={{
+                    background: secondaryButtonColor,
+                    color: textColor
+                  }}
+                  className="btn col-12 col-md-3 rair-button">
                   <i className="fas fa-minus" />
                 </button>
                 <div className="col-12 col-md-6">
@@ -218,7 +239,11 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                 <button
                   disabled={batchPage + 1 >= (rows.length - 2) / rowsLimit}
                   onClick={() => setBatchPage(batchPage + 1)}
-                  className="btn col-12 col-md-3 btn-royal-ice">
+                  style={{
+                    background: secondaryButtonColor,
+                    color: textColor
+                  }}
+                  className="btn col-12 col-md-3 rair-button">
                   <i className="fas fa-plus" />
                 </button>
               </>
@@ -248,7 +273,11 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                 }
               }}
               disabled={!minterInstance || !paginatedRows.length}
-              className="col btn btn-stimorol">
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              className="col btn rair-button">
               Batch Mint {paginatedRows.length} tokens!
             </button>
           </>

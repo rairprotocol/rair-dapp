@@ -10,6 +10,7 @@ import {
 } from './creatorMode.types';
 
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -30,14 +31,18 @@ const RangeManager: React.FC<IRangeManager> = ({
     disabled
       ? array[index].endingToken
       : index === 0
-      ? 0
-      : Number(array[index - 1].endingToken) + 1
+        ? 0
+        : Number(array[index - 1].endingToken) + 1
   );
   const [rangeName, setRangeName] = useState<string>(array[index].name);
   const [rangePrice, setRangePrice] = useState<string>(array[index].price);
   const syncOutside = useCallback(sync, [sync]);
   const rangeInit = index === 0 ? 0 : Number(array[index - 1].endingToken) + 1;
   const [locked, setLocked] = useState<number>(0);
+  const { primaryButtonColor, textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   useEffect(() => {
     const aux = array[index].endingToken !== endingRange;
@@ -137,7 +142,11 @@ const RangeManager: React.FC<IRangeManager> = ({
                 rangeName
               )
             }
-            className="btn btn-stimorol h-50">
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="btn rair-button h-50">
             <i className="fas fa-arrow-up" />
           </button>
         </th>
@@ -153,7 +162,11 @@ const RangeManager: React.FC<IRangeManager> = ({
           <button
             disabled={locked <= 0}
             onClick={() => locker(productIndex, rangeInit, endingRange, locked)}
-            className="btn btn-royal-ice h-50">
+            style={{
+              background: secondaryButtonColor,
+              color: textColor
+            }}
+            className="btn rair-button h-50">
             <i className="fas fa-lock" />
           </button>
         </th>
@@ -186,6 +199,10 @@ const ProductManager: React.FC<IProductManager> = ({
   const { minterInstance } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
+  const { textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [ranges, setRanges] = useState<IRangesType[]>([]);
   const [, /*locks*/ setLocks] = useState<IExistingLock[]>([]);
@@ -375,7 +392,6 @@ const ProductManager: React.FC<IProductManager> = ({
         <hr className="w-100" />
         <div className="col-12" style={{ position: 'relative' }}>
           <button
-            style={{ position: 'absolute', right: 0, top: 0 }}
             onClick={() => {
               const aux = [...ranges];
               aux.push({
@@ -388,7 +404,14 @@ const ProductManager: React.FC<IProductManager> = ({
               });
               setRanges(aux);
             }}
-            className="btn btn-royal-ice">
+            style={{
+              background: secondaryButtonColor,
+              color: textColor,
+              position: 'absolute',
+              right: 0,
+              top: 0
+            }}
+            className="btn rair-button">
             <i className="fas fa-plus" />
           </button>
           <h5> On the Minter Marketplace </h5>

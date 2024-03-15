@@ -86,6 +86,9 @@ const useConnectUser = () => {
       (store) => store.contractStore
     );
 
+  const { textColor, primaryButtonColor, primaryColor } =
+    useSelector<RootState>((store) => store.colorStore);
+
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const reactSwal = useSwal();
@@ -243,12 +246,22 @@ const useConnectUser = () => {
                 <OnboardingButton />
               ) : (
                 <button
+                  className="btn rair-button"
                   style={{
-                    color: '#fff'
+                    background: `${
+                      primaryColor === '#dedede'
+                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                          ? 'var(--hot-drops)'
+                          : 'linear-gradient(to right, #e882d5, #725bdb)'
+                        : import.meta.env.VITE_HOTDROPS === 'true'
+                          ? primaryButtonColor ===
+                            'linear-gradient(to right, #e882d5, #725bdb)'
+                            ? 'var(--hot-drops)'
+                            : primaryButtonColor
+                          : primaryButtonColor
+                    }`,
+                    color: textColor
                   }}
-                  className={`btn ${
-                    hotdropsVar === 'true' ? 'hotdrops-bg' : 'btn-stimorol'
-                  }`}
                   onClick={() => resolve('metamask')}>
                   Web3
                 </button>

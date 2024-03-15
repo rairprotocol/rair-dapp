@@ -185,9 +185,10 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
     fetchData();
   }, [fetchData]);
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   useEffect(() => {
     setStepNumber(stepNumber);
@@ -238,7 +239,11 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
       </small>
       <div className="col-4 text-start mb-3" />
       <button
-        className={`btn btn-stimorol rounded-rair col-4 my-5`}
+        style={{
+          background: primaryButtonColor,
+          color: textColor
+        }}
+        className={`btn rair-button rounded-rair col-4 my-5`}
         onClick={downloadTemplateCSV}>
         Download CSV Template
       </button>
@@ -250,7 +255,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
               <div
                 {...getRootProps()}
                 style={{
-                  border: 'dashed 1px var(--charcoal-80)',
+                  border: `dashed 1px color-mix(in srgb, ${primaryColor}, #888888)`,
                   position: 'relative'
                 }}
                 className="w-100 h-100 rounded-rair col-6 text-center mb-3 p-3">
@@ -296,7 +301,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
                   onClick: () => setChangeFile(true)
                 })}
                 style={{
-                  border: 'dashed 1px var(--charcoal-80)',
+                  border: `dashed 1px color-mix(in srgb, ${primaryColor}, #888888)`,
                   position: 'relative'
                 }}
                 className="w-100 h-100 rounded-rair col-6 text-center mb-3 p-3">
@@ -336,7 +341,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
       {metadata && headers && (
         <div
           style={{
-            border: 'solid 1px var(--charcoal-80)',
+            border: `solid 1px color-mix(in srgb, ${primaryColor}, #888888)`,
             overflow: 'scroll',
             width: '100%',
             maxHeight: '50vh'

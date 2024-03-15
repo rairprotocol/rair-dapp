@@ -37,7 +37,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
 
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const { adminRights, loggedIn } = useSelector<RootState, any>(
@@ -147,7 +147,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
       <button
         onClick={() => setTriggerState((prev) => !prev)}
         className={`button profile-btn ${
-          primaryColor === 'rhyno' ? 'rhyno' : ''
+          primaryColor === '#dedede' ? 'rhyno' : ''
         }`}
         style={{
           display: 'flex',
@@ -156,13 +156,13 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
         }}>
         <div
           className={`profile-buy-button ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
+            primaryColor === '#dedede' ? 'rhyno' : ''
           }`}>
           {loginType === 'oreid' ? <AikonWidget /> : '|'}
         </div>
         <div
           className={`profile-user-balance ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
+            primaryColor === '#dedede' ? 'rhyno' : ''
           }`}>
           <div>
             {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance}
@@ -227,15 +227,28 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
           <span
             style={{
               padding: '0 0px 0 2px',
-              color: primaryColor === 'charcoal' ? '#fff' : '#383637',
+              color: textColor,
               fontSize: '14px'
             }}>
             {cutUserAddress()}
           </span>
           <i
-            className={`icon-menu fas fa-bars ${
-              hotdropsVar === 'true' ? 'hotdrops-btn' : ''
-            }`}></i>
+            className={`icon-menu fas fa-bars`}
+            style={{
+              backgroundColor:
+                import.meta.env.VITE_HOTDROPS === 'true'
+                  ? `${
+                      textColor === '#FFF' || textColor === 'black'
+                        ? '#F95631'
+                        : textColor
+                    }`
+                  : `${
+                      textColor === '#FFF' || textColor === 'black'
+                        ? '#E882D5'
+                        : textColor
+                    }`,
+              WebkitBackgroundClip: 'text'
+            }}></i>
         </div>
       </button>
       <Popup
@@ -249,12 +262,18 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
         }}>
         <div
           ref={settingBlockRef}
-          className={`user-popup ${primaryColor === 'rhyno' ? 'rhyno' : ''}`}
+          className={`user-popup ${primaryColor === '#dedede' ? 'rhyno' : ''}`}
           style={{
-            background: primaryColor === 'rhyno' ? '#F2F2F2' : '#383637',
+            background: `${
+              primaryColor === '#dedede'
+                ? '#fff'
+                : `color-mix(in srgb, ${primaryColor}, #888888)`
+            }`,
             borderRadius: 16,
             filter: 'drop-shadow(0.4px 0.5px 1px black)',
-            boder: `${primaryColor === 'rhyno' ? '1px solid #DEDEDE' : 'none'}`,
+            border: `${
+              primaryColor === '#dedede' ? '1px solid #DEDEDE' : 'none'
+            }`,
             marginTop: `${selectedChain && showAlert ? '65px' : '12px'}`
           }}>
           {!next ? (
@@ -265,7 +284,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                   onClick={pushToProfile}
                   style={{
                     color:
-                      primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
+                      primaryColor === '#dedede' ? 'rgb(41, 41, 41)' : 'white'
                   }}>
                   <SvgUserIcon primaryColor={primaryColor} /> Profile settings
                 </li>
@@ -277,7 +296,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                         onClick={() => pushToUploadVideo(2)}
                         style={{
                           color:
-                            primaryColor === 'rhyno'
+                            primaryColor === '#dedede'
                               ? 'rgb(41, 41, 41)'
                               : 'white'
                         }}>
@@ -289,7 +308,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                         onClick={() => pushToUploadVideo(2)}
                         style={{
                           color:
-                            primaryColor === 'rhyno'
+                            primaryColor === '#dedede'
                               ? 'rgb(41, 41, 41)'
                               : 'white'
                         }}>
@@ -319,7 +338,9 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                       onClick={pushToFactory}
                       style={{
                         color:
-                          primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
+                          primaryColor === '#dedede'
+                            ? 'rgb(41, 41, 41)'
+                            : 'white'
                       }}>
                       <SvgFactoryIcon primaryColor={primaryColor} /> Factory
                     </li>
@@ -329,7 +350,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                   onClick={logoutUser}
                   style={{
                     color:
-                      primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
+                      primaryColor === '#dedede' ? 'rgb(41, 41, 41)' : 'white'
                   }}>
                   <i className="fas fa-sign-out-alt"></i>Logout
                 </li>

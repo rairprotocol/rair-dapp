@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 
 import MobileEditProfile from './MobileEditProfile';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import useConnectUser from '../../../hooks/useConnectUser';
 import { NavFooter, NavFooterBox } from '../../Footer/FooterItems/FooterItems';
 import TalkSalesComponent from '../../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';
@@ -12,7 +11,7 @@ import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
 interface IMobileNavigationList {
   messageAlert: string | null;
   setMessageAlert: (arg: string | null) => void;
-  primaryColor: ColorChoice;
+  primaryColor: string;
   currentUserAddress: string | undefined;
   toggleMenu: (otherPage?: string) => void;
   setTabIndexItems: (arg: number) => void;

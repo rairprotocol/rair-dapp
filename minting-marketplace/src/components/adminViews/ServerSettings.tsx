@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { isAddress } from 'ethers/lib/utils';
 
+import { RootState } from '../../ducks';
+import { setCustomColors } from '../../ducks/colors/actions';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import useSwal from '../../hooks/useSwal';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
@@ -35,7 +39,31 @@ const ServerSettings = ({ fullContractData }) => {
   const [nodeAddress, setNodeAddress] = useState(
     import.meta.env.VITE_NODE_ADDRESS
   );
+  const [customPrimaryColor, setCustomPrimaryColor] = useState('#222021');
+  const [customSecondaryColor, setCustomSecondaryColor] = useState('#4e4d4d');
+  const [customTextColor, setCustomTextColor] = useState('#FFFFFF');
+  const [customPrimaryButtonColor, setCustomPrimaryButtonColor] =
+    useState('#725bdb');
+  const [customSecondaryButtonColor, setCustomSecondaryButtonColor] =
+    useState('#e882d5');
+  const [customFadeButtonColor, setCustomFadeButtonColor] = useState('#1486c5');
+
+  const [customLightModeLogo, setCustomLightModeLogo] = useState({ name: '' });
+  const [customDarkModeLogo, setCustomDarkModeLogo] = useState({ name: '' });
+  const [customLightModeMobileLogo, setCustomLightModeMobileLogo] = useState({
+    name: ''
+  });
+  const [customDarkModeMobileLogo, setCustomDarkModeMobileLogo] = useState({
+    name: ''
+  });
+
+  const { primaryButtonColor, textColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
+
   const reactSwal = useSwal();
+  const dispatch = useDispatch();
 
   const getServerSettings = useCallback(async () => {
     const { success, settings, blockchainSettings } =
@@ -48,6 +76,34 @@ const ServerSettings = ({ fullContractData }) => {
         );
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
+      }
+      dispatch(
+        setCustomColors({
+          primary: settings.darkModePrimary,
+          secondary: settings.darkModeSecondary,
+          text: settings.darkModeText,
+          primaryButton: settings.buttonPrimaryColor,
+          fadeButton: settings.buttonFadeColor,
+          secondaryButton: settings.buttonSecondaryColor
+        })
+      );
+      if (settings.darkModePrimary) {
+        setCustomPrimaryColor(settings.darkModePrimary);
+      }
+      if (settings.darkModeSecondary) {
+        setCustomSecondaryColor(settings.darkModeSecondary);
+      }
+      if (settings.darkModeText) {
+        setCustomTextColor(settings.darkModeText);
+      }
+      if (settings.buttonPrimaryColor) {
+        setCustomPrimaryButtonColor(settings.buttonPrimaryColor);
+      }
+      if (settings.buttonFadeColor) {
+        setCustomSecondaryButtonColor(settings.buttonSecondaryColor);
+      }
+      if (settings.buttonSecondaryColor) {
+        setCustomFadeButtonColor(settings.buttonFadeColor);
       }
       setSuperAdmins(settings?.superAdmins);
       setBlockchainSettings(blockchainSettings || []);
@@ -104,6 +160,47 @@ const ServerSettings = ({ fullContractData }) => {
     [reactSwal, getServerSettings]
   );
 
+  const loadImage = useCallback(
+    (setterTarget) => (file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (file.type !== 'video/mp4') {
+          setterTarget(file);
+        } else {
+          reactSwal.fire(
+            'Info',
+            `You cannot upload video as a logo`,
+            'warning'
+          );
+        }
+      };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    },
+    []
+  );
+
+  const setAppLogos = useCallback(
+    async (target: string, image: any) => {
+      if (!image) {
+        return;
+      }
+      const formData = new FormData();
+      formData.append('logoImage', image);
+      formData.append('target', target);
+      const { success } = await rFetch(`/api/settings/appLogo`, {
+        method: 'POST',
+        body: formData
+      });
+      if (success) {
+        reactSwal.fire('Success', 'App Logo Set', 'success');
+        getServerSettings();
+      }
+    },
+    [reactSwal, getServerSettings]
+  );
+
   useEffect(() => {
     getServerSettings();
   }, [getServerSettings]);
@@ -133,13 +230,21 @@ const ServerSettings = ({ fullContractData }) => {
         <h3>Only return minted tokens on collection page:</h3>
         <button
           disabled={!!settings?.onlyMintedTokensResult}
-          className="btn btn-royal-ice"
+          className="btn rair-button"
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}
           onClick={() => setServerSetting('onlyMintedTokensResult', 'true')}>
           Yes
         </button>
         <button
           disabled={!settings?.onlyMintedTokensResult}
-          className="btn btn-stimorol"
+          className="btn rair-button"
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
           onClick={() => setServerSetting('onlyMintedTokensResult', 'false')}>
           No
         </button>
@@ -148,13 +253,21 @@ const ServerSettings = ({ fullContractData }) => {
         <h3>Allow demo page uploads:</h3>
         <button
           disabled={!!settings?.demoUploadsEnabled}
-          className="btn btn-royal-ice"
+          className="btn rair-button"
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}
           onClick={() => setServerSetting('demoUploadsEnabled', 'true')}>
           Yes
         </button>
         <button
           disabled={!settings?.demoUploadsEnabled}
-          className="btn btn-stimorol"
+          className="btn rair-button"
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
           onClick={() => setServerSetting('demoUploadsEnabled', 'false')}>
           No
         </button>
@@ -190,7 +303,11 @@ const ServerSettings = ({ fullContractData }) => {
         </div>
         <button
           disabled={featuredProduct === 'null' || featuredContract === 'null'}
-          className="btn btn-stimorol"
+          className="btn rair-button"
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
           onClick={() => {
             if (featuredProduct !== 'null' && featuredContract !== 'null') {
               setServerSetting('featuredCollection', featuredProduct);
@@ -208,7 +325,11 @@ const ServerSettings = ({ fullContractData }) => {
           placeholder="Node address"
         />
         <button
-          className="btn btn-royal-ice"
+          className="btn rair-button"
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}
           onClick={() => setServerSetting('nodeAddress', nodeAddress)}>
           Set
         </button>
@@ -223,7 +344,11 @@ const ServerSettings = ({ fullContractData }) => {
                 <span className="me-4">Sync contracts:</span>
                 <button
                   disabled={!!chain?.sync}
-                  className="btn btn-royal-ice"
+                  className="btn rair-button"
+                  style={{
+                    background: secondaryButtonColor,
+                    color: textColor
+                  }}
                   onClick={() =>
                     setBlockchainSetting(chain.hash, 'sync', 'true')
                   }>
@@ -231,7 +356,11 @@ const ServerSettings = ({ fullContractData }) => {
                 </button>
                 <button
                   disabled={!chain?.sync}
-                  className="btn btn-stimorol"
+                  className="btn rair-button"
+                  style={{
+                    background: primaryButtonColor,
+                    color: textColor
+                  }}
                   onClick={() =>
                     setBlockchainSetting(chain.hash, 'sync', 'false')
                   }>
@@ -242,7 +371,11 @@ const ServerSettings = ({ fullContractData }) => {
                 <span className="me-4">Display contracts:</span>
                 <button
                   disabled={!!chain?.display}
-                  className="btn btn-royal-ice"
+                  className="btn rair-button"
+                  style={{
+                    background: secondaryButtonColor,
+                    color: textColor
+                  }}
                   onClick={() =>
                     setBlockchainSetting(chain.hash, 'display', 'true')
                   }>
@@ -250,7 +383,11 @@ const ServerSettings = ({ fullContractData }) => {
                 </button>
                 <button
                   disabled={!chain?.display}
-                  className="btn btn-stimorol"
+                  className="btn rair-button"
+                  style={{
+                    background: primaryButtonColor,
+                    color: textColor
+                  }}
                   onClick={() =>
                     setBlockchainSetting(chain.hash, 'display', 'false')
                   }>
@@ -264,28 +401,33 @@ const ServerSettings = ({ fullContractData }) => {
       </div>
       <div className="col-12 text-end col-md-6 px-5 my-2">
         <h3>Super admins:</h3>
-        {superAdmins.map((user, index) => {
-          return (
-            <div key={index} className="row">
-              <InputField
-                customClass="rounded-rair text-center col-12 col-md-10"
-                getter={user}
-                setter={modifySuperAdminAddress(index)}
-                type="text"
-              />
-              <button
-                className="btn col-12 col-md-2 btn-danger"
-                onClick={() => {
-                  deleteSuperAdminAddress(index);
-                }}>
-                {' '}
-                Delete{' '}
-              </button>
-            </div>
-          );
-        })}
+        {superAdmins &&
+          superAdmins.map((user, index) => {
+            return (
+              <div key={index} className="row">
+                <InputField
+                  customClass="rounded-rair text-center col-12 col-md-10"
+                  getter={user}
+                  setter={modifySuperAdminAddress(index)}
+                  type="text"
+                />
+                <button
+                  className="btn col-12 col-md-2 btn-danger"
+                  onClick={() => {
+                    deleteSuperAdminAddress(index);
+                  }}>
+                  {' '}
+                  Delete{' '}
+                </button>
+              </div>
+            );
+          })}
         <button
-          className="btn float-start btn-stimorol"
+          className="btn rair-button float-start"
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
           onClick={() => {
             const result = superAdmins.reduce((result, user) => {
               return result && isAddress(user);
@@ -308,6 +450,174 @@ const ServerSettings = ({ fullContractData }) => {
           {' '}
           Add{' '}
         </button>
+      </div>
+      <div className="row">
+        <div className="col-12 col-md-6 px-5 my-2">
+          <h3>Custom Dark Mode Colors</h3>
+          {[
+            {
+              getter: customPrimaryColor,
+              setter: setCustomPrimaryColor,
+              label: 'Primary Color'
+            },
+            {
+              getter: customSecondaryColor,
+              setter: setCustomSecondaryColor,
+              label: 'Secondary Color'
+            },
+            {
+              getter: customTextColor,
+              setter: setCustomTextColor,
+              label: 'Text Color'
+            },
+            {
+              getter: customPrimaryButtonColor,
+              setter: setCustomPrimaryButtonColor,
+              label: 'Primary Button Color'
+            },
+            {
+              getter: customSecondaryButtonColor,
+              setter: setCustomSecondaryButtonColor,
+              label: 'Secondary Button Color'
+            },
+            {
+              getter: customFadeButtonColor,
+              setter: setCustomFadeButtonColor,
+              label: 'Fade Button Color'
+            }
+          ].map((item, index) => {
+            return (
+              <div key={index} className="row">
+                <div className="col-12 col-md-6">
+                  <InputField
+                    customClass="form-control p-0"
+                    label={item.label}
+                    getter={item.getter}
+                    setter={item.setter}
+                    type="color"
+                  />
+                </div>
+                <div className="col-12 col-md-6">
+                  <InputField
+                    customClass="form-control p-0"
+                    label="Hex (#FFFFFF)"
+                    getter={item.getter}
+                    setter={item.setter}
+                  />
+                </div>
+              </div>
+            );
+          })}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginTop: '10px'
+            }}>
+            <button
+              className="btn btn-success"
+              onClick={async () => {
+                await setServerSetting('darkModePrimary', customPrimaryColor);
+                await setServerSetting(
+                  'darkModeSecondary',
+                  customSecondaryColor
+                );
+                await setServerSetting('darkModeText', customTextColor);
+                await setServerSetting(
+                  'buttonPrimaryColor',
+                  customPrimaryButtonColor
+                );
+                await setServerSetting(
+                  'buttonFadeColor',
+                  customFadeButtonColor
+                );
+                await setServerSetting(
+                  'buttonSecondaryColor',
+                  customSecondaryButtonColor
+                );
+                await getServerSettings();
+              }}>
+              Set colors
+            </button>
+            <button
+              className="btn btn-warning"
+              onClick={async () => {
+                await setServerSetting('darkModePrimary', '#222021');
+                await setServerSetting('darkModeSecondary', '#4e4d4d');
+                await setServerSetting('darkModeText', '#FFF');
+                await setServerSetting('buttonPrimaryColor', '#725bdb'); // Royal Purple
+                await setServerSetting('buttonFadeColor', '#e882d5'); // Bubblegum
+                await setServerSetting('buttonSecondaryColor', '#1486c5'); // Arctic Blue
+                await getServerSettings();
+              }}>
+              Reset colors
+            </button>
+          </div>
+        </div>
+        <div className="col-12 col-md-6 px-5 my-2">
+          <h3>Custom Logos</h3>
+          {[
+            {
+              label: 'Dark Mode Desktop Logo',
+              getter: customDarkModeLogo,
+              setter: setCustomDarkModeLogo,
+              target: 'darkModeBannerLogo'
+            },
+            {
+              label: 'Dark Mode Mobile logo',
+              getter: customDarkModeMobileLogo,
+              setter: setCustomDarkModeMobileLogo,
+              target: 'darkModeMobileLogo'
+            },
+            {
+              label: 'Light Mode Desktop Logo',
+              getter: customLightModeLogo,
+              setter: setCustomLightModeLogo,
+              target: 'lightModeBannerLogo'
+            },
+            {
+              label: 'Light Mode Mobile Logo',
+              getter: customLightModeMobileLogo,
+              setter: setCustomLightModeMobileLogo,
+              target: 'lightModeMobileLogo'
+            }
+          ].map((item, index) => {
+            return (
+              <div className="row" key={index}>
+                <div className="col-12 col-md-10">
+                  <InputField
+                    customClass="form-control p-0"
+                    label={item.label}
+                    setter={loadImage(item.setter)}
+                    setterField={['files', 0]}
+                    type="file"
+                  />
+                </div>
+                <button
+                  disabled={!item.getter}
+                  onClick={() => {
+                    setAppLogos(item.target, item.getter);
+                    getServerSettings();
+                  }}
+                  className="col-12 col-md-1 btn rair-button"
+                  style={{
+                    background: primaryButtonColor,
+                    color: textColor
+                  }}>
+                  <i className="fa fa-arrow-up" />
+                </button>
+                <button
+                  onClick={() => {
+                    setAppLogos(item.target, undefined);
+                    getServerSettings();
+                  }}
+                  className="col-12 col-md-1 btn btn-danger">
+                  <i className="fa fa-trash" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

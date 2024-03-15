@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { BigNumber } from 'ethers';
 
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 //import InputSelect from '../../common/InputSelect';
 // import { TTokenData } from '../../../axios.responseTypes';
 import useSwal from '../../../hooks/useSwal';
@@ -84,6 +87,11 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
 }) => {
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+
+  const { textColor, primaryButtonColor, secondaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const lastTokenInProduct = contractData?.product?.copies || 0;
   const [blockchainOperationInProgress, setBlockchainOperationInProgress] =
@@ -296,7 +304,11 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               setBlockchainOperationInProgress(false);
             }}
             disabled={blockchainOperationInProgress || !contractData.instance}
-            className="col-12 col-md-6 btn-stimorol btn">
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="col-12 col-md-6 rair-button btn">
             {blockchainOperationInProgress
               ? 'Sending Metadata...'
               : `${contractWideMetadata === '' ? 'Uns' : 'S'}et metadata`}
@@ -367,7 +379,11 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               setBlockchainOperationInProgress(false);
             }}
             disabled={blockchainOperationInProgress || !contractData.instance}
-            className="col-12 col-md-6 btn-stimorol btn">
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="col-12 col-md-6 rair-button btn">
             {blockchainOperationInProgress
               ? 'Sending Metadata...'
               : `${collectionWideMetadata === '' ? 'Uns' : 'S'}et metadata`}
@@ -437,7 +453,11 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               !contractData.instance ||
               selectedRange === 'null'
             }
-            className="col-12 col-md-6 btn-stimorol btn">
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="col-12 col-md-6 rair-button btn">
             {blockchainOperationInProgress
               ? 'Sending Metadata...'
               : `${rangeWideMetadata === '' ? 'Uns' : 'S'}et metadata`}
@@ -483,7 +503,11 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
             setBlockchainOperationInProgress(false);
           }}
           disabled={blockchainOperationInProgress || !contractData.instance}
-          className="col-12 col-md-6 btn-stimorol btn">
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
+          className="col-12 col-md-6 rair-button btn">
           {blockchainOperationInProgress
             ? 'Sending data...'
             : `${metadataExtension === '' ? 'Uns' : 'S'}et extension`}
@@ -499,14 +523,23 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
         <button
           onClick={() => setPinOverwrite(!pinOverwrite)}
           disabled={changeFile}
-          className={`btn btn-${pinOverwrite ? 'stimorol' : 'secondary'}`}>
+          style={{
+            color: textColor,
+            background: pinOverwrite ? primaryButtonColor : secondaryColor,
+            border: `solid 1px ${textColor}`
+          }}
+          className={`btn rair-button`}>
           {!pinOverwrite ? "Don't" : ''} Overwrite already pinned metadata
         </button>
         <br />
         <button
           onClick={pinAll}
           disabled={changeFile}
-          className="btn btn-stimorol">
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}
+          className="btn rair-button">
           Pin token metadata to IPFS
         </button>
       </details>
@@ -526,7 +559,11 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                 <th className="px-0">
                   <button
                     onClick={addUniqueURIRow}
-                    className="btn btn-stimorol">
+                    style={{
+                      background: primaryButtonColor,
+                      color: textColor
+                    }}
+                    className="btn rair-button">
                     Add <i className="fas fa-plus" />
                   </button>
                 </th>
@@ -628,7 +665,11 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                 setBlockchainOperationInProgress(false);
               }}
               disabled={!contractData.instance}
-              className="btn-stimorol w-100 btn">
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              className="rair-button w-100 btn">
               {blockchainOperationInProgress
                 ? 'Sending Metadata...'
                 : `${openSeaURI === '' ? 'Uns' : 'S'}et contract metadata`}

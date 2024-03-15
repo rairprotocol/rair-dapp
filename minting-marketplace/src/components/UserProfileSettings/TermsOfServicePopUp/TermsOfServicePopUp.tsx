@@ -30,9 +30,10 @@ export const AgreementsPopUp = ({
   const [termsOfUse, setTermsOfUse] = useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const { textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const onChangeUserInfo = async () => {
     const formData = new FormData();
@@ -147,7 +148,11 @@ export const AgreementsPopUp = ({
           <button
             onClick={onChangeUserInfo}
             disabled={!privacyPolicy || !termsOfUse}
-            className="btn my-4 btn-stimorol rounded-rair col-12 col-sm-8 col-md-4">
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            className="btn my-4 rair-button rounded-rair col-12 col-sm-8 col-md-4">
             Save
           </button>
         </div>

@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
-
 interface INftCollectionProps {
-  primaryColor: ColorChoice;
+  primaryColor: string;
 }
 
 export const NftCollection = styled.div<INftCollectionProps>`

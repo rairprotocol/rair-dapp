@@ -106,7 +106,7 @@ const OfferRow: React.FC<IOfferRow> = ({
               setter={(value) => updater('name', setItemName, value)}
               customClass="form-control rounded-rair"
               customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
+                backgroundColor: primaryColor,
                 color: 'inherit',
                 borderColor: `var(--${secondaryColor}-40)`
               }}
@@ -122,7 +122,7 @@ const OfferRow: React.FC<IOfferRow> = ({
             min={0}
             customClass="form-control rounded-rair"
             customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
+              backgroundColor: primaryColor,
               color: 'inherit',
               borderColor: `var(--${secondaryColor}-40)`
             }}
@@ -143,7 +143,7 @@ const OfferRow: React.FC<IOfferRow> = ({
               }
               max={maxCopies}
               customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
+                backgroundColor: primaryColor,
                 color: 'inherit',
                 borderColor: `var(--${secondaryColor}-40)`
               }}
@@ -160,7 +160,7 @@ const OfferRow: React.FC<IOfferRow> = ({
               min={100}
               customClass="form-control rounded-rair"
               customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
+                backgroundColor: primaryColor,
                 color: 'inherit',
                 borderColor: `var(--${secondaryColor}-40)`
               }}

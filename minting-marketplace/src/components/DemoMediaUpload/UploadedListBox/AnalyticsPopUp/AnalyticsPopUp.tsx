@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Moment from 'react-moment';
+import { useSelector } from 'react-redux';
 
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import useSwal from '../../../../hooks/useSwal';
 import { rFetch } from '../../../../utils/rFetch';
 
@@ -14,6 +16,10 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({ videoId }) => {
   const reactSwal = useSwal();
 
   const [watchCounter, setWatchCounter] = useState<number>(0);
+  const { textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const getCounterVideo = useCallback(async () => {
     if (videoId) {
@@ -57,7 +63,11 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({ videoId }) => {
 
   return (
     <button
-      className="btn btn-stimorol"
+      className="btn rair-button"
+      style={{
+        background: primaryButtonColor,
+        color: textColor
+      }}
       onClick={() => {
         reactSwal.fire({
           html: <PopUpContainer videoId={videoId} />,

@@ -27,10 +27,8 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   instance,
   diamondRangeIndex
 }) => {
-  const { primaryColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, secondaryColor, textColor, primaryButtonColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const [itemName, setItemName] = useState(offerName);
   const [startingToken, setStartingToken] = useState<string>(range[0]);
@@ -224,9 +222,12 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
           <button
             onClick={updateRange}
             disabled={!valuesChanged}
-            className={`btn w-100 btn-${
-              valuesChanged ? 'stimorol' : 'success'
-            } rounded-rair`}>
+            style={{
+              color: textColor,
+              background: valuesChanged ? primaryButtonColor : 'green',
+              border: `solid 1px ${textColor}`
+            }}
+            className="btn w-100 rair-button rounded-rair">
             {valuesChanged ? 'Update' : 'Saved'}
           </button>
         ) : (

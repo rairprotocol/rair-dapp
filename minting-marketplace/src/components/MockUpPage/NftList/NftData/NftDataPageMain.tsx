@@ -266,7 +266,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             className="nft-collection nft-collection-wrapper"
             style={{
               backgroundColor: `${
-                primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
+                primaryColor === '#dedede'
+                  ? 'var(--rhyno-40)'
+                  : `color-mix(in srgb, ${primaryColor} 40%, #888888)`
               }`
             }}>
             {verticalImage && (
@@ -443,7 +445,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               className="nft-collection nft-collection-video-wrapper"
               style={{
                 backgroundColor: `${
-                  primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
+                  primaryColor === '#dedede'
+                    ? 'var(--rhyno-40)'
+                    : `color-mix(in srgb, ${primaryColor} 40%, #888888)`
                 }`
               }}>
               <UnlockableVideosSingleTokenPage

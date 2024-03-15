@@ -73,7 +73,7 @@ const LockRow: React.FC<ILockRow> = ({
           setter={setItemName}
           customClass="form-control rounded-rair"
           customCSS={{
-            backgroundColor: `var(--${primaryColor})`,
+            backgroundColor: primaryColor,
             color: 'inherit',
             borderColor: `var(--${secondaryColor}-40)`
           }}
@@ -88,7 +88,7 @@ const LockRow: React.FC<ILockRow> = ({
           min={0}
           customClass="form-control rounded-rair"
           customCSS={{
-            backgroundColor: `var(--${primaryColor})`,
+            backgroundColor: primaryColor,
             color: 'inherit',
             borderColor: `var(--${secondaryColor}-40)`
           }}
@@ -104,7 +104,7 @@ const LockRow: React.FC<ILockRow> = ({
           min={0}
           max={maxCopies}
           customCSS={{
-            backgroundColor: `var(--${primaryColor})`,
+            backgroundColor: primaryColor,
             color: 'inherit',
             borderColor: `var(--${secondaryColor}-40)`
           }}
@@ -123,7 +123,7 @@ const LockRow: React.FC<ILockRow> = ({
           setter={setStatePrice}
           customClass="form-control rounded-rair"
           customCSS={{
-            backgroundColor: `var(--${primaryColor})`,
+            backgroundColor: primaryColor,
             color: 'inherit',
             borderColor: `var(--${secondaryColor}-40)`
           }}
@@ -139,7 +139,7 @@ const LockRow: React.FC<ILockRow> = ({
             max={Number(endingToken) - Number(startingToken)}
             customClass="form-control rounded-rair"
             customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
+              backgroundColor: primaryColor,
               color: 'inherit',
               borderColor: `var(--${secondaryColor}-40)`
             }}

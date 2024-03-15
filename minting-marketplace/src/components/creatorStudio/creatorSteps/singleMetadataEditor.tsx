@@ -58,9 +58,10 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const { address, collectionIndex } = useParams<TParamsBatchMetadata>();
 
   const navigate = useNavigate();
@@ -75,9 +76,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
       return;
     }
     const { success, result } = await rFetch(
-      `/api/nft/network/${
-        contractData?.blockchain
-      }/${address.toLowerCase()}/${collectionIndex}`
+      `/api/nft/network/${contractData?.blockchain}/${address.toLowerCase()}/${collectionIndex}`
     );
     if (success) {
       const mapping = {};
@@ -321,8 +320,14 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           }}>
           <button
             onClick={addRow}
-            className="rounded-rair btn btn-stimorol"
-            style={{ position: 'absolute', top: 0, right: 0 }}>
+            style={{
+              background: primaryButtonColor,
+              color: textColor,
+              position: 'absolute',
+              top: 0,
+              right: 0
+            }}
+            className="rounded-rair btn rair-button">
             <i className="fas fa-plus" />
           </button>
           {propertiesArray && propertiesArray.length > 0 && (
@@ -467,7 +472,11 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
                   });
                 }
               }}
-              className="btn btn-stimorol">
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              className="btn rair-button">
               {metadataURI === '' ? 'Uns' : 'S'}et Metadata for token #{nftID}
             </button>
           </div>
