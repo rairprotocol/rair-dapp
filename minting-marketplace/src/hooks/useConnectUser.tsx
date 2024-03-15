@@ -3,10 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import {
-  getDefaultLightAccountFactoryAddress,
-  LightSmartContractAccount
+  MultiOwnerModularAccount,
+  multiOwnerPluginActions
 } from '@alchemy/aa-accounts';
-import { AccountSigner, EthersProviderAdapter } from '@alchemy/aa-ethers';
+import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
+import { EthersProviderAdapter } from '@alchemy/aa-ethers';
 import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import { Alchemy } from 'alchemy-sdk';
 import axios from 'axios';
@@ -47,23 +48,28 @@ const oreIdMappingToChainHash = {
 };
 
 const getCoingeckoRates = async () => {
-  const { data } = await axios.get(
-    `https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(chainData)
-      .filter((chain) => chainData[chain].coingecko)
-      .map((chain) => chainData[chain].coingecko)
-      .join(',')}&vs_currencies=usd`
-  );
-  if (data) {
-    const rateData = {};
-    Object.keys(chainData).forEach((chain) => {
-      if (chainData[chain].coingecko) {
-        rateData[chain] = data[chainData[chain].coingecko].usd;
-        console.info(rateData[chain]);
-      } else {
-        rateData[chain] = 0;
-      }
-    });
-    return rateData;
+  try {
+    const { data } = await axios.get(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(
+        chainData
+      )
+        .filter((chain) => chainData[chain].coingecko)
+        .map((chain) => chainData[chain].coingecko)
+        .join(',')}&vs_currencies=usd`
+    );
+    if (data) {
+      const rateData = {};
+      Object.keys(chainData).forEach((chain) => {
+        if (chainData[chain].coingecko) {
+          rateData[chain] = data[chainData[chain].coingecko].usd;
+        } else {
+          rateData[chain] = 0;
+        }
+      });
+      return rateData;
+    }
+  } catch (err) {
+    console.error('Error querying CoinGecko rates', err);
   }
 };
 
@@ -172,25 +178,24 @@ const useConnectUser = () => {
       }
     });
 
-    const provider = alchemyProvider.connectToAccount(
-      (rpcClient) =>
-        new LightSmartContractAccount({
-          chain: chainInformation.viem,
-          owner: web3AuthSigner,
-          factoryAddress: getDefaultLightAccountFactoryAddress(
-            chainInformation.viem
-          ),
-          rpcClient
-        })
-    );
+    const a = await createModularAccountAlchemyClient({
+      apiKey: import.meta.env.VITE_ALCHEMY_KEY,
+      chain: chainInformation.viem,
+      signer: web3AuthSigner,
+      gasManagerConfig: {
+        policyId: import.meta.env.VITE_ALCHEMY_GAS_POLICY
+      }
+    });
+
+    const provider = alchemyProvider.connectToAccount(a);
 
     dispatch(setProgrammaticProvider(provider));
     provider.signTypedData = web3AuthSigner.signTypedData;
     provider.userDetails = web3AuthSigner.getAuthDetails;
 
     return {
-      userAddress: await provider.getAddress(),
-      ownerAddress: await provider.account.owner.getAddress(),
+      userAddress: provider.account.account.address,
+      ownerAddress: provider.account.account.publicKey,
       blockchain: currentChain,
       alchemyProvider: provider
     };
@@ -282,7 +287,7 @@ const useConnectUser = () => {
       blockchain: BlockchainType | undefined;
       idToken?: string;
       provider?: string;
-      alchemyProvider?: AccountSigner<LightSmartContractAccount>;
+      alchemyProvider?: AccountSigner<MultiOwnerModularAccount>;
     };
     const dispatchStack = [];
     const loginMethod: string = await selectMethod();
@@ -526,6 +531,7 @@ const useConnectUser = () => {
       dispatch(setLogInStatus(false));
       dispatch(setUserData(undefined));
       dispatch(setProgrammaticProvider(undefined));
+      dispatch(setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
       navigate('/');
     }
   }, [dispatch, navigate, oreId, loginType]);

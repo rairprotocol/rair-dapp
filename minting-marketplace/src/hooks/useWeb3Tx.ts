@@ -1,8 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LightSmartContractAccount } from '@alchemy/aa-accounts';
 import { SendUserOperationResult } from '@alchemy/aa-core';
-import { AccountSigner } from '@alchemy/aa-ethers';
 import {
   BigNumber,
   Contract,
@@ -177,10 +175,15 @@ const useWeb3Tx = () => {
         intendedBlockchain: BlockchainType;
       }
     ) => {
+      if (!programmaticProvider) {
+        console.error('Provider not found');
+        return;
+      }
       try {
-        const txHash = await (
-          programmaticProvider as any
-        ).waitForUserOperationTransaction(userOperation.hash);
+        const txHash =
+          await programmaticProvider.waitForUserOperationTransaction({
+            hash: userOperation.hash
+          });
         handleReceipt(txHash, options?.callback);
         return true;
       } catch (err: any) {
@@ -195,7 +198,7 @@ const useWeb3Tx = () => {
         reactSwal.fire('Error', err.toString(), 'error');
       }
     },
-    []
+    [programmaticProvider]
   );
 
   const web3AuthCall = useCallback(
@@ -234,15 +237,30 @@ const useWeb3Tx = () => {
         functionName: method,
         args: args
       });
-      const userOperation = await (
-        programmaticProvider as AccountSigner<LightSmartContractAccount>
-      )
-        .sendUserOperation({
+
+      const elegibleForSponsorship = await (
+        programmaticProvider.account as any
+      ).checkGasSponsorshipEligibility({
+        uo: {
           target: contract.address as `0x${string}`,
           data: uoCallData,
           value: transactionValue
+        }
+      });
+
+      const userOperation = await (programmaticProvider.account as any)
+        .sendUserOperation({
+          uo: {
+            target: contract.address as `0x${string}`,
+            data: uoCallData,
+            value: transactionValue
+          },
+          overrides: elegibleForSponsorship
+            ? undefined
+            : { paymasterAndData: '0x' }
         })
         .catch((err) => {
+          // console.info(err);
           reactSwal.fire('Error', err.details, 'error');
         });
       if (!userOperation?.hash) {
@@ -250,7 +268,13 @@ const useWeb3Tx = () => {
       }
       return await verifyAAUserOperation(userOperation, options);
     },
-    [currentUserAddress, programmaticProvider, handleReceipt, reactSwal]
+    [
+      currentUserAddress,
+      programmaticProvider,
+      handleReceipt,
+      reactSwal,
+      verifyAAUserOperation
+    ]
   );
 
   const oreIdCall = useCallback(

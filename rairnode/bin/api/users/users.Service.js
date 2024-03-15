@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 const fs = require('fs');
+const { randomUUID } = require('crypto');
 const _ = require('lodash');
 const path = require('path');
 const config = require('../../config');
@@ -154,6 +155,12 @@ exports.updateUserByUserAddress = async (req, res, next) => {
     const foundUser = await User.findOne({ publicAddress });
     const { user } = req;
     let fieldsForUpdate = _.assign({}, req.body);
+    if (fieldsForUpdate.nickName) {
+      const foundNickname = await User.findOne({ nickName: `@${fieldsForUpdate.nickName}` });
+      if (foundNickname !== null && foundNickname.publicAddress !== publicAddress) {
+        fieldsForUpdate.nickName += randomUUID();
+      }
+    }
 
     if (!foundUser) {
       return next(new AppError('User not found.', 404));

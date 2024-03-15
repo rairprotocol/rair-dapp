@@ -1,4 +1,4 @@
-import { LightSmartContractAccount } from '@alchemy/aa-accounts';
+import { MultiOwnerModularAccount } from '@alchemy/aa-accounts';
 import { AccountSigner } from '@alchemy/aa-ethers';
 import { ethers } from 'ethers';
 
@@ -39,10 +39,7 @@ export type ContractsInitialType = {
   creditHandlerInstance: ethers.Contract | undefined;
   currentChain: BlockchainType | undefined;
   currentUserAddress: string | undefined;
-  programmaticProvider:
-    | ethers.Wallet
-    | AccountSigner<LightSmartContractAccount>
-    | undefined;
+  programmaticProvider: AccountSigner<MultiOwnerModularAccount> | undefined;
   contractCreator:
     | undefined
     | ((

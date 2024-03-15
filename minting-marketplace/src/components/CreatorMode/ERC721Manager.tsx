@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { LightSmartContractAccount } from '@alchemy/aa-accounts';
+import { MultiOwnerModularAccount } from '@alchemy/aa-accounts';
 import { AccountSigner } from '@alchemy/aa-ethers';
 import * as ethers from 'ethers';
 
@@ -62,7 +62,7 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
 
   useEffect(() => {
     let signer:
-      | AccountSigner<LightSmartContractAccount>
+      | AccountSigner<MultiOwnerModularAccount>
       | ethers.Wallet
       | ethers.providers.JsonRpcSigner
       | undefined = programmaticProvider;

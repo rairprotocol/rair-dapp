@@ -1,5 +1,5 @@
+import { goerli, mainnet, polygon, polygonMumbai } from '@alchemy/aa-core';
 import { Network } from 'alchemy-sdk';
-import { astar, goerli, mainnet, polygon, polygonMumbai } from 'viem/chains';
 
 import { TChainData } from './utils.types';
 
@@ -69,7 +69,7 @@ const chainData: TChainData = {
       rpcUrls: ['https://evm.astar.network'],
       blockExplorerUrls: ['https://blockscout.com/astar']
     },
-    viem: astar,
+    viem: undefined,
     alchemy: Network.ASTAR_MAINNET,
     coingecko: 'astar'
   },
@@ -109,7 +109,7 @@ const chainData: TChainData = {
         symbol: 'tMATIC',
         decimals: 18
       },
-      rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
+      rpcUrls: ['https://rpc-mumbai.polygon.technology/'],
       blockExplorerUrls: ['https://mumbai.polygonscan.com/']
     },
     viem: polygonMumbai,
