@@ -122,7 +122,8 @@ const InitialState: ContractsInitialType = {
   currentUserAddress: undefined,
   programmaticProvider: undefined,
   contractCreator: undefined,
-  realChain: undefined
+  realChain: undefined,
+  coingeckoRates: undefined
 };
 
 export default function userStore(
@@ -211,6 +212,7 @@ export default function userStore(
           }
           return undefined;
         };
+
         return {
           ...state,
           currentChain: action.currentChain,
@@ -280,6 +282,11 @@ export default function userStore(
       return {
         ...state,
         realChain: action.realChain
+      };
+    case types.SET_COINGECKO_RATE:
+      return {
+        ...state,
+        coingeckoRates: action.rates
       };
     default:
       return state;
