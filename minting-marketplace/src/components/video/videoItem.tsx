@@ -49,7 +49,6 @@ const VideoItem: React.FC<IVideoItem> = ({
 
   const navigate = useNavigate();
   // const [offerDataInfo,setOfferDataInfo] = useState<TOfferType[]>();
-  // const oreId = useOreId();
   const [contractData, setContractData] =
     useStateIfMounted<TVideoItemContractData | null>(null);
   const { width } = useWindowDimensions();

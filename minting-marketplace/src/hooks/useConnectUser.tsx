@@ -2,17 +2,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import {
-  MultiOwnerModularAccount,
-  multiOwnerPluginActions
-} from '@alchemy/aa-accounts';
+import { MultiOwnerModularAccount } from '@alchemy/aa-accounts';
 import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
-import { EthersProviderAdapter } from '@alchemy/aa-ethers';
+import { AccountSigner, EthersProviderAdapter } from '@alchemy/aa-ethers';
 import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import { Alchemy } from 'alchemy-sdk';
 import axios from 'axios';
-import { AuthProvider } from 'oreid-js';
-import { useOreId } from 'oreid-react';
 
 import useSwal from './useSwal';
 
@@ -20,6 +15,7 @@ import { TUserResponse } from '../axios.responseTypes';
 import { OnboardingButton } from '../components/common/OnboardingButton/OnboardingButton';
 import { RootState } from '../ducks';
 import { getTokenComplete, getTokenStart } from '../ducks/auth/actions';
+import { ColorStoreType } from '../ducks/colors/colorStore.types';
 import {
   setChainId,
   setCoingeckoRates,
@@ -39,13 +35,6 @@ import {
 import { TUsersInitialState } from '../ducks/users/users.types';
 import chainData from '../utils/blockchainData';
 import { rFetch, signWeb3Message } from '../utils/rFetch';
-
-const oreIdMappingToChainHash = {
-  eth_main: '0x1' as BlockchainType,
-  eth_goerli: '0x5' as BlockchainType,
-  polygon_main: '0x89' as BlockchainType,
-  polygon_mumbai: '0x13881' as BlockchainType
-};
 
 const getCoingeckoRates = async () => {
   try {
@@ -86,68 +75,31 @@ const useConnectUser = () => {
       (store) => store.contractStore
     );
 
-  const { textColor, primaryButtonColor, primaryColor } =
-    useSelector<RootState>((store) => store.colorStore);
+  const { textColor, primaryButtonColor, primaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const reactSwal = useSwal();
   const navigate = useNavigate();
-  const oreId = useOreId();
 
   const checkMetamask = useCallback(() => {
     setMetamaskInstalled(window?.ethereum && window?.ethereum?.isMetaMask);
   }, [setMetamaskInstalled]);
 
-  const findMethodForOreId = useCallback(
-    (account) => {
-      if (!currentChain && account.chainAccount.length === 42) {
-        // If there is no default blockchain then take the first valid address
-        // (42 characters)
-        return true;
-      }
-      return account.chainNetwork === chainData[currentChain]?.oreIdAlias;
-    },
-    [currentChain]
-  );
-
-  const loginWithOreIdToken = useCallback(
-    async (idToken: string) => {
-      if (!idToken) {
-        return;
-      }
-      await oreId.auth.loginWithToken({ idToken });
-      const userAccount =
-        oreId.auth.user.data.chainAccounts.find(findMethodForOreId);
-      return {
-        address: userAccount.chainAccount,
-        blockchain: oreIdMappingToChainHash[userAccount.chainNetwork]
-      };
-    },
-    [oreId, findMethodForOreId]
-  );
-
-  const loginWithOreId = useCallback(
-    async (loginMethod: AuthProvider) => {
-      const response = await oreId.popup.auth({ provider: loginMethod });
-      const userAccount = response.user.chainAccounts.find(findMethodForOreId);
-      if (!userAccount) {
-        return { address: undefined, blockchain: undefined };
-      }
-      return {
-        address: userAccount.chainAccount,
-        blockchain: oreIdMappingToChainHash[userAccount.chainNetwork],
-        idToken: response.idToken,
-        provider: loginMethod
-      };
-    },
-    [oreId, findMethodForOreId]
-  );
   const loginWithWeb3Auth = useCallback(async () => {
+    if (!currentChain) {
+      return;
+    }
     const chainInformation = chainData[currentChain];
+    if (!chainInformation?.alchemy || !chainInformation?.viem) {
+      return;
+    }
     const alchemy = new Alchemy({
       apiKey: import.meta.env.VITE_ALCHEMY_KEY,
-      network: chainInformation.alchemy,
+      network: chainInformation?.alchemy,
       maxRetries: 10
     });
     const ethersProvider = await alchemy.config.getProvider();
@@ -294,20 +246,21 @@ const useConnectUser = () => {
 
   const connectUserData = useCallback(async () => {
     dispatch(setLoginProcessStatus(true));
-    let loginData: {
-      userAddress: string | undefined;
-      ownerAddress: string | undefined;
-      blockchain: BlockchainType | undefined;
-      idToken?: string;
-      provider?: string;
-      alchemyProvider?: AccountSigner<MultiOwnerModularAccount>;
-    };
+    let loginData:
+      | {
+          userAddress: string | undefined;
+          ownerAddress: string | undefined;
+          blockchain: BlockchainType | undefined;
+          idToken?: string;
+          provider?: string;
+          alchemyProvider?: AccountSigner<MultiOwnerModularAccount>;
+        }
+      | undefined;
     const dispatchStack = [];
     const loginMethod: string = await selectMethod();
-    const [loginConnection, oreIdProvider] = loginMethod.split('-');
     reactSwal.close();
     try {
-      switch (loginConnection) {
+      switch (loginMethod) {
         case 'web3auth':
           loginData = await loginWithWeb3Auth();
           break;
@@ -316,9 +269,6 @@ const useConnectUser = () => {
           break;
         case 'programmatic':
           loginData = await loginWithProgrammaticProvider();
-          break;
-        case 'oreid':
-          loginData = await loginWithOreId(oreIdProvider as AuthProvider);
           break;
         default:
           reactSwal.fire({
@@ -346,12 +296,7 @@ const useConnectUser = () => {
 
     dispatchStack.push(setCoingeckoRates(await getCoingeckoRates()));
 
-    dispatchStack.push(
-      setChainId(
-        loginData.blockchain,
-        loginConnection === 'oreid' ? loginData.userAddress : undefined
-      )
-    );
+    dispatchStack.push(setChainId(loginData.blockchain));
 
     let firstTimeLogin = false;
 
@@ -386,34 +331,7 @@ const useConnectUser = () => {
       ) {
         dispatchStack.push(getTokenStart());
         let loginResponse;
-        switch (loginConnection) {
-          case 'oreid':
-            loginResponse = await rFetch('/api/v2/auth/oreId', {
-              method: 'POST',
-              body: JSON.stringify({
-                idToken: loginData.idToken,
-                blockchain: loginData.blockchain
-              }),
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            });
-            if (firstTimeLogin) {
-              oreId.auth.user.getData();
-              const oreIdUserData = oreId.auth.user.data;
-              const userName = oreIdUserData.name.split(' ');
-              const newUserResponse = await axios.patch(
-                `/api/v2/users/${loginData.userAddress.toLowerCase()}`,
-                {
-                  email: oreIdUserData.email,
-                  nickName: oreIdUserData.username,
-                  firstName: userName.slice(0, userName.length / 2).join(' '),
-                  lastName: userName.slice(userName.length / 2).join(' ')
-                }
-              );
-              user = newUserResponse.data.user;
-            }
-            break;
+        switch (loginMethod) {
           case 'programmatic':
             loginResponse = await signWeb3Message(
               loginData.userAddress,
@@ -460,7 +378,7 @@ const useConnectUser = () => {
           dispatchStack.push(getUserComplete(loginResponse.user));
           dispatchStack.push(setAdminRights(loginResponse.user.adminRights));
           dispatchStack.push(setSuperAdmin(loginResponse.user.superAdmin));
-          dispatchStack.push(setLoginType(loginConnection));
+          dispatchStack.push(setLoginType(loginMethod));
           dispatchStack.forEach((dispatchItem) => {
             dispatch(dispatchItem);
           });
@@ -473,11 +391,9 @@ const useConnectUser = () => {
       dispatch(setLoginProcessStatus(false));
     }
   }, [
-    oreId,
     selectMethod,
     loginWithMetamask,
     loginWithProgrammaticProvider,
-    loginWithOreId,
     loginWithWeb3Auth,
     reactSwal,
     adminRights,
@@ -503,20 +419,14 @@ const useConnectUser = () => {
         false
       );
       if (success && user) {
-        if (user.oreId) {
-          const { address, blockchain } = await loginWithOreIdToken(user.oreId);
-          dispatch(setChainId(blockchain, address));
-          dispatch(setLoginType('oreid'));
-        } else {
-          if (!window?.ethereum?.selectedAddress) {
-            // Metamask isn't connected anymore to the page,
-            //  it's unreliable to use the login data in this case
-            dispatch(setLoginProcessStatus(false));
-            return await logoutUser();
-          }
-          dispatch(setChainId(window.ethereum.chainId?.toLowerCase()));
-          dispatch(setLoginType('metamask'));
+        if (!window?.ethereum?.selectedAddress) {
+          // Metamask isn't connected anymore to the page,
+          //  it's unreliable to use the login data in this case
+          dispatch(setLoginProcessStatus(false));
+          return await logoutUser();
         }
+        dispatch(setChainId(window.ethereum.chainId?.toLowerCase()));
+        dispatch(setLoginType('metamask')); // Because web3 logins end on page reload
         dispatch(setCoingeckoRates(await getCoingeckoRates()));
         dispatch(setUserData(user));
         dispatch(setUserAddress(user.publicAddress));
@@ -532,10 +442,6 @@ const useConnectUser = () => {
 
   const logoutUser = useCallback(async () => {
     const { success } = await rFetch('/api/v2/auth/logout');
-    if (loginType === 'oreid') {
-      oreId.auth.logout();
-      oreId.logout();
-    }
     if (success) {
       dispatch(getTokenComplete(null));
       dispatch(setUserAddress(undefined));
@@ -547,7 +453,7 @@ const useConnectUser = () => {
       dispatch(setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
       navigate('/');
     }
-  }, [dispatch, navigate, oreId, loginType]);
+  }, [dispatch, navigate, loginType]);
 
   return {
     connectUserData,

@@ -58,8 +58,6 @@ services:
       KOHLER_MEETING_ID: ${kohler_meeting_id}
       ALCHEMY_API_KEY: ${alchemy_api_key}
       WITHDRAWER_PRIVATE_KEY: ${withdrawer_private_key}
-      ORE_ID_APPID: ${ore_id_appid}
-      ORE_ID_APIKEY: ${ore_id_apikey}
       APP_NAME: ${app_name}
       GOERLI_DIAMOND_MARKETPLACE_ADDRESS: ${goerli_diamond_marketplace_address}
       MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mumbai_diamond_marketplace_address}

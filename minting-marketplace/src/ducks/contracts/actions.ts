@@ -6,14 +6,10 @@ const setCoingeckoRates = (rates: { [key: string]: number }) =>
     rates
   }) as const;
 
-const setChainId = (
-  currentChain: BlockchainType | undefined,
-  oreIdAddress: string | undefined = ''
-) =>
+const setChainId = (currentChain: BlockchainType | undefined) =>
   ({
     type: types.SET_CHAIN_ID,
-    currentChain,
-    oreIdAddress
+    currentChain
   }) as const;
 
 const setUserAddress = (currentUserAddress: string | undefined) =>

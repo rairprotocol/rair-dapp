@@ -2,7 +2,6 @@ import React from 'react';
 import { useCallback, useState } from 'react';
 import Modal from 'react-modal';
 import { Provider, useSelector, useStore } from 'react-redux';
-import { OreidProvider, useOreId } from 'oreid-react';
 
 import VideoPlayerBySignature from './VideoPlayerBySignature ';
 
@@ -65,7 +64,6 @@ const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
   }
 
   const store = useStore();
-  const oreId = useOreId();
   const reactSwal = useSwal();
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -140,15 +138,13 @@ const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
               reactSwal.fire({
                 title: videoTitle,
                 html: (
-                  <OreidProvider oreId={oreId}>
-                    <Provider store={store}>
-                      {selectVideo && selectVideo?._id ? (
-                        <NftVideoplayer selectVideo={selectVideo} main={true} />
-                      ) : (
-                        <StandaloneVideoPlayer {...{ baseURL, mediaId }} />
-                      )}
-                    </Provider>
-                  </OreidProvider>
+                  <Provider store={store}>
+                    {selectVideo && selectVideo?._id ? (
+                      <NftVideoplayer selectVideo={selectVideo} main={true} />
+                    ) : (
+                      <StandaloneVideoPlayer {...{ baseURL, mediaId }} />
+                    )}
+                  </Provider>
                 ),
                 width: '90vw',
                 customClass: {

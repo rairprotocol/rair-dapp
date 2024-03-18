@@ -145,8 +145,6 @@ const FilteringBlock = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalModaldispatch]);
 
-  console.info(textColor, 'textColor');
-
   return (
     <>
       <div ref={sortRef} className="select-sort-wrapper">

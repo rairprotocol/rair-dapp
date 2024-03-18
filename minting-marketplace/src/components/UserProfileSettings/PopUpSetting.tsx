@@ -14,7 +14,6 @@ import { VerifiedIcon } from '../../images';
 import chainData from '../../utils/blockchainData';
 import LoadingComponent from '../common/LoadingComponent';
 
-import AikonWidget from './AikonWidget/AikonWidget';
 import EditMode from './EditMode/EditMode';
 import defaultPictures from './images/defaultUserPictures.png';
 import {
@@ -157,9 +156,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
         <div
           className={`profile-buy-button ${
             primaryColor === '#dedede' ? 'rhyno' : ''
-          }`}>
-          {loginType === 'oreid' ? <AikonWidget /> : '|'}
-        </div>
+          }`}></div>
         <div
           className={`profile-user-balance ${
             primaryColor === '#dedede' ? 'rhyno' : ''
@@ -345,7 +342,6 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                       <SvgFactoryIcon primaryColor={primaryColor} /> Factory
                     </li>
                   )}
-                {/* {loginType === 'oreid' && <AikonWidget />} */}
                 <li
                   onClick={logoutUser}
                   style={{

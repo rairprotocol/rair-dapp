@@ -1,12 +1,14 @@
-//@ts-nocheck
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Provider, useStore } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import { OreidProvider, useOreId } from 'oreid-react';
 import Swal from 'sweetalert2';
 
+import { TUserResponse } from '../../../axios.responseTypes';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { getUserStart } from '../../../ducks/users/actions';
 import useSwal from '../../../hooks/useSwal';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
@@ -26,19 +28,22 @@ const EditMode = ({
 }) => {
   const dispatch = useDispatch();
   const store = useStore();
-  const oreId = useOreId();
   const reactSwal = useSwal();
 
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
   const [userName, setUserName] = useState(mainName.replace(/@/g, ''));
   const [emailUser, setEmailUser] = useState(userEmail);
   const [userAvatar, setUserAvatar] = useState(
     imagePreviewUrl ? imagePreviewUrl : ''
   );
-  const [filePhoto, setFilePhoto] = useState();
+  const [filePhoto, setFilePhoto] = useState<any>();
   const [copyState, setCopyState] = useState(false);
 
   const onChangeAvatar = (e) => {
@@ -54,26 +59,27 @@ const EditMode = ({
 
   const onSubmitData = async (e) => {
     e.preventDefault();
+    if (!currentUserAddress) {
+      return;
+    }
     if (!userEmail) {
       reactSwal.fire({
         title: <h2 style={{ color: 'var(--bubblegum)' }}>Terms of Service</h2>,
         html: (
-          <OreidProvider oreId={oreId}>
-            <Provider store={store}>
-              <AgreementsPopUp
-                userName={userName}
-                emailUser={emailUser}
-                filePhoto={filePhoto}
-                currentUserAddress={currentUserAddress}
-                setUserName={setUserName}
-                setMainEmail={setMainEmail}
-                setMainName={setMainName}
-                setUserAvatar={setUserAvatar}
-                setImagePreviewUrl={setImagePreviewUrl}
-                onChangeEditMode={onChangeEditMode}
-              />
-            </Provider>
-          </OreidProvider>
+          <Provider store={store}>
+            <AgreementsPopUp
+              userName={userName}
+              emailUser={emailUser}
+              filePhoto={filePhoto}
+              currentUserAddress={currentUserAddress}
+              setUserName={setUserName}
+              setMainEmail={setMainEmail}
+              setMainName={setMainName}
+              setUserAvatar={setUserAvatar}
+              setImagePreviewUrl={setImagePreviewUrl}
+              onChangeEditMode={onChangeEditMode}
+            />
+          </Provider>
         ),
         showConfirmButton: false,
         width: '90vw',
@@ -88,7 +94,7 @@ const EditMode = ({
       formData.append('email', emailUser);
       if (filePhoto) {
         formData.append('files', filePhoto);
-        formData.append('avatar', filePhoto.name);
+        formData.append('avatar', filePhoto?.name);
       }
 
       try {
@@ -103,25 +109,22 @@ const EditMode = ({
         );
         const { user, success } = profileUpdateResponse.data;
 
-        if (user.nickName) {
-          setUserName(user.nickName.replace(/@/g, ''));
-          dispatch(getUserStart(currentUserAddress));
-        }
         if (success) {
-          setMainName(user.nickName);
-          setMainEmail(user.email);
-
+          if (user?.nickName) {
+            setUserName(user.nickName.replace(/@/g, ''));
+            dispatch(getUserStart(currentUserAddress));
+            setMainName(user.nickName);
+          }
+          setMainEmail(user?.email);
           dispatch(getUserStart(currentUserAddress));
-        }
-        if (user?.avatar) {
-          setUserAvatar(user.avatar);
-          setImagePreviewUrl(user.avatar);
+          if (user?.avatar) {
+            setUserAvatar(user.avatar);
+            setImagePreviewUrl(user.avatar);
+          }
         }
 
         onChangeEditMode();
       } catch (err) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const error = err as AxiosError;
         Swal.fire('Info', `The name ${userName} already exists`, 'question');
       }
     }
@@ -250,14 +253,16 @@ const EditMode = ({
                           cursor: 'pointer'
                         }}
                         onClick={() => {
-                          navigator.clipboard.writeText(currentUserAddress);
-                          setCopyState(true);
+                          if (currentUserAddress) {
+                            navigator.clipboard.writeText(currentUserAddress);
+                            setCopyState(true);
+                          }
                         }}>
                         {copyState
                           ? 'Copied!'
-                          : currentUserAddress.slice(0, 5) +
+                          : currentUserAddress?.slice(0, 5) +
                             '....' +
-                            currentUserAddress.slice(length - 4)}
+                            currentUserAddress?.slice(length - 4)}
                       </span>
                     </TooltipBox>
                   </>

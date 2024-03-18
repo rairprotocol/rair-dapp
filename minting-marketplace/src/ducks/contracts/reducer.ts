@@ -1,4 +1,4 @@
-import * as ethers from 'ethers';
+import { Contract, providers } from 'ethers';
 
 import {
   ContractAddressesType,
@@ -137,25 +137,10 @@ export default function userStore(
         contractAddresses[action.currentChain] !== undefined
       ) {
         let signer;
-        if (action.oreIdAddress) {
-          const data = chainData[action.currentChain];
-          if (data?.addChainData.rpcUrls?.at) {
-            const provider = new ethers.providers.StaticJsonRpcProvider(
-              chainData[action.currentChain]?.addChainData?.rpcUrls?.at(0),
-              {
-                name: data.name,
-                chainId: parseInt(action.currentChain, 16)
-              }
-            );
-            signer = provider.getSigner(action.oreIdAddress);
-          }
-        } else if (state.programmaticProvider) {
+        if (state.programmaticProvider) {
           signer = state.programmaticProvider;
         } else if (window.ethereum) {
-          const provider = new ethers.providers.Web3Provider(
-            window.ethereum,
-            'any'
-          );
+          const provider = new providers.Web3Provider(window.ethereum, 'any');
           provider.on(
             'debug',
             ({
@@ -208,7 +193,7 @@ export default function userStore(
         }
         const contractCreator = (address, abi) => {
           if (address) {
-            return new ethers.Contract(address, abi, signer);
+            return new Contract(address, abi, signer);
           }
           return undefined;
         };

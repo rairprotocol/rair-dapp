@@ -1,14 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SendUserOperationResult } from '@alchemy/aa-core';
-import {
-  BigNumber,
-  Contract,
-  ContractReceipt,
-  ContractTransaction
-} from 'ethers';
-import { JSONObject } from 'oreid-js';
-import { useOreId } from 'oreid-react';
+import { Contract, ContractReceipt, ContractTransaction } from 'ethers';
 import { encodeFunctionData } from 'viem';
 
 import useSwal from './useSwal';
@@ -30,7 +23,6 @@ const useWeb3Tx = () => {
   const { loginType } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
-  const oreId = useOreId();
   const reactSwal = useSwal();
   const dispatch = useDispatch();
   const handleReceipt = useCallback(
@@ -277,103 +269,6 @@ const useWeb3Tx = () => {
     ]
   );
 
-  const oreIdCall = useCallback(
-    async (
-      contract: Contract,
-      method: string,
-      args: any[],
-      options: {
-        failureMessage?: string;
-        callback?: () => void;
-        intendedBlockchain: BlockchainType;
-      }
-    ) => {
-      if (!oreId.isInitialized) {
-        reactSwal.fire('OreID error', 'Please login', 'error');
-      }
-      // Use the Ethers contract to populate the transaction
-      const transactionBody = await contract.populateTransaction[method](
-        ...args
-      );
-      /*
-    Used for debugging
-    const userBalance = await contract.provider.getBalance(
-      contract.signer.getAddress()
-    );
-    */
-
-      const methodsFound = Object.keys(contract.interface.functions).find(
-        (item) => item.includes(`${method}(`)
-      );
-      if (
-        methodsFound &&
-        contract.interface.functions[methodsFound].stateMutability === 'view'
-      ) {
-        // If the method is a view function, query the info directly through Ethers
-        return await contract[method](...args);
-      }
-      if (args.length && args.at(-1).value) {
-        let estimatedGas;
-        try {
-          estimatedGas = await contract.estimateGas[method](...args);
-        } catch (error) {
-          return handleWeb3Error(error);
-        }
-        const totalValue = BigNumber.from(args.at(-1).value).add(estimatedGas);
-        args[args.length - 1] = {
-          value: totalValue.toString()
-        };
-      }
-      const userChainAccounts = oreId.auth.user.data.chainAccounts;
-      // Find the ETH public address
-      const ethAccount = userChainAccounts.find(
-        (account) =>
-          account.chainNetwork ===
-          chainData[options?.intendedBlockchain]?.oreIdAlias
-      );
-
-      if (!ethAccount) {
-        reactSwal.fire('Error', 'No accounts found', 'error');
-        return;
-      }
-      // Cleanup any BigNumber values (convert to string)
-      const convertedTransactionBody: JSONObject = {};
-      Object.keys(transactionBody).forEach((key) => {
-        convertedTransactionBody[key] = transactionBody[key]._isBigNumber
-          ? transactionBody[key].toString()
-          : transactionBody[key];
-      });
-      convertedTransactionBody.from = ethAccount.chainAccount;
-      try {
-        const transaction = await oreId.createTransaction({
-          transaction: convertedTransactionBody,
-          chainAccount: ethAccount.chainAccount,
-          chainNetwork: ethAccount.chainNetwork,
-          signOptions: {
-            broadcast: true
-          }
-        });
-        // launch popup to have the user approve signature
-        const response = await oreId.popup.sign({ transaction });
-        if (response.transactionId) {
-          await contract.provider.waitForTransaction(
-            response.transactionId,
-            confirmationsRequired
-          );
-          handleReceipt(response.transactionId, options?.callback);
-          return true;
-        } else {
-          return false;
-        }
-      } catch (error) {
-        console.error(error);
-        reactSwal.fire('Error', 'An error has occurred', 'error');
-        return false;
-      }
-    },
-    [handleReceipt, handleWeb3Error, oreId, reactSwal]
-  );
-
   const metamaskSwitch = async (chainId: BlockchainType) => {
     try {
       await window.ethereum.request({
@@ -397,21 +292,6 @@ const useWeb3Tx = () => {
     }
   };
 
-  const hasOreIdSupport = useCallback(
-    (chainId: BlockchainType) => {
-      const oreIdAlias = chainData[chainId]?.oreIdAlias;
-      if (!oreIdAlias) {
-        return undefined;
-      }
-      for (const accountData of oreId.auth.user.data.chainAccounts) {
-        if (accountData.chainNetwork === oreIdAlias) {
-          return accountData.chainAccount;
-        }
-      }
-    },
-    [oreId]
-  );
-
   const web3TxHandler = useCallback(
     async (
       contract: Contract,
@@ -428,11 +308,6 @@ const useWeb3Tx = () => {
         return;
       }
       switch (loginType) {
-        case 'oreid':
-          if (!options) {
-            return;
-          }
-          return oreIdCall(contract, method, args, options);
         case 'metamask':
           return metamaskCall(contract, method, args, options);
         case 'web3auth':
@@ -446,7 +321,6 @@ const useWeb3Tx = () => {
       currentUserAddress,
       loginType,
       metamaskCall,
-      oreIdCall,
       reactSwal,
       web3AuthCall
     ]
@@ -455,25 +329,10 @@ const useWeb3Tx = () => {
   const web3Switch = useCallback(
     async (chainId: BlockchainType) => {
       if (!currentUserAddress) {
-        // It's necessary that the user logs in because that's how we know
-        //  if we need to switch using Metamask or OreID.
         reactSwal.fire('Please login');
         return;
       }
       switch (loginType) {
-        case 'oreid':
-          // eslint-disable-next-line no-case-declarations
-          const oreIdAddress = hasOreIdSupport(chainId);
-          if (!oreIdAddress) {
-            reactSwal.fire(
-              'Error',
-              `${chainData[chainId]?.name} isn't currently supported`,
-              'error'
-            );
-            return;
-          }
-          dispatch(setChainId(chainId, oreIdAddress));
-          return;
         case 'metamask':
           if (chainData[chainId]?.disabled) {
             return;
@@ -481,7 +340,7 @@ const useWeb3Tx = () => {
           return await metamaskSwitch(chainId);
       }
     },
-    [currentUserAddress, dispatch, hasOreIdSupport, loginType, reactSwal]
+    [currentUserAddress, dispatch, loginType, reactSwal]
   );
 
   const correctBlockchain = useCallback(

@@ -1,3 +1,4 @@
+import { Network } from 'alchemy-sdk';
 import { Chain } from 'viem';
 
 export type TNativeCurrency = {
@@ -19,11 +20,10 @@ export type TChainItemData = {
   name: string;
   chainId: BlockchainType;
   symbol: string;
-  oreIdAlias: string | undefined;
   addChainData: TAddChainData;
   disabled?: boolean;
   viem?: Chain;
-  alchemy?: string;
+  alchemy?: Network;
   coingecko?: string;
 };
 export type TChainData = {

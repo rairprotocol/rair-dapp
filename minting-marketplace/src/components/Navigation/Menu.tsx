@@ -24,7 +24,6 @@ import {
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import chainData from '../../utils/blockchainData';
 import LoadingComponent from '../common/LoadingComponent';
-import AikonWidget from '../UserProfileSettings/AikonWidget/AikonWidget';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
@@ -276,9 +275,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         backgroundColor:
                           primaryColor === 'rhyno'
                             ? 'var(--rhyno-20)'
-                            : 'var(----charcoal-80)'
+                            : 'var(--charcoal-80)'
                       }}>
-                      <AikonWidget />
                       <div
                         className={`profile-user-balance ${
                           primaryColor === 'rhyno' ? 'rhyno' : ''

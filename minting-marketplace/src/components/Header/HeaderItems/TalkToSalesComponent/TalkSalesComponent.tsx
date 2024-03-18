@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
-import { OreidProvider, useOreId } from 'oreid-react';
 
 import { TalkSalesButton } from './TalkSalesButton';
 
@@ -37,7 +36,6 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
   const reactSwal = useSwal();
 
   const store = useStore();
-  const oreId = useOreId();
 
   const openInquiriesPage = () => {
     reactSwal.fire({

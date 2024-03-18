@@ -1,8 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Modal from 'react-modal';
 import { Provider, useSelector, useStore } from 'react-redux';
-import { OreidProvider, useOreId } from 'oreid-react';
-import Swal from 'sweetalert2';
 
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
@@ -50,18 +48,15 @@ const VideoTilesItem = ({
   backgroundImage
 }) => {
   const store = useStore();
-  const oreId = useOreId();
   const reactSwal = useSwal();
 
   const openRAIRvideo = () => {
     reactSwal.fire({
       title: videoName,
       html: (
-        <OreidProvider oreId={oreId}>
-          <Provider store={store}>
-            <StandaloneVideoPlayer {...{ baseURL, mediaId }} />
-          </Provider>
-        </OreidProvider>
+        <Provider store={store}>
+          <StandaloneVideoPlayer {...{ baseURL, mediaId }} />
+        </Provider>
       ),
       width: '90vw',
       customClass: {
@@ -102,7 +97,7 @@ const VideoTilesItem = ({
               onClick={() => {
                 videoSRC
                   ? openVideo()
-                  : Swal.fire('Error', 'No Video Found', 'error');
+                  : reactSwal.fire('Error', 'No Video Found', 'error');
               }}>
               <div
                 className="block-with-video"
@@ -183,8 +178,8 @@ const VideoTilesItem = ({
                 videoSRC
                   ? openVideo()
                   : baseURL && mediaId
-                  ? openRAIRvideo()
-                  : Swal.fire('Error', 'No Video Found', 'error');
+                    ? openRAIRvideo()
+                    : reactSwal.fire('Error', 'No Video Found', 'error');
               }}>
               <div
                 className="block-with-video"
