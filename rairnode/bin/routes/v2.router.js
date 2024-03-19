@@ -11,7 +11,6 @@ const offersController = require('../api/offers/offers.Controller');
 const usersController = require('../api/users/users.Controller');
 const verifyController = require('../verification/userVerification.controller');
 const favoritesController = require('../api/favorites/favorites.Controller');
-const authController = require('../auth/auth.controller');
 const csv = require('./csv');
 
 module.exports = () => {
@@ -28,7 +27,6 @@ module.exports = () => {
   router.use('/users', usersController);
   router.use('/offers', offersController);
   router.use('/resales', resalesController);
-  router.use('/auth', authController);
   router.use('/csv', csv);
   return router;
 };

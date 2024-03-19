@@ -6,11 +6,12 @@ const analyticsController = require('../api/analytics/analytics.Controller');
 const creditController = require('../api/credits/credits.Controller');
 const settingsRouter = require('../api/settings/settings.Controller');
 const resalesController = require('../api/resales/resales.Controller');
+const authController = require('../api/auth/auth.Controller');
 
 module.exports = (context) => {
   const router = express.Router();
   router.use('/v2', v2());
-  router.use('/auth', require('./auth')(context));
+  router.use('/auth', authController);
   router.use('/docs', require('./swagger'));
   router.use('/media', require('./media')());
   router.use('/users', require('./users')(context));

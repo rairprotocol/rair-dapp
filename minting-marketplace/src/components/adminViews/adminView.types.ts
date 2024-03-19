@@ -93,6 +93,7 @@ export type Settings = {
   onlyMintedTokensResult?: Boolean;
   nodeAddress?: String;
   featuredCollection?: any;
+  superAdminsOnVault?: Boolean;
 };
 
 export type BlockchainSetting = {

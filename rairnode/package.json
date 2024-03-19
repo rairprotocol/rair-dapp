@@ -35,7 +35,7 @@
     "@rair/eth-auth": "^0.2.0",
     "@rair/hls-server": "^0.2.1",
     "@sentry/node": "^7.5.0",
-    "alchemy-sdk": "^3.1.2",
+    "alchemy-sdk": "^3.2.0",
     "axios": "^0.21.0",
     "body-parser": "^1.20.2",
     "connect-redis": "^6.1.3",
@@ -43,9 +43,9 @@
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
     "dompurify": "^2.3.5",
-    "dotenv": "^16.4.1",
-    "ethers": "^6.8.0",
-    "express": "^4.18.2",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.11.1",
+    "express": "^4.18.3",
     "express-session": "^1.18.0",
     "files-from-path": "^1.0.0",
     "follow-redirects": "^1.15.5",
@@ -64,7 +64,6 @@
     "nanoid": "^3.3.7",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",
-    "oreid-js": "^4.7.2",
     "nodemon": "^3.0.3",
     "redis": "^4.6.10",
     "socket.io": "^4.7.4",
@@ -73,7 +72,7 @@
     "triple-beam": "^1.4.1",
     "winston": "^3.11.0",
     "winston-transport": "^4.6.0",
-    "yoti": "4.5.1"
+    "yoti": "^4.6.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

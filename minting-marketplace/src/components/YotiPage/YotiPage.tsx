@@ -28,7 +28,7 @@ const YotiPage = ({ setOpenVideoplayer }) => {
     if (data.success) {
       if (data.data.age.age_check === 'pass') {
         const { success, user: userInfoData } = await rFetch(
-          '/api/v2/auth/me/',
+          '/api/auth/me/',
           undefined,
           undefined,
           false

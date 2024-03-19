@@ -1,43 +1,75 @@
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-const { OreId } = require('oreid-js');
-const log = require('../utils/logger')(module);
-const { File, User, MediaViewLog, Unlock, ServerSetting } = require('../models');
-const AppError = require('../utils/errors/AppError');
-const { zoomSecret, zoomClientID } = require('../config');
-const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
-// const { superAdminInstance } = require('../utils/vaultSuperAdmin');
+const log = require('../../utils/logger')(module);
+const { File, User, MediaViewLog, Unlock, ServerSetting } = require('../../models');
+const AppError = require('../../utils/errors/AppError');
+const { zoomSecret, zoomClientID } = require('../../config');
+const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../../integrations/ethers/tokenValidation');
+const { superAdminInstance } = require('../../utils/vaultSuperAdmin');
 const fs = require('fs');
-
-const chainHashToOreIdMapping = {
-  '0x1': 'eth_main',
-  '0x5': 'eth_goerli',
-  '0x89': 'polygon_main',
-  '0x13881': 'polygon_mumbai',
-};
-
 module.exports = {
-  oreIdIdentifier: async (req, res, next) => {
-    const { idToken, blockchain } = req.body;
-    const oreId = new OreId({
-        appId: process.env.ORE_ID_APPID,
-        apiKey: process.env.ORE_ID_APIKEY,
-        appName: 'RAIR',
-    });
-    await oreId.init();
-    await oreId.auth.loginWithToken({
-        idToken,
-    });
-    await oreId.auth.user.getData();
-    const userAccount = oreId.auth.user.data.chainAccounts.find(
-      (account) => account.chainNetwork === chainHashToOreIdMapping[blockchain],
-    );
-    if (!userAccount) {
-      next(new AppError('No accounts found'));
+  checkAdminStatus: async (req, res, next) => {
+    const ethAddress = req.metaAuth.recovered;
+    try {
+      if (ethAddress) {
+        const user = await User.findOne({
+          publicAddress: ethAddress,
+        });
+
+        if (!user) {
+          return next(new AppError('User not found.', 404));
+        }
+
+        try {
+          const ownsTheToken = await checkAdminTokenOwns(ethAddress);
+
+          if (!ownsTheToken) {
+            return next(new AppError("You don't hold the current admin token", 401));
+          }
+          return res.json({ success: true, message: 'Admin token holder' });
+        } catch (e) {
+          log.error(e);
+          return next(new AppError('Could not verify account.', 401));
+        }
+      } else {
+        return next(new AppError('Incorrect credentials.', 400));
+      }
+    } catch (err) {
+      return next(err);
+    }
+  },
+  generateChallengeMessage: async (req, res, next) => {
+    const messages = {
+      login: `Login to ${process.env.APP_NAME}. This sign request securely logs you in and will not trigger a blockchain transaction or cost any gas fees.`,
+    };
+    if (req?.body?.mediaId) {
+      const fileData = await File.findById(req.body.mediaId);
+      if (fileData.ageRestricted && !req.session.userData.ageVerified) {
+        return next(new AppError('Age verification required', 400));
+      }
+      const authorData = await User.findOne({
+        publicAddress: fileData?.uploader,
+      });
+      messages.decrypt = `Complete this signature request to unlock media: ${fileData?.title} by ${authorData?.nickName ? authorData?.nickName : fileData?.uploader}`;
+    }
+    if (req.body.zoomId) {
+      let zoomData;
+      if (req.body.zoomId === 'Kohler') {
+        zoomData = {
+          title: 'Tax Hacks Summit',
+          user: 'Mark Kohler',
+        };
+      } else {
+        return next(new AppError('Invalid meeting ID', 400));
+      }
+      /* const fileData = await context.db.File.findById(req.body.mediaId);
+      const authorData = await context.db.User.findOne({
+        publicAddress: fileData?.uploader,
+      }); */
+      messages.decrypt = `Complete this signature request to unlock the meeting: ${zoomData.title} by ${zoomData.user}`;
     }
     req.metaAuth = {
-      recovered: userAccount.chainAccount,
-      oreId: idToken,
+      customDescription: messages[req.body.intent],
     };
     return next();
   },
@@ -82,10 +114,13 @@ module.exports = {
         return next(new AppError('Authentication failed.', 403));
       }
 
-      const { superAdmins } = await ServerSetting.findOne({});
       userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
-      userData.superAdmin = superAdmins.includes(userData.publicAddress);
-      // await superAdminInstance.hasSuperAdminRights(userData.publicAddress);
+      const { superAdmins, superAdminsOnVault } = await ServerSetting.findOne({});
+      userData.superAdmin = superAdminsOnVault ? 
+        await superAdminInstance.hasSuperAdminRights(userData.publicAddress) 
+        :
+        superAdmins.includes(userData.publicAddress);
+      
       userData.oreId = req?.metaAuth?.oreId;
       req.session.userData = userData;
 

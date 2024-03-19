@@ -25,7 +25,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
   const requestChallenge = useCallback(async () => {
     setProcessDone(true);
     try {
-      const unlockResponse = await rFetch('/api/v2/auth/unlock/', {
+      const unlockResponse = await rFetch('/api/auth/unlock/', {
         method: 'POST',
         body: JSON.stringify({
           type: 'file',

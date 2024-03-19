@@ -176,7 +176,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
           setNewPhotoValue(user.avatar);
 
           const { success, user: userInfoData } = await rFetch(
-            '/api/v2/auth/me/',
+            '/api/auth/me/',
             undefined,
             undefined,
             false

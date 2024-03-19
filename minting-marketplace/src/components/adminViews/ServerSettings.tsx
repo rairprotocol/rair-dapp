@@ -211,57 +211,52 @@ const ServerSettings = ({ fullContractData }) => {
   return (
     <div className="row text-start w-100 p-5 mx-5">
       <h5>Server Settings</h5>
-      <div className="col-12 px-5 text-start my-3">
-        <h3>Only return minted tokens on collection page:</h3>
-        <button
-          disabled={!!settings?.onlyMintedTokensResult}
-          className="btn rair-button"
-          style={{
-            background: secondaryButtonColor,
-            color: textColor
-          }}
-          onClick={() => setServerSetting({ onlyMintedTokensResult: true })}>
-          Yes
-        </button>
-        <button
-          disabled={!settings?.onlyMintedTokensResult}
-          className="btn rair-button"
-          style={{
-            background: primaryButtonColor,
-            color: textColor
-          }}
-          onClick={() => setServerSetting({ onlyMintedTokensResult: false })}>
-          No
-        </button>
-      </div>
-      <div className="col-12 px-5 text-start my-2">
-        <h3>Allow demo page uploads:</h3>
-        <button
-          disabled={!!settings?.demoUploadsEnabled}
-          className="btn rair-button"
-          style={{
-            background: secondaryButtonColor,
-            color: textColor
-          }}
-          onClick={() => setServerSetting({ demoUploadsEnabled: true })}>
-          Yes
-        </button>
-        <button
-          disabled={!settings?.demoUploadsEnabled}
-          className="btn rair-button"
-          style={{
-            background: primaryButtonColor,
-            color: textColor
-          }}
-          onClick={() => setServerSetting({ demoUploadsEnabled: false })}>
-          No
-        </button>
-      </div>
+      {[
+        {
+          title: 'Only return minted tokens on collection page',
+          value: 'onlyMintedTokensResult'
+        },
+        {
+          title: 'Allow demo page uploads',
+          value: 'demoUploadsEnabled'
+        },
+        {
+          title: 'Use Vault for super admin verification',
+          value: 'superAdminsOnVault'
+        }
+      ].map((item, index) => {
+        return (
+          <div key={index} className="col-12 px-5 text-start my-3">
+            <h5>{item.title}</h5>
+            <button
+              disabled={!!settings?.[item.value]}
+              className="btn rair-button"
+              style={{
+                background: secondaryButtonColor,
+                color: textColor
+              }}
+              onClick={() => setServerSetting({ [item.value]: 'true' })}>
+              Yes
+            </button>
+            <button
+              disabled={!settings?.[item.value]}
+              className="btn rair-button"
+              style={{
+                background: primaryButtonColor,
+                color: textColor
+              }}
+              onClick={() => setServerSetting({ [item.value]: 'false' })}>
+              No
+            </button>
+          </div>
+        );
+      })}
       <div className="col-12 px-5 my-2">
         <h3>Featured banner</h3>
         <div className="row">
           <div className="col-12 col-md-6">
             <InputSelect
+              label="Contract"
               customClass="rounded-rair form-control"
               placeholder="Select a contract"
               getter={featuredContract}
@@ -278,6 +273,7 @@ const ServerSettings = ({ fullContractData }) => {
           </div>
           <div className="col-12 col-md-6">
             <InputSelect
+              label="Product"
               customClass="rounded-rair form-control"
               placeholder="Select a product"
               getter={featuredProduct}
@@ -386,11 +382,13 @@ const ServerSettings = ({ fullContractData }) => {
       </div>
       <div className="col-12 text-end col-md-6 px-5 my-2">
         <h3>Super admins:</h3>
+        {settings.superAdminsOnVault ? 'Currently using Vault' : ''}
         {superAdmins &&
           superAdmins.map((user, index) => {
             return (
               <div key={index} className="row">
                 <InputField
+                  disabled={!!settings.superAdminsOnVault}
                   customClass="rounded-rair text-center col-12 col-md-10"
                   getter={user}
                   setter={modifySuperAdminAddress(index)}
@@ -398,6 +396,7 @@ const ServerSettings = ({ fullContractData }) => {
                 />
                 <button
                   className="btn col-12 col-md-2 btn-danger"
+                  disabled={!!settings.superAdminsOnVault}
                   onClick={() => {
                     deleteSuperAdminAddress(index);
                   }}>
@@ -413,6 +412,7 @@ const ServerSettings = ({ fullContractData }) => {
             background: primaryButtonColor,
             color: textColor
           }}
+          disabled={!!settings.superAdminsOnVault}
           onClick={() => {
             const result = superAdmins.reduce((result, user) => {
               return result && isAddress(user);
@@ -430,6 +430,7 @@ const ServerSettings = ({ fullContractData }) => {
         </button>
         <button
           className="btn btn-success"
+          disabled={!!settings.superAdminsOnVault}
           onClick={() => {
             modifySuperAdminAddress(superAdmins.length)('');
           }}>

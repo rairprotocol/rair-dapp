@@ -23,7 +23,7 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
   const requestChallenge = useCallback(async () => {
     if (selectVideo && videoNameRef) {
       try {
-        const streamAddress = await rFetch('/api/v2/auth/unlock/', {
+        const streamAddress = await rFetch('/api/auth/unlock/', {
           method: 'POST',
           body: JSON.stringify({
             type: 'file',

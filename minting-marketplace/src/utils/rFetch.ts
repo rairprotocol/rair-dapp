@@ -23,39 +23,6 @@ const signIn = async (provider: providers.StaticJsonRpcProvider) => {
     console.error('No address');
     return;
   }
-  /*
-    // Check if user exists in DB
-    if (!success || !user) {
-        // If the user doesn't exist, send a request to register him using a TEMP adminNFT
-        console.log('Address is not registered!');
-        const userCreation = await fetch('/api/users', {
-            method: 'POST',
-            body: JSON.stringify({ publicAddress: currentUser, adminNFT: 'temp' }),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        console.log('User Created', userCreation);
-    //  setUserData(userCreation);
-    } else {
-    //  setUserData(user);
-    }
-
-    // Admin rights validation
-    let adminRights = adminAccess;
-    if (adminAccess === undefined) {
-        const { response } = await (await fetch(`/api/auth/get_challenge/${currentUser}`)).json();
-        const ethResponse = await window.ethereum.request({
-            method: 'eth_signTypedData_v4',
-            params: [currentUser, response],
-            from: currentUser
-        });
-        const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
-        setAdminAccess(adminResponse.success);
-        adminRights = adminResponse.success;
-    }
-  */
   const responseData = await axios.get<TUserResponse>(
     `/api/users/${currentUser}`
   );
@@ -114,7 +81,7 @@ const signWeb3Message = async (
           const parsedResponse = JSON.parse(response);
           ethResponse = await signTypedData(parsedResponse);
         }
-        const loginResponse = await rFetch('/api/v2/auth/loginSmartAccount', {
+        const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
           method: 'POST',
           body: JSON.stringify({
             MetaMessage: JSON.parse(response).message.challenge,
@@ -137,7 +104,7 @@ const signWeb3Message = async (
     }
 
     if (ethResponse) {
-      const loginResponse = await rFetch('/api/v2/auth/login', {
+      const loginResponse = await rFetch('/api/auth/login', {
         method: 'POST',
         body: JSON.stringify({
           MetaMessage: JSON.parse(response).message.challenge,

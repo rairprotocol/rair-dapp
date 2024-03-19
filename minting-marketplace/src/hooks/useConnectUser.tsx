@@ -413,7 +413,7 @@ const useConnectUser = () => {
     (async () => {
       dispatch(setLoginProcessStatus(true));
       const { success, user } = await rFetch(
-        '/api/v2/auth/me/',
+        '/api/auth/me/',
         undefined,
         undefined,
         false
@@ -441,7 +441,7 @@ const useConnectUser = () => {
   }, []);
 
   const logoutUser = useCallback(async () => {
-    const { success } = await rFetch('/api/v2/auth/logout');
+    const { success } = await rFetch('/api/auth/logout');
     if (success) {
       dispatch(getTokenComplete(null));
       dispatch(setUserAddress(undefined));

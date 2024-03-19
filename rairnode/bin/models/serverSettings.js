@@ -13,6 +13,7 @@ const ServerSetting = new Schema({
   nodeAddress: { type: String, required: false, default: '' },
   // User addresses with super admin rights
   superAdmins: [{ type: String, required: false }],
+  superAdminsOnVault: { type: Boolean, default: false },
   // Light mode and dark mode colors for background
   darkModePrimary: { type: String, required: false },
   darkModeSecondary: { type: String, required: false },
