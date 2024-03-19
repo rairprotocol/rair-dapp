@@ -33,15 +33,6 @@ const { analyticsParams, analyticsQuery } = require('./analytics');
 const { tokenCreditQuery, tokenCreditWithdraw } = require('./credits');
 const { resaleQuery, resaleUpdate, resaleCreate } = require('./resales');
 // V2 validations
-const {
-  dbContracts,
-  dbProducts,
-  dbTokens,
-  dbOffers,
-  dbResales,
-  dbRoyalties,
-  dbFiles,
-} = require('./databaseSchemas');
 const textSearch = require('./textSearch');
 const {
   validateMediaData,
@@ -128,13 +119,7 @@ module.exports = {
 
   // V2 Validation
   // Database schemas (using the Entity helper)
-  dbContracts,
-  dbProducts,
-  dbTokens,
-  dbOffers,
-  dbResales,
-  dbRoyalties,
-  dbFiles,
+  ...require('./databaseSchemas'),
   // Media schemas
   validateMediaData,
   addFileFromMediaService,

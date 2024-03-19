@@ -87,3 +87,18 @@ export type TExternalContractType = {
   contract: TContractSchema;
   numberOfTokensAdded: number;
 };
+
+export type Settings = {
+  demoUploadsEnabled?: Boolean;
+  onlyMintedTokensResult?: Boolean;
+  nodeAddress?: String;
+  featuredCollection?: any;
+};
+
+export type BlockchainSetting = {
+  hash: string;
+  display: Boolean;
+  sync: Boolean;
+  name: String;
+  _id: String;
+};

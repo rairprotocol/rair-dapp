@@ -2,6 +2,25 @@ const Joi = require('joi');
 const { ethAddress, blockchainNetworks, ethTransaction, mongoId } = require('./reusableCustomTypes');
 
 module.exports = {
+    dbSettings: () => ({
+        onlyMintedTokensResult: Joi.boolean(),
+        demoUploadsEnabled: Joi.boolean(),
+        featuredCollection: mongoId,
+        nodeAddress: ethAddress,
+        superAdmins: ethAddress,
+        darkModePrimary: Joi.string(),
+        darkModeSecondary: Joi.string(),
+        darkModeText: Joi.string(),
+        buttonPrimaryColor: Joi.string(),
+        buttonFadeColor: Joi.string(),
+        buttonSecondaryColor: Joi.string(),
+    }),
+    dbSettingsFiles: () => ({
+        darkModeBannerLogo,
+        darkModeMobileLogo,
+        lightModeBannerLogo,
+        lightModeMobileLogo
+    }),
     dbContracts: () => ({
         title: Joi.string(),
         user: ethAddress,

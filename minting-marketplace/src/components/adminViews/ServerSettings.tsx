@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isAddress } from 'ethers/lib/utils';
 
+import { BlockchainSetting, Settings } from './adminView.types';
+
 import { RootState } from '../../ducks';
 import { setCustomColors } from '../../ducks/colors/actions';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
@@ -11,21 +13,6 @@ import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
-
-type Settings = {
-  demoUploadsEnabled?: Boolean;
-  onlyMintedTokensResult?: Boolean;
-  nodeAddress?: String;
-  featuredCollection?: any;
-};
-
-type BlockchainSetting = {
-  hash: string;
-  display: Boolean;
-  sync: Boolean;
-  name: String;
-  _id: String;
-};
 
 const ServerSettings = ({ fullContractData }) => {
   const [settings, setSettings] = useState<Settings>({});
@@ -123,12 +110,10 @@ const ServerSettings = ({ fullContractData }) => {
   };
 
   const setServerSetting = useCallback(
-    async (setting, value) => {
-      const { success } = await rFetch(`/api/settings/${setting}`, {
+    async (setting) => {
+      const { success } = await rFetch(`/api/settings/`, {
         method: 'POST',
-        body: JSON.stringify({
-          value
-        }),
+        body: JSON.stringify(setting),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -235,7 +220,7 @@ const ServerSettings = ({ fullContractData }) => {
             background: secondaryButtonColor,
             color: textColor
           }}
-          onClick={() => setServerSetting('onlyMintedTokensResult', 'true')}>
+          onClick={() => setServerSetting({ onlyMintedTokensResult: true })}>
           Yes
         </button>
         <button
@@ -245,7 +230,7 @@ const ServerSettings = ({ fullContractData }) => {
             background: primaryButtonColor,
             color: textColor
           }}
-          onClick={() => setServerSetting('onlyMintedTokensResult', 'false')}>
+          onClick={() => setServerSetting({ onlyMintedTokensResult: false })}>
           No
         </button>
       </div>
@@ -258,7 +243,7 @@ const ServerSettings = ({ fullContractData }) => {
             background: secondaryButtonColor,
             color: textColor
           }}
-          onClick={() => setServerSetting('demoUploadsEnabled', 'true')}>
+          onClick={() => setServerSetting({ demoUploadsEnabled: true })}>
           Yes
         </button>
         <button
@@ -268,7 +253,7 @@ const ServerSettings = ({ fullContractData }) => {
             background: primaryButtonColor,
             color: textColor
           }}
-          onClick={() => setServerSetting('demoUploadsEnabled', 'false')}>
+          onClick={() => setServerSetting({ demoUploadsEnabled: false })}>
           No
         </button>
       </div>
@@ -310,7 +295,7 @@ const ServerSettings = ({ fullContractData }) => {
           }}
           onClick={() => {
             if (featuredProduct !== 'null' && featuredContract !== 'null') {
-              setServerSetting('featuredCollection', featuredProduct);
+              setServerSetting({ featuredCollection: featuredProduct });
             }
           }}>
           Set Featured Banner Info
@@ -330,7 +315,7 @@ const ServerSettings = ({ fullContractData }) => {
             background: secondaryButtonColor,
             color: textColor
           }}
-          onClick={() => setServerSetting('nodeAddress', nodeAddress)}>
+          onClick={() => setServerSetting({ nodeAddress: nodeAddress })}>
           Set
         </button>
       </div>
@@ -433,10 +418,11 @@ const ServerSettings = ({ fullContractData }) => {
               return result && isAddress(user);
             }, true);
             if (result) {
-              setServerSetting(
-                'superAdmins',
-                superAdmins.map((userAddress) => userAddress.toLowerCase())
-              );
+              setServerSetting({
+                superAdmins: superAdmins.map((userAddress) =>
+                  userAddress.toLowerCase()
+                )
+              });
             }
           }}>
           {' '}
@@ -517,38 +503,28 @@ const ServerSettings = ({ fullContractData }) => {
             <button
               className="btn btn-success"
               onClick={async () => {
-                await setServerSetting('darkModePrimary', customPrimaryColor);
-                await setServerSetting(
-                  'darkModeSecondary',
-                  customSecondaryColor
-                );
-                await setServerSetting('darkModeText', customTextColor);
-                await setServerSetting(
-                  'buttonPrimaryColor',
-                  customPrimaryButtonColor
-                );
-                await setServerSetting(
-                  'buttonFadeColor',
-                  customFadeButtonColor
-                );
-                await setServerSetting(
-                  'buttonSecondaryColor',
-                  customSecondaryButtonColor
-                );
-                await getServerSettings();
+                await setServerSetting({
+                  darkModePrimary: customPrimaryColor,
+                  darkModeSecondary: customSecondaryColor,
+                  darkModeText: customTextColor,
+                  buttonPrimaryColor: customPrimaryButtonColor,
+                  buttonFadeColor: customFadeButtonColor,
+                  buttonSecondaryColor: customSecondaryButtonColor
+                });
               }}>
               Set colors
             </button>
             <button
               className="btn btn-warning"
               onClick={async () => {
-                await setServerSetting('darkModePrimary', '#222021');
-                await setServerSetting('darkModeSecondary', '#4e4d4d');
-                await setServerSetting('darkModeText', '#FFF');
-                await setServerSetting('buttonPrimaryColor', '#725bdb'); // Royal Purple
-                await setServerSetting('buttonFadeColor', '#e882d5'); // Bubblegum
-                await setServerSetting('buttonSecondaryColor', '#1486c5'); // Arctic Blue
-                await getServerSettings();
+                await setServerSetting({
+                  darkModePrimary: '#222021',
+                  darkModeSecondary: '#4e4d4d',
+                  darkModeText: '#FFF',
+                  buttonPrimaryColor: '#725bdb', // Royal Purple
+                  buttonFadeColor: '#e882d5', // Bubblegum
+                  buttonSecondaryColor: '#1486c5' // Arctic Blue
+                });
               }}>
               Reset colors
             </button>

@@ -1,5 +1,5 @@
 const express = require('express');
-const { requireUserSession, isAdmin, verifySuperAdmin } = require('../../middleware');
+const { requireUserSession, isAdmin, verifySuperAdmin, validation } = require('../../middleware');
 const upload = require('../../Multer/Config');
 const {
   createSettingsIfTheyDontExist,
@@ -42,10 +42,11 @@ router.post(
 );
 
 router.post(
-  '/:setting',
+  '/',
   requireUserSession,
   isAdmin,
   createSettingsIfTheyDontExist,
+  validation(['dbSettings']),
   setServerSetting,
 );
 
