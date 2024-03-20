@@ -4,7 +4,7 @@ info:
   version: 1.0.5
   description: API for interfacing with RAIR server nodes.
 servers:
-  - url: demo-api.rair.tech/
+  - url: api.rair.market/
 tags:
   - name: Admin
   - name: Analytics
