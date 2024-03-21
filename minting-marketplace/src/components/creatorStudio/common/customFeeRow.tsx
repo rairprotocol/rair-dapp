@@ -29,9 +29,8 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
   const [recipientAddress, setRecipientAddress] = useState<string | undefined>(
     recipient
   );
-  const [canBeContractFlag, setCanBeContractFlag] = useState<boolean>(
-    !!canBeContract
-  );
+  const [canBeContractFlag, setCanBeContractFlag] =
+    useState<boolean>(!!canBeContract);
   const [percentageReceived, setPercentageReceived] = useState<BigNumber>(
     BigNumber.from(percentage)
   );

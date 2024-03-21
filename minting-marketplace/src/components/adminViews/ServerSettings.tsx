@@ -5,7 +5,11 @@ import { isAddress } from 'ethers/lib/utils';
 import { BlockchainSetting, Settings } from './adminView.types';
 
 import { RootState } from '../../ducks';
-import { setCustomColors } from '../../ducks/colors/actions';
+import {
+  setCustomColors,
+  setCustomLogosDark,
+  setCustomLogosLight
+} from '../../ducks/colors/actions';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import useSwal from '../../hooks/useSwal';
 import chainData from '../../utils/blockchainData';
@@ -63,6 +67,20 @@ const ServerSettings = ({ fullContractData }) => {
         );
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
+      }
+      if (settings.darkModeMobileLogo && settings.lightModeMobileLogo) {
+        dispatch(
+          setCustomLogosDark({
+            mobile: settings.darkModeMobileLogo,
+            desktop: settings.darkModeBannerLogo
+          })
+        );
+        dispatch(
+          setCustomLogosLight({
+            mobile: settings.lightModeMobileLogo,
+            desktop: settings.lightModeBannerLogo
+          })
+        );
       }
       dispatch(
         setCustomColors({
@@ -168,18 +186,21 @@ const ServerSettings = ({ fullContractData }) => {
 
   const setAppLogos = useCallback(
     async (target: string, image: any) => {
-      if (!image) {
-        return;
-      }
       const formData = new FormData();
-      formData.append('logoImage', image);
+      if (image) {
+        formData.append('logoImage', image);
+      }
       formData.append('target', target);
       const { success } = await rFetch(`/api/settings/appLogo`, {
         method: 'POST',
         body: formData
       });
       if (success) {
-        reactSwal.fire('Success', 'App Logo Set', 'success');
+        reactSwal.fire(
+          'Success',
+          `App Logo ${image ? 'Set' : 'Removed'}`,
+          'success'
+        );
         getServerSettings();
       }
     },

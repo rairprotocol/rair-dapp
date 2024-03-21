@@ -9,6 +9,7 @@ const {
 } = require('./errorHandlers');
 
 const sendErrorDev = (err, req, res) => {
+  console.error(err);
   if (req.originalUrl.startsWith('/api')) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -18,13 +19,14 @@ const sendErrorDev = (err, req, res) => {
     });
   } else {
     res.status(err.statusCode).json({
-      title: 'Something went wrong!',
+      title: 'An error has ocurred',
       msg: err.message,
     });
   }
 };
 
 const sendErrorProd = (err, res) => {
+  console.error(err);
   // Operational, trusted error: send message to client
   if (err.isOperational) {
     res.status(err.statusCode).json({

@@ -215,17 +215,17 @@ const ListOffers: React.FC<TListOffers> = ({
                   action: !onMyChain
                     ? switchBlockchain
                     : offerList[0]?._id
-                    ? offerList.filter((item) => !item._id).length === 0
-                      ? gotoNextStep
-                      : createOffers
-                    : createOffers,
+                      ? offerList.filter((item) => !item._id).length === 0
+                        ? gotoNextStep
+                        : createOffers
+                      : createOffers,
                   label: !onMyChain
                     ? `Switch to ${chainData[contractData?.blockchain]?.name}`
                     : offerList[0]?._id
-                    ? offerList.filter((item) => !item._id).length === 0
-                      ? 'Continue'
-                      : 'Append Ranges'
-                    : 'Create Ranges',
+                      ? offerList.filter((item) => !item._id).length === 0
+                        ? 'Continue'
+                        : 'Append Ranges'
+                      : 'Create Ranges',
                   disabled:
                     onMyChain &&
                     (!contractData.diamond ||

@@ -15,16 +15,23 @@ exports.createSettingsIfTheyDontExist = async (req, res, next) => {
   }
 };
 
+const ipfsGateway = {
+  filebase: 'https://rair.myfilebase.com/ipfs/',
+  pinata: 'https://ipfs.io/ipfs/',
+  ipfs: 'https://ipfs.io/ipfs/',
+}[process.env.IPFS_SERVICE];
+
 exports.setAppLogo = async (req, res, next) => {
   try {
     const { target } = req.body;
     const settings = await ServerSetting.findOne({});
     let value = undefined;
-    if (req.file || req.file.mimetype.includes('image')) {
-      console.info(req.file);
+    if (req.file && req.file.mimetype.includes('image')) {
       const ipfsHash = await addFile(req.file.destination, req.file.filename);
-      console.info(ipfsHash);
-      value = `https://ipfs.io/ipfs/${ipfsHash}`;
+      if (!ipfsHash) {
+        return next(new AppError('Unable to upload image at the moment'));
+      }
+      value = `${ipfsGateway}${ipfsHash}`;
     }
     settings[target] = value;
     await settings.save();
