@@ -38,8 +38,8 @@ data:
   SYNC_CONTRACT_TASK_INTERVAL: "5"
   MORALIS_SERVER_TEST: https://ldz2lkdhowt1.usemoralis.com:2053/server
   MORALIS_SERVER_MAIN: https://y14jhwis7uao.moralishost.com:2053/server 
-  MORALIS_API_KEY_TEST: 1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn
-  MORALIS_MASTER_KEY_TEST: P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5
+  MORALIS_API_KEY_TEST: 
+  MORALIS_MASTER_KEY_TEST: 
   TEST_BSCSCAN_GATEWAY: https://testnet.bscscan.com/token
   TEST_POLYGONSCAN_GATEWAY: https://mumbai.polygonscan.com/token
   TEST_ETHERSCAN_GATEWAY: https://goerli.etherscan.io/token
@@ -47,8 +47,8 @@ data:
   ETHERSCAN_GATEWAY: https://etherscan.io/token
   BSCSCAN_GATEWAY: https://bscscan.com/token
   VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
-  VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9"
-  VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: "f537dd61-bd49-e564-9b16-d718d8f37060"
+  VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID:
+  VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID:
   BASE_RAIRNODE_URL: http://rairnode:5000
   MATIC_TESTNET_RPC: https://polygon-mumbai.infura.io/v3/92a88973a28d41318792f77451db4c5b
   MATIC_MAINNET_RPC: https://polygon-mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b
@@ -58,4 +58,4 @@ data:
   ETHEREUM_TESTNET_GOERLI_RPC: https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b
   REDIS_HOST: rair-redis
   REDIS_PORT: "6379"
-  ALCHEMY_API_KEY: 3YEVFJlp5RIVO3sMttd508xkjP_Faacl
+  ALCHEMY_API_KEY: 

@@ -4,7 +4,7 @@ metadata:
   name: media-service-env
 data:
   PRODUCTION: "true"
-  PINATA_KEY: aaa581a498f99ed85279
+  PINATA_KEY: ""
   GCP_PROJECT_ID: rair-market
   GCP_IMAGE_BUCKET_NAME: rair_images
   GCP_VIDEO_BUCKET_NAME: rair-videos
@@ -19,8 +19,8 @@ data:
   USE_X509_CERT_AUTH: "false"
   IPFS_API: http://rairipfs:5001
   VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
-  VAULT_MEDIA_SERVICE_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9"
-  VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: "f537dd61-bd49-e564-9b16-d718d8f37060"
+  VAULT_MEDIA_SERVICE_APP_ROLE_ID: ""
+  VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: ""
   VAULT_MEDIA_SERVICE_use_x509_cert_auth: "false"
   SERVICE_HOST: ms.rair.market
   REDIS_HOST: rair-redis

@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ingress-env
-data:
-  IP_NAME: new-dev-ip
-  HOSTNAME: new-dev.rair.tech
