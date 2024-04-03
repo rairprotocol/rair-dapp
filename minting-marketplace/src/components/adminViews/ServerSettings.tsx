@@ -2,14 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isAddress } from 'ethers/lib/utils';
 
-import { BlockchainSetting, Settings } from './adminView.types';
+import { BlockchainSetting } from './adminView.types';
+import useServerSettings from './useServerSettings';
 
 import { RootState } from '../../ducks';
-import {
-  setCustomColors,
-  setCustomLogosDark,
-  setCustomLogosLight
-} from '../../ducks/colors/actions';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import useSwal from '../../hooks/useSwal';
 import chainData from '../../utils/blockchainData';
@@ -19,25 +15,12 @@ import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
 const ServerSettings = ({ fullContractData }) => {
-  const [settings, setSettings] = useState<Settings>({});
+  const serverSettings = useServerSettings();
   const [productOptions, setProductOptions] = useState<OptionsType[]>();
-  const [featuredContract, setFeaturedContract] = useState('null');
-  const [featuredProduct, setFeaturedProduct] = useState('null');
   const [blockchainSettings, setBlockchainSettings] = useState<
     BlockchainSetting[]
   >([]);
   const [superAdmins, setSuperAdmins] = useState<string[]>([]);
-  const [nodeAddress, setNodeAddress] = useState(
-    import.meta.env.VITE_NODE_ADDRESS
-  );
-  const [customPrimaryColor, setCustomPrimaryColor] = useState('#222021');
-  const [customSecondaryColor, setCustomSecondaryColor] = useState('#4e4d4d');
-  const [customTextColor, setCustomTextColor] = useState('#FFFFFF');
-  const [customPrimaryButtonColor, setCustomPrimaryButtonColor] =
-    useState('#725bdb');
-  const [customSecondaryButtonColor, setCustomSecondaryButtonColor] =
-    useState('#e882d5');
-  const [customFadeButtonColor, setCustomFadeButtonColor] = useState('#1486c5');
 
   const [customLightModeLogo, setCustomLightModeLogo] = useState({ name: '' });
   const [customDarkModeLogo, setCustomDarkModeLogo] = useState({ name: '' });
@@ -55,65 +38,6 @@ const ServerSettings = ({ fullContractData }) => {
 
   const reactSwal = useSwal();
   const dispatch = useDispatch();
-
-  const getServerSettings = useCallback(async () => {
-    const { success, settings, blockchainSettings } =
-      await rFetch('/api/settings');
-    if (success) {
-      setSettings(settings);
-      if (settings.featuredCollection) {
-        setNodeAddress(
-          settings?.nodeAddress || import.meta.env.VITE_NODE_ADDRESS
-        );
-        setFeaturedContract(settings?.featuredCollection?.contract?._id);
-        setFeaturedProduct(settings?.featuredCollection?._id);
-      }
-      if (settings.darkModeMobileLogo && settings.lightModeMobileLogo) {
-        dispatch(
-          setCustomLogosDark({
-            mobile: settings.darkModeMobileLogo,
-            desktop: settings.darkModeBannerLogo
-          })
-        );
-        dispatch(
-          setCustomLogosLight({
-            mobile: settings.lightModeMobileLogo,
-            desktop: settings.lightModeBannerLogo
-          })
-        );
-      }
-      dispatch(
-        setCustomColors({
-          primary: settings.darkModePrimary,
-          secondary: settings.darkModeSecondary,
-          text: settings.darkModeText,
-          primaryButton: settings.buttonPrimaryColor,
-          fadeButton: settings.buttonFadeColor,
-          secondaryButton: settings.buttonSecondaryColor
-        })
-      );
-      if (settings.darkModePrimary) {
-        setCustomPrimaryColor(settings.darkModePrimary);
-      }
-      if (settings.darkModeSecondary) {
-        setCustomSecondaryColor(settings.darkModeSecondary);
-      }
-      if (settings.darkModeText) {
-        setCustomTextColor(settings.darkModeText);
-      }
-      if (settings.buttonPrimaryColor) {
-        setCustomPrimaryButtonColor(settings.buttonPrimaryColor);
-      }
-      if (settings.buttonFadeColor) {
-        setCustomSecondaryButtonColor(settings.buttonSecondaryColor);
-      }
-      if (settings.buttonSecondaryColor) {
-        setCustomFadeButtonColor(settings.buttonFadeColor);
-      }
-      setSuperAdmins(settings?.superAdmins);
-      setBlockchainSettings(blockchainSettings || []);
-    }
-  }, []);
 
   const modifySuperAdminAddress = (index) => (value) => {
     const aux = [...superAdmins];
@@ -137,11 +61,11 @@ const ServerSettings = ({ fullContractData }) => {
         }
       });
       if (success) {
+        serverSettings.getServerSettings();
         reactSwal.fire('Success', 'Setting updated', 'success');
-        getServerSettings();
       }
     },
-    [reactSwal, getServerSettings]
+    [reactSwal, serverSettings.getServerSettings]
   );
 
   const setBlockchainSetting = useCallback(
@@ -157,10 +81,10 @@ const ServerSettings = ({ fullContractData }) => {
       });
       if (success) {
         reactSwal.fire('Success', 'Setting set', 'success');
-        getServerSettings();
+        serverSettings.getServerSettings();
       }
     },
-    [reactSwal, getServerSettings]
+    [reactSwal, serverSettings.getServerSettings]
   );
 
   const loadImage = useCallback(
@@ -201,33 +125,36 @@ const ServerSettings = ({ fullContractData }) => {
           `App Logo ${image ? 'Set' : 'Removed'}`,
           'success'
         );
-        getServerSettings();
+        serverSettings.getServerSettings();
       }
     },
-    [reactSwal, getServerSettings]
+    [reactSwal, serverSettings.getServerSettings]
   );
 
   useEffect(() => {
-    getServerSettings();
-  }, [getServerSettings]);
+    serverSettings.getServerSettings();
+  }, [serverSettings.getServerSettings]);
 
   useEffect(() => {
-    setFeaturedProduct('null');
-    if (featuredContract === 'null') {
+    serverSettings.setFeaturedProduct('null');
+    if (serverSettings.featuredContract === 'null') {
       return;
     }
-    if (!fullContractData[featuredContract]?.products) {
+    if (!fullContractData[serverSettings.featuredContract]?.products) {
       return;
     }
     const options = Object.keys(
-      fullContractData[featuredContract].products
+      fullContractData[serverSettings.featuredContract].products
     ).map((productIndex) => {
-      const data = fullContractData[featuredContract].products[productIndex];
+      const data =
+        fullContractData[serverSettings.featuredContract].products[
+          productIndex
+        ];
       return { label: `${data.name} (${data.copies} NFTs)`, value: data._id };
     });
 
     setProductOptions(options);
-  }, [featuredContract, fullContractData]);
+  }, [serverSettings.featuredContract, fullContractData]);
 
   return (
     <div className="row text-start w-100 p-5 mx-5">
@@ -250,7 +177,7 @@ const ServerSettings = ({ fullContractData }) => {
           <div key={index} className="col-12 px-5 text-start my-3">
             <h5>{item.title}</h5>
             <button
-              disabled={!!settings?.[item.value]}
+              disabled={!!serverSettings.settings?.[item.value]}
               className="btn rair-button"
               style={{
                 background: secondaryButtonColor,
@@ -260,7 +187,7 @@ const ServerSettings = ({ fullContractData }) => {
               Yes
             </button>
             <button
-              disabled={!settings?.[item.value]}
+              disabled={!serverSettings.settings?.[item.value]}
               className="btn rair-button"
               style={{
                 background: primaryButtonColor,
@@ -280,8 +207,8 @@ const ServerSettings = ({ fullContractData }) => {
               label="Contract"
               customClass="rounded-rair form-control"
               placeholder="Select a contract"
-              getter={featuredContract}
-              setter={setFeaturedContract}
+              getter={serverSettings.featuredContract}
+              setter={serverSettings.setFeaturedContract}
               options={Object.keys(fullContractData).map((contract) => {
                 return {
                   label: `${fullContractData[contract].title} (${chainData[
@@ -297,22 +224,30 @@ const ServerSettings = ({ fullContractData }) => {
               label="Product"
               customClass="rounded-rair form-control"
               placeholder="Select a product"
-              getter={featuredProduct}
-              setter={setFeaturedProduct}
+              getter={serverSettings.featuredProduct}
+              setter={serverSettings.setFeaturedProduct}
               options={productOptions}
             />
           </div>
         </div>
         <button
-          disabled={featuredProduct === 'null' || featuredContract === 'null'}
+          disabled={
+            serverSettings.featuredProduct === 'null' ||
+            serverSettings.featuredContract === 'null'
+          }
           className="btn rair-button"
           style={{
             background: primaryButtonColor,
             color: textColor
           }}
           onClick={() => {
-            if (featuredProduct !== 'null' && featuredContract !== 'null') {
-              setServerSetting({ featuredCollection: featuredProduct });
+            if (
+              serverSettings.featuredProduct !== 'null' &&
+              serverSettings.featuredContract !== 'null'
+            ) {
+              setServerSetting({
+                featuredCollection: serverSettings.featuredProduct
+              });
             }
           }}>
           Set Featured Banner Info
@@ -322,8 +257,8 @@ const ServerSettings = ({ fullContractData }) => {
         <h3>Node address</h3>
         <InputField
           customClass="rounded-rair form-control"
-          getter={nodeAddress}
-          setter={setNodeAddress}
+          getter={serverSettings.nodeAddress}
+          setter={serverSettings.setNodeAddress}
           placeholder="Node address"
         />
         <button
@@ -332,7 +267,9 @@ const ServerSettings = ({ fullContractData }) => {
             background: secondaryButtonColor,
             color: textColor
           }}
-          onClick={() => setServerSetting({ nodeAddress: nodeAddress })}>
+          onClick={() =>
+            setServerSetting({ nodeAddress: serverSettings.nodeAddress })
+          }>
           Set
         </button>
       </div>
@@ -403,13 +340,15 @@ const ServerSettings = ({ fullContractData }) => {
       </div>
       <div className="col-12 text-end col-md-6 px-5 my-2">
         <h3>Super admins:</h3>
-        {settings.superAdminsOnVault ? 'Currently using Vault' : ''}
+        {serverSettings.settings.superAdminsOnVault
+          ? 'Currently using Vault'
+          : ''}
         {superAdmins &&
           superAdmins.map((user, index) => {
             return (
               <div key={index} className="row">
                 <InputField
-                  disabled={!!settings.superAdminsOnVault}
+                  disabled={!!serverSettings.settings.superAdminsOnVault}
                   customClass="rounded-rair text-center col-12 col-md-10"
                   getter={user}
                   setter={modifySuperAdminAddress(index)}
@@ -417,7 +356,7 @@ const ServerSettings = ({ fullContractData }) => {
                 />
                 <button
                   className="btn col-12 col-md-2 btn-danger"
-                  disabled={!!settings.superAdminsOnVault}
+                  disabled={!!serverSettings.settings.superAdminsOnVault}
                   onClick={() => {
                     deleteSuperAdminAddress(index);
                   }}>
@@ -433,7 +372,7 @@ const ServerSettings = ({ fullContractData }) => {
             background: primaryButtonColor,
             color: textColor
           }}
-          disabled={!!settings.superAdminsOnVault}
+          disabled={!!serverSettings.settings.superAdminsOnVault}
           onClick={() => {
             const result = superAdmins.reduce((result, user) => {
               return result && isAddress(user);
@@ -451,7 +390,7 @@ const ServerSettings = ({ fullContractData }) => {
         </button>
         <button
           className="btn btn-success"
-          disabled={!!settings.superAdminsOnVault}
+          disabled={!!serverSettings.settings.superAdminsOnVault}
           onClick={() => {
             modifySuperAdminAddress(superAdmins.length)('');
           }}>
@@ -464,33 +403,33 @@ const ServerSettings = ({ fullContractData }) => {
           <h3>Custom Dark Mode Colors</h3>
           {[
             {
-              getter: customPrimaryColor,
-              setter: setCustomPrimaryColor,
+              getter: serverSettings.customPrimaryColor,
+              setter: serverSettings.setCustomPrimaryColor,
               label: 'Primary Color'
             },
             {
-              getter: customSecondaryColor,
-              setter: setCustomSecondaryColor,
+              getter: serverSettings.customSecondaryColor,
+              setter: serverSettings.setCustomSecondaryColor,
               label: 'Secondary Color'
             },
             {
-              getter: customTextColor,
-              setter: setCustomTextColor,
+              getter: serverSettings.customTextColor,
+              setter: serverSettings.setCustomTextColor,
               label: 'Text Color'
             },
             {
-              getter: customPrimaryButtonColor,
-              setter: setCustomPrimaryButtonColor,
+              getter: serverSettings.customPrimaryButtonColor,
+              setter: serverSettings.setCustomPrimaryButtonColor,
               label: 'Primary Button Color'
             },
             {
-              getter: customSecondaryButtonColor,
-              setter: setCustomSecondaryButtonColor,
+              getter: serverSettings.customSecondaryButtonColor,
+              setter: serverSettings.setCustomSecondaryButtonColor,
               label: 'Secondary Button Color'
             },
             {
-              getter: customFadeButtonColor,
-              setter: setCustomFadeButtonColor,
+              getter: serverSettings.customFadeButtonColor,
+              setter: serverSettings.setCustomFadeButtonColor,
               label: 'Fade Button Color'
             }
           ].map((item, index) => {
@@ -526,12 +465,13 @@ const ServerSettings = ({ fullContractData }) => {
               className="btn btn-success"
               onClick={async () => {
                 await setServerSetting({
-                  darkModePrimary: customPrimaryColor,
-                  darkModeSecondary: customSecondaryColor,
-                  darkModeText: customTextColor,
-                  buttonPrimaryColor: customPrimaryButtonColor,
-                  buttonFadeColor: customFadeButtonColor,
-                  buttonSecondaryColor: customSecondaryButtonColor
+                  darkModePrimary: serverSettings.customPrimaryColor,
+                  darkModeSecondary: serverSettings.customSecondaryColor,
+                  darkModeText: serverSettings.customTextColor,
+                  buttonPrimaryColor: serverSettings.customPrimaryButtonColor,
+                  buttonFadeColor: serverSettings.customFadeButtonColor,
+                  buttonSecondaryColor:
+                    serverSettings.customSecondaryButtonColor
                 });
               }}>
               Set colors
@@ -595,7 +535,7 @@ const ServerSettings = ({ fullContractData }) => {
                   disabled={!item.getter}
                   onClick={() => {
                     setAppLogos(item.target, item.getter);
-                    getServerSettings();
+                    serverSettings.getServerSettings();
                   }}
                   className="col-12 col-md-1 btn rair-button"
                   style={{
@@ -607,7 +547,7 @@ const ServerSettings = ({ fullContractData }) => {
                 <button
                   onClick={() => {
                     setAppLogos(item.target, undefined);
-                    getServerSettings();
+                    serverSettings.getServerSettings();
                   }}
                   className="col-12 col-md-1 btn btn-danger">
                   <i className="fa fa-trash" />

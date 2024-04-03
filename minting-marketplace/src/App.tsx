@@ -15,6 +15,7 @@ import { headerLogoBlack, headerLogoWhite } from './images';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
 import TransferTokens from './components/adminViews/transferTokens';
+import useServerSettings from './components/adminViews/useServerSettings';
 import AlertMetamask from './components/AlertMetamask/index';
 import ConsumerMode from './components/consumerMode';
 import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
@@ -70,11 +71,6 @@ import NotificationPage from './components/UserProfileSettings/NotificationPage/
 import FileUpload from './components/video/videoUpload/videoUpload';
 import VideoManager from './components/videoManager/VideoManager';
 import YotiPage from './components/YotiPage/YotiPage';
-import {
-  setCustomColors,
-  setCustomLogosDark,
-  setCustomLogosLight
-} from './ducks/colors/actions';
 import { ColorStoreType } from './ducks/colors/colorStore.types';
 import { setChainId } from './ducks/contracts/actions';
 import { ContractsInitialType } from './ducks/contracts/contracts.types';
@@ -104,6 +100,7 @@ const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const dispatch = useDispatch();
+  const { getServerSettings } = useServerSettings();
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
@@ -266,35 +263,8 @@ function App() {
     import.meta.env.VITE_DISABLE_CREATOR_VIEWS === 'true';
 
   const loadLogos = useCallback(async () => {
-    const { success, settings } = await rFetch('/api/settings/theme');
-    if (success) {
-      dispatch(
-        setCustomColors({
-          primary: settings.darkModePrimary,
-          secondary: settings.darkModeSecondary,
-          text: settings.darkModeText,
-          primaryButton: settings.buttonPrimaryColor,
-          fadeButton: settings.buttonFadeColor,
-          secondaryButton: settings.buttonSecondaryColor
-        })
-      );
-
-      if (settings.darkModeMobileLogo && settings.lightModeMobileLogo) {
-        dispatch(
-          setCustomLogosDark({
-            mobile: settings.darkModeMobileLogo,
-            desktop: settings.darkModeBannerLogo
-          })
-        );
-        dispatch(
-          setCustomLogosLight({
-            mobile: settings.lightModeMobileLogo,
-            desktop: settings.lightModeBannerLogo
-          })
-        );
-      }
-    }
-  }, [dispatch]);
+    getServerSettings();
+  }, []);
 
   useEffect(() => {
     loadLogos();

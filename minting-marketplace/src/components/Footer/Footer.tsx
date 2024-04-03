@@ -52,7 +52,10 @@ const Footer: React.FC<IFooter> = () => {
   };
 
   return (
-    <FooterMain hotdrops={hotdropsVar} primaryColor={primaryColor}>
+    <FooterMain
+      hotdrops={hotdropsVar}
+      primaryColor={primaryColor}
+      textColor={textColor}>
       {hotdropsVar === 'true' ? (
         <>
           <FooterWrapper

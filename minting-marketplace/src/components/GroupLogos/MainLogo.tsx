@@ -6,22 +6,29 @@ import { MainLogoContaier } from './MainLogoItems';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { HotDropsLogo, HotDropsLogoLight } from '../../images';
+import useServerSettings from '../adminViews/useServerSettings';
+
+import LoadingComponent from './../common/LoadingComponent';
 
 const MainLogo: React.FC<IMainLogo> = ({ goHome }) => {
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const { isLoading } = useServerSettings();
   const hotdropsVar = import.meta.env.VITE_HOTDROPS;
   return (
     <>
       <MainLogoContaier>
-        <img
-          className={`${hotdropsVar === 'true' ? 'logo-hotdrops-image' : ''}`}
-          onClick={() => goHome()}
-          alt="Rair Tech"
-          src={headerLogo}
-        />
+        {!isLoading ? (
+          <img
+            className={`${hotdropsVar === 'true' ? 'logo-hotdrops-image' : ''}`}
+            onClick={() => goHome()}
+            alt="Rair Tech"
+            src={headerLogo}
+          />
+        ) : (
+          <LoadingComponent size={25} classes={''} />
+        )}
       </MainLogoContaier>
     </>
   );

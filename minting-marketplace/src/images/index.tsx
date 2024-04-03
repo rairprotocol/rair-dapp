@@ -5,6 +5,7 @@ import blackBg from './BlackBg.webp';
 import whiteBg from './ClayBg.webp';
 import curios from './curios.webp';
 import dapper from './dapper-logo.webp';
+import newDefaultRairBG from './Default-RairTech.webp';
 import avatar from './defaultAvatarProfile.webp';
 import discordIconWhiteNoBorder from './discord-white-no-border.webp';
 import documentIcon from './documentIcon.svg';
@@ -58,6 +59,7 @@ export const GrandpaWait = grandpaGif;
 export const LennyWait = lennyGif;
 export const KidWait = kigGif;
 export const YotiLogo = yotiLogo;
+export const RairBackground = newDefaultRairBG;
 
 // Icons
 export const discrodIconNoBorder = discordIconWhiteNoBorder;

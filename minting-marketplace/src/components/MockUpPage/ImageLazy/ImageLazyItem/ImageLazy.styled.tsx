@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { defaultHotDrops } from '../../../../images';
+import { defaultHotDrops, RairBackground } from '../../../../images';
 import { ILazyImageItem } from '../types/imageLazy.types';
 
 export const Image = styled.img<ILazyImageItem>`
@@ -28,8 +28,6 @@ export const Image = styled.img<ILazyImageItem>`
     max-width: -webkit-fill-available;
     content: url(${import.meta.env.VITE_HOTDROPS === 'true'
       ? defaultHotDrops
-      : `${
-          import.meta.env.VITE_IPFS_GATEWAY
-        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`});
+      : RairBackground});
   }
 `;
