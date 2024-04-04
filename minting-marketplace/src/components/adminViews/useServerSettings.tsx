@@ -9,6 +9,7 @@ import {
   setCustomLogosLight
 } from '../../ducks/colors/actions';
 import { rFetch } from '../../utils/rFetch';
+import { FooterLinkType } from '../common/commonTypes/InputSelectTypes.types';
 
 const useServerSettings = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const useServerSettings = () => {
     useState('#e882d5');
   const [customFadeButtonColor, setCustomFadeButtonColor] = useState('#1486c5');
   const [superAdmins, setSuperAdmins] = useState<string[]>([]);
+  const [footerLinks, setFooterLinks] = useState<FooterLinkType[]>([]);
   const [blockchainSettings, setBlockchainSettings] = useState<
     BlockchainSetting[]
   >([]);
@@ -90,6 +92,7 @@ const useServerSettings = () => {
       }
       setSuperAdmins(settings?.superAdmins);
       setBlockchainSettings(blockchainSettings || []);
+      setFooterLinks(settings.footerLinks);
     }
     setIsLoading(false);
   }, []);
@@ -121,6 +124,8 @@ const useServerSettings = () => {
     setCustomFadeButtonColor,
     superAdmins,
     setSuperAdmins,
+    footerLinks,
+    setFooterLinks,
     blockchainSettings,
     isLoading
   };

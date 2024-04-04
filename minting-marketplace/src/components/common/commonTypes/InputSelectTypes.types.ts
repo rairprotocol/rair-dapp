@@ -5,6 +5,11 @@ export type OptionsType = {
   id?: string;
 };
 
+export type FooterLinkType = {
+  label: string;
+  url: string;
+};
+
 export interface InputSelectProps<T = any> {
   getter: string | undefined;
   setter: (targetValue: T) => void;

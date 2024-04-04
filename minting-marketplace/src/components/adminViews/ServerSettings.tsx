@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { isAddress } from 'ethers/lib/utils';
 
-import { BlockchainSetting } from './adminView.types';
 import useServerSettings from './useServerSettings';
 
 import { RootState } from '../../ducks';
@@ -17,14 +16,13 @@ import InputSelect from '../common/InputSelect';
 const ServerSettings = ({ fullContractData }) => {
   const serverSettings = useServerSettings();
   const [productOptions, setProductOptions] = useState<OptionsType[]>();
-  const [blockchainSettings, setBlockchainSettings] = useState<
-    BlockchainSetting[]
-  >([]);
-  const [superAdmins, setSuperAdmins] = useState<string[]>([]);
 
   const [customLightModeLogo, setCustomLightModeLogo] = useState({ name: '' });
   const [customDarkModeLogo, setCustomDarkModeLogo] = useState({ name: '' });
   const [customLightModeMobileLogo, setCustomLightModeMobileLogo] = useState({
+    name: ''
+  });
+  const [favicon, setFavicon] = useState({
     name: ''
   });
   const [customDarkModeMobileLogo, setCustomDarkModeMobileLogo] = useState({
@@ -37,18 +35,29 @@ const ServerSettings = ({ fullContractData }) => {
   >((store) => store.colorStore);
 
   const reactSwal = useSwal();
-  const dispatch = useDispatch();
 
   const modifySuperAdminAddress = (index) => (value) => {
-    const aux = [...superAdmins];
+    const aux = [...serverSettings.superAdmins];
     aux[index] = value;
-    setSuperAdmins(aux);
+    serverSettings.setSuperAdmins(aux);
   };
 
   const deleteSuperAdminAddress = (index) => {
-    const aux = [...superAdmins];
+    const aux = [...serverSettings.superAdmins];
     aux.splice(index, 1);
-    setSuperAdmins(aux);
+    serverSettings.setSuperAdmins(aux);
+  };
+
+  const modifyFooterLinks = (index, field) => (value) => {
+    const aux = [...serverSettings.footerLinks];
+    aux[index][field] = value;
+    serverSettings.setFooterLinks(aux);
+  };
+
+  const deleteFooterLinks = (index) => {
+    const aux = [...serverSettings.footerLinks];
+    aux.splice(index, 1);
+    serverSettings.setFooterLinks(aux);
   };
 
   const setServerSetting = useCallback(
@@ -275,7 +284,7 @@ const ServerSettings = ({ fullContractData }) => {
       </div>
       <div className="col-12 px-5 col-md-6 my-2">
         <h3>Blockchain settings:</h3>
-        {blockchainSettings?.map((chain, index) => {
+        {serverSettings.blockchainSettings?.map((chain, index) => {
           return (
             <details className="row" key={index}>
               <summary className="h5">{chain.name}</summary>
@@ -343,8 +352,8 @@ const ServerSettings = ({ fullContractData }) => {
         {serverSettings.settings.superAdminsOnVault
           ? 'Currently using Vault'
           : ''}
-        {superAdmins &&
-          superAdmins.map((user, index) => {
+        {serverSettings.superAdmins &&
+          serverSettings.superAdmins.map((user, index) => {
             return (
               <div key={index} className="row">
                 <InputField
@@ -374,12 +383,12 @@ const ServerSettings = ({ fullContractData }) => {
           }}
           disabled={!!serverSettings.settings.superAdminsOnVault}
           onClick={() => {
-            const result = superAdmins.reduce((result, user) => {
+            const result = serverSettings.superAdmins.reduce((result, user) => {
               return result && isAddress(user);
             }, true);
             if (result) {
               setServerSetting({
-                superAdmins: superAdmins.map((userAddress) =>
+                superAdmins: serverSettings.superAdmins.map((userAddress) =>
                   userAddress.toLowerCase()
                 )
               });
@@ -392,7 +401,7 @@ const ServerSettings = ({ fullContractData }) => {
           className="btn btn-success"
           disabled={!!serverSettings.settings.superAdminsOnVault}
           onClick={() => {
-            modifySuperAdminAddress(superAdmins.length)('');
+            modifySuperAdminAddress(serverSettings.superAdmins.length)('');
           }}>
           {' '}
           Add{' '}
@@ -518,6 +527,12 @@ const ServerSettings = ({ fullContractData }) => {
               getter: customLightModeMobileLogo,
               setter: setCustomLightModeMobileLogo,
               target: 'lightModeMobileLogo'
+            },
+            {
+              label: 'Favicon',
+              getter: favicon,
+              setter: setFavicon,
+              target: 'favicon'
             }
           ].map((item, index) => {
             return (
@@ -555,6 +570,65 @@ const ServerSettings = ({ fullContractData }) => {
               </div>
             );
           })}
+        </div>
+        <div className="col-12 px-5 my-2">
+          <h3>Footer items</h3>
+          {serverSettings.footerLinks &&
+            serverSettings.footerLinks.map((footerLink, index) => {
+              return (
+                <div key={index} className="row">
+                  <div className="col-12 col-md-5">
+                    <InputField
+                      label="Text"
+                      customClass="rounded-rair text-center p-1 w-100"
+                      getter={footerLink.label}
+                      setter={modifyFooterLinks(index, 'label')}
+                      type="text"
+                    />
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <InputField
+                      label="URL"
+                      customClass="rounded-rair text-center p-1 w-100"
+                      getter={footerLink.url}
+                      setter={modifyFooterLinks(index, 'url')}
+                      type="text"
+                    />
+                  </div>
+                  <button
+                    className="btn mt-4 col-12 col-md-1 btn-danger"
+                    onClick={() => {
+                      deleteFooterLinks(index);
+                    }}>
+                    Delete
+                  </button>
+                </div>
+              );
+            })}
+          <button
+            className="btn rair-button float-start"
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            onClick={() => {
+              setServerSetting({ footerLinks: serverSettings.footerLinks });
+            }}>
+            Set Footer Links
+          </button>
+          <button
+            className="btn btn-success float-end"
+            disabled={!!serverSettings.settings.superAdminsOnVault}
+            onClick={() => {
+              const aux = [...serverSettings.footerLinks];
+              aux.push({
+                label: '',
+                url: ''
+              });
+              serverSettings.setFooterLinks(aux);
+            }}>
+            Add
+          </button>
         </div>
       </div>
     </div>

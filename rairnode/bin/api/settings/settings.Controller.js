@@ -15,8 +15,6 @@ const router = express.Router();
 
 router.get(
   '/',
-  requireUserSession,
-  isAdmin,
   createSettingsIfTheyDontExist,
   getServerSettings,
 );

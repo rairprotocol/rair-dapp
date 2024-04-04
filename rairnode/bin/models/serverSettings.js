@@ -28,6 +28,13 @@ const ServerSetting = new Schema({
   buttonPrimaryColor: { type: String, required: false },
   buttonFadeColor: { type: String, required: false },
   buttonSecondaryColor: { type: String, required: false },
+  // Custom footer
+  footerLinks: { type: [{
+    label: { type: String, required: true },
+    url: { type: String, required: true }
+  }], required: false, default: [] },
+  // Favicon
+  favicon: { type: String, required: false },
 }, { versionKey: false, timestamps: false });
 
 module.exports = ServerSetting;
