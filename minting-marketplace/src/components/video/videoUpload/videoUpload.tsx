@@ -60,7 +60,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
 
   const [categoryArray, setCategoryArray] = useState([]);
   const getCategories = useCallback(async () => {
-    const { success, categories } = await rFetch('/api/categories');
+    const { success, categories } = await rFetch('/api/files/categories');
     if (success) {
       setCategoryArray(
         categories.map((item) => {
@@ -466,7 +466,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
               });
               formData.append('offer', JSON.stringify(acceptedOffers));
               setUploading(true);
-              const tokenRequest = await rFetch('/api/v2/upload/token');
+              const tokenRequest = await rFetch('/api/upload/token');
               if (!tokenRequest.success) {
                 setUploading(false);
                 return;

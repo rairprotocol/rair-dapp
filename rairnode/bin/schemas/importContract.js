@@ -1,13 +1,10 @@
 const Joi = require('joi');
-const { blockchainNetworks } = require('./reusableCustomTypes');
+const { blockchainNetworks, ethAddress } = require('./reusableCustomTypes');
 
 module.exports = () => ({
   networkId: blockchainNetworks.required(),
-  contractAddress: Joi.string()
-    .required(),
-  limit: Joi.number()
-    .required(),
-  contractCreator: Joi.string()
-    .required(),
+  contractAddress: ethAddress.required(),
+  limit: Joi.number().required(),
+  contractCreator: ethAddress.required(),
   socketSessionId: Joi.string(),
 });

@@ -240,7 +240,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
         setLoadingBg(true);
         formData.append('banner', fileUpload);
 
-        const response = await rFetch(`/api/v2/products/${offerAllData?._id}`, {
+        const response = await rFetch(`/api/products/${offerAllData?._id}`, {
           method: 'POST',
           body: formData
         });

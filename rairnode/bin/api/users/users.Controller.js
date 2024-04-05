@@ -31,15 +31,17 @@ router.post(
   yotiVerify
 );
 
-router.post('/', validation(['createUser']), createUser);
+router.post(
+  '/',
+  validation(['createUser']),
+  createUser
+);
 
 // Common for the group of routes below validation
 router.use('/:userAddress', validation(['userAddress'], 'params'));
-
 router
   .route('/:publicAddress')
   .get(getUserByAddress)
-  // Was POST in V1, no difference in usage, just standard
   .patch(
     requireUserSession,
     upload.array('files', 2),

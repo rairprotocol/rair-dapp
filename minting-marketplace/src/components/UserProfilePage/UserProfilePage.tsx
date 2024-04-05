@@ -101,7 +101,7 @@ const UserProfilePage: React.FC = () => {
               return;
             }
             const contractData = await rFetch(
-              `/api/contracts/singleContract/${token.contract._id}`
+              `/api/contracts/${token.contract._id}`
             );
             tokenData.push({
               ...token,
@@ -207,7 +207,7 @@ const UserProfilePage: React.FC = () => {
         formData.append('files', fileUpload);
         formData.append('background', fileUpload.name);
 
-        const profileEditResponse = await axios.post<TUserResponse>(
+        const profileEditResponse = await axios.patch<TUserResponse>(
           `/api/users/${currentUserAddress.toLowerCase()}`,
           formData,
           {

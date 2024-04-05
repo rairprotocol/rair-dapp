@@ -31,7 +31,7 @@ const PersonalProfileBackgroundComponent = () => {
         formData.append('files', fileUpload);
         formData.append('background', fileUpload.name);
 
-        const profileEditResponse = await axios.post<TUserResponse>(
+        const profileEditResponse = await axios.patch<TUserResponse>(
           `/api/users/${currentUserAddress.toLowerCase()}`,
           formData,
           {

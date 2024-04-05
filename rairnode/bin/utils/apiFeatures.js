@@ -45,12 +45,15 @@ class APIFeatures {
 
   paginate() {
     const page = this.queryString.page * 1 || 1;
-    const limit =
-      this.queryString.limit === undefined ||
-      Number(this.queryString.limit) > 100 ||
-      Number(this.queryString.limit) <= 0
-        ? 36
-        : Number(this.queryString.limit);
+    let limit = 36;
+    if (this.queryString.limit !== undefined) {
+      limit = Number(this.queryString.limit);
+    } else if (this.queryString.itemsPerPage !== undefined) {
+      limit = Number(this.queryString.itemsPerPage);
+    }
+    if (limit > 100 || limit <= 0) {
+      limit = 36;
+    }
     const skip = (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
     return this;

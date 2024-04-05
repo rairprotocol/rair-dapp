@@ -1,70 +1,84 @@
-const express = require('express');
-const contractService = require('./contracts.Service');
+const { Router } = require('express');
+const {
+  queryMyContracts,
+  getAllContracts,
+  getContractById,
+  updateContract,
+  fullListOfContracts,
+  importExternalContract,
+  searchContractByNetworkAndAddress,
+  findContractByNetworkAndAddress,
+  productsByNetworkAndAddress,
+  offersByNetworkAndAddress,
+  contractListForFactory
+} = require('./contracts.Service');
 const {
   isAdmin,
   validation,
   verifySuperAdmin,
   requireUserSession,
+  loadUserSession,
 } = require('../../middleware');
-const userService = require('../users/users.Service');
 
-const router = express.Router();
+const router = Router();
 
 router.get(
   '/',
   validation(['pagination', 'dbContracts'], 'query'),
-  contractService.getAllContracts,
-);
-router.get(
-  '/byUser/:userId',
-  validation(['dbContracts'], 'query'),
-  validation(['userId'], 'params'),
-  userService.addUserAdressToFilterById,
-  contractService.getAllContracts,
-);
-router.get(
-  '/full',
-  validation(['fullContracts'], 'query'),
-  contractService.getFullContracts,
+  getAllContracts,
 );
 
 router.get(
-  '/byCategory/:id',
-  validation(['dbId'], 'params'),
-  validation(['pagination'], 'query'),
-  contractService.getContractByCategory,
+  '/factoryList',
+  requireUserSession,
+  contractListForFactory
 );
 
 router.get(
   '/my',
   requireUserSession,
   validation(['pagination', 'dbContracts', 'userAddress'], 'query'),
-  contractService.queryMyContracts,
-  contractService.getAllContracts,
+  queryMyContracts,
+  getAllContracts,
+);
+router.get(
+  '/full',
+  loadUserSession,
+  validation(['filterAndSort', 'pagination'], 'query'),
+  fullListOfContracts
+);
+
+router.get(
+  '/network/:networkId/:contractAddress',
+  validation(['singleContract'], 'params'),
+  searchContractByNetworkAndAddress,
+  findContractByNetworkAndAddress
+);
+router.get(
+  '/network/:networkId/:contractAddress/products',
+  validation(['singleContract'], 'params'),
+  searchContractByNetworkAndAddress,
+  productsByNetworkAndAddress
+);
+router.get(
+  '/network/:networkId/:contractAddress/offers',
+  validation(['singleContract'], 'params'),
+  searchContractByNetworkAndAddress,
+  offersByNetworkAndAddress
 );
 router.post(
-  '/import',
+  '/import/',
   requireUserSession,
   isAdmin,
-  validation(['importExternalContract'], 'body'),
-  contractService.importContractsMoralis,
+  validation(['importContract'], 'body'),
+  importExternalContract
 );
-// Overload is implemented on service level
-router.get(
-  '/fullSA',
-  requireUserSession,
-  isAdmin,
-  verifySuperAdmin,
-  validation(['fullContracts'], 'query'),
-  contractService.getFullContracts,
-);
+
 router.get(
   '/:id',
   validation(['dbId'], 'params'),
-  contractService.getContractById,
+  getContractById,
 );
-
-// Allows to update only two fields
 router.patch(
   '/:id',
   requireUserSession,
@@ -72,7 +86,7 @@ router.patch(
   verifySuperAdmin,
   validation(['dbId'], 'params'),
   validation(['manageContract']),
-  contractService.updateContract,
+  updateContract,
 );
 
 module.exports = router;

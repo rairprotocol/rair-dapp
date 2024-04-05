@@ -74,7 +74,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const getTokenData = useCallback(async () => {
     if (tokenData && selectedToken && tokenData[selectedToken]) {
       const response = await rFetch(
-        `/api/v2/tokens/${tokenData[selectedToken]._id}`,
+        `/api/tokens/id/${tokenData[selectedToken]._id}`,
         undefined,
         undefined,
         undefined

@@ -69,7 +69,7 @@ module.exports = {
     let storageLink = '';
 
     const validData = await axios
-      .get(`${baseUri}/api/v2/upload/validate`, {
+      .get(`${baseUri}/api/upload/validate`, {
         params: {
           offers,
           category,
@@ -281,7 +281,7 @@ module.exports = {
 
         const uploadData = await axios({
           method: 'POST',
-          url: `${baseUri}/api/v2/upload/file`,
+          url: `${baseUri}/api/upload/file`,
           data: {
             cid,
             meta,

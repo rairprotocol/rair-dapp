@@ -44,7 +44,7 @@ export const BannerCollection = ({ item, getContractData }) => {
       setLoadingBg(true);
       formData.append('banner', fileUpload);
 
-      const response = await rFetch(`/api/v2/products/${item._id}`, {
+      const response = await rFetch(`/api/products/${item._id}`, {
         method: 'POST',
         body: formData
       });

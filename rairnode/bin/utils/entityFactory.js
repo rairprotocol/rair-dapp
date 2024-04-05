@@ -28,10 +28,16 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+    const { id } = req.params;
+
+    const doc = await Model.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
+
+    if (!doc) {
+      return next(new AppError(`No document found with ID ${id}`, 404))
+    }
 
     return res.status(200).json({
       success: true,
@@ -86,7 +92,7 @@ exports.getOne = (Model, options = {}) =>
           },
           {},
         )
-      : { _id: ObjectId(req.params.id) };
+      : { _id: new ObjectId(req.params.id) };
     const projection = options.projection || {};
 
     if (options.populateOptions) {

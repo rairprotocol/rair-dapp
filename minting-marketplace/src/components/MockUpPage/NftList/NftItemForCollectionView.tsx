@@ -169,7 +169,7 @@ const NftItemForCollectionViewComponent: React.FC<
   const getTokenData = useCallback(async () => {
     if (!contract && item) {
       const response = await rFetch(
-        `/api/v2/tokens/${item._id}`,
+        `/api/tokens/id/${item._id}`,
         undefined,
         undefined,
         undefined
@@ -226,7 +226,7 @@ const NftItemForCollectionViewComponent: React.FC<
   const getParticularOffer = useCallback(async () => {
     if (resaleFlag) {
       const responseToken = await rFetch(
-        `/api/v2/tokens/${item._id}`,
+        `/api/tokens/id/${item._id}`,
         undefined,
         undefined,
         undefined

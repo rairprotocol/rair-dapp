@@ -26,7 +26,7 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
       const userAddressChanged = userAddress.toLowerCase();
       try {
         const response = await rFetch(
-          `/api/v2/favorites/${userAddressChanged}`,
+          `/api/favorites/${userAddressChanged}`,
           undefined,
           undefined,
           false
@@ -46,7 +46,7 @@ const UserProfileFavoritesTab: React.FC<IUserProfileFavoritesTab> = ({
     if (userAddress) {
       if (userAddress) {
         try {
-          await rFetch(`/api/v2/favorites/${currentLikeToken}`, {
+          await rFetch(`/api/favorites/${currentLikeToken}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json'

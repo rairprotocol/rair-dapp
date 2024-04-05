@@ -22,7 +22,7 @@ const PersonalProfileMyCreatedComponent = ({
   const { width } = useWindowDimensions();
 
   const getMyContracts = useCallback(async () => {
-    const response = await axios.get('/api/contracts');
+    const response = await axios.get('/api/contracts/factoryList');
 
     if (response.data.success) {
       setLoad(false);

@@ -136,7 +136,7 @@ module.exports = {
   generateChallengeV2: (req, res, next) => {
     const { userAddress, ownerAddress } = req.body;
     if (!req.metaAuth.customDescription || !isAddress(userAddress)) {
-      return next(new AppError('Error in signature description'));
+      return next(new AppError('Error in signature description', 400));
     }
     const challenge = createChallenge(
       userAddress,
@@ -154,7 +154,7 @@ module.exports = {
   validateWeb3AuthOwner: async (req, res, next) => {
     const { MetaSignature, MetaMessage, userAddress } = req.body;
     if (!MetaSignature || !MetaMessage || !userAddress) {
-      return next(new AppError('Error in web3Auth login'));
+      return next(new AppError('Error in web3Auth login', 400));
     }
     const recovered = await recoverUserFromSignature(MetaMessage, MetaSignature);
     const storedOwner = cache.get(`${userAddress}secret`);

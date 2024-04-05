@@ -78,7 +78,7 @@ const MainHeader: React.FC<IMainHeader> = ({
     async (addressId: string, collectionIndexInContract: string) => {
       if (dataAll) {
         const response = await axios.get<TAxiosCollectionData>(
-          `/api/contracts/singleContract/${addressId}`
+          `/api/contracts/${addressId}`
         );
         const exactlyContractData = {
           blockchain: response.data.contract.blockchain,
@@ -99,7 +99,7 @@ const MainHeader: React.FC<IMainHeader> = ({
     async (addressId: string, token: string) => {
       if (dataAll) {
         const response = await axios.get<TAxiosCollectionData>(
-          `/api/contracts/singleContract/${addressId}`
+          `/api/contracts/${addressId}`
         );
 
         const exactlyTokenData = {

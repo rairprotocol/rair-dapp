@@ -56,9 +56,7 @@ const ListOffers: React.FC<TListOffers> = ({
   }, [forceRerender, offerList]);
 
   useEffect(() => {
-    setOfferList(
-      contractData?.product?.offers ? contractData?.product?.offers : []
-    );
+    setOfferList(contractData?.product?.offers || []);
   }, [contractData]);
 
   useEffect(() => {

@@ -28,7 +28,7 @@ export type ColorSchemaType = {
   secondaryColor: string;
   headerLogo: string;
   headerLogoMobile: string;
-  textColor: string | undefined;
+  textColor: string;
   backgroundImage: string;
   backgroundImageEffect: {
     backgroundBlendMode: BackgroundBlendModeType | undefined;

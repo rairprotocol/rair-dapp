@@ -70,9 +70,7 @@ const MyItems: React.FC<IMyItems> = ({
           if (!token.contract) {
             return;
           }
-          const contractData = await rFetch(
-            `/api/contracts/singleContract/${token.contract}`
-          );
+          const contractData = await rFetch(`/api/contracts/${token.contract}`);
           tokenData.push({
             ...token,
             ...contractData.contract

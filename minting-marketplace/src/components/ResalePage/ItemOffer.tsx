@@ -65,7 +65,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
       return;
     }
     const operatorData = await rFetch(
-      `/api/v2/users/${operator.toLowerCase()}`,
+      `/api/users/${operator.toLowerCase()}`,
       undefined,
       undefined,
       false
@@ -79,7 +79,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
 
   const getContractData = useCallback(async () => {
     if (contract) {
-      const contractData = (await rFetch(`/api/v2/contracts/${contract}`))
+      const contractData = (await rFetch(`/api/contracts/${contract}`))
         ?.contract;
       setContractData(contractData);
     }

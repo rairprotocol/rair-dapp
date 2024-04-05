@@ -1,5 +1,5 @@
-const Joi = require('joi');
+const { mongoId } = require('./reusableCustomTypes');
 
 module.exports = () => ({
-  token: Joi.string().required(),
+  token: mongoId
 });

@@ -1,34 +1,41 @@
-/* eslint-disable global-require */
-const express = require('express');
+const { Router } = require('express');
+
 const searchController = require('../api/search/search.Controller');
-const v2 = require('./v2.router');
 const analyticsController = require('../api/analytics/analytics.Controller');
 const creditController = require('../api/credits/credits.Controller');
 const settingsRouter = require('../api/settings/settings.Controller');
 const resalesController = require('../api/resales/resales.Controller');
 const authController = require('../api/auth/auth.Controller');
+const contractsController = require('../api/contracts/contracts.Controller');
+const transactionsController = require('../api/transactions/transactions.Controller');
+const filesController = require('../api/files/files.Controller');
+const usersController = require('../api/users/users.Controller');
+const productsController = require('../api/products/product.Controller')
+const tokensController = require('../api/tokens/tokens.Controller')
+const offersController = require('../api/offers/offers.Controller');
+const nftController = require('../api/nft/nft.Controller');
+const uploadController = require('../api/upload/upload.Controller');
+const favoritesController = require('../api/favorites/favorites.Controller')
 
-module.exports = (context) => {
-  const router = express.Router();
-  router.use('/v2', v2());
-  router.use('/auth', authController);
-  router.use('/docs', require('./swagger'));
-  router.use('/media', require('./media')());
-  router.use('/users', require('./users')(context));
-  router.use('/contracts', require('./contracts')(context));
-  router.use('/nft', require('./nft')(context));
-  router.use('/categories', require('./categories')(context));
-  router.use('/transaction', require('./transactions')(context));
-  router.use('/analytics', analyticsController);
-  router.use('/credits', creditController);
-  router.use('/settings', settingsRouter);
-  router.use('/resales', resalesController);
+const router = Router();
+router.use('/analytics', analyticsController);
+router.use('/auth', authController);
+router.use('/credits', creditController);
+router.use('/contracts', contractsController);
+router.use('/files', filesController);
+router.use('/favorites', favoritesController);
+router.use('/nft', nftController);
+router.use('/transaction', transactionsController);
+router.use('/users', usersController);
+router.use('/offers', offersController);
+router.use('/products', productsController);
+router.use('/resales', resalesController);
+router.use('/search', searchController);
+router.use('/settings', settingsRouter);
+router.use('/tokens', tokensController);
+router.use('/upload', uploadController);
 
-  // Searches ->
-  router.use('/search', searchController);
+// Custom temporary endpoint for the monaco2021
+router.use('/', require('./monaco2021'));
 
-  // Custom temporary endpoint for the monaco2021
-  router.use('/', require('./monaco2021')(context));
-
-  return router;
-};
+module.exports = router;

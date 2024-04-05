@@ -1,6 +1,7 @@
 const { addFile } = require('../../integrations/ipfsService')();
 const { ServerSetting, Product, Contract, User, Blockchain } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
+const { ipfsGateways } = require('../../config')
 
 exports.createSettingsIfTheyDontExist = async (req, res, next) => {
   try {
@@ -15,11 +16,7 @@ exports.createSettingsIfTheyDontExist = async (req, res, next) => {
   }
 };
 
-const ipfsGateway = {
-  filebase: 'https://rair.myfilebase.com/ipfs/',
-  pinata: 'https://ipfs.io/ipfs/',
-  ipfs: 'https://ipfs.io/ipfs/',
-}[process.env.IPFS_SERVICE];
+const ipfsGateway = ipfsGateways[process.env.IPFS_SERVICE];
 
 exports.setAppLogo = async (req, res, next) => {
   try {

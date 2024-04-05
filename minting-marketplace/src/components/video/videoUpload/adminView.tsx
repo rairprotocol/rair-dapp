@@ -31,7 +31,7 @@ const AdminView = ({
       switch (option) {
         case 'off':
           await axios.patch(
-            `/api/v2/contracts/${contract}`,
+            `/api/contracts/${contract}`,
             {
               blockSync: true,
               blockView: true
@@ -47,7 +47,7 @@ const AdminView = ({
           break;
         case 'on':
           await axios.patch(
-            `/api/v2/contracts/${contract}`,
+            `/api/contracts/${contract}`,
             {
               blockSync: false,
               blockView: false

@@ -8,36 +8,6 @@ const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('.
 const { superAdminInstance } = require('../../utils/vaultSuperAdmin');
 const fs = require('fs');
 module.exports = {
-  checkAdminStatus: async (req, res, next) => {
-    const ethAddress = req.metaAuth.recovered;
-    try {
-      if (ethAddress) {
-        const user = await User.findOne({
-          publicAddress: ethAddress,
-        });
-
-        if (!user) {
-          return next(new AppError('User not found.', 404));
-        }
-
-        try {
-          const ownsTheToken = await checkAdminTokenOwns(ethAddress);
-
-          if (!ownsTheToken) {
-            return next(new AppError("You don't hold the current admin token", 401));
-          }
-          return res.json({ success: true, message: 'Admin token holder' });
-        } catch (e) {
-          log.error(e);
-          return next(new AppError('Could not verify account.', 401));
-        }
-      } else {
-        return next(new AppError('Incorrect credentials.', 400));
-      }
-    } catch (err) {
-      return next(err);
-    }
-  },
   generateChallengeMessage: async (req, res, next) => {
     const messages = {
       login: `Login to ${process.env.APP_NAME}. This sign request securely logs you in and will not trigger a blockchain transaction or cost any gas fees.`,
@@ -62,8 +32,8 @@ module.exports = {
       } else {
         return next(new AppError('Invalid meeting ID', 400));
       }
-      /* const fileData = await context.db.File.findById(req.body.mediaId);
-      const authorData = await context.db.User.findOne({
+      /* const fileData = await File.findById(req.body.mediaId);
+      const authorData = await User.findOne({
         publicAddress: fileData?.uploader,
       }); */
       messages.decrypt = `Complete this signature request to unlock the meeting: ${zoomData.title} by ${zoomData.user}`;
@@ -257,37 +227,5 @@ module.exports = {
       return res.json({ success: true });
     }
     return res.json({ success: false });
-  },
-  authToZoom: async (req, res, next) => {
-    try {
-      // JWT creation will be deprecated on June 2023
-      const payload = {
-        iss: zoomClientID,
-        exp: new Date().getTime() + 5000,
-      };
-      const token = jwt.sign(payload, zoomSecret);
-      // ... replace with Oauth
-
-      // Do not use findOne - this will lead to positive result in case mediaID=''
-      // To work this requires auth with /get_token/:MetaMessage/:MetaSignature/:mediaId
-      // This is the most secure way as user won't be able to change mediaID in request
-      // As well this quarantee that user is authorized, as there is a valid session
-      const { session } = req;
-      if (session.authorizedMediaType !== 'zoom') {
-        return next(new AppError('Invalid request', 403));
-      }
-      const { meetingId } = File.findById(session.authorizedMediaStream);
-      // Challenging Zoom for meeting invitation link
-      const respond = await axios.get({
-        uri: `https://api.zoom.us/v2/meetings/${meetingId}/invitation`,
-        auth: {
-          bearer: token,
-        },
-      });
-      return res.json(respond);
-    } catch (err) {
-      log.error(err);
-      return next(err);
-    }
   },
 };

@@ -41,7 +41,6 @@ const {
 const {
   v2Unlock,
   web3Validation,
-  oreIdValidation,
 } = require('./v2AuthSchemas');
 const {
   csvFileUpload,
@@ -54,7 +53,6 @@ const {
   fileId,
   productId,
   offerId,
-  userId,
   userAddress,
   resaleFlag,
   metadataSearch,
@@ -62,7 +60,6 @@ const {
 const {
   fullContracts,
   importExternalContracts,
-  specificContracts,
 } = require('./v2ContractSchemas');
 
 module.exports = {
@@ -126,7 +123,6 @@ module.exports = {
   // Auth schemas
   v2Unlock,
   web3Validation,
-  oreIdValidation,
   // Token Schemas
   csvFileUpload,
   getTokenNumbers,
@@ -138,7 +134,6 @@ module.exports = {
   fileId,
   productId,
   offerId,
-  userId,
   userAddress,
   resaleFlag,
   metadataSearch,
@@ -146,7 +141,6 @@ module.exports = {
   // Contract schemas
   fullContracts,
   importExternalContracts,
-  specificContracts,
 
   // Credit system
   tokenCreditQuery,

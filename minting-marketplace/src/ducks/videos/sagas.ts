@@ -22,7 +22,7 @@ export function* getVideos({ params }: TParamsVideosSaga) {
     yield put(setLoading(true));
     const videos: AxiosResponse<TMediaList> = yield call(
       axios.get,
-      `/api/media/list?itemsPerPage=${params.itemsPerPage}` +
+      `/api/files/list?itemsPerPage=${params.itemsPerPage}` +
         `${params.pageNum ? '&pageNum=' + params.pageNum : ''}` +
         `${params.blockchain ? '&blockchain=' + params.blockchain : ''}` +
         `${params.category ? params.category : ''}` +

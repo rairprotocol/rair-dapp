@@ -11,10 +11,6 @@ const storage = multer.diskStorage({
     let uploadPath = '';
     const uniqueSuffix = `${Date.now()}-${nanoid()}`;
 
-    if (file.fieldname === 'video') {
-      uploadPath = path.join(__dirname, '../Videos/', uniqueSuffix);
-    }
-
     if (file.fieldname === 'csv') {
       uploadPath = path.join(__dirname, '../csv/');
     }

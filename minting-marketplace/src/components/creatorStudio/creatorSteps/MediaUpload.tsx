@@ -82,7 +82,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
       setLoading(true);
       try {
         const { success, data } = await rFetch(
-          `/api/v2/files/forToken/${contractData?.nfts?.tokens[0]._id}`
+          `/api/files/forToken/${contractData?.nfts?.tokens[0]._id}`
         );
         if (success && contractData) {
           setMediaUploadedList(data.map((unlock) => unlock.file));

@@ -53,7 +53,7 @@ const ListCollections = () => {
       response2.contract.products = response3.products;
     }
     const response4: TContractsNetworkOffersResponse = await rFetch(
-      `/api/contracts/network/${blockchain}/${address}/products/offers`
+      `/api/contracts/network/${blockchain}/${address}/offers`
     );
     // Special case where a product exists but it has no offers
     if (response4.success) {

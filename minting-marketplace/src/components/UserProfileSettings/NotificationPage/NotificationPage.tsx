@@ -1,10 +1,8 @@
 //@ts-nocheck
-import React from 'react';
 import { useSelector } from 'react-redux';
 
-import store, { RootState } from '../../../ducks';
+import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { HotDropsLogo } from '../../../images';
 
 import IconRemove from './images/icon-remove.png';
 

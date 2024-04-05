@@ -153,7 +153,8 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
       BigNumber.from(nftID).sub(contractData.product.firstTokenIndex);
 
     const response = await rFetch(
-      `/api/nft/network/${networkId}/${contractAddress}/${product}/token/${internalNFTID}/pinning`
+      `/api/nft/network/${networkId}/${contractAddress}/${product}/token/${internalNFTID}/pinning`,
+      { method: 'POST' }
     );
 
     if (response?.success) {
@@ -195,7 +196,15 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
 
     formData.append('name', nftTitle);
     formData.append('description', nftDescription);
-    formData.append('attributes', JSON.stringify(propertiesArray));
+    formData.append(
+      'attributes',
+      JSON.stringify(
+        propertiesArray.map((i) => ({
+          trait_type: i.trait_type,
+          value: i.value
+        }))
+      )
+    );
 
     if (files?.name) {
       formData.append('image', files.name);
@@ -229,8 +238,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
             <InputField
               getter={nftID}
               setter={setNFTID}
-              customClass={`bg-${primaryColor} rounded-rair w-100 form-control text-center`}
-              customCSS={{ color: textColor ? textColor : '' }}
+              customClass={`rounded-rair w-100 form-control text-center`}
               type="number"
               min={Number(
                 BigNumber.from(
@@ -282,8 +290,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           <InputField
             getter={nftImage}
             setter={setNFTImage}
-            customClass={`bg-${primaryColor} rounded-rair w-100 form-control`}
-            customCSS={{ color: textColor ? textColor : '' }}
+            customClass={`rounded-rair w-100 form-control`}
           />
         </div>
         <br />
@@ -293,8 +300,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           <InputField
             getter={nftTitle}
             setter={setNFTTitle}
-            customClass={`bg-${primaryColor} rounded-rair w-100 form-control`}
-            customCSS={{ color: textColor ? textColor : '' }}
+            customClass={`rounded-rair w-100 form-control`}
           />
         </div>
         <br />
@@ -304,8 +310,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           <textarea
             value={nftDescription}
             onChange={(e) => setNFTDescription(e.target.value)}
-            className={`bg-${primaryColor} rounded-rair w-100 form-control`}
-            style={{ color: textColor }}
+            className={`rounded-rair w-100 form-control`}
             rows={3}
           />
         </div>
@@ -364,9 +369,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           className="w-100 border-stimorol py-auto rounded-rair">
           <Dropzone onDrop={onImageDrop}>
             {({ getRootProps, getInputProps }) => (
-              <div
-                {...getRootProps()}
-                className={`w-100 h-100 bg-${primaryColor} rounded-rair`}>
+              <div {...getRootProps()} className={`w-100 h-100 rounded-rair`}>
                 <input {...getInputProps()} />
                 <img
                   alt=""

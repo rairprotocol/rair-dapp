@@ -52,9 +52,7 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
   }, [item]);
 
   const goToTokenLink = async (contract) => {
-    const contractData = await rFetch(
-      `/api/contracts/singleContract/${contract}`
-    );
+    const contractData = await rFetch(`/api/contracts/${contract}`);
     if (contractData.success) {
       navigate(
         `/tokens/${contractData.contract.blockchain}/${contractData.contract.contractAddress}/0/${item.token.token}`

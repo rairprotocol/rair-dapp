@@ -149,7 +149,7 @@ const VideoItem: React.FC<IVideoItem> = ({
   const getInfo = useCallback(async () => {
     if (mediaList && item) {
       const { data } = await rFetch(
-        `/api/v2/files/${mediaList[item]._id}/unlocks`
+        `/api/files/${mediaList[item]._id}/unlocks`
       );
 
       if (data?.offers && data.offers.length > 0) {
@@ -157,7 +157,7 @@ const VideoItem: React.FC<IVideoItem> = ({
 
         if (firstOffer.contract?._id) {
           const { contract } = await rFetch(
-            `/api/v2/contracts/${firstOffer.contract._id}`
+            `/api/contracts/${firstOffer.contract._id}`
           );
           setOffersArray(data.offers);
 
@@ -177,7 +177,6 @@ const VideoItem: React.FC<IVideoItem> = ({
     ) {
       const response = await axios.get<TUserResponse>(
         `/api/users/${mediaList[item].uploader}`
-        // `/api/users/${data.data.result.contract.user}`
       );
       setDataUser(response.data.user);
     }

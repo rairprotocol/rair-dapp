@@ -4,7 +4,7 @@ const {
     getAllFavoritesByUser,
     getAllFavoritesOfAddress,
     deleteFavorite,
-} = require('./favoriteTokens.Service');
+} = require('./favorites.Service');
 const { validation, isOwner, requireUserSession } = require('../../middleware');
 const { FavoriteTokens } = require('../../models');
 

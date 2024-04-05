@@ -165,7 +165,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (offerData) {
       (async () => {
         const contractInfo = await rFetch(
-          `/api/v2/contracts/${offerData.contract}`
+          `/api/contracts/${offerData.contract}`
         );
         setContractData(contractInfo?.contract);
       })();
@@ -181,7 +181,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       return;
     }
     const contractResponse = await rFetch(
-      `/api/v2/contracts?contractAddress=${params.contract}&blockchain=${params.blockchain}`
+      `/api/contracts?contractAddress=${params.contract}&blockchain=${params.blockchain}`
     );
     if (!contractResponse.success) {
       return;
@@ -202,7 +202,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       return;
     }
     const userResponse = await rFetch(
-      `/api/v2/users/${resaleData.seller.toLowerCase()}`
+      `/api/users/${resaleData.seller.toLowerCase()}`
     );
     if (userResponse.success) {
       resaleData.seller = userResponse.user.nickName;

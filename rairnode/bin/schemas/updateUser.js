@@ -7,6 +7,5 @@ module.exports = () => ({
   email: Joi.string().email(),
   firstName: Joi.string(),
   lastName: Joi.string(),
-  ageVerified: Joi.boolean(),
   blocked: Joi.boolean(),
 });

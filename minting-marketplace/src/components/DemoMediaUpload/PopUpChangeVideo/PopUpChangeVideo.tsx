@@ -36,7 +36,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
   const [itemCategory, setItemCategory] = useState(item.category);
 
   const getCategory = useCallback(async () => {
-    const { success, categories } = await rFetch(`/api/categories`);
+    const { success, categories } = await rFetch(`/api/files/categories`);
 
     if (success) {
       setCategories(
@@ -83,7 +83,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
         category: choiceCategory.id
       };
       try {
-        const request = await rFetch(`/api/media/update/${item._id}`, {
+        const request = await rFetch(`/api/files/update/${item._id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'

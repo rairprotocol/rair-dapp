@@ -6,27 +6,6 @@ exports.getOfferById = eFactory.getOne(Offer);
 exports.getAllOffers = eFactory.getAll(Offer);
 exports.validateQueryProduct = eFactory.validateQuery('product');
 
-exports.getOffersAndLocks = async (req, res, next) => {
-  const {
-    contract,
-    product,
-  } = req.query;
-
-  const offers = await Offer.find({
-    contract,
-    product,
-  }).sort('diamondRangeIndex').lean();
-
-  if (!offers.length) {
-    return next(new AppError('Offers not found.', 404));
-  }
-
-  return res.json({
-    success: true,
-    offers,
-  });
-};
-
 exports.getOfferIndexesByContractAndProduct = async (req, res, next) => {
   try {
     const { contract } = req;

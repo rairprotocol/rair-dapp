@@ -139,6 +139,9 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
   const onSubmitData = useCallback(
     async (e) => {
       e.preventDefault();
+      if (!currentUserAddress) {
+        return;
+      }
       const formData = new FormData();
       if (userName !== userNameNew) {
         formData.append('nickName', userName);
@@ -152,10 +155,8 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
       }
 
       try {
-        const profileUpdateResponse = await axios.post<TUserResponse>(
-          `/api/users/${
-            currentUserAddress && currentUserAddress.toLowerCase()
-          }`,
+        const profileUpdateResponse = await axios.patch<TUserResponse>(
+          `/api/users/${currentUserAddress.toLowerCase()}`,
           formData,
           {
             headers: {

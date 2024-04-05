@@ -15,7 +15,7 @@ const YotiPage = ({ setOpenVideoplayer }) => {
   const dispatch = useDispatch();
 
   const onSuccess = async ({ img }) => {
-    const data = await rFetch('/api/v2/users/verify-age', {
+    const data = await rFetch('/api/users/verify-age', {
       method: 'POST',
       body: JSON.stringify({
         image: img

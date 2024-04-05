@@ -14,7 +14,7 @@ import InputField from '../common/InputField';
 import AnalyticsPopUp from '../DemoMediaUpload/UploadedListBox/AnalyticsPopUp/AnalyticsPopUp';
 
 const VideoManager = () => {
-  const [uploads, setUploads] = useState([]);
+  const [uploads, setUploads] = useState<any[]>([]);
   const [unlockData, setUnlockData] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
@@ -37,7 +37,7 @@ const VideoManager = () => {
     }
     (async () => {
       const { data, success } = await rFetch(
-        `/api/v2/files/${selectedFile._id}/unlocks`
+        `/api/files/${selectedFile._id}/unlocks`
       );
       if (success && data?.offers?.length) {
         setUnlockData(data.offers);
@@ -46,9 +46,9 @@ const VideoManager = () => {
   }, [selectedFile, refresh]);
 
   const refreshFileList = useCallback(async () => {
-    const { data, success } = await rFetch('/api/v2/files');
+    const { success, list } = await rFetch('/api/files/list');
     if (success) {
-      setUploads(data);
+      setUploads(Object.keys(list).map((key) => list[key]));
     }
   }, []);
 
@@ -76,7 +76,7 @@ const VideoManager = () => {
 
   const refreshFileData = useCallback(async () => {
     const { success, file } = await rFetch(
-      `/api/v2/files/byId/${selectedFile._id}`
+      `/api/files/byId/${selectedFile._id}`
     );
     if (success) {
       setSelectedFile(file);
@@ -85,7 +85,7 @@ const VideoManager = () => {
 
   const updateFile = useCallback(
     async (body) => {
-      await rFetch(`/api/v2/files/byId/${selectedFile._id}`, {
+      await rFetch(`/api/files/byId/${selectedFile._id}`, {
         method: 'PUT',
         body: JSON.stringify(body),
         headers: {
@@ -110,7 +110,7 @@ const VideoManager = () => {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          await rFetch(`/api/media/remove/${selectedFile._id}`, {
+          await rFetch(`/api/files/remove/${selectedFile._id}`, {
             method: 'DELETE'
           });
           setSelectedFile({});
@@ -139,7 +139,7 @@ const VideoManager = () => {
 
   const deleteUnlock = useCallback(
     async (offerId) => {
-      await rFetch(`/api/v2/files/${selectedFile._id}/unlocks`, {
+      await rFetch(`/api/files/${selectedFile._id}/unlocks`, {
         method: 'DELETE',
         body: JSON.stringify({
           offer: offerId
@@ -167,6 +167,7 @@ const VideoManager = () => {
           {uploads &&
             uploads
               .filter((item: any) => {
+                console.info(item);
                 return item?.title
                   ?.toLowerCase()
                   ?.includes(filter.toLowerCase());

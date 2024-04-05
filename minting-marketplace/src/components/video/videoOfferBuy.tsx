@@ -18,7 +18,7 @@ const OfferBuyButton = ({ offerName, contract, product }) => {
   );
 
   const fetchContractData = useCallback(async () => {
-    const data = await rFetch(`/api/v2/contracts/${contract}`);
+    const data = await rFetch(`/api/contracts/${contract}`);
     if (data.success) {
       setContractData(data.contract);
     }

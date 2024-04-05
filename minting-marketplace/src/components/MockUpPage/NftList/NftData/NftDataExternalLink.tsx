@@ -72,7 +72,7 @@ const NftDataExternalLink = () => {
     if (contractId && product && token) {
       try {
         const response = await axios.get(
-          `/api/v2/tokens/${token}?contract=${contractId}&product=${product}`
+          `/api/tokens/${token}?contract=${contractId}&product=${product}`
         );
         const { success, data } = response.data;
         if (success) {
@@ -95,7 +95,7 @@ const NftDataExternalLink = () => {
   const getContractInfo = useCallback(async () => {
     if (neededContract) {
       try {
-        const response = await axios.get(`/api/v2/contracts/${neededContract}`);
+        const response = await axios.get(`/api/contracts/${neededContract}`);
         const { success, contract } = response.data;
         if (success) {
           setDataFromOneContract(contract);
@@ -116,7 +116,7 @@ const NftDataExternalLink = () => {
         case true:
           // eslint-disable-next-line no-case-declarations
           const diamondResponse = await axios.get(
-            `/api/v2/offers/?contract=${neededContract}&diamondRangeIndex=${neededTokenOffer}`
+            `/api/offers/?contract=${neededContract}&diamondRangeIndex=${neededTokenOffer}`
           );
           setDataFromOneOffers(diamondResponse);
           setOfferPrice(diamondResponse.data.data.doc?.map((p) => p.price));
@@ -126,7 +126,7 @@ const NftDataExternalLink = () => {
         case false:
           // eslint-disable-next-line no-case-declarations
           const classicResponse = await axios.get(
-            `/api/v2/offers/?contract=${neededContract}&offerPool=${ifClassicContract}&offerIndex=${product}`
+            `/api/offers/?contract=${neededContract}&offerPool=${ifClassicContract}&offerIndex=${product}`
           );
           setDataFromOneOffers(classicResponse);
           setOfferPrice(classicResponse.data.data.doc?.map((p) => p.price));
@@ -167,11 +167,11 @@ const NftDataExternalLink = () => {
     if (neededContract) {
       try {
         const response = await axios.get(
-          `/api/v2/tokens/?contract=${neededContract}`
+          `/api/tokens/?contract=${neededContract}`
         );
-        const { success, data } = response.data;
+        const { success, tokens } = response.data;
         if (success) {
-          setDataFromListTokens(data.doc);
+          setDataFromListTokens(tokens);
         }
       } catch (err) {
         const error = err as AxiosError;
@@ -192,7 +192,7 @@ const NftDataExternalLink = () => {
 
   const getListOfTokens = useCallback(async () => {
     if (currentUserAddress) {
-      const response = await axios.get(`/api/v2/tokens/tokenNumbers`, {
+      const response = await axios.get(`/api/tokens/tokenNumbers`, {
         params: {
           product: neededProduct,
           networkId: neededBlockchain,

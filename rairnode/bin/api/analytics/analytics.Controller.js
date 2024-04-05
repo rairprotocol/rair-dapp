@@ -1,5 +1,5 @@
 const express = require('express');
-const { validation, requireUserSession, consumeTokenCredit } = require('../../middleware');
+const { validation, requireUserSession } = require('../../middleware');
 const { getAnalyticsData, getAnalyticsCSVReport } = require('./analytics.Server');
 
 const router = express.Router();
@@ -16,7 +16,6 @@ router.get(
     requireUserSession,
     validation(['analyticsParams'], 'params'),
     validation(['analyticsQuery'], 'query'),
-    consumeTokenCredit('0x5', '100000000'),
     getAnalyticsCSVReport,
 );
 

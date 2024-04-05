@@ -64,7 +64,7 @@ module.exports = {
         ownerAddress: Joi.string(),
         offerPool: Joi.string(),
         offer: Joi.string(),
-        contract: mongoId,
+        contract: mongoId.required(),
         metadataURI: Joi.string(),
         authenticityLink: Joi.string(),
         isMinted: Joi.boolean(),
@@ -117,4 +117,8 @@ module.exports = {
         ageRestricted: Joi.boolean(),
         hidden: Joi.boolean(),
     }),
+    dbBlockchains: () => ({
+        display: Joi.boolean(),
+        sync: Joi.boolean(),
+    })
 };

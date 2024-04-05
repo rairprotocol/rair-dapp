@@ -46,7 +46,7 @@ const LikeButton: React.FC<ILikeButton> = ({
       dispatch(addItemFavoriteStart());
       try {
         await axios
-          .post<TAxiosFavoriteData>('/api/v2/favorites', token, {
+          .post<TAxiosFavoriteData>('/api/favorites', token, {
             headers: {
               'Content-Type': 'application/json'
             }
@@ -68,7 +68,7 @@ const LikeButton: React.FC<ILikeButton> = ({
         try {
           dispatch(addItemFavoriteStart());
           await axios
-            .delete(`/api/v2/favorites/${currentLikeToken[0]?._id}`, {
+            .delete(`/api/favorites/${currentLikeToken[0]?._id}`, {
               headers: {
                 'Content-Type': 'application/json'
               }
@@ -87,7 +87,7 @@ const LikeButton: React.FC<ILikeButton> = ({
 
   const getFavotiteData = useCallback(async () => {
     try {
-      const { data: result } = await axios.get('/api/v2/favorites', {
+      const { data: result } = await axios.get('/api/favorites', {
         headers: {
           'Content-Type': 'application/json'
         }

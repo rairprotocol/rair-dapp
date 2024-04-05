@@ -247,7 +247,7 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
             formData.append('demo', String(item.offer === '-1'));
             setUploading(true);
             try {
-              const tokenRequest = await rFetch('/api/v2/upload/token');
+              const tokenRequest = await rFetch('/api/upload/token');
               if (!tokenRequest.success) {
                 setUploading(false);
                 return;

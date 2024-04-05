@@ -1,20 +1,21 @@
 const { Router } = require('express');
-const searchService = require('./credits.Service');
+const { getUserCredits, generateWithdrawRequest } = require('./credits.Service');
 const { requireUserSession } = require('../../middleware/verifyUserSession');
 const validation = require('../../middleware/validation');
 
 const router = Router();
+
 router.get(
     '/:blockchain/:tokenAddress',
     validation(['tokenCreditQuery'], 'params'),
     requireUserSession,
-    searchService.getUserCredits,
+    getUserCredits
 );
 router.post(
     '/withdraw',
     validation(['tokenCreditWithdraw'], 'body'),
     requireUserSession,
-    searchService.generateWithdrawRequest,
+    generateWithdrawRequest
 );
 
 module.exports = router;

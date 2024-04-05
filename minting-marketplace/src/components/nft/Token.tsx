@@ -25,7 +25,7 @@ const Token = () => {
   const fetchData = useCallback(async () => {
     try {
       const { success, products } = await rFetch(
-        `/api/contracts/network/${params.blockchain}/${params.contract}/products/offers`
+        `/api/contracts/network/${params.blockchain}/${params.contract}/offers`
       );
       const contractData = await rFetch(
         `/api/contracts/network/${params.blockchain}/${params.contract}`

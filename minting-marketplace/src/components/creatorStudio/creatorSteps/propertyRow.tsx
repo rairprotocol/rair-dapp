@@ -33,20 +33,18 @@ const PropertyRow: React.FC<IPropertyRow> = ({
       <th>
         <div className="border-stimorol rounded-rair w-100">
           <InputField
-            customClass={`form-control rounded-rair bg-${primaryColor}`}
+            customClass={`form-control rounded-rair`}
             getter={trait_type}
             setter={updatePropertyName}
-            customCSS={{ color: textColor ? textColor : '' }}
           />
         </div>
       </th>
       <th>
         <div className="border-stimorol rounded-rair w-100">
           <InputField
-            customClass={`form-control rounded-rair bg-${primaryColor}`}
+            customClass={`form-control rounded-rair`}
             getter={value}
             setter={updatePropertyValue}
-            customCSS={{ color: textColor ? textColor : '' }}
           />
         </div>
       </th>

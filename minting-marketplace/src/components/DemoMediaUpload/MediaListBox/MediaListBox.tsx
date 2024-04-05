@@ -325,7 +325,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   const dispatch = useDispatch();
 
   const getCategories = useCallback(async () => {
-    const { success, categories } = await rFetch('/api/categories');
+    const { success, categories } = await rFetch('/api/files/categories');
     if (success) {
       setCategoryOptions(
         categories.map((item) => {
@@ -389,7 +389,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
       setSocketMessage('');
       setUploading(true);
       try {
-        const tokenRequest = await rFetch('/api/v2/upload/token');
+        const tokenRequest = await rFetch('/api/upload/token');
         if (!tokenRequest.success) {
           setUploading(false);
           return;

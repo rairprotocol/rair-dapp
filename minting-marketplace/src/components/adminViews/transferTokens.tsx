@@ -61,7 +61,9 @@ const TransferTokens = () => {
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
 
   const getUserContracts = useCallback(async () => {
-    const response: ContractsResponseType = await rFetch('/api/contracts');
+    const response: ContractsResponseType = await rFetch(
+      '/api/contracts/factoryList'
+    );
     if (response.success) {
       setUserContracts(
         response.contracts
@@ -140,7 +142,7 @@ const TransferTokens = () => {
       setContractProducts([]);
       setOwnedTokens([]);
       const response2 = await rFetch(
-        `/api/contracts/${selectedContract}/products/offers`
+        `/api/contracts/${selectedContract}/product/offers`
       );
       if (response2.success) {
         setContractProducts(

@@ -16,9 +16,4 @@ module.exports = {
         contractAddress: ethAddress,
         limit: Joi.number(),
     }),
-    specificContracts: () => ({
-        contractAddress: ethAddress,
-        networkId: blockchainNetworks,
-        contract: mongoId,
-    }),
 };

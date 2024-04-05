@@ -85,7 +85,7 @@ const MobileEditProfile: React.FC = () => {
         //   formData.append('file', file);
         // }
         try {
-          const profileEditResponse = await axios.post<TUserResponse>(
+          const profileEditResponse = await axios.patch<TUserResponse>(
             `/api/users/${currentUserAddress.toLowerCase()}`,
             formData,
             {

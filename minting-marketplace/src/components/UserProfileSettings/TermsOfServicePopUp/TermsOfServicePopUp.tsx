@@ -45,7 +45,7 @@ export const AgreementsPopUp = ({
     }
 
     try {
-      const profileUpdateResponse = await axios.post<TUserResponse>(
+      const profileUpdateResponse = await axios.patch<TUserResponse>(
         `/api/users/${currentUserAddress.toLowerCase()}`,
         formData,
         {

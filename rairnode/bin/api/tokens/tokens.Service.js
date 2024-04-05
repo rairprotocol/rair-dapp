@@ -10,10 +10,10 @@ const {
   Product,
 } = require('../../models');
 const config = require('../../config');
-const { addPin, addFile, addMetadata, removePin } =
+const { addPin, addFile } =
   require('../../integrations/ipfsService')();
 const log = require('../../utils/logger')(module);
-const { textPurify, cleanStorage } = require('../../utils/helpers');
+const { textPurify, cleanStorage, processPaginationQuery } = require('../../utils/helpers');
 const eFactory = require('../../utils/entityFactory');
 const { processMetadata } = require('../../utils/metadataClassify');
 
@@ -73,25 +73,42 @@ const prepareTokens = async (
   });
 };
 
+exports.getOfferPoolByContractAndProduct = async (req, res, next) => {
+  try {
+    const { contract } = req;
+    const { product } = req.query;
+
+    if (!contract.diamond) {
+      const offerPool = await OfferPool.findOne({
+        contract: contract._id,
+        product,
+      });
+
+      if (_.isEmpty(offerPool)) {
+        return next(new AppError('OfferPool not found.', 404));
+      }
+
+      req.offerPool = offerPool;
+    }
+
+    return next();
+  } catch (e) {
+    return next(e);
+  }
+};
+
 exports.getTokenNumbers = async (req, res, next) => {
   try {
-    // reminder of controller level logic - can be removed
-    // getSpecificContracts -> req.contract = contract
-    // getOfferIndexesByContractAndProduct, -> req.offers = offers (diamondRangeIndex)
-    // getOfferPoolByContractAndProduct, -> req.offerPool = offerPool
-    // create options \|/
     const { contract, offerPool, offers } = req.query;
-    const options = offerPool
-      ? {
-          contract: contract._id,
-          offerPool: offerPool.marketplaceCatalogIndex,
-        }
-      : {
-          contract: contract._id,
-          offer: { $in: offers },
-        };
-
-    // request mintedToken \|/
+    const options = {
+      contract: contract
+    }
+    if (offerPool) {
+      options.offerPool = offerPool.marketplaceCatalogIndex;
+    }
+    if (offers) {
+      options.offer = { $in: offers }
+    }
     const tokens = await MintedToken.find(options)
       .sort([['token', 1]])
       .collation({ locale: 'en_US', numericOrdering: true })
@@ -106,7 +123,18 @@ exports.getTokenNumbers = async (req, res, next) => {
   }
 };
 
-exports.getAllTokens = eFactory.getAll(MintedToken);
+exports.getAllTokens = async (req, res, next) => {
+  try {
+    const { skip, limit, query } = processPaginationQuery(req.query);
+    const tokens = await MintedToken.find(query)
+      .skip(skip)
+      .limit(limit);
+    const results = await MintedToken.countDocuments(query);
+    return res.json({ results, tokens });
+  } catch (err) {
+    return next(new AppError(err));
+  }
+}
 
 exports.updateTokenCommonMetadata = async (req, res, next) => {
   try {
@@ -518,68 +546,6 @@ exports.getFullTokenInfo = async (req, res, next) => {
     }
   }
   return res.json({ success: true, tokenData });
-};
-
-exports.pinMetadataToPinata = async (req, res, next) => {
-  try {
-    const { contract, offers, offerPool } = req.query;
-    const { token } = req.params;
-    const { user } = req;
-    // eslint-disable-next-line
-    const reg =
-      /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gm;
-    let metadataURI = 'none';
-
-    if (!user.superAdmin && user.publicAddress !== contract.user) {
-      return next(
-        new AppError(
-          `You have no permissions for updating token ${token}.`,
-          403,
-        ),
-      );
-    }
-
-    const options = _.assign(
-      {
-        contract: contract._id,
-        token,
-      },
-      contract.diamond
-        ? { offer: { $in: offers } }
-        : { offerPool: offerPool.marketplaceCatalogIndex },
-    );
-
-    const foundToken = await MintedToken.findOne(options);
-
-    if (_.isEmpty(foundToken)) {
-      return next(new AppError('Token not found.', 400));
-    }
-
-    metadataURI = foundToken.metadataURI;
-
-    if (!_.isEmpty(foundToken.metadata)) {
-      const CID = await addMetadata(
-        foundToken.metadata,
-        _.get(foundToken.metadata, 'name', 'none'),
-      );
-      await addPin(
-        CID,
-        `metadata_${_.get(foundToken.metadata, 'name', 'none')}`,
-      );
-      metadataURI = `${process.env.PINATA_GATEWAY}/${CID}`;
-    }
-
-    if (reg.test(foundToken.metadataURI)) {
-      const CID = _.chain(foundToken.metadataURI).split('/').last().value();
-      await removePin(CID);
-    }
-
-    await foundToken.updateOne({ metadataURI, isMetadataPinned: true });
-
-    return res.json({ success: true, metadataURI });
-  } catch (err) {
-    return next(err);
-  }
 };
 
 exports.createTokensViaCSV = async (req, res, next) => {

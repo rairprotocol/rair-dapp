@@ -70,7 +70,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
         return fileData;
       });
       try {
-        const request = await rFetch(`/api/media/update/${mediaId}`, {
+        const request = await rFetch(`/api/files/update/${mediaId}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'

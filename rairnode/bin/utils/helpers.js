@@ -261,6 +261,21 @@ const attributesCounter = (tokens = []) => {
   });
 };
 
+const processPaginationQuery = (queryFields) => {
+  let { itemsPerPage, pageNum, ...query } = queryFields;
+  if (!pageNum || pageNum === '') {
+      pageNum = 1;
+  }
+  if (!itemsPerPage || itemsPerPage === '') {
+      itemsPerPage = 10;
+  }
+
+  const limit = parseInt(itemsPerPage, 10);
+  const skip = (parseInt(pageNum, 10) - 1) * limit;
+
+  return { skip, limit, query };
+}
+
 module.exports = {
   attributesCounter,
   execPromise,
@@ -268,4 +283,5 @@ module.exports = {
   textPurify: textPurify(),
   cleanStorage,
   checkFileAccess,
+  processPaginationQuery,
 };

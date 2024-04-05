@@ -107,7 +107,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
 
   useEffect(() => {
     let isDestroyed = false;
-    fetch(`/api/nft/network/${blockchain}/${contract}/${product}/tokenNumbers`)
+    fetch(`/api/nft/network/${blockchain}/${contract}/${product}/`)
       .then((res) => res.json())
       .then((response) => {
         if (!isDestroyed) {

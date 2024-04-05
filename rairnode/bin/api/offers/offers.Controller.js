@@ -1,8 +1,6 @@
 const express = require('express');
 const {
   getAllOffers,
-  getOffersAndLocks,
-  getOfferById,
 } = require('./offers.Service');
 const { validation } = require('../../middleware');
 
@@ -14,15 +12,4 @@ router.get(
   getAllOffers,
 );
 
-router.get(
-  '/locks',
-  validation(['dbOffers'], 'query'),
-  getOffersAndLocks,
-);
-
-router.get(
-  '/:id',
-  validation(['dbId'], 'params'),
-  getOfferById,
-);
 module.exports = router;

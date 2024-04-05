@@ -59,7 +59,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
     async (addressId: string, collectionIndexInContract: string) => {
       if (dataAll) {
         const response = await axios.get<TAxiosCollectionData>(
-          `/api/contracts/singleContract/${addressId}`
+          `/api/contracts/${addressId}`
         );
         const exactlyContractData = {
           blockchain: response.data.contract.blockchain,
@@ -80,7 +80,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
     async (addressId: string, token: string) => {
       if (dataAll) {
         const response = await axios.get<TAxiosCollectionData>(
-          `/api/contracts/singleContract/${addressId}`
+          `/api/contracts/${addressId}`
         );
 
         const exactlyTokenData = {

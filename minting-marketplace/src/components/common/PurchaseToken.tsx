@@ -28,7 +28,7 @@ const queryRangeDataFromDatabase = async (
   diamond = false
 ): Promise<undefined | IRangeDataType> => {
   const { success, products } = await rFetch(
-    `/api/contracts/network/${network}/${contractInstance?.address}/products/offers`,
+    `/api/contracts/network/${network}/${contractInstance?.address}/offers`,
     undefined,
     undefined,
     false // disables error messages for this rFetch call, because if this fails, the blockchain query starts

@@ -481,7 +481,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   };
 
   const getCategories = useCallback(async () => {
-    const res = await rFetch(`/api/categories`);
+    const res = await rFetch(`/api/files/categories`);
 
     if (res.success) {
       const categ = res.categories.map((el, index) => {

@@ -14,7 +14,7 @@ const specificOptions = {
 /**
  * Check that a public address has tokens in a product inside a RAIR-ERC721 contract
  * @param  {string} accountAddress      Account to check balance of
- * @param  {string} blockchain          Endpoint where Infura gets connected
+ * @param  {string} blockchain          Blockchain to connect
  * @param  {string} contractAddress     Address of RAIR ERC721 contract
  * @param  {string} productId           Product ID within the contract
  * @param  {string} offerRangeStart     Start of the range to look for
@@ -58,7 +58,7 @@ async function checkBalanceProduct(
 /**
  * Check that a public address has a specific token inside an ERC721 contract
  * @param  {string} accountAddress      Account to check balance of
- * @param  {string} blockchain          Endpoint where Infura gets connected
+ * @param  {string} blockchain          Blockchain to connect
  * @param  {string} contractAddress     Address of RAIR ERC721 contract
  * @param  {string} tokenId             Token to look for
  * @return {boolean}                    Returns true if the account owns the token

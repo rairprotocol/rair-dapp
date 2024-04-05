@@ -91,7 +91,8 @@ module.exports = {
     },
     addMetadata: async (data, name) => {
         try {
-            const { cid } = await s3Upload(name, data);
+            const buffer = Buffer.from(JSON.stringify(data));
+            const { cid } = await s3Upload(name, buffer);
             return cid;
         } catch (error) {
             log.error(error);

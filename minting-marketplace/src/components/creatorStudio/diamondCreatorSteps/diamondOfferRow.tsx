@@ -209,11 +209,6 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
             getter={itemName}
             setter={(value) => updater('offerName', setItemName, value)}
             customClass="form-control rounded-rair"
-            customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: 'inherit',
-              borderColor: `var(--${secondaryColor}-40)`
-            }}
           />
         </div>
       </div>
@@ -248,11 +243,6 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
             type="number"
             min={0}
             customClass="form-control rounded-rair"
-            customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: 'inherit',
-              borderColor: `var(--${secondaryColor}-40)`
-            }}
           />
         </div>
       </div>
@@ -274,11 +264,6 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
             type="number"
             min={+startingToken}
             max={maxCopies}
-            customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: 'inherit',
-              borderColor: `var(--${secondaryColor}-40)`
-            }}
           />
         </div>
       </div>
@@ -290,11 +275,6 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
             setter={(value) => updater('price', setIndividualPrice, value)}
             type="number"
             customClass="form-control rounded-rair"
-            customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: 'inherit',
-              borderColor: `var(--${secondaryColor}-40)`
-            }}
           />
         </div>
         {validateInteger(individualPrice) && (

@@ -143,7 +143,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           };
         }
         const request = await rFetch(
-          `/api/media/update/${fileData._id}`,
+          `/api/files/update/${fileData._id}`,
           {
             method: 'PATCH',
             headers: {

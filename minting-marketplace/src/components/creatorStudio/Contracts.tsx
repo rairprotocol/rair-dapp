@@ -28,7 +28,7 @@ const Contracts = () => {
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const fetchContracts = useCallback(async () => {
-    const response = await rFetch('/api/contracts', undefined, {
+    const response = await rFetch('/api/contracts/factoryList', undefined, {
       provider: programmaticProvider
     });
     if (response.success) {

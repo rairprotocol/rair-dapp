@@ -17,8 +17,4 @@ module.exports = {
         mediaId: Joi.string(),
         zoomId: Joi.string(),
     }),
-    oreIdValidation: () => ({
-        idToken: Joi.string().required(),
-        blockchain: blockchainNetworks.required(),
-    }),
 };

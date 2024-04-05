@@ -25,7 +25,7 @@ const OfferSelector = ({ fileId }) => {
   useEffect(() => {
     (async () => {
       const { success, result } = await rFetch(
-        '/api/v2/contracts/my?itemsPerPage=all'
+        '/api/contracts/my?itemsPerPage=all'
       );
       if (!success) {
         return;
@@ -54,7 +54,7 @@ const OfferSelector = ({ fileId }) => {
     }
     (async () => {
       const { success, data } = await rFetch(
-        `/api/v2/offers?contract=${selectedContract}`,
+        `/api/offers?contract=${selectedContract}`,
         undefined,
         undefined,
         false
@@ -80,7 +80,7 @@ const OfferSelector = ({ fileId }) => {
   );
 
   const sendOffers = useCallback(async () => {
-    const data = await rFetch(`/api/v2/files/${fileId}/unlocks`, {
+    const data = await rFetch(`/api/files/${fileId}/unlocks`, {
       method: 'POST',
       body: JSON.stringify({
         offers: selectedOffers

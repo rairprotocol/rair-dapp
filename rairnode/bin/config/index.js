@@ -142,4 +142,9 @@ module.exports = {
       '0x250': Network.ASTAR_MAINNET,
     },
   },
+  ipfsGateways: {
+    filebase: 'https://rair.myfilebase.com/ipfs/',
+    pinata: 'https://ipfs.io/ipfs/',
+    ipfs: 'https://ipfs.io/ipfs/',
+  }
 };

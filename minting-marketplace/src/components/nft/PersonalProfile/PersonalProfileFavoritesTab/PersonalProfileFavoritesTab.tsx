@@ -25,7 +25,7 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
     setLoading(true);
     try {
       await axios
-        .get('/api/v2/favorites', {
+        .get('/api/favorites', {
           headers: {
             'Content-Type': 'application/json'
           }
@@ -45,7 +45,7 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
       if (currentLikeToken) {
         try {
           await axios
-            .delete(`/api/v2/favorites/${currentLikeToken}`, {
+            .delete(`/api/favorites/${currentLikeToken}`, {
               headers: {
                 'Content-Type': 'application/json'
               }

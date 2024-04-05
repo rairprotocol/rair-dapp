@@ -89,7 +89,7 @@ const ImportExternalContract = () => {
   }, []);
 
   const getUserData = useCallback(async () => {
-    const { success, data } = await rFetch('/api/v2/users/list');
+    const { success, data } = await rFetch('/api/users/list');
     if (success) {
       setUserList(data);
     }
@@ -237,7 +237,7 @@ const ImportExternalContract = () => {
         <button
           onClick={async () => {
             axios
-              .get('/api/v2/users/export', { responseType: 'blob' })
+              .get('/api/users/export', { responseType: 'blob' })
               .then((response) => response.data)
               .then((blob) => {
                 // Create blob link to download
@@ -275,7 +275,7 @@ const ImportExternalContract = () => {
                 <td>
                   <button
                     onClick={async () => {
-                      await rFetch(`/api/v2/users/${user.publicAddress}`, {
+                      await rFetch(`/api/users/${user.publicAddress}`, {
                         method: 'PATCH',
                         body: JSON.stringify({
                           blocked: !user.blocked

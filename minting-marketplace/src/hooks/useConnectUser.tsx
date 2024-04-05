@@ -361,7 +361,7 @@ const useConnectUser = () => {
                 availableData.lastName = userData.name.split(' ')?.[0];
               }
               const newUserResponse = await axios.patch(
-                `/api/v2/users/${loginData.userAddress.toLowerCase()}`,
+                `/api/users/${loginData.userAddress.toLowerCase()}`,
                 availableData
               );
               user = newUserResponse.data.user;

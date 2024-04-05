@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const { ObjectID } = require('mongodb');
-const { Contract, Blockchain, File } = require('../../models');
+const { ObjectId } = require('mongodb');
+const { Contract, Blockchain, File, Product } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const eFactory = require('../../utils/entityFactory');
 const {
@@ -8,6 +8,402 @@ const {
 } = require('../../integrations/ethers/importContractData');
 
 exports.updateContract = eFactory.updateOne(Contract);
+module.exports.offersByNetworkAndAddress = async (req, res, next) => {
+  try {
+    const { contract } = req;
+
+    let products;
+
+    const commonQuery = [
+      { $match: { contract: contract._id } },
+      { $sort: { creationDate: -1 } },
+    ];
+
+    if (contract?.diamond) {
+      products = await Product.aggregate([
+        ...commonQuery,
+        {
+          $lookup: {
+            from: 'Offer',
+            let: {
+              contr: '$contract',
+              prod: '$collectionIndexInContract',
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contr',
+                        ],
+                      },
+                      {
+                        $eq: [
+                          '$product',
+                          '$$prod',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: 'offers',
+          },
+        },
+      ]);
+    } else {
+      products = await Product.aggregate([
+        ...commonQuery,
+        {
+          $lookup: {
+            from: 'OfferPool',
+            let: {
+              contr: '$contract',
+              prod: '$collectionIndexInContract',
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contr',
+                        ],
+                      },
+                      {
+                        $eq: [
+                          '$product',
+                          '$$prod',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: 'offerPool',
+          },
+        },
+        { $unwind: '$offerPool' },
+        {
+          $lookup: {
+            from: 'Offer',
+            let: {
+              offerPoolL: '$offerPool.marketplaceCatalogIndex',
+              contractL: '$contract',
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contractL',
+                        ],
+                      },
+                      {
+                        $eq: [
+                          '$offerPool',
+                          '$$offerPoolL',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: 'offers',
+          },
+        },
+      ]);
+    }
+
+    res.json({ success: true, products });
+  } catch (err) {
+    next(err);
+  }
+}
+module.exports.findContractByNetworkAndAddress = async (req, res, next) => {
+  try {
+    res.json({ success: true, contract: req.contract });
+  } catch (e) {
+    next(e);
+  }
+};
+module.exports.productsByNetworkAndAddress = async (req, res, next) => {
+  try {
+    const { contract } = req;
+    const products = await Product.find({ contract: contract._id });
+    res.json({ success: true, products });
+  } catch (err) {
+    next(err);
+  }
+}
+module.exports.searchContractByNetworkAndAddress = async (req, res, next) => {
+  const contract = await Contract.findOne({
+    contractAddress: req.params.contractAddress.toLowerCase(),
+    blockchain: req.params.networkId,
+  });
+
+  if (!contract) {
+    return next(new AppError('Contract not found.', 404));
+  }
+
+  req.contract = contract;
+
+  return next();
+},
+exports.importExternalContract = async (req, res, next) => {
+  try {
+    const { networkId, contractAddress, limit, contractCreator } = req.body;
+    const { success, result, message } = await importContractData(
+      networkId,
+      contractAddress,
+      limit,
+      contractCreator,
+      req.user.publicAddress,
+    );
+    return res.json({ success, result, message });
+  } catch (err) {
+    log.error(err);
+    return next(err);
+  }
+},
+exports.fullListOfContracts = async (req, res, next) => {
+  try {
+    const {
+      pageNum = '1',
+      itemsPerPage = '20',
+      blockchain = '',
+      category = [],
+      hidden = false,
+      contractTitle = '',
+    } = req.query;
+    const pageSize = parseInt(itemsPerPage, 10);
+    const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+    const blockchainArr = blockchain === '' ? [] : blockchain.split(',');
+
+    const options = [];
+
+    const lookupProduct = {
+      $lookup: {
+        from: 'Product',
+        let: {
+          contr: '$_id',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ['$contract', '$$contr'],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'products',
+      },
+    };
+    options.push(lookupProduct, { $unwind: '$products' });
+
+    if (category.length > 0) {
+      const categoryIds = category.map((cat) => new ObjectId(cat));
+      const matchingMedia = await File.aggregate([
+        {
+          $match: {
+            category: {
+              $in: categoryIds,
+            },
+          },
+        }, {
+          $lookup: {
+            from: 'Unlock',
+            localField: '_id',
+            foreignField: 'file',
+            as: 'unlockData',
+          },
+        }, {
+          $lookup: {
+            from: 'Offer',
+            localField: 'unlockData.offers',
+            foreignField: '_id',
+            as: 'unlockData.offers',
+          },
+        },
+      ]);
+
+      const matchingContractsForCategory = matchingMedia
+        .filter((item) => !!item?.unlockData?.offers?.length)
+        .reduce((result, item) => {
+          const contractsForVideos = item.unlockData.offers.map((offer) => offer.contract);
+          return [...result, ...contractsForVideos];
+        }, []);
+
+      options.push({
+        $match: {
+          _id: { $in: matchingContractsForCategory },
+        },
+      });
+    }
+
+    options.push(
+      {
+        $lookup: {
+          from: 'OfferPool',
+          let: {
+            contr: '$_id',
+            prod: '$products.collectionIndexInContract',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $eq: ['$contract', '$$contr'],
+                    },
+                    {
+                      $eq: ['$product', '$$prod'],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'offerPool',
+        },
+      },
+      {
+        $unwind: {
+          path: '$offerPool',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'Offer',
+          let: {
+            prod: '$products.collectionIndexInContract',
+            contractL: '$_id',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $eq: ['$contract', '$$contractL'],
+                    },
+                    {
+                      $eq: ['$product', '$$prod'],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'products.offers',
+        },
+      },
+      {
+        $match: {
+          $or: [
+            { diamond: true, 'products.offers': { $not: { $size: 0 } } },
+            {
+              diamond: { $in: [false, undefined] },
+              offerPool: { $ne: null },
+              'products.offers': { $not: { $size: 0 } },
+            },
+          ],
+        },
+      },
+    );
+
+    const blockchainFilter = {
+      display: { $ne: false },
+    };
+    if (blockchainArr?.length >= 1) {
+      blockchainFilter.hash = [...blockchainArr];
+    }
+    const foundBlockchain = await Blockchain.find(blockchainFilter);
+
+    options.unshift({
+      $match: {
+        blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
+      },
+    });
+    if (foundBlockchain.length === 0 && blockchain.length >= 1) {
+      return next(new AppError('Invalid blockchain.', 404));
+    }
+
+    if (!hidden) {
+      options.unshift({
+        $match: {
+          blockView: false,
+        },
+      });
+    }
+    if (contractTitle !== '') {
+      options.unshift({
+        $match: {
+          title: { $regex: contractTitle, $options: 'i' },
+        },
+      });
+    }
+
+    const totalNumber = _.chain(
+      await Contract.aggregate(options).count('contracts'),
+    )
+      .head()
+      .get('contracts', 0)
+      .value();
+
+    const contracts = await Contract.aggregate(options)
+      .sort({ 'products.name': 1 })
+      .skip(skip)
+      .limit(pageSize);
+
+    return res.json({ success: true, contracts, totalNumber });
+  } catch (e) {
+    return next(e);
+  }
+},
+exports.contractListForFactory = async (req, res, next) => {
+  try {
+    const { publicAddress: user, superAdmin } = req.user;
+    const foundBlockchain = await Blockchain.find({
+      display: { $ne: false },
+    });
+    const contractQuery = {
+      blockView: false,
+      blockchain: foundBlockchain.map((chain) => chain.hash),
+    };
+    if (!superAdmin) {
+      contractQuery.user = user;
+    }
+    const contracts = await Contract.find(contractQuery, {
+      _id: 1,
+      contractAddress: 1,
+      title: 1,
+      blockchain: 1,
+      diamond: 1,
+    });
+    return res.json({ success: true, contracts });
+  } catch (e) {
+    return next(e);
+  }
+}
 
 exports.getAllContracts = async (req, res, next) => {
   const {
@@ -19,6 +415,11 @@ exports.getAllContracts = async (req, res, next) => {
   const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
   const clearFilter = {};
+  if (query.external === 'true') {
+    query.external = true;
+  } else if (query.external === 'false') {
+    query.external = false;
+  }
   Object.keys(query).forEach((item) => {
     if (query[item] !== undefined) {
       clearFilter[item] = query[item];
@@ -53,33 +454,6 @@ exports.getAllContracts = async (req, res, next) => {
   const result = await Contract.aggregate([...pipeline]);
 
   res.json({ success: true, result, totalCount: count[0]?.totalCount });
-};
-
-// Returns all contracts associated with a video with the specified category
-exports.getContractByCategory = async (req, res, next) => {
-  const { id } = req.params;
-  const { pageNum = '1', itemsPerPage = '20' } = req.query;
-  const pageSize = parseInt(itemsPerPage, 10);
-  const skip = (parseInt(pageNum, 10) - 1) * pageSize;
-
-  const foundBlockchain = await Blockchain.find({
-    display: { $ne: false },
-  });
-  const contractList = (await File.find({ category: id })).sort({ title: 1 })
-    .map((item) => item.contract);
-  const results = await Contract.find({
-    _id: { $in: contractList },
-    blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
-  })
-    .skip(skip)
-    .limit(pageSize);
-  const totalCount = await Contract.find({ _id: { $in: contractList } }).countDocuments();
-
-  res.json({
-    success: true,
-    totalCount,
-    contracts: results,
-  });
 };
 
 exports.getContractById = async (req, res, next) => {
@@ -127,146 +501,32 @@ exports.queryMyContracts = async (req, res, next) => {
   }
 };
 
-// create like method
-exports.importContractsMoralis = async (req, res, next) => {
-  try {
-    const { networkId, contractAddress, limit } = req.body;
-    const { success, result, message } = await importContractData(
-      networkId,
-      contractAddress,
-      limit,
-      req.user, // jwtverify provides
-    );
-    return res.json({ success, result, message });
-  } catch (err) {
-    return next(err);
-  }
-};
 exports.getSpecificContracts = async (req, res, next) => {
   try {
-    let contract;
-    if (
-      (req.query.contractAddress && req.query.networkId) ||
-      req.query.contract
-    ) {
-      contract = await Contract.findOne(
-        req.query.contract
-          ? { _id: ObjectID(req.query.contract) }
-          : {
-              contractAddress: req.query.contractAddress.toLowerCase(),
-              blockchain: req.query.networkId,
-            },
-      );
+    let foundContract;
+    const { contractAddress, networkId, contract } = req.query;
+    if (contract) {
+      foundContract = await Contract.findById(contract);
+    } else if (contractAddress && networkId) {
+      foundContract = await Contract.findOne({
+        contractAddress,
+        blockchain: networkId
+      });
+      req.query.contractAddress = undefined;
+      req.query.networkId = undefined;
     } else {
       return next(new AppError('Cannot find contract: missing params', 400));
     }
-
-    if (_.isEmpty(contract)) {
+    if (!foundContract) {
       return next(new AppError('Contract not found.', 404));
     }
 
-    req.contract = contract;
-    if (!req.query.contract) req.query.contract = contract._id;
+    req.contract = foundContract;
+    if (!req.query.contract) {
+      req.query.contract = foundContract._id;
+    }
 
     return next();
-  } catch (e) {
-    return next(e);
-  }
-};
-
-exports.getFullContracts = async (req, res, next) => {
-  try {
-    const {
-      pageNum = '1',
-      itemsPerPage = '20',
-      blockchain = '',
-      contractAddress = '',
-      contractId = '',
-      addOffers = true,
-      addLocks = false,
-    } = req.query;
-    const pageSize = parseInt(itemsPerPage, 10);
-    const skip = (parseInt(pageNum, 10) - 1) * pageSize;
-    const blockchainArr = blockchain.split(',');
-    const contractAddressArr = contractAddress.split(',');
-    const contractIdArr = contractId.split(',');
-    const addOffersFlag = addOffers * 1;
-    const addLocksFlag = addLocks * 1;
-    const options = [...Contract.lookupProduct];
-
-    if (addLocksFlag) {
-      options.push(...Contract.lookupLockedTokens);
-    }
-    if (addOffersFlag) {
-      options.push(...Contract.lookupOfferAndOfferPoolsAggregationOptions);
-    }
-    const blockchainFilter = {
-      display: { $ne: false },
-    };
-    if (blockchainArr) {
-      blockchainFilter.hash = [...blockchainArr];
-    }
-    const foundBlockchain = await Blockchain.find(blockchainFilter);
-    options.unshift({
-      $match: {
-        blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
-      },
-    });
-    if (contractIdArr.length >= 1 && contractIdArr[0] !== '') {
-      const optionIds = [];
-      contractIdArr.reduce(
-        (prev, curr) => optionIds.push(new ObjectID(curr)),
-        {},
-      );
-      options.unshift({
-        $match: {
-          _id: {
-            $in: [...optionIds],
-          },
-        },
-      });
-    }
-    if (contractAddressArr.length >= 1 && contractAddressArr[0] !== '') {
-      options.unshift({
-        $match: {
-          contractAddress: {
-            $in: [...contractAddressArr],
-          },
-        },
-      });
-    }
-    const blockOption = [
-      {
-        $match: {
-          blockView: {
-            $ne: true,
-          },
-        },
-      },
-      { $project: { blockView: 0, blockSync: 0 } },
-    ];
-    if (req.user) {
-      if (!req.user.superAdmin) {
-        options.unshift(...blockOption);
-      }
-    } else {
-      options.unshift(...blockOption);
-    }
-    const totalNumber = _.chain(
-      await Contract.aggregate(options).count('contracts'),
-    )
-      .head()
-      .get('contracts', 0)
-      .value();
-
-    const contracts = await Contract.aggregate(options)
-      .sort({ 'products.name': 1 })
-      .skip(skip)
-      .limit(pageSize);
-    if (totalNumber === 0) {
-      return next(new AppError('No contracts found', 404));
-    }
-    return res.json({ success: true, totalNumber, contracts });
   } catch (e) {
     return next(e);
   }

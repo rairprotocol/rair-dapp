@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const Socket = require('socket.io');
@@ -13,7 +12,6 @@ const redis = require('redis');
 const seedDB = require('./seeds');
 const log = require('./utils/logger')(module);
 const StartHLS = require('./hls-starter');
-const models = require('./models');
 const redisService = require('./services/redis');
 const streamRoute = require('./routes/stream');
 const apiV1Routes = require('./routes');
@@ -23,14 +21,13 @@ const { textPurify } = require('./utils/helpers');
 const { appSecretManager, vaultAppRoleTokenManager } = require('./vault');
 
 const config = require('./config');
-const gcp = require('./integrations/gcp');
 
 const { mongoConnectionManager } = require('./mongooseConnect');
 
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
 
 async function main() {
-  const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails', './bin/banners'];
+  const mediaDirectories = ['./bin/banners'];
 
   // Create Redis client
   const client = redis.createClient({
@@ -60,9 +57,7 @@ async function main() {
 
   const context = {
     hls,
-    db: models,
     config,
-    gcp: gcp(config),
     textPurify,
     redis: {
       client,
@@ -100,16 +95,15 @@ async function main() {
       },
     }),
   );
-  app.use(
-    '/thumbnails',
-    express.static(path.join(__dirname, 'Videos/Thumbnails')),
-  );
   app.use('/stream', streamRoute(context));
-  app.use('/api', (req, res, next) => {
-    req.redisService = context.redis.redisService;
-    return next();
-  }, apiV1Routes(context));
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(
+    '/api',
+    (req, res, next) => {
+      req.redisService = context.redis.redisService;
+      return next();
+    },
+    apiV1Routes
+  );
   app.use(mainErrorHandler);
 
   const server = app.listen(config.port, () => {

@@ -27,7 +27,7 @@ const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
 
   const getTokenData = useCallback(async () => {
     const response = await rFetch(
-      `/api/v2/tokens/${item._id}`,
+      `/api/tokens/id/${item._id}`,
       undefined,
       undefined,
       undefined

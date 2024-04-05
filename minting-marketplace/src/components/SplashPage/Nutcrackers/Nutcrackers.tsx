@@ -72,7 +72,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
     }
 
     const { success, products } = await rFetch(
-      `/api/contracts/network/0x89/${nutcrackerAddress}/products/offers`
+      `/api/contracts/network/0x89/${nutcrackerAddress}/offers`
     );
     if (success && contractCreator && minterInstance) {
       const instance = contractCreator(nutcrackerAddress, erc721Abi);

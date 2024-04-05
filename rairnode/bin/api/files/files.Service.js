@@ -1,5 +1,21 @@
-const { File, MintedToken, Unlock, Offer } = require('../../models');
+const {
+  File,
+  MintedToken,
+  Unlock,
+  Offer,
+  Category,
+  User,
+  Blockchain,
+  Contract,
+} = require('../../models');
+const _ = require('lodash');
+const { ObjectId } = require('mongodb');
+const log = require('../../utils/logger')(module);
 const AppError = require('../../utils/errors/AppError');
+const { removePin } = require('../../integrations/ipfsService');
+const { checkFileAccess } = require('../../utils/helpers');
+const config = require('../../config');
+const gcp = require('../../integrations/gcp')(config);
 
 exports.isFileOwner = async (req, res, next) => {
   const { publicAddress, superAdmin } = req.user;
@@ -14,21 +30,209 @@ exports.isFileOwner = async (req, res, next) => {
   return next();
 };
 
-exports.getFiles = async (req, res) => {
-  const { query } = req;
-  const dataQuery = {
-    ...query,
-  };
-  if (!req.session.userData.superAdmin) {
-    dataQuery.uploader = req.session.userData.publicAddress;
-  }
-  const result = await File.find(dataQuery).sort({ title: 1 }).populate({ path: 'category', model: 'Category' });
+exports.listMedia = async (req, res, next) => {
+  try {
+    const {
+      pageNum = '1',
+      itemsPerPage = '20',
+      blockchain = '',
+      category = [],
+      userAddress = '',
+      contractAddress = '',
+      contractTitle = '',
+      mediaTitle = '',
+    } = req.query;
+    const pageSize = parseInt(itemsPerPage, 10);
+    const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
-  return res.status(200).json({
-    success: true,
-    data: result,
-  });
-};
+    const foundUser = await User.findOne({ publicAddress: userAddress });
+
+    const blockchainQuery = {
+      display: { $ne: false },
+    };
+    if (blockchain) {
+      blockchainQuery.hash = blockchain;
+    }
+
+    const foundBlockchain = await Blockchain.find(blockchainQuery);
+    const contractQuery = {
+      blockView: false,
+    };
+    if (foundBlockchain.length !== undefined) {
+      contractQuery.blockchain = { $in: foundBlockchain.map((chain) => chain.hash) };
+    }
+    if (contractAddress) {
+      contractQuery.contractAddress = contractAddress;
+    }
+    if (contractTitle) {
+      contractQuery.title = { $regex: contractTitle, $options: 'i' };
+    }
+    const arrayOfContracts = await Contract.find(contractQuery).distinct(
+      '_id',
+    );
+    const matchData = {
+      $or: [{
+        'unlockData.offers.contract': {
+          $in: arrayOfContracts,
+        },
+      }, {
+        demo: true,
+      }],
+      hidden: { $ne: true },
+    };
+
+    if (category.length) {
+      matchData.category = { $in: category.map((cat) => new ObjectId(cat)) };
+    }
+
+    if (foundUser) {
+      matchData.uploader = userAddress;
+    }
+
+    if (mediaTitle !== '') {
+      matchData.title = { $regex: mediaTitle, $options: 'i' };
+    }
+
+    const pipeline = [
+      {
+        $lookup: {
+          from: 'Unlock',
+          localField: '_id',
+          foreignField: 'file',
+          as: 'unlockData',
+        },
+      }, {
+        $lookup: {
+          from: 'Offer',
+          localField: 'unlockData.offers',
+          foreignField: '_id',
+          as: 'unlockData.offers',
+        },
+      },
+      {
+        $match: matchData,
+      },
+      {
+        $project: {
+          key: false,
+          encryptionType: false,
+          totalEncryptedFiles: false,
+          extension: false,
+        },
+      }, {
+        $sort: {
+          title: 1,
+        },
+      },
+    ];
+
+    let data = (await File.aggregate([
+      ...pipeline,
+      { $skip: skip },
+      { $limit: pageSize },
+    ]));
+
+    const [countResult] = await File.aggregate([...pipeline, { $count: 'totalCount' }]);
+
+    const { totalCount } = countResult || 0;
+
+    // verify the user have needed tokens for unlock the files
+    data = await checkFileAccess(data, req.user);
+
+    const list = _.chain(data)
+      .reduce((result, value) => {
+      // eslint-disable-next-line no-param-reassign
+        result[value._id] = value;
+        return result;
+      }, {})
+      .value();
+
+    return res.json({ success: true, list, totalNumber: totalCount });
+  } catch (e) {
+    log.error(e);
+    return next(e.message);
+  }
+},
+
+exports.deleteMedia = async (req, res, next) => {
+  try {
+    const { mediaId } = req.params;
+
+    const fileData = await File.findOne({ _id: mediaId });
+
+    let deleteResponse;
+    if (!fileData.storage) {
+      log.error(`Can't tell where media ID ${mediaId} is stored, will not unpin/delete from storage, just from DB`);
+      deleteResponse = { success: true };
+    } else {
+      switch (fileData.storage) {
+        case 'gcp':
+          deleteResponse = await gcp.removeFile(config.gcp.videoBucketName, mediaId);
+        break;
+        case 'ipfs':
+          deleteResponse = await removePin(mediaId);
+        break;
+        default:
+          log.error(`Unknown storage type for media ID ${mediaId} : ${fileData.storage}`);
+        break;
+      }
+    }
+
+    if (deleteResponse.success) {
+      await File.deleteOne({ _id: mediaId });
+      await Unlock.deleteMany({ file: mediaId });
+      log.info(`File with ID: ${mediaId}, was removed from DB.`);
+      res.json({
+        success: true,
+      });
+      return;
+    }
+
+    res.json({
+      success: false,
+      message: deleteResponse.response,
+    });
+  } catch (err) {
+    next(err);
+  }
+},
+
+exports.updateMedia = async (req, res, next) => {
+  try {
+    const { mediaId } = req.params;
+
+    // eslint-disable-next-line no-unused-vars
+    const { _id, ...cleanBody } = req.body;
+
+    if (!req.user.adminRights) {
+      // eslint-disable-next-line no-unused-vars
+      const { contract, offer, product, demo, bodyForNonAdmins } = cleanBody;
+      req.body = bodyForNonAdmins;
+    }
+
+    const updateRes = await File.updateOne({ _id: mediaId }, cleanBody);
+
+    if (!updateRes.acknowledged) {
+      return res.json({ success: false, message: 'An error has ocurred' });
+    }
+    if (updateRes.matchedCount === 1 && updateRes.modifiedCount === 0) {
+      return res.json({ success: false, message: 'Nothing to update' });
+    }
+    log.info(`File with ID: ${mediaId}, was updated on DB.`);
+    return res.json({ success: true });
+  } catch (err) {
+    return next(err);
+  }
+},
+
+exports.listCategories = async (req, res, next) => {
+  try {
+      const categories = await Category.find();
+      res.json({ success: true, categories });
+  } catch (e) {
+      next(e);
+  }
+}
 
 exports.getFile = async (req, res, next) => {
   const { id } = req.params;

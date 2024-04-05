@@ -47,10 +47,10 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
     if (currentUserAddress !== undefined) {
       setLoading(true);
       const firstData = await rFetch(
-        `/api/media/list?userAddress=${currentUserAddress}&itemsPerPage=1`
+        `/api/files/list?userAddress=${currentUserAddress}&itemsPerPage=1`
       );
       const { success, list, error } = await rFetch(
-        `/api/media/list?userAddress=${currentUserAddress}&itemsPerPage=${
+        `/api/files/list?userAddress=${currentUserAddress}&itemsPerPage=${
           firstData.totalNumber || '1'
         }`
       );

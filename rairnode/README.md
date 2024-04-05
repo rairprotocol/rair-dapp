@@ -1,172 +1,186 @@
-# `decrypt-node`
+# RAIR backend
 
-> TODO: description
+Main backend component for a RAIR system, mainly focused on API calls, small IPFS uploads and database queries.  
+For the backend component in charge of processing blockchain data, see Syncing Service.  
+For the backend component in charge of video uploading and processing, see Media Service.  
 
-## Usage
+Reliant on Express, Mongoose and Alchemy for it's various functionalities.  
 
+# Setup
+Provide all necessary environment variables and then
 ```
-const decryptNode = require('decrypt-node');
-
-// TODO: DEMONSTRATE API
+    npm i && npm start
 ```
+Alternatively you can use the provided Dockerfile to create an image.  
+The benefits of using the Dockerfile are that it uses the latest OFAC list.
 
-# `Docker Implementation -in progress
-
-This will build the rair node, but IPFS will not be functioning locally, as additional configuration is necesary to communicate outside of the container.  This is currently observing an external IPFS cluster, as noted in the .env file.
-
-docker build -t rairnode .
-
-docker run -it --rm -p 5000:5000 -p 3000:3000 -p 5001:5001 -p 4001:4001 -p 8080:8080 rairnode
-
-Optionally, use -d flag to run as a daemon
-
-# Usage of the IPFS Service
-
-For switching between different IPFS services have to be changed environment variable `IPFS_SERVICE`
-
-Supported options:
- - **ipfs** - native IPFS service;
- - **pinata** - Pinata cloud;
-
-# Usage admin NFT
-
-Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file 
-
-# Redis
-
-For correct work of Redis we have to set
-
-`REDIS_HOST=rair-redis`
-
-`REDIS_PORT=6379`
-
-# Sessions
-
-For correct work of sessions we need to set
-
-`SESSION_SECRET` - any string
-
-`SESSION_TTL` - number of hours (**default 12**)
-
-# Sentry
-
-Logs to Sentry will collect only for Production environment
-
-`PRODUCTION` - has to be "true"
-
-`SENTRY_DSN` - should be provided Sentry Data Source Name
-
-# Super Admin rights
-
-Provide ability to make some specific actions on the platform
-
-`SUPER_ADMIN_VAULT_STORE` - key of the list of user public addresses on the Vault storage
+# Environment variables
+| Name | Description |
+| --- | --- |
+| PRODUCTION | Enable / disable production mode |
+| MONGO_URI | URI for database in production mode |
+| MONGO_URI_LOCAL | URI for database in development mode |
+| MONGO_DB_HOSTNAME | Database hostname |
+| MONGO_DB_NAME | Database name |
+| GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL |  |
+| USE_X509_CERT_AUTH |  |
+| PINATA_KEY | (Deprecated) Piñata API key |
+| PINATA_SECRET | (Deprecated) Piñata Secret |
+| ADMIN_NETWORK | Admin blockchain |
+| ADMIN_CONTRACT | Admin contract |
+| SUPER_ADMIN_VAULT_STORE | Vault data for Super Admin List |
+| SERVICE_HOST | Service hostname |
+| DEFAULT_PRODUCT_COVER | Url for default product cover |
+| GCP_PROJECT_ID |  |
+| GCP_IMAGE_BUCKET_NAME |  |
+| GCP_VIDEO_BUCKET_NAME |  |
+| GCP_GATEWAY |  |
+| GCP_CREDENTIALS |  |
+| IPFS_SERVICE |  |
+| IPFS_GATEWAY |  |
+| IPFS_API |  |
+| PINATA_GATEWAY |  |
+| MATIC_TESTNET_RPC |  |
+| MATIC_MAINNET_RPC |  |
+| BINANCE_MAINNET_RPC |  |
+| BINANCE_TESTNET_RPC |  |
+| ETHEREUM_MAINNET_RPC |  |
+| ETHEREUM_TESTNET_GOERLI_RPC |  |
+| ASTAR_MAINNET_RPC |  |
+| MONGO_LOG_COLLECTION |  |
+| LOG_LEVEL |  |
+| VAULT_URL |  |
+| VAULT_RAIRNODE_APP_ROLE_ID |  |
+| VAULT_RAIRNODE_APP_ROLE_SECRET_ID |  |
+| REDIS_HOST |  |
+| REDIS_PORT |  |
+| SESSION_SECRET |  |
+| SESSION_TTL |  |
+| SENTRY_DSN |  |
+| BASE_BCN_URL |  |
+| ZOOM_API_KEY |  |
+| ZOOM_API_SECRET |  |
+| ALCHEMY_API_KEY |  |
+| WITHDRAWER_PRIVATE_KEY |  |
+| APP_NAME |  |
+| GOERLI_DIAMOND_MARKETPLACE_ADDRESS |  |
+| MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS |  |
+| MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS |  |
+| ASTAR_DIAMOND_MARKETPLACE_ADDRESS |  |
+| AWS_ACCESS_KEY_ID |  |
+| AWS_SECRET_ACCESS_KEY |  |
+| FILEBASE_BUCKET |  |
+| YOTI_CLIENT_ID |  |
 
 
 # API
+* /api
+    * /analytics
+        * [x] /:mediaId - GET - Fetch analytics data for a media file ([details](readme/current/analytics/file_analytics.md))
+        * [x] /:mediaId/csv - GET - Export analytics of a media file as a CSV file ([details](readme/current/analytics/file_analytics_csv.md))
+    * /auth
+        * [x] /get_challenge - POST - Generate signature challenge for web3 wallets ([details](readme/current/auth/auth_challenge.md))
+        * [x] /login/ - POST - Verify the signed message from a web3 wallet ([details](readme/current/auth/auth_login.md))
+        * [x] /loginSmartAccount - POST - Verify signed message from Alchemy Smart Account ([details](readme/current/auth/auth_login.md))
+        * [x] /logout/ - GET - Close session from current user ([details](readme/current/auth/auth_logout.md))
+        * [x] /me/ - GET - Get information of current user ([details](readme/current/auth/auth_current.md))
+        * [x] /stream/out - GET - Stop decryption for current media file ([details](readme/current/auth/auth_streamout.md))
+        * [x] /unlock/ - POST - Verify NFT ownership to unlock media file ([details](readme/current/auth/auth_unlock.md))
+    * /credits
+        * [x] /:blockchain/:tokenAddress - GET - Query balance in a specific blockchain and token ([details](readme/current/credits/credits_balance.md))
+        * [x] /withdraw - POST - Withdraw tokens ([details](readme/current/credits/credits_withdraw.md))
+    * /contracts
+        * [x] / - GET - Get all contracts ([details](readme/current/contracts/contracts_get_all.md))
+        * [x] /:id - GET - Get a specific contract ([details](readme/current/contracts/contracts_get_single.md))
+        * [x] /:id - PATCH - Update the contract's display or syncing flags ([details](readme/current/contracts/contracts_update_single.md))
+        * [x] /factoryList - GET - Summarized list of contracts for the factory ([details](readme/current/contracts/contracts_get_factory.md))
+        * [x] /full - GET - Full contract list with information about products and offers ([details](readme/current/contracts/contracts_get_full.md))
+        * [x] /import/ - POST - Import an external contract ([details](readme/current/contracts/contracts_import.md))
+        * [x] /my - GET - Get all contracts deployed by the current user ([details](readme/current/contracts/contracts_get_user.md))
+        * [x] /network/:networkId/:contractAddress - GET - Find a specific contract given a network and address ([details](readme/current/contracts/contracts_get_manual.md))
+            * [x] /products - GET - List products from found contract ([details](readme/current/contracts/contracts_get_manual_products.md))
+                * [x] /offers - GET - List products and offers from found contract ([details](readme/current/contracts/contracts_get_manual_offers.md))
+    * [x] /favorites
+        * [x] / - POST - Create a favorite token for the current user ([details](readme/current/favorites/favorites_create.md))
+        * [x] / - GET - Get all favorited tokens by the current user ([details](readme/current/favorites/favorites_list.md))
+        * [x] /:userAddress - GET - Get the favorites for a current user ([details](readme/current/favorites/favorites_user.md))
+        * [x] /:id - DELETE - Delete a favorite ([details](readme/current/favorites/favorites_delete.md))
+    * [x] /files
+        * [x] /update/:mediaId - PATCH - Update general information about a file ([details](readme/current/files/files_update.md))
+        * [x] /remove/:mediaId - DELETE - Delete and unpin a file ([details](readme/current/files/files_delete.md))
+        * [x] /list - List all media files ([details](readme/current/files/files_list.md))
+        * [x] /byId/:id - GET - Fetch information about a single file ([details](readme/current/files/files_get_id.md))
+        * [x] /byId/:id - PUT - Update access information about a single file ([details](readme/current/files/files_update_id.md))
+        * [x] /byCategory/:id - List all files under a specific category ([details](readme/current/files/files_category_search.md))
+        * [x] /forToken/:id - List all files associated with a token ([details](readme/current/files/files_token_search.md))
+        * [x] /categories - List all available categories ([details](readme/current/files/files_categories.md))
+        * [x] /:id/unlocks - GET - Get all offers associated with a file ([details](readme/current/files/files_unlocks_get.md))
+        * [x] /:id/unlocks - POST - Update offers associated with a file ([details](readme/current/files/files_unlocks_add.md))
+        * [x] /:id/unlocks - DELETE - Remove an unlock from a file ([details](readme/current/files/files_unlocks_remove.md))
+    * [x] /nft
+        * [x] / - POST - Upload CSV file to populate metadata ([details](readme/current/nft/nft_upload_csv.md))
+        * [x] / - GET - Get all tokens owned by the current user ([details](readme/current/nft/nft_get_current.md))
+        * [x] /:userAddress - GET - Get tokens owned by a user ([details](readme/current/nft/nft_get_user.md))
+        * [x] /csv/sample - GET - Download the sample CSV for metadata population ([details](readme/current/nft/nft_get_csv_sample.md))
+        * [x] /pinningMultiple - POST - Pin all NFT metadata to the current IPFS service ([details](readme/current/nft/nft_pin_multiple.md))
+        * [x] /network/:networkId/:contract/:product
+            * [x] / - GET - Get the tokens in product ([details](readme/current/nft/nft_manual_product.md))
+            * [x] /attributes - GET - Get all attributes from the NFTs in a product ([details](readme/current/nft/nft_manual_attributes.md))
+            * [x] /files - GET - Get all files associated with the product ([details](readme/current/nft/nft_manual_files.md))
+            * [x] /files/:token - GET - Get all files associated with a token in the product ([details](readme/current/nft/nft_manual_files_token.md))
+            * [x] /offers - GET - Get the product data and the offers associated ([details](readme/current/nft/nft_manual_offers.md))
+            * [x] /locks - GET - Get the offers with locks associated to the product ([details](readme/current/nft/nft_manual_locks.md))
+            * [x] /token/:token
+                * [x] / - GET - Get data of a single token ([details](readme/current/nft/nft_get_single_index.md))
+                * [x] / - POST - Update the metadata for a single token ([details](readme/current/nft/nft_update_metadata.md))
+                * [x] /pinning - POST - Pin the metadata of a single token ([details](readme/current/nft/nft_pin_metadata.md))
+    * [x] /offers
+        * [x] / - GET - Get all offers ([details](readme/current/offers/offers_list.md))
+    * [x] /products
+        * [x] / - GET - Get all products ([details](readme/current/products/products_list.md))
+        * [x] /user/:userAddress - GET - Get all products from an user ([details](readme/current/products/products_user_list.md))
+        * [x] /:id - GET - Get a single product's data ([details](readme/current/products/products_single.md))
+        * [x] /:id - POST - Set the product's banner ([details](readme/current/products/products_set_banner.md))
+    * [x] /resales
+        * [x] /open - GET - List all open resale offers ([details](readme/current/resales/resales_open.md))
+        * [x] /purchase/:id - GET - Purchase a resale offer ([details](readme/current/resales/resales_purchase.md))
+        * [x] /create - POST - Create a resale offers ([details](readme/current/resales/resales_create.md))
+        * [x] /update - PUT - Update a resale offer ([details](readme/current/resales/resales_update.md))
+        * [x] /delete/:id - DELETE - Delete a resale offer ([details](readme/current/resales/resales_delete.md))
+    * [x] /search
+        * [x] /:textParam - GET - Get paginated result of text search ([details](readme/current/search/search_simple.md))
+        * [x] /:textParam/all - GET - Get all results of text search ([details](readme/current/search/search_full.md))
+    * [x] /settings
+        * [x] / - GET - Get all settings ([details](readme/current/settings/settings_get.md))
+        * [x] /theme - GET - Get all settings related to color and theme ([details](readme/current/settings/settings_get_theme.md))
+        * [x] /featured - GET - Get featured collection ([details](readme/current/settings/settings_get_featured.md))
+        * [x] /appLogo - POST - Upload custom logos ([details](readme/current/settings/settings_set_logos.md))
+        * [x] / - POST - Set settings ([details](readme/current/settings/settings_set_settings.md))
+        * [x] /:blockchain - PUT - Set settings for a specific blockchain ([details](readme/current/settings/settings_update_blockchain.md))
+    * [x] /tokens
+        * [x] / - GET - Search tokens ([details](readme/current/tokens/tokens_list.md))
+        * [x] /id/:id - GET - Get data for a specific token ([details](readme/current/tokens/tokens_single.md))
+        * [x] /tokenNumbers - GET - Get all tokens on a specific contract and offer ([details](readme/current/tokens/tokens_numbers.md))
+        * [x] /:token - GET - Get information for a single token ([details](readme/current/tokens/tokens_single_number.md))
+    * [x] /transaction/:network/:hash - POST - Process a blockchain transaction ([details](readme/current/transactions/transaction_hash.md))
+    * [x] /users
+        * [x] /list - GET - List all users ([details](readme/current/users/users_list.md))
+        * [x] /export - GET - Export all users as a CSV file ([details](readme/current/users/users_export.md))
+        * [x] /verify-age - POST - Use Yoti services to verify the user's age ([details](readme/current/users/users_yoti_check.md))
+        * [x] / - Create user at login ([details](readme/current/users/users_create.md))
+        * [x] /:publicAddress - GET - Get information from a single user ([details](readme/current/users/users_get.md))
+        * [x] /:publicAddress - PATCH - Update user information ([details](readme/current/users/users_update.md))
+    * [x] /upload
+        * [x] /validate - GET - Validate information for the media file ([details](readme/current/upload/upload_validate.md))
+        * [x] /file - POST - Insert a media file in the database ([details](readme/current/upload/upload_file.md))
 
-* [x] /api
-    * [x] /analytics/:mediaId - GET - Return analytics data for a media file, [see details here](readme/current/v1/analytics/get_analytics.md)
-    * [x] /transaction/:network/:hash - POST - Process the transaction hash given, [see details here](readme/current/v1/transaction/get_transaction.md)
-    * [x] /blockchains - GET - get blockchains list, [see details here](readme/current/v1/blockchains/get_blockchains.md)
-    * [x] /categories - GET - get categories list, [see details here](readme/current/v1/categories/get_categories.md)
-    * [x] /search - POST - [DEPRCIATED] searching by files, products, users, [see details here](readme/depreciated/unsorted/search.md)
-    * [x] /stream/out - GET - terminating access for video streaming session, [see details here](readme/current/v1/stream/terminate_stream_session.md)
-    * [x] /auth
-        * [x] /get_challenge - POST - Generate an auth challenge for the given eth address and intent [see details here](readme/current/v2/unsorted/get_challengeV2.md)
-            * [x] /:MetaAddress- GET - request an auth challenge for the given ethereum address, [see details here](readme/current/v1/auth/get_challenge.md)
-        * [x] /get_token/:MetaMessage/:MetaSignature/:mediaId - GET - respond to a challenge to receive a JWT, [see details here](readme/current/v1/auth/get_token.md)
-        * [x] /validate - POST - Validate a meta signature, [see details here](readme/current/v1/auth/validate_signature.md)
-        * [x] /admin/:MetaMessage/:MetaSignature - GET - verify with a Metamask challenge if the user holds the current Administrator token, [see details here](readme/current/v1/auth/admin.md)
-        * [x] /authentication/:MetaMessage/:MetaSignature - GET - verification of user Metamask challenge and generating of JWT token, [see details here](readme/current/v1/auth/get_jwt_token.md)
-        * [x] /user_info - GET - get details about user by JWT token, [see details here](readme/current/v1/auth/get_user_details.md)
-    * [x] /media
-        * [x] /add/:mediaId - POST -  [DEPRECIATED] register a new piece of media, [see details here](readme/depreciated/media/add_media.md)
-        * [x] /remove/:mediaId - DELETE - find and delete the media, [see details here](readme/current/v1/media/remove_media.md)
-        * [x] /update/:mediaId - PATCH - find and update the media, [see details here](readme/current/v1/media/update_media.md)
-        * [x] /list - GET - list all the registered media, their URIs and encrypted status, [see details here](readme/current/v1/media/get_all_media.md)
-        * [x] /upload - POST - [DEPRECIATED] upload the media, [see details here](readme/depreciated/media/upload_media.md)
-    * [x] /users - POST - [DEPRECIATED] create new user, [see details here](readme/depreciated/user/create_user.md)
-        * [x] /:publicAddress - GET - [DEPRECIATED] get single user, [see details here](readme/depreciated/user/get_user.md)
-        * [x] /:publicAddress - POST - update specific user, [see details here](readme/current/v1/user/update_user.md)
-    * [x] /contracts - GET - [DEPRECIATED] get list of contracts for specific user, [see details here](readme/depreciated/contracts/get_contracts.md)
-        * [x] /import/network/:networkId/:contractAddress/ - GET - [DEPRECIATED] Import the given contract's NFTs, [see details here](readme/depreciated/contracts/get_external_contract.md)
-        * [x] /imported - GET - List imported contracts by the current user, [see details here](readme/current/v1/get_imported_contracts.md)
-        * [x] /network/:networkId
-            * [x] /:contractAddress - GET - [DEPRECIATED] get specific contract, [see details here](readme/depreciated/contracts/get_single_contract.md)
-                * [x] /products - GET - [DEPRECIATED] get all products for specific contract, [see details here](readme/depreciated/contracts/get_products_for_contract.md)
-                    * [x] /offers - GET - [DEPRECIATED] get all products with all offers for each of them for particular user, [see details here](readme/depreciated/contracts/get_products_offers.md)
-        * [x] /full - GET - [DEPRECIATED] get list of all contracts with all products and offers, [see details here](readme/depreciated/contracts/get_full_contracts.md)
-        * [x] /singleContract/:contractId - GET- [DEPRECIATED] get single contract by ID, [see details here](readme/depreciated/contracts/get_single_contract_by_id.md)
-    * [x] /nft - POST - create new or update existed nft tokens, [see details here](readme/current/v1/nft/bulk_create_NFT_tokens.md)
-        * [x] / - GET - [DEPRECIATED] get all tokens which belongs to current user, [see details here](readme/depreciated/nft/get_all_tokens_for_current_user.md)
-        * [x] /csv/sample - GET - get CSV sample file, [see details here](readme/current/v1/nft/get_csv_sample_file.md)
-        * [x] /pinningMultiple - POST - upload multiple tokens metadata to the cloud, [see details here](readme/current/v1/nft/upload_multiple_tokens_metadata_to_cloud.md)
-        * [x] /network/:networkId/:contract
-            * [x] /:product - GET - get tokens for the product, [see details here](readme/get_all_minted_tokens_from_product.md)
-                * [x] /tokenNumbers - GET - Get list of token numbers, [see details here](readme/get_all_minted_token_numbers_from_product.md)
-                * [x] /token/:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index.md)
-                    * [x] / - POST - Update specific token metadata by contract, product and internal ID, [see details here](readme/update_token_metadata.md)
-                    * [x] /pinning - GET - Pin token metadata to IPFS cloud, [see details here](readme/pin_token_metadata_to_ipfs.md)
-                * [x] /files - GET - get files for specific product, [see details here](readme/get_files_by_product.md)
-                    * [x] /:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft.md)
-                * [x] /offers - GET - get specific product with all offers, [see details here](readme/get_product_offers.md)
-                * [x] /locks - GET - get all locks for specific product, [see details here](readme/get_product_locks.md)
-            * [x] /token/:tokenInContract - GET - Get specific token by contract address and unique toke ID in contract, [see details here](readme/get_minted_token_by_contract_index.md)
-    * [x] /docs - swagger documentation for the server
-    * [x] /:contractId/:productIndex - GET - [DEPRECIATED] get full data about particular product and get list of tokens for it, [see details here](readme/depreciated/unsorted/get_token_metadata.md)
-  * [x] /v2
-      * [x] /search - NULL
-          * [x] /:textParam - GET - returns top 4 results of search among tokens, products and authors with text params [see details here](readme/current/v2/search/search_v2.md)
-          * [x] /:textParam/all - GET - NOT FOR PROD work in progress - returns all results of search among tokens, products and authors with text params
-      * [x] /contracts - Return all Contracts (Query string supported) [see details here](readme/common_get_all.md)
-          * [x] /my - get contracts for curent user [see details here](readme/get_contracts_my.md).
-          * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/current/v2/contracts/get_full_contracts_v2.md)
-          * [x] /fullSA - GET - mirrors full (authorized access shows blocked for view), [see details here](readme/current/v2/contracts/get_full_contracts_v2.md)
-          * [x] /:id - GET - return one found by ID [see details here](readme/current/v2/contracts/common_get_by_id.md)
-          * [x] /:id - PATCH - return one updated by ID [see details here](readme/current/v2/contracts/update_contract_by_id.md)
-          * [x] /byUser/:userId - get list of conract for user based on user address [see details here](readme/get_contracts_by_userId.md)
-          * [x] /import - POST - Import the given contract's NFTs, [see details here](readme/current/v2/contracts/post_external_contract.md)
-      * [x] /favorites - POST - store favorite token for current user, [see details here](readme/current/v2/favorites/create_favoriteToken.md)
-      * [x] /favorites - GET - get list of favorites token for current user, [see details here](readme/current/v2/favorites/get_list_of_favoriteTokens.md)
-          * [x] /:id - DELETE - remove favorite token for current user, [see details here](readme/current/v2/favorites/delete_favoriteToken.md)
-      * [x] /locks - GET - get all locks for specific product, [see details here](readme/current/v2/locks/get_product_locks_v2.md)
-      * [x] /files - GET - get files for specific product, [see details here](readme/current/v2/files/get_files_by_product_v2.md)
-          * [x] /:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft_v2.md)
-      * [x] /products - Return all Products (Query string supported) [see details here](readme/common_get_all.md)
-          * [x] /:productId - return one found by ID [see details here](readme/current/v2/products/get_product_by_id.md)
-          * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme/current/v2/products/get_products_by_user_adress.md)
-      * [x] /upload/file - POST- create file with media data si database [see details here](readme/current/v2/upload/add_file_after_upload_media.md)
-      * [x] /upload/
-          * [x] /validate - GET - get validate data for upload video [see details here](readme/current/v2/upload/get_validate_data_for_upload.md)
-          * [x] /token - GET - Get a one-time-use secret from the backend to upload files to the media service [see details here](readme/current/v2/upload/get_secret_token_to_upload.md)
-          * [x] /:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft_v2.md)
-      * [x] /verify - GET - return  verify User with rightAdmin for uploading media [see details here](readme/current/v2/verify/get_verify_user_for_upload_media.md)
-          * [x] /:productId - return one found by ID [see details here](readme/get_product_by_id.md)
-          * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme/current/v2/products/get_products_by_user_adress.md)
-      * [x] /offers - Return all Offers (Query string supported) [see details here](readme/common_get_all.md)
-          * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
-          * [x] /byAddressAndProduct - GET - get list of offers for specific Product [see details here](readme/current/v2/offers/get_Offer_by_Address_and_Product.md)
-      * [x] /tokens 
-          * [x] / - get - get all tokens [see details here](readme/current/v2/tokens/get_tokens.md)
-          * [x] / - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)
-          * [x] /my - GET - get all tokens which belongs to current user, [see details here](readme/current/v2/tokens/get_my_tokens.md)
-          * [x] /tokenNumbers - GET - get all tokens' numbers for [see details here](readme/current/v2/tokens/get_tokenNumbers.md)
-          * [x] /viaCSV - POST - update existed nft tokens, (**mirrors POST:api/nft/** without creating of new tokens. No handling for *"Token not created"* scenario.) [see details here](readme/bulk_create_NFT_tokens.md)
-          * [x] /:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/current/v2/tokens/get_minted_token_by_contract_product_index_v2.md)
-          * [x] /:token - PATCH - Update specific token metadata by contract, product and internal ID, [see details here](readme/current/v2/tokens/update_token_metadata_v2.md)
-          * [x] /:token - POST - Pin token metadata to IPFS cloud, [see details here](readme/current/v2/tokens/pin_token_metadata_to_ipfs_v2.md)
-      * [x] /users - POST - Create new user[see details here](readme/depreciated/user/create_user.md)
-          * [x] /:publicAddress - GET   - get single user data by public address [see details here](readme/depreciated/user/get_user.md)
-          * [x] /:publicAddress - PATCH - update single user data by public address [see details here](readme/current/v1/user/update_user.md)
-      * [x] /resales - Return all ResalesTokenOffers (Query string supported) [see details here](readme/get_list_of_favoriteTokens.md)
-          * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
-          * [x] /customRoyalties - Return all customRoyaltiesSets (Query string supported) [see details here](readme/common_get_all.md)
-          * [x] /byProduct/:productId - Return all ResalesTokenOffers for provided Product Id [see details here](readme/current/v2/resales/get_resales_by_Product.md)
-          * [x] /byOffer/:offerId - Return all ResalesTokenOffers for provided Offer Id [see details here](readme/current/v2/resales/get_resales_by_Offer.md)
-* [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/current/v1/stream/stream.md)
-* [x] /thumbnails - GET - get static files, [see details here](readme/current/v1/unsorted/thumbnails.md)
+# Contributors
+\
+Valerii Kovalov \
+Micahel Bielikov \
+Yehor Boromazov \
+Dima \
+Juan Sanchez \
 
-# MongoDB structure
-
-![](readme/assets/rair_db.png)
+# License
+Apache 2.0 license

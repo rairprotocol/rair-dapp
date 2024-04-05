@@ -67,7 +67,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
     setLoadDeleting(true);
 
     try {
-      const req = await rFetch(`/api/media/remove/${index}`, {
+      const req = await rFetch(`/api/files/remove/${index}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -106,9 +106,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
       (offer) => offer.contract
     );
     if (contracts?.length) {
-      const request = await rFetch(
-        `/api/contracts/singleContract/${contracts[0]}`
-      );
+      const request = await rFetch(`/api/contracts/${contracts[0]}`);
       setCurrentContract(request.contract);
     }
   }, [fileData]);

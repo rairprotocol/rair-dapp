@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get(
     '/',
-    validation(['pagination', 'dbProducts'], 'query'),
+    validation(['dbProducts', 'pagination'], 'query'),
     productService.getAllProducts,
 );
 

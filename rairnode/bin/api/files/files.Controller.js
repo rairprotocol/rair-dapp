@@ -1,7 +1,6 @@
 const express = require('express');
 const {
     getFile,
-    getFiles,
     getFilesForToken,
     getFilesByCategory,
     connectFileAndOffer,
@@ -9,19 +8,47 @@ const {
     removeFileAndOffer,
     updateFile,
     isFileOwner,
+    listCategories,
+    updateMedia,
+    deleteMedia,
+    listMedia,
 } = require('./files.Service');
-const { validation, requireUserSession } = require('../../middleware');
+const {
+    validation,
+    requireUserSession,
+    isOwner,
+    loadUserSession
+} = require('../../middleware');
+const { File } = require('../../models');
 
 const router = express.Router();
 
-router.get(
-    '/',
+router.patch(
+    '/update/:mediaId',
     requireUserSession,
-    validation(['dbFiles'], 'query'),
-    getFiles,
+    validation(['removeMedia'], 'params'),
+    validation(['updateMedia'], 'body'),
+    isOwner(File),
+    updateMedia,
 );
+  
+router.delete(
+    '/remove/:mediaId',
+    requireUserSession,
+    validation(['removeMedia'], 'params'),
+    isOwner(File),
+    deleteMedia
+);
+  
 router.get(
-    '/byID/:id',
+    '/list',
+    validation(['filterAndSort', 'pagination'], 'query'),
+    loadUserSession,
+    listMedia
+);
+  
+router.get(
+    '/byId/:id',
     validation(['fileId'], 'params'),
     getFile,
 );
@@ -44,7 +71,7 @@ router.get(
     validation(['dbId'], 'params'),
     getFilesForToken,
 );
-
+router.get('/categories', listCategories);
 router.get('/:id/unlocks', getFileAndOffer);
 router.post(
     '/:id/unlocks',

@@ -46,7 +46,7 @@ const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
 
   const getAllTokens = useCallback(async () => {
     const responseAllTokenNumbers = await axios.get(
-      `/api/nft/network/${blockchain}/${contract}/${product}/tokenNumbers`
+      `/api/nft/network/${blockchain}/${contract}/${product}/`
     );
 
     if (responseAllTokenNumbers.data.tokens) {
@@ -86,8 +86,8 @@ const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
     title === 'Unlock Ultra Rair' || title === 'Ultra Rair'
       ? '#E4476D'
       : title === 'Unlock Rair' || title === 'Rair'
-      ? 'gold'
-      : 'silver';
+        ? 'gold'
+        : 'silver';
   const sortedClick = () => {
     // mb need to refactor
     /* eslint-disable */

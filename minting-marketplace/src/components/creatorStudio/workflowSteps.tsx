@@ -253,13 +253,13 @@ const WorkflowSteps: FC = () => {
       contractDataResponse.contract.products = productDataResponse.products;
     }
     const offersAndLocksResponse = await rFetch(
-      `/api/v2/offers/locks?contract=${contractDataResponse.contract._id}&product=${collectionIndex}`,
+      `/api/offers?contract=${contractDataResponse.contract._id}&product=${collectionIndex}`,
       undefined,
       undefined,
       false
     );
     const response4 = await rFetch(
-      `/api/contracts/network/${blockchain}/${address}/products/offers`,
+      `/api/contracts/network/${blockchain}/${address}/offers`,
       undefined,
       undefined,
       false
@@ -281,7 +281,7 @@ const WorkflowSteps: FC = () => {
       delete contractDataResponse.contract.products;
       if (offersAndLocksResponse.success) {
         contractDataResponse.contract.product.offers =
-          offersAndLocksResponse.offers;
+          offersAndLocksResponse.data.doc;
       }
       if (contractDataResponse.contract.blockchain === currentChain) {
         contractDataResponse.contract.instance = contractCreator?.(

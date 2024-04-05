@@ -117,7 +117,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
         return;
       }
       const contractResponse = await rFetch(
-        `/api/v2/contracts?contractAddress=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}`
+        `/api/contracts?contractAddress=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}`
       );
       if (!contractResponse.success) {
         return;
@@ -138,7 +138,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
         return;
       }
       const userResponse = await rFetch(
-        `/api/v2/users/${resaleData.seller.toLowerCase()}`
+        `/api/users/${resaleData.seller.toLowerCase()}`
       );
       if (userResponse.success) {
         resaleData.seller = userResponse.user.nickName;
