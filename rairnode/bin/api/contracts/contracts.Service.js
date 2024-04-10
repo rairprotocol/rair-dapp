@@ -415,11 +415,14 @@ exports.getAllContracts = async (req, res, next) => {
   const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
   const clearFilter = {};
-  if (query.external === 'true') {
-    query.external = true;
-  } else if (query.external === 'false') {
-    query.external = false;
-  }
+  ['external', 'blockView', 'blockSync']
+    .forEach((field) => {
+      if (query[field] === 'true') {
+        query[field] = true;
+      } else if (query[field] === 'false') {
+        query[field] = false;
+      }
+    });
   Object.keys(query).forEach((item) => {
     if (query[item] !== undefined) {
       clearFilter[item] = query[item];
