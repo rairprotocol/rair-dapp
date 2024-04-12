@@ -1,5 +1,5 @@
+import { Chain } from '@alchemy/aa-core/node_modules/viem/_types/chains/index';
 import { Network } from 'alchemy-sdk';
-import { Chain } from 'viem';
 
 export type TNativeCurrency = {
   name: string;

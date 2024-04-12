@@ -20,45 +20,45 @@ import {
 import chainData from '../../utils/blockchainData';
 
 const contractAddresses: ContractAddressesType = {
-  '0x38': {
-    // Binance Mainnet
-    factory: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
-    erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
-    minterMarketplace: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
-    diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0x556a3Db6d800AAA56f8B09E476793c5100705Db5') as string,
-    diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0x92FBe344513e108B581170E73CFA352B729E47EA') as string,
-    resaleMarketplace: undefined,
-    tokenPurchaser: undefined,
-    creditHandler: undefined
-  },
-  '0x61': {
-    // Binance Testnet
-    factory: '0xfaB4B835fBFC671c15e2fDe237c625e82612893F',
-    erc777: '0x5b01aBE2DCfaa4C9c80ccE87223c8e21D7Fc9845',
-    minterMarketplace: '0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD',
-    diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0xA2c57691b8DF0D8479f5f888c69346363D23a49F') as string,
-    diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0xaCb13B4c527eD6237f7DB6E95Ef71929d1e13DD6') as string,
-    resaleMarketplace: '0x166eD118F380dDFe1F4FD3ccc7D2C5CaeCf0AE96',
-    tokenPurchaser: undefined,
-    creditHandler: undefined
-  },
-  '0x5': {
-    // Ethereum Goerli
-    factory: '0x12EF5310499318C90C55077241137Db52189b036',
-    erc777: '0x4e6a5B076730954d80e55dDb2d2e7E732B5bAb70',
-    minterMarketplace: '0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5',
-    diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0xEF85370b8F136E2F28eA904bF0dA5acac3D1d74f') as string,
-    diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0x6B3c06b39Aa1ADe73c625b184326d4837c7a2b64') as string,
-    resaleMarketplace: '0x73eDc2F5Fc3F895Dfc6aE8a580a5969640260b79',
-    tokenPurchaser: '0x9dCbe7021803eBb3153412Ed719A2d0B887afB8e' as string,
-    creditHandler: '0xad78463579Ff43bdC917674c64749c35c7E325f5' as string
-  },
+  // '0x38': {
+  //   // Binance Mainnet
+  //   factory: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
+  //   erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
+  //   minterMarketplace: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
+  //   diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
+  //     '0x556a3Db6d800AAA56f8B09E476793c5100705Db5') as string,
+  //   diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
+  //     '0x92FBe344513e108B581170E73CFA352B729E47EA') as string,
+  //   resaleMarketplace: undefined,
+  //   tokenPurchaser: undefined,
+  //   creditHandler: undefined
+  // },
+  // '0x61': {
+  //   // Binance Testnet
+  //   factory: '0xfaB4B835fBFC671c15e2fDe237c625e82612893F',
+  //   erc777: '0x5b01aBE2DCfaa4C9c80ccE87223c8e21D7Fc9845',
+  //   minterMarketplace: '0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD',
+  //   diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
+  //     '0xA2c57691b8DF0D8479f5f888c69346363D23a49F') as string,
+  //   diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
+  //     '0xaCb13B4c527eD6237f7DB6E95Ef71929d1e13DD6') as string,
+  //   resaleMarketplace: '0x166eD118F380dDFe1F4FD3ccc7D2C5CaeCf0AE96',
+  //   tokenPurchaser: undefined,
+  //   creditHandler: undefined
+  // },
+  // '0x5': {
+  //   // Ethereum Goerli
+  //   factory: '0x12EF5310499318C90C55077241137Db52189b036',
+  //   erc777: '0x4e6a5B076730954d80e55dDb2d2e7E732B5bAb70',
+  //   minterMarketplace: '0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5',
+  //   diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
+  //     '0xEF85370b8F136E2F28eA904bF0dA5acac3D1d74f') as string,
+  //   diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
+  //     '0x6B3c06b39Aa1ADe73c625b184326d4837c7a2b64') as string,
+  //   resaleMarketplace: '0x73eDc2F5Fc3F895Dfc6aE8a580a5969640260b79',
+  //   tokenPurchaser: '0x9dCbe7021803eBb3153412Ed719A2d0B887afB8e' as string,
+  //   creditHandler: '0xad78463579Ff43bdC917674c64749c35c7E325f5' as string
+  // },
   '0x13881': {
     // Matic Mumbai
     factory: '0x72639374fC9e4eec25839080763025A1d3E710EC',

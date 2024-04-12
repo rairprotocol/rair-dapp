@@ -1,5 +1,6 @@
 // import Images
 import astar from './astar.ico';
+import baseMainnet from './base-logo.svg';
 import binance from './binance-diamond.svg';
 import blackBg from './BlackBg.webp';
 import whiteBg from './ClayBg.webp';
@@ -68,6 +69,7 @@ export const BinanceDiamond = binance;
 export const EthereumLogo = ethereum;
 export const DocumentIcon = documentIcon;
 export const AstarLogo = astar;
+export const BaseLogo = baseMainnet;
 
 export const DiscordIcon = ({ color, primaryColor }) => {
   return (

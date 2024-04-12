@@ -23,7 +23,9 @@ const bootstrapColorMapping = {
   '0x5': 'light',
   '0x250': 'primary',
   '0x89': 'warning',
-  '0x13881': 'warning'
+  '0x13881': 'warning',
+  '0xaa36a7': 'primary',
+  '0x2105': 'light'
 };
 
 const blockchains: BlockchainInfo[] = Object.keys(chainData)
