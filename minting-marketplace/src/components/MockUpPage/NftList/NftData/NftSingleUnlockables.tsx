@@ -37,7 +37,7 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
   }, [productsFromOffer]);
 
   useEffect(() => {
-    const result = productsFromOffer.reduce((acc, item) => {
+    const result = productsFromOffer?.reduce((acc, item) => {
       if (isDiamond) {
         const key = item.offer.length;
         const value = acc[key];

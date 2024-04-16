@@ -263,7 +263,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
       showTokensRef.current.toString(),
       selectedAttributeValues &&
         selectedAttributeValues.length &&
-        selectedAttributeValues.reduce((acc, item) => {
+        selectedAttributeValues?.reduce((acc, item) => {
           const { name, values } = item;
           const newValue = values.filter((el) => el.active);
 
@@ -339,7 +339,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
       const result: any =
         selectedAttributeValues &&
         selectedAttributeValues.length &&
-        selectedAttributeValues.reduce((acc, item) => {
+        selectedAttributeValues?.reduce((acc, item) => {
           const { name, values } = item;
           const newValue = values.filter((el) => el.active);
 
@@ -752,7 +752,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                             showTokensRef.current.toString(),
                             selectedAttributeValues &&
                               selectedAttributeValues.length &&
-                              selectedAttributeValues.reduce((acc, item) => {
+                              selectedAttributeValues?.reduce((acc, item) => {
                                 const { name, values } = item;
                                 const newValue = values.filter(
                                   (el) => el.active

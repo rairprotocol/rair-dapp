@@ -121,7 +121,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
 
   const availableRanges = useMemo(
     () =>
-      productTokenNumbers.reduce((acc, tokenNumber: string) => {
+      productTokenNumbers?.reduce((acc, tokenNumber: string) => {
         const tokenRange = Math.floor(+tokenNumber / 100) * 100;
         return {
           ...acc,

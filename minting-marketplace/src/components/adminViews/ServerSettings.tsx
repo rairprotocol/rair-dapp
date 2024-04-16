@@ -383,9 +383,12 @@ const ServerSettings = ({ fullContractData }) => {
           }}
           disabled={!!serverSettings.settings.superAdminsOnVault}
           onClick={() => {
-            const result = serverSettings.superAdmins.reduce((result, user) => {
-              return result && isAddress(user);
-            }, true);
+            const result = serverSettings?.superAdmins.reduce(
+              (result, user) => {
+                return result && isAddress(user);
+              },
+              true
+            );
             if (result) {
               setServerSetting({
                 superAdmins: serverSettings.superAdmins.map((userAddress) =>
