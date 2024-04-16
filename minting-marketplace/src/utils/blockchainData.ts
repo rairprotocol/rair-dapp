@@ -156,7 +156,7 @@ const chainData: TChainData = {
     },
     viem: mainnet,
     alchemy: Network.BASE_MAINNET,
-    coingecko: undefined
+    coingecko: 'base'
   }
 };
 
