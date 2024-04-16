@@ -17,6 +17,7 @@ const VideoManager = () => {
   const [uploads, setUploads] = useState<any[]>([]);
   const [unlockData, setUnlockData] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [hiddenFlag, setHiddenFlag] = useState(false);
 
   const [filter, setFilter] = useState('');
   const [selectedFile, setSelectedFile] = useState<any>({});
@@ -46,11 +47,13 @@ const VideoManager = () => {
   }, [selectedFile, refresh]);
 
   const refreshFileList = useCallback(async () => {
-    const { success, list } = await rFetch('/api/files/list');
+    const { success, list } = await rFetch(
+      `/api/files/list?hidden=${hiddenFlag}`
+    );
     if (success) {
       setUploads(Object.keys(list).map((key) => list[key]));
     }
-  }, []);
+  }, [hiddenFlag]);
 
   useEffect(() => {
     if (!currentUserAddress) {
@@ -157,6 +160,26 @@ const VideoManager = () => {
     <div className="row py-5 ps-5">
       <h4> My Uploads </h4>
       <div className="col-4">
+        <button
+          className="btn rair-button"
+          disabled={!hiddenFlag}
+          onClick={() => setHiddenFlag(false)}
+          style={{
+            background: secondaryButtonColor,
+            color: textColor
+          }}>
+          Visible
+        </button>
+        <button
+          className="btn rair-button"
+          disabled={hiddenFlag}
+          onClick={() => setHiddenFlag(true)}
+          style={{
+            background: primaryButtonColor,
+            color: textColor
+          }}>
+          Hidden
+        </button>
         <InputField
           customClass="form-control"
           placeholder="Title filter"
@@ -167,7 +190,6 @@ const VideoManager = () => {
           {uploads &&
             uploads
               .filter((item: any) => {
-                console.info(item);
                 return item?.title
                   ?.toLowerCase()
                   ?.includes(filter.toLowerCase());
@@ -272,7 +294,7 @@ const VideoManager = () => {
                     </span>
                     <b>
                       {formatEther(unlock.price)}{' '}
-                      {chainData[unlock.contract.blockchain].symbol}
+                      {chainData[unlock.contract.blockchain]?.symbol}
                     </b>
                     <button
                       className="btn float-end btn-danger"

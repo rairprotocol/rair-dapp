@@ -17,7 +17,7 @@ const {
     validation,
     requireUserSession,
     isOwner,
-    loadUserSession
+    loadUserSession,
 } = require('../../middleware');
 const { File } = require('../../models');
 
@@ -31,22 +31,22 @@ router.patch(
     isOwner(File),
     updateMedia,
 );
-  
+
 router.delete(
     '/remove/:mediaId',
     requireUserSession,
     validation(['removeMedia'], 'params'),
     isOwner(File),
-    deleteMedia
+    deleteMedia,
 );
-  
+
 router.get(
     '/list',
-    validation(['filterAndSort', 'pagination'], 'query'),
+    validation(['dbFiles', 'filterAndSort', 'pagination'], 'query'),
     loadUserSession,
-    listMedia
+    listMedia,
 );
-  
+
 router.get(
     '/byId/:id',
     validation(['fileId'], 'params'),

@@ -11,7 +11,7 @@ exports.getAnalyticsData = async (req, res, next) => {
             return next(new AppError('Invalid media Id', 404));
         }
         if (
-            !req.user.superAdmin &&
+            !req.user.adminRights &&
             req.user.publicAddress !== mediaData.uploader
         ) {
             return next(new AppError('Invalid user address', 403));
@@ -74,7 +74,7 @@ exports.getAnalyticsCSVReport = async (req, res, next) => {
             return next(new AppError('Invalid media Id', 404));
         }
         if (
-            !req.user.superAdmin &&
+            !req.user.adminRights &&
             req.user.publicAddress !== mediaData.uploader
         ) {
             return next(new AppError('Invalid user address', 403));

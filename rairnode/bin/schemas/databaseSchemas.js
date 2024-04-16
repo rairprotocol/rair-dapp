@@ -120,5 +120,5 @@ module.exports = {
     dbBlockchains: () => ({
         display: Joi.boolean(),
         sync: Joi.boolean(),
-    })
+    }),
 };

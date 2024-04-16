@@ -3,6 +3,32 @@
 **URL** : `/api/files/list`
 **Method** : `GET`
 
+**Query Parameters**
+```json
+{
+    "pageNum": {"required": false, "content": {"type": "string"}},
+    "itemsPerPage": {"required": false, "content": {"type": "string"}},
+
+    "blockchain": {"required": false, "content": {"type": "string"}},
+    "userAddress": {"required": false, "content": {"type": "string"}},
+    "contractAddress": {"required": false, "content": {"type": "string"}},
+    "mediaTitle": {"required": false, "content": {"type": "string"}},
+    "contractTitle": {"required": false, "content": {"type": "string"}},
+
+    "author": {"required": false ,"content": {"type": "string"}},
+    "uploader": {"required": false ,"content": {"type": "string"}},
+    "title": {"required": false ,"content": {"type": "string"}},
+    "description": {"required": false ,"content": {"type": "string"}},
+    "contract": {"required": false ,"content": {"type": "string"}},
+    "product": {"required": false ,"content": {"type": "string"}},
+    "offer": {"required": false ,"content": {"type": "string"}},
+    "category": {"required": false ,"content": {"type": "string"}},
+    "demo": {"required": false ,"content": {"type": "string"}},
+    "ageRestricted": {"required": false ,"content": {"type": "string"}},
+    "hidden": {"required": false ,"content": {"type": "string"}},
+}
+```
+
 ## Success Response
 **Code** : `200 OK`
 **Content-Type**: `application/json`
