@@ -623,7 +623,9 @@ const ServerSettings = ({ fullContractData }) => {
             className="btn btn-success float-end"
             disabled={!!serverSettings.settings.superAdminsOnVault}
             onClick={() => {
-              const aux = [...serverSettings.footerLinks];
+              const aux = serverSettings?.footerLinks
+                ? [...serverSettings.footerLinks]
+                : [];
               aux.push({
                 label: '',
                 url: ''
