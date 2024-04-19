@@ -1,4 +1,3 @@
-const { Storage } = require('@google-cloud/storage');
 const { nanoid } = require('nanoid');
 const fs = require('fs').promises;
 const path = require('path');
@@ -10,24 +9,26 @@ const {
 } = require('../../shared_backend_code_generated/integrations/gcp');
 
 module.exports = (config) => {
-  let storage = {};
+  let storage;
 
+  const { projectId, credentials } = config.gcp;
   try {
-    const storageParams = {
-      projectId: config.gcp.projectId,
-    };
-
-    storage = getAuthorizedStorageObject({
-      use_default_iam: applicationConfig['rairnode'].useDefaultIamUserForFileManager,
-      storageParams,
-      jsonCredentialsLocation: config.gcp.credentials,
-    });
+    if (projectId && credentials) {
+      storage = getAuthorizedStorageObject({
+        use_default_iam: applicationConfig.rairnode.useDefaultIamUserForFileManager,
+        storageParams: { projectId },
+        jsonCredentialsLocation: credentials,
+      });
+    }
   } catch (e) {
     log.error(e);
     throw new AppError('Authorized to GSP failed', 403);
   }
 
   const uploadFile = async (bucketName, file) => {
+    if (!storage) {
+      throw new AppError("Can't store image. Uninitialized", 500);
+    }
     try {
       const bucket = storage.bucket(bucketName);
       const uploadData = await bucket.upload(file.path);
@@ -41,6 +42,9 @@ module.exports = (config) => {
 
   const uploadFolder = async (bucketName, directoryPath, socketInstance) => {
     try {
+      if (!storage) {
+        throw new AppError("Can't store folder. Uninitialized", 500);
+      }
       let dirCtr = 1;
       let itemCtr = 0;
       const fileList = [];
@@ -79,7 +83,8 @@ module.exports = (config) => {
           const items = await fs.readdir(directory);
           dirCtr--;
           itemCtr += items.length;
-          for (const item of items) {
+          // eslint-disable-next-line no-restricted-syntax
+          for await (const item of items) {
             const fullPath = path.join(directory, item);
             const stat = await fs.stat(fullPath);
             itemCtr--;
@@ -106,6 +111,9 @@ module.exports = (config) => {
 
   const removeFile = async (bucketName, file) => {
     try {
+      if (!storage) {
+        throw new AppError("Can't remove file. Uninitialized", 500);
+      }
       const bucket = storage.bucket(bucketName);
       const response = await bucket.deleteFiles({
         prefix: file,

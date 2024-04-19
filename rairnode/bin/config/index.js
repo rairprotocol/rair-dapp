@@ -146,5 +146,5 @@ module.exports = {
     filebase: 'https://rair.myfilebase.com/ipfs/',
     pinata: 'https://ipfs.io/ipfs/',
     ipfs: 'https://ipfs.io/ipfs/',
-  }
+  },
 };

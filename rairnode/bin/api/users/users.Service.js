@@ -2,6 +2,7 @@
 const fs = require('fs');
 const { randomUUID } = require('crypto');
 const path = require('path');
+const { RequestBuilder, Payload } = require('yoti');
 const config = require('../../config');
 const gcp = require('../../integrations/gcp')(config);
 const log = require('../../utils/logger')(module);
@@ -9,7 +10,6 @@ const { cleanStorage, textPurify } = require('../../utils/helpers');
 const { User } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const eFactory = require('../../utils/entityFactory');
-const { RequestBuilder, Payload } = require('yoti');
 
 exports.getAllUsers = eFactory.getAll(User);
 exports.getUserById = eFactory.getOne(User);
@@ -22,17 +22,17 @@ exports.yotiVerify = async (req, res, next) => {
     if (!YOTI_CLIENT_ID || !image) {
       return res.json({
         success: false,
-        message: 'Cannot process age verification'
+        message: 'Cannot process age verification',
       });
     }
 
     const data = {
       img: image,
       threshold: 25,
-      operator: "OVER",
-      metadata: {        
-        "device": "unknown"
-      }
+      operator: 'OVER',
+      metadata: {
+        device: 'unknown',
+      },
     };
 
     const request = new RequestBuilder()
@@ -43,19 +43,19 @@ exports.yotiVerify = async (req, res, next) => {
       .withMethod('POST')
       .withHeader('X-Yoti-Auth-Id', YOTI_CLIENT_ID)
       .build();
-  
+
     const response = await request.execute();
 
-    if (response.parsedResponse.age.age_check === "pass") {
-      await User.findByIdAndUpdate(req.user._id, {$set: {
-        ageVerified: true
-      }});
+    if (response.parsedResponse.age.age_check === 'pass') {
+      await User.findByIdAndUpdate(req.user._id, { $set: {
+        ageVerified: true,
+      } });
       req.session.userData.ageVerified = true;
     }
 
     return res.json({
       success: true,
-      data: response.parsedResponse
+      data: response.parsedResponse,
     });
   } catch (err) {
     return next(err);
@@ -69,7 +69,7 @@ exports.listUsers = async (req, res, next) => {
       nickName: 1,
       publicAddress: 1,
       creationDate: 1,
-      blocked: 1
+      blocked: 1,
     });
     return res.json({
       success: true,
@@ -148,7 +148,7 @@ exports.updateUserByUserAddress = async (req, res, next) => {
     const publicAddress = req.params.publicAddress.toLowerCase();
     const foundUser = await User.findOne({ publicAddress });
     const { user } = req;
-    let fieldsForUpdate = { ...req.body }
+    const fieldsForUpdate = { ...req.body };
     if (fieldsForUpdate.nickName) {
       const foundNickname = await User.findOne({ nickName: `@${fieldsForUpdate.nickName}` });
       if (foundNickname !== null && foundNickname.publicAddress !== publicAddress) {
@@ -165,9 +165,10 @@ exports.updateUserByUserAddress = async (req, res, next) => {
     }
 
     if (req?.files?.length) {
+      // eslint-disable-next-line no-restricted-syntax
       for await (const file of req.files) {
         const target = Object.keys(req.body)
-          .find(key => req.body[key] === file.originalname);
+          .find((key) => req.body[key] === file.originalname);
         if (!target) {
           continue;
         }
@@ -178,7 +179,7 @@ exports.updateUserByUserAddress = async (req, res, next) => {
           );
           if (fileLink) {
             log.info(`File ${file.filename} has added to GCP bucket.`);
-            fieldsForUpdate[target] = `${config.gcp.gateway}/${config.gcp.imageBucketName}/${fileLink}`
+            fieldsForUpdate[target] = `${config.gcp.gateway}/${config.gcp.imageBucketName}/${fileLink}`;
           }
         } catch (err) {
           log.error(err);
