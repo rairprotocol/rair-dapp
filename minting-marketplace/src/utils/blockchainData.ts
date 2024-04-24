@@ -1,4 +1,4 @@
-import { mainnet, polygon } from '@alchemy/aa-core';
+import { base, mainnet, polygon, sepolia } from '@alchemy/aa-core';
 import { Network } from 'alchemy-sdk';
 
 import { TChainData } from './utils.types';
@@ -127,22 +127,39 @@ const chainData: TChainData = {
     coingecko: 'ethereum'
   },
   '0xaa36a7': {
-    testnet: false,
+    testnet: true,
     image: EthereumLogo,
-    name: 'Sepolia Mainnet',
+    name: 'Ethereum Sepolia',
     chainId: '0xaa36a7',
-    symbol: 'ETH',
+    symbol: 'Sepolia ETH',
     addChainData: {
       chainId: '0xaa36a7',
       chainName: 'Sepolia (Ethereum)',
       rpcUrls: ['https://sepolia.etherscan.io'],
       blockExplorerUrls: ['https://eth-sepolia.g.alchemy.com/v2/demo']
     },
-    viem: mainnet,
+    viem: sepolia,
     alchemy: Network.ETH_SEPOLIA,
     coingecko: undefined
   },
+  // '0x5': {
+  //   testnet: true,
+  //   image: EthereumLogo,
+  //   name: 'Ethereum Goerli',
+  //   chainId: '0x5',
+  //   symbol: 'Goerli ETH',
+  //   addChainData: {
+  //     chainId: '0x5',
+  //     chainName: 'Goerli (Ethereum)',
+  //     rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com'],
+  //     blockExplorerUrls: ['https://sepolia.etherscan.io/']
+  //   },
+  //   viem: mainnet,
+  //   alchemy: Network.ETH_SEPOLIA,
+  //   coingecko: undefined
+  // },
   '0x2105': {
+    // Base Mainnet
     testnet: false,
     image: BaseLogo,
     name: 'Base Mainnet',
@@ -150,11 +167,11 @@ const chainData: TChainData = {
     symbol: 'ETH',
     addChainData: {
       chainId: '0x2105',
-      chainName: 'Base (Ethereum)',
+      chainName: 'Base',
       rpcUrls: ['https://mainnet.base.org'],
       blockExplorerUrls: ['https://basescan.org']
     },
-    viem: mainnet,
+    viem: base,
     alchemy: Network.BASE_MAINNET,
     coingecko: 'base'
   }

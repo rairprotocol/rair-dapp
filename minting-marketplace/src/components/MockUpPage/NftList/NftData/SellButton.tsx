@@ -17,6 +17,7 @@ import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
+import useServerSettings from '../../../adminViews/useServerSettings';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISellButton } from '../../mockupPage.types';
@@ -50,6 +51,7 @@ const SellButton: React.FC<ISellButton> = ({
 
   const reactSwal = useSwal();
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
+  const { nodeAddress, settings } = useServerSettings();
 
   const handleClickSellButton = useCallback(async () => {
     if (!correctBlockchain(blockchain as BlockchainType)) {
@@ -110,19 +112,31 @@ const SellButton: React.FC<ISellButton> = ({
       icon: 'info',
       showConfirmButton: false
     });
-    const response = await rFetch(`/api/resales/create`, {
-      method: 'POST',
-      body: JSON.stringify({
-        contract,
-        blockchain,
-        index: tokenInformation.uniqueIndexInContract,
-        price: parseEther(sellingPrice).toString()
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      }
-    });
+    let response;
+    if (settings.databaseResales) {
+      response = await rFetch(`/api/resales/create`, {
+        method: 'POST',
+        body: JSON.stringify({
+          contract,
+          blockchain,
+          index: tokenInformation.uniqueIndexInContract,
+          price: parseEther(sellingPrice).toString()
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        }
+      });
+    } else if (
+      await web3TxHandler(diamondMarketplaceInstance, 'createGasTokenOffer', [
+        contract, // ERC721 address
+        tokenId, // Token number
+        parseEther(sellingPrice).toString(), // Token Price
+        nodeAddress // Node address
+      ])
+    ) {
+      response = { success: true };
+    }
     if (response.success) {
       reactSwal.fire({
         title: 'Success',
@@ -146,7 +160,9 @@ const SellButton: React.FC<ISellButton> = ({
     refreshResaleData,
     item,
     tokenData,
-    selectedToken
+    selectedToken,
+    nodeAddress,
+    settings
   ]);
 
   const openInputField = useCallback(() => {

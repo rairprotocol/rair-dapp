@@ -135,11 +135,6 @@ const ListCollections = () => {
       ) : (
         'Fetching data...'
       )}
-      <FixedBottomNavigation
-        backwardFunction={() => {
-          navigate(-1);
-        }}
-      />
     </div>
   );
 };

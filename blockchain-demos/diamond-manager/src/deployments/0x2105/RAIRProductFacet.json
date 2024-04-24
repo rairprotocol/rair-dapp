@@ -1,0 +1,875 @@
+{
+  "address": "0xA2A7e7636AB4374847074c147BE770624F43342E",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "length",
+          "type": "uint256"
+        }
+      ],
+      "name": "StringsInsufficientHexLength",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "collectionIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "collectionName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "startingToken",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "collectionLength",
+          "type": "uint256"
+        }
+      ],
+      "name": "CreatedCollection",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "CREATOR",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MINTER",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "TRADER",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_productName",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_copies",
+          "type": "uint256"
+        }
+      ],
+      "name": "createProduct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "collectionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "startingIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "endingIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getNextSequentialIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "nextIndex",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getProductCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productIndex_",
+          "type": "uint256"
+        }
+      ],
+      "name": "getProductInfo",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "startingToken",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "endingToken",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "mintableTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "rangeList",
+              "type": "uint256[]"
+            }
+          ],
+          "internalType": "struct ERC721Storage.product",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRoleMember",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleMemberCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "productIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "startingToken",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "endingToken",
+          "type": "uint256"
+        }
+      ],
+      "name": "hasTokenInProduct",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintedTokensInProduct",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "length",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "find",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "productIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownsTokenInProduct",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "find",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownsTokenInRange",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productIndex_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenIndex_",
+          "type": "uint256"
+        }
+      ],
+      "name": "productToToken",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productIndex_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenIndex_",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenByProduct",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenOfOwnerByIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenIndex_",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenToProduct",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "productIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenIndex_",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenToProductIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x93e9e35157db19bb37047327508e0d289fcae476f1ab47cd646f1a0d0101c6ab",
+  "receipt": {
+    "to": null,
+    "from": "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+    "contractAddress": "0xA2A7e7636AB4374847074c147BE770624F43342E",
+    "transactionIndex": 79,
+    "gasUsed": "1642993",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x5425e14e78c1c2c5a678cde3bc3e35c3d898ffc47045b6971adb4fd179d1d17c",
+    "transactionHash": "0x93e9e35157db19bb37047327508e0d289fcae476f1ab47cd646f1a0d0101c6ab",
+    "logs": [],
+    "blockNumber": 13040574,
+    "cumulativeGasUsed": "17706778",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "ba288d747cc1aa4c71ee545a11fd6010",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.25+commit.b61c2a91\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"StringsInsufficientHexLength\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"collectionIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"collectionName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startingToken\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"collectionLength\",\"type\":\"uint256\"}],\"name\":\"CreatedCollection\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"CREATOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINTER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRADER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_productName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_copies\",\"type\":\"uint256\"}],\"name\":\"createProduct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"collectionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"startingIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endingIndex\",\"type\":\"uint256\"}],\"name\":\"getNextSequentialIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"nextIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getProductCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"productIndex_\",\"type\":\"uint256\"}],\"name\":\"getProductInfo\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startingToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endingToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"mintableTokens\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"uint256[]\",\"name\":\"rangeList\",\"type\":\"uint256[]\"}],\"internalType\":\"struct ERC721Storage.product\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"userAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"productIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"startingToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endingToken\",\"type\":\"uint256\"}],\"name\":\"hasTokenInProduct\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"productIndex\",\"type\":\"uint256\"}],\"name\":\"mintedTokensInProduct\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"find\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"productIndex\",\"type\":\"uint256\"}],\"name\":\"ownsTokenInProduct\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"find\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"}],\"name\":\"ownsTokenInRange\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"productIndex_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenIndex_\",\"type\":\"uint256\"}],\"name\":\"productToToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"productIndex_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenIndex_\",\"type\":\"uint256\"}],\"name\":\"tokenByProduct\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenIndex_\",\"type\":\"uint256\"}],\"name\":\"tokenToProduct\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"productIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenIndex_\",\"type\":\"uint256\"}],\"name\":\"tokenToProductIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"errors\":{\"StringsInsufficientHexLength(uint256,uint256)\":[{\"details\":\"The `value` string doesn't fit in the specified `length`.\"}]},\"events\":{\"CreatedCollection(uint256,string,uint256,uint256)\":{\"params\":{\"collectionIndex\":\"Index for the collection\",\"collectionLength\":\"Number of tokens in the collection\",\"collectionName\":\"Name for the collection\",\"startingToken\":\"First token in the collection (include)\"}}},\"kind\":\"dev\",\"methods\":{\"balanceOf(address)\":{\"params\":{\"owner\":\"Contains the address which balance we want to verify\"},\"returns\":{\"_0\":\"uint256 with the current balance of the account\"}},\"createProduct(string,uint256)\":{\"details\":\"This function is only available to an account with a `CREATOR` role\",\"params\":{\"_copies\":\"Amount of tokens inside the product\",\"_productName\":\"Name of the product to create\"}},\"getNextSequentialIndex(uint256,uint256,uint256)\":{\"details\":\"Uses a loop, do not call this from a non-view function!This functions require that the collection exist to properly work \",\"params\":{\"collectionId\":\"Index of the collection that we want to loop\",\"endingIndex\":\"Index of the last token of the product \",\"startingIndex\":\"Index of the starting token of the product\"},\"returns\":{\"nextIndex\":\"\\tWith the next starting point available for new products\"}},\"getProductCount()\":{\"details\":\"Use with get product to list all of the products\",\"returns\":{\"_0\":\"uint With the total of products\"}},\"getProductInfo(uint256)\":{\"details\":\"This function require that the collection exist\",\"params\":{\"productIndex_\":\"Contains the id of the product that we want to verify\"},\"returns\":{\"_0\":\"product which contain the information of the product\"}},\"hasTokenInProduct(address,uint256,uint256,uint256)\":{\"details\":\"Loops are expensive in solidity, so don't use this in a function that requires gas\",\"params\":{\"endingToken\":\"Last token to search \",\"productIndex\":\"Index of the collection to search\",\"startingToken\":\"Starting token to search\",\"userAddress\":\"Address that will be uses to see the belonging tokens of a product and a range\"},\"returns\":{\"_0\":\"bool \\t\\t\\t\\tWhich respond if the tokens belongs or not to a product and a range\"}},\"mintedTokensInProduct(uint256)\":{\"params\":{\"productIndex\":\"Product index to verify\"},\"returns\":{\"length\":\" \\t \\tNumber of tokens already minted\"}},\"ownsTokenInProduct(address,uint256)\":{\"details\":\"This function require that the product exist\",\"params\":{\"find\":\"Address to search\",\"productIndex\":\"Collection to verify\"},\"returns\":{\"_0\":\"bool \\t\\t\\tFor the existence or not, of the token in the product \"}},\"ownsTokenInRange(address,uint256)\":{\"details\":\"This function require that the range exist \",\"params\":{\"find\":\"Address to search\",\"rangeIndex\":\"Range to verify\"},\"returns\":{\"_0\":\"bool \\t\\tFor the existence or not, of the token in the range \"}},\"productToToken(uint256,uint256)\":{\"details\":\"This function require that the collection exist\\\\\",\"params\":{\"productIndex_\":\"Contains the index of the collection where is the token\",\"tokenIndex_\":\"Contains the index of the token inside the collection\"},\"returns\":{\"_0\":\"uint\\t\\t  With the value of the token in that indexed position \"}},\"tokenByProduct(uint256,uint256)\":{\"details\":\"This function require that the collection exist\",\"params\":{\"productIndex_\":\"Contains the index of the collection where is the token\",\"tokenIndex_\":\"Contains the index of the token inside the collection\"},\"returns\":{\"_0\":\"uint\\t\\t  With the value of the token in that indexed position \"}},\"tokenOfOwnerByIndex(address,uint256)\":{\"params\":{\"index\":\"Contains the position in the owned tokens list\",\"owner\":\"Contains address of the acount that we want to verify\"},\"returns\":{\"_0\":\"uint with the token that is owned by the account in that position \"}},\"tokenToProduct(uint256)\":{\"details\":\"This function require that the token exist\",\"params\":{\"tokenIndex_\":\"Contains the index of the token which info we want to know \"},\"returns\":{\"productIndex\":\" With the corresponding collection ID for the token\",\"rangeIndex\":\"  With the corresponding range of the collection \"}},\"tokenToProductIndex(uint256)\":{\"details\":\"This function require that the token exist\",\"params\":{\"tokenIndex_\":\"Contains the index of the token inside the collection\"},\"returns\":{\"_0\":\"uint \\t\\t Return the ID of the collection \"}}},\"title\":\"RAIR Product facet contract\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"balanceOf(address)\":{\"notice\":\"this funtions allow us to know the balance of an account\"},\"createProduct(string,uint256)\":{\"notice\":\"Creates a new product\"},\"getNextSequentialIndex(uint256,uint256,uint256)\":{\"notice\":\"Loops through a range of tokens inside a collection and returns the first token without an owner\"},\"getProductCount()\":{\"notice\":\"Returns the number of products on the contract\"},\"getProductInfo(uint256)\":{\"notice\":\"This function allow us to check the information of a product\"},\"hasTokenInProduct(address,uint256,uint256,uint256)\":{\"notice\":\"Loops over the user's tokens looking for one that belongs to a product and a specific range\"},\"mintedTokensInProduct(uint256)\":{\"notice\":\"Returns the number of tokens inside a product\"},\"ownsTokenInProduct(address,uint256)\":{\"notice\":\"Wrapper for the validator, searching for the entire product\"},\"ownsTokenInRange(address,uint256)\":{\"notice\":\"Wrapper for the validator, searching for the entire range\"},\"productToToken(uint256,uint256)\":{\"notice\":\"This function will search in a collection for a especific token and return its value\"},\"tokenByProduct(uint256,uint256)\":{\"notice\":\"This function allow us to see the position of creation of a token\"},\"tokenOfOwnerByIndex(address,uint256)\":{\"notice\":\"This functions allow us to check is a token is owned by an account\"},\"tokenToProduct(uint256)\":{\"notice\":\"This function allow us to locaste the collection & range of a token \"},\"tokenToProductIndex(uint256)\":{\"notice\":\"This function allow us to know the index of the collection that contains the token\"}},\"notice\":\"Facets for Product management\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/tokens/RAIR-721/Facets/ProductFacet.sol\":\"RAIRProductFacet\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    function _contextSuffixLength() internal view virtual returns (uint256) {\\n        return 0;\\n    }\\n}\\n\",\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Strings.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (utils/Strings.sol)\\n\\npragma solidity ^0.8.20;\\n\\nimport {Math} from \\\"./math/Math.sol\\\";\\nimport {SignedMath} from \\\"./math/SignedMath.sol\\\";\\n\\n/**\\n * @dev String operations.\\n */\\nlibrary Strings {\\n    bytes16 private constant HEX_DIGITS = \\\"0123456789abcdef\\\";\\n    uint8 private constant ADDRESS_LENGTH = 20;\\n\\n    /**\\n     * @dev The `value` string doesn't fit in the specified `length`.\\n     */\\n    error StringsInsufficientHexLength(uint256 value, uint256 length);\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` decimal representation.\\n     */\\n    function toString(uint256 value) internal pure returns (string memory) {\\n        unchecked {\\n            uint256 length = Math.log10(value) + 1;\\n            string memory buffer = new string(length);\\n            uint256 ptr;\\n            /// @solidity memory-safe-assembly\\n            assembly {\\n                ptr := add(buffer, add(32, length))\\n            }\\n            while (true) {\\n                ptr--;\\n                /// @solidity memory-safe-assembly\\n                assembly {\\n                    mstore8(ptr, byte(mod(value, 10), HEX_DIGITS))\\n                }\\n                value /= 10;\\n                if (value == 0) break;\\n            }\\n            return buffer;\\n        }\\n    }\\n\\n    /**\\n     * @dev Converts a `int256` to its ASCII `string` decimal representation.\\n     */\\n    function toStringSigned(int256 value) internal pure returns (string memory) {\\n        return string.concat(value < 0 ? \\\"-\\\" : \\\"\\\", toString(SignedMath.abs(value)));\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(uint256 value) internal pure returns (string memory) {\\n        unchecked {\\n            return toHexString(value, Math.log256(value) + 1);\\n        }\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.\\n     */\\n    function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {\\n        uint256 localValue = value;\\n        bytes memory buffer = new bytes(2 * length + 2);\\n        buffer[0] = \\\"0\\\";\\n        buffer[1] = \\\"x\\\";\\n        for (uint256 i = 2 * length + 1; i > 1; --i) {\\n            buffer[i] = HEX_DIGITS[localValue & 0xf];\\n            localValue >>= 4;\\n        }\\n        if (localValue != 0) {\\n            revert StringsInsufficientHexLength(value, length);\\n        }\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts an `address` with fixed length of 20 bytes to its not checksummed ASCII `string` hexadecimal\\n     * representation.\\n     */\\n    function toHexString(address addr) internal pure returns (string memory) {\\n        return toHexString(uint256(uint160(addr)), ADDRESS_LENGTH);\\n    }\\n\\n    /**\\n     * @dev Returns true if the two strings are equal.\\n     */\\n    function equal(string memory a, string memory b) internal pure returns (bool) {\\n        return bytes(a).length == bytes(b).length && keccak256(bytes(a)) == keccak256(bytes(b));\\n    }\\n}\\n\",\"keccak256\":\"0x55f102ea785d8399c0e58d1108e2d289506dde18abc6db1b7f68c1f9f9bc5792\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/math/Math.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (utils/math/Math.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Standard math utilities missing in the Solidity language.\\n */\\nlibrary Math {\\n    /**\\n     * @dev Muldiv operation overflow.\\n     */\\n    error MathOverflowedMulDiv();\\n\\n    enum Rounding {\\n        Floor, // Toward negative infinity\\n        Ceil, // Toward positive infinity\\n        Trunc, // Toward zero\\n        Expand // Away from zero\\n    }\\n\\n    /**\\n     * @dev Returns the addition of two unsigned integers, with an overflow flag.\\n     */\\n    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            uint256 c = a + b;\\n            if (c < a) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, with an overflow flag.\\n     */\\n    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b > a) return (false, 0);\\n            return (true, a - b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.\\n     */\\n    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n            // benefit is lost if 'b' is also tested.\\n            // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n            if (a == 0) return (true, 0);\\n            uint256 c = a * b;\\n            if (c / a != b) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the division of two unsigned integers, with a division by zero flag.\\n     */\\n    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a / b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.\\n     */\\n    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a % b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the largest of two numbers.\\n     */\\n    function max(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a > b ? a : b;\\n    }\\n\\n    /**\\n     * @dev Returns the smallest of two numbers.\\n     */\\n    function min(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a < b ? a : b;\\n    }\\n\\n    /**\\n     * @dev Returns the average of two numbers. The result is rounded towards\\n     * zero.\\n     */\\n    function average(uint256 a, uint256 b) internal pure returns (uint256) {\\n        // (a + b) / 2 can overflow.\\n        return (a & b) + (a ^ b) / 2;\\n    }\\n\\n    /**\\n     * @dev Returns the ceiling of the division of two numbers.\\n     *\\n     * This differs from standard division with `/` in that it rounds towards infinity instead\\n     * of rounding towards zero.\\n     */\\n    function ceilDiv(uint256 a, uint256 b) internal pure returns (uint256) {\\n        if (b == 0) {\\n            // Guarantee the same behavior as in a regular Solidity division.\\n            return a / b;\\n        }\\n\\n        // (a + b - 1) / b can overflow on addition, so we distribute.\\n        return a == 0 ? 0 : (a - 1) / b + 1;\\n    }\\n\\n    /**\\n     * @notice Calculates floor(x * y / denominator) with full precision. Throws if result overflows a uint256 or\\n     * denominator == 0.\\n     * @dev Original credit to Remco Bloemen under MIT license (https://xn--2-umb.com/21/muldiv) with further edits by\\n     * Uniswap Labs also under MIT license.\\n     */\\n    function mulDiv(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 result) {\\n        unchecked {\\n            // 512-bit multiply [prod1 prod0] = x * y. Compute the product mod 2^256 and mod 2^256 - 1, then use\\n            // use the Chinese Remainder Theorem to reconstruct the 512 bit result. The result is stored in two 256\\n            // variables such that product = prod1 * 2^256 + prod0.\\n            uint256 prod0 = x * y; // Least significant 256 bits of the product\\n            uint256 prod1; // Most significant 256 bits of the product\\n            assembly {\\n                let mm := mulmod(x, y, not(0))\\n                prod1 := sub(sub(mm, prod0), lt(mm, prod0))\\n            }\\n\\n            // Handle non-overflow cases, 256 by 256 division.\\n            if (prod1 == 0) {\\n                // Solidity will revert if denominator == 0, unlike the div opcode on its own.\\n                // The surrounding unchecked block does not change this fact.\\n                // See https://docs.soliditylang.org/en/latest/control-structures.html#checked-or-unchecked-arithmetic.\\n                return prod0 / denominator;\\n            }\\n\\n            // Make sure the result is less than 2^256. Also prevents denominator == 0.\\n            if (denominator <= prod1) {\\n                revert MathOverflowedMulDiv();\\n            }\\n\\n            ///////////////////////////////////////////////\\n            // 512 by 256 division.\\n            ///////////////////////////////////////////////\\n\\n            // Make division exact by subtracting the remainder from [prod1 prod0].\\n            uint256 remainder;\\n            assembly {\\n                // Compute remainder using mulmod.\\n                remainder := mulmod(x, y, denominator)\\n\\n                // Subtract 256 bit number from 512 bit number.\\n                prod1 := sub(prod1, gt(remainder, prod0))\\n                prod0 := sub(prod0, remainder)\\n            }\\n\\n            // Factor powers of two out of denominator and compute largest power of two divisor of denominator.\\n            // Always >= 1. See https://cs.stackexchange.com/q/138556/92363.\\n\\n            uint256 twos = denominator & (0 - denominator);\\n            assembly {\\n                // Divide denominator by twos.\\n                denominator := div(denominator, twos)\\n\\n                // Divide [prod1 prod0] by twos.\\n                prod0 := div(prod0, twos)\\n\\n                // Flip twos such that it is 2^256 / twos. If twos is zero, then it becomes one.\\n                twos := add(div(sub(0, twos), twos), 1)\\n            }\\n\\n            // Shift in bits from prod1 into prod0.\\n            prod0 |= prod1 * twos;\\n\\n            // Invert denominator mod 2^256. Now that denominator is an odd number, it has an inverse modulo 2^256 such\\n            // that denominator * inv = 1 mod 2^256. Compute the inverse by starting with a seed that is correct for\\n            // four bits. That is, denominator * inv = 1 mod 2^4.\\n            uint256 inverse = (3 * denominator) ^ 2;\\n\\n            // Use the Newton-Raphson iteration to improve the precision. Thanks to Hensel's lifting lemma, this also\\n            // works in modular arithmetic, doubling the correct bits in each step.\\n            inverse *= 2 - denominator * inverse; // inverse mod 2^8\\n            inverse *= 2 - denominator * inverse; // inverse mod 2^16\\n            inverse *= 2 - denominator * inverse; // inverse mod 2^32\\n            inverse *= 2 - denominator * inverse; // inverse mod 2^64\\n            inverse *= 2 - denominator * inverse; // inverse mod 2^128\\n            inverse *= 2 - denominator * inverse; // inverse mod 2^256\\n\\n            // Because the division is now exact we can divide by multiplying with the modular inverse of denominator.\\n            // This will give us the correct result modulo 2^256. Since the preconditions guarantee that the outcome is\\n            // less than 2^256, this is the final result. We don't need to compute the high bits of the result and prod1\\n            // is no longer required.\\n            result = prod0 * inverse;\\n            return result;\\n        }\\n    }\\n\\n    /**\\n     * @notice Calculates x * y / denominator with full precision, following the selected rounding direction.\\n     */\\n    function mulDiv(uint256 x, uint256 y, uint256 denominator, Rounding rounding) internal pure returns (uint256) {\\n        uint256 result = mulDiv(x, y, denominator);\\n        if (unsignedRoundsUp(rounding) && mulmod(x, y, denominator) > 0) {\\n            result += 1;\\n        }\\n        return result;\\n    }\\n\\n    /**\\n     * @dev Returns the square root of a number. If the number is not a perfect square, the value is rounded\\n     * towards zero.\\n     *\\n     * Inspired by Henry S. Warren, Jr.'s \\\"Hacker's Delight\\\" (Chapter 11).\\n     */\\n    function sqrt(uint256 a) internal pure returns (uint256) {\\n        if (a == 0) {\\n            return 0;\\n        }\\n\\n        // For our first guess, we get the biggest power of 2 which is smaller than the square root of the target.\\n        //\\n        // We know that the \\\"msb\\\" (most significant bit) of our target number `a` is a power of 2 such that we have\\n        // `msb(a) <= a < 2*msb(a)`. This value can be written `msb(a)=2**k` with `k=log2(a)`.\\n        //\\n        // This can be rewritten `2**log2(a) <= a < 2**(log2(a) + 1)`\\n        // \\u2192 `sqrt(2**k) <= sqrt(a) < sqrt(2**(k+1))`\\n        // \\u2192 `2**(k/2) <= sqrt(a) < 2**((k+1)/2) <= 2**(k/2 + 1)`\\n        //\\n        // Consequently, `2**(log2(a) / 2)` is a good first approximation of `sqrt(a)` with at least 1 correct bit.\\n        uint256 result = 1 << (log2(a) >> 1);\\n\\n        // At this point `result` is an estimation with one bit of precision. We know the true value is a uint128,\\n        // since it is the square root of a uint256. Newton's method converges quadratically (precision doubles at\\n        // every iteration). We thus need at most 7 iteration to turn our partial result with one bit of precision\\n        // into the expected uint128 result.\\n        unchecked {\\n            result = (result + a / result) >> 1;\\n            result = (result + a / result) >> 1;\\n            result = (result + a / result) >> 1;\\n            result = (result + a / result) >> 1;\\n            result = (result + a / result) >> 1;\\n            result = (result + a / result) >> 1;\\n            result = (result + a / result) >> 1;\\n            return min(result, a / result);\\n        }\\n    }\\n\\n    /**\\n     * @notice Calculates sqrt(a), following the selected rounding direction.\\n     */\\n    function sqrt(uint256 a, Rounding rounding) internal pure returns (uint256) {\\n        unchecked {\\n            uint256 result = sqrt(a);\\n            return result + (unsignedRoundsUp(rounding) && result * result < a ? 1 : 0);\\n        }\\n    }\\n\\n    /**\\n     * @dev Return the log in base 2 of a positive value rounded towards zero.\\n     * Returns 0 if given 0.\\n     */\\n    function log2(uint256 value) internal pure returns (uint256) {\\n        uint256 result = 0;\\n        unchecked {\\n            if (value >> 128 > 0) {\\n                value >>= 128;\\n                result += 128;\\n            }\\n            if (value >> 64 > 0) {\\n                value >>= 64;\\n                result += 64;\\n            }\\n            if (value >> 32 > 0) {\\n                value >>= 32;\\n                result += 32;\\n            }\\n            if (value >> 16 > 0) {\\n                value >>= 16;\\n                result += 16;\\n            }\\n            if (value >> 8 > 0) {\\n                value >>= 8;\\n                result += 8;\\n            }\\n            if (value >> 4 > 0) {\\n                value >>= 4;\\n                result += 4;\\n            }\\n            if (value >> 2 > 0) {\\n                value >>= 2;\\n                result += 2;\\n            }\\n            if (value >> 1 > 0) {\\n                result += 1;\\n            }\\n        }\\n        return result;\\n    }\\n\\n    /**\\n     * @dev Return the log in base 2, following the selected rounding direction, of a positive value.\\n     * Returns 0 if given 0.\\n     */\\n    function log2(uint256 value, Rounding rounding) internal pure returns (uint256) {\\n        unchecked {\\n            uint256 result = log2(value);\\n            return result + (unsignedRoundsUp(rounding) && 1 << result < value ? 1 : 0);\\n        }\\n    }\\n\\n    /**\\n     * @dev Return the log in base 10 of a positive value rounded towards zero.\\n     * Returns 0 if given 0.\\n     */\\n    function log10(uint256 value) internal pure returns (uint256) {\\n        uint256 result = 0;\\n        unchecked {\\n            if (value >= 10 ** 64) {\\n                value /= 10 ** 64;\\n                result += 64;\\n            }\\n            if (value >= 10 ** 32) {\\n                value /= 10 ** 32;\\n                result += 32;\\n            }\\n            if (value >= 10 ** 16) {\\n                value /= 10 ** 16;\\n                result += 16;\\n            }\\n            if (value >= 10 ** 8) {\\n                value /= 10 ** 8;\\n                result += 8;\\n            }\\n            if (value >= 10 ** 4) {\\n                value /= 10 ** 4;\\n                result += 4;\\n            }\\n            if (value >= 10 ** 2) {\\n                value /= 10 ** 2;\\n                result += 2;\\n            }\\n            if (value >= 10 ** 1) {\\n                result += 1;\\n            }\\n        }\\n        return result;\\n    }\\n\\n    /**\\n     * @dev Return the log in base 10, following the selected rounding direction, of a positive value.\\n     * Returns 0 if given 0.\\n     */\\n    function log10(uint256 value, Rounding rounding) internal pure returns (uint256) {\\n        unchecked {\\n            uint256 result = log10(value);\\n            return result + (unsignedRoundsUp(rounding) && 10 ** result < value ? 1 : 0);\\n        }\\n    }\\n\\n    /**\\n     * @dev Return the log in base 256 of a positive value rounded towards zero.\\n     * Returns 0 if given 0.\\n     *\\n     * Adding one to the result gives the number of pairs of hex symbols needed to represent `value` as a hex string.\\n     */\\n    function log256(uint256 value) internal pure returns (uint256) {\\n        uint256 result = 0;\\n        unchecked {\\n            if (value >> 128 > 0) {\\n                value >>= 128;\\n                result += 16;\\n            }\\n            if (value >> 64 > 0) {\\n                value >>= 64;\\n                result += 8;\\n            }\\n            if (value >> 32 > 0) {\\n                value >>= 32;\\n                result += 4;\\n            }\\n            if (value >> 16 > 0) {\\n                value >>= 16;\\n                result += 2;\\n            }\\n            if (value >> 8 > 0) {\\n                result += 1;\\n            }\\n        }\\n        return result;\\n    }\\n\\n    /**\\n     * @dev Return the log in base 256, following the selected rounding direction, of a positive value.\\n     * Returns 0 if given 0.\\n     */\\n    function log256(uint256 value, Rounding rounding) internal pure returns (uint256) {\\n        unchecked {\\n            uint256 result = log256(value);\\n            return result + (unsignedRoundsUp(rounding) && 1 << (result << 3) < value ? 1 : 0);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns whether a provided rounding mode is considered rounding up for unsigned integers.\\n     */\\n    function unsignedRoundsUp(Rounding rounding) internal pure returns (bool) {\\n        return uint8(rounding) % 2 == 1;\\n    }\\n}\\n\",\"keccak256\":\"0x005ec64c6313f0555d59e278f9a7a5ab2db5bdc72a027f255a37c327af1ec02d\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/math/SignedMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (utils/math/SignedMath.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Standard signed math utilities missing in the Solidity language.\\n */\\nlibrary SignedMath {\\n    /**\\n     * @dev Returns the largest of two signed numbers.\\n     */\\n    function max(int256 a, int256 b) internal pure returns (int256) {\\n        return a > b ? a : b;\\n    }\\n\\n    /**\\n     * @dev Returns the smallest of two signed numbers.\\n     */\\n    function min(int256 a, int256 b) internal pure returns (int256) {\\n        return a < b ? a : b;\\n    }\\n\\n    /**\\n     * @dev Returns the average of two signed numbers without overflow.\\n     * The result is rounded towards zero.\\n     */\\n    function average(int256 a, int256 b) internal pure returns (int256) {\\n        // Formula from the book \\\"Hacker's Delight\\\"\\n        int256 x = (a & b) + ((a ^ b) >> 1);\\n        return x + (int256(uint256(x) >> 255) & (a ^ b));\\n    }\\n\\n    /**\\n     * @dev Returns the absolute unsigned value of a signed value.\\n     */\\n    function abs(int256 n) internal pure returns (uint256) {\\n        unchecked {\\n            // must be unchecked in order to support `n = type(int256).min`\\n            return uint256(n >= 0 ? n : -n);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x5f7e4076e175393767754387c962926577f1660dd9b810187b9002407656be72\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (utils/structs/EnumerableSet.sol)\\n// This file was procedurally generated from scripts/generate/templates/EnumerableSet.js.\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Library for managing\\n * https://en.wikipedia.org/wiki/Set_(abstract_data_type)[sets] of primitive\\n * types.\\n *\\n * Sets have the following properties:\\n *\\n * - Elements are added, removed, and checked for existence in constant time\\n * (O(1)).\\n * - Elements are enumerated in O(n). No guarantees are made on the ordering.\\n *\\n * ```solidity\\n * contract Example {\\n *     // Add the library methods\\n *     using EnumerableSet for EnumerableSet.AddressSet;\\n *\\n *     // Declare a set state variable\\n *     EnumerableSet.AddressSet private mySet;\\n * }\\n * ```\\n *\\n * As of v3.3.0, sets of type `bytes32` (`Bytes32Set`), `address` (`AddressSet`)\\n * and `uint256` (`UintSet`) are supported.\\n *\\n * [WARNING]\\n * ====\\n * Trying to delete such a structure from storage will likely result in data corruption, rendering the structure\\n * unusable.\\n * See https://github.com/ethereum/solidity/pull/11843[ethereum/solidity#11843] for more info.\\n *\\n * In order to clean an EnumerableSet, you can either remove all elements one by one or create a fresh instance using an\\n * array of EnumerableSet.\\n * ====\\n */\\nlibrary EnumerableSet {\\n    // To implement this library for multiple types with as little code\\n    // repetition as possible, we write it in terms of a generic Set type with\\n    // bytes32 values.\\n    // The Set implementation uses private functions, and user-facing\\n    // implementations (such as AddressSet) are just wrappers around the\\n    // underlying Set.\\n    // This means that we can only create new EnumerableSets for types that fit\\n    // in bytes32.\\n\\n    struct Set {\\n        // Storage of set values\\n        bytes32[] _values;\\n        // Position is the index of the value in the `values` array plus 1.\\n        // Position 0 is used to mean a value is not in the set.\\n        mapping(bytes32 value => uint256) _positions;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function _add(Set storage set, bytes32 value) private returns (bool) {\\n        if (!_contains(set, value)) {\\n            set._values.push(value);\\n            // The value is stored at length-1, but we add 1 to all indexes\\n            // and use 0 as a sentinel value\\n            set._positions[value] = set._values.length;\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function _remove(Set storage set, bytes32 value) private returns (bool) {\\n        // We cache the value's position to prevent multiple reads from the same storage slot\\n        uint256 position = set._positions[value];\\n\\n        if (position != 0) {\\n            // Equivalent to contains(set, value)\\n            // To delete an element from the _values array in O(1), we swap the element to delete with the last one in\\n            // the array, and then remove the last element (sometimes called as 'swap and pop').\\n            // This modifies the order of the array, as noted in {at}.\\n\\n            uint256 valueIndex = position - 1;\\n            uint256 lastIndex = set._values.length - 1;\\n\\n            if (valueIndex != lastIndex) {\\n                bytes32 lastValue = set._values[lastIndex];\\n\\n                // Move the lastValue to the index where the value to delete is\\n                set._values[valueIndex] = lastValue;\\n                // Update the tracked position of the lastValue (that was just moved)\\n                set._positions[lastValue] = position;\\n            }\\n\\n            // Delete the slot where the moved value was stored\\n            set._values.pop();\\n\\n            // Delete the tracked position for the deleted slot\\n            delete set._positions[value];\\n\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function _contains(Set storage set, bytes32 value) private view returns (bool) {\\n        return set._positions[value] != 0;\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function _length(Set storage set) private view returns (uint256) {\\n        return set._values.length;\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function _at(Set storage set, uint256 index) private view returns (bytes32) {\\n        return set._values[index];\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function _values(Set storage set) private view returns (bytes32[] memory) {\\n        return set._values;\\n    }\\n\\n    // Bytes32Set\\n\\n    struct Bytes32Set {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _add(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _remove(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(Bytes32Set storage set, bytes32 value) internal view returns (bool) {\\n        return _contains(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(Bytes32Set storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(Bytes32Set storage set, uint256 index) internal view returns (bytes32) {\\n        return _at(set._inner, index);\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(Bytes32Set storage set) internal view returns (bytes32[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        bytes32[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n\\n    // AddressSet\\n\\n    struct AddressSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(AddressSet storage set, address value) internal returns (bool) {\\n        return _add(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(AddressSet storage set, address value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(AddressSet storage set, address value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(AddressSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(AddressSet storage set, uint256 index) internal view returns (address) {\\n        return address(uint160(uint256(_at(set._inner, index))));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(AddressSet storage set) internal view returns (address[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        address[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n\\n    // UintSet\\n\\n    struct UintSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _add(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(UintSet storage set, uint256 value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(UintSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(UintSet storage set, uint256 index) internal view returns (uint256) {\\n        return uint256(_at(set._inner, index));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(UintSet storage set) internal view returns (uint256[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        uint256[] memory result;\\n\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n}\\n\",\"keccak256\":\"0x86c1470cbfd878491e5de030072b647352d36bd27122cffb928970b1945282aa\",\"license\":\"MIT\"},\"contracts/common/DiamondStorage/AccessControlEnumerable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.25;\\n\\nimport { Context } from \\\"@openzeppelin/contracts/utils/Context.sol\\\";\\nimport { Strings } from \\\"@openzeppelin/contracts/utils/Strings.sol\\\";\\nimport { EnumerableSet } from \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\nimport { AccessControlEnumerableStorage } from \\\"./AccessControlEnumerableStorage.sol\\\";\\n\\nabstract contract AccessControlEnumerable is Context {\\n    using EnumerableSet for EnumerableSet.AddressSet;\\n    \\n    event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\tevent RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    modifier onlyRole(bytes32 role) {\\n        _checkRole(role, _msgSender());\\n        _;\\n    }\\n\\n    function renounceRole(bytes32 role, address account) public {\\n        require(account == _msgSender(), \\\"AccessControl: can only renounce roles for self\\\");\\n        _revokeRole(role, account);\\n    }\\n\\n    function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _grantRole(role, account);\\n    }\\n\\n    function revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _revokeRole(role, account);\\n    }\\n\\n    function _checkRole(bytes32 role, address account) internal view {\\n        if (!hasRole(role, account)) {\\n            revert(\\n                string(\\n                    abi.encodePacked(\\n                        \\\"AccessControl: account \\\",\\n                        Strings.toHexString(uint160(account), 20),\\n                        \\\" is missing role \\\",\\n                        Strings.toHexString(uint256(role), 32)\\n                    )\\n                )\\n            );\\n        }\\n    }\\n\\n\\tfunction hasRole(bytes32 role, address account) public view returns (bool) {\\n\\t\\treturn AccessControlEnumerableStorage.layout()._roles[role].members[account];\\n\\t}\\n\\n\\tfunction getRoleAdmin(bytes32 role) public view returns (bytes32) {\\n\\t\\treturn AccessControlEnumerableStorage.layout()._roles[role].adminRole;\\n\\t}\\n\\n\\tfunction getRoleMember(bytes32 role, uint256 index) public view returns (address) {\\n\\t\\treturn AccessControlEnumerableStorage.layout()._roleMembers[role].at(index);\\n\\t}\\n\\t\\n\\tfunction getRoleMemberCount(bytes32 role) public view returns (uint256) {\\n\\t\\treturn AccessControlEnumerableStorage.layout()._roleMembers[role].length();\\n\\t}\\n\\n\\tfunction _setRoleAdmin(bytes32 role, bytes32 adminRole) internal {\\n\\t\\tbytes32 previousAdminRole = getRoleAdmin(role);\\n\\t\\tAccessControlEnumerableStorage.layout()._roles[role].adminRole = adminRole;\\n\\t\\temit RoleAdminChanged(role, previousAdminRole, adminRole);\\n\\t}\\n\\n\\tfunction _grantRole(bytes32 role, address account) internal {\\n\\t\\tif (!hasRole(role, account)) {\\n\\t\\t\\tAccessControlEnumerableStorage.layout()._roles[role].members[account] = true;\\n\\t\\t\\temit RoleGranted(role, account, _msgSender());\\n\\t\\t\\tAccessControlEnumerableStorage.layout()._roleMembers[role].add(account);\\n\\t\\t}\\n\\t}\\n\\n\\tfunction _revokeRole(bytes32 role, address account) internal {\\n\\t\\tif (hasRole(role, account)) {\\n\\t\\t\\tAccessControlEnumerableStorage.layout()._roles[role].members[account] = false;\\n\\t\\t\\temit RoleRevoked(role, account, _msgSender());\\n\\t\\t\\tAccessControlEnumerableStorage.layout()._roleMembers[role].remove(account);\\n\\t\\t}\\n\\t}\\n}\",\"keccak256\":\"0x876db28aa285dd662a703c8bf6d0a9f2d3856046a85df76e86cfd545e00adb91\",\"license\":\"MIT\"},\"contracts/common/DiamondStorage/AccessControlEnumerableStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.25;\\n\\nimport { EnumerableSet } from \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\n\\nlibrary AccessControlEnumerableStorage {\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('rair.contracts.storage.AccessControlEnumerable');\\n\\n    struct RoleData {\\n        mapping(address => bool) members;\\n        bytes32 adminRole;\\n    }\\n\\n    struct Layout {\\n        mapping(bytes32 => RoleData) _roles;\\n        mapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;\\n    }\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\",\"keccak256\":\"0x08d3921fe7d2296c619e195c3c6662e3ba79d325b9222f3fc94ac75ffc6eec01\",\"license\":\"MIT\"},\"contracts/tokens/RAIR-721/AccessControlRoles.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.25; \\n\\nabstract contract ERC721AccessControlRoles {\\n\\tbytes32 public constant TRADER = keccak256(\\\"TRADER\\\");\\n\\tbytes32 public constant MINTER = keccak256(\\\"MINTER\\\");\\n\\tbytes32 public constant CREATOR = keccak256(\\\"CREATOR\\\");\\n}\",\"keccak256\":\"0x0e0cff57250a7b36955e106678d96a52a5ff30f81daca4aec265e57b335087fc\",\"license\":\"GPL-3.0\"},\"contracts/tokens/RAIR-721/AppStorage.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.25; \\n\\nlibrary ERC721Storage {\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('rair.contracts.storage.RAIR721');\\n\\n    struct product {\\n        uint startingToken;\\n        uint endingToken;\\n        uint mintableTokens;\\n        string name;\\n        uint[] rangeList;\\n    }\\n\\n    struct range {\\n        uint rangeStart;\\n        uint rangeEnd;\\n        uint tokensAllowed;\\n        uint mintableTokens;\\n        uint lockedTokens;\\n        uint rangePrice;\\n        string rangeName;\\n    }\\n\\n    struct Layout {\\n        // Base ERC721\\n        string _name;\\n        string _symbol;\\n        mapping(uint256 tokenId => address) _owners;\\n        mapping(address owner => uint256) _balances;\\n        mapping(uint256 tokenId => address) _tokenApprovals;\\n        mapping(address owner => mapping(address operator => bool)) _operatorApprovals;\\n        // ERC721 enumerable extension\\n        mapping(address owner => mapping(uint256 index => uint256)) _ownedTokens;\\n        mapping(uint256 tokenId => uint256) _ownedTokensIndex;\\n        uint256[] _allTokens;\\n        mapping(uint256 tokenId => uint256) _allTokensIndex;\\n        // RAIR exclusive\\n        string baseURI;\\n        address factoryAddress;\\n        uint16 royaltyFee;\\n        product[] products;\\n        range[] ranges;\\n        mapping(uint => uint) tokenToProduct;\\n        mapping(uint => uint) tokenToRange;\\n        mapping(uint => string) uniqueTokenURI;\\n        mapping(uint => string) productURI;\\n        mapping(uint => bool) appendTokenIndexToProductURI;\\n        bool appendTokenIndexToBaseURI;\\n        mapping(uint => uint[]) tokensByProduct;\\n        string contractMetadataURI;\\n        mapping(uint => uint) rangeToProduct;\\n        mapping(uint => bool) _minted;\\n        // August 2022 - Metadata File Extension Update\\n        mapping(uint => string) rangeURI;\\n        mapping(uint => bool) appendTokenIndexToRangeURI;\\n        string _metadataExtension;\\n        // March 2024 - Optional trader role\\n        bool requiresTrader;\\n    }\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\",\"keccak256\":\"0x5c1dacd45344afb85c863c85f27e20928c01951b96f3ac4096324b93183e0d31\",\"license\":\"GPL-3.0\"},\"contracts/tokens/RAIR-721/Facets/ProductFacet.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.25;\\n\\nimport {ERC721Storage} from \\\"../AppStorage.sol\\\";\\nimport {ERC721AccessControlRoles} from \\\"../AccessControlRoles.sol\\\";\\nimport {AccessControlEnumerable} from \\\"../../../common/DiamondStorage/AccessControlEnumerable.sol\\\";\\n\\n/// @title  RAIR Product facet contract\\n/// @notice Facets for Product management\\ncontract RAIRProductFacet is AccessControlEnumerable, ERC721AccessControlRoles {\\n    /// @param  collectionIndex \\tIndex for the collection\\n\\t/// @param  collectionName \\t\\tName for the collection\\n\\t/// @param  startingToken \\t\\tFirst token in the collection (include)\\n\\t/// @param  collectionLength \\tNumber of tokens in the collection\\n\\tevent CreatedCollection(uint indexed collectionIndex, string collectionName, uint startingToken, uint collectionLength);\\n\\n\\t/// @notice Verifies that the product exists\\n\\t/// @param\\tcollectionId\\tCollection to verify\\n\\tmodifier collectionExists(uint collectionId) {\\n\\t\\trequire(ERC721Storage.layout().products.length > collectionId, \\\"RAIR ERC721: Collection does not exist\\\");\\n\\t\\t_;\\n\\t}\\n\\n\\t/// @notice Verifies that the range exists\\n\\t/// @param\\trangeID\\tRange to verify\\n\\tmodifier rangeExists(uint rangeID) {\\n\\t\\trequire(ERC721Storage.layout().ranges.length > rangeID, \\\"RAIR ERC721: Range does not exist\\\");\\n\\t\\t_;\\n\\t}\\n\\n\\t/// @notice Verifies that the token exists\\n\\t/// @param\\ttokenIndex\\tRange to verify\\n\\tmodifier tokenExists(uint tokenIndex) {\\n\\t\\trequire(\\n\\t\\t\\tERC721Storage.layout()._owners[tokenIndex] != address(0),\\n\\t\\t\\t\\\"RAIR ERC721: Query for nonexistent token\\\"\\n\\t\\t);\\n\\t\\t_;\\n\\t}\\n\\n\\t/// @notice Wrapper for the validator, searching for the entire product\\n\\t/// @dev \\tThis function require that the product exist\\n\\t/// @param\\tfind\\t\\t\\tAddress to search\\n\\t/// @param\\tproductIndex\\tCollection to verify\\n\\t/// @return bool \\t\\t\\tFor the existence or not, of the token in the product \\n\\tfunction ownsTokenInProduct(address find, uint productIndex) public view collectionExists(productIndex) returns (bool) {\\n\\t\\tERC721Storage.product storage selectedProduct = ERC721Storage.layout().products[productIndex];\\n\\t\\treturn _ownsTokenInsideRange(find, selectedProduct.startingToken, selectedProduct.endingToken);\\n\\t}\\n\\n\\t/// @notice Wrapper for the validator, searching for the entire range\\n\\t/// @dev \\tThis function require that the range exist \\n\\t/// @param\\tfind\\t\\tAddress to search\\n\\t/// @param\\trangeIndex\\tRange to verify\\n\\t/// @return bool \\t\\tFor the existence or not, of the token in the range \\n\\tfunction ownsTokenInRange(address find, uint rangeIndex) public view rangeExists(rangeIndex) returns (bool) {\\n\\t\\tERC721Storage.Layout storage store = ERC721Storage.layout();\\n\\t\\tERC721Storage.range storage selectedRange = store.ranges[rangeIndex];\\n\\t\\tuint startOfProduct = store.products[store.rangeToProduct[rangeIndex]].startingToken;\\n\\t\\treturn _ownsTokenInsideRange(find, startOfProduct + selectedRange.rangeStart, startOfProduct + selectedRange.rangeEnd);\\n\\t}\\n\\n\\t/// @notice Validates that an address owns at least one token inside a specified range\\n\\t/// @dev Loops through the range, don't use on non-view functions\\n\\t/// @param\\tfind\\tAddress to validate\\n\\t/// @param\\tfrom\\tRange start\\n\\t/// @param\\tto\\t\\tRange end\\n\\t/// @return bool \\tFor the existence or not, of the token inside the range \\n\\tfunction _ownsTokenInsideRange(address find, uint from, uint to) internal view returns (bool) {\\n\\t\\tfor (uint i = from; i < to; i++) {\\n\\t\\t\\tif (ERC721Storage.layout()._owners[i] == find) {\\n\\t\\t\\t\\treturn true;\\n\\t\\t\\t}\\n\\t\\t}\\n\\t\\treturn false;\\n\\t}\\n\\n\\t/// @notice This function allow us to see the position of creation of a token\\n\\t/// @dev \\tThis function require that the collection exist\\n\\t/// @param \\tproductIndex_ Contains the index of the collection where is the token\\n\\t/// @param \\ttokenIndex_   Contains the index of the token inside the collection\\n\\t/// @return uint\\t\\t  With the value of the token in that indexed position \\n\\tfunction tokenByProduct(uint productIndex_, uint tokenIndex_) public view collectionExists(productIndex_) returns (uint) {\\n\\t\\treturn ERC721Storage.layout().tokensByProduct[productIndex_][tokenIndex_];\\n\\t}\\n\\n\\t/// @notice This function will search in a collection for a especific token and return its value\\n\\t/// @dev \\tThis function require that the collection exist\\\\\\n\\t/// @param \\tproductIndex_ Contains the index of the collection where is the token\\n\\t/// @param \\ttokenIndex_   Contains the index of the token inside the collection\\n\\t/// @return uint\\t\\t  With the value of the token in that indexed position \\n\\tfunction productToToken(uint productIndex_, uint tokenIndex_) public view collectionExists(productIndex_) returns(uint) {\\n\\t\\treturn ERC721Storage.layout().products[productIndex_].startingToken + tokenIndex_;\\n\\t}\\n\\n\\t/// @notice This function allow us to know the index of the collection that contains the token\\n\\t/// @dev \\tThis function require that the token exist\\n\\t/// @param  tokenIndex_  Contains the index of the token inside the collection\\n\\t/// @return uint \\t\\t Return the ID of the collection \\n\\tfunction tokenToProductIndex(uint tokenIndex_) public view tokenExists(tokenIndex_) returns (uint) {\\n\\t\\tERC721Storage.Layout storage store = ERC721Storage.layout();\\n\\t\\treturn tokenIndex_ - store.products[store.tokenToProduct[tokenIndex_]].startingToken;\\n\\t}\\n\\n\\t/// @notice This function allow us to locaste the collection & range of a token \\n\\t/// @dev \\tThis function require that the token exist\\n\\t/// @param \\ttokenIndex_   Contains the index of the token which info we want to know \\n\\t/// @return productIndex  With the corresponding collection ID for the token\\n\\t/// @return rangeIndex\\t  With the corresponding range of the collection \\n\\tfunction tokenToProduct(uint tokenIndex_) public view tokenExists(tokenIndex_) returns (uint productIndex, uint rangeIndex) {\\n\\t\\tERC721Storage.Layout storage store = ERC721Storage.layout();\\n\\t\\tproductIndex = store.tokenToProduct[tokenIndex_];\\n\\t\\trangeIndex = store.tokenToRange[tokenIndex_];\\n\\t}\\n\\n\\t/// @notice\\tReturns the number of products on the contract\\n\\t/// @dev\\tUse with get product to list all of the products\\n\\t/// @return uint With the total of products\\n\\tfunction getProductCount() external view returns(uint) {\\n\\t\\treturn ERC721Storage.layout().products.length;\\n\\t}\\n\\n\\t/// @notice This function allow us to check the information of a product\\n\\t/// @dev \\tThis function require that the collection exist\\n\\t/// @param productIndex_ Contains the id of the product that we want to verify\\n\\t/// @return product which contain the information of the product\\n\\tfunction getProductInfo(uint productIndex_)\\n\\t\\texternal\\n\\t\\tview\\n\\tcollectionExists(productIndex_) returns (ERC721Storage.product memory) {\\n\\t\\treturn ERC721Storage.layout().products[productIndex_];\\n\\t}\\n\\n\\t/// @notice This functions allow us to check is a token is owned by an account\\n\\t/// @param owner Contains address of the acount that we want to verify\\n\\t/// @param index Contains the position in the owned tokens list\\n\\t/// @return uint with the token that is owned by the account in that position \\n\\tfunction tokenOfOwnerByIndex(address owner, uint256 index) public view returns (uint256) {\\n\\t\\trequire(index < RAIRProductFacet.balanceOf(owner), \\\"ERC721Enumerable: owner index out of bounds\\\");\\n\\t\\treturn ERC721Storage.layout()._ownedTokens[owner][index];\\n\\t}\\n\\n\\t/// @notice this funtions allow us to know the balance of an account\\n\\t/// @param owner Contains the address which balance we want to verify\\n\\t/// @return uint256 with the current balance of the account\\n\\tfunction balanceOf(address owner) public view returns (uint256) {\\n\\t\\trequire(owner != address(0), \\\"ERC721: balance query for the zero address\\\");\\n\\t\\treturn ERC721Storage.layout()._balances[owner];\\n\\t}\\n\\n\\t/// @notice \\t\\tCheck if the NFT has an owner\\n\\t/// @param tokenId \\tNFT id to check\\n\\t/// @return bool \\tto indicate if the token exist or not\\n\\tfunction _exists(uint256 tokenId) internal view returns (bool) {\\n        return ERC721Storage.layout()._owners[tokenId] != address(0);\\n    }\\n\\t\\n\\t/// @notice\\tLoops through a range of tokens inside a collection and returns the first token without an owner\\n\\t/// @dev\\tUses a loop, do not call this from a non-view function!\\n\\t/// @dev \\tThis functions require that the collection exist to properly work \\n\\t/// @param\\tcollectionId\\tIndex of the collection that we want to loop\\n\\t/// @param\\tstartingIndex\\tIndex of the starting token of the product\\n\\t/// @param\\tendingIndex\\t\\tIndex of the last token of the product \\n\\t/// @return nextIndex\\t\\tWith the next starting point available for new products\\n\\tfunction getNextSequentialIndex(uint collectionId, uint startingIndex, uint endingIndex) public view collectionExists(collectionId) returns(uint nextIndex) {\\n\\t\\tERC721Storage.product memory currentProduct = ERC721Storage.layout().products[collectionId];\\n\\t\\tfor (uint i = currentProduct.startingToken + startingIndex; i <= currentProduct.startingToken + endingIndex; i++) {\\n\\t\\t\\tif (!_exists(i)) {\\n\\t\\t\\t\\treturn i - currentProduct.startingToken;\\n\\t\\t\\t}\\n\\t\\t}\\n\\t\\trequire(false, \\\"RAIR ERC721: There are no available tokens in this range.\\\");\\n\\t}\\n\\n\\t/// @notice\\tLoops over the user's tokens looking for one that belongs to a product and a specific range\\n\\t/// @dev\\tLoops are expensive in solidity, so don't use this in a function that requires gas\\n\\t/// @param\\tuserAddress\\t\\t\\tAddress that will be uses to see the belonging tokens of a product and a range\\n\\t/// @param\\tproductIndex\\t\\tIndex of the collection to search\\n\\t/// @param\\tstartingToken\\t\\tStarting token to search\\n\\t/// @param\\tendingToken\\t\\t\\tLast token to search \\n\\t/// @return bool \\t\\t\\t\\tWhich respond if the tokens belongs or not to a product and a range\\n\\tfunction hasTokenInProduct(\\n\\t\\t\\t\\taddress userAddress,\\n\\t\\t\\t\\tuint productIndex,\\n\\t\\t\\t\\tuint startingToken,\\n\\t\\t\\t\\tuint endingToken) public view returns (bool) {\\n\\t\\tERC721Storage.Layout storage store = ERC721Storage.layout();\\n\\t\\tERC721Storage.product memory aux = store.products[productIndex];\\n\\t\\tif (aux.endingToken != 0) {\\n\\t\\t\\tfor (uint i = 0; i < balanceOf(userAddress); i++) {\\n\\t\\t\\t\\tuint token = tokenOfOwnerByIndex(userAddress, i);\\n\\t\\t\\t\\tif (store.tokenToProduct[token] == productIndex &&\\n\\t\\t\\t\\t\\t\\ttoken >= aux.startingToken + startingToken &&\\n\\t\\t\\t\\t\\t\\ttoken <= aux.startingToken + endingToken) {\\n\\t\\t\\t\\t\\treturn true;\\n\\t\\t\\t\\t}\\n\\t\\t\\t}\\n\\t\\t}\\n\\t\\treturn false;\\n\\t}\\n\\n\\t/// @notice\\tReturns the number of tokens inside a product\\n\\t/// @param\\tproductIndex \\tProduct index to verify\\n\\t/// @return length  \\t \\tNumber of tokens already minted\\n\\tfunction mintedTokensInProduct(uint productIndex) public view returns (uint length) {\\n\\t\\tlength = ERC721Storage.layout().tokensByProduct[productIndex].length;\\n\\t}\\n\\t\\n\\t/// @notice\\tCreates a new product\\n\\t/// @dev \\tThis function is only available to an account with a `CREATOR` role\\n\\t/// @param\\t_productName \\tName of the product to create\\n\\t/// @param\\t_copies\\t\\t\\tAmount of tokens inside the product\\n\\tfunction createProduct(string memory _productName, uint _copies) public onlyRole(CREATOR) {\\n\\t\\tERC721Storage.Layout storage store = ERC721Storage.layout();\\n\\t\\tuint lastToken = store.products.length == 0 ? 0 : store.products[store.products.length - 1].endingToken + 1;\\n\\t\\t\\n\\t\\tERC721Storage.product storage newProduct = store.products.push();\\n\\n\\t\\tnewProduct.startingToken = lastToken;\\n\\t\\tnewProduct.endingToken = newProduct.startingToken + _copies - 1;\\n\\t\\tnewProduct.name = string(_productName);\\n\\t\\tnewProduct.mintableTokens = _copies;\\n\\t\\t\\n\\t\\temit CreatedCollection(store.products.length - 1, _productName, lastToken, _copies);\\n\\t}\\n}\",\"keccak256\":\"0xc43b92b38656abae54b555fc3c3df502bce9581b59edc2537ee4d11ce7412bed\",\"license\":\"GPL-3.0\"}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50611cc28061001f6000396000f3fe608060405234801561001057600080fd5b50600436106101585760003560e01c806391d14854116100c3578063d547741f1161007c578063d547741f14610306578063d76bf56614610319578063e4fbb60914610341578063e5b8501514610368578063e9300c6c1461037b578063fe6d81241461038e57600080fd5b806391d14854146102945780639716d101146102a7578063971b4cc4146102ba578063bda5ec33146102cd578063c00b83c5146102e0578063ca15c873146102f357600080fd5b80634a348da9116101155780634a348da914610208578063586704ea146102105780636c99dcbf1461022357806370a082311461023657806379a85e6c146102495780639010d07c1461026957600080fd5b8063175c4ef81461015d578063248a9ca3146101975780632f2ff15d146101aa5780632f745c59146101bf57806336568abe146101d257806336706b41146101e5575b600080fd5b6101847f872340a532bdd7bb02bea115c1b0f1ba87eac982f5b79b51ac189ffaac1b6fce81565b6040519081526020015b60405180910390f35b6101846101a5366004611650565b6103b5565b6101bd6101b8366004611685565b6103d7565b005b6101846101cd3660046116b1565b6103f9565b6101bd6101e0366004611685565b6104a4565b6101f86101f33660046116b1565b610522565b604051901515815260200161018e565b610184610599565b61018461021e366004611650565b6105ac565b6101f86102313660046116db565b6105ca565b610184610244366004611714565b6107ae565b61025c610257366004611650565b610843565b60405161018e919061177f565b61027c610277366004611805565b6109e6565b6040516001600160a01b03909116815260200161018e565b6101f86102a2366004611685565b610a12565b6101846102b5366004611805565b610a4a565b6101846102c8366004611805565b610ab0565b6101846102db366004611827565b610b1e565b6101846102ee366004611650565b610d5f565b610184610301366004611650565b610df4565b6101bd610314366004611685565b610e18565b61032c610327366004611650565b610e35565b6040805192835260208301919091520161018e565b6101847f3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db681565b6101f86103763660046116b1565b610eae565b6101bd610389366004611869565b610fbb565b6101847ff0887ba65ee2024ea881d91b74c2450ef19e1557f03bed3ea9f16b037cbe2dc981565b6000908152600080516020611c4d833981519152602052604090206001015490565b6103e0826103b5565b6103ea81336110ee565b6103f48383611152565b505050565b6000610404836107ae565b821061046b5760405162461bcd60e51b815260206004820152602b60248201527f455243373231456e756d657261626c653a206f776e657220696e646578206f7560448201526a74206f6620626f756e647360a81b60648201526084015b60405180910390fd5b6104736111e9565b6001600160a01b03841660009081526006919091016020908152604080832085845290915290205490505b92915050565b6001600160a01b03811633146105145760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152608401610462565b61051e828261120d565b5050565b6000818061052e6111e9565b600c01541161054f5760405162461bcd60e51b81526004016104629061191e565b60006105596111e9565b600c01848154811061056d5761056d611964565b9060005260206000209060050201905061059085826000015483600101546112a2565b95945050505050565b60006105a36111e9565b600c0154919050565b60006105b66111e9565b600092835260140160205250604090205490565b6000806105d56111e9565b9050600081600c0186815481106105ee576105ee611964565b90600052602060002090600502016040518060a00160405290816000820154815260200160018201548152602001600282015481526020016003820180546106359061197a565b80601f01602080910402602001604051908101604052809291908181526020018280546106619061197a565b80156106ae5780601f10610683576101008083540402835291602001916106ae565b820191906000526020600020905b81548152906001019060200180831161069157829003601f168201915b505050505081526020016004820180548060200260200160405190810160405280929190818152602001828054801561070657602002820191906000526020600020905b8154815260200190600101908083116106f2575b5050505050815250509050806020015160001461079f5760005b610729886107ae565b81101561079d57600061073c89836103f9565b6000818152600e860160205260409020549091508814801561076a575082516107669088906119c4565b8110155b80156107825750825161077e9087906119c4565b8111155b156107945760019450505050506107a6565b50600101610720565b505b6000925050505b949350505050565b60006001600160a01b0382166108195760405162461bcd60e51b815260206004820152602a60248201527f4552433732313a2062616c616e636520717565727920666f7220746865207a65604482015269726f206164647265737360b01b6064820152608401610462565b6108216111e9565b6001600160a01b03909216600090815260039290920160205250604090205490565b6108756040518060a0016040528060008152602001600081526020016000815260200160608152602001606081525090565b818061087f6111e9565b600c0154116108a05760405162461bcd60e51b81526004016104629061191e565b6108a86111e9565b600c0183815481106108bc576108bc611964565b90600052602060002090600502016040518060a00160405290816000820154815260200160018201548152602001600282015481526020016003820180546109039061197a565b80601f016020809104026020016040519081016040528092919081815260200182805461092f9061197a565b801561097c5780601f106109515761010080835404028352916020019161097c565b820191906000526020600020905b81548152906001019060200180831161095f57829003601f168201915b50505050508152602001600482018054806020026020016040519081016040528092919081815260200182805480156109d457602002820191906000526020600020905b8154815260200190600101908083116109c0575b50505050508152505091505b50919050565b6000828152600080516020611c6d83398151915260205260408120610a0b90836112fe565b9392505050565b6000918252600080516020611c4d833981519152602090815260408084206001600160a01b0393909316845291905290205460ff1690565b60008280610a566111e9565b600c015411610a775760405162461bcd60e51b81526004016104629061191e565b82610a806111e9565b600c018581548110610a9457610a94611964565b9060005260206000209060050201600001546107a691906119c4565b60008280610abc6111e9565b600c015411610add5760405162461bcd60e51b81526004016104629061191e565b610ae56111e9565b60140160008581526020019081526020016000208381548110610b0a57610b0a611964565b906000526020600020015491505092915050565b60008380610b2a6111e9565b600c015411610b4b5760405162461bcd60e51b81526004016104629061191e565b6000610b556111e9565b600c018681548110610b6957610b69611964565b90600052602060002090600502016040518060a0016040529081600082015481526020016001820154815260200160028201548152602001600382018054610bb09061197a565b80601f0160208091040260200160405190810160405280929190818152602001828054610bdc9061197a565b8015610c295780601f10610bfe57610100808354040283529160200191610c29565b820191906000526020600020905b815481529060010190602001808311610c0c57829003601f168201915b5050505050815260200160048201805480602002602001604051908101604052809291908181526020018280548015610c8157602002820191906000526020600020905b815481526020019060010190808311610c6d575b50505050508152505090506000858260000151610c9e91906119c4565b90505b8151610cae9086906119c4565b8111610ce857610cbd8161130a565b610cd6578151610ccd90826119d7565b93505050610d57565b80610ce0816119ea565b915050610ca1565b5060405162461bcd60e51b815260206004820152603960248201527f52414952204552433732313a20546865726520617265206e6f20617661696c6160448201527f626c6520746f6b656e7320696e20746869732072616e67652e000000000000006064820152608401610462565b509392505050565b60008181610d6b6111e9565b600083815260029190910160205260409020546001600160a01b031603610da45760405162461bcd60e51b815260040161046290611a03565b6000610dae6111e9565b6000858152600e82016020526040902054600c82018054929350918110610dd757610dd7611964565b906000526020600020906005020160000154846107a691906119d7565b6000818152600080516020611c6d8339815191526020526040812061049e90611338565b610e21826103b5565b610e2b81336110ee565b6103f4838361120d565b6000808281610e426111e9565b600083815260029190910160205260409020546001600160a01b031603610e7b5760405162461bcd60e51b815260040161046290611a03565b6000610e856111e9565b6000958652600e81016020908152604080882054600f9093019091529095205494959350505050565b60008180610eba6111e9565b600d015411610f155760405162461bcd60e51b815260206004820152602160248201527f52414952204552433732313a2052616e676520646f6573206e6f7420657869736044820152601d60fa1b6064820152608401610462565b6000610f1f6111e9565b9050600081600d018581548110610f3857610f38611964565b90600052602060002090600702019050600082600c018360160160008881526020019081526020016000205481548110610f7457610f74611964565b9060005260206000209060050201600001549050610fb087836000015483610f9c91906119c4565b6001850154610fab90856119c4565b6112a2565b979650505050505050565b7f3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db6610fe681336110ee565b6000610ff06111e9565b600c8101549091506000901561104557600c82018054611012906001906119d7565b8154811061102257611022611964565b906000526020600020906005020160010154600161104091906119c4565b611048565b60005b600c83018054600181810183556000928352602090922060059091020182815591925061107586846119c4565b61107f91906119d7565b6001820155600381016110928782611a9b565b5060028101859055600c8301546110ab906001906119d7565b7fe318895d3fd44cb3524ca783576b7737ae76b172e344357462ab4258b50c1c228784886040516110de93929190611b5b565b60405180910390a2505050505050565b6110f88282610a12565b61051e57611110816001600160a01b03166014611342565b61111b836020611342565b60405160200161112c929190611b80565b60408051601f198184030181529082905262461bcd60e51b825261046291600401611bf5565b61115c8282610a12565b61051e576000828152600080516020611c4d833981519152602090815260408083206001600160a01b0385168085529252808320805460ff1916600117905551339285917f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d9190a46000828152600080516020611c6d833981519152602052604090206103f490826114ba565b7f13fbb056f2602120441ced10c19d8151fd41fd4b17a6646b53bc0f944eb07a3990565b6112178282610a12565b1561051e576000828152600080516020611c4d833981519152602090815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a46000828152600080516020611c6d833981519152602052604090206103f490826114cf565b6000825b828110156112f357846001600160a01b03166112c06111e9565b600083815260029190910160205260409020546001600160a01b0316036112eb576001915050610a0b565b6001016112a6565b506000949350505050565b6000610a0b83836114e4565b6000806113156111e9565b60009384526002016020526040909220546001600160a01b031690911415919050565b600061049e825490565b6060826000611352846002611c08565b61135d9060026119c4565b67ffffffffffffffff81111561137557611375611853565b6040519080825280601f01601f19166020018201604052801561139f576020820181803683370190505b509050600360fc1b816000815181106113ba576113ba611964565b60200101906001600160f81b031916908160001a905350600f60fb1b816001815181106113e9576113e9611964565b60200101906001600160f81b031916908160001a905350600061140d856002611c08565b6114189060016119c4565b90505b6001811115611490576f181899199a1a9b1b9c1cb0b131b232b360811b83600f166010811061144c5761144c611964565b1a60f81b82828151811061146257611462611964565b60200101906001600160f81b031916908160001a90535060049290921c9161148981611c1f565b905061141b565b5081156107a65760405163e22e27eb60e01b81526004810186905260248101859052604401610462565b6000610a0b836001600160a01b03841661150e565b6000610a0b836001600160a01b03841661155d565b60008260000182815481106114fb576114fb611964565b9060005260206000200154905092915050565b60008181526001830160205260408120546115555750815460018181018455600084815260208082209093018490558454848252828601909352604090209190915561049e565b50600061049e565b600081815260018301602052604081205480156116465760006115816001836119d7565b8554909150600090611595906001906119d7565b90508082146115fa5760008660000182815481106115b5576115b5611964565b90600052602060002001549050808760000184815481106115d8576115d8611964565b6000918252602080832090910192909255918252600188019052604090208390555b855486908061160b5761160b611c36565b60019003818190600052602060002001600090559055856001016000868152602001908152602001600020600090556001935050505061049e565b600091505061049e565b60006020828403121561166257600080fd5b5035919050565b80356001600160a01b038116811461168057600080fd5b919050565b6000806040838503121561169857600080fd5b823591506116a860208401611669565b90509250929050565b600080604083850312156116c457600080fd5b6116cd83611669565b946020939093013593505050565b600080600080608085870312156116f157600080fd5b6116fa85611669565b966020860135965060408601359560600135945092505050565b60006020828403121561172657600080fd5b610a0b82611669565b60005b8381101561174a578181015183820152602001611732565b50506000910152565b6000815180845261176b81602086016020860161172f565b601f01601f19169290920160200192915050565b6000602080835283518184015280840151604084015260408401516060840152606084015160a060808501526117b860c0850182611753565b6080860151858203601f190160a0870152805180835290840192506000918401905b808310156117fa57835182529284019260019290920191908401906117da565b509695505050505050565b6000806040838503121561181857600080fd5b50508035926020909101359150565b60008060006060848603121561183c57600080fd5b505081359360208301359350604090920135919050565b634e487b7160e01b600052604160045260246000fd5b6000806040838503121561187c57600080fd5b823567ffffffffffffffff8082111561189457600080fd5b818501915085601f8301126118a857600080fd5b8135818111156118ba576118ba611853565b604051601f8201601f19908116603f011681019083821181831017156118e2576118e2611853565b816040528281528860208487010111156118fb57600080fd5b826020860160208301376000602093820184015298969091013596505050505050565b60208082526026908201527f52414952204552433732313a20436f6c6c656374696f6e20646f6573206e6f7460408201526508195e1a5cdd60d21b606082015260800190565b634e487b7160e01b600052603260045260246000fd5b600181811c9082168061198e57607f821691505b6020821081036109e057634e487b7160e01b600052602260045260246000fd5b634e487b7160e01b600052601160045260246000fd5b8082018082111561049e5761049e6119ae565b8181038181111561049e5761049e6119ae565b6000600182016119fc576119fc6119ae565b5060010190565b60208082526028908201527f52414952204552433732313a20517565727920666f72206e6f6e657869737465604082015267373a103a37b5b2b760c11b606082015260800190565b601f8211156103f4576000816000526020600020601f850160051c81016020861015611a745750805b601f850160051c820191505b81811015611a9357828155600101611a80565b505050505050565b815167ffffffffffffffff811115611ab557611ab5611853565b611ac981611ac3845461197a565b84611a4b565b602080601f831160018114611afe5760008415611ae65750858301515b600019600386901b1c1916600185901b178555611a93565b600085815260208120601f198616915b82811015611b2d57888601518255948401946001909101908401611b0e565b5085821015611b4b5787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b606081526000611b6e6060830186611753565b60208301949094525060400152919050565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351611bb881601785016020880161172f565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351611be981602884016020880161172f565b01602801949350505050565b602081526000610a0b6020830184611753565b808202811582820484141761049e5761049e6119ae565b600081611c2e57611c2e6119ae565b506000190190565b634e487b7160e01b600052603160045260246000fdfe4f4f658137f4e10317e1a22624c2b114af7563a20fb2e3444ae2ac2342d457d04f4f658137f4e10317e1a22624c2b114af7563a20fb2e3444ae2ac2342d457d1a26469706673582212207fcd73d0a7f6fd808779d5789c77d9365dc8067ff4341eb82c51a8552d94864d64736f6c63430008190033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101585760003560e01c806391d14854116100c3578063d547741f1161007c578063d547741f14610306578063d76bf56614610319578063e4fbb60914610341578063e5b8501514610368578063e9300c6c1461037b578063fe6d81241461038e57600080fd5b806391d14854146102945780639716d101146102a7578063971b4cc4146102ba578063bda5ec33146102cd578063c00b83c5146102e0578063ca15c873146102f357600080fd5b80634a348da9116101155780634a348da914610208578063586704ea146102105780636c99dcbf1461022357806370a082311461023657806379a85e6c146102495780639010d07c1461026957600080fd5b8063175c4ef81461015d578063248a9ca3146101975780632f2ff15d146101aa5780632f745c59146101bf57806336568abe146101d257806336706b41146101e5575b600080fd5b6101847f872340a532bdd7bb02bea115c1b0f1ba87eac982f5b79b51ac189ffaac1b6fce81565b6040519081526020015b60405180910390f35b6101846101a5366004611650565b6103b5565b6101bd6101b8366004611685565b6103d7565b005b6101846101cd3660046116b1565b6103f9565b6101bd6101e0366004611685565b6104a4565b6101f86101f33660046116b1565b610522565b604051901515815260200161018e565b610184610599565b61018461021e366004611650565b6105ac565b6101f86102313660046116db565b6105ca565b610184610244366004611714565b6107ae565b61025c610257366004611650565b610843565b60405161018e919061177f565b61027c610277366004611805565b6109e6565b6040516001600160a01b03909116815260200161018e565b6101f86102a2366004611685565b610a12565b6101846102b5366004611805565b610a4a565b6101846102c8366004611805565b610ab0565b6101846102db366004611827565b610b1e565b6101846102ee366004611650565b610d5f565b610184610301366004611650565b610df4565b6101bd610314366004611685565b610e18565b61032c610327366004611650565b610e35565b6040805192835260208301919091520161018e565b6101847f3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db681565b6101f86103763660046116b1565b610eae565b6101bd610389366004611869565b610fbb565b6101847ff0887ba65ee2024ea881d91b74c2450ef19e1557f03bed3ea9f16b037cbe2dc981565b6000908152600080516020611c4d833981519152602052604090206001015490565b6103e0826103b5565b6103ea81336110ee565b6103f48383611152565b505050565b6000610404836107ae565b821061046b5760405162461bcd60e51b815260206004820152602b60248201527f455243373231456e756d657261626c653a206f776e657220696e646578206f7560448201526a74206f6620626f756e647360a81b60648201526084015b60405180910390fd5b6104736111e9565b6001600160a01b03841660009081526006919091016020908152604080832085845290915290205490505b92915050565b6001600160a01b03811633146105145760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152608401610462565b61051e828261120d565b5050565b6000818061052e6111e9565b600c01541161054f5760405162461bcd60e51b81526004016104629061191e565b60006105596111e9565b600c01848154811061056d5761056d611964565b9060005260206000209060050201905061059085826000015483600101546112a2565b95945050505050565b60006105a36111e9565b600c0154919050565b60006105b66111e9565b600092835260140160205250604090205490565b6000806105d56111e9565b9050600081600c0186815481106105ee576105ee611964565b90600052602060002090600502016040518060a00160405290816000820154815260200160018201548152602001600282015481526020016003820180546106359061197a565b80601f01602080910402602001604051908101604052809291908181526020018280546106619061197a565b80156106ae5780601f10610683576101008083540402835291602001916106ae565b820191906000526020600020905b81548152906001019060200180831161069157829003601f168201915b505050505081526020016004820180548060200260200160405190810160405280929190818152602001828054801561070657602002820191906000526020600020905b8154815260200190600101908083116106f2575b5050505050815250509050806020015160001461079f5760005b610729886107ae565b81101561079d57600061073c89836103f9565b6000818152600e860160205260409020549091508814801561076a575082516107669088906119c4565b8110155b80156107825750825161077e9087906119c4565b8111155b156107945760019450505050506107a6565b50600101610720565b505b6000925050505b949350505050565b60006001600160a01b0382166108195760405162461bcd60e51b815260206004820152602a60248201527f4552433732313a2062616c616e636520717565727920666f7220746865207a65604482015269726f206164647265737360b01b6064820152608401610462565b6108216111e9565b6001600160a01b03909216600090815260039290920160205250604090205490565b6108756040518060a0016040528060008152602001600081526020016000815260200160608152602001606081525090565b818061087f6111e9565b600c0154116108a05760405162461bcd60e51b81526004016104629061191e565b6108a86111e9565b600c0183815481106108bc576108bc611964565b90600052602060002090600502016040518060a00160405290816000820154815260200160018201548152602001600282015481526020016003820180546109039061197a565b80601f016020809104026020016040519081016040528092919081815260200182805461092f9061197a565b801561097c5780601f106109515761010080835404028352916020019161097c565b820191906000526020600020905b81548152906001019060200180831161095f57829003601f168201915b50505050508152602001600482018054806020026020016040519081016040528092919081815260200182805480156109d457602002820191906000526020600020905b8154815260200190600101908083116109c0575b50505050508152505091505b50919050565b6000828152600080516020611c6d83398151915260205260408120610a0b90836112fe565b9392505050565b6000918252600080516020611c4d833981519152602090815260408084206001600160a01b0393909316845291905290205460ff1690565b60008280610a566111e9565b600c015411610a775760405162461bcd60e51b81526004016104629061191e565b82610a806111e9565b600c018581548110610a9457610a94611964565b9060005260206000209060050201600001546107a691906119c4565b60008280610abc6111e9565b600c015411610add5760405162461bcd60e51b81526004016104629061191e565b610ae56111e9565b60140160008581526020019081526020016000208381548110610b0a57610b0a611964565b906000526020600020015491505092915050565b60008380610b2a6111e9565b600c015411610b4b5760405162461bcd60e51b81526004016104629061191e565b6000610b556111e9565b600c018681548110610b6957610b69611964565b90600052602060002090600502016040518060a0016040529081600082015481526020016001820154815260200160028201548152602001600382018054610bb09061197a565b80601f0160208091040260200160405190810160405280929190818152602001828054610bdc9061197a565b8015610c295780601f10610bfe57610100808354040283529160200191610c29565b820191906000526020600020905b815481529060010190602001808311610c0c57829003601f168201915b5050505050815260200160048201805480602002602001604051908101604052809291908181526020018280548015610c8157602002820191906000526020600020905b815481526020019060010190808311610c6d575b50505050508152505090506000858260000151610c9e91906119c4565b90505b8151610cae9086906119c4565b8111610ce857610cbd8161130a565b610cd6578151610ccd90826119d7565b93505050610d57565b80610ce0816119ea565b915050610ca1565b5060405162461bcd60e51b815260206004820152603960248201527f52414952204552433732313a20546865726520617265206e6f20617661696c6160448201527f626c6520746f6b656e7320696e20746869732072616e67652e000000000000006064820152608401610462565b509392505050565b60008181610d6b6111e9565b600083815260029190910160205260409020546001600160a01b031603610da45760405162461bcd60e51b815260040161046290611a03565b6000610dae6111e9565b6000858152600e82016020526040902054600c82018054929350918110610dd757610dd7611964565b906000526020600020906005020160000154846107a691906119d7565b6000818152600080516020611c6d8339815191526020526040812061049e90611338565b610e21826103b5565b610e2b81336110ee565b6103f4838361120d565b6000808281610e426111e9565b600083815260029190910160205260409020546001600160a01b031603610e7b5760405162461bcd60e51b815260040161046290611a03565b6000610e856111e9565b6000958652600e81016020908152604080882054600f9093019091529095205494959350505050565b60008180610eba6111e9565b600d015411610f155760405162461bcd60e51b815260206004820152602160248201527f52414952204552433732313a2052616e676520646f6573206e6f7420657869736044820152601d60fa1b6064820152608401610462565b6000610f1f6111e9565b9050600081600d018581548110610f3857610f38611964565b90600052602060002090600702019050600082600c018360160160008881526020019081526020016000205481548110610f7457610f74611964565b9060005260206000209060050201600001549050610fb087836000015483610f9c91906119c4565b6001850154610fab90856119c4565b6112a2565b979650505050505050565b7f3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db6610fe681336110ee565b6000610ff06111e9565b600c8101549091506000901561104557600c82018054611012906001906119d7565b8154811061102257611022611964565b906000526020600020906005020160010154600161104091906119c4565b611048565b60005b600c83018054600181810183556000928352602090922060059091020182815591925061107586846119c4565b61107f91906119d7565b6001820155600381016110928782611a9b565b5060028101859055600c8301546110ab906001906119d7565b7fe318895d3fd44cb3524ca783576b7737ae76b172e344357462ab4258b50c1c228784886040516110de93929190611b5b565b60405180910390a2505050505050565b6110f88282610a12565b61051e57611110816001600160a01b03166014611342565b61111b836020611342565b60405160200161112c929190611b80565b60408051601f198184030181529082905262461bcd60e51b825261046291600401611bf5565b61115c8282610a12565b61051e576000828152600080516020611c4d833981519152602090815260408083206001600160a01b0385168085529252808320805460ff1916600117905551339285917f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d9190a46000828152600080516020611c6d833981519152602052604090206103f490826114ba565b7f13fbb056f2602120441ced10c19d8151fd41fd4b17a6646b53bc0f944eb07a3990565b6112178282610a12565b1561051e576000828152600080516020611c4d833981519152602090815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a46000828152600080516020611c6d833981519152602052604090206103f490826114cf565b6000825b828110156112f357846001600160a01b03166112c06111e9565b600083815260029190910160205260409020546001600160a01b0316036112eb576001915050610a0b565b6001016112a6565b506000949350505050565b6000610a0b83836114e4565b6000806113156111e9565b60009384526002016020526040909220546001600160a01b031690911415919050565b600061049e825490565b6060826000611352846002611c08565b61135d9060026119c4565b67ffffffffffffffff81111561137557611375611853565b6040519080825280601f01601f19166020018201604052801561139f576020820181803683370190505b509050600360fc1b816000815181106113ba576113ba611964565b60200101906001600160f81b031916908160001a905350600f60fb1b816001815181106113e9576113e9611964565b60200101906001600160f81b031916908160001a905350600061140d856002611c08565b6114189060016119c4565b90505b6001811115611490576f181899199a1a9b1b9c1cb0b131b232b360811b83600f166010811061144c5761144c611964565b1a60f81b82828151811061146257611462611964565b60200101906001600160f81b031916908160001a90535060049290921c9161148981611c1f565b905061141b565b5081156107a65760405163e22e27eb60e01b81526004810186905260248101859052604401610462565b6000610a0b836001600160a01b03841661150e565b6000610a0b836001600160a01b03841661155d565b60008260000182815481106114fb576114fb611964565b9060005260206000200154905092915050565b60008181526001830160205260408120546115555750815460018181018455600084815260208082209093018490558454848252828601909352604090209190915561049e565b50600061049e565b600081815260018301602052604081205480156116465760006115816001836119d7565b8554909150600090611595906001906119d7565b90508082146115fa5760008660000182815481106115b5576115b5611964565b90600052602060002001549050808760000184815481106115d8576115d8611964565b6000918252602080832090910192909255918252600188019052604090208390555b855486908061160b5761160b611c36565b60019003818190600052602060002001600090559055856001016000868152602001908152602001600020600090556001935050505061049e565b600091505061049e565b60006020828403121561166257600080fd5b5035919050565b80356001600160a01b038116811461168057600080fd5b919050565b6000806040838503121561169857600080fd5b823591506116a860208401611669565b90509250929050565b600080604083850312156116c457600080fd5b6116cd83611669565b946020939093013593505050565b600080600080608085870312156116f157600080fd5b6116fa85611669565b966020860135965060408601359560600135945092505050565b60006020828403121561172657600080fd5b610a0b82611669565b60005b8381101561174a578181015183820152602001611732565b50506000910152565b6000815180845261176b81602086016020860161172f565b601f01601f19169290920160200192915050565b6000602080835283518184015280840151604084015260408401516060840152606084015160a060808501526117b860c0850182611753565b6080860151858203601f190160a0870152805180835290840192506000918401905b808310156117fa57835182529284019260019290920191908401906117da565b509695505050505050565b6000806040838503121561181857600080fd5b50508035926020909101359150565b60008060006060848603121561183c57600080fd5b505081359360208301359350604090920135919050565b634e487b7160e01b600052604160045260246000fd5b6000806040838503121561187c57600080fd5b823567ffffffffffffffff8082111561189457600080fd5b818501915085601f8301126118a857600080fd5b8135818111156118ba576118ba611853565b604051601f8201601f19908116603f011681019083821181831017156118e2576118e2611853565b816040528281528860208487010111156118fb57600080fd5b826020860160208301376000602093820184015298969091013596505050505050565b60208082526026908201527f52414952204552433732313a20436f6c6c656374696f6e20646f6573206e6f7460408201526508195e1a5cdd60d21b606082015260800190565b634e487b7160e01b600052603260045260246000fd5b600181811c9082168061198e57607f821691505b6020821081036109e057634e487b7160e01b600052602260045260246000fd5b634e487b7160e01b600052601160045260246000fd5b8082018082111561049e5761049e6119ae565b8181038181111561049e5761049e6119ae565b6000600182016119fc576119fc6119ae565b5060010190565b60208082526028908201527f52414952204552433732313a20517565727920666f72206e6f6e657869737465604082015267373a103a37b5b2b760c11b606082015260800190565b601f8211156103f4576000816000526020600020601f850160051c81016020861015611a745750805b601f850160051c820191505b81811015611a9357828155600101611a80565b505050505050565b815167ffffffffffffffff811115611ab557611ab5611853565b611ac981611ac3845461197a565b84611a4b565b602080601f831160018114611afe5760008415611ae65750858301515b600019600386901b1c1916600185901b178555611a93565b600085815260208120601f198616915b82811015611b2d57888601518255948401946001909101908401611b0e565b5085821015611b4b5787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b606081526000611b6e6060830186611753565b60208301949094525060400152919050565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351611bb881601785016020880161172f565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351611be981602884016020880161172f565b01602801949350505050565b602081526000610a0b6020830184611753565b808202811582820484141761049e5761049e6119ae565b600081611c2e57611c2e6119ae565b506000190190565b634e487b7160e01b600052603160045260246000fdfe4f4f658137f4e10317e1a22624c2b114af7563a20fb2e3444ae2ac2342d457d04f4f658137f4e10317e1a22624c2b114af7563a20fb2e3444ae2ac2342d457d1a26469706673582212207fcd73d0a7f6fd808779d5789c77d9365dc8067ff4341eb82c51a8552d94864d64736f6c63430008190033",
+  "devdoc": {
+    "errors": {
+      "StringsInsufficientHexLength(uint256,uint256)": [
+        {
+          "details": "The `value` string doesn't fit in the specified `length`."
+        }
+      ]
+    },
+    "events": {
+      "CreatedCollection(uint256,string,uint256,uint256)": {
+        "params": {
+          "collectionIndex": "Index for the collection",
+          "collectionLength": "Number of tokens in the collection",
+          "collectionName": "Name for the collection",
+          "startingToken": "First token in the collection (include)"
+        }
+      }
+    },
+    "kind": "dev",
+    "methods": {
+      "balanceOf(address)": {
+        "params": {
+          "owner": "Contains the address which balance we want to verify"
+        },
+        "returns": {
+          "_0": "uint256 with the current balance of the account"
+        }
+      },
+      "createProduct(string,uint256)": {
+        "details": "This function is only available to an account with a `CREATOR` role",
+        "params": {
+          "_copies": "Amount of tokens inside the product",
+          "_productName": "Name of the product to create"
+        }
+      },
+      "getNextSequentialIndex(uint256,uint256,uint256)": {
+        "details": "Uses a loop, do not call this from a non-view function!This functions require that the collection exist to properly work ",
+        "params": {
+          "collectionId": "Index of the collection that we want to loop",
+          "endingIndex": "Index of the last token of the product ",
+          "startingIndex": "Index of the starting token of the product"
+        },
+        "returns": {
+          "nextIndex": "\tWith the next starting point available for new products"
+        }
+      },
+      "getProductCount()": {
+        "details": "Use with get product to list all of the products",
+        "returns": {
+          "_0": "uint With the total of products"
+        }
+      },
+      "getProductInfo(uint256)": {
+        "details": "This function require that the collection exist",
+        "params": {
+          "productIndex_": "Contains the id of the product that we want to verify"
+        },
+        "returns": {
+          "_0": "product which contain the information of the product"
+        }
+      },
+      "hasTokenInProduct(address,uint256,uint256,uint256)": {
+        "details": "Loops are expensive in solidity, so don't use this in a function that requires gas",
+        "params": {
+          "endingToken": "Last token to search ",
+          "productIndex": "Index of the collection to search",
+          "startingToken": "Starting token to search",
+          "userAddress": "Address that will be uses to see the belonging tokens of a product and a range"
+        },
+        "returns": {
+          "_0": "bool \t\t\t\tWhich respond if the tokens belongs or not to a product and a range"
+        }
+      },
+      "mintedTokensInProduct(uint256)": {
+        "params": {
+          "productIndex": "Product index to verify"
+        },
+        "returns": {
+          "length": " \t \tNumber of tokens already minted"
+        }
+      },
+      "ownsTokenInProduct(address,uint256)": {
+        "details": "This function require that the product exist",
+        "params": {
+          "find": "Address to search",
+          "productIndex": "Collection to verify"
+        },
+        "returns": {
+          "_0": "bool \t\t\tFor the existence or not, of the token in the product "
+        }
+      },
+      "ownsTokenInRange(address,uint256)": {
+        "details": "This function require that the range exist ",
+        "params": {
+          "find": "Address to search",
+          "rangeIndex": "Range to verify"
+        },
+        "returns": {
+          "_0": "bool \t\tFor the existence or not, of the token in the range "
+        }
+      },
+      "productToToken(uint256,uint256)": {
+        "details": "This function require that the collection exist\\",
+        "params": {
+          "productIndex_": "Contains the index of the collection where is the token",
+          "tokenIndex_": "Contains the index of the token inside the collection"
+        },
+        "returns": {
+          "_0": "uint\t\t  With the value of the token in that indexed position "
+        }
+      },
+      "tokenByProduct(uint256,uint256)": {
+        "details": "This function require that the collection exist",
+        "params": {
+          "productIndex_": "Contains the index of the collection where is the token",
+          "tokenIndex_": "Contains the index of the token inside the collection"
+        },
+        "returns": {
+          "_0": "uint\t\t  With the value of the token in that indexed position "
+        }
+      },
+      "tokenOfOwnerByIndex(address,uint256)": {
+        "params": {
+          "index": "Contains the position in the owned tokens list",
+          "owner": "Contains address of the acount that we want to verify"
+        },
+        "returns": {
+          "_0": "uint with the token that is owned by the account in that position "
+        }
+      },
+      "tokenToProduct(uint256)": {
+        "details": "This function require that the token exist",
+        "params": {
+          "tokenIndex_": "Contains the index of the token which info we want to know "
+        },
+        "returns": {
+          "productIndex": " With the corresponding collection ID for the token",
+          "rangeIndex": "  With the corresponding range of the collection "
+        }
+      },
+      "tokenToProductIndex(uint256)": {
+        "details": "This function require that the token exist",
+        "params": {
+          "tokenIndex_": "Contains the index of the token inside the collection"
+        },
+        "returns": {
+          "_0": "uint \t\t Return the ID of the collection "
+        }
+      }
+    },
+    "title": "RAIR Product facet contract",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "balanceOf(address)": {
+        "notice": "this funtions allow us to know the balance of an account"
+      },
+      "createProduct(string,uint256)": {
+        "notice": "Creates a new product"
+      },
+      "getNextSequentialIndex(uint256,uint256,uint256)": {
+        "notice": "Loops through a range of tokens inside a collection and returns the first token without an owner"
+      },
+      "getProductCount()": {
+        "notice": "Returns the number of products on the contract"
+      },
+      "getProductInfo(uint256)": {
+        "notice": "This function allow us to check the information of a product"
+      },
+      "hasTokenInProduct(address,uint256,uint256,uint256)": {
+        "notice": "Loops over the user's tokens looking for one that belongs to a product and a specific range"
+      },
+      "mintedTokensInProduct(uint256)": {
+        "notice": "Returns the number of tokens inside a product"
+      },
+      "ownsTokenInProduct(address,uint256)": {
+        "notice": "Wrapper for the validator, searching for the entire product"
+      },
+      "ownsTokenInRange(address,uint256)": {
+        "notice": "Wrapper for the validator, searching for the entire range"
+      },
+      "productToToken(uint256,uint256)": {
+        "notice": "This function will search in a collection for a especific token and return its value"
+      },
+      "tokenByProduct(uint256,uint256)": {
+        "notice": "This function allow us to see the position of creation of a token"
+      },
+      "tokenOfOwnerByIndex(address,uint256)": {
+        "notice": "This functions allow us to check is a token is owned by an account"
+      },
+      "tokenToProduct(uint256)": {
+        "notice": "This function allow us to locaste the collection & range of a token "
+      },
+      "tokenToProductIndex(uint256)": {
+        "notice": "This function allow us to know the index of the collection that contains the token"
+      }
+    },
+    "notice": "Facets for Product management",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

@@ -18,7 +18,7 @@ import {
 } from './creatorStudio.types';
 
 import WorkflowContext from '../../contexts/CreatorWorkflowContext';
-import { diamondFactoryAbi, erc721Abi, minterAbi } from '../../contracts';
+import { diamond721Abi, erc721Abi, minterAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -96,7 +96,9 @@ const WorkflowSteps: FC = () => {
         diamond: true,
         shortName: 'Ranges',
         hasAdvancedFeatures: true,
-        external: false
+        external: false,
+        description:
+          'Define a range of tokens and give them their own minting price'
       },
       {
         path: 'locks',
@@ -107,7 +109,9 @@ const WorkflowSteps: FC = () => {
         diamond: false,
         shortName: 'Locks',
         hasAdvancedFeatures: true,
-        external: false
+        external: false,
+        description:
+          'With locks you can prevent token trades before a certain number of tokens are minted'
       },
       {
         path: 'customizeFees',
@@ -118,7 +122,8 @@ const WorkflowSteps: FC = () => {
         diamond: false,
         shortName: 'Custom Fees',
         hasAdvancedFeatures: true,
-        external: false
+        external: false,
+        description: 'Add custom royalty fees for token mints'
       },
       {
         path: 'minterMarketplace',
@@ -129,7 +134,9 @@ const WorkflowSteps: FC = () => {
         diamond: true,
         shortName: 'Offers',
         hasAdvancedFeatures: true,
-        external: false
+        external: false,
+        description:
+          "Put your ranges on the marketplace contract, you can also customize the royalties you'll receive when a token is minted"
       },
       {
         path: 'resaleMarketplace',
@@ -140,7 +147,8 @@ const WorkflowSteps: FC = () => {
         diamond: true,
         shortName: 'Resale Setup',
         hasAdvancedFeatures: true,
-        external: false
+        external: false,
+        description: 'Set up royalty fees for the reselling of the NFTs'
       },
       {
         path: 'metadata/batch',
@@ -149,9 +157,11 @@ const WorkflowSteps: FC = () => {
         simple: true,
         classic: true,
         diamond: true,
-        shortName: 'Batch Metadata',
+        shortName: 'Metadata',
         hasAdvancedFeatures: true,
-        external: false
+        external: false,
+        description:
+          'Upload a CSV file with all of the metadata for your tokens'
       },
       {
         path: 'metadata/single',
@@ -162,7 +172,8 @@ const WorkflowSteps: FC = () => {
         diamond: true,
         shortName: 'Single Metadata',
         hasAdvancedFeatures: true,
-        external: false
+        external: false,
+        description: 'Update the metadata of a single token'
       },
       {
         path: 'media',
@@ -173,7 +184,9 @@ const WorkflowSteps: FC = () => {
         diamond: true,
         shortName: 'Media Files',
         hasAdvancedFeatures: false,
-        external: true
+        external: true,
+        description:
+          'Upload media files, users will need NFTs from your contract to unlock them'
       }
     ];
     if (contractData.external) {
@@ -275,9 +288,9 @@ const WorkflowSteps: FC = () => {
     }
     if (contractDataResponse.contract) {
       contractDataResponse.contract.product =
-        (contractDataResponse?.contract?.products?.filter(
+        contractDataResponse?.contract?.products?.filter(
           (i) => i?.collectionIndexInContract === collectionIndex
-        ))[0];
+        )?.[0];
       delete contractDataResponse.contract.products;
       if (offersAndLocksResponse.success) {
         contractDataResponse.contract.product.offers =
@@ -286,7 +299,7 @@ const WorkflowSteps: FC = () => {
       if (contractDataResponse.contract.blockchain === currentChain) {
         contractDataResponse.contract.instance = contractCreator?.(
           address,
-          contractDataResponse.contract.diamond ? diamondFactoryAbi : erc721Abi
+          contractDataResponse.contract.diamond ? diamond721Abi : erc721Abi
         );
       }
       if (
@@ -467,20 +480,24 @@ const WorkflowSteps: FC = () => {
             return (
               <div className="row px-0 mx-0">
                 <div className="col-12 my-5" style={{ position: 'relative' }}>
-                  {steps.length > 0 && currentStep !== 0 && (
-                    <div
-                      style={{ position: 'absolute', left: 20 }}
-                      className="border-stimorol btn rounded-rair p-0">
-                      <button
-                        onClick={goBack}
-                        style={{ border: 'none' }}
-                        className={`btn rounded-rair w-100 btn-${
-                          primaryColor === '#dedede' ? 'rhyno' : 'charcoal'
-                        }`}>
-                        <i className="fas fa-arrow-left" /> Back
-                      </button>
-                    </div>
-                  )}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: 20,
+                      background: primaryButtonColor
+                    }}
+                    className="btn rounded-rair p-0">
+                    <button
+                      onClick={goBack}
+                      style={{
+                        border: 'none',
+                        color: textColor,
+                        backgroundColor: primaryColor
+                      }}
+                      className="btn rounded-rair w-100 rair-button">
+                      <i className="fas fa-arrow-left" /> Back
+                    </button>
+                  </div>
                   {contractData && contractData.diamond && (
                     <div className="w-100 text-center h1">
                       <i className="fas fa-gem" />
@@ -541,6 +558,9 @@ const WorkflowSteps: FC = () => {
                         );
                       })}
                   </div>
+                  <div className="mx-5 px-5">
+                    {steps?.at(currentStep)?.description}
+                  </div>
                   {steps?.at(currentStep)?.hasAdvancedFeatures && (
                     <div
                       className="row mt-3 w-100"
@@ -575,7 +595,6 @@ const WorkflowSteps: FC = () => {
                       </div>
                     </div>
                   )}
-                  <h5>{steps?.at(currentStep)?.shortName}</h5>
                 </div>
               </div>
             );

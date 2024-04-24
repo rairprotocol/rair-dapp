@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.20; 
+pragma solidity ^0.8.25; 
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ResaleStorage } from "../Storage/ResaleStorage.sol";
@@ -17,6 +17,7 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket {
 	bytes32 public constant RESALE_ADMIN = keccak256("RESALE_ADMIN");
 
     event TokenSold(address erc721Address, address buyer, address seller, uint token, uint tokenPrice);
+    event TokenOfferCreated(address erc721Address, address seller, uint token, uint tokenPrice, uint offerId);
     
     modifier onlyOwnerOfContract(address erc721) {
         ResaleStorage.Layout storage data = ResaleStorage.layout();
@@ -110,22 +111,24 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket {
         }
     }
 
-    function purchaseTokenOffer(
+    function _sendToken(
         address erc721,
-        address buyer,
-        address seller,
         uint token,
+        address seller,
+        address buyer,
+        uint tokenPrice
+    ) internal {
+        IERC721(erc721).transferFrom(seller, buyer, token);
+        emit TokenSold(erc721, buyer, seller, token, tokenPrice);
+    }
+
+    function _distributeFees(
+        address erc721,
         uint tokenPrice,
         address nodeAddress,
-        bytes memory signature
-    ) public payable {
+        address seller
+    ) internal {
         ResaleStorage.feeSplits[] storage royaltyData = ResaleStorage.layout().royaltySplits[erc721];
-        bytes32 messageHash = generateResaleHash(erc721, buyer, seller, token, tokenPrice, nodeAddress);
-        bytes32 ethSignedMessageHash = getSignedMessageHash(messageHash);
-        require(
-            hasRole(RESALE_ADMIN, recoverSigner(ethSignedMessageHash, signature)),
-            "Resale: Invalid withdraw request"
-        );
         require(tokenPrice <= msg.value, "Resale: Insufficient funds!");
         uint leftoverForSeller = tokenPrice;
         if (msg.value - tokenPrice > 0) {
@@ -151,7 +154,74 @@ contract ResaleFacet is AccessControlAppStorageEnumerableMarket {
         payable(address(seller)).transfer(leftoverForSeller);
         totalTransferred += leftoverForSeller;
         require(totalTransferred == tokenPrice, "Resale: Error transferring funds!");
-        IERC721(erc721).transferFrom(seller, buyer, token);
-        emit TokenSold(erc721, buyer, seller, token, tokenPrice);
+    }
+
+    function createGasTokenOffer(
+        address erc721,
+        uint token,
+        uint tokenPrice,
+        address nodeAddress
+    ) public {
+        require(
+            IERC721(erc721).ownerOf(token) == msg.sender,
+            "Resale: Not the current owner of the token"
+        );
+		ResaleStorage.resaleOffer storage newOffer = ResaleStorage.layout().resaleOffers.push();
+        newOffer.erc721 = erc721;
+        newOffer.seller = msg.sender;
+        newOffer.token = token;
+        newOffer.tokenPrice = tokenPrice;
+        newOffer.nodeAddress = nodeAddress;
+        emit TokenOfferCreated(
+            erc721,
+            msg.sender,
+            token,
+            tokenPrice,
+            ResaleStorage.layout().resaleOffers.length - 1
+        );
+    }
+
+    function purchaseGasTokenOffer(
+        uint offerIndex
+    ) public payable {
+        ResaleStorage.resaleOffer storage offerData = ResaleStorage.layout().resaleOffers[offerIndex];
+        require(
+            offerData.buyer == address(0),
+            "Resale: Offer already purchased"
+        );
+        _distributeFees(
+            offerData.erc721,
+            offerData.tokenPrice,
+            offerData.nodeAddress,
+            offerData.seller
+        );
+        _sendToken(
+            offerData.erc721,
+            offerData.token,
+            offerData.seller,
+            msg.sender,
+            offerData.tokenPrice
+        );
+        offerData.buyer = msg.sender;
+    }
+
+    function purchaseTokenOffer(
+        address erc721,
+        address buyer,
+        address seller,
+        uint token,
+        uint tokenPrice,
+        address nodeAddress,
+        bytes memory signature
+    ) public payable {
+        bytes32 messageHash = generateResaleHash(erc721, buyer, seller, token, tokenPrice, nodeAddress);
+        bytes32 ethSignedMessageHash = getSignedMessageHash(messageHash);
+        require(
+            hasRole(RESALE_ADMIN, recoverSigner(ethSignedMessageHash, signature)),
+            "Resale: Invalid withdraw request"
+        );
+
+        _distributeFees(erc721, tokenPrice, nodeAddress, seller);
+        _sendToken(erc721, token, seller, buyer, tokenPrice);
     }
 }

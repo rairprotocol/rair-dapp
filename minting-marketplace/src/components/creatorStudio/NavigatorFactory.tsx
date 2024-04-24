@@ -20,15 +20,11 @@ const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
     <div className="row px-0 mx-0">
       <div className="col-xl-3 col-lg-1 col-md-1 d-none d-md-inline-block" />
       <div
-        className={`col ${
-          primaryColor === '#dedede'
-            ? 'bg'
-            : `bg-${primaryColor === '#dedede' ? 'rhyno' : 'charcoal'}`
-        } rounded-lg py-5`}
+        className={`col rounded-lg py-5`}
         style={{
-          color: `var(--charcoal${primaryColor === '#dedede' ? '' : '-40'})`
+          color: textColor
         }}>
-        <h5>Factory</h5>
+        <h5>Create with RAIR</h5>
         <span>{factoryInstance?.address}</span>
         <div className="row">
           <div className="col-6 p-2">
@@ -40,7 +36,7 @@ const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
               })}
               className="btn rair-button w-100 rounded-rair"
               to="/creator/deploy">
-              Deploy
+              Deploy a Contract
             </NavLink>
           </div>
           <div className="col-6 p-2">
@@ -52,7 +48,7 @@ const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
               })}
               className="btn rair-button w-100 rounded-rair"
               to="/creator/contracts">
-              My Contracts
+              Deployed Contracts
             </NavLink>
           </div>
         </div>

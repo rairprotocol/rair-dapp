@@ -6,26 +6,21 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 
 const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
-  forwardFunctions,
-  backwardFunction,
-  backwardDisabled
+  forwardFunctions
 }) => {
   const { primaryColor, textColor, primaryButtonColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
 
-  if (!forwardFunctions && !backwardFunction) {
+  if (!forwardFunctions) {
     return <></>;
   }
 
   return (
     <>
       <div className="py-3" />
-      <div
-        className={`w-100 ${
-          primaryColor === 'rhyno' ? 'bg' : `bg-${primaryColor}`
-        } py-4`}>
+      <div className={`w-100 py-4`}>
         <div style={{ position: 'relative' }}>
           <div className="btn" style={{ color: primaryColor }}>
             {
@@ -33,19 +28,6 @@ const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
               '_'
             }
           </div>
-          {backwardFunction && (
-            <div
-              style={{ position: 'absolute', left: '5rem', width: '10vw' }}
-              className="border-stimorol btn rounded-rair p-0">
-              <button
-                style={{ border: 'none' }}
-                disabled={backwardDisabled}
-                className={`btn rounded-rair w-100 btn-${primaryColor}`}
-                onClick={backwardFunction}>
-                Back
-              </button>
-            </div>
-          )}
           <div
             style={{
               position: 'absolute',
@@ -62,11 +44,14 @@ const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
                   return (
                     <div
                       key={index}
-                      className="border-stimorol rounded-rair btn p-0 mx-2">
+                      style={{
+                        background: primaryButtonColor
+                      }}
+                      className="rounded-rair btn p-0 mx-2">
                       <button
                         style={{
                           border: 'none',
-                          background: primaryButtonColor,
+                          background: primaryColor,
                           color: textColor
                         }}
                         disabled={item.disabled}

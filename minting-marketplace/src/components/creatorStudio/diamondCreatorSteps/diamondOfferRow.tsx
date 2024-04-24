@@ -27,8 +27,10 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   instance,
   diamondRangeIndex
 }) => {
-  const { primaryColor, secondaryColor, textColor, primaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [itemName, setItemName] = useState(offerName);
   const [startingToken, setStartingToken] = useState<string>(range[0]);
@@ -277,14 +279,6 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
             customClass="form-control rounded-rair"
           />
         </div>
-        {validateInteger(individualPrice) && (
-          <small>
-            {utils
-              .formatEther(!individualPrice ? 0 : individualPrice.toString())
-              .toString()}{' '}
-            {blockchainSymbol}
-          </small>
-        )}
       </div>
       {!simpleMode && (
         <div className={`col-12 col-md-6`}>
@@ -315,11 +309,6 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
               min={0}
               max={Number(endingToken) - Number(startingToken) + 1}
               customClass="form-control rounded-rair"
-              customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
-                color: 'inherit',
-                borderColor: `var(--${secondaryColor}-40)`
-              }}
             />
           </div>
         </div>
@@ -353,15 +342,32 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
               min={0}
               max={Number(endingToken) - Number(startingToken) + 1}
               customClass="form-control rounded-rair"
-              customCSS={{
-                backgroundColor: `var(--${primaryColor})`,
-                color: 'inherit',
-                borderColor: `var(--${secondaryColor}-40)`
-              }}
             />
           </div>
         </div>
       )}
+      {validateInteger(individualPrice) &&
+        validateInteger(endingToken) &&
+        validateInteger(startingToken) && (
+          <div className="text-center">
+            Will create{' '}
+            <b>
+              {(
+                BigInt(endingToken) -
+                BigInt(startingToken) +
+                BigInt(1)
+              ).toString()}
+            </b>{' '}
+            tokens for{' '}
+            <b>
+              {utils
+                .formatEther(!individualPrice ? 0 : individualPrice.toString())
+                .toString()}{' '}
+              {blockchainSymbol}
+            </b>{' '}
+            each
+          </div>
+        )}
       <hr className="my-4" />
     </div>
   );

@@ -1,12 +1,10 @@
-const jwt = require('jsonwebtoken');
-const axios = require('axios');
+const fs = require('fs');
 const log = require('../../utils/logger')(module);
 const { File, User, MediaViewLog, Unlock, ServerSetting } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
-const { zoomSecret, zoomClientID } = require('../../config');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../../integrations/ethers/tokenValidation');
 const { superAdminInstance } = require('../../utils/vaultSuperAdmin');
-const fs = require('fs');
+
 module.exports = {
   generateChallengeMessage: async (req, res, next) => {
     const messages = {
@@ -72,11 +70,11 @@ module.exports = {
       // Read the file content
       const content = fs.readFileSync(
         './bin/integrations/ofac/sanctioned_addresses_ETH.json',
-        'utf8'
+        'utf8',
       );
-      const ofacBlocklist = JSON.parse(content).map(address => address.toLowerCase());
+      const ofacBlocklist = JSON.parse(content).map((address) => address.toLowerCase());
       if (ofacBlocklist.includes(ethAddress)) {
-        await User.findByIdAndUpdate(userData._id, {$set: {blocked: true}});
+        await User.findByIdAndUpdate(userData._id, { $set: { blocked: true } });
         userData.blocked = true;
       }
       if (userData.blocked) {
@@ -86,11 +84,9 @@ module.exports = {
 
       userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
       const { superAdmins, superAdminsOnVault } = await ServerSetting.findOne({});
-      userData.superAdmin = superAdminsOnVault ? 
-        await superAdminInstance.hasSuperAdminRights(userData.publicAddress) 
-        :
-        superAdmins.includes(userData.publicAddress);
-      
+      userData.superAdmin = superAdminsOnVault
+        ? await superAdminInstance.hasSuperAdminRights(userData.publicAddress)
+        : superAdmins.includes(userData.publicAddress);
       userData.oreId = req?.metaAuth?.oreId;
       req.session.userData = userData;
 

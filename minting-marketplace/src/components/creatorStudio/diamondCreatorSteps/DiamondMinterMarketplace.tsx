@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 
 import MarketplaceOfferConfig from './MarketplaceOfferConfig';
@@ -32,7 +31,6 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
-  const navigate = useNavigate();
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
 
@@ -200,9 +198,6 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
         })}
       {chainData && treasuryAddress && (
         <FixedBottomNavigation
-          backwardFunction={() => {
-            navigate(-1);
-          }}
           forwardFunctions={[
             {
               label: mintingRole

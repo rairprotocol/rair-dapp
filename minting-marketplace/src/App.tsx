@@ -86,7 +86,6 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 // import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
-import { rFetch } from './utils/rFetch';
 // views
 import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
 

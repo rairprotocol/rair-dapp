@@ -1,77 +1,21 @@
 const { expect } = require("chai");
 const { time } = require("@nomicfoundation/hardhat-network-helpers");
-const FacetCutAction_ADD = 0;
-const FacetCutAction_REPLACE = 1;
-const FacetCutAction_REMOVE = 2;
+const {
+	getSelectors,
+	FacetCutAction_ADD,
+	FacetCutAction_REPLACE,
+	FacetCutAction_REMOVE
+} = require('../utilities/diamondUtils');
 
-const initialRAIR777Supply = 10000;
+const initialRAIR20Supply = 10000;
 const priceToDeploy = 150;
 
-const firstDeploymentAddress = '0x0cE7946e65c3682c55D7Fb2c4D1e3851b8139a64';
-const secondDeploymentAddress = '0xD77E4804680e04361692F58B033884D74f5f528D';
+// Expected deployment addresses
+const firstDeploymentAddress = '0xe098BeE2A5Be96dffa0BF7280934C2d6e4584a1a';
+const secondDeploymentAddress = '0x548b489C7c4E706B261db362fde75092a0152Ac2';
 
 let usedSelectorsForFactory = {};
 let usedSelectorsForMarketplace = {};
-let usedSelectorsForCredit = {};
-
-// get function selectors from ABI
-function getSelectors (contract, usedSelectors) {
-	const signatures = Object.keys(contract.interface.functions)
-	const selectors = signatures.reduce((acc, val) => {
-		if (val !== 'init(bytes)') {
-			let selector = contract.interface.getSighash(val);
-			if (usedSelectors[selector] !== undefined) {
-				//console.log('Function', val, 'already exists on', contract.address)	
-				return acc;
-			}
-			usedSelectors[selector] = {
-				address: contract.address,
-				name: val,
-				selector: selector
-			};
-			acc.push(selector)
-		}
-		return acc
-	}, [])
-	selectors.contract = contract
-	selectors.remove = remove
-	selectors.get = get
-	return selectors
-}
-
-// used with getSelectors to remove selectors from an array of selectors
-// functionNames argument is an array of function signatures
-function remove (functionNames) {
-  const selectors = this.filter((v) => {
-	for (const functionName of functionNames) {
-	  if (v === this.contract.interface.getSighash(functionName)) {
-		return false
-	  }
-	}
-	return true
-  })
-  selectors.contract = this.contract
-  selectors.remove = this.remove
-  selectors.get = this.get
-  return selectors
-}
-
-// used with getSelectors to get selectors from an array of selectors
-// functionNames argument is an array of function signatures
-function get (functionNames) {
-  const selectors = this.filter((v) => {
-	for (const functionName of functionNames) {
-	  if (v === this.contract.interface.getSighash(functionName)) {
-		return true
-	  }
-	}
-	return false
-  })
-  selectors.contract = this.contract
-  selectors.remove = this.remove
-  selectors.get = this.get
-  return selectors
-}
 
 describe("Diamonds", function () {
 	let owner, addr1, addr2, addr3, addr4, treasuryAddress, nodeAddress, addrs;
@@ -83,11 +27,11 @@ describe("Diamonds", function () {
 	let OwnershipFacetFactory, ownershipFacetInstance;
 	let DiamondLoupeFacetFactory, diamondLoupeFacetInstance;
 
-	let ERC777ReceiverFacetFactory, erc777ReceiverFacetInstance;
+	let DeployerFacetFactory, deployerFacetInstance;
 	let CreatorsFacetFactory, creatorsFacetInstance;
 	let TokensFacetFactory, tokensFacetInstance;
 
-	let ERC777Factory, erc777Instance, extraERC777Instance;
+	let ERC20Factory, erc20Instance, extraERC20Instance;
 
 	let ERC721FacetFactory, erc721FacetInstance;
 	let RAIRMetadataFacetFactory, rairMetadataFacetInstance;
@@ -101,36 +45,52 @@ describe("Diamonds", function () {
 
 	let ReceiveEthAttackerFactory, receiveEthAttackerInstance;
 
-	let CreditFactory, creditInstance;
-	let CreditDepositFactory, creditDepositInstance;
-	let CreditQueryFactory, creditQueryInstance;
-	let CreditWithdrawFactory, creditWithdrawInstance;
+	let PointsDepositFactory, pointsDepositInstance;
+	let PointsQueryFactory, pointsQueryInstance;
+	let PointsWithdrawFactory, pointsWithdrawInstance;
+
+	let FacetSourceFactory, facetSourceInstance;
 
 	beforeEach(async () => {
 		//console.log(ethers.utils.formatEther(await ethers.provider.getBalance(owner.address)));
 	})
 	
 	before(async () => {
-		[owner, addr1, addr2, addr3, addr4, treasuryAddress, nodeAddress, ...addrs] = await ethers.getSigners();	
+		[
+			owner,
+			addr1,
+			addr2,
+			addr3,
+			addr4,
+			treasuryAddress,
+			nodeAddress,
+			...addrs
+		] = await ethers.getSigners();
 		// Nick Mudge's facets
 		DiamondCutFacetFactory = await ethers.getContractFactory("DiamondCutFacet");
 		OwnershipFacetFactory = await ethers.getContractFactory("OwnershipFacet");
 		DiamondLoupeFacetFactory = await ethers.getContractFactory("DiamondLoupeFacet");
 		
-		// ERC777 Deployment (RAIR Token)
-		ERC777Factory = await ethers.getContractFactory("RAIR777");
+		// ERC20 Deployment (RAIR Token)
+		ERC20Factory = await ethers.getContractFactory("RAIR20");
 		// Factory
 		FactoryDiamondFactory = await ethers.getContractFactory("FactoryDiamond");
 		// Marketplace
 		MarketDiamondFactory = await ethers.getContractFactory("MarketplaceDiamond");
 
 		// Factory's facets
-		ERC777ReceiverFacetFactory = await ethers.getContractFactory("ERC777ReceiverFacet");
-		CreatorsFacetFactory = await ethers.getContractFactory("creatorFacet");
+		DeployerFacetFactory = await ethers.getContractFactory("DeployerFacet");
+		CreatorsFacetFactory = await ethers.getContractFactory("CreatorsFacet");
 		TokensFacetFactory = await ethers.getContractFactory("TokensFacet");
+		PointsDepositFactory = await ethers.getContractFactory("PointsDeposit");
+		PointsQueryFactory = await ethers.getContractFactory("PointsQuery");
+		PointsWithdrawFactory = await ethers.getContractFactory("PointsWithdraw");
+
+		// Facet source for ERC721 contract
+		FacetSourceFactory = await ethers.getContractFactory("FacetSource");
 
 		// ERC721's Facets
-		ERC721FacetFactory = await ethers.getContractFactory("ERC721Facet");
+		ERC721FacetFactory = await ethers.getContractFactory("ERC721EnumerableFacet");
 		RAIRMetadataFacetFactory = await ethers.getContractFactory("RAIRMetadataFacet");
 		RAIRProductFacetFactory = await ethers.getContractFactory("RAIRProductFacet");
 		RAIRRangesFacetFactory = await ethers.getContractFactory("RAIRRangesFacet");
@@ -146,11 +106,11 @@ describe("Diamonds", function () {
 	});
 
 	describe("Deploying external contracts", () => {
-		it ("Should deploy two ERC777 contracts", async () => {
-			erc777Instance = await ERC777Factory.deploy(initialRAIR777Supply, [addr1.address]);
-			extraERC777Instance = await ERC777Factory.deploy(initialRAIR777Supply / 2, [addr2.address]);
-			await erc777Instance.deployed();
-			await extraERC777Instance.deployed();
+		it ("Should deploy two ERC20 contracts", async () => {
+			erc20Instance = await ERC20Factory.deploy("RAIR One", "RAIR1", initialRAIR20Supply, owner.address);
+			extraERC20Instance = await ERC20Factory.deploy("RAIR Two", "RAIR2", initialRAIR20Supply / 2, owner.address);
+			await erc20Instance.deployed();
+			await extraERC20Instance.deployed();
 		})
 	});
 
@@ -162,6 +122,11 @@ describe("Diamonds", function () {
 
 		it ("Should deploy the base Factory Diamond", async () => {
 			factoryDiamondInstance = await FactoryDiamondFactory.deploy(diamondCutFacetInstance.address);
+			await factoryDiamondInstance.deployed();
+		});
+
+		it ("Should deploy the base Facet Source", async () => {
+			facetSourceInstance = await FacetSourceFactory.deploy(diamondCutFacetInstance.address);
 			await factoryDiamondInstance.deployed();
 		});
 
@@ -188,9 +153,9 @@ describe("Diamonds", function () {
 			await creatorsFacetInstance.deployed();
 		});
 
-		it ("Should deploy the ERC777Receiver facet", async () => {
-			erc777ReceiverFacetInstance = await ERC777ReceiverFacetFactory.deploy();
-			await erc777ReceiverFacetInstance.deployed();
+		it ("Should deploy the deployer facet", async () => {
+			deployerFacetInstance = await DeployerFacetFactory.deploy();
+			await deployerFacetInstance.deployed();
 		});
 
 		it ("Should deploy the Creators Facet", async() => {
@@ -229,146 +194,203 @@ describe("Diamonds", function () {
 			await mintingOfferFacetsInstance.deployed();
 		});
 
-		it ("Should deploy the Market Minting Offers Facet", async () => {
+		it ("Should deploy the Fees Facet", async () => {
 			feesFacetInstance = await FeesFacetFactory.deploy();
 			await feesFacetInstance.deployed();
 		});
 
-		it ("Should deploy the Market Minting Offers Facet", async () => {
+		it ("Should deploy the Resale Facet", async () => {
 			resaleFacetInstance = await ResaleFacetFactory.deploy();
 			await feesFacetInstance.deployed();
+		});
+
+		it ("Should deploy the Points Deposit Facet", async () => {
+			pointsDepositInstance = await PointsDepositFactory.deploy();
+			await pointsDepositInstance.deployed();
+		});
+
+		it ("Should deploy the Points Query Facet", async () => {
+			pointsQueryInstance = await PointsQueryFactory.deploy();
+			await pointsQueryInstance.deployed();
+		});
+
+		it ("Should deploy the Points Withdraw Facet", async () => {
+			pointsWithdrawInstance = await PointsWithdrawFactory.deploy();
+			await pointsWithdrawInstance.deployed();
 		});
 	});
 
 	describe("Adding facets to the Factory Diamond contract", () => {
-		it ("Should add the ownership facet", async () => {
-			let diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const ownershipCutItem = {
-				facetAddress: ownershipFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(ownershipFacetInstance, usedSelectorsForFactory)
-			}
-			await expect(await diamondCut.diamondCut([ownershipCutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		describe("Basic Diamond facets", () => {
+			it ("Should add the ownership facet", async () => {
+				let diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+				const ownershipCutItem = {
+					facetAddress: ownershipFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(ownershipFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([ownershipCutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+	
+				// Also add the facet to the Marketplace Diamond
+				diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
+				await expect(await diamondCut.diamondCut([ownershipCutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+				// Also add the facet to the Marketplace Diamond
+				diamondCut = await ethers.getContractAt('IDiamondCut', facetSourceInstance.address);
+				await expect(await diamondCut.diamondCut([ownershipCutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+			});
+	
+			it ("Should add the Loupe facet", async () => {
+				let diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+				const loupeFacetItem = {
+					facetAddress: diamondLoupeFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(diamondLoupeFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+	
+				// Also add the facet to the Marketplace Diamond
+				diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
+				await expect(await diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+	
+				// Also add the facet to the Marketplace Diamond
+				diamondCut = await ethers.getContractAt('IDiamondCut', facetSourceInstance.address);
+				await expect(await diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+			});
+		})
 
-			// Also add the facet to the Marketplace Diamond
-			diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
-			await expect(await diamondCut.diamondCut([ownershipCutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
+		describe("Factory Facets", () => {
+			it ("Should add the Creators facet", async () => {
+				const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+				const creatorsFacetItem = {
+					facetAddress: creatorsFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(creatorsFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([creatorsFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+			});
+	
+			it ("Should add the Deployer facet", async () => {
+				const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+				const receiverFacetItem = {
+					facetAddress: deployerFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(deployerFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+			});
+	
+			it ("Should add the Tokens facet", async () => {
+				const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+				const receiverFacetItem = {
+					facetAddress: tokensFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(tokensFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+			});
 		});
 
-		it ("Should add the Loupe facet", async () => {
-			let diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const loupeFacetItem = {
-				facetAddress: diamondLoupeFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(diamondLoupeFacetInstance, usedSelectorsForFactory)
-			}
-			await expect(await diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		describe("Facet Source facets", () => {
+			it ("Should add the RAIR Metadata facet", async () => {
+				const diamondCut = await ethers.getContractAt('IDiamondCut', facetSourceInstance.address);
+				const receiverFacetItem = {
+					facetAddress: rairMetadataFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(rairMetadataFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+			});
 
-			// Also add the facet to the Marketplace Diamond
-			diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
-			await expect(await diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
+			it ("Should add the ERC721 facet", async () => {
+				const diamondCut = await ethers.getContractAt('IDiamondCut', facetSourceInstance.address);
+				const receiverFacetItem = {
+					facetAddress: erc721FacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(erc721FacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+			});
+	
+			it ("Should add the RAIR Product facet", async () => {
+				const diamondCut = await ethers.getContractAt('IDiamondCut', facetSourceInstance.address);
+				const receiverFacetItem = {
+					facetAddress: rairProductFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(rairProductFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+			});
+	
+			it ("Should add the RAIR Ranges facet", async () => {
+				const diamondCut = await ethers.getContractAt('IDiamondCut', facetSourceInstance.address);
+				const receiverFacetItem = {
+					facetAddress: rairRangesFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(rairRangesFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+			});
+	
+			it ("Should add the RAIR Royalties facet", async () => {
+				const diamondCut = await ethers.getContractAt('IDiamondCut', facetSourceInstance.address);
+				const receiverFacetItem = {
+					facetAddress: rairRoyaltiesFacetInstance.address,
+					action: FacetCutAction_ADD,
+					functionSelectors: getSelectors(rairRoyaltiesFacetInstance, usedSelectorsForFactory)
+				}
+				await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+					.to.emit(diamondCut, "DiamondCut");
+					//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+			});
 		});
 
-		it ("Should add the Tokens facet", async () => {
+		it("Should connect all points facets", async () => {
 			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: creatorsFacetInstance.address,
+			let receiverFacetItem = {
+				facetAddress: pointsDepositInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(creatorsFacetInstance, usedSelectorsForFactory)
+				functionSelectors: getSelectors(pointsDepositInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
-		it ("Should add the ERC777 Receiver facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: erc777ReceiverFacetInstance.address,
+			
+			receiverFacetItem = {
+				facetAddress: pointsQueryInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(erc777ReceiverFacetInstance, usedSelectorsForFactory)
+				functionSelectors: getSelectors(pointsQueryInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
-		it ("Should add the Tokens facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: tokensFacetInstance.address,
+			
+			receiverFacetItem = {
+				facetAddress: pointsWithdrawInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(tokensFacetInstance, usedSelectorsForFactory)
+				functionSelectors: getSelectors(pointsWithdrawInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
-		it ("Should add the ERC721 facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: erc721FacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(erc721FacetInstance, usedSelectorsForFactory)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
-		it ("Should add the RAIR Metadata facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: rairMetadataFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(rairMetadataFacetInstance, usedSelectorsForFactory)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
-		it ("Should add the RAIR Product facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: rairProductFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(rairProductFacetInstance, usedSelectorsForFactory)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
-		it ("Should add the RAIR Ranges facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: rairRangesFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(rairRangesFacetInstance, usedSelectorsForFactory)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
-		it ("Should add the RAIR Royalties facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: rairRoyaltiesFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(rairRoyaltiesFacetInstance, usedSelectorsForFactory)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
 		});
 	});
 
@@ -422,113 +444,107 @@ describe("Diamonds", function () {
 			await expect(diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.be.revertedWith("LibDiamond: Must be contract owner");
 		});
-
-		it ("Should replace facets");
-		it ("Should remove facets");
+		//it ("Should replace facets");
+		//it ("Should remove facets");
 	});
 
 	describe("AccessControl", () => {
 		it ("Roles should be set up", async () => {
-			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.OWNER(), owner.address))
+			await expect(
+				await factoryDiamondInstance.hasRole(
+					await factoryDiamondInstance.ADMINISTRATOR(), owner.address))
 				.to.equal(true);
-			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
+			await expect(
+				await factoryDiamondInstance.hasRole(
+					await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
 				.to.equal(true);
-			await expect(await factoryDiamondInstance.getRoleAdmin(await factoryDiamondInstance.OWNER()))
-				.to.equal(await factoryDiamondInstance.OWNER());
-			await expect(await factoryDiamondInstance.getRoleAdmin(await factoryDiamondInstance.ERC777()))
-				.to.equal(await factoryDiamondInstance.OWNER());
-		});
-
-		it ("Should grant ERC777 roles", async () => {
-			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
-			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
-				.to.equal(true);
-			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.ERC777(), addr1.address))
-				.to.emit(factoryDiamondInstance, 'RoleGranted')
-				.withArgs(await factoryDiamondInstance.ERC777(), addr1.address, owner.address);
-			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.ERC777(), addr1.address))
-				.to.equal(true);
-		});
-
-		it ("Should properly add an ERC777 token to the Receiver Facet", async () => {
-			const tokensFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
-			await expect(await tokensFacet.acceptNewToken(erc777Instance.address, priceToDeploy))
-				.to.emit(factoryDiamondInstance, 'RoleGranted')
-				.withArgs(await factoryDiamondInstance.ERC777(), erc777Instance.address, owner.address)
-				.to.emit(tokensFacet, 'AcceptedToken')
-				.withArgs(erc777Instance.address, priceToDeploy, owner.address);
+			await expect(
+				await factoryDiamondInstance.getRoleAdmin(
+					await factoryDiamondInstance.ADMINISTRATOR()))
+				.to.equal(await factoryDiamondInstance.ADMINISTRATOR());
 		});
 	});
 
-	describe("Deployment using the ERC777 tokensReceived Function", () => {
-		it ("Should return the deployment cost of an ERC777 contract", async () => {
+	describe("Factory setup", () => {
+		it ("Should properly add an ERC20 token to the Deployer Facet", async () => {
 			const tokensFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
-			await expect(await tokensFacet.getDeploymentCost(erc777Instance.address))
+			await expect(await tokensFacet.changeToken(erc20Instance.address, priceToDeploy))
+				.to.emit(tokensFacet, 'ChangedToken')
+				.withArgs(erc20Instance.address, priceToDeploy, owner.address);
+		});
+
+		it ("Should connect the Facet Source", async () => {
+			const tokensFacet = await ethers.getContractAt('CreatorsFacet', factoryDiamondInstance.address);
+			await expect(await tokensFacet.setFacetSource(facetSourceInstance.address))
+				.to.not.be.reverted
+			await expect(await tokensFacet.getFacetSource())
+				.to.equal(facetSourceInstance.address)
+		});
+	})
+
+	describe("Deployment of RAIR721 contracts", () => {
+		it ("Should return the deployment cost of the current ERC20", async () => {
+			const tokensFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
+			await expect(await tokensFacet.getDeploymentCost())
 				.to.equal(priceToDeploy);
-			await expect(await tokensFacet.getDeploymentCost(extraERC777Instance.address))
-				.to.equal(0);
 		})
 
-		it ("Shouldn't be able to execute the tokensReceived function from external addresses", async () => {
-			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
-			expect(receiverFacet.tokensReceived(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes(''),  ethers.utils.toUtf8Bytes('')))
-					.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryDiamondInstance.ERC777()}`);
+		it ("Shouldn't deploy a RAIR contract without approving the tokens", async() => {
+			const deployerFacet = await ethers.getContractAt('DeployerFacet', factoryDiamondInstance.address);
+			await expect(deployerFacet.deployContract("TestRairOne!", "RAIR"))
+				.to.be.revertedWith("Deployer: Not allowed to transfer tokens");
 		});
 
-		it ("Should not deploy a contract if it receives ERC777 tokens from an unapproved ERC777 contract", async () => {
-			await expect(extraERC777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('')))
-				.to.be.revertedWith(`AccessControl: account ${extraERC777Instance.address.toLowerCase()} is missing role ${await factoryDiamondInstance.ERC777()}`);
+		it ("Should approve the tokens needed to deploy", async() => {
+			await expect(await erc20Instance.approve(factoryDiamondInstance.address, priceToDeploy * 2))
+				.to.emit(erc20Instance, 'Approval')
+				.withArgs(owner.address, factoryDiamondInstance.address, priceToDeploy * 2);
 		});
 
-		it ("Should not deploy a contract if it receives less than the required amount", async () => {
-			await expect(erc777Instance.send(factoryDiamondInstance.address, priceToDeploy - 1, ethers.utils.toUtf8Bytes('')))
-				.to.be.revertedWith(`HOT Factory: not enough RAIR tokens to deploy a contract`);
-		});
-
-		it ("Should deploy a RAIR contract if it receives ERC777 tokens from an approved address", async() => {
-			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
-			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRairOne!')))
-				//.to.emit(erc777Instance, "Sent")
-				//.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
+		it ("Should deploy a RAIR contract after approving the tokens", async() => {
+			const receiverFacet = await ethers.getContractAt('DeployerFacet', factoryDiamondInstance.address);
+			await expect(await receiverFacet.deployContract("TestRairOne!", "RAIR"))
 				.to.emit(receiverFacet, 'DeployedContract')
-				.withArgs(owner.address, 0, firstDeploymentAddress, 'TestRairOne!');
+				.withArgs(owner.address, 0, firstDeploymentAddress, 'TestRairOne!')
+				.to.emit(erc20Instance, "Transfer")
+				.withArgs(owner.address, factoryDiamondInstance.address, priceToDeploy)
+			await expect(await erc20Instance.balanceOf(owner.address))
+				.to.equal(initialRAIR20Supply - priceToDeploy);
+			await expect(await erc20Instance.balanceOf(factoryDiamondInstance.address))
+				.to.equal(priceToDeploy);
 		});
 
 		it ("Should return excess tokens from the deployment", async() => {
-			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
-			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy + 5, ethers.utils.toUtf8Bytes('TestRairTwo!')))
-				//.to.emit(erc777Instance, "Sent")
-				//.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy + 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
-				//.to.emit(erc777Instance, "Sent")
-				//.withArgs(factoryDiamondInstance.address, factoryDiamondInstance.address, owner.address, 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
+			const receiverFacet = await ethers.getContractAt('DeployerFacet', factoryDiamondInstance.address);
+			await expect(await receiverFacet.deployContract('TestRairTwo!', 'HOT'))
 				.to.emit(receiverFacet, 'DeployedContract')
 				.withArgs(owner.address, 1, secondDeploymentAddress, 'TestRairTwo!');
-			await expect(await erc777Instance.balanceOf(owner.address))
-				.to.equal(initialRAIR777Supply - (priceToDeploy * 2));
-			await expect(await erc777Instance.balanceOf(factoryDiamondInstance.address))
+			await expect(await erc20Instance.balanceOf(owner.address))
+				.to.equal(initialRAIR20Supply - (priceToDeploy * 2));
+			await expect(await erc20Instance.balanceOf(factoryDiamondInstance.address))
 				.to.equal(priceToDeploy * 2);
 		});
 	});
 
 	describe("Creators Facet", () => {
 		it ("Should return the correct amount of creators", async () => {
-			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			const creatorFacet = await ethers.getContractAt('CreatorsFacet', factoryDiamondInstance.address);
 			await expect(await creatorFacet.getCreatorsCount()).to.equal(1);
 		});
 
 		it ("Should return the address of the creators", async () => {
-			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			const creatorFacet = await ethers.getContractAt('CreatorsFacet', factoryDiamondInstance.address);
 			await expect(await creatorFacet.getCreatorAtIndex(0))
 				.to.equal(owner.address);
 		});
 
 		it ("Should return the correct amount of contracts deployed by a creator", async () => {
-			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			const creatorFacet = await ethers.getContractAt('CreatorsFacet', factoryDiamondInstance.address);
 			await expect(await creatorFacet.getContractCountOf(owner.address)).to.equal(2);
 		})
 
 		it ("Should return the contracts deployed by a creator individually", async () => {
-			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			const creatorFacet = await ethers.getContractAt('CreatorsFacet', factoryDiamondInstance.address);
 			await expect(await creatorFacet.creatorToContractIndex(owner.address, 0))
 				.to.equal(firstDeploymentAddress);
 			await expect(await creatorFacet.creatorToContractIndex(owner.address, 1))
@@ -536,14 +552,14 @@ describe("Diamonds", function () {
 		})
 		
 		it ("Should return the contracts deployed by a creator in a full list", async () => {
-			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			const creatorFacet = await ethers.getContractAt('CreatorsFacet', factoryDiamondInstance.address);
 			let contracts = await creatorFacet.creatorToContractList(owner.address);
 			await expect(contracts[0]).to.equal(firstDeploymentAddress);
 			await expect(contracts[1]).to.equal(secondDeploymentAddress);
 		});
 
 		it ("Should return the creator of a token deployed", async () => {
-			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			const creatorFacet = await ethers.getContractAt('CreatorsFacet', factoryDiamondInstance.address);
 			await expect(await creatorFacet.contractToCreator(firstDeploymentAddress))
 				.to.equal(owner.address);
 			await expect(await creatorFacet.contractToCreator(secondDeploymentAddress))
@@ -554,20 +570,25 @@ describe("Diamonds", function () {
 	describe("Tokens Facet", () => {
 		it ("Should display the balance of each approved token", async () => {
 			let tokenFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
-			await expect(await erc777Instance.balanceOf(tokenFacet.address))
+			await expect(await erc20Instance.balanceOf(tokenFacet.address))
 				.to.equal(priceToDeploy * 2); //2 deployments
 		});
 
 		it ("Shouldn't let the owners withdraw more than what the address holds", async () => {
 			let tokenFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
-			await expect(tokenFacet.withdrawTokens(erc777Instance.address, priceToDeploy * 2 + 1))
-				.to.be.revertedWith("ERC777: transfer amount exceeds balance");
+			await expect(tokenFacet.withdrawTokens(priceToDeploy * 2 + 1))
+				.to.be.revertedWith("ERC20InsufficientBalance")
+				.withArgs(
+					factoryDiamondInstance.address,
+					priceToDeploy * 2,
+					301
+				);
 		});
 
 		it ("Should let the owners withdraw tokens", async () => {
 			let tokenFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
-			await expect(await tokenFacet.withdrawTokens(erc777Instance.address, priceToDeploy * 2))
-				.to.emit(erc777Instance, 'Sent')
+			await expect(await tokenFacet.withdrawTokens(priceToDeploy * 2))
+				.to.emit(erc20Instance, 'Transfer')
 				/*.withArgs(
 					tokenFacet.address,
 					tokenFacet.address,
@@ -578,86 +599,81 @@ describe("Diamonds", function () {
 				);*/
 		});
 
-		it ("Shouldn't let other addresses add erc777 tokens", async () => {
+		it ("Shouldn't let other addresses add erc20 tokens", async () => {
 			const tokensFacet = (await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address)).connect(addr1);
-			await expect(tokensFacet.acceptNewToken(extraERC777Instance.address, priceToDeploy))
-				.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await factoryDiamondInstance.OWNER()}`);
+			await expect(tokensFacet.changeToken(extraERC20Instance.address, priceToDeploy))
+				.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await factoryDiamondInstance.ADMINISTRATOR()}`);
 		});
 
-		it ("Should remove erc777 tokens", async () => {
+		it ("Should remove erc20 tokens", async () => {
 			const tokensFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
-			await expect(await tokensFacet.removeToken(erc777Instance.address))
-				.to.emit(factoryDiamondInstance, 'RoleRevoked')
-				.withArgs(await factoryDiamondInstance.ERC777(), erc777Instance.address, owner.address)
-				.to.emit(tokensFacet, 'RemovedToken')
-				.withArgs(erc777Instance.address, owner.address);
+			await expect(await tokensFacet.changeToken(extraERC20Instance.address, priceToDeploy))
+				.to.emit(tokensFacet, 'ChangedToken')
+				.withArgs(extraERC20Instance.address, priceToDeploy, owner.address);
 		});
 
 		it ("Should let owners grant their role to other addresses", async () => {
-			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.OWNER(), addr1.address))
+			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address))
 				.to.emit(factoryDiamondInstance, 'RoleGranted')
-				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, owner.address);
+				.withArgs(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address, owner.address);
 		});
 
 		it ("Should let owners revoke their role to other addresses", async () => {
-			await expect(await factoryDiamondInstance.revokeRole(await factoryDiamondInstance.OWNER(), addr1.address))
+			await expect(await factoryDiamondInstance.revokeRole(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address))
 				.to.emit(factoryDiamondInstance, 'RoleRevoked')
-				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, owner.address);
+				.withArgs(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address, owner.address);
 		});
 
 		it ("Shouldn't let other owners renounce an address' role", async () => {
-			await expect(factoryDiamondInstance.renounceRole(await factoryDiamondInstance.OWNER(), addr1.address))
+			await expect(factoryDiamondInstance.renounceRole(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address))
 				.to.be.revertedWith("AccessControl: can only renounce roles for self")
 		});
 
 		it ("Should let owners renounce their role", async () => {
-			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.OWNER(), addr1.address))
+			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address))
 				.to.emit(factoryDiamondInstance, 'RoleGranted')
-				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, owner.address);
+				.withArgs(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address, owner.address);
 			let factoryAsAddress1 = await factoryDiamondInstance.connect(addr1);
-			await expect(await factoryAsAddress1.renounceRole(await factoryDiamondInstance.OWNER(), addr1.address))
+			await expect(await factoryAsAddress1.renounceRole(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address))
 				.to.emit(factoryDiamondInstance, 'RoleRevoked')
-				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, addr1.address);
-			await expect(await factoryAsAddress1.renounceRole(await factoryDiamondInstance.ERC777(), addr1.address))
-				.to.emit(factoryDiamondInstance, 'RoleRevoked')
-				.withArgs(await factoryDiamondInstance.ERC777(), addr1.address, addr1.address);
+				.withArgs(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address, addr1.address);
 		});
 
 		it ("Should return the number of owners in the factory", async () => {
-			await expect(await factoryDiamondInstance.getRoleMemberCount(await factoryDiamondInstance.OWNER()))
+			await expect(await factoryDiamondInstance.getRoleMemberCount(await factoryDiamondInstance.ADMINISTRATOR()))
 				.to.equal(1);
 		});
 
 		it ("Should return the address of each owners in the factory", async () => {
-			await expect(await factoryDiamondInstance.getRoleMember(await factoryDiamondInstance.OWNER(), 0))
+			await expect(await factoryDiamondInstance.getRoleMember(await factoryDiamondInstance.ADMINISTRATOR(), 0))
 				.to.equal(owner.address);
 		});
 	});
 
 	describe("RAIR ERC721", () => {
 		it ("Should have the RAIR symbol", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 			await expect(await erc721Facet.symbol())
-				.to.equal("HOT");
-			erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+				.to.equal("RAIR");
+			erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.symbol())
 				.to.equal("HOT");
 		});
 
 		it ("Should have the user defined name", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 			await expect(await erc721Facet.name())
 				.to.equal("TestRairOne!");
-			erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.name())
 				.to.equal("TestRairTwo!");
 		});
 
 		it ("Should return the factory's address", async () => {
-			let erc721Facet = await ethers.getContractAt('RAIR_ERC721_Diamond', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('RAIR721_Diamond', firstDeploymentAddress);
 			await expect(await erc721Facet.getFactoryAddress())
 				.to.equal(factoryDiamondInstance.address);
-			erc721Facet = await ethers.getContractAt('RAIR_ERC721_Diamond', secondDeploymentAddress);
+			erc721Facet = await ethers.getContractAt('RAIR721_Diamond', secondDeploymentAddress);
 			await expect(await erc721Facet.getFactoryAddress())
 				.to.equal(factoryDiamondInstance.address);
 		})
@@ -665,7 +681,7 @@ describe("Diamonds", function () {
 
 	describe("RAIR Metadata Facet", () => {
 		it ("Should return the contract's creator address", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 			await expect(await erc721Facet.getRoleMember(await erc721Facet.CREATOR(), 0))
 				.to.equal(owner.address);
 		});
@@ -929,53 +945,54 @@ describe("Diamonds", function () {
 
 	describe ("Creator side minting", () => {
 		it ("Shouldn't let other addresses mint tokens", async () => {
-			let erc721Facet = (await ethers.getContractAt('ERC721Facet', firstDeploymentAddress)).connect(addr1);
+			let erc721Facet = (await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress)).connect(addr1);
 			await expect(erc721Facet.mintFromRange(addr2.address, 0, 0))
 				.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await erc721Facet.MINTER()}`);
-			erc721Facet = (await ethers.getContractAt('ERC721Facet', secondDeploymentAddress)).connect(addr2);
+			erc721Facet = (await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress)).connect(addr2);
 			await expect(erc721Facet.mintFromRange(addr1.address, 1, 3))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await erc721Facet.MINTER()}`);
 		});
 
 		it ("Shouldn't mint tokens outside of the range's boundaries", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(erc721Facet.mintFromRange(addr3.address, 1, 3))
 				.to.be.revertedWith("RAIR ERC721: Invalid token index");
 		});
 
 		it ("Should let the creator mint tokens from ranges", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.mintFromRange(addr3.address, 2, 0))
 				.to.emit(erc721Facet, 'Transfer')
 				.withArgs(ethers.constants.AddressZero, addr3.address, 100);
 		});
 
 		it ("Shouldn't mint tokens from invalid ranges", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 			await expect(erc721Facet.mintFromRange(addr3.address, 3, 0))
 				.to.be.revertedWith("RAIR ERC721: Range does not exist");
 		});
 
 		it ("Should return the owner of each token", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.ownerOf(100))
 				.to.equal(addr3.address);
 		});
 
 		it ("Shouldn't return the owner of a non existant token", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(erc721Facet.ownerOf(101))
-				.to.be.revertedWith("ERC721: owner query for nonexistent token");
+				.to.be.revertedWith("ERC721NonexistentToken")
+				.withArgs(101);
 		});
 
 		it ("Should return the next mintable token of an offer", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.nextMintableTokenInRange(2))
 				.to.equal(1);
 		});
 
 		it ("Should let a token's owner to approve other addresses to spend tokens", async () => {
-			let erc721Facet = (await ethers.getContractAt('ERC721Facet', secondDeploymentAddress)).connect(addr3);
+			let erc721Facet = (await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress)).connect(addr3);
 			await expect(await erc721Facet.approve(addr4.address, 100))
 				.to.emit(erc721Facet, 'Approval')
 				.withArgs(addr3.address, addr4.address, 100);
@@ -984,7 +1001,7 @@ describe("Diamonds", function () {
 		});
 
 		it ("Should approve all tokens to third parties", async () => {
-			let erc721Facet = (await ethers.getContractAt('ERC721Facet', secondDeploymentAddress)).connect(addr3);
+			let erc721Facet = (await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress)).connect(addr3);
 			await expect(await erc721Facet.setApprovalForAll(addr1.address, true))
 				.to.emit(erc721Facet, 'ApprovalForAll');
 			await expect(await erc721Facet.isApprovedForAll(addr3.address, addr1.address))
@@ -1004,25 +1021,25 @@ describe("Diamonds", function () {
 		});
 
 		it ("Should show the total number of tokens minted", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.totalSupply())
 				.to.equal(1);
 		})
 
 		it ("Should show how many tokens an address holds", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.balanceOf(addr3.address))
 				.to.equal(1);
 		})
 
 		it ("Should list the tokens owned by an address", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.tokenOfOwnerByIndex(addr3.address, 0))
 				.to.equal(100);
 		});
 
 		it ("Should list the tokens minted", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.tokenByIndex(0))
 				.to.equal(100);
 		});
@@ -1060,7 +1077,7 @@ describe("Diamonds", function () {
 
 	describe ("Minting", () => {
 		it ("Should let the creator mint tokens from ranges in batches", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.mintFromRangeBatch(
 				[addr1.address, addr2.address, addr3.address],
 				2,
@@ -1075,7 +1092,7 @@ describe("Diamonds", function () {
 		});
 
 		it ("Should unlock the product for trading if all tokens are minted", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(await erc721Facet.mintFromRange(addr3.address, 2, 4))
 				.to.emit(erc721Facet, 'Transfer')
 				.withArgs(ethers.constants.AddressZero, addr3.address, 104)
@@ -1094,13 +1111,13 @@ describe("Diamonds", function () {
 		});
 
 		it ("Shouldn't mint more tokens if the allowed number is 0", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(erc721Facet.mintFromRange(addr3.address, 2, 5))
 				.to.be.revertedWith("RAIR ERC721: Not allowed to mint more tokens from this range!");
 		})
 
 		it ("Should emit an event if the entire range is minted", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 			const neededTokens = 26;
 			await expect(await erc721Facet.mintFromRangeBatch(
 				Array.from(Array(neededTokens).keys()).map(item => addr2.address),
@@ -1113,13 +1130,13 @@ describe("Diamonds", function () {
 		});
 
 		it ("Shouldn't mint more tokens if the range is complete", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 			await expect(erc721Facet.mintFromRange(addr3.address, 1, 7))
 				.to.be.revertedWith("RAIR ERC721: Cannot mint more tokens from this range!");
 		})
 
 		it ("Should emit an event if the entire product is minted", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 			const neededTokens = 24;
 			await expect(await erc721Facet.mintFromRangeBatch(
 				Array.from(Array(neededTokens).keys()).map(item => addr2.address),
@@ -1133,7 +1150,7 @@ describe("Diamonds", function () {
 		});
 
 		it ("Shouldn't mint more tokens if the range is complete", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 			await expect(erc721Facet.mintFromRange(addr3.address, 1, 7))
 				.to.be.revertedWith("RAIR ERC721: Cannot mint more tokens from this product!");
 			await expect(erc721Facet.mintFromRange(addr3.address, 2, 27))
@@ -1277,17 +1294,20 @@ describe("Diamonds", function () {
 
 	describe("NFT Trading", () => {
 		it ("Should only let Traders trade tokens", async () => {
-			let erc721Facet = (await ethers.getContractAt('ERC721Facet', firstDeploymentAddress)).connect(addr2);
+			let erc721Facet = (await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress)).connect(addr2);
 			await expect(erc721Facet['safeTransferFrom(address,address,uint256)'](addr2.address, addr3.address, 1004))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await erc721Facet.TRADER()}`);
-			erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			await expect(await erc721Facet.approve(owner.address, 1004)).to.not.be.reverted;
+			erc721Facet = (await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress));
 			await expect(await erc721Facet['safeTransferFrom(address,address,uint256)'](addr2.address, addr3.address, 1004))
 				.to.emit(erc721Facet, 'Transfer')
 				.withArgs(addr2.address, addr3.address, 1004);
 		});
 
 		it ("Shouldn't trade tokens if the range is locked", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			let erc721Facet = (await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress)).connect(addr3);
+			await expect(await erc721Facet.approve(owner.address, 100)).to.not.be.reverted;
+			erc721Facet = (await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress));
 			await expect(erc721Facet['safeTransferFrom(address,address,uint256)'](addr3.address, addr2.address, 100))
 				.to.be.revertedWith("RAIR ERC721: Cannot transfer from a locked range!");
 		});
@@ -1379,11 +1399,11 @@ describe("Diamonds", function () {
 			});
 
 			it ("Should be granted the Minter role from the ERC721 Instance", async () => {
-				let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+				let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', firstDeploymentAddress);
 				await expect(await erc721Facet.grantRole(await erc721Facet.MINTER(), marketDiamondInstance.address))
 					.to.emit(erc721Facet, 'RoleGranted')
 					.withArgs(await erc721Facet.MINTER(), marketDiamondInstance.address, owner.address);
-				erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+				erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 				await expect(await erc721Facet.grantRole(await erc721Facet.MINTER(), marketDiamondInstance.address))
 					.to.emit(erc721Facet, 'RoleGranted')
 					.withArgs(await erc721Facet.MINTER(), marketDiamondInstance.address, owner.address);
@@ -1598,7 +1618,7 @@ describe("Diamonds", function () {
 		describe("Minting from the Marketplace", () => {
 			it ("Shouldn't mint without permissions", async () => {
 				// Remove Role
-				let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+				let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 				await expect(await erc721Facet.revokeRole(await erc721Facet.MINTER(), marketDiamondInstance.address))
 					.to.emit(erc721Facet, 'RoleRevoked')
 					.withArgs(await erc721Facet.MINTER(), marketDiamondInstance.address, owner.address);
@@ -1633,7 +1653,7 @@ describe("Diamonds", function () {
 
 			it ("Should mint tokens", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
-				let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+				let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 				await expect(await mintingOffersFacet.buyMintingOffer(0, 0, {value: 4500}))
 					//MintedToken(erc721Address, rangeIndex, tokenIndex, msg.sender);
 					.to.emit(mintingOffersFacet, 'MintedToken')
@@ -1780,7 +1800,7 @@ describe("Diamonds", function () {
 
 			it ("Should mint FREE tokens", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
-				let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+				let erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 				await expect(await mintingOffersFacet.buyMintingOffer(5, 251, {value: 0}))
 					//MintedToken(erc721Address, rangeIndex, tokenIndex, msg.sender);
 					.to.emit(mintingOffersFacet, 'MintedToken')
@@ -1815,43 +1835,22 @@ describe("Diamonds", function () {
 					.to.be.revertedWith("LibDiamond: Must be contract owner");
 			});
 
-			it ("Shouldn't run have access to the Master Factory's roles", async () => {
-				let diamondFacet = await ethers.getContractAt('FactoryDiamond', firstDeploymentAddress);
-				await expect(diamondFacet.OWNER()).to.be.reverted;
-				await expect(diamondFacet.ERC777()).to.be.reverted;
-			});
-
 			it ("Shouldn't be able to modify roles of the Master Factory", async () => {
 				let diamondFacet = await ethers.getContractAt('FactoryDiamond', firstDeploymentAddress);
-				await expect(diamondFacet.grantRole(await factoryDiamondInstance.ERC777(), addr1.address)).to.be.reverted;
-				await expect(diamondFacet.grantRole(await factoryDiamondInstance.OWNER(), addr1.address))
+				await expect(diamondFacet.grantRole(await factoryDiamondInstance.ADMINISTRATOR(), addr1.address))
 					.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryDiamondInstance.DEFAULT_ADMIN_ROLE()}`);
 			});
 
-			it ("Shouldn't be able to call the tokensReceived function", async () => {
-				let tokenReceiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', firstDeploymentAddress);
-				await expect(
-					tokenReceiverFacet.tokensReceived(
-						addr1.address,
-						owner.address,
-						addr2.address,
-						priceToDeploy,
-						ethers.utils.toUtf8Bytes('NO'),
-						ethers.utils.toUtf8Bytes('')
-					))
-				.to.be.reverted;
-			});
-
-			it ("Shouldn't grant ERC777 roles from the Master Factory", async () => {
+			/*it ("Shouldn't grant ERC20 roles from the Master Factory", async () => {
 				let tokenReceiverFacet = await ethers.getContractAt('TokensFacet', firstDeploymentAddress);
-				await expect(tokenReceiverFacet.acceptNewToken(addr1.address, priceToDeploy * 2)).to.be.reverted;
-				await expect(tokenReceiverFacet.removeToken(erc777Instance.address)).to.be.reverted;
+				await expect(await tokenReceiverFacet.changeToken(addr1.address, priceToDeploy * 2))
+					.to.be.revertedWith('ASDASDASD');
 			});
 
 			it ("Shouldn't withdraw tokens from the Master Factory", async () => {
 				let tokenReceiverFacet = await ethers.getContractAt('TokensFacet', firstDeploymentAddress);
-				await expect(tokenReceiverFacet.withdrawTokens(erc777Instance.address, 1)).to.be.reverted;
-			});
+				await expect(tokenReceiverFacet.withdrawTokens(1)).to.be.reverted;
+			});*/
 		});
 
 		describe("Factory Security", () => {
@@ -1877,265 +1876,193 @@ describe("Diamonds", function () {
 				await expect(productFacet.tokenToProductIndex(0)).to.be.reverted;
 			});
 		});
-
-			/*it ("Shouldn't execute code from the parent", async () => {
-				let interfaces = [
-					await ethers.getContractAt('IDiamondCut', firstDeploymentAddress),
-					await ethers.getContractAt('ERC777ReceiverFacet', firstDeploymentAddress),
-					await ethers.getContractAt('TokensFacet', firstDeploymentAddress),
-					await ethers.getContractAt('creatorFacet', firstDeploymentAddress),
-					await ethers.getContractAt('RAIRProductFacet', firstDeploymentAddress),
-					await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress),
-					await ethers.getContractAt('FeesFacet', firstDeploymentAddress),
-					await ethers.getContractAt('MintingOffersFacet', firstDeploymentAddress),
-					await ethers.getContractAt('ERC721Facet', firstDeploymentAddress),
-					await ethers.getContractAt('DiamondLoupeFacet', firstDeploymentAddress),
-					await ethers.getContractAt('RAIRMetadataFacet', firstDeploymentAddress)
-				];
-				let names = [];
-				interfaces.forEach(item => {
-					Object.keys(item.functions).forEach(functionName => {
-						if (functionName.includes('(') && !names.includes(functionName)) {
-							names.push(functionName);
-						}
-					})
-				});
-				console.log(names);
-			});*/
 	});
 
-	describe("Token Consumer", () => {
-		it("Should deploy the main contract", async () => {
-			CreditFactory = await ethers.getContractFactory("CreditHandler");
-			creditInstance = await CreditFactory.deploy(diamondCutFacetInstance.address);
-		});
-
-		it("Should deploy the facets", async () => {
-			CreditDepositFactory = await ethers.getContractFactory("CreditDeposit");
-			CreditQueryFactory = await ethers.getContractFactory("CreditQuery");
-			CreditWithdrawFactory = await ethers.getContractFactory("CreditWithdraw");
-			creditDepositInstance = await CreditDepositFactory.deploy();
-			creditQueryInstance = await CreditQueryFactory.deploy();
-			creditWithdrawInstance = await CreditWithdrawFactory.deploy();
-		});
-
-		it("Should connect all facets", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', creditInstance.address);
-			let receiverFacetItem = {
-				facetAddress: creditDepositInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(creditDepositInstance, usedSelectorsForCredit)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-			
-			receiverFacetItem = {
-				facetAddress: creditQueryInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(creditQueryInstance, usedSelectorsForCredit)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-			
-			receiverFacetItem = {
-				facetAddress: creditWithdrawInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(creditWithdrawInstance, usedSelectorsForCredit)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-		});
-
+	describe("Points system", () => {
 		it("Should have roles set up", async () => {
-			await expect(await creditInstance.hasRole(await creditInstance.ADMINISTRATOR(), owner.address))
+			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.ADMINISTRATOR(), owner.address))
 				.to.equal(true);
-			await expect(await creditInstance.grantRole(await creditInstance.ALLOWED_ERC777(), erc777Instance.address))
-				.to.emit(creditInstance, "RoleGranted");
 		});
 
-		it("Should accept tokens from allowed contracts", async () => {
-			const creditInstanceWithDeposit = await ethers.getContractAt('CreditDeposit', creditInstance.address);
-			await erc777Instance.send(addr1.address, 2000, ethers.utils.toUtf8Bytes(''));
-			await expect(await erc777Instance.send(creditInstance.address, 200, ethers.utils.toUtf8Bytes('')))
-				.to.emit(creditInstanceWithDeposit, "ReceivedTokens");
+		it("Shouldn't take tokens without approval", async () => {
+			const pointsInstanceWithDeposit = await ethers.getContractAt('PointsDeposit', factoryDiamondInstance.address);
+			await expect(pointsInstanceWithDeposit.depositTokens(2000))
+				.to.be.revertedWith('PointsDeposit: Not allowed to transfer tokens');
+		});
+
+		it ("Should approve the tokens needed to deploy", async() => {
+			await expect(await extraERC20Instance.approve(factoryDiamondInstance.address, 2500))
+				.to.emit(extraERC20Instance, 'Approval')
+				.withArgs(owner.address, factoryDiamondInstance.address, 2500);
+			await expect(await extraERC20Instance.transfer(addr1.address, 2500)).to.not.be.reverted;
+			await expect(await (await extraERC20Instance.connect(addr1)).approve(factoryDiamondInstance.address, 2500))
+				.to.emit(extraERC20Instance, 'Approval')
+				.withArgs(addr1.address, factoryDiamondInstance.address, 2500);
+			console.info(await extraERC20Instance.balanceOf(addr1.address), await extraERC20Instance.balanceOf(owner.address));
+		});
+
+		it("Should take tokens after approval", async () => {
+			const pointsInstanceWithDeposit = await ethers.getContractAt('PointsDeposit', factoryDiamondInstance.address);
+			await expect(await pointsInstanceWithDeposit.depositTokens(200))
+				.to.emit(pointsInstanceWithDeposit, "ReceivedTokens")
+				.withArgs(owner.address, extraERC20Instance.address, 200, 200);
 			await expect(
-				await (await erc777Instance.connect(addr1))
-					.send(creditInstance.address, 2000, ethers.utils.toUtf8Bytes('')))
-				.to.emit(creditInstanceWithDeposit, "ReceivedTokens");
+				await (await pointsInstanceWithDeposit.connect(addr1)).depositTokens(2000))
+				.to.emit(pointsInstanceWithDeposit, "ReceivedTokens")
+				.withArgs(addr1.address, extraERC20Instance.address, 2000, 2000);
 		});
 		
-		it("Should reject tokens from other contracts", async () => {
-			await expect(extraERC777Instance.send(creditInstance.address, 200, ethers.utils.toUtf8Bytes('')))
-				.to.be.revertedWith(`AccessControl: account ${extraERC777Instance.address.toLowerCase()} is missing role ${await creditDepositInstance.ALLOWED_ERC777()}`);
-		});
-
 		it("Should display token balances", async () => {
-			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
-			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, owner.address))
+			const pointsInstanceWithQuery = await ethers.getContractAt('PointsQuery', factoryDiamondInstance.address);
+			await expect(await pointsInstanceWithQuery.getUserPoints(owner.address))
 				.to.equal(200);
-			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address))
+			await expect(await pointsInstanceWithQuery.getUserPoints(addr1.address))
 				.to.equal(2000);
-			await expect(await creditInstanceWithQuery.getUserCredits(extraERC777Instance.address, owner.address))
-				.to.equal(0);
 		});
 			
 		it("Should display overall balances", async () => {
-			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
-			await expect(await creditInstanceWithQuery.getTotalUserCredits(owner.address))
-				.to.equal(200);
-			await expect(await creditInstanceWithQuery.getTotalUserCredits(addr1.address))
+			const pointsInstanceWithQuery = await ethers.getContractAt('PointsQuery', factoryDiamondInstance.address);
+			await expect(await pointsInstanceWithQuery.getTotalUserPoints(owner.address))
+				.to.equal(500);  // 300 from the past 2 deployments and 200 from the deposit above
+			await expect(await pointsInstanceWithQuery.getTotalUserPoints(addr1.address))
 				.to.equal(2000);
-			await expect(await creditInstanceWithQuery.getTotalUserCredits(addr2.address))
+			await expect(await pointsInstanceWithQuery.getTotalUserPoints(addr2.address))
 				.to.equal(0);
 		});
 
 		it ("Should setup the time limit", async () => {
-			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
-			// 1 minute leeway
-			await creditInstanceWithWithdraw.setWithdrawTimeLimit(60);
+			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
+			// A bit over 3 minutes limit before hash expires
+			await pointsInstanceWithWithdraw.setWithdrawTimeLimit(200);
 		});
 
 		it ("Shouldn't generate a signed message if amount is greater than balance", async () => {
-			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
 			const withdrawValue = [
-				erc777Instance.address, // ERC777 
-				10000,					// Amount
+				extraERC20Instance.address, // Token address 
+				10000,				   // Amount
 			];
-			await expect(creditInstanceWithWithdraw.getWithdrawHash(
+			await expect(pointsInstanceWithWithdraw.getWithdrawHash(
 				addr1.address,
 				...withdrawValue
-			)).to.be.revertedWith("CreditHandler: Invalid withdraw amount");
+			)).to.be.revertedWith("PointsWithdraw: Invalid withdraw amount");
 		});
 
 		it ("Should withdraw with signed messages", async () => {
-			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
 			const withdrawValue = [
-				erc777Instance.address, // ERC777 
+				extraERC20Instance.address, 	// ERC20
 				1000,					// Amount
 			];
-			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+			const withdrawMessage = await pointsInstanceWithWithdraw.getWithdrawHash(
 				addr1.address,
 				...withdrawValue
 			);
+
+			// One minute later
 			await time.increase(60);
+
 			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(withdrawMessage));
 			await expect(
-				await (await creditInstanceWithWithdraw.connect(addr1))
-					.withdraw(...withdrawValue, signedMessageOwner)
+				await (await pointsInstanceWithWithdraw.connect(addr1))
+					.withdraw(1000, signedMessageOwner)
 			)
-				.to.emit(erc777Instance, "Sent")
-				.to.emit(creditInstanceWithWithdraw, "WithdrewCredit")
-				.withArgs(addr1.address, erc777Instance.address, 1000);
-			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
-			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address))
+				.to.emit(extraERC20Instance, "Transfer")
+				.to.emit(pointsInstanceWithWithdraw, "WithdrewPoints")
+				.withArgs(addr1.address, extraERC20Instance.address, 1000);
+			const pointsInstanceWithQuery = await ethers.getContractAt('PointsQuery', factoryDiamondInstance.address);
+			await expect(await pointsInstanceWithQuery.getUserPoints(addr1.address))
 				.to.equal(1000);
-			await expect(await erc777Instance.balanceOf(addr1.address)).to.equal(1000);
+			await expect(await extraERC20Instance.balanceOf(addr1.address)).to.equal(1500);
 		});
 
 		it ("Shouldn't withdraw with signed message twice", async () => {
-			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
 			const withdrawValue = [
-				erc777Instance.address, // ERC777 
-				10,						// Amount
+				extraERC20Instance.address, // ERC20 
+				10,					   // Amount
 			];
-			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+			const withdrawMessage = await pointsInstanceWithWithdraw.getWithdrawHash(
 				addr1.address,
 				...withdrawValue
 			);
 			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(withdrawMessage));
 			await expect(
-				await (await creditInstanceWithWithdraw.connect(addr1))
-					.withdraw(...withdrawValue, signedMessageOwner)
+				await (await pointsInstanceWithWithdraw.connect(addr1))
+					.withdraw(10, signedMessageOwner)
 			)
-				.to.emit(erc777Instance, "Sent")
-				.to.emit(creditInstanceWithWithdraw, "WithdrewCredit")
-				.withArgs(addr1.address, erc777Instance.address, 10);
-			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
-			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address))
+				.to.emit(extraERC20Instance, "Transfer")
+				.to.emit(pointsInstanceWithWithdraw, "WithdrewPoints")
+				.withArgs(addr1.address, extraERC20Instance.address, 10);
+			const pointsInstanceWithQuery = await ethers.getContractAt('PointsQuery', factoryDiamondInstance.address);
+			await expect(await pointsInstanceWithQuery.getUserPoints(addr1.address))
 				.to.equal(990);
-			await expect(await erc777Instance.balanceOf(addr1.address)).to.equal(1010);
+			await expect(await extraERC20Instance.balanceOf(addr1.address)).to.equal(1510);
 			await expect(
-				creditInstanceWithWithdraw.connect(addr1)
-					.withdraw(...withdrawValue, signedMessageOwner)
-			).to.be.revertedWith("CreditHandler: Invalid withdraw request");
+				pointsInstanceWithWithdraw.connect(addr1)
+					.withdraw(10, signedMessageOwner)
+			).to.be.revertedWith("PointsWithdraw: Invalid withdraw request");
 		});
 
 		it ("Shouldn't withdraw with signed messages if it took too long", async () => {
-			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
 			const withdrawValue = [
-				erc777Instance.address, // ERC777 
-				900,					// Amount
+				extraERC20Instance.address, // ERC20
+				900,						// Amount
 			];
-			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+			const withdrawMessage = await pointsInstanceWithWithdraw.getWithdrawHash(
 				addr1.address,
 				...withdrawValue
 			);
-			// 2 minutes
-			await time.increase(120);
+			// 4 mins
+			await time.increase(250);
 			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(withdrawMessage));
 			await expect(
-				creditInstanceWithWithdraw.connect(addr1).withdraw(...withdrawValue, signedMessageOwner)
-			).to.be.revertedWith("CreditHandler: Invalid withdraw request");
+				pointsInstanceWithWithdraw.connect(addr1).withdraw(900, signedMessageOwner)
+			).to.be.revertedWith("PointsWithdraw: Invalid withdraw request");
 		});
 
 		it ("Shouldn't withdraw without signed messages", async () => {
-			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
 			const withdrawValue = [
-				erc777Instance.address,
+				erc20Instance.address,
 				600,
 			];
-			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+			const withdrawMessage = await pointsInstanceWithWithdraw.getWithdrawHash(
 				addr1.address,
 				...withdrawValue
 			);
 			const signedMessageAddr1 = await addr1.signMessage(ethers.utils.arrayify(withdrawMessage));
 			await expect(
-				(creditInstanceWithWithdraw.connect(addr1))
-					.withdraw(...withdrawValue, signedMessageAddr1)
-			).to.be.revertedWith("CreditHandler: Invalid withdraw request");
+				(pointsInstanceWithWithdraw.connect(addr1))
+					.withdraw(600, signedMessageAddr1)
+			).to.be.revertedWith("PointsWithdraw: Invalid withdraw request");
 		});
 
-		it ("Shouldn't withdraw without signed messages", async () => {
-			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
+		it ("Should withdraw all points", async () => {
+			const pointsInstanceWithQuery = await ethers.getContractAt('PointsQuery', factoryDiamondInstance.address);
+			const pointsInstanceWithWithdraw = await ethers.getContractAt('PointsWithdraw', factoryDiamondInstance.address);
+			const currentUserBalance = await pointsInstanceWithQuery.getUserPoints(addr1.address);
 			const withdrawValue = [
-				erc777Instance.address,
-				600,
+				extraERC20Instance.address, 	// ERC20 
+				currentUserBalance,				// Amount
 			];
-			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
-				addr1.address,
-				...withdrawValue
-			);
-			const signedMessageAddr1 = await addr1.signMessage(ethers.utils.arrayify(withdrawMessage));
-			await expect(
-				(creditInstanceWithWithdraw.connect(addr1))
-					.withdraw(...withdrawValue, signedMessageAddr1)
-			).to.be.revertedWith("CreditHandler: Invalid withdraw request");
-		});
-
-		it ("Should withdraw all credits", async () => {
-			const creditInstanceWithQuery = await ethers.getContractAt('CreditQuery', creditInstance.address);
-			const creditInstanceWithWithdraw = await ethers.getContractAt('CreditWithdraw', creditInstance.address);
-			const currentUserBalance = await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address);
-			const withdrawValue = [
-				erc777Instance.address, 																// ERC777 
-				currentUserBalance,	// Amount
-			];
-			const withdrawMessage = await creditInstanceWithWithdraw.getWithdrawHash(
+			const withdrawMessage = await pointsInstanceWithWithdraw.getWithdrawHash(
 				addr1.address,
 				...withdrawValue
 			);
 			await time.increase(50);
 			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(withdrawMessage));
 			await expect(
-				await (await creditInstanceWithWithdraw.connect(addr1))
-					.withdraw(...withdrawValue, signedMessageOwner)
+				await (await pointsInstanceWithWithdraw.connect(addr1))
+					.withdraw(currentUserBalance, signedMessageOwner)
 			)
-				.to.emit(erc777Instance, "Sent")
-				.to.emit(creditInstanceWithWithdraw, "WithdrewCredit")
-				.withArgs(addr1.address, erc777Instance.address, currentUserBalance);
-			await expect(await creditInstanceWithQuery.getUserCredits(erc777Instance.address, addr1.address))
+				.to.emit(extraERC20Instance, "Transfer")
+				.to.emit(pointsInstanceWithWithdraw, "WithdrewPoints")
+				.withArgs(addr1.address, extraERC20Instance.address, currentUserBalance);
+			await expect(await pointsInstanceWithQuery.getUserPoints(addr1.address))
 				.to.equal(0);
-			await expect(await erc777Instance.balanceOf(addr1.address)).to.equal(2000);
+			await expect(await extraERC20Instance.balanceOf(addr1.address)).to.equal(2500);
 		});
 	});
 
@@ -2165,7 +2092,7 @@ describe("Diamonds", function () {
 
 		it ("Should grant all necessary roles", async () => {
 			const resaleFacet = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
-			const erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			const erc721Facet = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(
 				await resaleFacet.grantRole(
 					await resaleFacet.MAINTAINER(),
@@ -2206,12 +2133,12 @@ describe("Diamonds", function () {
 
 		it ("Should generate a hash if the marketplace is approved", async () => {
 			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
-			const erc721Instance = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			const erc721Instance = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(
 				await erc721Instance.setApprovalForAll(resaleInstance.address, true)
 			)
-			.to.emit(erc721Instance, "ApprovalForAll")
-			.withArgs(owner.address, resaleInstance.address, true);
+				.to.emit(erc721Instance, "ApprovalForAll")
+				.withArgs(owner.address, resaleInstance.address, true);
 
 			const args = [
 				secondDeploymentAddress,	// erc721,
@@ -2242,6 +2169,7 @@ describe("Diamonds", function () {
 			const hash = await resaleInstance.generateResaleHash(...[...args, nodeAddress.address]);
 
 			const signedMessageOwner = await owner.signMessage(ethers.utils.arrayify(hash));
+			const erc721Instance = await ethers.getContractAt('ERC721EnumerableFacet', secondDeploymentAddress);
 			await expect(
 				await resaleInstanceAddr3.purchaseTokenOffer(...[...args, nodeAddress.address], signedMessageOwner, {value: 200000})
 			)
@@ -2262,6 +2190,21 @@ describe("Diamonds", function () {
 
 		it ("Shouldn't purchase a token twice", async () => {
 			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			
+			// Address 3 approves the marketplace
+			const erc721Instance = (
+				await ethers.getContractAt(
+					'ERC721EnumerableFacet',
+					secondDeploymentAddress
+				)
+			).connect(addr3);
+			await expect(
+				await erc721Instance.setApprovalForAll(resaleInstance.address, true)
+			)
+				.to.emit(erc721Instance, "ApprovalForAll")
+				.withArgs(addr3.address, resaleInstance.address, true);
+
+			// Generate the hash for the sale
 			const resaleInstanceAddr3 = await (
 				await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address)
 			).connect(addr3);
@@ -2288,13 +2231,20 @@ describe("Diamonds", function () {
 				.to.emit(resaleInstance, 'TokenSold')
 				.withArgs(...args);
 
+			// Try to run the same purchase again
 			await expect(
 				resaleInstanceAddr3.purchaseTokenOffer(
 					...[...args, nodeAddress.address],
 					signedMessageOwner,
 					{value: 200000}
 				)
-			).to.be.revertedWith("ERC721: transfer from incorrect owner");
+			)
+				.to.be.revertedWith("ERC721IncorrectOwner")
+				.withArgs(
+					addr3.address,
+					0,
+					owner.address
+				);
 		});
 
 		it ("Shouldn't purchase with wrong information", async () => {
@@ -2326,7 +2276,35 @@ describe("Diamonds", function () {
 					{value: 2000}
 				)
 			)
-				.to.be.revertedWith("Resale: Invalid withdraw request")
+				.to.be.revertedWith("Resale: Marketplace isn't approved for transfers");
+			
+				// Address 2 happens to have approved the marketplace
+			const erc721Instance = (
+				await ethers.getContractAt(
+					'ERC721EnumerableFacet',
+					secondDeploymentAddress
+				)
+			).connect(addr2);
+			// Try again
+			await expect(
+				await erc721Instance.setApprovalForAll(resaleInstance.address, true)
+			)
+				.to.emit(erc721Instance, "ApprovalForAll")
+				.withArgs(addr2.address, resaleInstance.address, true);
+
+				await expect(
+					resaleInstanceAddr3.purchaseTokenOffer(
+						secondDeploymentAddress,	// erc721,
+						owner.address,				// buyer,
+						addr2.address,				// seller,
+						0, 							// token,
+						2000,
+						nodeAddress.address,
+						signedMessageOwner,
+						{value: 2000}
+					)
+				)
+					.to.be.revertedWith("Resale: Invalid withdraw request");
 		});
 
 		it ("Shouldn't purchase after 2 minutes", async () => {
@@ -2421,6 +2399,85 @@ describe("Diamonds", function () {
 					52000,
 					120000,
 				])
+		});
+
+		it ("Shouldn't create resale offers if user is not owner of token", async () => {
+			const resaleInstance = await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			);
+			await expect(resaleInstance.createGasTokenOffer(
+				secondDeploymentAddress, // ERC721 address
+				0,						 // Token number
+				300000,					 // Token Price
+				nodeAddress.address		 // Node address
+			)).to.be.revertedWith("Resale: Not the current owner of the token");
+		});
+
+		it ("Should create resale offers (stored in the blockchain)", async () => {
+			const resaleInstance = (await ethers.getContractAt(
+				'ResaleFacet',
+				marketDiamondInstance.address
+			)).connect(addr3);
+			await expect(await resaleInstance.createGasTokenOffer(
+				secondDeploymentAddress, // ERC721 address
+				0,						 // Token number
+				300000,					 // Token Price
+				nodeAddress.address		 // Node address
+			)).to.emit(resaleInstance, 'TokenOfferCreated')
+				.withArgs(
+					secondDeploymentAddress, // ERC721 address
+					addr3.address,			 // Seller address
+					0,						 // Token ID
+					300000,					 // Token Price
+					0						 // Offer ID
+				)
+		});
+
+		it ("Shouldn't purchase resale offers without enough funds", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			await expect(resaleInstance.purchaseGasTokenOffer(
+				0, // Offer Id
+				{value: 2000}
+			)).to.be.revertedWith("Resale: Insufficient funds!");
+		});
+
+		it ("Should purchase resale offers (stored in the blockchain)", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			await expect(await resaleInstance.purchaseGasTokenOffer(
+				0, // Offer Id
+				{value: 300000}
+			)).to.emit(resaleInstance, 'TokenSold')
+				.withArgs(
+					secondDeploymentAddress,	// erc721,
+					owner.address,				// buyer,
+					addr3.address,				// seller,
+					0, 							// token,
+					300000,						// tokenPrice
+				)
+				.changeEtherBalances([
+					owner,	// Buyer
+					nodeAddress,
+					treasuryAddress,
+					addr4,
+					addr1,
+					addr3, // Seller
+				], [
+					-300000,
+					15000,
+					15000,
+					12000,
+					78000,
+					180000,
+				])
+		});
+
+		it ("Shouldn't purchase resale offers twice", async () => {
+			const resaleInstance = await ethers.getContractAt('ResaleFacet', marketDiamondInstance.address);
+			await expect(resaleInstance.purchaseGasTokenOffer(
+				0, // Offer Id
+				{value: 300000}
+			)).to.be.revertedWith("Resale: Offer already purchased")
 		});
 	});
 

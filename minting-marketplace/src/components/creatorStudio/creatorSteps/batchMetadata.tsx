@@ -26,7 +26,6 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   setStepNumber,
   stepNumber,
   gotoNextStep,
-  goBack,
   simpleMode,
   refreshNFTMetadata
 }) => {
@@ -233,7 +232,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   );
 
   return (
-    <>
+    <div className="row">
       <small className="w-100 text-center">
         Please, download our prebuilt CSV template for metadata uploading.
       </small>
@@ -418,11 +417,8 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         </>
       )}
 
-      <FixedBottomNavigation
-        backwardFunction={goBack}
-        forwardFunctions={buttons}
-      />
-    </>
+      <FixedBottomNavigation forwardFunctions={buttons} />
+    </div>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
 
-import store, { RootState } from '../../../ducks';
+import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';

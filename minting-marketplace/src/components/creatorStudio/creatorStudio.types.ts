@@ -227,6 +227,7 @@ export type TSteps = {
   shortName: string;
   simple: boolean;
   external: boolean;
+  description: string;
 };
 
 export type TMediaType = {
@@ -445,12 +446,6 @@ export type IForwardFunctions = {
   visible?: boolean;
 };
 
-export interface IFixedBottomNavigation {
-  forwardFunctions?: IForwardFunctions[];
-  backwardFunction: () => void;
-  backwardDisabled?: boolean;
-}
-
 export type TContractsNetworkContract = {
   blockchain: BlockchainType | undefined;
   contractAddress: string;
@@ -502,8 +497,6 @@ export type TSetDataUseState = {
 
 export interface IFixedBottomNavigation {
   forwardFunctions?: IForwardFunctions[];
-  backwardFunction: () => void;
-  backwardDisabled?: boolean;
 }
 
 export interface INavigatorContract {

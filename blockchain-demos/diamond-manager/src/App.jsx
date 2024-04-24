@@ -10,14 +10,12 @@ const diamondContracts = {
 		mainDiamondContract: 'FactoryDiamond',
 		// Import order is important, don't rearrange!
 		facetContracts: [
-			'ERC777ReceiverFacet', // Factory Facets
-			'creatorFacet',
+			'DeployerFacet', // Factory Facets
+			'CreatorsFacet',
 			'TokensFacet',
-			'ERC721Facet', // Deployed Token Facets
-			'RAIRMetadataFacet',
-			'RAIRProductFacet',
-			'RAIRRangesFacet',
-			'RAIRRoyaltiesFacet'
+			'PointsDeposit', // Points facets
+			'PointsQuery',
+			'PointsWithdraw',
 		]
 	},
 	Marketplace: {
@@ -29,13 +27,15 @@ const diamondContracts = {
 			'ResaleFacet'
 		]
 	},
-	Credit: {
-		mainDiamondContract: 'CreditHandler',
+	'ERC721 Source': {
+		mainDiamondContract: 'FacetSource',
 		// Import order is important, don't rearrange!
 		facetContracts: [
-			'CreditDeposit',
-			'CreditQuery',
-			'CreditWithdraw',
+			'ERC721EnumerableFacet',
+			'RAIRMetadataFacet',
+			'RAIRProductFacet',
+			'RAIRRangesFacet',
+			'RAIRRoyaltiesFacet'
 		]
 	}
 }

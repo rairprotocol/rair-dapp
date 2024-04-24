@@ -55,7 +55,8 @@ services:
       BINANCE_MAINNET_RPC: ${binance_mainnet_rpc}
       BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
       ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
-      ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
+      ETHEREUM_TESTNET_SEPOLIA_RPC: ${ethereum_testnet_sepolia_rpc}
+      BASE_MAINNET_RPC: ${base_mainnet_rpc}
       ASTAR_MAINNET_RPC: ${astar_mainnet_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
@@ -70,7 +71,7 @@ services:
       KOHLER_MEETING_ID: ${kohler_meeting_id}
       WITHDRAWER_PRIVATE_KEY: ${withdrawer_private_key}
       APP_NAME: ${app_name}
-      GOERLI_DIAMOND_MARKETPLACE_ADDRESS: ${goerli_diamond_marketplace_address}
+      SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS: ${sepolia_diamond_marketplace_address}
       MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mumbai_diamond_marketplace_address}
       MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mainnet_diamond_marketplace_address}
       ASTAR_DIAMOND_MARKETPLACE_ADDRESS: ${astar_diamond_marketplace_address}

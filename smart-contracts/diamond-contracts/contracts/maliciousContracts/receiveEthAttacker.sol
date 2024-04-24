@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.18; 
+pragma solidity ^0.8.25; 
 
 /// @title  This is a token protection contract
 /// @notice The function of this contract prevent another contract to recieve the tokens

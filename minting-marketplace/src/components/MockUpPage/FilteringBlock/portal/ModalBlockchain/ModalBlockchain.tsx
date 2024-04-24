@@ -20,8 +20,8 @@ const blockchains: TBlockchainCategory[] = [
     clicked: false
   },
   {
-    name: 'Goerli Testnet',
-    chainId: '0x5',
+    name: 'Sepolia Testnet',
+    chainId: '0xaa36a7',
     clicked: false
   },
   {

@@ -1,4 +1,4 @@
-import { Chain } from '@alchemy/aa-core/node_modules/viem/_types/chains/index';
+import { chains } from '@alchemy/aa-core';
 import { Network } from 'alchemy-sdk';
 
 export type TNativeCurrency = {
@@ -22,7 +22,7 @@ export type TChainItemData = {
   symbol: string;
   addChainData: TAddChainData;
   disabled?: boolean;
-  viem?: Chain;
+  viem?: chains.Chain;
   alchemy?: Network;
   coingecko?: string;
 };

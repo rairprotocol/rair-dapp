@@ -9,8 +9,9 @@ const maticTestnet = new Network('Matic Testnet', 0x13881);
 const maticMainnet = new Network('Matic Mainnet', 0x89);
 const binanceTestnet = new Network('Binance Testnet', 0x61);
 const binanceMainnet = new Network('Binance Mainnet', 0x38);
-const ethereumGoerli = new Network('Ethereum Goerli', 0x5);
 const ethereumMainnet = new Network('Ethereum Mainnet', 0x1);
+const ethereumSepolia = new Network('Ethereum Sepolia', 0xaa36a7);
+const baseMainnet = new Network('Base Sepolia', 0x2105);
 
 const endpoints = {
     '0x13881': process.env.MATIC_TESTNET_RPC,
@@ -23,10 +24,12 @@ const endpoints = {
     'binance-mainnet': process.env.BINANCE_MAINNET_RPC,
     '0x1': process.env.ETHEREUM_MAINNET_RPC,
     ethereum: process.env.ETHEREUM_MAINNET_RPC,
-    '0x5': process.env.ETHEREUM_TESTNET_GOERLI_RPC,
-    goerli: process.env.ETHEREUM_TESTNET_GOERLI_RPC,
     astar: 'https://evm.astar.network', // Temporary hardcode until Alchemy gets fixed
     '0x250': 'https://evm.astar.network',
+    '0xaa36a7': process.env.ETHEREUM_TESTNET_SEPOLIA_RPC,
+    sepolia: process.env.ETHEREUM_TESTNET_SEPOLIA_RPC,
+    base: process.env.BASE_MAINNET_RPC,
+    '0x2105': process.env.BASE_MAINNET_RPC,
 };
 
 const ethersV6Networks = {
@@ -40,10 +43,12 @@ const ethersV6Networks = {
     'binance-mainnet': binanceMainnet,
     '0x1': ethereumMainnet,
     ethereum: ethereumMainnet,
-    '0x5': ethereumGoerli,
-    goerli: ethereumGoerli,
     astar: astarMainnet,
     '0x250': astarMainnet,
+    '0xaa36a7': ethereumSepolia,
+    sepolia: ethereumSepolia,
+    base: baseMainnet,
+    '0x2105': baseMainnet,
 };
 
 const getContractRunner = async (

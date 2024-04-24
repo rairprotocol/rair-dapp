@@ -32,6 +32,7 @@ const {
   withdrawCredits,
   updateMintingOffer,
   sellResaleOffer,
+  createResaleOffer,
   transferredToken,
 } = require('./eventCatcherUtils');
 
@@ -54,6 +55,7 @@ const insertionMapping = {
   MintedToken: insertTokenDiamond,
   UpdatedMintingOffer: updateMintingOffer,
   TokenSold: sellResaleOffer,
+  TokenOfferCreated: createResaleOffer,
 
   // Classic Factory
   NewContractDeployed: insertContract,

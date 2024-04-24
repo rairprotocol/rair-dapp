@@ -6,10 +6,11 @@ const { diamondMarketplaceAbi } = require('../../integrations/smartContracts');
 const { getInstance, getContractRunner } = require('../../integrations/ethers/contractInstances');
 
 const addressMapping = {
-    '0x5': process.env.GOERLI_DIAMOND_MARKETPLACE_ADDRESS,
+    '0xaa36a7': process.env.SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS,
     '0x13881': process.env.MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS,
     '0x89': process.env.MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
     '0x250': process.env.ASTAR_DIAMOND_MARKETPLACE_ADDRESS,
+    '0x2105': process.env.BASE_DIAMOND_MARKETPLACE_ADDRESS,
 };
 
 exports.openResales = async (req, res, next) => {

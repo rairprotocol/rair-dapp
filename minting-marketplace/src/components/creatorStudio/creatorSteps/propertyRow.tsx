@@ -1,8 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import InputField from '../../common/InputField';
 import { IPropertyRow } from '../creatorStudio.types';
 
@@ -14,10 +11,6 @@ const PropertyRow: React.FC<IPropertyRow> = ({
   array,
   index
 }) => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
-
   const updatePropertyName = (value: string) => {
     array[index].trait_type = value;
     rerender();

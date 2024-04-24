@@ -9,6 +9,6 @@ module.exports = {
   'binance-mainnet': process.env.BINANCE_MAINNET_RPC,
   '0x1': process.env.ETHEREUM_MAINNET_RPC,
   ethereum: process.env.ETHEREUM_MAINNET_RPC,
-  '0x5': process.env.ETHEREUM_TESTNET_GOERLI_RPC,
-  goerli: process.env.ETHEREUM_TESTNET_GOERLI_RPC,
+  '0xaa36a7': process.env.ETHEREUM_TESTNET_SEPOLIA_RPC,
+  sepolia: process.env.ETHEREUM_TESTNET_SEPOLIA_RPC,
 };

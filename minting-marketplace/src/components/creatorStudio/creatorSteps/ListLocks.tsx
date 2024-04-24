@@ -163,8 +163,7 @@ const ListLocks: React.FC<TListLocks> = ({
   contractData,
   setStepNumber,
   gotoNextStep,
-  stepNumber,
-  goBack
+  stepNumber
 }) => {
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
@@ -284,7 +283,6 @@ const ListLocks: React.FC<TListLocks> = ({
           )}
           {chainData && (
             <FixedBottomNavigation
-              backwardFunction={goBack}
               forwardFunctions={[
                 {
                   action: !onMyChain

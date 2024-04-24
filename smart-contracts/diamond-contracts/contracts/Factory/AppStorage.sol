@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.18; 
+pragma solidity ^0.8.25; 
 
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -14,6 +14,11 @@ library FactoryStorage {
 		mapping(address => address[]) creatorToContracts;
 		mapping(address => address) contractToCreator;
 		mapping(address => uint) deploymentCostForToken;
+        address currentERC20;
+        mapping(address => uint) currentUserPoints;
+        mapping(address => uint) totalUserPoints;
+        uint transferTimeLimit;
+        address facetSource;
     }
 
     function layout() internal pure returns (Layout storage l) {

@@ -22,8 +22,12 @@ const Factory = () => {
   const [deploymentPrice, setDeploymentPrice] = useState<BigNumber>(
     BigNumber.from(0)
   );
-  const [deploymentPriceDiamond, setDeploymentPriceDiamond] =
-    useState<BigNumber>(BigNumber.from(0));
+  const [deploymentPriceDiamond, setDeploymentPriceDiamond] = useState<
+    BigNumber | undefined
+  >();
+
+  const [allowance, setAllowance] = useState<BigNumber | undefined>();
+
   const [userBalance, setUserBalance] = useState<BigNumber>(BigNumber.from(0));
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
 
@@ -48,6 +52,28 @@ const Factory = () => {
   const { adminRights } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
+
+  const getAllowance = useCallback(async () => {
+    if (erc777Instance && diamondFactoryInstance) {
+      const allowanceCheck = await web3TxHandler(erc777Instance, 'allowance', [
+        currentUserAddress,
+        diamondFactoryInstance.address
+      ]);
+      setAllowance(allowanceCheck);
+    }
+  }, [
+    erc777Instance,
+    diamondFactoryInstance,
+    currentUserAddress,
+    web3TxHandler
+  ]);
+
+  useEffect(() => {
+    if (allowance !== undefined) {
+      return;
+    }
+    getAllowance();
+  }, [getAllowance, allowance]);
 
   const getExchangeData = useCallback(async () => {
     if (tokenPurchaserInstance) {
@@ -74,24 +100,24 @@ const Factory = () => {
         setDeploymentPrice(value);
       }
     }
-  }, [factoryInstance, erc777Instance, deploymentPrice]);
+  }, [factoryInstance, erc777Instance, deploymentPrice, web3TxHandler]);
 
   const getDiamondDeploymentCost = useCallback(async () => {
-    if (
-      diamondFactoryInstance &&
-      erc777Instance &&
-      deploymentPriceDiamond.eq(0)
-    ) {
+    if (diamondFactoryInstance && erc777Instance && !deploymentPriceDiamond) {
       const value = await web3TxHandler(
         diamondFactoryInstance,
-        'getDeploymentCost',
-        [erc777Instance.address]
+        'getDeploymentCost'
       );
       if (value?._isBigNumber) {
         setDeploymentPriceDiamond(value);
       }
     }
-  }, [diamondFactoryInstance, erc777Instance, deploymentPriceDiamond]);
+  }, [
+    diamondFactoryInstance,
+    erc777Instance,
+    deploymentPriceDiamond,
+    web3TxHandler
+  ]);
 
   const getUserBalance = useCallback(async () => {
     if (erc777Instance && userBalance?.eq(0)) {
@@ -107,7 +133,13 @@ const Factory = () => {
         setTokenSymbol(symbolValue);
       }
     }
-  }, [erc777Instance, currentUserAddress]);
+  }, [
+    erc777Instance,
+    currentUserAddress,
+    getExchangeData,
+    userBalance,
+    web3TxHandler
+  ]);
 
   useEffect(() => {
     getLegacyDeploymentCost();
@@ -132,24 +164,117 @@ const Factory = () => {
     [web3Switch]
   );
 
+  const deployClassic = useCallback(async () => {
+    if (!erc777Instance || !factoryInstance) {
+      return;
+    }
+    setDeploying(true);
+    reactSwal.fire({
+      title: 'Deploying contract!',
+      html: 'Please wait...',
+      icon: 'info',
+      showConfirmButton: false
+    });
+    const success = await web3TxHandler(erc777Instance, 'send', [
+      factoryInstance.address,
+      deploymentPrice,
+      stringToHex(contractName)
+    ]);
+    setDeploying(false);
+    if (success) {
+      reactSwal.fire({
+        title: 'Success',
+        html: 'Contract deployed',
+        icon: 'success',
+        showConfirmButton: true
+      });
+      setContractName('');
+    }
+  }, [
+    erc777Instance,
+    contractName,
+    deploymentPrice,
+    factoryInstance,
+    reactSwal,
+    web3TxHandler
+  ]);
+
+  const deployDiamond = useCallback(async () => {
+    if (
+      !erc777Instance ||
+      !diamondFactoryInstance ||
+      contractName === '' ||
+      !deploymentPriceDiamond ||
+      deploymentPriceDiamond.eq(0)
+    ) {
+      return;
+    }
+    setDeploying(true);
+    if (allowance?.lt(deploymentPriceDiamond)) {
+      reactSwal.fire({
+        title: 'Step 1 of 2',
+        html: `Approve ${utils
+          .formatEther(deploymentPriceDiamond)
+          .toString()} ${tokenSymbol} to be transferred from your wallet`,
+        icon: 'info',
+        showConfirmButton: false
+      });
+      const approveResult = await web3TxHandler(erc777Instance, 'approve', [
+        diamondFactoryInstance.address,
+        deploymentPriceDiamond
+      ]);
+      if (!approveResult) {
+        setDeploying(false);
+        return;
+      }
+    }
+    reactSwal.fire({
+      title: 'Step 2 of 2',
+      html: 'Deploying a RAIR diamond contract',
+      icon: 'info',
+      showConfirmButton: false
+    });
+    const success = await web3TxHandler(
+      diamondFactoryInstance,
+      'deployContract',
+      [contractName, 'RAIR']
+    );
+    setDeploying(false);
+    if (success) {
+      reactSwal.fire({
+        title: 'Success',
+        html: 'Diamond Contract deployed',
+        icon: 'success',
+        showConfirmButton: true
+      });
+      setContractName('');
+    }
+  }, [
+    tokenSymbol,
+    contractName,
+    erc777Instance,
+    diamondFactoryInstance,
+    allowance,
+    deploymentPriceDiamond,
+    web3TxHandler,
+    reactSwal
+  ]);
+
   return (
     <div className="row my-5 px-0 mx-0">
       <NavigatorFactory>
-        <div className="col-12 p-2">
-          <InputField
-            getter={contractName}
-            setter={setContractName}
-            placeholder="Name your contract"
-            label="Contract name"
-            customClass="rounded-rair form-control"
-            customCSS={{
-              backgroundColor: primaryColor,
-              color: 'inherit',
-              borderColor: `var(--${secondaryColor}-40)`
-            }}
-            labelClass="text-start w-100"
-          />
-        </div>
+        <b className="p-5">
+          {
+            "Use your RAIR tokens to create an NFT smart contract you'll be able to upload your files, "
+          }
+          {'set up minting prices, resale prices, rarity and metadata.'}
+        </b>
+        <hr />
+        <span className="text-start">
+          <b>Your balance:</b>{' '}
+          {userBalance && utils.formatEther(userBalance).toString()}{' '}
+          {tokenSymbol} Tokens
+        </span>
         <div className="col-12 p-2">
           <InputSelect
             options={Object.keys(chainData)
@@ -160,19 +285,34 @@ const Factory = () => {
             getter={currentChain}
             setter={updateChain}
             placeholder="Please select"
-            label="Contract's Blockchain"
+            label="Deploy on"
             customClass="rounded-rair form-control"
             customCSS={{
               backgroundColor: primaryColor,
-              color: 'inherit',
-              borderColor: `var(--${secondaryColor}-40)`
+              color: textColor,
+              borderColor: secondaryColor
             }}
             labelClass="text-start w-100"
             optionClass="text-white"
           />
         </div>
         <div className="col-12 p-2">
-          {factoryInstance && (
+          <InputField
+            getter={contractName}
+            setter={setContractName}
+            placeholder="Name your contract"
+            label="Contract name"
+            customClass="rounded-rair form-control"
+            customCSS={{
+              backgroundColor: primaryColor,
+              color: textColor ? textColor : 'inherit',
+              borderColor: secondaryColor
+            }}
+            labelClass="text-start w-100"
+          />
+        </div>
+        <div className="col-12 row p-2">
+          {false && factoryInstance && (
             <button
               disabled={
                 contractName === '' ||
@@ -187,41 +327,26 @@ const Factory = () => {
                 background: primaryButtonColor,
                 color: textColor
               }}
-              className="btn rair-button col-12 rounded-rair"
-              onClick={async () => {
-                if (!erc777Instance) {
-                  return;
-                }
-                setDeploying(true);
-                reactSwal.fire({
-                  title: 'Deploying contract!',
-                  html: 'Please wait...',
-                  icon: 'info',
-                  showConfirmButton: false
-                });
-                const success = await web3TxHandler(erc777Instance, 'send', [
-                  factoryInstance?.address,
-                  deploymentPrice,
-                  stringToHex(contractName)
-                ]);
-                setDeploying(false);
-                if (success) {
-                  reactSwal.fire({
-                    title: 'Success',
-                    html: 'Contract deployed',
-                    icon: 'success',
-                    showConfirmButton: true
-                  });
-                  setContractName('');
-                }
-              }}>
-              Deploy a classic contract for{' '}
-              {deploymentPrice && utils.formatEther(deploymentPrice).toString()}{' '}
-              {tokenSymbol} Tokens
+              className="btn rair-button col-12 col-md-5 rounded-rair"
+              onClick={deployClassic}>
+              <i className="fas h1 fa-landmark" />
+              <br />
+              Deploy a classic contract
+              <br />
+              <b>
+                {deploymentPrice &&
+                  utils.formatEther(deploymentPrice).toString()}{' '}
+                {tokenSymbol} Tokens
+              </b>
+              <br />
+              <small>
+                A classic, monolithic contract with all the basic
+                functionalities
+              </small>
             </button>
           )}
-          {factoryInstance && diamondFactoryInstance && (
-            <div className="col-12">or</div>
+          {factoryInstance && diamondFactoryInstance && false && (
+            <div className="col-12 col-md-2">or</div>
           )}
           {diamondFactoryInstance && (
             <button
@@ -240,46 +365,26 @@ const Factory = () => {
                 color: textColor
               }}
               className="btn rair-button col-12 rounded-rair mt-3"
-              onClick={async () => {
-                if (!erc777Instance) {
-                  return;
-                }
-                setDeploying(true);
-                reactSwal.fire({
-                  title: 'Deploying contract (with Diamonds)!',
-                  html: 'Please wait...',
-                  icon: 'info',
-                  showConfirmButton: false
-                });
-                const success = await web3TxHandler(erc777Instance, 'send', [
-                  diamondFactoryInstance.address,
-                  deploymentPriceDiamond,
-                  stringToHex(contractName)
-                ]);
-                setDeploying(false);
-                if (success) {
-                  reactSwal.fire({
-                    title: 'Success',
-                    html: 'Contract deployed with Diamonds!',
-                    icon: 'success',
-                    showConfirmButton: true
-                  });
-                  setContractName('');
-                }
-              }}>
-              <i className="fas fa-gem" /> Deploy a <b>diamond</b> contract for{' '}
-              {deploymentPriceDiamond &&
-                utils.formatEther(deploymentPriceDiamond).toString()}{' '}
-              {tokenSymbol} Tokens <i className="fas fa-gem" />
+              onClick={deployDiamond}>
+              <i className="fas h1 fa-gem" />
+              <br />
+              Deploy a diamond contract
+              <br />
+              <b>
+                {deploymentPriceDiamond &&
+                  utils.formatEther(deploymentPriceDiamond).toString()}{' '}
+                {tokenSymbol} Tokens
+              </b>
+              <br />
+              <small>
+                Using the ERC-2535 Diamonds functionality, updates can be made
+                to the codebase of the contract over time, adding new
+                functionalities
+              </small>
             </button>
           )}
           <br />
           <hr />
-          <h5>Your balance:</h5>
-          <h2>
-            {userBalance && utils.formatEther(userBalance).toString()}{' '}
-            {tokenSymbol} Tokens
-          </h2>
         </div>
         {tokenPurchaserInstance &&
           Object.keys(exchangeData).map((ethPrice, index) => {

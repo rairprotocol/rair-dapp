@@ -114,7 +114,7 @@ const ServerSettings = ({ fullContractData }) => {
         reader.readAsDataURL(file);
       }
     },
-    []
+    [reactSwal]
   );
 
   const setAppLogos = useCallback(
@@ -180,6 +180,10 @@ const ServerSettings = ({ fullContractData }) => {
         {
           title: 'Use Vault for super admin verification',
           value: 'superAdminsOnVault'
+        },
+        {
+          title: 'Use gasless resales',
+          value: 'databaseResales'
         }
       ].map((item, index) => {
         return (

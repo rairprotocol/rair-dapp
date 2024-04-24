@@ -38,7 +38,8 @@ services:
       BINANCE_MAINNET_RPC: ${binance_mainnet_rpc}
       BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
       ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
-      ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
+      ETHEREUM_TESTNET_SEPOLIA_RPC: ${ethereum_testnet_sepolia_rpc}
+      BASE_MAINNET_RPC: ${base_mainnet_rpc}
       ASTAR_MAINNET_RPC: ${astar_mainnet_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
@@ -54,7 +55,7 @@ services:
       ALCHEMY_API_KEY: ${alchemy_api_key}
       WITHDRAWER_PRIVATE_KEY: ${withdrawer_private_key}
       APP_NAME: ${app_name}
-      GOERLI_DIAMOND_MARKETPLACE_ADDRESS: ${goerli_diamond_marketplace_address}
+      SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS: ${sepolia_diamond_marketplace_address}
       MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mumbai_diamond_marketplace_address}
       MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mainnet_diamond_marketplace_address}
       ASTAR_DIAMOND_MARKETPLACE_ADDRESS: ${astar_diamond_marketplace_address}
@@ -89,8 +90,8 @@ services:
       BINANCE_TESTNET_MINTER_ADDRESS: ${binance_testnet_minter_address}
       BINANCE_MAINNET_FACTORY_ADDRESS: ${binance_mainnet_factory_addres}
       BINANCE_MAINNET_MINTER_ADDRESS: ${binance_mainnet_minter_address}
-      GOERLI_FACTORY_ADDRESS: ${goerli_factory_addres}
-      GOERLI_MINTER_ADDRESS: ${goerli_minter_address}
+      SEPOLIA_FACTORY_ADDRESS: ${sepolia_factory_addres}
+      SEPOLIA_MINTER_ADDRESS: ${sepolia_minter_address}
       MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
       MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
       MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}
@@ -98,7 +99,7 @@ services:
       ETHEREUM_MAINNET_FACTORY_ADDRESS: ${ethereum_mainnet_factory_addres}
       ETHEREUM_MAINNET_MINTER_ADDRESS: ${ethereum_mainnet_minter_address}
       BINANCE_RESALE_ADDRESS: ${binance_resale_address}
-      GOERLI_RESALE_ADDRESS: ${goerli_resale_address}
+      SEPOLIA_RESALE_ADDRESS: ${sepolia_resale_address}
       MATIC_MUMBAI_RESALE_ADDRESS: ${matic_mumbai_resale_address}
       ASTAR_DIAMOND_FACTORY_ADDRESS: ${astar_diamond_factory_address}
       ASTAR_DIAMOND_MARKETPLACE_ADDRESS: ${astar_diamond_marketplace_address}
@@ -128,11 +129,13 @@ services:
       BINANCE_MAINNET_RPC: ${binance_mainnet_rpc}
       BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
       ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
-      ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
+      ETHEREUM_TESTNET_SEPOLIA_RPC: ${ethereum_testnet_sepolia_rpc}
       ASTAR_MAINNET_RPC: ${astar_mainnet_rpc}
       REDIS_HOST: ${redisthhost}
       REDIS_PORT: ${redisport}
       ALCHEMY_API_KEY: ${alchemy_api_key}
+      BASE_DIAMOND_FACTORY_ADDRESS: ${base_diamond_factory_address}
+      BASE_DIAMOND_MARKETPLACE_ADDRESS: ${base_diamond_marketplace_address}
     ports:
       - 5001:5001
     depends_on:

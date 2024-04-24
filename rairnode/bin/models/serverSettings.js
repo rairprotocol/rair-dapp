@@ -14,6 +14,7 @@ const ServerSetting = new Schema({
   // User addresses with super admin rights
   superAdmins: [{ type: String, required: false }],
   superAdminsOnVault: { type: Boolean, default: false },
+  databaseResales: { type: Boolean, default: false },
   // Light mode and dark mode colors for background
   darkModePrimary: { type: String, required: false },
   darkModeSecondary: { type: String, required: false },
@@ -29,10 +30,14 @@ const ServerSetting = new Schema({
   buttonFadeColor: { type: String, required: false },
   buttonSecondaryColor: { type: String, required: false },
   // Custom footer
-  footerLinks: { type: [{
-    label: { type: String, required: true },
-    url: { type: String, required: true }
-  }], required: false, default: [] },
+  footerLinks: {
+    type: [{
+      label: { type: String, required: true },
+      url: { type: String, required: true },
+    }],
+    required: false,
+    default: [],
+  },
   // Favicon
   favicon: { type: String, required: false },
 }, { versionKey: false, timestamps: false });

@@ -28,7 +28,6 @@ const ListOffers: React.FC<IListOffers> = ({
   setStepNumber,
   stepNumber,
   gotoNextStep,
-  goBack,
   forceRefetch
 }) => {
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
@@ -307,7 +306,6 @@ const ListOffers: React.FC<IListOffers> = ({
           </div>
           {chainData && (
             <FixedBottomNavigation
-              backwardFunction={goBack}
               forwardFunctions={[
                 !onMyChain
                   ? {

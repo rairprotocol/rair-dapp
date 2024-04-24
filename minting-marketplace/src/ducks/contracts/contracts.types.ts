@@ -63,7 +63,7 @@ export type ContractContents = {
 };
 
 export type ContractAddressesType = {
-  [key: string]: ContractContents;
+  [key in BlockchainType]?: ContractContents;
 };
 
 export type SetChainId = ReturnType<typeof setChainId>;

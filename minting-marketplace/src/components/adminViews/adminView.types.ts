@@ -94,6 +94,7 @@ export type Settings = {
   nodeAddress?: String;
   featuredCollection?: any;
   superAdminsOnVault?: Boolean;
+  databaseResales?: Boolean;
 };
 
 export type BlockchainSetting = {

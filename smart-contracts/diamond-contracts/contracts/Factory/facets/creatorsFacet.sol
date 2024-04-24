@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.18; 
+pragma solidity ^0.8.25; 
 
 import { AccessControlEnumerable } from "../../common/DiamondStorage/AccessControlEnumerable.sol";
 import { FactoryStorage } from "../AppStorage.sol";
 
 /// @title 	Our Facet creators contract
 /// @notice You can use this contract to view the creator of contracts and the list of contractsdeployed
-contract creatorFacet is AccessControlEnumerable {
+contract CreatorsFacet is AccessControlEnumerable {
 	/// @notice Returns the number of addresses that have deployed a contract
 	/// @return count with the total of creators of this contract
 	function getCreatorsCount() public view returns(uint count) {
@@ -48,5 +48,16 @@ contract creatorFacet is AccessControlEnumerable {
 	/// @return creator 	Address of the contracts creator
 	function contractToCreator(address deployedContract) public view returns (address creator) {
 		creator = FactoryStorage.layout().contractToCreator[deployedContract];
+	}
+
+	/// @notice Returns the address of the creator given a deployed contract's address
+	/// @param 	facetSource 	Contains the facet addresses and function selectors
+	function setFacetSource(address facetSource) public {
+		FactoryStorage.Layout storage store = FactoryStorage.layout();
+		store.facetSource = facetSource;
+	}
+
+	function getFacetSource() public view returns (address facetSource) {
+		facetSource = FactoryStorage.layout().facetSource;
 	}
 }

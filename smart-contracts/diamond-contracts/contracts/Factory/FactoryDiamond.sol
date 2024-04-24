@@ -1,28 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.18; 
-
-// Interfaces
-import "@openzeppelin/contracts/utils/introspection/IERC1820Registry.sol";
+pragma solidity ^0.8.25; 
 
 // Parent classes
-import '../diamondStandard/Diamond.sol';
+import { Diamond } from '../diamondStandard/Diamond.sol';
 import { AccessControlEnumerable } from "../common/DiamondStorage/AccessControlEnumerable.sol";
+import { FactoryHandlerRoles } from './AccessControlRoles.sol';
 
 /// @title  RAIR ERC721 Factory
 /// @notice Handles the deployment of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
-contract FactoryDiamond is Diamond, AccessControlEnumerable {
-	IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
-	
-	bytes32 public constant OWNER = keccak256("OWNER");
-	bytes32 public constant ERC777 = keccak256("ERC777");
-	bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
-
+contract FactoryDiamond is Diamond, AccessControlEnumerable, FactoryHandlerRoles {
 	constructor(address _diamondCut) Diamond(msg.sender, _diamondCut) {
-		_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
-		_setRoleAdmin(OWNER, OWNER);
-		_setRoleAdmin(ERC777, OWNER);
+		_setRoleAdmin(ADMINISTRATOR, ADMINISTRATOR);
+		_setRoleAdmin(WITHDRAW_SIGNER, ADMINISTRATOR);
 		_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-		_grantRole(OWNER, msg.sender);
+		_grantRole(ADMINISTRATOR, msg.sender);
+		_grantRole(WITHDRAW_SIGNER, msg.sender);
 	}
 }

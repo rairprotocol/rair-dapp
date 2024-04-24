@@ -42,11 +42,11 @@ const ethereumMainnetData = {
   testnet: false,
   rpc: process.env.ETHEREUM_MAINNET_RPC,
 };
-const ethereumGoerliData = {
-  name: 'Ethereum Goerli',
-  blockchainId: '0x5',
+const ethereumSepoliaData = {
+  name: 'Ethereum Sepolia',
+  blockchainId: '0xaa36a7',
   testnet: true,
-  rpc: process.env.ETHEREUM_TESTNET_GOERLI_RPC,
+  rpc: process.env.ETHEREUM_TESTNET_SEPOLIA_RPC,
 };
 const polygonMainnetData = {
   name: 'Polygon Mainnet',
@@ -65,6 +65,12 @@ const astarMainnetData = {
   blockchainId: '0x250',
   testnet: true,
   rpc: process.env.ASTAR_MAINNET_RPC,
+};
+const baseMainnetData = {
+  name: 'Base Mainnet',
+  blockchainId: '0x2105',
+  testnet: false,
+  rpc: process.env.BASE_MAINNET_RPC,
 };
 
 module.exports = {
@@ -102,8 +108,11 @@ module.exports = {
       '0x1': ethereumMainnetData,
       ethereum: ethereumMainnetData,
 
-      '0x5': ethereumGoerliData,
-      goerli: ethereumGoerliData,
+      sepolia: ethereumSepoliaData,
+      '0xaa36a7': ethereumSepoliaData,
+
+      base: baseMainnetData,
+      '0x2105': baseMainnetData,
     },
   },
   gcp: {
@@ -136,10 +145,11 @@ module.exports = {
     apiKey: ALCHEMY_API_KEY,
     networkMapping: {
       '0x1': Network.ETH_MAINNET,
-      '0x5': Network.ETH_GOERLI,
+      '0xaa36a7': Network.ETH_SEPOLIA,
       '0x89': Network.MATIC_MAINNET,
       '0x13881': Network.MATIC_MUMBAI,
       '0x250': Network.ASTAR_MAINNET,
+      '0x2105': Network.BASE_MAINNET,
     },
   },
   ipfsGateways: {

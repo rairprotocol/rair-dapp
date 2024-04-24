@@ -10,26 +10,25 @@ module.exports = async ({getUnnamedAccounts}) => {
 		"OwnershipFacet",
 
         // 721 Facets
-        "ERC721Facet",
+        "ERC721EnumerableFacet",
 		"RAIRMetadataFacet",
 		"RAIRProductFacet",
 		"RAIRRangesFacet",
 		"RAIRRoyaltiesFacet",
 
         // Factory Facets
-        'creatorFacet',
-		'ERC777ReceiverFacet',
-		'TokensFacet',
+        "CreatorsFacet",
+		"DeployerFacet",
+		"TokensFacet",
+		// Points facets
+        "PointsDeposit",
+		"PointsQuery",
+		"PointsWithdraw",
 
         // Marketplace Facets
 		"MintingOffersFacet",
 		"FeesFacet",
 		"ResaleFacet",
-
-        // Credit Handler Facets
-        "CreditDeposit",
-		"CreditQuery",
-		"CreditWithdraw",
 	]
 
 	for await (let facet of facets) {

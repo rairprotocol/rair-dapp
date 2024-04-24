@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BigNumber } from 'ethers';
 
@@ -63,8 +63,6 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     ColorStoreType
   >((store) => store.colorStore);
   const { address, collectionIndex } = useParams<TParamsBatchMetadata>();
-
-  const navigate = useNavigate();
 
   const networkId = contractData?.blockchain;
   const contractAddress = contractData?.contractAddress;
@@ -390,9 +388,6 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
       </div>
       {chainData && (
         <FixedBottomNavigation
-          backwardFunction={() => {
-            navigate(-1);
-          }}
           forwardFunctions={[
             {
               action: !onMyChain

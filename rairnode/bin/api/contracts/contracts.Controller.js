@@ -10,7 +10,7 @@ const {
   findContractByNetworkAndAddress,
   productsByNetworkAndAddress,
   offersByNetworkAndAddress,
-  contractListForFactory
+  contractListForFactory,
 } = require('./contracts.Service');
 const {
   isAdmin,
@@ -31,7 +31,7 @@ router.get(
 router.get(
   '/factoryList',
   requireUserSession,
-  contractListForFactory
+  contractListForFactory,
 );
 
 router.get(
@@ -45,33 +45,33 @@ router.get(
   '/full',
   loadUserSession,
   validation(['filterAndSort', 'pagination'], 'query'),
-  fullListOfContracts
+  fullListOfContracts,
 );
 
 router.get(
   '/network/:networkId/:contractAddress',
   validation(['singleContract'], 'params'),
   searchContractByNetworkAndAddress,
-  findContractByNetworkAndAddress
+  findContractByNetworkAndAddress,
 );
 router.get(
   '/network/:networkId/:contractAddress/products',
   validation(['singleContract'], 'params'),
   searchContractByNetworkAndAddress,
-  productsByNetworkAndAddress
+  productsByNetworkAndAddress,
 );
 router.get(
   '/network/:networkId/:contractAddress/offers',
   validation(['singleContract'], 'params'),
   searchContractByNetworkAndAddress,
-  offersByNetworkAndAddress
+  offersByNetworkAndAddress,
 );
 router.post(
   '/import/',
   requireUserSession,
   isAdmin,
   validation(['importContract'], 'body'),
-  importExternalContract
+  importExternalContract,
 );
 
 router.get(

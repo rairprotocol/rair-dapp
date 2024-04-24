@@ -8,5 +8,6 @@ const ResaleTokenOffer = new Schema({
   price: { type: String, required: true },
   buyer: { type: String, default: undefined },
   seller: { type: String, required: true },
+  blockchainOfferId: { type: String, required: false },
 });
 module.exports = ResaleTokenOffer;

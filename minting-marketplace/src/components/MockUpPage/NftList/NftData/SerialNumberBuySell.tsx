@@ -20,6 +20,7 @@ import { BillTransferIcon, GrandpaWait } from '../../../../images';
 import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
+import useServerSettings from '../../../adminViews/useServerSettings';
 import ResaleModal from '../../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
@@ -161,6 +162,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     minterInstance
   ]);
 
+  const { settings } = useServerSettings();
+
   useEffect(() => {
     if (offerData) {
       (async () => {
@@ -197,18 +200,24 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (!resaleResponse.success) {
       return;
     }
-    const resaleData = resaleResponse?.data?.[0];
-    if (!resaleData) {
+    const fetchedResaleData = resaleResponse?.data?.[0];
+    if (!fetchedResaleData) {
       return;
     }
     const userResponse = await rFetch(
-      `/api/users/${resaleData.seller.toLowerCase()}`
+      `/api/users/${fetchedResaleData.seller.toLowerCase()}`
     );
     if (userResponse.success) {
-      resaleData.seller = userResponse.user.nickName;
+      fetchedResaleData.seller = userResponse.user.nickName;
     }
-    setResaleData(resaleData);
-  }, [diamondMarketplaceInstance, params, tokenData, selectedToken]);
+    setResaleData(fetchedResaleData);
+  }, [
+    diamondMarketplaceInstance,
+    params.contract,
+    params.blockchain,
+    tokenData,
+    selectedToken
+  ]);
 
   useEffect(() => {
     getResaleData();
@@ -255,41 +264,42 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       icon: 'info',
       showConfirmButton: false
     });
-    const { success, hash } = await rFetch(
-      `/api/resales/purchase/${resaleData._id}`
-    );
-
-    /*
-      address erc721,
-      address buyer,
-      address seller,
-      uint token,
-      uint tokenPrice,
-      address nodeAddress,
-      bytes memory signature
-    */
-    if (
-      success &&
+    if (settings.databaseResales) {
+      const { success, hash } = await rFetch(
+        `/api/resales/purchase/${resaleData._id}`
+      );
+      if (
+        success &&
+        (await web3TxHandler(
+          diamondMarketplaceInstance,
+          'purchaseTokenOffer',
+          [
+            params.contract, // address erc721,
+            currentUserAddress, // address buyer,
+            tokenData?.[selectedToken]?.ownerAddress, // address seller,
+            resaleData.tokenIndex, // uint token,
+            resaleData.price, // uint tokenPrice,
+            import.meta.env.VITE_NODE_ADDRESS, // address nodeAddress,
+            hash, // bytes memory signature
+            { value: resaleData.price }
+          ],
+          {
+            callback: () => {
+              getResaleData();
+              handleTokenBoughtButton();
+            },
+            intendedBlockchain: blockchain as BlockchainType
+          }
+        ))
+      ) {
+        reactSwal.fire('Success', 'Token purchased', 'success');
+      }
+    } else if (
+      resaleData.blockchainOfferId !== undefined &&
       (await web3TxHandler(
         diamondMarketplaceInstance,
-        'purchaseTokenOffer',
-        [
-          params.contract, // address erc721,
-          currentUserAddress, // address buyer,
-          tokenData?.[selectedToken]?.ownerAddress, // address seller,
-          resaleData.tokenIndex, // uint token,
-          resaleData.price, // uint tokenPrice,
-          import.meta.env.VITE_NODE_ADDRESS, // address nodeAddress,
-          hash, // bytes memory signature
-          { value: resaleData.price }
-        ],
-        {
-          callback: () => {
-            getResaleData();
-            handleTokenBoughtButton();
-          },
-          intendedBlockchain: blockchain as BlockchainType
-        }
+        'purchaseGasTokenOffer',
+        [resaleData.blockchainOfferId, { value: resaleData.price }]
       ))
     ) {
       reactSwal.fire('Success', 'Token purchased', 'success');
@@ -307,7 +317,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     selectedToken,
     tokenData,
     getResaleData,
-    correctBlockchain
+    correctBlockchain,
+    settings.databaseResales
   ]);
 
   const checkAllSteps = useCallback(() => {

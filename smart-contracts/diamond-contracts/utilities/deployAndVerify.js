@@ -1,5 +1,9 @@
 const { deployments } = require('hardhat');
 
+const wasteTime = (ms) => new Promise((resolve) => {
+    setTimeout(resolve, ms);
+});
+
 const deploy = async (deploymentName, args = [], deployerAddress) => {
     const { deploy } = deployments;
     const deployment = await deploy(deploymentName, { 
@@ -13,6 +17,8 @@ const deploy = async (deploymentName, args = [], deployerAddress) => {
 
 const verify = async (deployment, args) => {
     if (deployment.newlyDeployed) {
+        console.info("Waiting a minute before verification process")
+        wasteTime(60000);
         try {
             await hre.run("verify:verify", {
                 address: deployment.receipt.contractAddress,

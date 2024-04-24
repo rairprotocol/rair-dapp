@@ -15,7 +15,7 @@
   "dependencies": {
     "@alchemy/aa-accounts": "^3.5.1",
     "@alchemy/aa-alchemy": "^3.5.1",
-    "@alchemy/aa-core": "^3.4.0",
+    "@alchemy/aa-core": "^3.5.1",
     "@alchemy/aa-ethers": "^3.5.1",
     "@alchemy/aa-signers": "^3.5.1",
     "@analytics/google-analytics": "^1.0.7",

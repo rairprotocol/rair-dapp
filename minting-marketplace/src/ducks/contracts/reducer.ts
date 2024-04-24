@@ -17,7 +17,6 @@ import {
   resaleAbi,
   tokenPurchaserAbi
 } from '../../contracts';
-import chainData from '../../utils/blockchainData';
 
 const contractAddresses: ContractAddressesType = {
   // '0x38': {
@@ -59,28 +58,41 @@ const contractAddresses: ContractAddressesType = {
   //   tokenPurchaser: '0x9dCbe7021803eBb3153412Ed719A2d0B887afB8e' as string,
   //   creditHandler: '0xad78463579Ff43bdC917674c64749c35c7E325f5' as string
   // },
-  '0x13881': {
-    // Matic Mumbai
-    factory: '0x72639374fC9e4eec25839080763025A1d3E710EC',
-    erc777: '0x1AeAb89553233D1045b506e8DCBFa3df76E18896',
-    minterMarketplace: '0x4594D508cDa05D016571082d467889f4629e1f56',
+  // '0x13881': {
+  //  // Matic Mumbai
+  //  factory: '0x72639374fC9e4eec25839080763025A1d3E710EC',
+  //  erc777: '0x1AeAb89553233D1045b506e8DCBFa3df76E18896',
+  //  minterMarketplace: '0x4594D508cDa05D016571082d467889f4629e1f56',
+  //  diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
+  //    '0xbB236Ce48dDCb58adB8665E220FE976bA5d080a5') as string,
+  //  diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
+  //    '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0') as string,
+  //  resaleMarketplace: '0x0F08c99070fbebDa7E324596d95635d30D414070',
+  //  tokenPurchaser: undefined,
+  //  creditHandler: undefined
+  //},
+  '0xaa36a7': {
+    // Ethereum Sepolia
+    factory: undefined,
+    erc777: '0x27F4843209f43EC32cd905868121039021a86739',
+    minterMarketplace: undefined,
     diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0xbB236Ce48dDCb58adB8665E220FE976bA5d080a5') as string,
+      '0x05f79B2C8173c07470a7Bb2B9990a0098f158Ac5') as string,
     diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0') as string,
-    resaleMarketplace: '0x0F08c99070fbebDa7E324596d95635d30D414070',
+      '0x1F89Cc515dDc53dA2fac5B0Ca3b322066A71E6BA') as string,
+    resaleMarketplace: undefined,
     tokenPurchaser: undefined,
     creditHandler: undefined
   },
   '0x89': {
     // Matic Mainnet
-    factory: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
-    erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
-    minterMarketplace: '0x781F15a23506CF28539EA057e3f33008E6339E49',
+    factory: undefined,
+    erc777: '0xd441f95291dc79ce3f1d9c9e27f1fd60cf7cfcc9',
+    minterMarketplace: undefined,
     diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0xeef47e293d01ce29e91707ed2fe8e9b8e3fe75d1') as string,
+      '0x2469f47b61cb9c1724ba816e861475a89bd8cf69') as string,
     diamondMarketplace: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
-      '0x5535fe9abda206f6780cc87b4e1fe4733b98bd9c') as string,
+      '0xafbacedad4117ea6f53686e7702f012d0bbff452') as string,
     resaleMarketplace: undefined,
     tokenPurchaser: undefined,
     creditHandler: undefined
@@ -99,13 +111,24 @@ const contractAddresses: ContractAddressesType = {
   '0x250': {
     // Ethereum Mainnet
     factory: undefined,
-    erc777: '0x762BbcF6E6486fbee13a5CeE291F7aEE14f1CA77',
+    erc777: '0x22c2aF337cd3D9c6C0aa533D519163de9106DeBe',
     minterMarketplace: undefined,
-    diamondFactory: '0x92FBe344513e108B581170E73CFA352B729E47EA',
-    diamondMarketplace: '0x2b1FE33Cb7264dBa6331F54012f04133395fDe44',
+    diamondFactory: '0xC475c824715c0f0DcbC936F5c644254159e95439',
+    diamondMarketplace: '0xd402CB64A138B2F50C3e810d4fD71344583173DE',
     resaleMarketplace: undefined,
     tokenPurchaser: undefined,
-    creditHandler: '0x6C9Ca38fFb93756a52f0072B72eA3C6769f87892'
+    creditHandler: undefined
+  },
+  '0x2105': {
+    // Base Mainnet
+    factory: undefined,
+    erc777: '0x2b1FE33Cb7264dBa6331F54012f04133395fDe44',
+    minterMarketplace: undefined,
+    diamondFactory: '0x1F89Cc515dDc53dA2fac5B0Ca3b322066A71E6BA',
+    diamondMarketplace: '0x58795f50b50d492C4252B9BBF78485EF4043FF3E',
+    resaleMarketplace: undefined,
+    tokenPurchaser: undefined,
+    creditHandler: undefined
   }
 };
 
@@ -164,8 +187,8 @@ export default function userStore(
             /*
 							Example of a network object:
 							{
-							    "name": "goerli",
-							    "chainId": 5,
+							    "name": "sepolia",
+							    "chainId": 11155111,
 							    "ensAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
 							}
 						*/
@@ -202,35 +225,35 @@ export default function userStore(
           ...state,
           currentChain: action.currentChain,
           factoryInstance: contractCreator(
-            contractAddresses[action.currentChain].factory,
+            contractAddresses[action.currentChain]?.factory,
             factoryAbi
           ),
           minterInstance: contractCreator(
-            contractAddresses[action.currentChain].minterMarketplace,
+            contractAddresses[action.currentChain]?.minterMarketplace,
             minterAbi
           ),
           resaleInstance: contractCreator(
-            contractAddresses[action.currentChain].resaleMarketplace,
+            contractAddresses[action.currentChain]?.resaleMarketplace,
             resaleAbi
           ),
           erc777Instance: contractCreator(
-            contractAddresses[action.currentChain].erc777,
+            contractAddresses[action.currentChain]?.erc777,
             erc777Abi
           ),
           diamondFactoryInstance: contractCreator(
-            contractAddresses[action.currentChain].diamondFactory,
+            contractAddresses[action.currentChain]?.diamondFactory,
             diamondFactoryAbi
           ),
           diamondMarketplaceInstance: contractCreator(
-            contractAddresses[action.currentChain].diamondMarketplace,
+            contractAddresses[action.currentChain]?.diamondMarketplace,
             diamondMarketplaceAbi
           ),
           tokenPurchaserInstance: contractCreator(
-            contractAddresses[action.currentChain].tokenPurchaser,
+            contractAddresses[action.currentChain]?.tokenPurchaser,
             tokenPurchaserAbi
           ),
           creditHandlerInstance: contractCreator(
-            contractAddresses[action.currentChain].creditHandler,
+            contractAddresses[action.currentChain]?.creditHandler,
             creditHandlerAbi
           ),
           contractCreator: contractCreator

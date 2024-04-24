@@ -9,13 +9,13 @@ router.get(
     '/:blockchain/:tokenAddress',
     validation(['tokenCreditQuery'], 'params'),
     requireUserSession,
-    getUserCredits
+    getUserCredits,
 );
 router.post(
     '/withdraw',
     validation(['tokenCreditWithdraw'], 'body'),
     requireUserSession,
-    generateWithdrawRequest
+    generateWithdrawRequest,
 );
 
 module.exports = router;

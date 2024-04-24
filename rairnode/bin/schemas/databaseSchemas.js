@@ -15,16 +15,11 @@ module.exports = {
         buttonFadeColor: Joi.string(),
         buttonSecondaryColor: Joi.string(),
         superAdminsOnVault: Joi.boolean(),
+        databaseResales: Joi.boolean(),
         footerLinks: Joi.array().items(Joi.object({
             label: Joi.string(),
             url: Joi.string(),
-        }))
-    }),
-    dbSettingsFiles: () => ({
-        darkModeBannerLogo,
-        darkModeMobileLogo,
-        lightModeBannerLogo,
-        lightModeMobileLogo
+        })),
     }),
     dbContracts: () => ({
         title: Joi.string(),

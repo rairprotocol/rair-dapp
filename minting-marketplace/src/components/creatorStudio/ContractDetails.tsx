@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import {
   TContractsNetworkContract,
@@ -12,7 +12,7 @@ import {
 import FixedBottomNavigation from './FixedBottomNavigation';
 import NavigatorContract from './NavigatorContract';
 
-import { diamondFactoryAbi, erc721Abi } from '../../contracts';
+import { diamond721Abi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -41,9 +41,8 @@ const ContractDetails = () => {
 
   const [data, setData] = useState<TContractsNetworkContract | TSetData>();
 
-  const navigate = useNavigate();
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const getContractData = useCallback(async () => {
     if (!address) {
@@ -61,9 +60,9 @@ const ContractDetails = () => {
       }
       setData(dataRequest.contract);
       setIsDiamond(dataRequest.contract.diamond);
-    } else {
+    } else if (contractCreator) {
       // Try diamonds
-      const instance = contractCreator?.(address, diamondFactoryAbi);
+      const instance = contractCreator(address, diamond721Abi);
       if (instance) {
         const productCount = Number(
           (await instance.getProductCount()).toString()
@@ -82,12 +81,6 @@ const ContractDetails = () => {
   useEffect(() => {
     getContractData();
   }, [getContractData]);
-
-  const onMyChain =
-    data?.blockchain &&
-    (window.ethereum
-      ? chainData[data?.blockchain]?.chainId === currentChain
-      : chainData[data?.blockchain]?.chainId === currentChain);
 
   return (
     <div className="row px-0 mx-0">
@@ -156,33 +149,20 @@ const ContractDetails = () => {
         'Fetching data...'
       )}
       <FixedBottomNavigation
-        backwardFunction={() => {
-          navigate(-1);
-        }}
         forwardFunctions={[
           {
             action:
               collectionLength > 0 && collectionName !== ''
                 ? async () => {
-                    if (!onMyChain) {
-                      if (window.ethereum) {
-                        await window.ethereum.request({
-                          method: 'wallet_switchEthereumChain',
-                          params: [
-                            {
-                              chainId:
-                                data?.blockchain &&
-                                chainData[data.blockchain]?.chainId
-                            }
-                          ]
-                        });
-                      } else {
-                        // Code for suresh goes here
-                      }
+                    if (!data?.blockchain) {
+                      return;
+                    }
+                    if (!correctBlockchain(data.blockchain)) {
+                      web3Switch(data.blockchain);
                     } else {
                       const instance = await contractCreator?.(
                         data?.contractAddress,
-                        isDiamond ? diamondFactoryAbi : erc721Abi
+                        isDiamond ? diamond721Abi : erc721Abi
                       );
                       if (!instance) {
                         return;
@@ -214,7 +194,7 @@ const ContractDetails = () => {
                   }
                 : undefined,
             label:
-              data && data.blockchain && !onMyChain
+              data && data.blockchain && !correctBlockchain(data.blockchain)
                 ? `Switch to ${chainData[data.blockchain]?.name}`
                 : 'Create collection!',
             disabled:

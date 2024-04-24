@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { getRandomValues } from '../../utils/getRandomValues';
 
 /***
@@ -53,7 +56,7 @@ const InputField = <T extends any = any>({
   getter,
   setter,
   setterField = ['value'],
-  customCSS = { color: 'black' },
+  customCSS,
   customClass,
   labelCSS = { color: 'inherit' },
   labelClass,
@@ -67,6 +70,10 @@ const InputField = <T extends any = any>({
   maxLength
 }: TInputFieldProps<T>) => {
   const [id] = useState<number | null>(getRandomValues);
+
+  const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   const ethValidation = (value) => {
     try {
@@ -107,7 +114,11 @@ const InputField = <T extends any = any>({
         }}
         value={getter}
         disabled={disabled}
-        style={{ ...customCSS }}
+        style={{
+          color: textColor,
+          backgroundColor: primaryColor,
+          ...customCSS
+        }}
         className={customClass}
         required={required ? required : false}
         min={min}

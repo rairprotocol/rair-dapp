@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.25;
 
 library ResaleStorage {
     bytes32 internal constant STORAGE_SLOT =
@@ -10,11 +10,21 @@ library ResaleStorage {
         uint percentage;
     }
 
+    struct resaleOffer {
+        address erc721;
+        address buyer;
+        address seller;
+        uint token;
+        uint tokenPrice;
+        address nodeAddress;
+    }
+
     struct Layout {
         mapping(address => feeSplits[]) royaltySplits;
         mapping(address => address) contractOwner;
         uint purchaseGracePeriod;
         uint decimalPow;
+        resaleOffer[] resaleOffers;
     }
 
     function layout() internal pure returns (Layout storage l) {

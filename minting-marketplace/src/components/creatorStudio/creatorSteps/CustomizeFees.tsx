@@ -101,8 +101,7 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
   correctMinterInstance,
   setStepNumber,
   stepNumber,
-  gotoNextStep,
-  goBack
+  gotoNextStep
 }) => {
   const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
@@ -164,7 +163,7 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
           customPayments.map((i) => i.receiver),
           customPayments.map((i) => i.percentage * Math.pow(10, minterDecimals))
         )
-      ).wait();
+      )?.wait();
       Swal.fire({
         title: 'Success',
         html: 'Custom fees set',
@@ -239,7 +238,6 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
       </div>
       {chainData && (
         <FixedBottomNavigation
-          backwardFunction={goBack}
           forwardFunctions={[
             {
               label: customPayments.length ? 'Set custom fees' : 'Continue',

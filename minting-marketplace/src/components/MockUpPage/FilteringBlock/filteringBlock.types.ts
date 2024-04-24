@@ -94,7 +94,7 @@ export interface IModalCategories {
 export type TBlockchainNames =
   | 'Matic Mainnet'
   | 'Matic Testnet'
-  | 'Goerli Testnet'
+  | 'Sepolia Testnet'
   // | 'Binance Testnet'
   // | 'Binance Mainnet'
   | 'Ethereum Mainnet'

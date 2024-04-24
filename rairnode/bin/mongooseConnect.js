@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const log = require('./utils/logger')(module);
 const {
-  getMongoConnectionStringURI
+  getMongoConnectionStringURI,
 } = require('./shared_backend_code_generated/mongo/mongoUtils');
 const {
-  appSecretManager
+  appSecretManager,
 } = require('./vault');
 
 class MongoConnectionManager {
@@ -12,13 +12,11 @@ class MongoConnectionManager {
     this.mongooseConnection = null;
   }
 
-  async getMongooseConnection({
-    connectionString
-  }) {
-    if(this.mongooseConnection === null) {
-      const mongoConnectionString = await getMongoConnectionStringURI({appSecretManager});
+  async getMongooseConnection() {
+    if (this.mongooseConnection === null) {
+      const mongoConnectionString = await getMongoConnectionStringURI({ appSecretManager });
       await this.connectToMongoose({
-        connectionString: mongoConnectionString
+        connectionString: mongoConnectionString,
       });
     }
     return this.mongooseConnection;
@@ -52,5 +50,5 @@ class MongoConnectionManager {
 const mongoConnectionManager = new MongoConnectionManager();
 
 module.exports = {
-  mongoConnectionManager
-}
+  mongoConnectionManager,
+};

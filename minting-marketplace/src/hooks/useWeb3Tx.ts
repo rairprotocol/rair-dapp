@@ -146,6 +146,7 @@ const useWeb3Tx = () => {
             confirmationsRequired
           );
         } catch (errorMessage) {
+          console.error(`Error calling ${method}`);
           return handleWeb3Error(errorMessage, options?.failureMessage);
         }
         if (transactionReceipt && transactionReceipt.blockNumber) {

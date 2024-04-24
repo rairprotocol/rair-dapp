@@ -44,7 +44,7 @@ async function main() {
     }
   });
 
-  await mongoConnectionManager.getMongooseConnection({});
+  await mongoConnectionManager.getMongooseConnection();
 
   const app = express();
 
@@ -71,7 +71,7 @@ async function main() {
 
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
-  app.use(bodyParser.json({limit: '50mb'}));
+  app.use(bodyParser.json({ limit: '50mb' }));
   app.use(cookieParser());
   app.set('trust proxy', 1);
   app.use(
@@ -102,7 +102,7 @@ async function main() {
       req.redisService = context.redis.redisService;
       return next();
     },
-    apiV1Routes
+    apiV1Routes,
   );
   app.use(mainErrorHandler);
 

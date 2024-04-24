@@ -237,7 +237,6 @@ const NftItemForCollectionViewComponent: React.FC<
           const response = await axios.get<IOffersResponseType>(
             `/api/nft/network/${responseToken.tokenData.contract.blockchain}/${responseToken.tokenData.contract.contractAddress}/${responseToken.tokenData.product.collectionIndexInContract}/offers`
           );
-
           const resaleResponse = await rFetch(
             `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
           );

@@ -1,6 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
-require("@nomiclabs/hardhat-etherscan");
+require("@nomicfoundation/hardhat-verify");
 require('hardhat-deploy');
 require('hardhat-contract-sizer');
 require("hardhat-gas-reporter");
@@ -15,19 +15,11 @@ module.exports = {
 		hardhat: {
 			forking: {
 				url: process.env.ETH_MAIN_RPC,
-				blockNumber: 16000000
+				blockNumber: 19600000
 			}
 		},
 		"0x1": {
 			url: process.env.ETH_MAIN_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY],
-		},
-		"0x5": {
-			url: process.env.GOERLI_RPC,
-			accounts: [process.env.ADDRESS_PRIVATE_KEY],
-		},
-		"0x13881": {
-			url: process.env.MUMBAI_RPC,
 			accounts: [process.env.ADDRESS_PRIVATE_KEY],
 		},
 		"0x89": {
@@ -38,10 +30,22 @@ module.exports = {
 			url: process.env.ASTAR_RPC,
 			accounts: [process.env.ADDRESS_PRIVATE_KEY],
 		},
+		"0xaa36a7": {
+			url: process.env.SEPOLIA_RPC,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+		},
+		"0x13882": {
+			url: process.env.AMOY_RPC,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+		},
+		"0x2105": {
+			url: process.env.BASE_RPC,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+		}
 	},
 	solidity: {
 		compilers: [{
-			version: "0.8.20",
+			version: "0.8.25",
 			settings: {
 				optimizer: {
 					enabled: true,
@@ -62,6 +66,9 @@ module.exports = {
 		runOnCompile: true,
 		strict: true
 	},
+	sourcify: {
+		enabled: false,
+	},
 	mocha: {
 		timeout: 0
 	},
@@ -73,25 +80,40 @@ module.exports = {
 	etherscan: {
 		apiKey: {
 			mainnet: process.env.ETHERSCAN_API_KEY,
-			goerli: process.env.ETHERSCAN_API_KEY,
+			sepolia: process.env.ETHERSCAN_API_KEY,
 
 			polygon: process.env.POLYGONSCAN_API_KEY,
-			polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+			polygonAmoy: process.env.OKLINK_API_KEY,
 
-			bsc: process.env.BSCSCAN_API_KEY,
-			bscTestnet: process.env.BSCSCAN_API_KEY,
-
-			astar: "according to the documentation any value is valid here",
+			base: process.env.BASESCAN_API_KEY,
+			astar: process.env.BLOCKSCOUT_API_KEY,
 		},
 		customChains: [
 			{
 				network: "astar",
 				chainId: 592,
 				urls: {
-					apiURL: "https://blockscout.com/astar/api",
-					browserURL: "https://blockscout.com/astar"
+					apiURL: "https://astar.blockscout.com/api/",
+					browserURL: "https://astar.blockscout.com/"
 				}
+			},
+			{
+				network: "polygonAmoy",
+				chainId: 80002,
+				urls: {
+					apiURL: "https://www.oklink.com/api/explorer/v1/contract/verify/async/api/polygonAmoy",
+					browserURL: "https://www.oklink.com/polygonAmoy"
+				},
+			},
+			{
+				network: "base",
+				chainId: 80002,
+				urls: {
+					apiURL: "https://api.basescan.org/api",
+					browserURL: "https://basescan.org/"
+				},
 			}
 		],
+		
 	}
 };

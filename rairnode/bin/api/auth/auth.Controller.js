@@ -1,8 +1,8 @@
 const express = require('express');
-const { 
+const {
     validateChallengeV2,
     validateWeb3AuthOwner,
-    generateChallengeV2
+    generateChallengeV2,
 } = require('../../integrations/ethers/web3Signature');
 const {
     loginFromSignature,

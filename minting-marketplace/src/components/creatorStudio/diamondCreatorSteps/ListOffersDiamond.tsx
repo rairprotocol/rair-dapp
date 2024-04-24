@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import DiamondOfferRow from './diamondOfferRow';
 
@@ -42,9 +42,8 @@ const ListOffers: React.FC<TListOffers> = ({
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor, secondaryColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { collectionIndex } = useParams<TParamsDiamondListOffers>();
 
   useEffect(() => {
@@ -93,14 +92,13 @@ const ListOffers: React.FC<TListOffers> = ({
     aux.splice(index, 1);
     setOfferList(aux);
   };
-  const navigate = useNavigate();
 
   const createOffers = async () => {
     if (!contractData) {
       return;
     }
     reactSwal.fire({
-      title: 'Creating offer...',
+      title: 'Creating ranges...',
       html: 'Please wait...',
       icon: 'info',
       showConfirmButton: false
@@ -165,27 +163,30 @@ const ListOffers: React.FC<TListOffers> = ({
             </div>
           )}
           <div className="col-12 mt-3 text-center">
-            <div className="border-stimorol rounded-rair">
-              <button
-                onClick={addOffer}
-                disabled={
-                  contractData === undefined ||
-                  offerList.length >= 12 ||
-                  Number(offerList?.at(-1)?.range[1]) >=
-                    Number(contractData?.product?.copies) - 1
-                }
-                className={`btn btn-${primaryColor} rounded-rair px-4`}>
-                Add new{' '}
-                <i
-                  className="fas fa-plus"
-                  style={{
-                    border: `solid 1px ${textColor}`,
-                    borderRadius: '50%',
-                    padding: '5px'
-                  }}
-                />
-              </button>
-            </div>
+            <button
+              onClick={addOffer}
+              style={{
+                color: textColor,
+                background: primaryButtonColor,
+                borderColor: secondaryColor
+              }}
+              disabled={
+                contractData === undefined ||
+                offerList.length >= 12 ||
+                Number(offerList?.at(-1)?.range[1]) >=
+                  Number(contractData?.product?.copies) - 1
+              }
+              className={`btn rair-button rounded-rair px-4`}>
+              Add new{' '}
+              <i
+                className="fas fa-plus"
+                style={{
+                  border: `solid 1px ${textColor}`,
+                  borderRadius: '50%',
+                  padding: '5px'
+                }}
+              />
+            </button>
           </div>
           <div
             className="col-12 mt-3 p-5 text-center rounded-rair"
@@ -205,9 +206,6 @@ const ListOffers: React.FC<TListOffers> = ({
           </div>
           {chainData && (
             <FixedBottomNavigation
-              backwardFunction={() => {
-                navigate(-1);
-              }}
               forwardFunctions={[
                 {
                   action: !onMyChain

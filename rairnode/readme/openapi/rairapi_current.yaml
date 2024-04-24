@@ -1250,8 +1250,8 @@ components:
             name: Binance Testnet
             hash: 0x61
           - _id: 61b0d2775f0a55001c272659
-            name: Goerli Testnet
-            hash: 0x5
+            name: Sepolia Testnet
+            hash: 0xaa36a7
           - _id: 61b0d2775f0a55001c27265a
             name: Matic Mainnet
             hash: 0x89

@@ -18,8 +18,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   contractData,
   setStepNumber,
   stepNumber,
-  gotoNextStep,
-  goBack
+  gotoNextStep
 }) => {
   const { textColor, primaryColor, primaryButtonColor } = useSelector<
     RootState,
@@ -269,7 +268,6 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
       )}
       {chainData && contractData && (
         <FixedBottomNavigation
-          backwardFunction={goBack}
           forwardFunctions={[
             {
               label: `Switch to ${chainData[contractData?.blockchain]?.name}`,

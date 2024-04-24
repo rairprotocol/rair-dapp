@@ -7,12 +7,12 @@ const {
   ETHEREUM_DIAMOND_FACTORY_ADDRESS,
   ETHEREUM_DIAMOND_MARKETPLACE_ADDRESS,
 
-  // Ethereum Goerli
+  // Ethereum Sepolia
   TEST_ETHERSCAN_GATEWAY,
-  GOERLI_FACTORY_ADDRESS,
-  GOERLI_MINTER_ADDRESS,
-  GOERLI_DIAMOND_FACTORY_ADDRESS,
-  GOERLI_DIAMOND_MARKETPLACE_ADDRESS,
+  SEPOLIA_FACTORY_ADDRESS,
+  SEPOLIA_MINTER_ADDRESS,
+  SEPOLIA_DIAMOND_FACTORY_ADDRESS,
+  SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS,
 
   // Polygon Mainnet
   POLYGONSCAN_GATEWAY,
@@ -33,6 +33,11 @@ const {
   ASTAR_MAINNET_DIAMOND_FACTORY_ADDRESS,
   ASTAR_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
 
+  // Base Mainnet
+  BASE_GATEWAY,
+  BASE_DIAMOND_FACTORY_ADDRESS,
+  BASE_DIAMOND_MARKETPLACE_ADDRESS,
+
   SENTRY_DSN,
   BASE_RAIRNODE_URL,
   LOG_LEVEL,
@@ -45,6 +50,18 @@ module.exports = {
   logLevel: LOG_LEVEL || 'info',
   blockchain: {
     networks: {
+      '0x2105': {
+        authenticityHost: BASE_GATEWAY,
+        factoryAddress: undefined,
+        minterAddress: undefined,
+        diamondFactoryAddress: BASE_DIAMOND_FACTORY_ADDRESS,
+        diamondMarketplaceAddress: BASE_DIAMOND_MARKETPLACE_ADDRESS,
+        chainId: 8453,
+        symbol: 'BASE',
+        network: '0x2105',
+        name: 'Base Mainnet',
+        testnet: false,
+      },
       '0x250': {
         authenticityHost: ASTAR_MAINNET_GATEWAY,
         factoryAddress: undefined,
@@ -108,16 +125,16 @@ module.exports = {
         name: 'Ethereum Mainnet',
         testnet: false,
       },
-      '0x5': {
+      '0xaa36a7': {
         authenticityHost: TEST_ETHERSCAN_GATEWAY,
-        factoryAddress: GOERLI_FACTORY_ADDRESS,
-        minterAddress: GOERLI_MINTER_ADDRESS,
-        diamondFactoryAddress: GOERLI_DIAMOND_FACTORY_ADDRESS,
-        diamondMarketplaceAddress: GOERLI_DIAMOND_MARKETPLACE_ADDRESS,
+        factoryAddress: SEPOLIA_FACTORY_ADDRESS,
+        minterAddress: SEPOLIA_MINTER_ADDRESS,
+        diamondFactoryAddress: SEPOLIA_DIAMOND_FACTORY_ADDRESS,
+        diamondMarketplaceAddress: SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS,
         chainId: 5,
         symbol: 'ETH',
-        network: '0x5',
-        name: 'Goerli Testnet',
+        network: '0xaa36a7',
+        name: 'Sepolia Testnet',
         testnet: true,
       },
       '0x89': {

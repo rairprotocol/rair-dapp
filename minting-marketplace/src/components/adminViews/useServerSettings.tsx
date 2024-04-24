@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { BlockchainSetting, Settings } from './adminView.types';
@@ -95,11 +95,11 @@ const useServerSettings = () => {
       setFooterLinks(settings.footerLinks);
     }
     setIsLoading(false);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     getServerSettings();
-  }, []);
+  }, [getServerSettings]);
 
   return {
     getServerSettings,
