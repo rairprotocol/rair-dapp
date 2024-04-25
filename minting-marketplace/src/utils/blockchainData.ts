@@ -64,7 +64,7 @@ const chainData: TChainData = {
         decimals: 18
       },
       rpcUrls: ['https://evm.astar.network'],
-      blockExplorerUrls: ['https://blockscout.com/astar']
+      blockExplorerUrls: ['https://astar.blockscout.com/']
     },
     viem: undefined,
     alchemy: Network.ASTAR_MAINNET,
@@ -135,8 +135,8 @@ const chainData: TChainData = {
     addChainData: {
       chainId: '0xaa36a7',
       chainName: 'Sepolia (Ethereum)',
-      rpcUrls: ['https://sepolia.etherscan.io'],
-      blockExplorerUrls: ['https://eth-sepolia.g.alchemy.com/v2/demo']
+      blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+      rpcUrls: ['https://eth-sepolia.g.alchemy.com/v2/demo']
     },
     viem: sepolia,
     alchemy: Network.ETH_SEPOLIA,
@@ -169,7 +169,7 @@ const chainData: TChainData = {
       chainId: '0x2105',
       chainName: 'Base',
       rpcUrls: ['https://mainnet.base.org'],
-      blockExplorerUrls: ['https://basescan.org']
+      blockExplorerUrls: ['https://basescan.org/']
     },
     viem: base,
     alchemy: Network.BASE_MAINNET,
