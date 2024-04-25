@@ -17,6 +17,7 @@ const useServerSettings = () => {
   const [nodeAddress, setNodeAddress] = useState(
     import.meta.env.VITE_NODE_ADDRESS
   );
+  const [legal, setLegal] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [featuredContract, setFeaturedContract] = useState('null');
   const [featuredProduct, setFeaturedProduct] = useState('null');
@@ -40,10 +41,11 @@ const useServerSettings = () => {
       await rFetch('/api/settings');
     if (success && settings) {
       setSettings(settings);
+      setNodeAddress(
+        settings?.nodeAddress || import.meta.env.VITE_NODE_ADDRESS
+      );
+      setLegal(settings?.legal || '');
       if (settings.featuredCollection) {
-        setNodeAddress(
-          settings?.nodeAddress || import.meta.env.VITE_NODE_ADDRESS
-        );
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
       }
@@ -126,6 +128,8 @@ const useServerSettings = () => {
     setSuperAdmins,
     footerLinks,
     setFooterLinks,
+    legal,
+    setLegal,
     blockchainSettings,
     isLoading
   };

@@ -20,6 +20,7 @@ module.exports = {
             label: Joi.string(),
             url: Joi.string(),
         })),
+        legal: Joi.string(),
     }),
     dbContracts: () => ({
         title: Joi.string(),

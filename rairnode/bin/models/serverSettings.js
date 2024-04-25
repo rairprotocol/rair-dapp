@@ -38,6 +38,7 @@ const ServerSetting = new Schema({
     required: false,
     default: [],
   },
+  legal: { type: String, required: false },
   // Favicon
   favicon: { type: String, required: false },
 }, { versionKey: false, timestamps: false });

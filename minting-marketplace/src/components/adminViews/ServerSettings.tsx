@@ -639,6 +639,24 @@ const ServerSettings = ({ fullContractData }) => {
             Add
           </button>
         </div>
+        <div className="col-12 px-5 my-2">
+          <h3>Legal info</h3>
+          <InputField
+            customClass="rounded-rair form-control"
+            getter={serverSettings.legal}
+            setter={serverSettings.setLegal}
+            placeholder="Legal information"
+          />
+          <button
+            className="btn rair-button"
+            style={{
+              background: secondaryButtonColor,
+              color: textColor
+            }}
+            onClick={() => setServerSetting({ legal: serverSettings.legal })}>
+            Set
+          </button>
+        </div>
       </div>
     </div>
   );
