@@ -9,7 +9,12 @@ import { RootState } from './ducks';
 // import * as ethers from 'ethers';
 // import * as colorTypes from './ducks/colors/types';
 // logos for About Page
-import { headerLogoBlack, headerLogoWhite } from './images';
+import {
+  headerLogoBlack,
+  headerLogoWhite,
+  HotdropsFavicon,
+  RairFavicon
+} from './images';
 
 //import CSVParser from './components/metadata/csvParser';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
@@ -99,7 +104,7 @@ const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const dispatch = useDispatch();
-  const { getServerSettings } = useServerSettings();
+  const { getServerSettings, settings } = useServerSettings();
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
@@ -249,7 +254,7 @@ function App() {
     }
   }, [primaryColor]);
 
-  const hotDropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotDropsVar = import.meta.env.VITE_TESTNET;
 
   useEffect(() => {
     if (hotDropsVar === 'true') {
@@ -263,11 +268,50 @@ function App() {
 
   const loadLogos = useCallback(async () => {
     getServerSettings();
-  }, []);
+  }, [getServerSettings]);
 
   useEffect(() => {
     loadLogos();
   }, []);
+
+  useEffect(() => {
+    if (settings.favicon) {
+      const changeFavicon = () => {
+        const link =
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'icon';
+        link.href = settings.favicon; // Set the href to your favicon
+        document.getElementsByTagName('head')[0].appendChild(link);
+      };
+
+      changeFavicon(); // Call the function to change the favicon when the component mounts
+    } else {
+      const changeFavicon = () => {
+        const link =
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'icon';
+        link.href =
+          import.meta.env.VITE_TESTNET === 'true'
+            ? HotdropsFavicon
+            : RairFavicon; // Set the href to your favicon
+        document.getElementsByTagName('head')[0].appendChild(link);
+      };
+
+      changeFavicon(); // Call the function to change the favicon when the component mounts
+    }
+
+    // Optionally, you can remove the old favicon when the component unmounts
+    return () => {
+      const link = document.querySelector("link[rel*='icon']");
+      if (link) {
+        link.parentNode.removeChild(link);
+      }
+    };
+  }, [settings]);
 
   return (
     <ErrorBoundary fallback={ErrorFallback}>

@@ -24,7 +24,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
   const [copySuccess /*setCopySuccess*/] = useState<string>('Copy link');
   const currentUrl = document.location.href;
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const { headerLogo, primaryColor, textColor } = useSelector<
     RootState,

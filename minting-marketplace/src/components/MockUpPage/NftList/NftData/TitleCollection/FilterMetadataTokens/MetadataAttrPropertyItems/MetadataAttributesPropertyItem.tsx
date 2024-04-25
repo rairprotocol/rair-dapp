@@ -12,7 +12,7 @@ const MetadataAttributesPropertyItem = ({
 }) => {
   const { width } = useWindowDimensions();
   const isMobileDesign = width < 540;
-  const [activeMetadata, setActiveMetadata] = useState<boolean>(false);
+  const [, /*activeMetadata*/ setActiveMetadata] = useState<boolean>(false);
 
   const clickProperty = useCallback(() => {
     const result = filteredDataAttributes.map(function (element) {
@@ -41,7 +41,7 @@ const MetadataAttributesPropertyItem = ({
       onClick={clickProperty}
       className={`custom-desc-to-offer nft-data-page-main-properties filter-metadata-block-titleCollection ${
         item.active && 'activeMetadata'
-      } ${import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops' : ''}`}
+      } ${import.meta.env.VITE_TESTNET === 'true' ? 'hotdrops' : ''}`}
       key={index}>
       {item.value.length > 7 && !isMobileDesign ? (
         <>

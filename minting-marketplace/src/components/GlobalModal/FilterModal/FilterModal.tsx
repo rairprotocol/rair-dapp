@@ -591,10 +591,10 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
             color: textColor,
             background: `${
               primaryColor === '#dedede'
-                ? import.meta.env.VITE_HOTDROPS === 'true'
+                ? import.meta.env.VITE_TESTNET === 'true'
                   ? 'var(--hot-drops)'
                   : 'linear-gradient(to right, #e882d5, #725bdb)'
-                : import.meta.env.VITE_HOTDROPS === 'true'
+                : import.meta.env.VITE_TESTNET === 'true'
                   ? primaryButtonColor ===
                     'linear-gradient(to right, #e882d5, #725bdb)'
                     ? 'var(--hot-drops)'

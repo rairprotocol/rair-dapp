@@ -11,11 +11,11 @@ import useServerSettings from '../adminViews/useServerSettings';
 import LoadingComponent from './../common/LoadingComponent';
 
 const MainLogo: React.FC<IMainLogo> = ({ goHome }) => {
-  const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
+  const { headerLogo } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
   const { isLoading } = useServerSettings();
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
   return (
     <>
       <MainLogoContaier>

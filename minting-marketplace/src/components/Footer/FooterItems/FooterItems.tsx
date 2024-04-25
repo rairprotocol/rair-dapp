@@ -18,6 +18,10 @@ export const FooterMain = styled.footer<TFooterMainStyled>`
   border-top: 1px solid
     ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
 
+  a {
+    color: ${(props) => props.textColor};
+  }
+
   @media screen and (max-width: 1024px) {
     padding: 40px 40px 25px 40px;
   }
@@ -37,7 +41,8 @@ export const FooterWrapper = styled.div<TFooterMainStyled>`
 
   &.footer-wrapper-hotdrops {
     padding-top: 52px;
-    border-top: 1px solid var(--hot-drops);
+    border-top: ${(props) =>
+      props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959'};
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -234,8 +239,7 @@ export const FooterTextRairTech = styled.div<TFooterMainStyled>`
     li {
       font-size: 14px;
       line-height: 28px;
-      color: ${(props) =>
-        props.primaryColor === '#dedede' ? '#7A797A' : '#A7A6A6'};
+      color: ${(props) => props.textColor};
     }
     li:nth-child(2) {
       margin: 0 32px;

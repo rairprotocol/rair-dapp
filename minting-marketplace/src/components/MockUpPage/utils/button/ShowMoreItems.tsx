@@ -38,7 +38,7 @@ export const ShowMoreItem = styled.div<TShowMoreItem>`
   &:hover {
     transition-duration: 0.5s;
     background: ${(props) =>
-      import.meta.env.VITE_HOTDROPS === 'true'
+      import.meta.env.VITE_TESTNET === 'true'
         ? 'var(--hot-drops-click)'
         : props.hoverBackground};
   }

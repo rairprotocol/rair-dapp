@@ -80,7 +80,7 @@ const useConnectUser = () => {
     ColorStoreType
   >((store) => store.colorStore);
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const reactSwal = useSwal();
   const navigate = useNavigate();
@@ -181,10 +181,6 @@ const useConnectUser = () => {
     };
   }, [currentChain, programmaticProvider]);
 
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   const selectMethod = useCallback(
     () =>
       new Promise((resolve: (value: string) => void) => {
@@ -202,10 +198,10 @@ const useConnectUser = () => {
                   style={{
                     background: `${
                       primaryColor === '#dedede'
-                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                        ? import.meta.env.VITE_TESTNET === 'true'
                           ? 'var(--hot-drops)'
                           : 'linear-gradient(to right, #e882d5, #725bdb)'
-                        : import.meta.env.VITE_HOTDROPS === 'true'
+                        : import.meta.env.VITE_TESTNET === 'true'
                           ? primaryButtonColor ===
                             'linear-gradient(to right, #e882d5, #725bdb)'
                             ? 'var(--hot-drops)'

@@ -81,7 +81,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     ContractsInitialType
   >((state) => state.contractStore);
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore

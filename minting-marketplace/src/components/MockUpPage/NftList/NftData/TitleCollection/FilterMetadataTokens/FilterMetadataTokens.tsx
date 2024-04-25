@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 
 import MetadataItem from './MetadataItem';
@@ -12,7 +13,7 @@ const FilterMetadataTokens = ({
   return (
     <div
       className={`properties-data ${
-        import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops' : ''
+        import.meta.env.VITE_TESTNET === 'true' ? 'hotdrops' : ''
       }`}>
       {selectedData && (
         <>

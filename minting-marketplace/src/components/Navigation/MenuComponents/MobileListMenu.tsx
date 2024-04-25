@@ -51,7 +51,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
     (store) => store.allInformationFromSearch
   );
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const [textSearch, setTextSearch] = useState<string>('');
 
@@ -156,7 +156,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
               hotdrops={hotdropsVar}
               primaryColor={primaryColor}>
               <i className="fas fa-search" aria-hidden="true"></i>
-              {import.meta.env.VITE_HOTDROPS === 'true' ? (
+              {import.meta.env.VITE_TESTNET === 'true' ? (
                 <input
                   className={
                     primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'

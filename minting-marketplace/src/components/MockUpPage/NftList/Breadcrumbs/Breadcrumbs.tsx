@@ -52,7 +52,7 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
           className="nft-home-icon"
           style={{
             color:
-              import.meta.env.VITE_HOTDROPS === 'true'
+              import.meta.env.VITE_TESTNET === 'true'
                 ? `${
                     textColor === '#FFF' || textColor === 'black'
                       ? '#F95631'
@@ -67,7 +67,7 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
           <SingleTokenHome
             style={{
               fill:
-                import.meta.env.VITE_HOTDROPS === 'true'
+                import.meta.env.VITE_TESTNET === 'true'
                   ? `${
                       textColor === '#FFF' || textColor === 'black'
                         ? '#F95631'
@@ -90,7 +90,7 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
           <div
             style={{
               color:
-                import.meta.env.VITE_HOTDROPS === 'true'
+                import.meta.env.VITE_TESTNET === 'true'
                   ? `${
                       textColor === '#FFF' || textColor === 'black'
                         ? '#F95631'
@@ -106,7 +106,7 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
             <SingleTokenHome
               style={{
                 fill:
-                  import.meta.env.VITE_HOTDROPS === 'true'
+                  import.meta.env.VITE_TESTNET === 'true'
                     ? `${
                         textColor === '#FFF' || textColor === 'black'
                           ? '#F95631'

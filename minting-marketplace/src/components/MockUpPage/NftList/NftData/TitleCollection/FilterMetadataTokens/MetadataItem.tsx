@@ -7,8 +7,7 @@ const MetadataItem = ({
   index,
   item,
   setSelectedAttributeValues,
-  selectedAttributeValues,
-  textColor
+  selectedAttributeValues
 }) => {
   const [checkName, setCheckName] = useState<boolean>(false);
 
@@ -57,7 +56,7 @@ const MetadataItem = ({
       onClick={toggleMetadata}
       className={`custom-desc-to-offer nft-data-page-main-properties filter-metadata-block-titleCollection ${
         checkName && 'activeMetadata'
-      } ${import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops' : ''}`}>
+      } ${import.meta.env.VITE_TESTNET === 'true' ? 'hotdrops' : ''}`}>
       <div
         className="custom-offer-percents"
         style={{

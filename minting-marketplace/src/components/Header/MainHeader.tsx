@@ -69,7 +69,7 @@ const MainHeader: React.FC<IMainHeader> = ({
     (store) => store.contractStore
   );
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
@@ -353,7 +353,7 @@ const MainHeader: React.FC<IMainHeader> = ({
           className={`fas fa-search`}
           style={{
             color:
-              import.meta.env.VITE_HOTDROPS === 'true'
+              import.meta.env.VITE_TESTNET === 'true'
                 ? `${
                     textColor === '#FFF' || textColor === 'black'
                       ? '#F95631'
@@ -376,10 +376,10 @@ const MainHeader: React.FC<IMainHeader> = ({
                 style={{
                   background: `${
                     primaryColor === '#dedede'
-                      ? import.meta.env.VITE_HOTDROPS === 'true'
+                      ? import.meta.env.VITE_TESTNET === 'true'
                         ? 'var(--hot-drops)'
                         : 'linear-gradient(to right, #e882d5, #725bdb)'
-                      : import.meta.env.VITE_HOTDROPS === 'true'
+                      : import.meta.env.VITE_TESTNET === 'true'
                         ? primaryButtonColor ===
                           'linear-gradient(to right, #e882d5, #725bdb)'
                           ? 'var(--hot-drops)'

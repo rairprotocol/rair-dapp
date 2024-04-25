@@ -81,7 +81,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
     (store) => store.userStore
   );
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
@@ -266,7 +266,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
               className={`fas fa-search fa-lg fas-custom`}
               style={{
                 color:
-                  import.meta.env.VITE_HOTDROPS === 'true'
+                  import.meta.env.VITE_TESTNET === 'true'
                     ? `${
                         textColor === '#FFF' || textColor === 'black'
                           ? '#F95631'
@@ -283,7 +283,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
               click={click}
               setIsClick={setClick}
               isFilterShow={
-                import.meta.env.VITE_HOTDROPS === 'true' ? false : true
+                import.meta.env.VITE_TESTNET === 'true' ? false : true
               }
               textColor={textColor}
               primaryColor={primaryColor}
@@ -311,10 +311,10 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
                   style={{
                     background: `${
                       primaryColor === '#dedede'
-                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                        ? import.meta.env.VITE_TESTNET === 'true'
                           ? 'var(--hot-drops)'
                           : 'linear-gradient(to right, #e882d5, #725bdb)'
-                        : import.meta.env.VITE_HOTDROPS === 'true'
+                        : import.meta.env.VITE_TESTNET === 'true'
                           ? primaryButtonColor ===
                             'linear-gradient(to right, #e882d5, #725bdb)'
                             ? 'var(--hot-drops)'
@@ -335,10 +335,10 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
                 style={{
                   background: `${
                     primaryColor === '#dedede'
-                      ? import.meta.env.VITE_HOTDROPS === 'true'
+                      ? import.meta.env.VITE_TESTNET === 'true'
                         ? 'var(--hot-drops)'
                         : 'linear-gradient(to right, #e882d5, #725bdb)'
-                      : import.meta.env.VITE_HOTDROPS === 'true'
+                      : import.meta.env.VITE_TESTNET === 'true'
                         ? primaryButtonColor ===
                           'linear-gradient(to right, #e882d5, #725bdb)'
                           ? 'var(--hot-drops)'
@@ -376,10 +376,10 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
                   style={{
                     background: `${
                       primaryColor === '#dedede'
-                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                        ? import.meta.env.VITE_TESTNET === 'true'
                           ? 'var(--hot-drops)'
                           : 'linear-gradient(to right, #e882d5, #725bdb)'
-                        : import.meta.env.VITE_HOTDROPS === 'true'
+                        : import.meta.env.VITE_TESTNET === 'true'
                           ? primaryButtonColor ===
                             'linear-gradient(to right, #e882d5, #725bdb)'
                             ? 'var(--hot-drops)'

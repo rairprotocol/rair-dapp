@@ -26,7 +26,7 @@ const buttons = {
   secondaryButtonColor: `linear-gradient(to right, ${arcticBlue}, ${royalPurple})`
 };
 
-const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+const hotdropsVar = import.meta.env.VITE_TESTNET;
 
 const schemes: SchemaType = {
   rhyno: {

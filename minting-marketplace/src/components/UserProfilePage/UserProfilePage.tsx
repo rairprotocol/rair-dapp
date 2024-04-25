@@ -286,7 +286,7 @@ const UserProfilePage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   if (userData === undefined) {
     return <LoadingComponent />;
@@ -524,7 +524,7 @@ const UserProfilePage: React.FC = () => {
                     className="fas fa-search fa-lg fas-custom"
                     style={{
                       color:
-                        import.meta.env.VITE_HOTDROPS === 'true'
+                        import.meta.env.VITE_TESTNET === 'true'
                           ? `${
                               textColor === '#FFF' || textColor === 'black'
                                 ? '#F95631'

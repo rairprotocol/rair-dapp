@@ -8,7 +8,7 @@ import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useSwal from '../../../hooks/useSwal';
-import { BellIcon, HotDropsLogo } from '../../../images';
+import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import NotificationPage from '../NotificationPage/NotificationPage';
 
@@ -18,7 +18,7 @@ const PopUpNotification = () =>
   // props was - isNotification
   {
     const currentName =
-      import.meta.env.VITE_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
+      import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
     const [openModal, setOpenModal] = useState(false);
     const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
       RootState,

@@ -19,10 +19,9 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   onClickItem,
   numberRef
 }) => {
-  const { textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryButtonColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
   return (
     <>
       <div ref={numberRef} className="select-number-container">
@@ -54,7 +53,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
             border: `${primaryColor === 'rhyno' ? '1px solid #D37AD6' : 'none'}`
           }}
           className={`select-number-popup ${
-            import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops' : ''
+            import.meta.env.VITE_TESTNET === 'true' ? 'hotdrops' : ''
           }`}>
           <div className="select-number-title">
             <div
@@ -84,10 +83,10 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                   style={{
                     background: `${
                       primaryColor === '#dedede'
-                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                        ? import.meta.env.VITE_TESTNET === 'true'
                           ? 'var(--hot-drops)'
                           : 'linear-gradient(to right, #e882d5, #725bdb)'
-                        : import.meta.env.VITE_HOTDROPS === 'true'
+                        : import.meta.env.VITE_TESTNET === 'true'
                           ? primaryButtonColor ===
                             'linear-gradient(to right, #e882d5, #725bdb)'
                             ? 'var(--hot-drops)'

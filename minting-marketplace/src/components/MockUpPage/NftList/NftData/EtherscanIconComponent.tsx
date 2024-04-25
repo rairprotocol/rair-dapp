@@ -25,7 +25,7 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
     (store) => store.contractStore
   );
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   return (
     <>

@@ -231,7 +231,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
     ? metaDataProducts.metadata.image_thumbnail
     : ipfsLink
       ? ipfsLink
-      : import.meta.env.VITE_HOTDROPS === 'true'
+      : import.meta.env.VITE_TESTNET === 'true'
         ? defaultHotDrops
         : pict;
 

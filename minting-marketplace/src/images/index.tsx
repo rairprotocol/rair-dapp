@@ -14,6 +14,7 @@ import ethereum from './ethereum-logo.svg';
 import grandpaGif from './grandpa.gif';
 import hotdropsDefaultBanner from './hotDrops_defaultBanner.png';
 import defaultHotDropsImg from './hotdrops-default.png';
+import HotdropsFaviconDefault from './Hotdrops-favicon.ico';
 import logoHotDropsLight from './HotdropsLogoLight.png';
 import kigGif from './kid.gif';
 import lennyGif from './lenny.gif';
@@ -25,6 +26,7 @@ import oneOf from './oneOf-logo.webp';
 import openSea from './openSea-logo.webp';
 // import Icons
 import polygonMatic from './polygon-matic.svg';
+import RairFaviconDefault from './rair_favicon.ico';
 import logoBlackMobile from './RAIR-Tech-Logo-POWERED-BY-BLACK-2021.webp';
 import logoWhiteMobile from './RAIR-Tech-Logo-POWERED-BY-WHITE-2021.webp';
 import rairTechLogoBlue from './rairLogo_blue.webp';
@@ -37,6 +39,8 @@ import yotiLogo from './yoti-logo.png';
 // images
 export const bgLogoBlack = blackBg;
 export const bgLogoWhite = whiteBg;
+export const RairFavicon = RairFaviconDefault;
+export const HotdropsFavicon = HotdropsFaviconDefault;
 export const VerifiedIcon = verifiedIcon;
 export const headerLogoWhiteMobile = logoWhiteMobile;
 export const headerLogoBlackMobile = logoBlackMobile;

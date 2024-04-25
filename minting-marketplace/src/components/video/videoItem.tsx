@@ -283,7 +283,7 @@ const VideoItem: React.FC<IVideoItem> = ({
                   style={{
                     lineHeight: 'inherit',
                     color:
-                      import.meta.env.VITE_HOTDROPS === 'true'
+                      import.meta.env.VITE_TESTNET === 'true'
                         ? `${
                             textColor === '#FFF' || textColor === 'black'
                               ? '#F95631'

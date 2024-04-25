@@ -23,7 +23,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
     (store) => store.colorStore
   );
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const [authCollection, setAuthCollection] = useState<string>();
   const [ipfsLink, setIpfsLink] = useState<string>('');
@@ -94,7 +94,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                             className="fas fa-arrow-right"
                             style={{
                               color:
-                                import.meta.env.VITE_HOTDROPS === 'true'
+                                import.meta.env.VITE_TESTNET === 'true'
                                   ? `${
                                       textColor === '#FFF' ||
                                       textColor === 'black'
@@ -136,7 +136,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                   className="fas fa-arrow-right"
                   style={{
                     color:
-                      import.meta.env.VITE_HOTDROPS === 'true'
+                      import.meta.env.VITE_TESTNET === 'true'
                         ? `${
                             textColor === '#FFF' || textColor === 'black'
                               ? '#F95631'
@@ -172,7 +172,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                 className="fas fa-arrow-right"
                 style={{
                   color:
-                    import.meta.env.VITE_HOTDROPS === 'true'
+                    import.meta.env.VITE_TESTNET === 'true'
                       ? `${
                           textColor === '#FFF' || textColor === 'black'
                             ? '#F95631'

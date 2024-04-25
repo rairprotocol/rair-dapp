@@ -11,7 +11,7 @@ import './NotificationPage.css';
 
 const NotificationPage = () => {
   const currentName =
-    import.meta.env.VITE_HOTDROPS === 'true' ? 'HotDrops' : 'Rair.tech';
+    import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );

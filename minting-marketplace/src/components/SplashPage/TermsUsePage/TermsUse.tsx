@@ -12,7 +12,7 @@ const TermsUseComponent: React.FC<ITermsUseComponent> = ({
   }, [setIsSplashPage]);
 
   const currentName =
-    import.meta.env.VITE_HOTDROPS === 'true' ? 'HotDrops' : 'Rair';
+    import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair';
 
   return (
     <div className={cl.main}>

@@ -8,11 +8,12 @@ import { IBuySellButton } from '../../mockupPage.types';
 export const BuySellButton: React.FC<IBuySellButton> = ({
   title,
   handleClick,
-  isColorPurple,
   disabled
 }) => {
-  const { textColor, primaryButtonColor, secondaryButtonColor, primaryColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const { textColor, primaryButtonColor, primaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   return (
     <button
@@ -23,10 +24,10 @@ export const BuySellButton: React.FC<IBuySellButton> = ({
         color: textColor,
         background: `${
           primaryColor === '#dedede'
-            ? import.meta.env.VITE_HOTDROPS === 'true'
+            ? import.meta.env.VITE_TESTNET === 'true'
               ? 'var(--hot-drops)'
               : 'linear-gradient(to right, #e882d5, #725bdb)'
-            : import.meta.env.VITE_HOTDROPS === 'true'
+            : import.meta.env.VITE_TESTNET === 'true'
               ? primaryButtonColor ===
                 'linear-gradient(to right, #e882d5, #725bdb)'
                 ? 'var(--hot-drops)'

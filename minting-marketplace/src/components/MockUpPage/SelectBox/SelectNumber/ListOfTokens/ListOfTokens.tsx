@@ -38,7 +38,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const [isBack /*setIsBack*/] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(true);
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const tokenData = useSelector<
     RootState,

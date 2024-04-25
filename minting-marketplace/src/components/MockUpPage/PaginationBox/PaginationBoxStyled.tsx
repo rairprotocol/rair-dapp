@@ -22,10 +22,10 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
           background: ${(props) =>
             `${
               props.primarycolor === '#dedede'
-                ? import.meta.env.VITE_HOTDROPS === 'true'
+                ? import.meta.env.VITE_TESTNET === 'true'
                   ? 'var(--hot-drops)'
                   : 'linear-gradient(to right, #e882d5, #725bdb)'
-                : import.meta.env.VITE_HOTDROPS === 'true'
+                : import.meta.env.VITE_TESTNET === 'true'
                   ? props.primaryButtonColor ===
                     'linear-gradient(to right, #e882d5, #725bdb)'
                     ? 'var(--hot-drops)'
@@ -42,10 +42,10 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
           background: ${(props) =>
             `${
               props.primarycolor === '#dedede'
-                ? import.meta.env.VITE_HOTDROPS === 'true'
+                ? import.meta.env.VITE_TESTNET === 'true'
                   ? 'var(--hot-drops)'
                   : 'linear-gradient(to right, #e882d5, #725bdb)'
-                : import.meta.env.VITE_HOTDROPS === 'true'
+                : import.meta.env.VITE_TESTNET === 'true'
                   ? props.primaryButtonColor ===
                     'linear-gradient(to right, #e882d5, #725bdb)'
                     ? 'var(--hot-drops)'

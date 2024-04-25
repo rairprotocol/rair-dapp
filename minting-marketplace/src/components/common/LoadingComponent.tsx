@@ -1,17 +1,9 @@
-import { useSelector } from 'react-redux';
 import { CircularProgress } from '@mui/material';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-
 const LoadingComponent = ({ size = 100, classes = 'list-wrapper-empty' }) => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
-
   return (
     <div className={classes}>
-      {import.meta.env.VITE_HOTDROPS === 'true' ? (
+      {import.meta.env.VITE_TESTNET === 'true' ? (
         <CircularProgress
           sx={{ color: 'var(--hot-drops-light)' }}
           size={size}

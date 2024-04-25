@@ -30,7 +30,7 @@ const EditMode = ({
   const store = useStore();
   const reactSwal = useSwal();
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore

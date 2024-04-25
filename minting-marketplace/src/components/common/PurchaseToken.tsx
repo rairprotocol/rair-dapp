@@ -6,7 +6,6 @@ import { diamondFactoryAbi, erc721Abi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -109,8 +108,6 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   const [buyingToken, setBuyingToken] = useState<boolean>(false);
   const [buttonMessage, setButtonMessage] = useState<string>('');
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
-
   const reactSwal = useSwal();
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
 
@@ -126,9 +123,6 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
-  const { loginType } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
 
   const queryRangeDataFromBlockchain = async (
     marketplaceInstance: Contract | undefined,
@@ -434,10 +428,8 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
   amountOfTokensToPurchase = '1',
   altButtonFormat = false,
   customButtonClassName,
-  customButtonIconClassName,
   customButtonTextClassName,
   customWrapperClassName,
-  img,
   buttonLabel = 'Mint!',
   handleClick,
   contractAddress,
@@ -457,7 +449,6 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
 
   const { web3TxHandler } = useWeb3Tx();
   const reactSwal = useSwal();
@@ -518,10 +509,10 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
           style={{
             background: `${
               primaryColor === '#dedede'
-                ? import.meta.env.VITE_HOTDROPS === 'true'
+                ? import.meta.env.VITE_TESTNET === 'true'
                   ? 'var(--hot-drops)'
                   : 'linear-gradient(to right, #e882d5, #725bdb)'
-                : import.meta.env.VITE_HOTDROPS === 'true'
+                : import.meta.env.VITE_TESTNET === 'true'
                   ? primaryButtonColor ===
                     'linear-gradient(to right, #e882d5, #725bdb)'
                     ? 'var(--hot-drops)'

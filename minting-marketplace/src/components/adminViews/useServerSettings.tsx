@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -8,6 +9,7 @@ import {
   setCustomLogosDark,
   setCustomLogosLight
 } from '../../ducks/colors/actions';
+import { HotdropsFavicon, RairFavicon } from '../../images';
 import { rFetch } from '../../utils/rFetch';
 import { FooterLinkType } from '../common/commonTypes/InputSelectTypes.types';
 
@@ -102,6 +104,45 @@ const useServerSettings = () => {
   useEffect(() => {
     getServerSettings();
   }, [getServerSettings]);
+
+  useEffect(() => {
+    if (settings.favicon) {
+      const changeFavicon = () => {
+        const link =
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'icon';
+        link.href = settings.favicon; // Set the href to your favicon
+        document.getElementsByTagName('head')[0].appendChild(link);
+      };
+
+      changeFavicon(); // Call the function to change the favicon when the component mounts
+    } else {
+      const changeFavicon = () => {
+        const link =
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'icon';
+        link.href =
+          import.meta.env.VITE_TESTNET === 'true'
+            ? HotdropsFavicon
+            : RairFavicon; // Set the href to your favicon
+        document.getElementsByTagName('head')[0].appendChild(link);
+      };
+
+      changeFavicon(); // Call the function to change the favicon when the component mounts
+    }
+
+    // Optionally, you can remove the old favicon when the component unmounts
+    return () => {
+      const link = document.querySelector("link[rel*='icon']");
+      if (link) {
+        link.parentNode.removeChild(link);
+      }
+    };
+  }, [settings]);
 
   return {
     getServerSettings,

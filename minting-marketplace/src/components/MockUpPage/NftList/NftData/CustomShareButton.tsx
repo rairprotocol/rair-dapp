@@ -15,7 +15,7 @@ const CustomShareButton: React.FC<ICusmonShareButton> = ({
       onClick={handleClick}
       className={`share-button ${
         moreUnlockablesClassName ? moreUnlockablesClassName : ''
-      } ${import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-border' : ''}`}
+      } ${import.meta.env.VITE_TESTNET === 'true' ? 'hotdrops-border' : ''}`}
       style={{
         background: `${
           primaryColor === '#dedede' ? '#F5F5F5' : 'var(--charcoal)'

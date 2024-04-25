@@ -7,7 +7,7 @@ import { ImageLazy } from '../ImageLazy/ImageLazy';
 import { changeIPFSLink } from '../NftList/utils/changeIPFSLink';
 
 const MainBanner = ({ mainBannerInfo }) => {
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const navigate = useNavigate();
 

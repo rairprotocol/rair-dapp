@@ -99,7 +99,7 @@ export const ModalContentPicture = styled.div`
 export const StyledFilterIcon = styled(FilterIconNew)`
   path {
     stroke: ${(props: TFiltersTitleIconStyled) =>
-      import.meta.env.VITE_HOTDROPS === 'true'
+      import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
@@ -119,7 +119,7 @@ export const StyledFilterIcon = styled(FilterIconNew)`
 export const StyledArrowUpIcon = styled(ArrowUp)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
-      import.meta.env.VITE_HOTDROPS === 'true'
+      import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
@@ -137,7 +137,7 @@ export const StyledArrowUpIcon = styled(ArrowUp)`
 export const StyledArrowDownIcon = styled(ArrowDown)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
-      import.meta.env.VITE_HOTDROPS === 'true'
+      import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
@@ -158,7 +158,7 @@ export const StyledShevronIcon = styled(SimpleFilterArrow)`
 
   path {
     stroke: ${(props) =>
-      import.meta.env.VITE_HOTDROPS === 'true'
+      import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
@@ -175,7 +175,7 @@ export const StyledShevronIcon = styled(SimpleFilterArrow)`
 export const StyledPopupArrowUpIcon = styled(ArrowUp)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
-      import.meta.env.VITE_HOTDROPS === 'true'
+      import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
@@ -191,7 +191,7 @@ export const StyledPopupArrowUpIcon = styled(ArrowUp)`
 export const StyledPopupArrowDownIcon = styled(ArrowDown)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
-      import.meta.env.VITE_HOTDROPS === 'true'
+      import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'

@@ -58,8 +58,6 @@ const ResaleModal: React.FC<IResaleModal> = ({
 
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
 
-  const hotDropsVar = import.meta.env.VITE_HOTDROPS;
-
   const handleInputClear = useCallback(() => {
     if (inputSellValue) {
       setInputSellValue('');
@@ -133,6 +131,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
       if (!resaleResponse.success) {
         return;
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       const [resaleData] = resaleResponse?.data;
       if (!resaleData) {
         return;
@@ -306,10 +305,10 @@ const ResaleModal: React.FC<IResaleModal> = ({
                     color: textColor,
                     background: `${
                       primaryColor === '#dedede'
-                        ? import.meta.env.VITE_HOTDROPS === 'true'
+                        ? import.meta.env.VITE_TESTNET === 'true'
                           ? 'var(--hot-drops)'
                           : 'linear-gradient(to right, #e882d5, #725bdb)'
-                        : import.meta.env.VITE_HOTDROPS === 'true'
+                        : import.meta.env.VITE_TESTNET === 'true'
                           ? primaryButtonColor ===
                             'linear-gradient(to right, #e882d5, #725bdb)'
                             ? 'var(--hot-drops)'

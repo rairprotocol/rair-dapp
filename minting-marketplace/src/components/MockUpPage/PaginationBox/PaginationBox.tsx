@@ -17,7 +17,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
     (store) => store.nftDataStore.itemsPerPage
   );
 
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+  const { primaryColor, primaryButtonColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -26,7 +26,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   const [totalPage, setTotalPages] = useState<number>();
   const [totalPageVideo, setTotalPagesVideo] = useState<number>();
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  // const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const pagesArray: number[] = [];
   if (whatPage && whatPage === 'nft' && totalPage) {

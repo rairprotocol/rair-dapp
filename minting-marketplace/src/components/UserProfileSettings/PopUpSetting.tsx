@@ -7,7 +7,7 @@ import { utils } from 'ethers';
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../ducks/users/users.types';
+// import { TUsersInitialState } from '../../ducks/users/users.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
 import { VerifiedIcon } from '../../images';
@@ -34,7 +34,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const [userBalance, setUserBalance] = useState<string>('');
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
 
@@ -51,9 +51,9 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
     ContractsInitialType
   >((state) => state.contractStore);
 
-  const { loginType } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  // const { loginType } = useSelector<RootState, TUsersInitialState>(
+  //   (store) => store.userStore
+  // );
 
   const onChangeEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
@@ -233,7 +233,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             className={`icon-menu fas fa-bars`}
             style={{
               backgroundColor:
-                import.meta.env.VITE_HOTDROPS === 'true'
+                import.meta.env.VITE_TESTNET === 'true'
                   ? `${
                       textColor === '#FFF' || textColor === 'black'
                         ? '#F95631'

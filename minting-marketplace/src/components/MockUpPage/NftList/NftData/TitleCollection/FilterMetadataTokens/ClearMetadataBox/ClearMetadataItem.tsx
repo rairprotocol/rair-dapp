@@ -4,14 +4,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../ducks';
 import { ColorStoreType } from '../../../../../../../ducks/colors/colorStore.types';
 
-const ClearMetadataItem = ({
-  clickProperty,
-  meta,
-  val,
-  getResetTokens,
-  filteredDataAttributes
-}) => {
-  const [clearActive, setClearActive] = useState(false);
+const ClearMetadataItem = ({ clickProperty, meta, val, getResetTokens }) => {
+  const [, /*clearActive*/ setClearActive] = useState(false);
 
   const { primaryColor, textColor, primaryButtonColor } = useSelector<
     RootState,
@@ -33,10 +27,10 @@ const ClearMetadataItem = ({
         marginBottom: '1rem',
         background: `${
           primaryColor === '#dedede'
-            ? import.meta.env.VITE_HOTDROPS === 'true'
+            ? import.meta.env.VITE_TESTNET === 'true'
               ? 'var(--hot-drops)'
               : 'linear-gradient(to right, #e882d5, #725bdb)'
-            : import.meta.env.VITE_HOTDROPS === 'true'
+            : import.meta.env.VITE_TESTNET === 'true'
               ? primaryButtonColor ===
                 'linear-gradient(to right, #e882d5, #725bdb)'
                 ? 'var(--hot-drops)'

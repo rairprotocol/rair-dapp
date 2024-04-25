@@ -26,7 +26,7 @@ export const Image = styled.img<ILazyImageItem>`
   }
   &.has-error {
     max-width: -webkit-fill-available;
-    content: url(${import.meta.env.VITE_HOTDROPS === 'true'
+    content: url(${import.meta.env.VITE_TESTNET === 'true'
       ? defaultHotDrops
       : RairBackground});
   }

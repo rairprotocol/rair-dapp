@@ -39,7 +39,6 @@ const FilteringBlock = ({
   setFilterCategoriesText,
   click,
   setClick,
-  metadataFilter,
   setMetadataFilter,
   tabIndexItems,
   colletionPage
@@ -61,7 +60,7 @@ const FilteringBlock = ({
   const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
   const { width /*height*/ } = useWindowDimensions();
 
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS;
+  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const { globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
@@ -79,10 +78,6 @@ const FilteringBlock = ({
       type: GLOBAL_MODAL_ACTIONS.TOGLE_IS_MODAL_OPEN,
       payload: null
     });
-  };
-
-  const toggleMetadataFilter = () => {
-    setFilterClose((prev) => !prev);
   };
 
   const onChangeSortPopUp = () => {
@@ -151,7 +146,7 @@ const FilteringBlock = ({
         <SelectSortItem
           onClick={onChangeSortPopUp}
           className={`select-sort ${
-            import.meta.env.VITE_HOTDROPS === 'true' ? 'hotdrops-hover' : ''
+            import.meta.env.VITE_TESTNET === 'true' ? 'hotdrops-hover' : ''
           }`}
           primaryColor={primaryColor}
           textColor={textColor}

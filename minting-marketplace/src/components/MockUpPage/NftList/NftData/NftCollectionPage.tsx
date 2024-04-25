@@ -144,12 +144,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
         return 0;
       });
 
-  const toUpper = (string: string) => {
-    if (string) {
-      return string[0].toUpperCase() + string.slice(1);
-    }
-  };
-
   const loadToken = useCallback(
     (entries) => {
       const target = entries[0];
@@ -449,7 +443,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                 className={`fas fa-search fa-lg fas-custom`}
                 style={{
                   color:
-                    import.meta.env.VITE_HOTDROPS === 'true'
+                    import.meta.env.VITE_TESTNET === 'true'
                       ? `${
                           textColor === '#FFF' || textColor === 'black'
                             ? '#F95631'
@@ -729,10 +723,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                           color: textColor,
                           background: `${
                             primaryColor === '#dedede'
-                              ? import.meta.env.VITE_HOTDROPS === 'true'
+                              ? import.meta.env.VITE_TESTNET === 'true'
                                 ? 'var(--hot-drops)'
                                 : 'linear-gradient(to right, #e882d5, #725bdb)'
-                              : import.meta.env.VITE_HOTDROPS === 'true'
+                              : import.meta.env.VITE_TESTNET === 'true'
                                 ? primaryButtonColor ===
                                   'linear-gradient(to right, #e882d5, #725bdb)'
                                   ? 'var(--hot-drops)'
@@ -817,7 +811,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               }}
               onClick={() => goBack()}
               className="arrow-back">
-              {import.meta.env.VITE_HOTDROPS === 'true' ? (
+              {import.meta.env.VITE_TESTNET === 'true' ? (
                 <i className="fas fa-arrow-alt-circle-left hotdrops-color"></i>
               ) : (
                 <i className="fas fa-arrow-alt-circle-left"></i>

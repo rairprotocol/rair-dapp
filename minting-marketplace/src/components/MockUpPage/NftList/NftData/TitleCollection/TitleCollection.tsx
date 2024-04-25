@@ -36,7 +36,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   // toggleMetadataFilter
 }) => {
   const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+  const { primaryColor, primaryButtonColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -100,25 +100,6 @@ const TitleCollection: React.FC<ITitleCollection> = ({
       }
     }
   }, [offerDataCol, contractData]);
-
-  const percentToRGB = (percent: string) => {
-    const percentNumber = parseInt(percent);
-    if (percentNumber) {
-      if (percentNumber < 15) {
-        return '#95F619';
-      } else if (15 <= percentNumber && percentNumber < 35) {
-        return '#F6ED19';
-      } else {
-        return '#F63419';
-      }
-    }
-  };
-
-  const toUpper = (string: string) => {
-    if (string) {
-      return string[0].toUpperCase() + string.slice(1);
-    }
-  };
 
   const getContractInfo = useCallback(async () => {
     if (blockchain && contract) {
@@ -211,10 +192,10 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                       text="Mint!"
                       background={`${
                         primaryColor === '#dedede'
-                          ? import.meta.env.VITE_HOTDROPS === 'true'
+                          ? import.meta.env.VITE_TESTNET === 'true'
                             ? 'var(--hot-drops)'
                             : 'linear-gradient(to right, #e882d5, #725bdb)'
-                          : import.meta.env.VITE_HOTDROPS === 'true'
+                          : import.meta.env.VITE_TESTNET === 'true'
                             ? primaryButtonColor ===
                               'linear-gradient(to right, #e882d5, #725bdb)'
                               ? 'var(--hot-drops)'
@@ -240,10 +221,10 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                       text="Mint!"
                       background={`${
                         primaryColor === '#dedede'
-                          ? import.meta.env.VITE_HOTDROPS === 'true'
+                          ? import.meta.env.VITE_TESTNET === 'true'
                             ? 'var(--hot-drops)'
                             : 'linear-gradient(to right, #e882d5, #725bdb)'
-                          : import.meta.env.VITE_HOTDROPS === 'true'
+                          : import.meta.env.VITE_TESTNET === 'true'
                             ? primaryButtonColor ===
                               'linear-gradient(to right, #e882d5, #725bdb)'
                               ? 'var(--hot-drops)'
@@ -287,7 +268,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               rel="noreferrer">
               <div
                 className={`etherscan-icon ${
-                  import.meta.env.VITE_HOTDROPS === 'true'
+                  import.meta.env.VITE_TESTNET === 'true'
                     ? 'hotdrops-border'
                     : ''
                 }`}>

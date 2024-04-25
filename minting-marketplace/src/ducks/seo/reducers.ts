@@ -4,7 +4,7 @@ import * as types from './types';
 import HotDropsFavicon from '../../components/MockUpPage/assets/Hotdrops-favicon.ico';
 import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
 
-const hotDropsVar = import.meta.env.VITE_HOTDROPS;
+const hotDropsVar = import.meta.env.VITE_TESTNET;
 
 export let InitialState: TInfoSeo;
 

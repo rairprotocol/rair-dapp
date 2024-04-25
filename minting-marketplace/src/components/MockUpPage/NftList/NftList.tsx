@@ -38,7 +38,7 @@ const NftListComponent: React.FC<INftListComponent> = ({
   }
 
   const defaultImg =
-    import.meta.env.VITE_HOTDROPS === 'true'
+    import.meta.env.VITE_TESTNET === 'true'
       ? defaultHotDrops
       : `${
           import.meta.env.VITE_IPFS_GATEWAY

@@ -55,7 +55,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const [verticalImage, setVerticalImage] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const myRef = useRef(null);
-  const hotdropsVar = import.meta.env.VITE_HOTDROPS === 'true';
+  const hotdropsVar = import.meta.env.VITE_TESTNET === 'true';
   const [playing, setPlaying] = useState<boolean>(false);
   const [tokenDataForResale, setTokenDataForResale] = useState<any>(undefined);
   const [, /*offersIndexesData*/ setOffersIndexesData] =

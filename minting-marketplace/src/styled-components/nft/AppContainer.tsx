@@ -22,6 +22,10 @@ export const AppContainerFluid = styled.div<IAppContainerFluidStyled>`
   background-repeat: no-repeat;
   overflow: hidden;
 
+  a {
+    color: ${(props) => (props.primaryColor === '#dedede' ? '#000' : '#fff')};
+  }
+
   @media screen and (max-width: 1024px) {
     background-size: contain;
   }
