@@ -136,6 +136,8 @@ services:
       ALCHEMY_API_KEY: ${alchemy_api_key}
       BASE_DIAMOND_FACTORY_ADDRESS: ${base_diamond_factory_address}
       BASE_DIAMOND_MARKETPLACE_ADDRESS: ${base_diamond_marketplace_address}
+      SEPOLIA_DIAMOND_FACTORY_ADDRESS: ${sepolia_diamond_factory_address}
+      SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS: ${sepolia_diamond_marketplace_address}
     ports:
       - 5001:5001
     depends_on:

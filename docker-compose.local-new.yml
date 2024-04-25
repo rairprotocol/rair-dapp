@@ -144,6 +144,8 @@ services:
       REDIS_HOST: ${redisthhost}
       REDIS_PORT: ${redisport}
       ALCHEMY_API_KEY: ${alchemy_api_key}
+      SEPOLIA_DIAMOND_FACTORY_ADDRESS: ${sepolia_diamond_factory_address}
+      SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS: ${sepolia_diamond_marketplace_address}
     ports:
       - 5001:5001
     depends_on:
