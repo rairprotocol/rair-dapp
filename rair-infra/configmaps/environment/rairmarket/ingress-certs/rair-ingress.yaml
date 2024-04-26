@@ -18,6 +18,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: minting-network
+            name: rair-front
             port:
               number: 80

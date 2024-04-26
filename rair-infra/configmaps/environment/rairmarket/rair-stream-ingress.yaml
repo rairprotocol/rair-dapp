@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: media-service-ingress
+  name: rair-stream-ingress
   annotations:
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/session-cookie-name: "route"
@@ -17,6 +17,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: media-service
+            name: rair-stream
             port: 
               number: 5002

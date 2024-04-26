@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: blockchain-event-listener-env
+  name: rair-sync-env
 data:
   PRODUCTION: "true"
   PINATA_KEY: ${pinata_key}

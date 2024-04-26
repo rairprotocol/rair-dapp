@@ -6,15 +6,15 @@ metadata:
     kompose.version: 1.22.0 (955b78124)
   creationTimestamp: null
   labels:
-    io.kompose.service: blockchain-event-listener
-  name: blockchain-event-listener
+    io.kompose.service: rair-sync
+  name: rair-sync
 spec:
   ports:
     - name: "5001"
       port: 5001
       targetPort: 5001
   selector:
-    io.kompose.service: blockchain-event-listener
+    io.kompose.service: rair-sync
 status:
   loadBalancer: {}
 ---
@@ -27,13 +27,13 @@ metadata:
     dockerfile: version
   creationTimestamp: null
   labels:
-    io.kompose.service: blockchain-event-listener
-  name: blockchain-event-listener
+    io.kompose.service: rair-sync
+  name: rair-sync
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: blockchain-event-listener
+      io.kompose.service: rair-sync
   strategy:
     type: Recreate
   template:
@@ -44,11 +44,11 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.network/rair-local: "true"
-        io.kompose.service: blockchain-event-listener
+        io.kompose.service: rair-sync
     spec:
       containers:
-        - image: rairtechinc/blockchain-event-listener:cb1d2042ecd68d145e82147d71f03acb419b4a22
-          name: blockchain-event-listener
+        - image: rairprotocol/rair-sync:latest
+          name: rair-sync
           imagePullPolicy: Always
           ports:
             - containerPort: 5001
@@ -80,7 +80,7 @@ spec:
                   key: MORALIS_MASTER_KEY_TEST
           envFrom:
           - configMapRef:
-              name: blockchain-event-listener-env
+              name: rair-sync-env
           resources: {}
       imagePullSecrets:
         - name: regcred

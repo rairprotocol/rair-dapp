@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: media-service-env
+  name: rair-stream-env
 data:
   PRODUCTION: "true"
   PINATA_KEY: ""
