@@ -1,21 +1,21 @@
 version: '3.9'
 
 services:
-  rairnode:
-    container_name: 'rairnode'
+  rair-node:
+    container_name: 'rair-node'
     build:
-      context: rairnode/
+      context: rair-node/
       dockerfile: Dockerfile
     volumes:
-      - ./rairnode/db:/usr/src/rairnode/db
-      - ./rairnode/bin/Videos:/usr/src/rairnode/bin/Videos
+      - ./rair-node/db:/usr/src/rair-node/db
+      - ./rair-node/bin/Videos:/usr/src/rair-node/bin/Videos
     environment:
       PRODUCTION: "true"
       MONGO_URI:  ${db}
       MONGO_URI_LOCAL: ${db}
-      GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${rairnode_generate_mongo_uri_with_vault_credential_util}
-      USE_X509_CERT_AUTH: ${VAULT_RAIRNODE_use_x509_cert_auth}
-      MONGO_DB_HOSTNAME: ${RAIRNODE_mongo_db_hostname}
+      GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${rair-node_generate_mongo_uri_with_vault_credential_util}
+      USE_X509_CERT_AUTH: ${VAULT_rair-node_use_x509_cert_auth}
+      MONGO_DB_HOSTNAME: ${rair-node_mongo_db_hostname}
       MONGO_DB_NAME: ${mongo_db_name}
       JWT_SECRET: ${jwt_secret}
       PINATA_KEY: ${pinata_key}
@@ -46,8 +46,8 @@ services:
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
       VAULT_URL: ${VAULT_URL}
-      VAULT_RAIRNODE_APP_ROLE_ID: ${VAULT_RAIRNODE_APP_ROLE_ID}
-      VAULT_RAIRNODE_APP_ROLE_SECRET_ID: ${VAULT_RAIRNODE_APP_ROLE_SECRET_ID}
+      VAULT_rair-node_APP_ROLE_ID: ${VAULT_rair-node_APP_ROLE_ID}
+      VAULT_rair-node_APP_ROLE_SECRET_ID: ${VAULT_rair-node_APP_ROLE_SECRET_ID}
       REDIS_HOST: ${redisthhost}
       REDIS_PORT: ${redisport}
       SESSION_SECRET: ${session_secret}
@@ -75,10 +75,10 @@ services:
       - rair-redis
     networks:
       - rair-local
-  blockchain-networks:
-    container_name: 'blockchain-networks'
+  rair-sync:
+    container_name: 'rair-sync'
     build:
-      context: blockchain-networks-service/
+      context: rair-sync-service/
       dockerfile: Dockerfile
     environment:
       PRODUCTION: "true"
@@ -130,7 +130,7 @@ services:
       ASTAR_MAINNET_DIAMOND_FACTORY_ADDRESS: ${astar_diamond_factory_address}
       ASTAR_MAINNET_DIAMOND_MARKETPLACE_ADDRESS: ${astar_diamond_marketplace_address}
       SENTRY_DSN: ${sentry_dsn}
-      BASE_RAIRNODE_URL: ${base_rairnode_url}
+      BASE_rair-node_URL: ${base_rair-node_url}
       MATIC_TESTNET_RPC: ${matic_testnet_rpc}
       MATIC_MAINNET_RPC: ${matic_mainnet_rpc}
       BINANCE_MAINNET_RPC: ${binance_mainnet_rpc}
@@ -148,18 +148,18 @@ services:
     ports:
       - 5001:5001
     depends_on:
-      - rairnode
+      - rair-node
     networks:
       - rair-local
-  media-service:
-    container_name: 'media-service'
+  rair-stream:
+    container_name: 'rair-stream'
     build:
-      context: media-service/
+      context: rair-stream/
       dockerfile: Dockerfile
     environment:
       PRODUCTION: "true"
       MEDIA_SERVICE_PORT: ${media_service_port}
-      BASE_RAIRNODE_URL: ${base_rairnode_url}
+      BASE_rair-node_URL: ${base_rair-node_url}
       GCP_PROJECT_ID: ${gcp_project_id}
       GCP_IMAGE_BUCKET_NAME: ${gcp_image_bucket_name}
       GCP_VIDEO_BUCKET_NAME: ${gcp_video_bucket_name}
@@ -194,10 +194,10 @@ services:
       - 6379:6379
     networks:
       - rair-local
-  minting-network:
-    container_name: minting-network
+  rair-front:
+    container_name: rair-front
     build:
-      context: minting-marketplace
+      context: rair-front
       dockerfile: Dockerfile.prod
     environment:
       VITE_SENTRY_ENABLED: ${sentry_enabled}
@@ -215,7 +215,7 @@ services:
     networks:
       - rair-local
     depends_on:
-      - rairnode
+      - rair-node
 networks:
   rair-local:
     driver: bridge
