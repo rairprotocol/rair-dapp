@@ -78,7 +78,7 @@ services:
   rair-sync:
     container_name: 'rair-sync'
     build:
-      context: rair-sync-service/
+      context: rair-sync/
       dockerfile: Dockerfile
     environment:
       PRODUCTION: "true"
