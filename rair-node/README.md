@@ -1,8 +1,15 @@
+![Banner](../assets/img/banner.webp)
+[![RAIRmarket](https://img.shields.io/badge/RAIR-market-C67FD1)](https://rair.market)
+[![RAIRprotocol](https://img.shields.io/badge/RAIR-protocol-C67FD1)](https://rairprotocol.org)
+![License](https://img.shields.io/badge/License-Apache2.0-yellow)
+[![Discord](https://img.shields.io/badge/Discord-4950AF)](https://discord.gg/vuBUfB7w)
+[![Twitter](https://img.shields.io/twitter/follow/rairprotocol)](https://twitter.com/rairprotocol)
+
 # RAIR backend
 
 Main backend component for a RAIR system, mainly focused on API calls, small IPFS uploads and database queries.  
-For the backend component in charge of processing blockchain data, see Syncing Service.  
-For the backend component in charge of video uploading and processing, see Media Service.  
+For the backend component in charge of processing blockchain data, see RAIRsync.  
+For the backend component in charge of video uploading and processing, see RAIRstream.  
 
 Reliant on Express, Mongoose and Alchemy for it's various functionalities.  
 
@@ -11,67 +18,79 @@ Provide all necessary environment variables and then
 ```
     npm i && npm start
 ```
-Alternatively you can use the provided Dockerfile to create an image.  
+Alternatively you can use the provided Dockerfile to create an image. 
 The benefits of using the Dockerfile are that it uses the latest OFAC list.
 
 # Environment variables
-| Name | Description |
-| --- | --- |
-| PRODUCTION | Enable / disable production mode |
-| MONGO_URI | URI for database in production mode |
-| MONGO_URI_LOCAL | URI for database in development mode |
-| MONGO_DB_HOSTNAME | Database hostname |
-| MONGO_DB_NAME | Database name |
-| GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL |  |
-| USE_X509_CERT_AUTH |  |
-| PINATA_KEY | (Deprecated) Piñata API key |
-| PINATA_SECRET | (Deprecated) Piñata Secret |
-| ADMIN_NETWORK | Admin blockchain |
-| ADMIN_CONTRACT | Admin contract |
-| SUPER_ADMIN_VAULT_STORE | Vault data for Super Admin List |
-| SERVICE_HOST | Service hostname |
-| DEFAULT_PRODUCT_COVER | Url for default product cover |
-| GCP_PROJECT_ID |  |
-| GCP_IMAGE_BUCKET_NAME |  |
-| GCP_VIDEO_BUCKET_NAME |  |
-| GCP_GATEWAY |  |
-| GCP_CREDENTIALS |  |
-| IPFS_SERVICE |  |
-| IPFS_GATEWAY |  |
-| IPFS_API |  |
-| PINATA_GATEWAY |  |
-| MATIC_TESTNET_RPC |  |
-| MATIC_MAINNET_RPC |  |
-| BINANCE_MAINNET_RPC |  |
-| BINANCE_TESTNET_RPC |  |
-| ETHEREUM_MAINNET_RPC |  |
-| ETHEREUM_TESTNET_GOERLI_RPC |  |
-| ASTAR_MAINNET_RPC |  |
-| MONGO_LOG_COLLECTION |  |
-| LOG_LEVEL |  |
-| VAULT_URL |  |
-| VAULT_RAIRNODE_APP_ROLE_ID |  |
-| VAULT_RAIRNODE_APP_ROLE_SECRET_ID |  |
-| REDIS_HOST |  |
-| REDIS_PORT |  |
-| SESSION_SECRET |  |
-| SESSION_TTL |  |
-| SENTRY_DSN |  |
-| BASE_BCN_URL |  |
-| ZOOM_API_KEY |  |
-| ZOOM_API_SECRET |  |
-| ALCHEMY_API_KEY |  |
-| WITHDRAWER_PRIVATE_KEY |  |
-| APP_NAME |  |
-| GOERLI_DIAMOND_MARKETPLACE_ADDRESS |  |
-| MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS |  |
-| MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS |  |
-| ASTAR_DIAMOND_MARKETPLACE_ADDRESS |  |
-| AWS_ACCESS_KEY_ID |  |
-| AWS_SECRET_ACCESS_KEY |  |
-| FILEBASE_BUCKET |  |
-| YOTI_CLIENT_ID |  |
-
+| Name | Type| Description |
+| --- | --- | --- |
+| *_GATEWAY | String| Blockchain Explorer Gateway|
+| *_RPC | String| RPC Endpoint |
+| *_FACTORY_ADDRESS | String | 0xAddress |
+| *_DIAMOND_FACTORY_ADDRESS | String| 0xAddress |
+| *_DIAMOND_MARKETPLACE_ADDRESS | String| 0xAddress |
+| *_MINTER_ADDRESS | String| 0xAddress |
+| *_RESALE_ADDRESS | String| 0xAddress |
+| *_CREDIT_ADDRESS | String| 0xAddress |
+| *_GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL | Boolean| Generate Database URI  |
+| ADMIN_NFT_CHAIN | String| Admin blockchain |
+| ADMIN_CONTRACT | String| 0xAddress |
+| ALCHEMY_API_KEY| String | Required For Blockchain Sync |
+| APP_NAME | String |  |
+| AWS_ACCESS_KEY_ID | String | ID |
+| AWS_SECRET_ACCESS_KEY | String | Secret |
+| BASE_BCN_URL | String | Locate Blockchain-Networks service from Rairnode |
+| BASE_RAIRNODE_URL | String | Locate Rairnode from Media-Service|
+| DBUSER | String | Remote Mongo Username|
+| DBPASS | String | Remote Mongo Password|
+| DBHOST | String | Remote Mongo Hostname|
+| DEFAULT_PRODUCT_COVER | String | Image URL for NFTs that have no metadata|
+| FILEBASE_BUCKET | String | IPFS STORAGE  |
+| GCP_PROJECT_ID | String | ID for a GCP project |
+| GCP_IMAGE_BUCKET_NAME | String | For Image Storage |
+| GCP_VIDEO_BUCKET_NAME | String | For Video Storage  |
+| GCP_GATEWAY | String | Gateway to GCP storage API |
+| GCP_CREDENTIALS | String | Private key for authenticating with GCP |
+| HOSTNAME | String | Docker Container Hostname|
+| INFURA_PROJECT_ID | String | (DEPRECIATED)|
+| IPFS_SERVICE | String | Pinata or IPFS |
+| IPFS_GATEWAY | String | URL |
+| IPFS_API | String | URL |
+| MONGO_URI | String | URI for database in production mode |
+| MONGO_URI_LOCAL | String | URI for database in development mode |
+| MONGO_DB_HOSTNAME | String | Database hostname |
+| MONGO_DB_NAME | String | Database name |
+| PINATA_KEY | String | (Deprecated) Piñata API key |
+| PINATA_SECRET | String | (Deprecated) Piñata Secret |
+| PINATA_GATEWAY | String | (Depreciated) Pinata Gateway |
+| PRODUCTION | Boolean | Enable / disable production mode
+| REDIS_HOST | String | Hostname |
+| REDIS_PORT | Int | Port Number |
+| SESSION_SECRET | String |  Sign user sessions to prevent tampering |
+| SESSION_TTL | Int | Lifespan in Seconds |
+| SENTRY_DSN | String |  |
+| SENTRY_ENABLED | Boolean | T/F |
+| SENTRY_ENDPOINT | String | URL|
+| SENTRY_TRACE_RATE | Float | Rate |
+| SENTRY_RELEASE | String | Build|
+| SYNC_CONTRACT_REPEAT_EVERY |Int | Long-term Sync|
+| SYNC_CONTRACT_TASK_INTERVAL| int| Long-term Sync|
+| SUPER_ADMIN_VAULT_STORE | String | Vault data for Super Admin List |
+| SERVICE_HOST | String | Service hostname |
+| MEDIA_SERVICE_PORT | Int | Media-Service Port Number|
+| MONGO_LOG_COLLECTION | String|  |
+| LOCALDBUSER | String | Local Mongo Username|
+| LOCALDBPASS | String | Local Mongo Password
+| LOCALDBHOST | String | Local Mongo Hostname|
+| LOG_LEVEL | Int | (0-6) Controls Log Verbosity |
+| VAULT_URL | String | For connecting to remote Vault cluster |
+| VAULT_*_APP_ROLE_ID | String | RoleID  |
+| VAULT_*_APP_ROLE_SECRET_ID | String | SecretID |
+| VAULT_*_USE_X509_CERT_AUTH | Boolean | For Passwordless Auth |
+| WITHDRAWER_PRIVATE_KEY | String |  |
+| YOTI_CLIENT_ID | String | ID |
+| ZOOM_API_KEY | String | (DEPRECIATED) |
+| ZOOM_API_SECRET | String | (DEPRECIATED) |
 
 # API
 * /api
@@ -175,7 +194,6 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
         * [x] /file - POST - Insert a media file in the database ([details](readme/current/upload/upload_file.md))
 
 # Contributors
-\
 Valerii Kovalov \
 Micahel Bielikov \
 Yehor Boromazov \
