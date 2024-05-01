@@ -87,7 +87,7 @@ const contractAddresses: ContractAddressesType = {
   '0x89': {
     // Matic Mainnet
     factory: undefined,
-    erc777: '0xd441f95291dc79ce3f1d9c9e27f1fd60cf7cfcc9',
+    erc777: '0x2b0fFbF00388f9078d5512256c43B983BB805eF8',
     minterMarketplace: undefined,
     diamondFactory: (import.meta.env.VITE_DIAMONDS_ENABLED === 'true' &&
       '0x2469f47b61cb9c1724ba816e861475a89bd8cf69') as string,
@@ -109,9 +109,9 @@ const contractAddresses: ContractAddressesType = {
     creditHandler: undefined
   },
   '0x250': {
-    // Ethereum Mainnet
+    // Astar Mainnet
     factory: undefined,
-    erc777: '0x22c2aF337cd3D9c6C0aa533D519163de9106DeBe',
+    erc777: '0x2b0fFbF00388f9078d5512256c43B983BB805eF8',
     minterMarketplace: undefined,
     diamondFactory: '0xC475c824715c0f0DcbC936F5c644254159e95439',
     diamondMarketplace: '0xd402CB64A138B2F50C3e810d4fD71344583173DE',
@@ -122,7 +122,7 @@ const contractAddresses: ContractAddressesType = {
   '0x2105': {
     // Base Mainnet
     factory: undefined,
-    erc777: '0x2b1FE33Cb7264dBa6331F54012f04133395fDe44',
+    erc777: '0x2b0fFbF00388f9078d5512256c43B983BB805eF8',
     minterMarketplace: undefined,
     diamondFactory: '0x1F89Cc515dDc53dA2fac5B0Ca3b322066A71E6BA',
     diamondMarketplace: '0x58795f50b50d492C4252B9BBF78485EF4043FF3E',
