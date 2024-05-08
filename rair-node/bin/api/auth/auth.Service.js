@@ -66,16 +66,20 @@ module.exports = {
         return next(new AppError('User not found.', 404));
       }
 
-      // Check OFAC blocklist
-      // Read the file content
-      const content = fs.readFileSync(
-        './bin/integrations/ofac/sanctioned_addresses_ETH.json',
-        'utf8',
-      );
-      const ofacBlocklist = JSON.parse(content).map((address) => address.toLowerCase());
-      if (ofacBlocklist.includes(ethAddress)) {
-        await User.findByIdAndUpdate(userData._id, { $set: { blocked: true } });
-        userData.blocked = true;
+      try {
+        // Check OFAC blocklist
+        // Read the file content
+        const content = fs.readFileSync(
+          './bin/integrations/ofac/sanctioned_addresses_ETH.json',
+          'utf8',
+        );
+        const ofacBlocklist = JSON.parse(content).map((address) => address.toLowerCase());
+        if (ofacBlocklist.includes(ethAddress)) {
+          await User.findByIdAndUpdate(userData._id, { $set: { blocked: true } });
+          userData.blocked = true;
+        }
+      } catch (error) {
+        log.error("Cannot read OFAC list");
       }
       if (userData.blocked) {
         log.error(`Blocked user tried to login: ${ethAddress}`);
