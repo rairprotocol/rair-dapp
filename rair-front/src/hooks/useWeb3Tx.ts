@@ -152,7 +152,7 @@ const useWeb3Tx = () => {
         if (transactionReceipt && transactionReceipt.blockNumber) {
           handleReceipt(transactionReceipt.transactionHash, options?.callback);
         }
-        return true;
+        return transactionReceipt.transactionHash;
       }
       return paramsValidation;
     },

@@ -4,6 +4,8 @@ import axios from 'axios';
 import { utils } from 'ethers';
 import { isAddress } from 'ethers/lib/utils';
 
+import BatchERC20Transfer from './BatchERC20Transfer';
+
 import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
@@ -301,6 +303,7 @@ const ImportExternalContract = () => {
           })}
         </tbody>
       </table>
+      <BatchERC20Transfer />
     </div>
   );
 };
