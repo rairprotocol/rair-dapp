@@ -20,6 +20,8 @@ export const ImageLazy: React.FC<IImageLazy> = ({
 
   const onLoad = (event) => {
     event.target.classList.add('loaded');
+
+    event.target.classList.add('has-error');
   };
 
   const onError = (event) => {
