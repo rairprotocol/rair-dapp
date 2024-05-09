@@ -82,7 +82,8 @@ const BatchERC20Transfer = () => {
     csvParser(file[0], (data) => {
       setData(
         data.map((item) => {
-          return { ...item, Status: 'Ready', TxHash: '' };
+          const { Name, Address, Amount } = item;
+          return { Name, Address, Amount, Status: 'Ready', TxHash: '' };
         })
       );
     });
@@ -95,13 +96,13 @@ const BatchERC20Transfer = () => {
     }
     const aux = [...data];
     for await (const dataItem of aux) {
-      if (dataItem.Status !== 'Ready') {
+      if (dataItem.Status !== 'Ready' || !dataItem.Amount) {
         continue;
       }
       reactSwal.fire({
         icon: 'info',
         title: 'Preparing transaction',
-        html: `Sending ${dataItem.Amount} to ${dataItem.Name} (${dataItem.Address})`,
+        html: `Sending ${dataItem.Amount} tokens to ${dataItem.Name} (${dataItem.Address})`,
         showConfirmButton: false
       });
       const txHash = await web3TxHandler(erc777Instance, 'transfer', [
