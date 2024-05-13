@@ -6,7 +6,7 @@ import pathlib
 import json
 
 FEATURE_TYPE_TEXT = "Digital Currency Address - "
-NAMESPACE = {'sdn': 'http://www.un.org/sanctions/1.0'}
+NAMESPACE = {'sdn': 'https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ADVANCED_XML'}
 
 # List of assets that have been sanctioned by the OFAC.
 # Possible assets be seen by grepping the sdn_advanced.xml file for "Digital Currency Address".
