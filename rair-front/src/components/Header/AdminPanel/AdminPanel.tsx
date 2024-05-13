@@ -6,6 +6,7 @@ import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
+import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 
 const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
   const { minterInstance, diamondMarketplaceInstance, factoryInstance } =
@@ -32,60 +33,48 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
             backgroundColor: primaryColor
           }}
           className="container-admin-panel">
-          {adminPanel &&
+          {
+          adminPanel &&
             adminRights === true &&
             !creatorViewsDisabled &&
             [
               {
-                name: <i className="fas fa-photo-video" />,
-                route: '/all',
-                disabled: !loggedIn
-              },
-              {
-                name: <i className="fa fa-shopping-cart" aria-hidden="true" />,
-                route: '/resale-offers',
-                disabled: !loggedIn
-              },
-              {
-                name: <i className="fa fa-shopping-cart" aria-hidden="true" />,
-                route: '/on-sale',
-                disabled: !loggedIn
-              },
-              {
-                name: <i className="fa fa-user-secret" aria-hidden="true" />,
+                name: <TooltipBox position={'top'} title="Server Settings"> <div>
+                  <i className="fa fa-cog" aria-hidden="true" /></div></TooltipBox>,
                 route: '/admin/fileUpload',
                 disabled: !loggedIn
               },
+              // {
+              //   name: <TooltipBox position={'top'} title="Imprort / Export"><div><i className="fas fa-exchange"></i></div></TooltipBox>,
+              //   route: '/importExternalContracts',
+              //   disabled: !loggedIn
+              // },
               {
-                name: <i className="fas fa-city" />,
-                route: '/factory',
+                name:  <TooltipBox position={'top'} title="Import / Export / Transfer"><div><i className="fas fa-city" /></div></TooltipBox>,
+                route: '/admin/transferNFTs',
                 disabled: factoryInstance === undefined
               },
               {
-                name: <i className="fas fa-shopping-basket" />,
-                route: '/minter',
-                disabled: minterInstance === undefined
+                name:  <TooltipBox position={'top'} title="Streaming">
+                <div style={{width: "70px"}}><i className="fas fa-film" /></div>
+              </TooltipBox>,
+                route: '/user/videos',
+                disabled: !loggedIn
               },
               {
-                name: <i className="fas fa-gem" />,
+                name: <TooltipBox position={'top'} title="Old Market (diamond)">
+                <div style={{width: "70px"}}><i className="fas fa-gem" /></div>
+              </TooltipBox>,
                 route: '/diamondMinter',
                 disabled: diamondMarketplaceInstance === undefined
               },
               {
-                name: <i className="fas fa-exchange" />,
-                route: '/admin/transferNFTs',
+                name: <TooltipBox position={'top'} title="Old Market (classic)">
+                  <div style={{width: "70px"}}><i className="fa fa-shopping-cart" aria-hidden="true" /></div>
+                </TooltipBox>,
+                route: '/on-sale',
                 disabled: !loggedIn
               },
-              {
-                name: <i className="fas fa-file-import" />,
-                route: '/importExternalContracts',
-                disabled: !loggedIn
-              },
-              {
-                name: <i className="fas fa-film" />,
-                route: '/user/videos',
-                disabled: !loggedIn
-              }
             ].map((item, index) => {
               if (!item.disabled) {
                 return (

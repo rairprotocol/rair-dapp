@@ -233,7 +233,7 @@ const ImportExternalContract = () => {
       <br />
       <hr />
       <div className="row mb-5">
-        <div className="text-start col-10 h4">User data</div>
+        <div className="text-start col-10 h4">MANAGE USER</div>
         <button
           onClick={async () => {
             axios
