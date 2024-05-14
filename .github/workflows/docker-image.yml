@@ -1,0 +1,56 @@
+name: Build and Push Docker Image to Docker Hub
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - dev
+
+jobs:
+    if_merged:
+      if: github.event.pull_request.merged == true
+      runs-on: ubuntu-latest
+      steps:
+        - name: checkout repository
+          uses: actions/checkout@v4
+          with:
+            ref: 'dev'
+
+        - name: login to docker registry
+          uses: docker/login-action@v3
+          with:
+            username: ${{secrets.DOCKERHUB_USERNAME}}
+            password: ${{secrets.DOCKERHUB_TOKEN}}
+
+        - name: build and push rair-node docker image to registry
+          uses: docker/build-push-action@v5
+          with:
+            context: rair-node/
+            push: true
+            tags: rairprotocol/rair-node:${{github.sha}}
+
+        - name: build and push rair-front docker image to registry
+          run: cp rair-front/.env.sample rair-front/.env
+        - name: build rair-front docker image
+          run: sudo docker build -t rair-front:${{github.sha}} -f rair-front/Dockerfile.prod rair-front
+        - name: tag image
+          run: docker tag rair-front:${{github.sha}} rairprotocol/rair-front:${{github.sha}}
+        - name: Docker push
+          run: docker push ${{secrets.DOCKERHUB_USERNAME}}/rair-front:${{github.sha}}
+
+            
+        - name: build and push rair-stream docker image to registry
+          uses: docker/build-push-action@v5
+          with:
+            context: rair-stream/
+            push: true
+            tags: rairprotocol/rair-stream:${{github.sha}}
+
+        - name: build and push rair-sync docker image to registry
+          uses: docker/build-push-action@v5
+          with:
+            context: rair-sync/
+            push: true
+            tags: rairprotocol/rair-sync:${{github.sha}}
+
