@@ -52,7 +52,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
               {
                 name:  <TooltipBox position={'top'} title="Import / Export / Transfer"><div><i className="fas fa-city" /></div></TooltipBox>,
                 route: '/admin/transferNFTs',
-                disabled: factoryInstance === undefined
+                disabled: !loggedIn
               },
               {
                 name:  <TooltipBox position={'top'} title="Streaming">
