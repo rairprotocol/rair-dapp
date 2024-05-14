@@ -32,6 +32,7 @@ import ListCollections from './components/creatorStudio/ListCollections';
 import WorkflowSteps from './components/creatorStudio/workflowSteps';
 import DemoMediaUpload from './components/DemoMediaUpload/DemoMediaUpload';
 import Footer from './components/Footer/Footer';
+import ImportAndTransfer from './components/adminViews/ImportAndTransfer';
 import WelcomeHeader from './components/FrontPage/WelcomeHeader';
 import MainHeader from './components/Header/MainHeader';
 import IframePage from './components/iframePage/IframePage';
@@ -568,7 +569,7 @@ function App() {
                   // Token transfers
                   {
                     path: '/admin/transferNFTs',
-                    content: TransferTokens,
+                    content: ImportAndTransfer,
                     constraint: loggedIn && !creatorViewsDisabled
                   },
                   // Resale offers page
