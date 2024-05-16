@@ -28,16 +28,22 @@ jobs:
           with:
             context: rair-node/
             push: true
-            tags: rairprotocol/rair-node:${{github.sha}}
+            tags: |
+              ${{secrets.DOCKERHUB_USERNAME}}/rair-node:${{github.sha}}
+              ${{secrets.DOCKERHUB_USERNAME}}/rair-node:latest
 
         - name: build and push rair-front docker image to registry
           run: cp rair-front/.env.sample rair-front/.env
         - name: build rair-front docker image
           run: sudo docker build -t rair-front:${{github.sha}} -f rair-front/Dockerfile.prod rair-front
         - name: tag image
-          run: docker tag rair-front:${{github.sha}} rairprotocol/rair-front:${{github.sha}}
+          run: |
+            docker tag rair-front:${{github.sha}} ${{secrets.DOCKERHUB_USERNAME}}/rair-front:${{github.sha}}
+            docker tag rair-front:${{github.sha}} ${{secrets.DOCKERHUB_USERNAME}}/rair-front:latest
         - name: Docker push
-          run: docker push ${{secrets.DOCKERHUB_USERNAME}}/rair-front:${{github.sha}}
+          run: |
+            docker push ${{secrets.DOCKERHUB_USERNAME}}/rair-front:${{github.sha}}
+            docker push ${{secrets.DOCKERHUB_USERNAME}}/rair-front:latest
 
             
         - name: build and push rair-stream docker image to registry
@@ -45,11 +51,15 @@ jobs:
           with:
             context: rair-stream/
             push: true
-            tags: rairprotocol/rair-stream:${{github.sha}}
+            tags: |
+              ${{secrets.DOCKERHUB_USERNAME}}/rair-stream:${{github.sha}}
+              ${{secrets.DOCKERHUB_USERNAME}}/rair-stream:latest
 
         - name: build and push rair-sync docker image to registry
           uses: docker/build-push-action@v5
           with:
             context: rair-sync/
             push: true
-            tags: rairprotocol/rair-sync:${{github.sha}}
+            tags: |
+              ${{secrets.DOCKERHUB_USERNAME}}/rair-sync:${{github.sha}}
+              ${{secrets.DOCKERHUB_USERNAME}}/rair-sync:latest
