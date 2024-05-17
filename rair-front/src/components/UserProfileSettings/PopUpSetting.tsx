@@ -10,7 +10,7 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 // import { TUsersInitialState } from '../../ducks/users/users.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
-import { VerifiedIcon } from '../../images';
+import { RairFavicon, RairTokenLogo, VerifiedIcon } from '../../images';
 import chainData from '../../utils/blockchainData';
 import LoadingComponent from '../common/LoadingComponent';
 
@@ -21,6 +21,7 @@ import {
   SvgUpload,
   SvgUserIcon
 } from './SettingsIcons/SettingsIcons';
+import { TooltipBox } from '../common/Tooltip/TooltipBox';
 
 const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const settingBlockRef = useRef();
@@ -33,6 +34,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const [editMode, setEditMode] = useState(false);
   const [userBalance, setUserBalance] = useState<string>('');
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
+  const [userBalanceTrigger, setUserBalanceTrigger] = useState<boolean>(false);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -144,7 +146,6 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   return (
     <>
       <button
-        onClick={() => setTriggerState((prev) => !prev)}
         className={`button profile-btn ${
           primaryColor === '#dedede' ? 'rhyno' : ''
         }`}
@@ -158,6 +159,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             primaryColor === '#dedede' ? 'rhyno' : ''
           }`}></div>
         <div
+        onClick={() => setUserBalanceTrigger((prev) => !prev)}
           className={`profile-user-balance ${
             primaryColor === '#dedede' ? 'rhyno' : ''
           }`}>
@@ -169,6 +171,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
           )}
         </div>
         <div
+          onClick={() => setTriggerState((prev) => !prev)}
           className="profile-btn-img"
           style={{
             height: '100%',
@@ -214,6 +217,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
           />
         )}
         <div
+        onClick={() => setTriggerState((prev) => !prev)}
           style={{
             display: 'flex',
             width: '140px',
@@ -248,6 +252,106 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             }}></i>
         </div>
       </button>
+      <Popup
+        className="popup-settings-block"
+        open={userBalanceTrigger}
+        position="bottom center"
+        closeOnDocumentClick
+        onClose={() => {
+          userBalanceTrigger(false);
+        }}>
+        <div
+          ref={settingBlockRef}
+          className={`user-popup ${primaryColor === '#dedede' ? 'rhyno' : ''}`}
+          style={{
+            background: `${
+              primaryColor === '#dedede'
+                ? '#fff'
+                : `color-mix(in srgb, ${primaryColor}, #888888)`
+            }`,
+            borderRadius: 16,
+            filter: 'drop-shadow(0.4px 0.5px 1px black)',
+            border: `${
+              primaryColor === '#dedede' ? '1px solid #DEDEDE' : 'none'
+            }`,
+            marginTop: `${selectedChain && showAlert ? '65px' : '12px'}`
+          }}>
+            <div style={{
+              padding: "10px",
+              color: `${primaryColor === '#dedede' ? "#000" : "#fff"}`,
+              display: "flex"
+            }}> 
+              <div style={{
+                display: 'flex',
+                flexDirection: "column",
+                justifyContent: 'space-evenly'
+              }}>
+              <div style={{
+                display: "flex",
+                marginBottom: "15px"
+              }}>
+                <div>
+                {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance}
+                </div>
+                <div>
+                {chainData[currentChain] && (
+            <img style={{
+              height: "25px",
+              marginLeft: "15px"
+            }} src={chainData[currentChain]?.image} alt="logo" />
+          )}
+                </div>
+              </div>
+              <div style={{
+                display: "flex"
+              }}>
+                <div>
+                {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance}
+                </div>
+                <div>
+                <img style={{
+              height: "25px",
+              marginLeft: "15px"
+            }} src={primaryColor === '#dedede' ?  RairFavicon : RairTokenLogo} alt="logo" />
+                </div>
+              </div>
+              </div>
+              <div style={{
+                marginLeft: "25px",
+                display: "flex",
+                flexDirection: "column",
+
+              }}>
+                <div style={{
+                  marginBottom: "10px"
+                }} className="user-new-balance-title-text">
+                <div style={{
+                  fontWeight: 'bold',
+                  fontSize: '12px'
+                }}>Exchange rate</div>
+                <div style={{
+                  fontSize: '14px'
+                }}>50K RAIR/bETH</div>
+                </div>
+                <div>
+                <TooltipBox position={'bottom'} title="Coming soon!">
+                  <button style={{
+                    background: "#7762D7",
+                    color: "#fff",
+                    border: "1px solid #000",
+                    borderRadius: "12px",
+                    width: "120px",
+                    height: '50px',
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}>Top up</button>
+                  </TooltipBox>
+                </div>
+              </div>
+            </div>
+        </div>
+      </Popup>
       <Popup
         className="popup-settings-block"
         open={triggerState}
