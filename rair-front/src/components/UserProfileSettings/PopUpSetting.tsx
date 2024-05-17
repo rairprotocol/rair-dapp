@@ -163,9 +163,12 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
           className={`profile-user-balance ${
             primaryColor === '#dedede' ? 'rhyno' : ''
           }`}>
-          <div>
+            <img style={{
+              marginRight: "5px"
+            }} src={primaryColor === '#dedede' ?  RairFavicon : RairTokenLogo} alt="logo" />
+          {/* <div>
             {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance}
-          </div>
+          </div> */}
           {chainData[currentChain] && (
             <img src={chainData[currentChain]?.image} alt="logo" />
           )}
