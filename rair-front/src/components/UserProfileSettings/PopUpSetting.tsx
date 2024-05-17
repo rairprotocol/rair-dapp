@@ -166,9 +166,6 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             <img style={{
               marginRight: "5px"
             }} src={primaryColor === '#dedede' ?  RairFavicon : RairTokenLogo} alt="logo" />
-          {/* <div>
-            {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance}
-          </div> */}
           {chainData[currentChain] && (
             <img src={chainData[currentChain]?.image} alt="logo" />
           )}
