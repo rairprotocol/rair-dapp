@@ -199,16 +199,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // setTitle('Welcome');
-    if (import.meta.env.NODE_ENV === 'development') {
-      window.gotoRouteBackdoor = navigate;
-      window.adminAccessBackdoor = (boolean) => {
-        dispatch(setAdminRights(boolean));
-      };
-    }
-  }, [dispatch, navigate]);
-
-  useEffect(() => {
     btnCheck();
   }, [btnCheck]);
 

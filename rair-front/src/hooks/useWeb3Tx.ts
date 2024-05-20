@@ -7,7 +7,6 @@ import { encodeFunctionData } from 'viem';
 import useSwal from './useSwal';
 
 import { RootState } from '../ducks';
-import { setChainId } from '../ducks/contracts/actions';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../ducks/users/users.types';
 import chainData from '../utils/blockchainData';
@@ -293,6 +292,27 @@ const useWeb3Tx = () => {
     }
   };
 
+  const web3TxSignMessage = useCallback(
+    async (message): Promise<any> => {
+      if (!currentUserAddress) {
+        console.error('Login required to sign messages');
+        return '';
+      }
+      switch (loginType) {
+        case 'metamask':
+          return await window.ethereum.request({
+            method: 'personal_sign',
+            params: [message, currentUserAddress]
+          });
+        case 'web3auth':
+          return programmaticProvider?.signMessage(message);
+        default:
+          reactSwal.fire('Error', 'Please login', 'error');
+      }
+    },
+    [programmaticProvider, currentUserAddress, loginType, reactSwal]
+  );
+
   const web3TxHandler = useCallback(
     async (
       contract: Contract,
@@ -354,7 +374,8 @@ const useWeb3Tx = () => {
   return {
     correctBlockchain,
     web3Switch,
-    web3TxHandler
+    web3TxHandler,
+    web3TxSignMessage
   };
 };
 
