@@ -115,7 +115,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                 {/* {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance} */}
                 </div>
                 <div>
-                {chainData[currentChain] && (
+                {currentChain && chainData[currentChain] && (
             <img style={{
               height: "25px",
               marginLeft: "15px"
