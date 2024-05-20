@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { parseUnits } from 'ethers/lib/utils';
+import { formatEther, parseUnits } from 'ethers/lib/utils';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
@@ -15,10 +15,10 @@ const LicenseExchange = () => {
   const [userAddress, setUserAddress] = useState('');
   const [signedHash, setSignedhash] = useState('');
 
-  const { licenseExchangeInstance, erc777Instance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { licenseExchangeInstance, erc777Instance, currentUserAddress } =
+    useSelector<RootState, ContractsInitialType>(
+      (store) => store.contractStore
+    );
 
   const { primaryButtonColor, secondaryButtonColor, textColor } = useSelector<
     RootState,
@@ -58,13 +58,43 @@ const LicenseExchange = () => {
   ]);
 
   const purchaseLicense = useCallback(async () => {
-    if (!licenseExchangeInstance) {
+    if (!licenseExchangeInstance || !erc777Instance) {
       return;
     }
+    const tokenPriceBigNumber = parseUnits(tokenPrice.toString(), 18);
+    rSwal.fire({
+      title: 'Checking allowance',
+      html: `Please wait`,
+      showConfirmButton: false
+    });
+    const allowance = await web3TxHandler(erc777Instance, 'allowance', [
+      currentUserAddress,
+      licenseExchangeInstance.address
+    ]);
+    if (allowance.lt(tokenPriceBigNumber)) {
+      rSwal.fire({
+        title: 'Awaiting approval',
+        html: `Approve the exchange contract to take ${formatEther(
+          tokenPriceBigNumber
+        )}`,
+        showConfirmButton: false
+      });
+      await web3TxHandler(erc777Instance, 'approve', [
+        licenseExchangeInstance.address,
+        tokenPriceBigNumber
+      ]);
+    }
+    rSwal.fire({
+      title: 'Minting License NFT',
+      html: `Minting License #${tokenIndex} for ${formatEther(
+        tokenPriceBigNumber
+      )} tokens`,
+      showConfirmButton: false
+    });
     if (
       await web3TxHandler(licenseExchangeInstance, 'mint', [
         tokenIndex,
-        parseUnits(tokenPrice.toString(), 18),
+        tokenPriceBigNumber,
         signedHash
       ])
     ) {
@@ -76,7 +106,9 @@ const LicenseExchange = () => {
     tokenIndex,
     tokenPrice,
     signedHash,
-    rSwal
+    rSwal,
+    erc777Instance,
+    currentUserAddress
   ]);
 
   const connectERC20 = useCallback(async () => {
