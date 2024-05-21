@@ -5,6 +5,7 @@ import { formatEther, parseUnits } from 'ethers/lib/utils';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import InputField from '../common/InputField';
@@ -19,6 +20,10 @@ const LicenseExchange = () => {
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
     );
+
+  const { adminRights } = useSelector<RootState, TUsersInitialState>(
+    (store) => store.userStore
+  );
 
   const { primaryButtonColor, secondaryButtonColor, textColor } = useSelector<
     RootState,
@@ -144,14 +149,16 @@ const LicenseExchange = () => {
           setter={setTokenPrice}
         />
       </div>
-      <div className="col-12 col-md-6">
-        <InputField
-          customClass="rounded-rair form-control"
-          label={'User address'}
-          getter={userAddress}
-          setter={setUserAddress}
-        />
-      </div>
+      {adminRights && (
+        <div className="col-12 col-md-6">
+          <InputField
+            customClass="rounded-rair form-control"
+            label={'User address'}
+            getter={userAddress}
+            setter={setUserAddress}
+          />
+        </div>
+      )}
       <div className="col-12">
         <InputField
           customClass="rounded-rair form-control"
@@ -161,20 +168,24 @@ const LicenseExchange = () => {
         />
       </div>
       <hr className="my-2" />
-      <button
-        className="btn col-12 col-md-3 rair-button"
-        disabled={userAddress === ''}
-        style={{ background: secondaryButtonColor, color: textColor }}
-        onClick={generateLicenseHash}>
-        Sign Hash (as admin)
-      </button>
-      <button
-        className="btn col-12 col-md-3 rair-button"
-        style={{ background: secondaryButtonColor, color: textColor }}
-        onClick={connectERC20}>
-        Connect ERC20 to Exchange (as admin)
-      </button>
-      <div className="col-12 col-md-3" />
+      {adminRights && (
+        <button
+          className="btn col-12 col-md-3 rair-button"
+          disabled={userAddress === ''}
+          style={{ background: secondaryButtonColor, color: textColor }}
+          onClick={generateLicenseHash}>
+          Sign Hash (as admin)
+        </button>
+      )}
+      {adminRights && (
+        <button
+          className="btn col-12 col-md-3 rair-button"
+          style={{ background: secondaryButtonColor, color: textColor }}
+          onClick={connectERC20}>
+          Connect ERC20 to Exchange (as admin)
+        </button>
+      )}
+      <div className="col-12 col-md" />
       <button
         className="btn col-12 h1 col-md-3 rair-button"
         style={{ background: primaryButtonColor, color: textColor }}

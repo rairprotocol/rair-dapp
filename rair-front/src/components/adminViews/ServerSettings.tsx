@@ -12,7 +12,6 @@ import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
-import LicenseExchange from './LicenseExchange';
 
 const ServerSettings = ({ fullContractData }) => {
   const serverSettings = useServerSettings();
@@ -659,7 +658,6 @@ const ServerSettings = ({ fullContractData }) => {
           </button>
         </div>
       </div>
-      <LicenseExchange />
     </div>
   );
 };

@@ -18,8 +18,9 @@ import {
 
 //import CSVParser from './components/metadata/csvParser';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
+import ImportAndTransfer from './components/adminViews/ImportAndTransfer';
 import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
-import TransferTokens from './components/adminViews/transferTokens';
+import LicenseExchange from './components/adminViews/LicenseExchange';
 import useServerSettings from './components/adminViews/useServerSettings';
 import AlertMetamask from './components/AlertMetamask/index';
 import ConsumerMode from './components/consumerMode';
@@ -32,7 +33,6 @@ import ListCollections from './components/creatorStudio/ListCollections';
 import WorkflowSteps from './components/creatorStudio/workflowSteps';
 import DemoMediaUpload from './components/DemoMediaUpload/DemoMediaUpload';
 import Footer from './components/Footer/Footer';
-import ImportAndTransfer from './components/adminViews/ImportAndTransfer';
 import WelcomeHeader from './components/FrontPage/WelcomeHeader';
 import MainHeader from './components/Header/MainHeader';
 import IframePage from './components/iframePage/IframePage';
@@ -81,7 +81,6 @@ import { ColorStoreType } from './ducks/colors/colorStore.types';
 import { setChainId } from './ducks/contracts/actions';
 import { ContractsInitialType } from './ducks/contracts/contracts.types';
 import { getCurrentPageEnd } from './ducks/pages/actions';
-import { setAdminRights } from './ducks/users/actions';
 import { TUsersInitialState } from './ducks/users/users.types';
 import useConnectUser from './hooks/useConnectUser';
 import useWeb3Tx from './hooks/useWeb3Tx';
@@ -545,16 +544,18 @@ function App() {
                     content: VideoManager
                   },
 
-                  // Old Video Upload view
+                  // Server Settings view
                   {
-                    path: '/admin/fileUpload',
+                    path: '/admin/settings',
                     content: FileUpload,
                     requirement:
-                      loggedIn && !creatorViewsDisabled && adminRights,
-                    props: {
-                      primaryColor: primaryColor,
-                      textColor: textColor
-                    }
+                      loggedIn && !creatorViewsDisabled && adminRights
+                  },
+                  // License UI
+                  {
+                    path: '/license',
+                    content: LicenseExchange,
+                    requirement: loggedIn && !creatorViewsDisabled
                   },
                   // Token transfers
                   {
