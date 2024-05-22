@@ -7,6 +7,10 @@ on:
     branches:
       - dev
 
+#Allow repo secrets
+env:
+  VITE_ALCHEMY_KEY: ${{ secrets.VITE_ALCHEMY_KEY }}
+
 jobs:
     if_merged:
       if: github.event.pull_request.merged == true
@@ -34,6 +38,8 @@ jobs:
 
         - name: build and push rair-front docker image to registry
           run: cp rair-front/.env.sample rair-front/.env
+        - name: appending VITE_ALCHEMY_KEY in .env file
+          run: echo "VITE_ALCHEMY_KEY"=${{ secrets.VITE_ALCHEMY_KEY }} >> rair-front/.env
         - name: build rair-front docker image
           run: sudo docker build -t rair-front:${{github.sha}} -f rair-front/Dockerfile.prod rair-front
         - name: tag image
