@@ -33,6 +33,7 @@ export type ContractsInitialType = {
   resaleInstance: ethers.Contract | undefined;
   factoryInstance: ethers.Contract | undefined;
   erc777Instance: ethers.Contract | undefined;
+  licenseExchangeInstance: ethers.Contract | undefined;
   diamondFactoryInstance: ethers.Contract | undefined;
   diamondMarketplaceInstance: ethers.Contract | undefined;
   tokenPurchaserInstance: ethers.Contract | undefined;
@@ -52,14 +53,15 @@ export type ContractsInitialType = {
 };
 
 export type ContractContents = {
-  factory: string | undefined;
-  erc777: string | undefined;
-  minterMarketplace: string | undefined;
-  diamondFactory: string | undefined;
-  diamondMarketplace: string | undefined;
-  resaleMarketplace: string | undefined;
-  tokenPurchaser: string | undefined;
-  creditHandler: string | undefined;
+  factory?: string;
+  erc777?: string;
+  minterMarketplace?: string;
+  diamondFactory?: string;
+  diamondMarketplace?: string;
+  resaleMarketplace?: string;
+  tokenPurchaser?: string;
+  creditHandler?: string;
+  licenseExchange?: string;
 };
 
 export type ContractAddressesType = {
