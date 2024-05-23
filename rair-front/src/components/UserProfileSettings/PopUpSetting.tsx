@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
-import { utils } from 'ethers';
+import { utils, BigNumber } from 'ethers';
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -22,6 +22,7 @@ import {
   SvgUserIcon
 } from './SettingsIcons/SettingsIcons';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
+import useWeb3Tx from './../../hooks/useWeb3Tx';
 
 const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const settingBlockRef = useRef();
@@ -35,6 +36,14 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const [userBalance, setUserBalance] = useState<string>('');
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [userBalanceTrigger, setUserBalanceTrigger] = useState<boolean>(false);
+  const [userRairBalance, setUserRairBalance] = useState<any>();
+  const [exchangeData, setExchangeData] = useState({});
+  const [deploymentPrice, setDeploymentPrice] = useState<BigNumber>(
+    BigNumber.from(0)
+  );
+  const [deploymentPriceDiamond, setDeploymentPriceDiamond] = useState<
+    BigNumber | undefined
+  >();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -45,17 +54,99 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
     (store) => store.userStore
   );
 
+  console.info(exchangeData, 'exchangeData');
+  console.info(userRairBalance, 'userRairBalance')
+
   const { logoutUser } = useConnectUser();
 
   const { userData } = useSelector((store) => store.userStore);
-  const { erc777Instance, currentUserAddress, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
 
-  // const { loginType } = useSelector<RootState, TUsersInitialState>(
-  //   (store) => store.userStore
-  // );
+  const {
+    currentUserAddress,
+    factoryInstance,
+    erc777Instance,
+    diamondFactoryInstance,
+    currentChain,
+    tokenPurchaserInstance
+  } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+
+  const { web3TxHandler } = useWeb3Tx();
+
+  const getLegacyDeploymentCost = useCallback(async () => {
+    if (factoryInstance && erc777Instance && deploymentPrice.eq(0)) {
+      const value = await web3TxHandler(
+        factoryInstance,
+        'deploymentCostForERC777',
+        [erc777Instance.address]
+      );
+      if (value?._isBigNumber) {
+        setDeploymentPrice(value);
+      }
+    }
+  }, [factoryInstance, erc777Instance, deploymentPrice, web3TxHandler]);
+
+  const getDiamondDeploymentCost = useCallback(async () => {
+    if (diamondFactoryInstance && erc777Instance && !deploymentPriceDiamond) {
+      const value = await web3TxHandler(
+        diamondFactoryInstance,
+        'getDeploymentCost'
+      );
+      if (value?._isBigNumber) {
+        setDeploymentPriceDiamond(value);
+      }
+    }
+  }, [
+    diamondFactoryInstance,
+    erc777Instance,
+    deploymentPriceDiamond,
+    web3TxHandler
+  ]);
+
+  const getExchangeData = useCallback(async () => {
+    if (tokenPurchaserInstance) {
+      const [ethPrices, rairPrices] = await web3TxHandler(
+        tokenPurchaserInstance,
+        'getExhangeRates'
+      );
+      console.info(rairPrices, 'rairPrices')
+      const exchanges = {};
+      ethPrices.forEach((item, index) => {
+        exchanges[item] = rairPrices[index];
+      });
+      setExchangeData(exchanges);
+    }
+  }, [tokenPurchaserInstance, web3TxHandler]);
+
+  const getUserRairBalance = useCallback(async () => {
+    if (erc777Instance && userRairBalance?.eq(0)) {
+      const userRairBalance = await web3TxHandler(erc777Instance, 'balanceOf', [
+        currentUserAddress
+      ]);
+      if (userRairBalance?._isBigNumber) {
+        getExchangeData();
+        setUserRairBalance(userRairBalance);
+      }
+    }
+  }, [
+    erc777Instance,
+    currentUserAddress,
+    getExchangeData,
+    userRairBalance,
+    web3TxHandler
+  ]);
+
+  useEffect(() => {
+    getLegacyDeploymentCost();
+  }, [getLegacyDeploymentCost]);
+  useEffect(() => {
+    getDiamondDeploymentCost();
+  }, [getDiamondDeploymentCost]);
+
+  useEffect(() => {
+    getUserRairBalance();
+  }, [getUserRairBalance]);
 
   const onChangeEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
@@ -258,7 +349,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
         position="bottom center"
         closeOnDocumentClick
         onClose={() => {
-          userBalanceTrigger(false);
+          setUserBalanceTrigger(false);
         }}>
         <div
           ref={settingBlockRef}
