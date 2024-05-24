@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import useConnectUser from '../../../hooks/useConnectUser';
@@ -10,6 +10,9 @@ import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { BigNumber, utils } from 'ethers';
+import useWeb3Tx from '../../../hooks/useWeb3Tx';
+import { formatEther } from 'ethers/lib/utils';
 
 interface IMobileNavigationList {
   messageAlert: string | null;
@@ -32,14 +35,57 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 }) => {
   const hotDropsVar = import.meta.env.VITE_TESTNET;
 
-  const {  currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
+  const [userBalance, setUserBalance] = useState<string>('');
+  const [userRairBalance, setUserRairBalance] = useState<any>(
+    BigNumber.from(0)
+  );
+  const { userData } = useSelector((store) => store.userStore);
+
+  const { web3TxHandler } = useWeb3Tx();
+
+  const { erc777Instance, currentChain } = useSelector<
+  RootState,
+  ContractsInitialType
+>((store) => store.contractStore);
+
+const getBalance = useCallback(async () => {
+  if (currentUserAddress && erc777Instance?.provider) {
+    const balance =
+      await erc777Instance.provider.getBalance(currentUserAddress);
+
+    if (balance) {
+      const result = utils.formatEther(balance);
+      const final = Number(result.toString())?.toFixed(2)?.toString();
+
+      setUserBalance(final);
+    }
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [currentUserAddress, erc777Instance, userData]);
+
+  const getUserRairBalance = useCallback(async () => {
+    if (!erc777Instance || userRairBalance?.gt(0)) {
+      return;
+    }
+    const result = await web3TxHandler(erc777Instance, 'balanceOf', [
+      currentUserAddress
+    ]);
+    if (result?._isBigNumber) {
+      setUserRairBalance(result);
+    }
+  }, [erc777Instance, currentUserAddress, userRairBalance, web3TxHandler]);
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
 
   const { logoutUser } = useConnectUser();
+
+  useEffect(() => {
+    getBalance();
+  }, [getBalance])
+
+  useEffect(() => {
+    getUserRairBalance();
+  }, [getUserRairBalance]);
 
   useEffect(() => {
     setCopyEth(false);
@@ -111,7 +157,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                 marginBottom: "15px"
               }}>
                 <div>
-                  0.00
+                  {userBalance ? userBalance : 0.00}
                 {/* {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance} */}
                 </div>
                 <div>
@@ -127,7 +173,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                 display: "flex"
               }}>
                 <div>
-                  0.00
+                  {userRairBalance ? formatEther(userRairBalance) : 0.00}
                 {/* {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance} */}
                 </div>
                 <div>
