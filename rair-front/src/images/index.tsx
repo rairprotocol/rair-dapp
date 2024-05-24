@@ -35,6 +35,7 @@ import rairTechLogoWhite from './rairTechLogoWhite.webp';
 import rarible from './rarible-logo.webp';
 import verifiedIcon from './verify-icon.png';
 import yotiLogo from './yoti-logo.png';
+import tokenLogoRair from './favicon2.png';
 
 // images
 export const bgLogoBlack = blackBg;
@@ -65,6 +66,7 @@ export const LennyWait = lennyGif;
 export const KidWait = kigGif;
 export const YotiLogo = yotiLogo;
 export const RairBackground = newDefaultRairBG;
+export const RairTokenLogo = tokenLogoRair;
 
 // Icons
 export const discrodIconNoBorder = discordIconWhiteNoBorder;
