@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
-import { utils, BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -13,7 +14,9 @@ import useConnectUser from '../../hooks/useConnectUser';
 import { RairFavicon, RairTokenLogo, VerifiedIcon } from '../../images';
 import chainData from '../../utils/blockchainData';
 import LoadingComponent from '../common/LoadingComponent';
+import { TooltipBox } from '../common/Tooltip/TooltipBox';
 
+import useWeb3Tx from './../../hooks/useWeb3Tx';
 import EditMode from './EditMode/EditMode';
 import defaultPictures from './images/defaultUserPictures.png';
 import {
@@ -21,8 +24,6 @@ import {
   SvgUpload,
   SvgUserIcon
 } from './SettingsIcons/SettingsIcons';
-import { TooltipBox } from '../common/Tooltip/TooltipBox';
-import useWeb3Tx from './../../hooks/useWeb3Tx';
 
 const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const settingBlockRef = useRef();
@@ -36,14 +37,9 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const [userBalance, setUserBalance] = useState<string>('');
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [userBalanceTrigger, setUserBalanceTrigger] = useState<boolean>(false);
-  const [userRairBalance, setUserRairBalance] = useState<any>();
-  const [exchangeData, setExchangeData] = useState({});
-  const [deploymentPrice, setDeploymentPrice] = useState<BigNumber>(
+  const [userRairBalance, setUserRairBalance] = useState<any>(
     BigNumber.from(0)
   );
-  const [deploymentPriceDiamond, setDeploymentPriceDiamond] = useState<
-    BigNumber | undefined
-  >();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -54,95 +50,28 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
     (store) => store.userStore
   );
 
-  console.info(exchangeData, 'exchangeData');
-  console.info(userRairBalance, 'userRairBalance')
-
   const { logoutUser } = useConnectUser();
 
   const { userData } = useSelector((store) => store.userStore);
 
-  const {
-    currentUserAddress,
-    factoryInstance,
-    erc777Instance,
-    diamondFactoryInstance,
-    currentChain,
-    tokenPurchaserInstance
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress, erc777Instance, currentChain } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
 
   const { web3TxHandler } = useWeb3Tx();
 
-  const getLegacyDeploymentCost = useCallback(async () => {
-    if (factoryInstance && erc777Instance && deploymentPrice.eq(0)) {
-      const value = await web3TxHandler(
-        factoryInstance,
-        'deploymentCostForERC777',
-        [erc777Instance.address]
-      );
-      if (value?._isBigNumber) {
-        setDeploymentPrice(value);
-      }
-    }
-  }, [factoryInstance, erc777Instance, deploymentPrice, web3TxHandler]);
-
-  const getDiamondDeploymentCost = useCallback(async () => {
-    if (diamondFactoryInstance && erc777Instance && !deploymentPriceDiamond) {
-      const value = await web3TxHandler(
-        diamondFactoryInstance,
-        'getDeploymentCost'
-      );
-      if (value?._isBigNumber) {
-        setDeploymentPriceDiamond(value);
-      }
-    }
-  }, [
-    diamondFactoryInstance,
-    erc777Instance,
-    deploymentPriceDiamond,
-    web3TxHandler
-  ]);
-
-  const getExchangeData = useCallback(async () => {
-    if (tokenPurchaserInstance) {
-      const [ethPrices, rairPrices] = await web3TxHandler(
-        tokenPurchaserInstance,
-        'getExhangeRates'
-      );
-      console.info(rairPrices, 'rairPrices')
-      const exchanges = {};
-      ethPrices.forEach((item, index) => {
-        exchanges[item] = rairPrices[index];
-      });
-      setExchangeData(exchanges);
-    }
-  }, [tokenPurchaserInstance, web3TxHandler]);
-
   const getUserRairBalance = useCallback(async () => {
-    if (erc777Instance && userRairBalance?.eq(0)) {
-      const userRairBalance = await web3TxHandler(erc777Instance, 'balanceOf', [
-        currentUserAddress
-      ]);
-      if (userRairBalance?._isBigNumber) {
-        getExchangeData();
-        setUserRairBalance(userRairBalance);
-      }
+    if (!erc777Instance || userRairBalance?.gt(0)) {
+      return;
     }
-  }, [
-    erc777Instance,
-    currentUserAddress,
-    getExchangeData,
-    userRairBalance,
-    web3TxHandler
-  ]);
-
-  useEffect(() => {
-    getLegacyDeploymentCost();
-  }, [getLegacyDeploymentCost]);
-  useEffect(() => {
-    getDiamondDeploymentCost();
-  }, [getDiamondDeploymentCost]);
+    const result = await web3TxHandler(erc777Instance, 'balanceOf', [
+      currentUserAddress
+    ]);
+    if (result?._isBigNumber) {
+      setUserRairBalance(result);
+    }
+  }, [erc777Instance, currentUserAddress, userRairBalance, web3TxHandler]);
 
   useEffect(() => {
     getUserRairBalance();
@@ -250,13 +179,17 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             primaryColor === '#dedede' ? 'rhyno' : ''
           }`}></div>
         <div
-        onClick={() => setUserBalanceTrigger((prev) => !prev)}
+          onClick={() => setUserBalanceTrigger((prev) => !prev)}
           className={`profile-user-balance ${
             primaryColor === '#dedede' ? 'rhyno' : ''
           }`}>
-            <img style={{
-              marginRight: "5px"
-            }} src={primaryColor === '#dedede' ?  RairFavicon : RairTokenLogo} alt="logo" />
+          <img
+            style={{
+              marginRight: '5px'
+            }}
+            src={primaryColor === '#dedede' ? RairFavicon : RairTokenLogo}
+            alt="logo"
+          />
           {chainData[currentChain] && (
             <img src={chainData[currentChain]?.image} alt="logo" />
           )}
@@ -308,7 +241,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
           />
         )}
         <div
-        onClick={() => setTriggerState((prev) => !prev)}
+          onClick={() => setTriggerState((prev) => !prev)}
           style={{
             display: 'flex',
             width: '140px',
@@ -367,80 +300,113 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             }`,
             marginTop: `${selectedChain && showAlert ? '65px' : '12px'}`
           }}>
-            <div style={{
-              padding: "10px",
-              color: `${primaryColor === '#dedede' ? "#000" : "#fff"}`,
-              display: "flex"
-            }}> 
-              <div style={{
+          <div
+            style={{
+              padding: '10px',
+              color: `${primaryColor === '#dedede' ? '#000' : '#fff'}`,
+              display: 'flex'
+            }}>
+            <div
+              style={{
                 display: 'flex',
-                flexDirection: "column",
+                flexDirection: 'column',
                 justifyContent: 'space-evenly'
               }}>
-              <div style={{
-                display: "flex",
-                marginBottom: "15px"
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  marginBottom: '15px'
+                }}>
                 <div>
-                {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance}
+                  {isLoadingBalance ? (
+                    <LoadingComponent size={18} />
+                  ) : (
+                    userBalance
+                  )}
                 </div>
                 <div>
-                {chainData[currentChain] && (
-            <img style={{
-              height: "25px",
-              marginLeft: "15px"
-            }} src={chainData[currentChain]?.image} alt="logo" />
-          )}
-                </div>
-              </div>
-              <div style={{
-                display: "flex"
-              }}>
-                <div>
-                {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance}
-                </div>
-                <div>
-                <img style={{
-              height: "25px",
-              marginLeft: "15px"
-            }} src={primaryColor === '#dedede' ?  RairFavicon : RairTokenLogo} alt="logo" />
+                  {chainData[currentChain] && (
+                    <img
+                      style={{
+                        height: '25px',
+                        marginLeft: '15px'
+                      }}
+                      src={chainData[currentChain]?.image}
+                      alt="logo"
+                    />
+                  )}
                 </div>
               </div>
-              </div>
-              <div style={{
-                marginLeft: "25px",
-                display: "flex",
-                flexDirection: "column",
-
-              }}>
-                <div style={{
-                  marginBottom: "10px"
-                }} className="user-new-balance-title-text">
-                <div style={{
-                  fontWeight: 'bold',
-                  fontSize: '12px'
-                }}>Exchange rate</div>
-                <div style={{
-                  fontSize: '14px'
-                }}>50K RAIR/bETH</div>
+              <div
+                style={{
+                  display: 'flex'
+                }}>
+                <div>
+                  {isLoadingBalance ? (
+                    <LoadingComponent size={18} />
+                  ) : (
+                    formatEther(userRairBalance)
+                  )}
                 </div>
                 <div>
-                <TooltipBox position={'bottom'} title="Coming soon!">
-                  <button style={{
-                    background: "#7762D7",
-                    color: "#fff",
-                    border: "1px solid #000",
-                    borderRadius: "12px",
-                    width: "120px",
-                    height: '50px',
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center"
-                  }}>Top up</button>
-                  </TooltipBox>
+                  <img
+                    style={{
+                      height: '25px',
+                      marginLeft: '15px'
+                    }}
+                    src={
+                      primaryColor === '#dedede' ? RairFavicon : RairTokenLogo
+                    }
+                    alt="logo"
+                  />
                 </div>
               </div>
             </div>
+            <div
+              style={{
+                marginLeft: '25px',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+              <div
+                style={{
+                  marginBottom: '10px'
+                }}
+                className="user-new-balance-title-text">
+                <div
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: '12px'
+                  }}>
+                  Exchange rate
+                </div>
+                <div
+                  style={{
+                    fontSize: '14px'
+                  }}>
+                  50K RAIR/bETH
+                </div>
+              </div>
+              <div>
+                <TooltipBox position={'bottom'} title="Coming soon!">
+                  <button
+                    style={{
+                      background: '#7762D7',
+                      color: '#fff',
+                      border: '1px solid #000',
+                      borderRadius: '12px',
+                      width: '120px',
+                      height: '50px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}>
+                    Top up
+                  </button>
+                </TooltipBox>
+              </div>
+            </div>
+          </div>
         </div>
       </Popup>
       <Popup
