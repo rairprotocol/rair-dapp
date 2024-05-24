@@ -13,6 +13,7 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { BigNumber, utils } from 'ethers';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { formatEther } from 'ethers/lib/utils';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 
 interface IMobileNavigationList {
   messageAlert: string | null;
@@ -39,7 +40,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   const [userRairBalance, setUserRairBalance] = useState<any>(
     BigNumber.from(0)
   );
-  const { userData } = useSelector((store) => store.userStore);
+  const { userData } = useSelector<RootState, TUsersInitialState>((store) => store.userStore);
 
   const { web3TxHandler } = useWeb3Tx();
 
