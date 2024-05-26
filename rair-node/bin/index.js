@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const cors = require('cors');
-const Socket = require('socket.io');
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 const morgan = require('morgan');
 const session = require('express-session');
 const RedisStorage = require('connect-redis')(session);
@@ -47,11 +48,17 @@ async function main() {
   await mongoConnectionManager.getMongooseConnection();
 
   const app = express();
+  const httpServer = createServer(app);
 
   /* CORS */
   const origin = `https://${process.env.SERVICE_HOST}`;
-
+  
   app.use(cors({ origin }));
+  const socketIo = new Server(httpServer, {
+    cors: {
+      origin: '*'
+    }
+  });
 
   const hls = await StartHLS();
 
@@ -67,6 +74,26 @@ async function main() {
   // connect redisService
   context.redis.redisService = redisService(context);
 
+  const sessionMiddleware = session({
+    store: new RedisStorage({
+      client,
+      // config.session.ttl was removed from here and used
+      //    for maxAge, because when maxAge used it will have no effect.
+    }),
+    secret: config.session.secret,
+    saveUninitialized: true,
+    resave: true,
+    proxy: config.production,
+    rolling: true,
+    cookie: {
+      sameSite: config.production ? 'none' : 'lax',
+      path: '/',
+      httpOnly: config.production,
+      secure: config.production,
+      maxAge: (`${config.session.ttl}` * 60 * 60 * 1000), // TTL * hour
+    },
+  });
+
   await seedDB(context);
 
   app.use(morgan('dev'));
@@ -74,27 +101,10 @@ async function main() {
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(cookieParser());
   app.set('trust proxy', 1);
-  app.use(
-    session({
-      store: new RedisStorage({
-        client,
-        // config.session.ttl was removed from here and used
-        //    for maxAge, because when maxAge used it will have no effect.
-      }),
-      secret: config.session.secret,
-      saveUninitialized: true,
-      resave: true,
-      proxy: config.production,
-      rolling: true,
-      cookie: {
-        sameSite: config.production ? 'none' : 'lax',
-        path: '/',
-        httpOnly: config.production,
-        secure: config.production,
-        maxAge: (`${config.session.ttl}` * 60 * 60 * 1000), // TTL * hour
-      },
-    }),
-  );
+
+  app.use(sessionMiddleware);
+  socketIo.engine.use(sessionMiddleware);
+
   app.use('/stream', streamRoute(context));
   app.use(
     '/api',
@@ -106,33 +116,18 @@ async function main() {
   );
   app.use(mainErrorHandler);
 
-  const server = app.listen(config.port, () => {
+  socketIo.on('connection', (socket) => {
+    log.info('SOCKET: a user connected');
+    socket.emit("message", "Welcome!");
+
+    socket.on('disconnect', () => {
+      log.info('SOCKET: user disconnected');
+    });
+  });
+
+  httpServer.listen(config.port, () => {
     log.info(`Rairnode server listening at http://localhost:${config.port}`);
   });
-
-  const io = Socket(server);
-  const sockets = {};
-
-  io.on('connection', (socket) => {
-    log.info(`Client connected: ${socket.id}`);
-    socket.on('init', (sessionId) => {
-      log.info(`Opened connection: ${sessionId}`);
-
-      sockets[sessionId] = socket.id;
-      app.set('sockets', sockets);
-    });
-
-    socket.on('end', (sessionId) => {
-      delete sockets[sessionId];
-
-      socket.disconnect(0);
-      app.set('sockets', sockets);
-
-      log.info(`Close connection ${sessionId}`);
-    });
-  });
-
-  app.set('io', io);
 }
 
 (async () => {

@@ -1,5 +1,6 @@
 //@ts-nocheck
 import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 // React Redux types
@@ -134,8 +135,13 @@ function App() {
   const navigate = useNavigate();
 
   // Redux
-  const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const {
+    primaryColor,
+    textColor,
+    backgroundImage,
+    backgroundImageEffect,
+    secondaryColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { adminRights, loggedIn } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
@@ -322,6 +328,17 @@ function App() {
         primaryColor={primaryColor}
         backgroundImage={hotDropsVar === 'true' ? '' : backgroundImage}>
         <div className="row w-100 m-0 p-0">
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                backgroundColor: primaryColor,
+                color: textColor,
+                border: `solid 1px ${textColor}`,
+                marginRight: '2vw'
+              }
+            }}
+          />
           {carousel && !isIframePage ? (
             <MainHeader
               goHome={goHome}

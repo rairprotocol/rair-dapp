@@ -35,6 +35,7 @@ import {
 import { TUsersInitialState } from '../ducks/users/users.types';
 import chainData from '../utils/blockchainData';
 import { rFetch, signWeb3Message } from '../utils/rFetch';
+import sockets from '../utils/sockets';
 
 const getCoingeckoRates = async () => {
   try {
@@ -64,7 +65,7 @@ const getCoingeckoRates = async () => {
 
 const useConnectUser = () => {
   const dispatch = useDispatch();
-  const { adminRights, loginProcess, loggedIn, loginType } = useSelector<
+  const { adminRights, loginProcess, loggedIn } = useSelector<
     RootState,
     TUsersInitialState
   >((store) => store.userStore);
@@ -379,6 +380,7 @@ const useConnectUser = () => {
             dispatch(dispatchItem);
           });
           dispatch(setLogInStatus(true));
+          sockets.nodeSocket.connect();
         }
       }
       dispatch(setLoginProcessStatus(false));
@@ -439,6 +441,7 @@ const useConnectUser = () => {
   const logoutUser = useCallback(async () => {
     const { success } = await rFetch('/api/auth/logout');
     if (success) {
+      sockets.nodeSocket.disconnect();
       dispatch(getTokenComplete(null));
       dispatch(setUserAddress(undefined));
       dispatch(setAdminRights(false));
@@ -449,7 +452,7 @@ const useConnectUser = () => {
       dispatch(setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
       navigate('/');
     }
-  }, [dispatch, navigate, loginType]);
+  }, [dispatch, navigate]);
 
   return {
     connectUserData,
