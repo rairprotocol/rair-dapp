@@ -15,52 +15,52 @@ const setLoginType = (loginType: string) =>
   ({
     type: SET_LOGIN_TYPE,
     loginType
-  } as const);
+  }) as const;
 
 const setUserData = (userData: UserQueryType) =>
   ({
     type: SET_USER_DATA,
     userData
-  } as const);
+  }) as const;
 
 const setLoginProcessStatus = (value: boolean) =>
   ({
     type: LOGIN_PROCESS_UPDATE,
     value
-  } as const);
+  }) as const;
 
 const setLogInStatus = (value: boolean) =>
   ({
     type: LOGIN_STATUS_UPDATE,
     value
-  } as const);
+  }) as const;
 
 const getUserStart = (publicAddress: string) =>
   ({
     type: GET_USER_START,
     publicAddress: publicAddress
-  } as const);
+  }) as const;
 
 const setAdminRights = (adminRights: boolean | undefined) =>
   ({
     type: SET_ADMIN_RIGHTS,
     adminRights
-  } as const);
+  }) as const;
 const setSuperAdmin = (superAdmin: boolean | undefined) =>
   ({
     type: SET_SUPER_ADMIN,
     superAdmin
-  } as const);
+  }) as const;
 const getUserComplete = (userRd: UserType | null) =>
   ({
     type: GET_USER_COMPLETE,
     userRd
-  } as const);
+  }) as const;
 const getUserError = (error: string) =>
   ({
     type: GET_USER_ERROR,
     error
-  } as const);
+  }) as const;
 
 export {
   getUserComplete,

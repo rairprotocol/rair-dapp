@@ -14,6 +14,8 @@ import {
   BellIcon,
   CloseIconMobile,
   MenuIcon,
+  RairFavicon,
+  RairTokenLogo,
   VerifiedIcon
 } from '../../images';
 import {
@@ -270,6 +272,10 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                       )}
                     </>
                     <div
+                      onClick={() => {
+                        handleMessageAlert('profileEdit');
+                        toggleMenu('nav');
+                      }}
                       className="mobileAikonWidget"
                       style={{
                         backgroundColor:
@@ -281,13 +287,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         className={`profile-user-balance ${
                           primaryColor === 'rhyno' ? 'rhyno' : ''
                         }`}>
-                        <div>
-                          {isLoadingBalance ? (
-                            <LoadingComponent size={12} />
-                          ) : (
-                            userBalance
-                          )}
-                        </div>
+                         <img style={{
+              marginRight: "5px"
+            }} src={primaryColor === '#dedede' ?  RairFavicon : RairTokenLogo} alt="logo" />
                         {currentChain && chainData[currentChain] && (
                           <img
                             src={chainData[currentChain]?.image}

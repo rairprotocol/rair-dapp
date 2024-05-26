@@ -13,6 +13,7 @@ import {
   diamondMarketplaceAbi,
   erc777Abi,
   factoryAbi,
+  licenseExchangeABI,
   minterAbi,
   resaleAbi,
   tokenPurchaserAbi
@@ -82,7 +83,8 @@ const contractAddresses: ContractAddressesType = {
       '0x1F89Cc515dDc53dA2fac5B0Ca3b322066A71E6BA') as string,
     resaleMarketplace: undefined,
     tokenPurchaser: undefined,
-    creditHandler: undefined
+    creditHandler: undefined,
+    licenseExchange: '0xE71E90841a7f9331949e2d0ef40e0f93cf171863'
   },
   '0x89': {
     // Matic Mainnet
@@ -146,7 +148,8 @@ const InitialState: ContractsInitialType = {
   programmaticProvider: undefined,
   contractCreator: undefined,
   realChain: undefined,
-  coingeckoRates: undefined
+  coingeckoRates: undefined,
+  licenseExchangeInstance: undefined
 };
 
 export default function userStore(
@@ -255,6 +258,10 @@ export default function userStore(
           creditHandlerInstance: contractCreator(
             contractAddresses[action.currentChain]?.creditHandler,
             creditHandlerAbi
+          ),
+          licenseExchangeInstance: contractCreator(
+            contractAddresses[action.currentChain]?.licenseExchange,
+            licenseExchangeABI
           ),
           contractCreator: contractCreator
         };
