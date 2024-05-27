@@ -79,7 +79,7 @@ const insertToken = async (token, contractId) => {
         offerPool: 0,
         product: 0,
       }, {
-        upsert: true
+        upsert: true,
       });
     } catch (error) {
       log.error(`Error upserting token ${token.token_id}, ${error.name}`);
@@ -89,8 +89,18 @@ const insertToken = async (token, contractId) => {
 };
 
 module.exports = {
-  importContractData: async (networkId, contractAddress, limit, contractCreator, importerUser) => {
-    let contract, product, offer, offerPool;
+  importContractData: async (
+    networkId,
+    contractAddress,
+    limit,
+    contractCreator,
+    importerAddress,
+    socket,
+  ) => {
+    let contract;
+    let product;
+    let offer;
+    let offerPool;
 
     // Optional Config object, but defaults to demo api-key and eth-mainnet.
     const settings = {
@@ -119,13 +129,18 @@ module.exports = {
       return { success: false, result: undefined, message: `Only ERC721 is supported, tried to process a ${contractMetadata.tokenType} contract` };
     }
 
+    socket.to(importerAddress).emit('importProgress', {
+      progress: 0,
+      message: `${contractMetadata.totalSupply} tokens found`,
+    });
+
     if (!contract) {
       contract = new Contract({
         user: contractCreator,
         title: contractMetadata.name,
         contractAddress,
         blockchain: networkId,
-        importedBy: importerUser,
+        importedBy: importerAddress,
         diamond: false,
         external: true,
       });
@@ -171,9 +186,14 @@ module.exports = {
     // console.log(await alchemySDK.nft.getOwnersForContract(contractAddress));
 
     let numberOfTokensAdded = 0;
+    const importTarget = Number(limit === '0' ? contractMetadata.totalSupply : Number(limit));
     for await (const nft of alchemySDK.nft.getNftsForContractIterator(contractAddress, {
       omitMetadata: false,
     })) {
+      socket.to(importerAddress).emit('importProgress', {
+        progress: (numberOfTokensAdded / importTarget) * 100,
+        message: `${numberOfTokensAdded} NFTs imported so far...`,
+      });
       const ownerResponse = await alchemySDK.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
       [nft.owner] = ownerResponse.owners;
       if (insertToken(nft, contract._id)) {
@@ -197,6 +217,11 @@ module.exports = {
       await offer.save();
       await offerPool.save();
       await processMetadata(contract._id, product.collectionIndexInContract);
+
+      socket.to(importerAddress).emit('importProgress', {
+        progress: 100,
+        message: 'Complete',
+      });
 
       return {
         success: true,

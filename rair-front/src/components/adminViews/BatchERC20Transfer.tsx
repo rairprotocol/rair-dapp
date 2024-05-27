@@ -140,7 +140,6 @@ const BatchERC20Transfer = () => {
 
   return (
     <div className="w-100 row">
-      <h5>ERC20 tool</h5>
       <Dropzone onDrop={onCSVDrop}>
         {({ getRootProps, getInputProps, isDragActive }) => (
           <section>

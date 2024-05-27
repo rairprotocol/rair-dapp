@@ -16,7 +16,7 @@ module.exports = (context) => {
       const result = await getTransaction(
         network,
         hash,
-        verificationData,
+        verificationData
       );
       res.json({ success: result !== undefined, foundEvents: result });
     } catch (e) {

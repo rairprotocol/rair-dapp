@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const cors = require('cors');
-const { createServer } = require("http");
-const { Server } = require("socket.io");
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 const morgan = require('morgan');
 const session = require('express-session');
 const RedisStorage = require('connect-redis')(session);
@@ -52,12 +52,12 @@ async function main() {
 
   /* CORS */
   const origin = `https://${process.env.SERVICE_HOST}`;
-  
+
   app.use(cors({ origin }));
   const socketIo = new Server(httpServer, {
     cors: {
-      origin: '*'
-    }
+      origin: '*',
+    },
   });
 
   const hls = await StartHLS();
@@ -87,7 +87,6 @@ async function main() {
     rolling: true,
     cookie: {
       sameSite: config.production ? 'none' : 'lax',
-      path: '/',
       httpOnly: config.production,
       secure: config.production,
       maxAge: (`${config.session.ttl}` * 60 * 60 * 1000), // TTL * hour
@@ -106,6 +105,7 @@ async function main() {
   socketIo.engine.use(sessionMiddleware);
 
   app.use('/stream', streamRoute(context));
+
   app.use(
     '/api',
     (req, res, next) => {
@@ -117,13 +117,14 @@ async function main() {
   app.use(mainErrorHandler);
 
   socketIo.on('connection', (socket) => {
-    log.info('SOCKET: a user connected');
-    socket.emit("message", "Welcome!");
-
     socket.on('disconnect', () => {
-      log.info('SOCKET: user disconnected');
+      log.info('User disconnected');
+    });
+    socket.on('subscribe', (roomName) => {
+      socket.join(roomName);
     });
   });
+  app.set('socket', socketIo);
 
   httpServer.listen(config.port, () => {
     log.info(`Rairnode server listening at http://localhost:${config.port}`);

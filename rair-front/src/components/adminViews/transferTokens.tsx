@@ -214,10 +214,6 @@ const TransferTokens = () => {
   return (
     <div className="w-100 row px-5">
       <div className="col-12">
-        <BlockChainSwitcher />
-        <div className="text-start col-10 h4">TRANSFER NFTs</div>
-      </div>
-      <div className="col-12">
         <button
           onClick={() => {
             setManualAddress(false);

@@ -166,14 +166,17 @@ module.exports = {
   importExternalContract: async (req, res, next) => {
     try {
       const { networkId, contractAddress, limit, contractCreator } = req.body;
-      const { success, result, message } = await importContractData(
+      const socket = req.app.get('socket');
+      socket.to(req.user.publicAddress).emit('Message', 'Importing contract');
+      importContractData(
         networkId,
         contractAddress,
         limit,
         contractCreator,
         req.user.publicAddress,
+        socket,
       );
-      return res.json({ success, result, message });
+      return res.json({ success: true });
     } catch (err) {
       log.error(err);
       return next(err);

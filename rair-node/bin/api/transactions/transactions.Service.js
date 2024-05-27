@@ -22,5 +22,5 @@ module.exports = {
         } catch (e) {
             next(e);
         }
-    }
-}
+    },
+};

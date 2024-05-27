@@ -79,7 +79,7 @@ module.exports = {
           userData.blocked = true;
         }
       } catch (error) {
-        log.error("Cannot read OFAC list");
+        log.error('Cannot read OFAC list');
       }
       if (userData.blocked) {
         log.error(`Blocked user tried to login: ${ethAddress}`);
@@ -87,6 +87,7 @@ module.exports = {
       }
 
       userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
+      req.app.get('socket').to(userData.publicAddress).emit('message', `Logged in as ${userData.publicAddress}`);
       const { superAdmins, superAdminsOnVault } = await ServerSetting.findOne({});
       userData.superAdmin = superAdminsOnVault
         ? await superAdminInstance.hasSuperAdminRights(userData.publicAddress)

@@ -381,6 +381,10 @@ const useConnectUser = () => {
           });
           dispatch(setLogInStatus(true));
           sockets.nodeSocket.connect();
+          sockets.nodeSocket.emit(
+            'subscribe',
+            loginResponse.user.publicAddress.toLowerCase()
+          );
         }
       }
       dispatch(setLoginProcessStatus(false));

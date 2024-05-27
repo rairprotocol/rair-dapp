@@ -7,7 +7,10 @@ const socketIo = io(import.meta.env.VITE_NODE_SOCKET_URI, {
 
 const events = {
   connect: () => toast('Connected'),
-  message: toast
+  message: (msg) => {
+    toast(msg);
+    console.info(msg);
+  }
 };
 
 Object.keys(events).forEach((event) => {
