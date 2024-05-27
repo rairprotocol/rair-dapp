@@ -138,7 +138,7 @@ const Footer: React.FC<IFooter> = () => {
                     <li>
                       <a
                         target={'_blank'}
-                        href="https://etherscan.io/token/0xe3fFbD303ccC7733e501713aAF06E46312B22D3E"
+                        href="https://etherscan.io/token/0x2b0ffbf00388f9078d5512256c43b983bb805ef8"
                         rel="noreferrer">
                         Contract
                       </a>
