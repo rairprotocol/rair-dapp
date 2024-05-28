@@ -8,7 +8,9 @@
 # Getting Started
 _Building RAIR is a snap! Follow these simple steps and you'll be up and running in no time._
 
-![video install guide with clickflows](https://github.com/rairprotocol/RAIRsite/blob/main/src/assets/images/rair-install.webm)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MmH-JmWkhQo?si=YLSNcz7WxQjBlwRO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+![download video from git](https://github.com/rairprotocol/RAIRsite/blob/main/src/assets/images/rair-install.webm)
 
 ## Clone the RAIR repository
 
