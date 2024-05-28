@@ -1,0 +1,154 @@
+.col-1.rounded.burder-menu .btn-connect-wallet-wrapper {
+  position: relative;
+  top: 0;
+  right: 0;
+}
+
+.col-1.rounded.burder-menu .burder-menu-logo img {
+  width: 40px;
+  height: auto;
+}
+
+.burder-menu .social-media {
+  display: flex;
+}
+
+.burder-menu .social-media .social-media-profile {
+  display: flex;
+  align-items: center;
+}
+
+.burder-menu .social-media .social-media-profile .social-media-user-icon {
+  margin-left: 10px;
+}
+
+.col-1.rounded.burder-menu .metamask-on-boarding {
+  position: relative;
+  right: 0;
+  top: 0;
+  border-radius: 16px;
+  color: #fff;
+}
+
+.burger-menu-avatar {
+  width: 50px;
+  height: auto;
+  border-radius: 16px;
+}
+
+.burger-menu-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-edit-mobileProfile {
+  border-radius: 12px;
+  margin: 10px 0;
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  color: #fff;
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+}
+
+.block-avatar-profile {
+  padding: 20px;
+}
+
+.block-avatar-profile img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.mobileAikonWidget {
+  height: 40px;
+  width: 40px;
+  background: rgb(66, 66, 66);
+  border: 1px solid rgb(234, 234, 234);
+  border-radius: 10px;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease 0s;
+  margin-right: 17px;
+}
+
+@media screen and (max-width: 1024px) {
+  .mobileAikonWidget {
+    height: 40px;
+    width: auto;
+    padding: 0 10px;
+    background: rgb(66, 66, 66);
+    border: 1px solid rgb(234, 234, 234);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease 0s;
+    margin-right: 12px;
+  }
+
+  .mobileAikonWidget .aikon-widget-block {
+    padding-right: 5px;
+  }
+
+  .mobileAikonWidget .profile-user-balance,
+  .profile-buy-button {
+    border: none;
+  }
+
+  .mobileAikonWidget .profile-user-balance {
+    padding: 0 0 0 5px;
+    border-left: 1px solid grey;
+  }
+
+  .mobileAikonWidget .profile-user-balance img {
+    height: 14px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .col-1.rounded.burder-menu .burder-menu-logo img {
+    width: 30px;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mobileAikonWidget {
+    height: 40px;
+    width: auto;
+    padding: 0 10px;
+    justify-content: space-evenly;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .mobileAikonWidget {
+    height: 35px;
+    width: auto;
+    padding: 0 10px;
+  }
+}

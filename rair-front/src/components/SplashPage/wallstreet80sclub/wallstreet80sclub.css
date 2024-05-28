@@ -1,0 +1,1208 @@
+/* use .wrapper-splash-page.wallstreet80sclub selector to override any general styling*/
+.wrapper-splash-page.wallstreet80sclub {
+  font-family: 'Aldrich', sans-serif;
+}
+
+/* author card default styling */
+.wrapper-splash-page.wallstreet80sclub .template-home-splash-page {
+  width: 1200px;
+  white-space: pre-line;
+}
+
+.wrapper-splash-page.wallstreet80sclub .template-author-card {
+  background-size: 491px 491px;
+  background-position: bottom 97px right 77px;
+  width: 100%;
+  height: 694px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .template-author-card .block-splash {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.wrapper-splash-page.wallstreet80sclub .template-author-card .text-splash {
+  padding: 190px 0 0 75px;
+  height: auto;
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .template-author-card
+  .text-splash
+  .title-splash
+  h3.text-gradient-template {
+  font-family: 'Cooper Std Black', sans-serif;
+  font-size: 50px;
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .template-author-card
+  .text-splash
+  .text-description {
+  font-family: 'Copperplate', sans-serif;
+  color: rgb(89, 25, 8);
+  font-weight: normal;
+  width: 476px;
+  margin: 27px 0 0 0;
+  padding: 0 0 0 7px;
+  font-size: 30px;
+  line-height: 33px;
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .template-author-card
+  .text-splash
+  .button-wrapper {
+  margin: 85px 0 0 0;
+  padding: 0;
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .btn-submit-with-form {
+  margin: 20px 0 0 0;
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .btn-submit-with-form
+  button {
+  width: 335px;
+  height: 64px;
+  font-size: 20px;
+  line-height: 22px;
+  font-family: 'Cooper Std Black', sans-serif;
+  border-radius: 0;
+  padding: 5px 0 0 0;
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .btn-submit-with-form
+  button
+  img.metamask-logo {
+  width: 37px;
+  height: auto;
+  margin: 0 23px 0 0;
+}
+
+/**/
+
+.wrapper-splash-page.wallstreet80sclub .splash-team {
+  margin-bottom: 600px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .meet-team {
+  margin: 0;
+}
+
+.wrapper-splash-page.wallstreet80sclub .splash-team-greyman {
+  margin-bottom: 0px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .splashpage-subtitle {
+  display: flex;
+  flex-direction: row;
+  margin: 120px 0 60px 0;
+  font-size: 40px;
+  line-height: 60px;
+  font-family: 'Cooper Std Black', sans-serif;
+  font-weight: 900;
+}
+
+.wrapper-splash-page.wallstreet80sclub .splashpage-subtitle.below-need-help {
+  margin: 0 0 60px 0;
+}
+
+.wrapper-splash-page.wallstreet80sclub .splashpage-subtitle.above-meet-team {
+  margin: 110px 0 20px 0;
+}
+
+.wrapper-splash-page.wallstreet80sclub .membership-block-text {
+  font-size: calc(24px + 0.3vw);
+  text-align: left;
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.wrapper-splash-page.wallstreet80sclub .membership-block-text-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.wrapper-splash-page.wallstreet80sclub .membership-block-image {
+  width: 55%;
+  height: auto;
+}
+
+.genesis-radius {
+  border-radius: 1rem;
+}
+.genesis-resp {
+  height: 95vh;
+  width: 80%;
+}
+.genesis-textCenter {
+  text-align: center !important;
+}
+.genesis-font {
+  font-family: 'Aldrich', sans-serif;
+}
+
+/*css button color variable instead of inline styling for linear gradient*/
+.wrapper-splash-page.wallstreet80sclub
+  .btn-submit-with-form
+  button.genesis-font {
+  background: rgb(89, 25, 8);
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .btn-submit-with-form
+  button.genesis-font:hover {
+  background: rgb(89, 25, 8);
+}
+
+.wrapper-splash-page.wallstreet80sclub .numbered-circle {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #e882d5;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  padding: calc(12px);
+  margin-right: 24px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .info-block {
+  font-size: calc(32px + 0.5vw);
+  text-align: center;
+  line-height: 1.5;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.warning-modal {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  /* height: 53vh; */
+  min-height: 20rem;
+  margin-top: 5vh;
+}
+
+.warning-modal-col-0 {
+  width: 25%;
+  height: auto;
+  background-image: url('../images/splashPageImages/warning_1.webp');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.warning-modal-col-1 {
+  width: 26%;
+  height: auto;
+  background-image: url('../images/splashPageImages/warning_2.webp');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.warning-modal-col-0-title {
+  font-family: 'Aldrich', sans-serif;
+  font-size: 1.125rem;
+  color: red;
+}
+
+.warning-modal-col-1-title {
+  font-family: 'Aldrich', sans-serif;
+  font-size: 1.125rem;
+  color: green;
+}
+
+.main-wrapper-nyc {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: flex-start;
+  justify-content: space-evenly;
+}
+
+.main-wrapper-nyc img {
+  max-width: 80%;
+  height: 30rem;
+}
+
+.bad {
+  flex: 1;
+  font-family: 'Aldrich', sans-serif;
+  font-size: 1.125rem;
+  color: red;
+}
+
+.good {
+  flex: 1;
+  font-family: 'Aldrich', sans-serif;
+  font-size: 1.125rem;
+  color: green;
+}
+
+.swal2-title.text-genesis {
+  color: #f15621;
+  /* margin-top: 1rem; */
+  font-family: 'Aldrich', sans-serif;
+}
+
+.wrapper-splash-page.wallstreet80sclub .warning-img {
+  width: 30vw;
+  margin: 1.563rem 0 1.5rem 0;
+}
+
+.wrapper-splash-page.wallstreet80sclub .btn-submit-with-form.need-help {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 90px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .btn-submit-with-form.need-help button {
+  border-radius: 0;
+  font-family: 'Copperplate', sans-serif;
+  font-size: 30px;
+  background-color: rgb(90, 27, 3);
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .main-greyman-pic-wrapper
+  .join-pic-main
+  img,
+.wrapper-splash-page.wallstreet80sclub .list-of-greymans-pic .join-pic img {
+  border-radius: 1rem;
+}
+
+.wrapper-splash-page.wallstreet80sclub .main-greyman-pic-wrapper {
+  width: 90vw;
+  display: flex;
+  justify-content: center;
+}
+
+/** token counter initial styling **/
+.wrapper-splash-page.wallstreet80sclub
+  .left-tokens-content
+  .tokens-description {
+  width: 100%;
+}
+
+.wrapper-splash-page.wallstreet80sclub .left-tokens {
+  max-width: 1600px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .left-tokens-content .title-tokens {
+  text-align: left;
+}
+
+.wrapper-splash-page.wallstreet80sclub .left-tokens-response {
+  margin-top: 125px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .left-tokens-content {
+  margin-left: 80px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .block-left-content-greyman {
+  margin-left: 80px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .title-tokens h3 span {
+  font-family: 'Cooper Std Black', sans-serif;
+  font-weight: heavy;
+  font-size: 38px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .tokens-description p {
+  font-family: 'Copperplate', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 42px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(6) {
+  margin-bottom: 30px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(2) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(3) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(4) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(7) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(8) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(9) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.wallstreet80sclub .btn-help {
+  font-family: 'Copperplate', sans-serif;
+}
+/**/
+/* Carousel Styles*/
+
+/* list - full size styles */
+.wrapper-splash-page.wallstreet80sclub .carousel-description {
+  font-family: 'Copperplate', sans-serif;
+  font-size: 28px;
+  line-height: 60px;
+  width: 100%;
+  margin: 29px 0;
+}
+.wrapper-splash-page.wallstreet80sclub .carousel-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  align-items: center;
+}
+
+.wrapper-splash-page.wallstreet80sclub .carousel-container .carousel-title {
+  margin: 0;
+}
+
+.wrapper-splash-page.wallstreet80sclub .carousel-container .carousel-list {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-height: 900px;
+  flex-wrap: wrap;
+  align-content: space-between;
+  justify-content: space-around;
+  align-items: baseline;
+}
+
+.wrapper-splash-page.wallstreet80sclub .carousel-container .join-pic-img {
+  width: 350px;
+  height: 350px;
+  border-radius: 0;
+}
+
+/**/
+.wrapper-splash-page.wallstreet80sclub .membership-block {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.wrapper-splash-page.wallstreet80sclub
+  .template-home-splash-page
+  .img-teammate
+  img {
+  width: 269px;
+  height: 269px;
+  border-radius: 0;
+}
+/**/
+
+@media screen and (max-width: 4200px) and (min-width: 2001px) {
+  .main-wrapper-nyc img {
+    max-width: 80%;
+    height: 78rem;
+  }
+  .swal2-title.text-genesis {
+    font-size: 5rem;
+  }
+  .main-wrapper-nyc h3 {
+    font-size: 5.75rem;
+  }
+  .genesis-resp {
+    height: 90vh;
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 2000px) {
+}
+
+@media screen and (max-width: 1800px) {
+  .warning-modal-col-0 {
+    width: 30%;
+  }
+  .warning-modal-col-1 {
+    width: 31%;
+  }
+}
+
+@media screen and (max-width: 1500px) {
+}
+
+@media screen and (max-width: 1400px) {
+}
+
+@media screen and (max-width: 1330px) {
+  /* carousel list - responsive */
+  .wrapper-splash-page.wallstreet80sclub .carousel-container .join-pic-img {
+    width: 24vw;
+    height: 24vw;
+    border-radius: 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-description {
+    font-family: 'Copperplate', sans-serif;
+    font-size: 1.9vw;
+    line-height: 4.2vw;
+    width: 100%;
+    margin: 2vw 0;
+  }
+  /**/
+
+  .wrapper-splash-page.wallstreet80sclub .template-home-splash-page {
+    max-width: 90vw;
+  }
+  /* author card - convert to responsive units */
+  .wrapper-splash-page.wallstreet80sclub .template-author-card {
+    background-size: 34.1vw 34.1vw;
+    background-position: bottom 6.7vw right 5.3vw;
+    width: 100%;
+    height: 48.2vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .template-author-card .text-splash {
+    padding: 13.2vw 0 0 5.2vw;
+    height: auto;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .title-splash
+    h3.text-gradient-template {
+    font-size: 3.5vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .text-description {
+    font-family: 'Copperplate', sans-serif;
+    color: rgb(89, 25, 8);
+    font-weight: normal;
+    width: 33vw;
+    margin: 1.9vw 0 0 0;
+    padding: 0 0 0 0.5vw;
+    font-size: 2.1vw;
+    line-height: 2.3vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper {
+    margin: 5.9vw 0 0 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form {
+    margin: 1.4vw 0 0 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form
+    button {
+    width: 23.3vw;
+    height: 4.4vw;
+    font-size: 1.4vw;
+    line-height: 1.5vw;
+    padding: 0.3vw 0 0 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form
+    button
+    img.metamask-logo {
+    width: 2.6vw;
+    height: auto;
+    margin: 0 1.6vw 0 0;
+  }
+
+  /**/
+}
+
+@media screen and (max-width: 1320px) {
+  .wrapper-splash-page.wallstreet80sclub .main-greyman-pic-wrapper {
+    margin-left: 0rem;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .wrapper-splash-page.wallstreet80sclub
+    .left-tokens-content
+    .tokens-description {
+    width: 100% !important;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(2) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(3) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(4) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(7) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(8) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(9) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .splashpage-subtitle.below-need-help {
+    margin: 6.7vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .btn-submit-with-form.need-help
+    button {
+    font-size: 1.7rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens-content .title-tokens {
+    text-align: center;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens-response {
+    margin-top: 8.7vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens-content {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .block-left-content-greyman {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .left-tokens-content
+    .tokens-description
+    p {
+    text-align: center;
+  }
+
+  /* carousel styles */
+  .wrapper-splash-page.wallstreet80sclub .carousel-container .carousel {
+    width: 80%;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-container .carousel-items {
+    margin-bottom: calc(16px + 1vw);
+    font-weight: 700;
+    font-size: calc(24px + 0.5vw);
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-container {
+    margin: 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-container .carousel-title {
+    text-align: center;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-description {
+    width: 24vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-container .join-pic-img {
+    width: 24vw;
+    height: 24vw;
+  }
+  /* author card - mobile breakpoint */
+
+  .wrapper-splash-page.wallstreet80sclub .template-author-card .block-splash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .template-author-card .text-splash {
+    padding: 0;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .template-author-card {
+    background-size: 40vw auto;
+    background-position: center 20.5vw;
+    height: 95vw;
+    padding: 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .title-splash
+    h3.text-gradient-template {
+    font-size: 7vw !important;
+    margin-bottom: 50vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .text-description {
+    width: 60%;
+    margin: 0;
+    padding: 0;
+    font-size: 2.7vw;
+    line-height: 2.7vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper {
+    margin: 4vw 0 0 0;
+    padding: 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form {
+    margin: 1.4vw 0 0 0;
+  }
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form
+    button {
+    width: 30vw;
+    height: 5vw;
+    font-size: 2vw;
+    line-height: 2vw;
+    border-radius: 0;
+    padding: 0.2vw 0 0 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form
+    button
+    img.metamask-logo {
+    width: 2.6vw;
+    height: auto;
+    margin: 0 1.6vw 0 0;
+  }
+
+  /**/
+  .wrapper-splash-page.wallstreet80sclub .membership-block {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .membership-block-text {
+    text-align: center;
+    width: 40vw;
+    display: flex;
+    font-size: 24px;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .membership-block-image {
+    margin-top: 5vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .membership-block {
+    flex-direction: column;
+  }
+
+  .warning-modal-col-0 {
+    width: 33%;
+  }
+
+  .warning-modal-col-1 {
+    width: 34%;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .main-greyman-pic-wrapper {
+    width: 90vw;
+    display: -webkit-inline-box !important;
+    margin-left: -2rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens {
+    flex-direction: column;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .block-left-content-greyman {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens .block-left-tokens {
+    width: 29.5rem;
+    height: 29.5rem;
+    margin-right: 0 !important;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .wrapper-splash-page.wallstreet80sclub
+    .left-tokens
+    .text-progress
+    .progress-info {
+    display: flex;
+    width: 8.125rem;
+    height: 8.125rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .text-progress.progress-text-template {
+    bottom: 30%;
+    left: 30%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* carousel styles - mobile*/
+  .wrapper-splash-page.wallstreet80sclub .join-pic-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-container {
+    margin: 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-container .carousel {
+    width: 100%;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-description {
+    width: 384px;
+    font-size: 4.2vw;
+    margin: 4.2vw 0 0 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-container .join-pic-img {
+    width: 384px;
+    height: 384px;
+  }
+  /**/
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-home-splash-page
+    .img-teammate
+    img {
+    width: 384px;
+    height: 384px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .splashpage-subtitle {
+    margin: 13.4vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .btn-submit-with-form.need-help {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: 6.2vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .splashpage-subtitle.above-meet-team {
+    margin: 6.7vw 0 6.7vw 0;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .warning-modal-col-0 {
+    width: 37%;
+  }
+
+  .warning-modal-col-1 {
+    width: 38%;
+  }
+
+  .warning-modal-col-0-title {
+    margin-top: -2rem;
+  }
+
+  .warning-modal-col-1-title {
+    margin-top: -2rem;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .wrapper-splash-page.wallstreet80sclub .left-tokens-response {
+    margin-top: 90px;
+  }
+  /* author card - smaller mobile breakpoint */
+  .wrapper-splash-page.wallstreet80sclub .template-author-card {
+    background-size: 42vw auto;
+    background-position: center 20.5vw;
+    height: 98vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .title-splash
+    h3.text-gradient-template {
+    font-size: 7.4vw !important;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .text-description {
+    width: 70%;
+    font-size: 3.5vw;
+    line-height: 3.5vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper {
+    margin: 3.5vw 0 0 0;
+    padding: 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form {
+    margin: 1.4vw 0 0 0;
+  }
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form
+    button {
+    width: 35vw;
+    height: 6vw;
+    font-size: 2.8vw;
+    line-height: 2.8vw;
+    border-radius: 0;
+    padding: 1vw 0 0 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form
+    button
+    img.metamask-logo {
+    width: 2.6vw;
+    height: auto;
+    margin: 0 1.6vw 0.8vw 0;
+  }
+  /**/
+  .wrapper-splash-page.wallstreet80sclub .splash-team {
+    margin-bottom: 700px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  /* carousel styles - breakpoint*/
+  .wrapper-splash-page.wallstreet80sclub .carousel-container .join-pic-img {
+    width: 50vw;
+    height: 50vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .carousel-description {
+    width: 384px;
+    font-size: 4.7vw;
+  }
+  /**/
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-home-splash-page
+    .img-teammate
+    img {
+    width: 50vw;
+    height: 50vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .splash-team {
+    margin-bottom: 800px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .splashpage-subtitle.below-need-help {
+    font-size: 6.7vw;
+    line-height: 6.7vw;
+    margin: 15vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .splashpage-subtitle.splashpage-subtitle.above-meet-team {
+    font-size: 6.7vw;
+    line-height: 6.7vw;
+    margin: 15vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .btn-submit-with-form.need-help {
+    margin-top: 15vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .splashpage-subtitle {
+    font-size: 6.7vw;
+    line-height: 6.7vw;
+    margin: 15vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .title-tokens h3 span {
+    font-size: 6vw !important;
+    line-height: 4vw !important;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .membership-block-text {
+    font-size: calc(16px + 0.5vw);
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .numbered-circle {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  .warning-modal-col-0-title {
+    margin-top: 2rem;
+  }
+
+  .warning-modal-col-1-title {
+    margin-top: 2.125rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .wrapper-splash-page.wallstreet80sclub
+    .left-tokens-content
+    .tokens-description
+    p {
+    font-size: 1.2rem;
+    line-height: 1.7rem;
+  }
+  /* carousel - breakpoint */
+  .wrapper-splash-page.wallstreet80sclub .carousel-container {
+    margin: 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .carousel-container
+    .carousel-description {
+    width: 100%;
+    padding: 0 10px;
+  }
+  /* author card - smallest mobile breakpoint */
+
+  .wrapper-splash-page.wallstreet80sclub .template-author-card {
+    background-size: 50vw auto;
+    background-position: center 18vw;
+    height: 112vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .title-splash
+    h3.text-gradient-template {
+    font-size: 7.4vw !important;
+    margin-bottom: 58vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .text-description {
+    width: 90%;
+    font-size: 4.5vw;
+    line-height: 4.5vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper {
+    margin: 3.5vw 0 4vw 0;
+    padding: 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form {
+    margin: 1.4vw 0 0 0;
+  }
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form
+    button {
+    width: 45vw;
+    height: 8vw;
+    font-size: 3.8vw;
+    line-height: 3.8vw;
+    border-radius: 0;
+    padding: 1vw 0 0 0;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form
+    button
+    img.metamask-logo {
+    width: 4vw;
+    height: auto;
+    margin: 0 2vw 1vw 0;
+  }
+  /**/
+  .wrapper-splash-page.wallstreet80sclub .btn-submit-with-form button {
+    width: 60vw;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens .block-left-tokens {
+    width: 21.875rem;
+    height: 21.875rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .left-tokens
+    .block-left-tokens
+    .down-text {
+    left: 0.625rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .left-tokens
+    .text-progress
+    .progress-info {
+    width: 8.125rem;
+    height: 8.125rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .text-progress.progress-text-template {
+    top: 25%;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .text-progress.progress-text-template
+    .text-whole-tokens {
+    font-size: 0.875rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .text-progress.progress-text-template
+    .text-numbers {
+    font-size: 2.063rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .box-progress.progress-template {
+    bottom: 0;
+    left: 0 !important;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .box-progress.progress-template
+    .css-1l24ewf-MuiCircularProgress-root {
+    left: 0.375rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens .progress-main svg {
+    width: 12.5rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub
+    .box-progress.progress-template
+    .MuiCircularProgress-svg.css-1idz92c-MuiCircularProgress-svg {
+    width: 12.5rem;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .template-home-splash-page .splash-team-greyman {
+    margin-bottom: 56.25rem;
+  }
+  .wrapper-splash-page.wallstreet80sclub .splash-team {
+    margin-bottom: 900px;
+  }
+}
+
+@media screen and (min-width: 2500px) {
+  html {
+    font-size: 1rem;
+  }
+  .genesis-font {
+    font-size: 2rem !important;
+  }
+  .position-teammate {
+    justify-content: start !important;
+  }
+}

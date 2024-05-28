@@ -1,0 +1,34 @@
+.home-page-filter-modal {
+  width: 282px;
+  /* height: 192px; */
+  background: #383637;
+  border-radius: 16px;
+  border: 1px solid #4e4d4d;
+  padding: 24px 16px 16px 16px;
+}
+.home-filter-modal-button {
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.accordion-content-wrapper {
+  margin-bottom: 1rem;
+}
+.dark-theme {
+  color: white;
+  background-color: #383637;
+}
+.light-theme {
+  color: black;
+  background-color: transparent;
+}
+.accordion-item-heading {
+  display: flex;
+  justify-content: space-between;
+}
+.accordion-item-heading-text {
+  min-width: 105px;
+  text-align: start;
+}

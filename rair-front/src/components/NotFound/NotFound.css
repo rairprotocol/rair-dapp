@@ -1,0 +1,64 @@
+.not-found-page {
+  margin-top: 100px;
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.not-found-page h3 {
+  font-size: 40px;
+  margin: 20px 0;
+}
+
+.not-found-page h3 span {
+  font-size: 100px;
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 45px;
+  font-weight: 700;
+}
+
+.not-found-page .go-back {
+  font-size: 24px;
+  color: #805fda;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 500px) {
+  .not-found-page h3 {
+    font-size: 25px;
+  }
+
+  .not-found-page h3 span {
+    font-size: 70px;
+  }
+
+  .not-found-page p {
+    padding: 0 10px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .not-found-page {
+    margin: 30px 0;
+  }
+}

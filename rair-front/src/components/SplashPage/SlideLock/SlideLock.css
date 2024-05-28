@@ -1,0 +1,347 @@
+/* use .wrapper-splash-page.slidelock selector to override any general styling*/
+
+.wrapper-splash-page.slidelock .template-author-card {
+  /* background-position: center 23vw; */
+  background-size: 37vw auto;
+}
+
+.wrapper-splash-page.slidelock
+  .template-author-card
+  .text-splash
+  .title-splash {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.slide-lock-custom-button {
+  background-color: #57b69c !important;
+}
+
+.wrapper-splash-page.slidelock .template-author-card .text-splash {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 3vw 0 0 8vw;
+}
+
+.wrapper-splash-page.slidelock
+  .template-author-card
+  .text-splash
+  .text-description {
+  padding: 3vw 3vw;
+  width: 80%;
+}
+
+.wrapper-splash-page.slidelock
+  .template-author-card
+  .text-splash
+  .btn-submit-with-form {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper-splash-page.slidelock
+  .template-author-card
+  .text-splash
+  .title-splash
+  img.author-card-title-image {
+  width: 100%;
+}
+
+.wrapper-splash-page.slidelock .main-greyman-pic-wrapper .join-pic-main img,
+.wrapper-splash-page.slidelock .list-of-greymans-pic .join-pic img {
+  border-radius: 16px;
+}
+
+.wrapper-splash-page.slidelock .main-greyman-pic-wrapper {
+  width: 90vw;
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper-splash-page.slidelock .left-tokens-content .tokens-description {
+  width: 100%;
+}
+
+.wrapper-splash-page.slidelock .left-tokens {
+  max-width: 1600px;
+}
+
+@media screen and (max-width: 2000px) {
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .title-splash
+    img.author-card-title-image {
+    width: 90%;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .btn-submit-with-form {
+    padding: 0 1vw;
+  }
+}
+
+@media screen and (max-width: 1320px) {
+  .wrapper-splash-page.slidelock .main-greyman-pic-wrapper {
+    margin-left: 0rem;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .wrapper-splash-page.slidelock .template-author-card {
+    /* background-position: center 23vw; */
+    background-size: 40vw auto;
+  }
+
+  .wrapper-splash-page.slidelock .template-author-card .text-splash {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 4vw 0 0 6vw;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .text-description {
+    padding: 3vw 2vw;
+    width: 80%;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .btn-submit-with-form {
+    margin: 0;
+    padding: 0 1vw;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .title-splash
+    img.author-card-title-image {
+    width: 80%;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens-content .tokens-description {
+    width: 100% !important;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-splash-page.slidelock .template-author-card {
+    background-position: center 23vw;
+    background-size: 55vw auto;
+    padding: 0 0 0 0;
+    height: 90vw;
+    padding-bottom: 0;
+  }
+
+  .wrapper-splash-page.slidelock .template-author-card .text-splash {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-left: 0vw;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .title-splash {
+    justify-content: center;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .title-splash
+    img.author-card-title-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10vw !important;
+    height: auto;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 47vw;
+    padding: 0 0 0 0;
+  }
+
+  .wrapper-splash-page.slidelock .main-greyman-pic-wrapper {
+    width: 90vw;
+    display: -webkit-inline-box !important;
+    margin-left: -2rem;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens {
+    flex-direction: column;
+  }
+
+  .wrapper-splash-page.slidelock .block-left-content-greyman {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens .block-left-tokens {
+    width: 472px;
+    height: 472px;
+    margin-right: 0 !important;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .wrapper-splash-page.slidelock .template-author-card {
+    background-size: 57vw auto;
+    background-position: center 29vw;
+    height: 100vw;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .title-splash
+    img.author-card-title-image {
+    margin-bottom: 50vw;
+  }
+
+  .wrapper-splash-page.slidelock .title-nft {
+    text-align: left;
+    margin-bottom: 0px;
+  }
+
+  .wrapper-splash-page.slidelock .tokens-description.false {
+    text-align: center;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .wrapper-splash-page.slidelock .template-author-card {
+    background-position: center 34vw;
+    background-size: 60vw auto;
+    height: 110vw;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .title-splash
+    img.author-card-title-image {
+    margin-top: 0vw;
+    margin-bottom: 55vw;
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper-splash-page.slidelock .template-author-card {
+    background-position: center 37vw;
+    height: 115vw;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .title-splash
+    img.author-card-title-image {
+    margin-bottom: 60vw;
+    width: 80%;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens-content .tokens-description p {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .wrapper-splash-page.slidelock .template-author-card {
+    background-position: center 35vw;
+    background-size: 65vw auto;
+    height: 120vw;
+  }
+
+  .wrapper-splash-page.slidelock
+    .template-author-card
+    .text-splash
+    .title-splash
+    img.author-card-title-image {
+    margin-bottom: 60vw;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens .block-left-tokens {
+    width: 350px;
+    height: 350px;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens .block-left-tokens .down-text {
+    left: 10px;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens .text-progress .progress-info {
+    width: 130px;
+    height: 130px;
+  }
+
+  .wrapper-splash-page.slidelock .text-progress.progress-text-template {
+    top: 25%;
+  }
+
+  .wrapper-splash-page.slidelock
+    .text-progress.progress-text-template
+    .text-whole-tokens {
+    font-size: 14px;
+  }
+
+  .wrapper-splash-page.slidelock
+    .text-progress.progress-text-template
+    .text-numbers {
+    font-size: 33px;
+  }
+
+  .wrapper-splash-page.slidelock .box-progress.progress-template {
+    bottom: 0;
+    left: 0 !important;
+  }
+
+  .wrapper-splash-page.slidelock
+    .box-progress.progress-template
+    .css-1l24ewf-MuiCircularProgress-root {
+    left: 6px;
+  }
+
+  .wrapper-splash-page.slidelock .left-tokens .progress-main svg {
+    width: 200px;
+  }
+
+  .wrapper-splash-page.slidelock
+    .box-progress.progress-template
+    .MuiCircularProgress-svg.css-1idz92c-MuiCircularProgress-svg {
+    width: 200px;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .template-home-splash-page .splash-team-greyman {
+    margin-bottom: 900px;
+  }
+}

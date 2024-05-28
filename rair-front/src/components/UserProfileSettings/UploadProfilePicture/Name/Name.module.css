@@ -1,0 +1,43 @@
+.field {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.field label {
+  text-transform: uppercase;
+  font-weight: 700;
+  color: white;
+  /* color: #676767; */
+}
+
+.field input {
+  border-radius: 15px;
+  border: 1px solid #b7b7b7;
+  /* border: 1px solid #bb73d7; */
+  padding: 5px 5px 5px 10px;
+  font-size: 18px;
+  transition: 0.2s;
+  background: #383637;
+}
+
+.field input:focus {
+  outline: none;
+  /* border: 1px solid #64d488; */
+  border: 1px solid #bb73d7;
+}
+
+.field input::placeholder {
+  color: #bebebe;
+}
+
+.name {
+  text-align: center;
+  /* text-transform: uppercase; */
+  font-weight: 700;
+  color: white;
+  /* color: #676767; */
+  max-width: 220px;
+  overflow-wrap: break-word;
+}

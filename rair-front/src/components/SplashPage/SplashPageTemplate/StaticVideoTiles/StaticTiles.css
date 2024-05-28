@@ -1,0 +1,15 @@
+.title-gets h3 {
+  font-size: 32px !important;
+}
+.block-videos {
+  justify-content: center;
+  text-align: left;
+}
+@media screen and (max-width: 700px) {
+  .video-locked {
+    width: 90vw;
+  }
+  .box-video {
+    margin-right: 0;
+  }
+}

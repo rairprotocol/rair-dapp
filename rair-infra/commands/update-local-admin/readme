@@ -1,0 +1,22 @@
+This script is intended for "easy" use of admin tools in a locally deployed rairnode.
+Due to the way admin credentials are used in the production applicaton, it is difficult 
+to make changes to the database through API calls. This means we have to do it manually
+in order to gain use of admin functions. There is probably another way around this, but this
+script is simply intended to allow for quick developer use. Some thinga re a little hacky at 
+the moment. But it does the trick. If there are any issues please contact Zeph.
+
+The process is as follows:
+
+First and foremost, use of this script requires ownership of an NFT which can be referenced for 
+admin privleges. Any NFT will do. But make note of the network it was minted on as thats must 
+be supplied to "admin_nft_chain" variable in the main .env file of the rair repository. 
+
+Next, a new user must be added to the database and that user object must contain references to our 
+developer Ethereum address and the NFT we wish to use as our adminNFT. The quickest way 
+to do this is by way of Postman and the RAIR Postman Collection (located in rair/assets/postman).
+See the Confluence article titled "Local Deployment" for instructions on how to set up and use the
+desktop version of Postman.
+
+We can now run update_local_admin.sh. Supply the script with the proper data. Once complete, 
+we should be able to access the admin tools in our local deployment. Point the browser to localhost, 
+and if logged in to metamask, logout and then login again. The admin tools should now be accessible. 

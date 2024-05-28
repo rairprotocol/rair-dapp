@@ -1,0 +1,59 @@
+.media-item-title {
+  width: 15rem;
+}
+
+.media-item-title .btn.rounded-rairo.mx-5.rhyno,
+.media-item-title .btn.btn-success.rounded-rairo.rhyno {
+  background-color: var(--rhyno-80);
+  color: #565656;
+}
+
+.media-item-title .btn.rounded-rairo.mx-5,
+.media-item-title .btn.btn-success.rounded-rairo {
+  background-color: var(--charcoal-80);
+}
+
+.media-item-title .btn.btn-success.rounded-rairo.mx-3,
+.mediaItem-group-btn .btn.btn-success.rounded-rairo {
+  border: 1.5px solid #198754;
+}
+
+.media-item-title .btn.btn-success.rounded-rairo.mx-3:hover,
+.mediaItem-group-btn .btn.btn-success.rounded-rairo:hover {
+  background-color: #198754;
+}
+
+.media-item-title .btn.btn-success.rounded-rairo.mx-3.modal-open,
+.mediaItem-group-btn .btn.btn-success.rounded-rairo.modal-open {
+  background-color: #198754;
+}
+
+.media-item-title input {
+  width: 15rem;
+}
+
+.media-item-title .mediaItem-group-btn {
+  margin-top: 10px;
+}
+
+@media screen and (max-width: 1360px) {
+  .media-item-title input,
+  .media-item-title {
+    width: 12rem;
+  }
+
+  .media-item-title p {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .media-item-title input,
+  .media-item-title {
+    width: 10rem;
+  }
+
+  .media-item-title p {
+    font-size: 14px;
+  }
+}

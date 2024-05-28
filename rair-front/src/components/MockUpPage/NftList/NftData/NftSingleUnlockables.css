@@ -1,0 +1,209 @@
+.wrapper-unlockables-page {
+  width: 85vw;
+  margin: 30px auto;
+}
+
+.nft-single-unlockables-page {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.nft-single-unlockables-page .nft-rarity-wrapper {
+  width: 100%;
+}
+
+.nft-single-unlockables-page .nft-rarity-wrapper .video-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nft-single-unlockables-page .nft-unlokvideo-description {
+  display: flex;
+  flex-direction: column;
+  width: inher;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 24px;
+}
+
+.nft-single-unlockables-page .nft-unlokvideo-description p {
+  font-size: 20px;
+  color: white;
+}
+
+.nft-single-unlockables-page .nft-unlokvideo-description.rhyno p {
+  color: #222021;
+}
+
+.nft-rarity-wrapper .video-wrapper .video-box-rarity {
+  cursor: pointer;
+  display: flex;
+  border-radius: 16px;
+  width: 592px;
+}
+
+.video-box-rarity .block-rariry-unlock-video {
+  position: relative;
+}
+
+.video-box-rarity .block-rariry-unlock-video img {
+  width: 230px;
+  height: 135px;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+
+.video-box-rarity .block-rariry-unlock-video.lock img {
+  opacity: 0.4;
+  filter: blur(3px);
+}
+
+.video-box-rarity .block-rariry-unlock-video.lock .custom-lock {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e882d5;
+  border-radius: 50%;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -35%);
+  z-index: 1;
+}
+
+.video-box-rarity .block-rariry-unlock-video.lock .custom-lock i {
+  padding: 7px 0 0 0px;
+}
+
+.video-rarity-preview-text {
+  margin-top: 9px;
+  text-align: center;
+  margin-left: -85px;
+  width: 200px;
+  color: #a7a6a6;
+}
+
+.video-rarity-preview-text.rhyno {
+  color: #222021;
+}
+
+.video-rarity-preview-text.long {
+  margin-left: -5.8rem;
+  width: 200px;
+  height: 50px;
+  word-wrap: break-word;
+  overflow: auto;
+}
+
+@media screen and (max-width: 1375px) {
+  .nft-rarity-wrapper .video-wrapper .video-box-rarity {
+    width: 500px;
+  }
+}
+
+@media screen and (max-width: 1175px) {
+  .nft-rarity-wrapper .video-wrapper .video-box-rarity {
+    width: 430px;
+  }
+
+  .video-box-rarity .block-rariry-unlock-video img {
+    width: 200px;
+    height: 120px;
+  }
+
+  .video-rarity-preview-text.long {
+    width: 200px;
+    padding-left: 8px;
+    font-size: 14px;
+    word-wrap: break-word;
+  }
+
+  .nft-single-unlockables-page .nft-unlokvideo-description p {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .video-box-rarity .block-rariry-unlock-video img {
+    width: 230px;
+    height: 135px;
+  }
+
+  .video-rarity-preview-text.logn {
+    width: 200px;
+  }
+
+  .nft-rarity-wrapper .video-wrapper .video-box-rarity {
+    width: 592px;
+  }
+
+  .nft-single-unlockables-page .nft-rarity-wrapper .video-wrapper {
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 845px) {
+  .wrapper-unlockables-page {
+    /* padding-top: 6rem; */
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .nft-rarity-wrapper .video-wrapper .video-box-rarity {
+    width: 420px;
+  }
+
+  .video-box-rarity .block-rariry-unlock-video img {
+    width: 200px;
+    height: 100px;
+  }
+
+  .nft-single-unlockables-page .nft-unlokvideo-description p {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .nft-rarity-wrapper .video-wrapper .video-box-rarity {
+    width: 320px;
+  }
+
+  .video-box-rarity .block-rariry-unlock-video img {
+    width: 145px;
+    height: 85px;
+  }
+
+  .nft-single-unlockables-page .nft-unlokvideo-description p,
+  .video-rarity-preview-text,
+  .video-rarity-preview-text.long {
+    font-size: 12px;
+  }
+
+  .video-rarity-preview-text.long {
+    width: 145px;
+    height: 30px;
+    margin-left: -4rem;
+    word-wrap: break-word;
+  }
+
+  .video-box-rarity .block-rariry-unlock-video.lock .custom-lock {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  .video-rarity-preview-text {
+    margin-left: -91px;
+  }
+
+  .video-box-rarity .block-rariry-unlock-video.lock .custom-lock i {
+    padding: 4px 0 0 0;
+  }
+}

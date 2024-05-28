@@ -1,0 +1,18 @@
+{
+  "env": {
+    "es2020": true,
+    "node": true,
+    "es6": true
+  },
+  "extends": [
+    "airbnb-base",
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "no-underscore-dangle": 0,
+    "object-curly-newline":"off"
+  }
+}

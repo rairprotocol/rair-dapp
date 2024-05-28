@@ -1,0 +1,114 @@
+.rhyno {
+  height: 18.75rem;
+  width: 100%;
+  width: calc(302px * 4 + 10px);
+
+  border-radius: 1rem;
+  background: #ebebeb;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 0.3s all ease;
+}
+
+/* .rhyno:hover{
+  transform: scale(1.3);
+} */
+
+.charcoal {
+  height: 18.75rem;
+  width: 100%;
+  width: calc(302px * 4 + 10px);
+
+  border-radius: 1rem;
+  background: #383637;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 0.3s all ease;
+}
+
+/* .charcoal:hover{
+  transform: scale(1.3);
+} */
+
+.loadingProfile {
+  width: 100%;
+  text-align: center;
+  height: 18.75rem;
+  margin: auto;
+  font-size: 30px;
+  padding-top: 6rem;
+}
+
+.blockAddBackrhyno {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 0px;
+  background: #ffffff;
+  border-radius: 1rem;
+  margin: 1rem 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s all ease;
+  cursor: pointer;
+}
+.blockAddBackrhyno:hover {
+  background: var(--charcoal-40);
+}
+
+.blockAddBackcharcoal {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 0px;
+  background: var(--charcoal-80);
+  border-radius: 1rem;
+  margin: 1rem 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s all ease;
+  cursor: pointer;
+}
+.blockAddBackcharcoal:hover {
+  background: var(--charcoal-40);
+}
+
+.inputFile {
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputFile input {
+  display: none;
+}
+
+.plus {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #19a7f6;
+}
+
+@media screen and (max-width: 1280px) {
+  .rhyno,
+  .charcoal {
+    width: 85vw;
+  }
+}

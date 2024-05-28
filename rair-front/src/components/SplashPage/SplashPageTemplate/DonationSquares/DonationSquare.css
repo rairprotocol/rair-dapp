@@ -1,0 +1,173 @@
+.donation-grid {
+  align-self: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.donation-square {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 570px;
+}
+
+.donation-square-title {
+  font-family: 'Acme', sans-serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 45.5px;
+  margin: 0;
+}
+
+.donation-square-image {
+  margin: 41px 12px 0 12px;
+  border-radius: 16px;
+  position: relative;
+  width: 546px;
+  height: 546px;
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.donation-square .btn-submit-with-form {
+}
+
+.donation-square .btn-submit-with-form button.donation-square-button {
+  font-size: 40px;
+  line-height: 28px;
+  font-family: 'Plus Jakarta Sans Bold', sans-serif;
+  width: 560px;
+  height: 126px;
+  margin: 29px 5px 0 5px;
+  border-radius: 16px;
+}
+
+.donation-square-textbox {
+  width: 570px;
+  margin: 50px 0 0 0;
+  border-radius: 16px;
+  border: 1px dotted #8a8a8a;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donation-square-inner-textbox {
+  width: 483px;
+}
+
+.donation-square-textbox.zero {
+  height: auto;
+  margin-bottom: 136px;
+}
+
+.donation-square-inner-textbox.zero {
+  height: 1000px;
+  margin-top: 60px;
+}
+
+.donation-square-textbox.one {
+  height: 930px;
+}
+
+.donation-square-inner-textbox.one {
+  height: 840px;
+  margin-top: 60px;
+}
+
+.donation-square-textbox-row {
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 45.5px;
+  margin-bottom: 45.5px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  width: 100%;
+}
+
+/* responsive units */
+@media screen and (max-width: 1266px) {
+  /**/
+
+  .donation-square {
+    width: 39.583vw;
+  }
+
+  .donation-square-title {
+    font-size: 2.778vw;
+    line-height: 3.16vw;
+    margin-top: 2vw;
+  }
+
+  .donation-square-image {
+    margin: 2vw 0.833vw 0 0.833vw;
+    border-radius: 16px;
+    width: 37.917vw;
+    height: 37.917vw;
+  }
+
+  .donation-square .btn-submit-with-form button.donation-square-button {
+    font-size: 2.778vw;
+    line-height: 1.944vw;
+    width: 38.889vw;
+    height: 8.75vw;
+    margin: 2.014vw 0.347vw 0 0.347vw;
+    border-radius: 16px;
+  }
+
+  .donation-square-textbox {
+    width: 39.583vw;
+    margin: 3.472vw 0 0 0;
+    border-radius: 16px;
+  }
+
+  .donation-square-inner-textbox {
+    width: 33.542vw;
+  }
+
+  .donation-square-textbox.zero {
+    height: 83.333vw;
+    margin-bottom: 2vw;
+  }
+
+  .donation-square-inner-textbox.zero {
+    height: 69.444vw;
+    margin-top: 6.25vw;
+  }
+
+  .donation-square-textbox.one {
+    height: 64.583vw;
+  }
+
+  .donation-square-inner-textbox.one {
+    height: 58.333vw;
+    margin-top: 4.167vw;
+  }
+
+  .donation-square-textbox-row {
+    font-size: 2.5vw;
+    line-height: 3.16vw;
+    margin-bottom: 3.16vw;
+  }
+
+  /**/
+  .donation-square {
+    width: 60%;
+    border: 1px solid #d4d4d4;
+    border-radius: 16px;
+    margin-bottom: 1.958vw;
+    padding: 0 0 2vw 0;
+  }
+
+  .donation-square:last-child {
+    margin-bottom: 0;
+  }
+
+  .donation-square-title:hover {
+    color: #8ffdff;
+  }
+}

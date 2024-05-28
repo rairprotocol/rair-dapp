@@ -1,0 +1,120 @@
+/* Carousel Styles*/
+
+.carousel-description {
+  width: 21vw;
+  /* padding: 0 5vw; */
+  margin: 2vw 0;
+  font-size: calc(12px + 0.5vw);
+}
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 10vw 0;
+  align-items: center;
+}
+
+.carousel-container .carousel-title {
+  margin-bottom: calc(24px + 1vw);
+  text-align: center;
+  font-weight: 500;
+  font-size: calc(32px + 0.5vw);
+  width: 100%;
+}
+
+.carousel-container .carousel-items {
+  margin-bottom: calc(16px + 1vw);
+  font-weight: 700;
+  font-size: calc(24px + 0.5vw);
+}
+
+.carousel-container .carousel-list {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex-wrap: nowrap;
+  align-content: space-between;
+  justify-content: space-around;
+  align-items: baseline;
+}
+
+.carousel-container .carousel {
+  width: 80%;
+}
+
+.carousel-container .join-pic-img {
+  width: 21vw;
+  height: 21vw;
+  border-radius: 16px;
+}
+
+/* Media */
+
+@media screen and (max-width: 1100px) {
+  .carousel-container {
+    margin: 12vw 0;
+  }
+  .carousel-container .carousel-title {
+    text-align: center;
+  }
+
+  .carousel-description {
+    width: 24vw;
+  }
+
+  .carousel-container .join-pic-img {
+    width: 24vw;
+    height: 24vw;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .carousel-container {
+    margin: 15vw 0;
+  }
+
+  .wrapper-splash-page.ukraineglitch .carousel-container {
+    margin: 15vw 0 0 0;
+  }
+
+  .carousel-container .carousel {
+    width: 100%;
+  }
+
+  .carousel-description {
+    width: 384px;
+  }
+
+  .carousel-container .join-pic-img {
+    width: 384px;
+    height: 384px;
+  }
+
+  .join-pic-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 570px) {
+  .carousel-container .join-pic-img {
+    width: 50vw;
+    height: 50vw;
+  }
+
+  .carousel-container .carousel-description {
+    margin: 3vh;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .carousel-container {
+    margin: 20vw 0;
+  }
+
+  .carousel-container .carousel-description {
+    width: 100%;
+    padding: 0 10px;
+  }
+}

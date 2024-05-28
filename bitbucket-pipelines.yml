@@ -1,0 +1,75 @@
+image: node:16.13.0
+definitions:
+  services:
+    docker:
+      memory: 3072
+
+pipelines:
+
+  default:
+
+    # Runs whenever file at includePaths (rairapi_current.yaml) is changed
+    - step:
+        name: Update RAIR API definition on rairtech.readme.com
+        script:
+          - npm install -g rdme
+          - ./rairnode/readme/utils/update_readme.sh
+        condition:
+          changesets:
+            includePaths:
+              - "rairnode/readme/openapi/rairapi_current.yaml"
+
+
+  pull-requests:
+
+    '**': #this runs as default for any branch not elsewhere defined
+
+      - step:
+          name: Install Dependencies and run typescript test for minting-network
+          caches:
+            - node
+          script:
+            - yarn --cwd ./minting-marketplace
+            - cd ./minting-marketplace && ./commands/run_tsc.sh
+          condition:
+            changesets:
+              includePaths:
+                - "minting-marketplace/**"
+
+      - step:
+          name: Run yarn install and compare generated yarn lock file with committed lock file
+          caches:
+            - node
+          script:
+            - cd ./commands/dependency_sync_check/ && ./init.sh
+          condition:
+            changesets:
+              includePaths:
+                - "**/package.json"
+                - "**/yarn.lock"
+
+      - step:
+          name: Test that frontend app builds successfully
+          caches:
+            - node
+          services:
+            - docker
+          script:
+            - cd ./commands/bitbucket-pipelines/frontend-build-success-pipeline/ && ./init.sh
+          condition:
+            changesets:
+              includePaths:
+               - "minting-marketplace/**"
+
+    feature/*: #any branch with a feature prefix
+      - step:
+          name: Install Dependencies and run typescript test for minting-network
+          caches:
+            - node
+          script:
+            - yarn --cwd ./minting-marketplace
+            - cd ./minting-marketplace && ./commands/run_tsc.sh
+          condition:
+            changesets:
+              includePaths:
+                - "minting-marketplace/**"

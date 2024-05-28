@@ -1,0 +1,573 @@
+.wrapper-splash-page.mark-kohler {
+}
+
+.splash-button-card {
+  border-radius: 16px;
+  height: 64px;
+  width: 100%;
+  border: none;
+  color: #ffffff;
+}
+
+.mark-kohler-purchase-button-black {
+  width: 100%;
+  height: 64px;
+  background: #000;
+  font-family: 'Plus Jakarta Sans';
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 28px;
+  padding: 14px 0px;
+  color: #ffffff;
+  border-radius: 16px;
+  border: none;
+}
+
+.mark-kohler-purchase-button {
+  width: 100%;
+  height: 64px;
+  background: linear-gradient(
+    96.34deg,
+    #035bbc 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+  font-family: 'Plus Jakarta Sans';
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 28px;
+  padding: 14px 0px;
+  color: #ffffff;
+  border-radius: 16px;
+  border: none;
+}
+
+.wrapper-splash-page.mark-kohler .template-home-splash-page {
+  width: 80vw;
+  white-space: pre-line;
+}
+
+.wrapper-splash-page.mark-kohler .container-about-conference {
+  padding: 130px 0px 0px;
+}
+
+.wrapper-splash-page.mark-kohler .container-about-conference h2 {
+  font-family: Nebulosa Black Display Stencil;
+  font-size: 42px;
+}
+
+.wrapper-splash-page.mark-kohler .container-about-conference .btn-enter-summit {
+  width: 735px;
+  height: 64px;
+  border-radius: 16px;
+  outline: none;
+  background: var(--stimorol);
+  border: none;
+  font-size: 28px;
+  color: #fff;
+}
+
+.nebulosa-font-style {
+  font-size: 2.08vw;
+}
+
+.wrapper-splash-page.mark-kohler
+  .container-about-conference
+  .about-conference-description {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 40px;
+}
+
+.wrapper-splash-page.mark-kohler
+  .container-about-conference
+  .about-conference-description.schedule {
+  text-align: left;
+  font-family: Nebulosa Black Display Stencil;
+}
+
+.wrapper-splash-page.mark-kohler
+  .container-about-conference
+  .about-conference-description.end-summit {
+  font-size: 20px;
+  font-family: Nebulosa Black Display Stencil;
+  padding: 0;
+}
+
+.wrapper-splash-page.mark-kohler
+  .container-about-conference
+  .about-conference-description
+  span {
+  color: #e180d6;
+}
+
+.container-about-conference .block-conference-link {
+  text-align: left;
+  font-size: 28px;
+  color: #e180d6;
+}
+
+.container-about-conference .block-paragragh-conference {
+  text-align: left;
+  font-size: 28px;
+  margin: 50px 0;
+  font-size: 400;
+}
+
+.container-about-conference .block-paragragh-conference span {
+  font-weight: 700;
+}
+
+.container-about-conference .about-conference-description-list {
+  text-align: left;
+  font-size: 28px;
+  line-height: 38px;
+}
+
+.container-about-conference .about-conference-container-list-mobile {
+  display: none;
+}
+
+.container-about-conference .about-conference-container-list-mobile ul {
+  padding-left: 0;
+  margin-top: 35px;
+  font-size: 18px;
+}
+
+.container-about-conference
+  .about-conference-container-list-mobile
+  ul
+  li:last-child {
+  margin-top: 5px;
+}
+
+.container-about-conference
+  .about-conference-container-list-mobile
+  ul
+  li:first-child {
+  color: #df76df;
+}
+
+.container-about-conference
+  .about-conference-description-list
+  .about-conference-container-list {
+  display: flex;
+  margin-bottom: 40px;
+}
+
+.container-about-conference
+  .about-conference-description-list
+  .about-conference-container-list:nth-child(odd)
+  ul:first-child {
+  width: 250px;
+  margin-right: 80px;
+}
+
+.wrapper-splash-page.mark-kohler .gap-for-aboutus {
+  margin-bottom: 650px;
+}
+
+.wrapper-splash-page.mark-kohler .block-video-the-summit {
+  margin: 130px 0;
+}
+
+.wrapper-splash-page.mark-kohler .container-title-of-video {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 47px;
+}
+
+.wrapper-splash-page.mark-kohler .container-title-of-video h2 {
+  font-family: Nebulosa Black Display Stencil;
+  font-size: 42px;
+}
+
+.wrapper-splash-page.mark-kohler
+  .container-title-of-video
+  .btn-help-the-summit {
+  width: 303px;
+  height: 64px;
+  font-size: 28px;
+  border-radius: 16px;
+  border: none;
+  outline: none;
+  background: var(--stimorol);
+  color: #fff;
+}
+
+.container-about-conference-image-text {
+  width: 40vw;
+  margin-right: 40px;
+}
+
+.container-about-conference-image {
+  display: flex;
+  align-items: center;
+}
+
+.container-about-conference-image img {
+  width: 34rem;
+  height: 20rem;
+}
+
+.mark-kohler-card-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #ffffff;
+  width: 85vw;
+  height: 642px;
+}
+
+.mark-kohler-text-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 50%;
+  height: 100%;
+  margin-left: 85px;
+}
+
+.mark-kohler-card-text {
+  color: #df76df;
+  font-size: 50px;
+  font-weight: 400;
+  font-family: 'Nebulosa Black Display Stencil';
+  line-height: 113.7%;
+  margin-top: 107px;
+  margin-bottom: 20px;
+  width: 538px;
+  text-align: start;
+}
+
+.mark-kohler-card-description {
+  color: #000000;
+  font-size: 28px;
+  font-weight: 400;
+  font-family: 'Nebulosa Black Display Stencil';
+  line-height: 129%;
+  width: 485px;
+  text-align: start;
+}
+
+.mark-kohler-card-image {
+  display: flex;
+  justify-content: flex-end;
+  width: 50%;
+  margin: 69px 61px 60px 0px;
+}
+
+.mark-kohler-card-buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 63px;
+  height: 148px;
+  width: 335px;
+  gap: 20px;
+}
+
+.mark-kohler-card-button-mint {
+  width: 100%;
+  height: 64px;
+  padding: 14px 0px;
+  font-family: 'Plus Jakarta Sans';
+  border-radius: 16px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 28px;
+  color: #ffffff;
+  border: none;
+  background: linear-gradient(
+    96.34deg,
+    #035bbc 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+}
+
+.mark-kohler-card-button-email-updates {
+  background: #000000;
+}
+
+@media screen and (max-width: 1448px) {
+  .container-about-conference
+    .about-conference-description-list
+    .about-conference-container-list:nth-child(odd)
+    ul:first-child {
+    width: 200px;
+    margin-right: 50px;
+  }
+
+  .about-conference-description-list
+    .about-conference-container-list:nth-child(7)
+    ul:first-child {
+    margin-right: 30px;
+  }
+
+  .about-conference-description-list
+    .about-conference-container-list
+    ul:first-child {
+    padding-left: 0;
+  }
+}
+
+@media screen and (max-width: 1448px) and (min-width: 1100px) {
+  .about-conference-description-list
+    .about-conference-container-list:nth-child(7) {
+    padding-left: 0;
+    font-size: 25px;
+  }
+
+  .about-conference-description-list
+    .about-conference-container-list:nth-child(7)
+    ul:first-child {
+    margin-right: 20px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .wrapper-splash-page.mark-kohler .template-home-splash-page {
+    width: 90vw;
+  }
+
+  .video-text-kohler {
+    font-size: 35px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-splash-page.mark-kohler .container-about-conference h2,
+  .wrapper-splash-page.mark-kohler .container-title-of-video h2 {
+    font-size: 35px;
+  }
+
+  .container-about-conference .about-conference-description-list,
+  .wrapper-splash-page.mark-kohler
+    .container-about-conference
+    .about-conference-description,
+  .container-about-conference .block-paragragh-conference,
+  .container-about-conference .block-conference-link {
+    font-size: 20px;
+  }
+
+  .wrapper-splash-page.mark-kohler .template-home-splash-page {
+    padding-left: 0;
+  }
+
+  .nebulosa-font-style {
+    font-size: 2.1vw;
+  }
+}
+
+@media screen and (max-width: 1032px) {
+  .container-about-conference-image {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .container-about-conference-image-text {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .wrapper-splash-page.mark-kohler
+    .container-about-conference
+    .btn-enter-summit {
+    width: 535px;
+    height: 48px;
+    font-size: 20px;
+  }
+
+  .wrapper-splash-page.mark-kohler
+    .container-title-of-video
+    .btn-help-the-summit {
+    width: 200px;
+    height: 48px;
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .container-about-conference
+    .about-conference-description-list
+    .about-conference-container-list
+    ul:first-child {
+    margin-right: 40px;
+  }
+}
+
+@media screen and (max-width: 930px) {
+  .container-about-conference
+    .about-conference-description-list
+    .about-conference-container-list
+    ul:first-child {
+    margin-right: 20px;
+  }
+
+  .nebulosa-font-style {
+    font-size: 3.2vw;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .container-about-conference
+    .about-conference-description-list
+    .about-conference-container-list {
+    display: flex;
+    margin-bottom: 15px;
+  }
+
+  .container-about-conference
+    .about-conference-description-list
+    .about-conference-container-list:nth-child(odd)
+    ul:first-child {
+    width: 150px;
+    margin-right: 30px;
+  }
+
+  .container-about-conference
+    .about-conference-description-list
+    .about-conference-container-list
+    ul:first-child {
+    margin-right: 10px;
+  }
+
+  .container-about-conference .about-conference-description-list {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 810px) {
+  .about-conference-description-list ul:first-child {
+    padding-left: 0;
+  }
+
+  .about-conference-description-list ul:last-child {
+    padding-left: 5px;
+  }
+}
+
+@media screen and (max-width: 740px) {
+  .container-about-conference .about-conference-container-list-mobile {
+    display: block;
+  }
+
+  .container-about-conference .about-conference-description-list.desktop {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 725px) {
+  .nebulosa-font-style {
+    font-size: 3.29vw;
+  }
+}
+
+@media screen and (max-width: 670px) {
+  .wrapper-splash-page.mark-kohler .container-about-conference h2,
+  .wrapper-splash-page.mark-kohler .container-title-of-video h2 {
+    font-size: 30px;
+  }
+
+  .container-about-conference .about-conference-description-list,
+  .wrapper-splash-page.mark-kohler
+    .container-about-conference
+    .about-conference-description,
+  .container-about-conference .block-paragragh-conference,
+  .container-about-conference .block-conference-link {
+    font-size: 18px;
+  }
+
+  .about-conference-description-list ul {
+    font-size: 16px;
+    padding-left: 0;
+  }
+
+  .container-about-conference .block-paragragh-conference {
+    margin: 20px 0;
+  }
+
+  .wrapper-splash-page.mark-kohler
+    .container-about-conference
+    .about-conference-description {
+    padding: 30px 0 0 0;
+  }
+
+  .wrapper-splash-page.mark-kohler .container-about-conference {
+    padding: 60px 10px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90vw;
+  }
+
+  .container-about-conference-image {
+    /* padding: 0 10px; */
+    width: 90vw;
+  }
+
+  .wrapper-splash-page.mark-kohler .gap-for-aboutus {
+    margin-bottom: 800px;
+  }
+
+  .wrapper-splash-page.mark-kohler
+    .container-about-conference
+    .btn-enter-summit {
+    width: 80vw;
+    font-size: 16px;
+  }
+
+  .wrapper-splash-page.mark-kohler .container-title-of-video {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.mark-kohler
+    .container-title-of-video
+    .btn-help-the-summit {
+    margin-top: 15px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .about-conference-description-list ul {
+    font-size: 14px;
+    padding-left: 0;
+  }
+}
+
+@media screen and (max-width: 539px) {
+  .nebulosa-font-style {
+    font-size: 21px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .container-about-conference-image img {
+    width: 16rem;
+    height: 9rem;
+  }
+}
