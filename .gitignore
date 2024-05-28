@@ -67,7 +67,7 @@ Thumbs.db
 .env-new
 blockchain-networks-service/.env
 commands/update-local-admin/.env
-
+.github/workflows/docker-image.yml
 #nginx configuration files
 nginx/*
 nginx-auth/*
