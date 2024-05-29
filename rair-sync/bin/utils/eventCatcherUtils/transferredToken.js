@@ -1,7 +1,7 @@
 const { constants } = require('ethers');
 const { MintedToken } = require('../../models');
 const { findContractFromAddress } = require('./eventsCommonUtils');
-const { redisClient } = require('../../services/redis');
+const { redisPublisher } = require('../../services/redis');
 
 module.exports = async (
   transactionData,
@@ -45,11 +45,11 @@ module.exports = async (
   const foundToken = await MintedToken.findOneAndUpdate(filter, update);
 
   if (from === constants.AddressZero) {
-    redisClient.set('notification', JSON.stringify({
+    redisPublisher.publish('notifications', JSON.stringify({
       type: 'tokenMint',
       message: `Token #${tokenId} was minted!`,
       address: contract.user,
-      additionalInfo: [foundToken._id],
+      data: [foundToken._id],
     }));
   }
 

@@ -167,7 +167,6 @@ module.exports = {
     try {
       const { networkId, contractAddress, limit, contractCreator } = req.body;
       const socket = req.app.get('socket');
-      socket.to(req.user.publicAddress).emit('Message', 'Importing contract');
       importContractData(
         networkId,
         contractAddress,

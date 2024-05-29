@@ -5,6 +5,7 @@ const log = require('../../utils/logger')(module);
 const { Contract, Product, Offer, OfferPool, MintedToken } = require('../../models');
 const { alchemy } = require('../../config');
 const { processMetadata } = require('../../utils/metadataClassify');
+const { emitEvent } = require('../socket.io');
 
 // Contract ABIs
 // The RAIR721 contract is still an ERC721 compliant contract,
@@ -129,14 +130,18 @@ module.exports = {
       return { success: false, result: undefined, message: `Only ERC721 is supported, tried to process a ${contractMetadata.tokenType} contract` };
     }
 
-    socket.to(importerAddress).emit('importProgress', {
-      progress: 0,
-      message: `${contractMetadata.totalSupply} tokens found`,
-      contractAddress,
-      blockchain: networkId,
-      creator: contractCreator,
-      limit,
-    });
+    emitEvent(socket)(
+      importerAddress,
+      'importProgress',
+      `${contractMetadata.totalSupply} tokens found`,
+      {
+        progress: 0,
+        contractAddress,
+        blockchain: networkId,
+        creator: contractCreator,
+        limit,
+      },
+    );
 
     if (!contract) {
       contract = new Contract({
@@ -194,14 +199,18 @@ module.exports = {
     for await (const nft of alchemySDK.nft.getNftsForContractIterator(contractAddress, {
       omitMetadata: false,
     })) {
-      socket.to(importerAddress).emit('importProgress', {
-        progress: (numberOfTokensAdded / importTarget) * 100,
-        message: `${numberOfTokensAdded} NFTs imported so far...`,
-        contractAddress,
-        blockchain: networkId,
-        creator: contractCreator,
-        limit,
-      });
+      emitEvent(socket)(
+        importerAddress,
+        'importProgress',
+        `${numberOfTokensAdded} NFTs imported so far...`,
+        {
+          progress: (numberOfTokensAdded / importTarget) * 100,
+          contractAddress,
+          blockchain: networkId,
+          creator: contractCreator,
+          limit,
+        },
+      );
       const ownerResponse = await alchemySDK.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
       [nft.owner] = ownerResponse.owners;
       if (insertToken(nft, contract._id)) {
@@ -226,14 +235,18 @@ module.exports = {
       await offerPool.save();
       await processMetadata(contract._id, product.collectionIndexInContract);
 
-      socket.to(importerAddress).emit('importProgress', {
-        progress: 100,
-        message: 'Complete',
-        contractAddress,
-        blockchain: networkId,
-        creator: contractCreator,
-        limit,
-      });
+      emitEvent(socket)(
+        importerAddress,
+        'importProgress',
+        'Complete',
+        {
+          progress: 100,
+          contractAddress,
+          blockchain: networkId,
+          creator: contractCreator,
+          limit,
+        },
+      );
 
       return {
         success: true,

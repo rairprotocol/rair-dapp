@@ -9,11 +9,10 @@ const { Server } = require('socket.io');
 const morgan = require('morgan');
 const session = require('express-session');
 const RedisStorage = require('connect-redis')(session);
-const redis = require('redis');
 const seedDB = require('./seeds');
 const log = require('./utils/logger')(module);
 const StartHLS = require('./hls-starter');
-const redisService = require('./services/redis');
+const { redisPublisher, redisSubscriber, redisClient } = require('./services/redis');
 const streamRoute = require('./routes/stream');
 const apiV1Routes = require('./routes');
 const mainErrorHandler = require('./utils/errors/mainErrorHandler');
@@ -26,17 +25,10 @@ const config = require('./config');
 const { mongoConnectionManager } = require('./mongooseConnect');
 
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
+const { emitEvent } = require('./integrations/socket.io');
 
 async function main() {
   const mediaDirectories = ['./bin/banners'];
-
-  // Create Redis client
-  const client = redis.createClient({
-    url: `redis://${config.redis.connection.host}:${config.redis.connection.port}`,
-    legacyMode: true,
-  });
-
-  client.connect().catch(log.error);
 
   mediaDirectories.forEach((folder) => {
     if (!fs.existsSync(folder)) {
@@ -67,16 +59,13 @@ async function main() {
     config,
     textPurify,
     redis: {
-      client,
+      redisService: redisPublisher,
     },
   };
 
-  // connect redisService
-  context.redis.redisService = redisService(context);
-
   const sessionMiddleware = session({
     store: new RedisStorage({
-      client,
+      client: redisClient,
       // config.session.ttl was removed from here and used
       //    for maxAge, because when maxAge used it will have no effect.
     }),
@@ -105,14 +94,7 @@ async function main() {
 
   app.use('/stream', streamRoute(context));
 
-  app.use(
-    '/api',
-    (req, res, next) => {
-      req.redisService = context.redis.redisService;
-      return next();
-    },
-    apiV1Routes,
-  );
+  app.use('/api', apiV1Routes);
   app.use(mainErrorHandler);
 
   socketIo.on('connection', (socket) => {
@@ -122,6 +104,15 @@ async function main() {
     socket.on('subscribe', (roomName) => {
       socket.join(roomName);
     });
+  });
+  redisSubscriber.subscribe('notifications', (notificationData) => {
+    try {
+      console.info(notificationData);
+      const { type, message, address, data } = JSON.parse(notificationData);
+      emitEvent(socketIo)(address, type, message, data);
+    } catch (err) {
+      log.error(err);
+    }
   });
   app.set('socket', socketIo);
 

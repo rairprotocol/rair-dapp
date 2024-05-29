@@ -1,24 +1,13 @@
-const { promisify } = require('util');
-
 const redis = require('redis');
 const config = require('../config');
+const log = require('../utils/logger')(module);
 // Create Redis client
-const redisClient = redis.createClient({
+const redisPublisher = redis.createClient({
   url: `redis://${config.redis.connection.host}:${config.redis.connection.port}`,
-  legacyMode: true,
 });
+const redisSubscriber = redisPublisher.duplicate();
 
-const getAsync = promisify(redisClient.get).bind(redisClient);
-const setAsync = promisify(redisClient.set).bind(redisClient);
+redisPublisher.connect().catch(log.error);
+redisSubscriber.connect().catch(log.error);
 
-const set = (key, object) => {
-  const value = JSON.stringify(object);
-  return setAsync(key, value);
-};
-const get = async (key) => {
-  const value = await getAsync(key);
-  if (!value) return value;
-  return JSON.parse(value);
-};
-
-module.exports = { redisClient, set, get };
+module.exports = { redisPublisher, redisSubscriber };
