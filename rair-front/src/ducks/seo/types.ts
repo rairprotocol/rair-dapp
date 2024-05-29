@@ -1,0 +1,2 @@
+export const SET_INFO_HELMET = 'SET_INFO_HELMET';
+export const RESET_INFO_HELMET = 'RESET_INFO_HELMET';

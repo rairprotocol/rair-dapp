@@ -1,0 +1,234 @@
+.container-resale-modal {
+  width: 100%;
+  background: #222021;
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.resale-pop-up-custom.rhyno .container-resale-modal {
+  background: var(--rhyno-40);
+}
+
+.container-resale-modal img {
+  width: 342px;
+  height: 342px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.resale-pop-up-custom {
+  padding: 0;
+  margin: 0;
+  width: 400px;
+  border-radius: 16px;
+  background: #222021;
+}
+
+.resale-pop-up-custom.rhyno {
+  background: var(--rhyno-40);
+}
+
+.container-resale-modal .resale-modal-blockchain-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  color: #fff;
+  margin-top: 20px;
+}
+
+.resale-pop-up-custom.rhyno
+  .container-resale-modal
+  .resale-modal-blockchain-container {
+  color: #2d2d2d;
+}
+
+.container-resale-modal .resale-modal-blockchain-block {
+  width: 120px;
+  height: 40px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  /* border: 1px solid #fff; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #383637;
+}
+
+.resale-pop-up-custom.rhyno
+  .container-resale-modal
+  .resale-modal-blockchain-block {
+  background: var(--rhyno);
+}
+
+.container-resale-modal .resale-modal-blockchain-block img {
+  height: 20px;
+  width: auto;
+}
+
+.container-resale-modal .resale-modal-information {
+  color: #fff;
+  padding-top: 10px;
+}
+
+.container-resale-modal .resale-modal-information.amount-titles {
+  display: flex;
+  justify-content: space-between;
+}
+
+.container-resale-modal .resale-modal-information-amount-node-total {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.container-resale-modal .resale-modal-information-amount-node-total div {
+  margin-top: 5px;
+  font-size: 18px;
+}
+
+.container-resale-modal .resale-modal-infotmation-subtitle {
+  display: flex;
+  font-size: 16px;
+}
+
+.container-resale-modal .resale-modal-infotmation-subtitle-usd {
+  margin-right: 50px;
+}
+
+.container-resale-modal .resale-modal-infotmation-title {
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #4d4d4d;
+}
+
+.resale-pop-up-custom.rhyno .container-resale-modal .resale-modal-information {
+  border-top: 1px solid var(--rhyno);
+}
+
+.resale-pop-up-custom.rhyno .container-resale-modal .resale-modal-information {
+  color: #2d2d2d;
+}
+
+.container-resale-modal .resale-modal-information-title {
+  font-size: 20px;
+  text-align: left;
+}
+
+.container-resale-modal .resale-modal-information-box {
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.container-resale-modal .resale-modal-group-btns {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.container-resale-modal .resale-modal-group-btns button,
+.container-resale-modal .resale-modal-group-btns input {
+  border-radius: 12px;
+  outline: none;
+  padding: 5px;
+  border: none;
+}
+
+.container-resale-modal .resale-modal-group-btns input {
+  width: 60%;
+}
+
+.resale-pop-up-custom.rhyno
+  .container-resale-modal
+  .resale-modal-group-btns
+  input {
+  background: rgb(250, 250, 250);
+}
+
+.container-resale-modal .resale-modal-group-btns button {
+  width: 35%;
+  color: #fff;
+}
+
+/* .container-resale-modal .resale-modal-group-btns button:hover {
+  background: var(--stimorol-hover);
+} */
+
+/* .container-resale-modal .resale-modal-group-btns button:active {
+  background: var(--stimorol-click);
+} */
+
+.resale-modal-group-btns .input-sell-container {
+  width: 90%;
+  border: 1px solid #fff !important;
+  border-radius: 12px;
+}
+
+.resale-modal-group-btns .input-sell-container .input-sell-value {
+  width: 85%;
+}
+
+.resale-modal-group-btns .input-sell-container .input-sell-close-icon {
+  right: 7px;
+  top: 7px;
+}
+
+.resale-switch-network-btn {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.resale-modal-group-btns .btn-remove-resale {
+  background: black;
+  border: 1px solid #fff;
+  width: 15% !important;
+  margin-left: 10px;
+  transition: all 0.2s ease;
+}
+
+.resale-modal-group-btns .btn-remove-resale:hover {
+  background: #fff;
+  color: #000;
+}
+
+.resale-modal-group-btns .btn-update-resale {
+  background: var(--stimorol);
+}
+
+.resale-modal-group-btns .btn-update-resale.disabled-resale-btn {
+  color: var(--charcoal-40);
+}
+
+.resale-modal-group-btns .btn-update-resale:hover {
+  background: var(--stimorol-hover);
+}
+
+.resale-modal-group-btns .btn-update-resale:active {
+  background: var(--stimorol-click);
+}
+
+.resale-modal-group-btns .btn-update-resale.hotdrops {
+  background: var(--hot-drops);
+}
+
+.resale-modal-group-btns .btn-update-resale.hotdrops:hover {
+  background: var(--hot-drops-hover);
+}
+
+.resale-modal-group-btns .btn-update-resale.hotdrops:active {
+  background: var(--hot-drops-click);
+}
+
+.resale-modal-group-btns .nft-btn-sell {
+  height: 100%;
+}

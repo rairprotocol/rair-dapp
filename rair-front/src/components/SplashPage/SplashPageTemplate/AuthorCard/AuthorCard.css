@@ -1,0 +1,500 @@
+/* overriding minting marketplace styling */
+
+@media screen and (max-width: 1077px) {
+  .col-1 {
+    width: inherit;
+  }
+
+  .col-1 img {
+    float: left;
+  }
+}
+
+@media screen and (max-width: 900px) and (min-width: 500px) {
+  .col-1.rounded {
+    display: block;
+    width: inherit;
+  }
+
+  .col-12.pt-2.mb-4 {
+    margin-right: 0px;
+  }
+}
+
+/* overriding about page */
+
+.template-home-splash-page .img-teammate {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.template-home-splash-page .img-teammate img {
+  width: 21vw;
+  height: 21vw;
+}
+
+.template-home-splash-page .splash-team-greyman {
+  margin-bottom: 600px;
+}
+
+@media screen and (max-width: 1100px) {
+  .template-home-splash-page .img-teammate img {
+    width: 24vw;
+    height: 24vw;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .template-home-splash-page .img-teammate img {
+    width: 384px;
+    height: 384px;
+  }
+
+  .template-home-splash-page .splash-team-greyman {
+    margin-bottom: 750px;
+  }
+}
+
+@media screen and (max-width: 570px) {
+  .template-home-splash-page .img-teammate img {
+    width: 50vw;
+    height: 50vw;
+  }
+}
+
+/* main block */
+
+.wrapper-splash-page {
+  display: flex;
+  justify-content: center;
+  background-image: none;
+  margin-top: 1rem;
+}
+
+.template-home-splash-page {
+  max-width: 90vw;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 0px;
+  overflow: hidden;
+}
+
+/* Author Information Block - specific selectors to avoid interfence with global style sheet */
+
+.template-author-card {
+  background-size: 30vw auto;
+  background-position: 88% center;
+  height: 42vw;
+  position: relative;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 24px;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+}
+
+.template-author-card .btn-help {
+  position: absolute;
+  top: 20px;
+  right: 5vw;
+  width: 200px;
+  height: 48px;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+}
+
+.template-author-card .block-splash {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  padding-left: 0vw;
+  height: 80%;
+}
+
+.template-author-card .text-splash {
+  display: flex;
+  flex-direction: column;
+  height: 75%;
+  justify-content: space-around;
+  padding-left: 10vw;
+}
+
+.template-author-card .block-splash .logo-author {
+  margin-top: 88px;
+}
+
+.template-author-card .block-splash .logo-author img:first-child {
+  width: 313px;
+  height: auto;
+}
+
+.template-author-card .text-splash .title-splash {
+  margin-bottom: 0px;
+}
+
+.template-author-card .text-splash h3 {
+  margin-bottom: 0px;
+}
+
+.template-author-card .text-splash .title-splash h3.text-gradient-template {
+  font-size: 5vw;
+  font-weight: 700;
+  z-index: 10;
+}
+
+.template-author-card .text-splash .title-splash img.author-card-title-image {
+  font-size: 5vw;
+  font-weight: 700;
+  z-index: 10;
+}
+
+.template-author-card .text-splash .text-description {
+  width: 50%;
+  font-size: 1.5vw;
+  padding: 0 5vw 0 0;
+  color: #a7a6a6;
+}
+
+/* buy metamask */
+.template-author-card .text-splash .btn-buy-metamask {
+  margin-top: 90px;
+}
+
+.template-author-card .text-splash .btn-buy-metamask button {
+  font-size: 20px;
+  color: #fff;
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+  width: 303px;
+  height: 64px;
+  border: none;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.template-author-card .text-splash .btn-buy-metamask button:hover {
+  background: linear-gradient(
+    320.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+  /* background: red; */
+}
+
+/* claim airdrop */
+
+.template-author-card .text-splash .btn-claim-airdrop {
+  margin-top: 40px;
+}
+
+.template-author-card .text-splash .btn-claim-airdrop button {
+  font-size: 20px;
+  color: #fff;
+  background: #79cbbd;
+  width: 303px;
+  height: 64px;
+  border: none;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.template-author-card .text-splash .btn-claim-airdrop button:hover {
+  background: #79cbbd;
+  /* background: red; */
+}
+
+/* submit with form*/
+
+.template-author-card .text-splash .button-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.template-author-card .text-splash .btn-submit-with-form {
+  margin-top: 2vw;
+}
+
+.template-author-card .text-splash .btn-submit-with-form button {
+  font-size: 1.5vw;
+  color: #fff;
+  background: #0a464f;
+  width: 20vw;
+  height: 5vw;
+  border: none;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.template-author-card .text-splash .btn-submit-with-form button:hover {
+  background: #0a464f;
+  /* background: red; */
+}
+
+.template-author-card
+  .text-splash
+  .btn-submit-with-form
+  button
+  img.metamask-logo {
+  width: 15%;
+  height: auto;
+  margin-right: 10px;
+}
+
+/* Media Responsive*/
+
+/* horizontal */
+
+@media screen and (max-width: 1400px) {
+  .template-author-card {
+    height: 45vw;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1100px) {
+  .template-author-card .btn-help {
+    width: 150px;
+    height: 30px;
+    top: 120px;
+    right: 10px;
+  }
+}
+
+/* @media screen and (min-width: 800px) and (max-width: 1024px) {
+  .wrapper-splash-page {
+    margin-top: 0;
+  }
+} */
+
+@media screen and (min-width: 600px) and (max-width: 800px) {
+  .template-author-card .btn-help {
+    width: 120px;
+    height: 30px;
+    top: 15%;
+    right: 10px;
+  }
+}
+
+/* vertical */
+@media screen and (max-width: 1100px) {
+  .template-author-card .text-splash .button-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .template-home-splash-page {
+    /* padding-left: 7vw; */
+    /* align-items: center; */
+  }
+
+  .template-author-card {
+    background-position: center 20vw;
+    background-size: 38vw auto;
+    padding: 0 0 5vw 0;
+    max-width: 88vw;
+    height: 98vw;
+    padding-bottom: 0;
+  }
+
+  .template-author-card .block-splash {
+    height: 100%;
+    padding-left: 0;
+    justify-content: center;
+  }
+
+  .template-author-card .text-splash {
+    text-align: center;
+    padding-left: 0vw;
+  }
+
+  .template-author-card .text-splash .title-splash {
+    margin-bottom: 0;
+  }
+
+  .template-author-card .text-splash .title-splash h3.text-gradient-template {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10vw !important;
+    height: 10vw;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 45vw;
+    padding: 0 0 0 0;
+  }
+
+  .template-author-card .text-splash .text-description {
+    padding: 0 15vw 0 15vw;
+    font-size: 2.5vw;
+    width: 100%;
+  }
+
+  .template-author-card .btn-claim-airdrop {
+    justify-content: center;
+    display: flex;
+    margin-top: 40px;
+  }
+
+  .template-author-card .text-splash .btn-submit-with-form {
+    justify-content: center;
+    display: flex;
+    margin-top: 2.5vw;
+  }
+
+  .template-author-card .text-splash .btn-submit-with-form button {
+    width: 35vw;
+    height: 8vw;
+    font-size: 2.5vw;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .template-author-card {
+    background-position: center 19vw;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .template-author-card {
+    padding-top: 2vw;
+    background-size: 45vw auto;
+    height: 105vw;
+  }
+
+  .template-author-card .text-splash .title-splash h3.text-gradient-template {
+    margin-bottom: 50vw;
+    font-size: 11vw !important;
+    height: 11vw;
+  }
+
+  .template-author-card .text-splash .text-description {
+    padding: 0 15vw 0 15vw;
+    font-size: 3vw;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .template-home-splash-page {
+    /* padding-left: 0;
+    align-items: center; */
+    max-width: 95vw;
+  }
+
+  .template-author-card {
+    background-position: center 23vw;
+    background-size: 45vw auto;
+    height: 110vw;
+  }
+
+  .template-author-card .text-splash .title-splash h3.text-gradient-template {
+    font-size: 11vw !important;
+    height: 11vw;
+    margin-top: 2vw;
+    margin-bottom: 55vw;
+  }
+
+  .template-author-card .text-splash .text-description {
+    padding: 0 15vw 0 15vw;
+    font-size: 3vw;
+  }
+
+  .template-author-card .text-splash .btn-submit-with-form button {
+    font-size: 2.5vw;
+    width: 40vw;
+    height: 8vw;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .template-author-card {
+    background-position: center 23vw;
+    background-size: 40vw auto;
+    height: 105vw;
+  }
+
+  .template-author-card .text-splash .title-splash h3.text-gradient-template {
+    margin-bottom: 50vw;
+    font-size: 12vw !important;
+    height: 12vw;
+  }
+
+  .template-author-card .btn-help {
+    height: 30px;
+    width: 150px;
+    top: 10px;
+    left: 40px;
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .template-author-card {
+    background-position: center 22vw;
+    background-size: 45vw auto;
+    padding: 3vw 0 5vw 0;
+    height: 120vw;
+  }
+
+  .template-author-card .text-splash .title-splash h3.text-gradient-template {
+    margin-bottom: 55vw;
+  }
+
+  .template-author-card .text-splash .text-description {
+    padding: 0 15vw 0 15vw;
+    font-size: 4vw;
+  }
+
+  .template-author-card .text-splash .btn-submit-with-form button {
+    font-size: 3vw;
+    width: 40vw;
+    height: 10vw;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .template-author-card {
+    background-position: center 22vw;
+    background-size: 47vw auto;
+    padding: 5vw 0 6vw 0;
+  }
+
+  .template-author-card .text-splash .btn-submit-with-form button {
+    width: 45vw;
+  }
+}

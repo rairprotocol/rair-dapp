@@ -1,0 +1,21 @@
+{
+  "env": {
+    "es2020": true,
+    "node": true,
+    "es6": true
+  },
+  "extends": [
+    "airbnb-base",
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "linebreak-style":["warn"],
+    "no-underscore-dangle": 0,
+    "object-curly-newline":"off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
+    "operator-linebreak": ["error", "after", { "overrides": { "?": "before", ":": "before" }}]
+  }
+}

@@ -1,0 +1,132 @@
+.addButton {
+  border-radius: 50%;
+  width: 30px;
+  float: right;
+  margin-bottom: -30px;
+  margin-top: -34px;
+  margin-right: -35px;
+  border: 1px solid #4e4d4d;
+}
+.addButton:hover {
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+}
+.btn-submit-custom {
+  margin-top: 0.5rem;
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+}
+.hidden-block-wrapper {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 230px 50px;
+}
+.hidden-table-col-one {
+  color: rgb(211, 47, 47);
+}
+.hidden-table-col-two {
+  color: rgb(46, 125, 50);
+}
+.hidden-table-title {
+  color: var(--rhyno);
+}
+
+.hidden-table-title.rhyno {
+  color: var(--charcoal);
+}
+
+.hidden-table-button {
+  background-color: rgb(46, 125, 50);
+  border-radius: 12px;
+  padding: 5px 10px;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+.hidden-table-button:hover {
+  background: rgb(27, 94, 32);
+}
+
+.hidden-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 70%;
+}
+.hidden-options-wrapper {
+  display: flex;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  justify-content: space-evenly;
+}
+.hidden-options-button {
+  background-color: rgb(211, 47, 47);
+  border-radius: 12px;
+  padding: 5px 10px;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+.hidden-options-button:hover {
+  background: rgb(168, 50, 50);
+}
+
+.hidden-block-wrapper .add_contact {
+  padding: 5px 10px;
+  border-radius: 12px;
+  background: var(--stimorol);
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+.hidden-block-wrapper .add_contact:hover {
+  background: var(--stimorol-hover);
+}
+
+.hidden-block-wrapper .add_contact:focus,
+.hidden-block-wrapper .add_contact:active {
+  background: var(--stimorol-click);
+}
+
+.hidden-block-wrapper .hidden-contracts-table {
+  height: 600px !important;
+  overflow: auto;
+}
+
+.hidden-block-wrapper
+  .hidden-options-wrapper
+  button.hidden-options-button:disabled {
+  background: rgb(168, 50, 50);
+}
+
+.hidden-block-wrapper
+  .hidden-options-wrapper
+  button.hidden-table-button:disabled {
+  background: rgb(27, 94, 32);
+}

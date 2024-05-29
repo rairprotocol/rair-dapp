@@ -1,0 +1,310 @@
+.title-collection-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+.title-collection-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.container-title-collection {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 40vw;
+}
+
+.container-title-collection .block-title-share {
+  text-align: left;
+}
+
+.container-title-collection .block-title-share h2 {
+  font-size: 40px;
+  font-weight: 700;
+  word-wrap: break-word;
+  margin-bottom: 18px;
+}
+
+.block-title-purple {
+  color: #5b49af;
+}
+
+.block-user-creator {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.block-user-creator:hover {
+  transition: all 0.2s ease;
+  color: grey;
+}
+
+.block-user-creator h5 {
+  word-break: keep-all;
+}
+
+.container-title-collection .block-user-creator img,
+.container-sell-button-user .block-user-creator img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  margin: 0 12px;
+  object-fit: cover;
+}
+
+.container-sell-button-user .block-user-creator {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.container-sell-button-user .block-user-creator h5 {
+  margin: 0;
+}
+
+.container-title-collection .block-user-creator span {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.container-title-collection .block-user-creator h5 {
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.block-collection-desc {
+  display: flex;
+  margin-top: 18px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 28px;
+  text-align: start;
+  width: 100%;
+}
+
+.etherscan-icon:hover {
+  background: var(--stimorol);
+  border-radius: 16px;
+}
+
+.etherscan-icon.hotdrops-border {
+  border-radius: 16px;
+}
+
+.etherscan-icon-token-dark {
+  background: #4e4d4d;
+  border-radius: 16px;
+  margin-bottom: 17px;
+}
+
+.etherscan-icon-token-dark:hover {
+  background: var(--stimorol);
+}
+
+.etherscan-icon-token-light {
+  background: #ffffff;
+  border-radius: 16px;
+  margin-bottom: 17px;
+}
+
+.etherscan-icon-token-light:hover {
+  background: var(--stimorol);
+  transition: all 0.2s ease;
+}
+
+.etherscan-icon-token-light.expand,
+.etherscan-icon-token-dark.expand {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.etherscan-collection-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.collection-authenticity-link-share {
+  display: flex;
+  justify-content: space-between;
+  width: 225px;
+}
+
+.collection-authenticity-link-share.external .etherscan-icon {
+  margin-right: 10px;
+}
+
+.collection-authenticity-link-share.external {
+  justify-content: flex-end;
+}
+
+.tokens-share {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.authenticity-link-icon {
+  margin-left: 16px;
+}
+
+.collection-btn-more button {
+  font-size: 20px;
+  padding: 10px 53px;
+  border-radius: 16px;
+  background: none;
+  border: 1px solid #d37ad6;
+  transition: 0.3s all ease;
+  color: #fff;
+}
+
+.collection-btn-more button:hover {
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+}
+
+.filter-metadata-button {
+  margin-left: 30px;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  background: #000;
+  color: #fff;
+  transition: all ease 0.3s;
+}
+
+.filter-metadata-button:hover,
+.filter-metadata-button:active,
+.filter-metadata-button:focus {
+  color: #000;
+  background: #fff;
+  transition: all ease 0.3s;
+}
+
+.custom-desc-to-offer.filter-metadata-block-titleCollection.activeMetadata {
+  cursor: pointer;
+  background: var(--bubblegum);
+}
+
+.custom-desc-to-offer.filter-metadata-block-titleCollection.hotdrops.activeMetadata {
+  background: var(--hot-drops-gradient);
+}
+
+@media screen and (min-width: 820px) {
+  .custom-desc-to-offer.filter-metadata-block-titleCollection:hover {
+    cursor: pointer;
+    background: var(--bubblegum);
+  }
+
+  .custom-desc-to-offer.filter-metadata-block-titleCollection.hotdrops:hover {
+    background: var(--hot-drops-hover);
+  }
+}
+
+.custom-desc-to-offer.filter-metadata-block-titleCollection:active,
+.custom-desc-to-offer.filter-metadata-block-titleCollection:focus {
+  background: var(--bubblegum-click);
+}
+
+.custom-desc-to-offer.filter-metadata-block-titleCollection.hordrops:active,
+.custom-desc-to-offer.filter-metadata-block-titleCollection.hordrops:focus {
+  background: var(--hot-drops);
+}
+
+@media screen and (max-width: 1250px) {
+  .title-collection-container.minted .title-collection-wrapper {
+    width: 100%;
+  }
+
+  .container-title-collection {
+    max-width: 30vw;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .title-collection-container.minted .title-collection-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container-title-collection .block-title-share h2 {
+    text-align: center;
+  }
+
+  .title-collection-container.minted .title-collection-wrapper {
+    width: 100%;
+  }
+
+  .title-collection-container.minted
+    .title-collection-wrapper
+    .collection-authenticity-link-share {
+    margin-top: 20px;
+  }
+
+  .title-collection-container.minted
+    .title-collection-wrapper
+    .collection-authenticity-link-share
+    div {
+    margin: 0;
+  }
+
+  .container-title-collection {
+    max-width: 100%;
+  }
+
+  .collection-authenticity-link-share.external {
+    justify-content: center;
+  }
+
+  .collection-authenticity-link-share.external a {
+    margin-right: 10px;
+  }
+
+  .container-sell-button-user {
+    font-size: 12px;
+  }
+
+  .container-sell-button-user h5 {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .title-collection-container.minted
+    .title-collection-wrapper
+    .collection-authenticity-link-share {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .title-collection-container.minted
+    .title-collection-wrapper
+    .collection-authenticity-link-share
+    a {
+    margin: 0px 15px;
+  }
+}

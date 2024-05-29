@@ -1,0 +1,417 @@
+.wrapper-user-page {
+  width: 100%;
+}
+
+.user-page-background.charcoal {
+  background: var(--stimorol);
+  height: 18.75rem;
+  width: 100%;
+  width: calc(302px * 4 + 10px);
+
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 0.3s all ease;
+}
+
+.user-page-background.rhyno {
+  background: var(--royal-ice);
+  height: 18.75rem;
+  width: 100%;
+  width: calc(302px * 4 + 10px);
+
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: 0.3s all ease;
+}
+
+.user-page-background img {
+  width: auto;
+  height: 50px;
+}
+
+.user-page-background.hotdrops-bg-default-banner {
+  background: url('./../../images/hotDrops_defaultBanner.png');
+  background-size: cover;
+  background-position: center center;
+}
+
+.bar-wrapper {
+  display: flex;
+  position: relative;
+}
+
+.personal-profile-box {
+  width: auto;
+  height: 8.625rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  position: relative;
+}
+
+.personal-profile-box .profile-avatar-block {
+  width: 8.625rem;
+  height: 8.625rem;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: -4.3rem;
+  margin-left: 0;
+  border-radius: 1rem;
+}
+
+.personal-profile-box .profile-avatar-block img {
+  width: 8.625rem;
+  height: 8.625rem;
+  border-radius: 1rem;
+  transition: 0.3s all ease;
+  object-fit: cover;
+}
+.personal-profile-box .profile-avatar-block img:hover {
+  transform: scale(1.2);
+}
+
+.personal-profile-box .profile-avatar-block .personal-default-avatar {
+  width: 8.625rem;
+  height: 8.625rem;
+  border-radius: 1rem;
+  transition: 0.3s all ease;
+  background: var(--royal-ice);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.personal-profile-box .profile-avatar-block .personal-default-avatar svg {
+  width: 50px;
+  height: 50px;
+}
+
+.personal-profile-box .profile-avatar-block .personal-default-avatar:hover {
+  transform: scale(1.2);
+}
+
+.profileName {
+  margin-left: 1.625rem;
+  margin-top: 1.4rem;
+  width: auto;
+  height: 2.5rem;
+  word-break: break-all;
+
+  font-family: 'Plus Jakarta Sans' sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2.188rem;
+  line-height: 2.5rem;
+  display: flex;
+  align-items: flex-start;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profileName:hover {
+  color: grey;
+  transition: all 0.2s ease;
+}
+
+.profileName.black {
+  color: #2d2d2d;
+}
+
+.user-page-favorite-container {
+  padding: 0 0 3rem 0;
+}
+
+.user-page-main-tab-block {
+  margin-bottom: 3rem;
+  width: 100%;
+}
+
+.my-items-header-wrapper.userpage {
+  max-width: calc(302px * 2 + 10px);
+}
+
+.my-items-header-wrapper .share-button {
+  border: 1px solid var(--bubblegum);
+  margin-top: 10px;
+}
+
+.my-items-header-wrapper.user {
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-page-filter-btn-block-resale {
+  display: flex;
+}
+
+.user-page-filter-btn-block-resale.rhyno button {
+  background: rgb(250, 250, 250);
+  border: 1px solid var(--rhyno);
+  color: #2d2d2d;
+}
+
+.user-page-filter-btn-block-resale.rhyno button:hover {
+  background: var(--rhyno-60);
+}
+
+.user-page-filter-btn-block-resale.rhyno button:active,
+.user-page-filter-btn-block-resale.rhyno button:focus {
+  background: var(--rhyno-transparent);
+}
+
+.user-page-filter-btn-block-resale button {
+  background: var(--charcoal);
+  border: none;
+  border-radius: 12px;
+  padding: 5px 15px;
+  color: #fff;
+  border: 1px solid var(--charcoal-90);
+}
+
+.user-page-filter-btn-block-resale button:disabled {
+  color: grey !important;
+}
+
+.user-page-filter-btn-block-resale button:hover {
+  background: var(--charcoal-80);
+}
+
+.user-page-filter-btn-block-resale button:active,
+.user-page-filter-btn-block-resale button:focus {
+  background: var(--charcoal-90);
+}
+
+.user-page-filter-btn-block-resale button span.hotdrops {
+  color: var(--hot-drops);
+}
+
+.user-page-filter-btn-block-resale button span {
+  color: var(--bubblegum);
+}
+
+.userpage-filter-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 40px;
+}
+
+.userpage-filter-btn {
+  height: 48px;
+  width: 170px;
+  display: flex;
+  justify-content: center;
+  border-radius: 12px;
+  align-items: center;
+  border: 1px solid rgb(78, 77, 77);
+  background-color: rgb(34, 32, 33);
+  color: #fff;
+}
+
+.userpage-filter-btn:disabled {
+  background: var(--stimorol-click);
+}
+
+.userpage-filter-btn.rhyno {
+  border: 1px solid var(--rhyno);
+  background-color: rgb(250, 250, 250);
+  color: #000;
+}
+
+.userpage-filter-btn.rhyno:hover {
+  background-color: var(--rhyno-60);
+}
+
+.userpage-filter-btn:hover {
+  background-color: var(--charcoal-60);
+}
+
+.userpage-filter-btn.active,
+.userpage-filter-btn.rhyno.active {
+  background-color: var(--bubblegum);
+}
+
+@media screen and (max-width: 1280px) {
+  .user-page-background.rhyno,
+  .user-page-background.charcoal {
+    width: 86.6vw;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .tabs-section .category-button {
+    width: 175px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .bar-wrapper {
+    flex-direction: column;
+    margin-bottom: 32px;
+    width: 86.6vw;
+  }
+
+  .tabs-section .category-wrapper {
+    width: 86.6vw;
+  }
+}
+
+@media screen and (max-width: 1025px) {
+  .user-page-background.rhyno,
+  .user-page-background.charcoal {
+    width: 100%;
+  }
+
+  .wrapper-user-page {
+    padding: 0 0.8rem;
+  }
+
+  .my-items-header-wrapper.user {
+    width: 100%;
+    padding: 0;
+    justify-content: space-around;
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  .personal-profile-box .profile-avatar-block {
+    margin-left: 0;
+  }
+
+  .personal-profile-box .profile-avatar-block img {
+    width: 6.625rem;
+    height: 6.625rem;
+  }
+
+  .profileName {
+    font-size: 1.6rem;
+    margin-top: 0;
+    margin-left: 0.5rem;
+  }
+
+  .my-items-header-wrapper.user {
+    max-width: calc(302px * 3 + 10px);
+  }
+
+  .my-items-header-wrapper.user.edit {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .my-items-header-wrapper.user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .my-items-header-wrapper .share-button {
+    margin: 0 0 1.4rem 0;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .personal-profile-box .profile-avatar-block {
+    margin-left: 0;
+  }
+
+  .personal-profile-box .profile-avatar-block img {
+    width: 5.625rem;
+    height: 5.625rem;
+  }
+
+  .profileName {
+    font-size: 1.2rem;
+    margin-left: 0;
+  }
+
+  .bar-wrapper input.input-styled {
+    max-width: 100%;
+    border-top-left-radius: 16px !important;
+  }
+
+  .form-control.input-styled.user-search {
+    margin: 0 0 10px 0;
+  }
+
+  .list-button-wrapper.tree-tab-unlocks {
+    justify-content: center;
+  }
+
+  .user-page-background img {
+    height: 30px;
+  }
+
+  .tabs-section .category-wrapper {
+    width: 100%;
+  }
+
+  .tabs-section .category-button {
+    width: 100%;
+  }
+
+  .wrapper-user-page .bar-wrapper {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .bar-wrapper {
+    align-items: flex-end;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .tabs-section .category-button {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .my-items-header-wrapper .share-button {
+    width: 124px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .personal-profile-box .profile-avatar-block {
+    margin-left: 0;
+  }
+
+  .personal-profile-box .profile-avatar-block img {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .profileName {
+    font-size: 16px;
+    margin-left: 0;
+  }
+
+  .list-button-wrapper.tree-tab-unlocks h5.text-center,
+  .list-wrapper-empty h2,
+  .list-button-wrapper-grid-template.favotire p {
+    font-size: 14px;
+  }
+}

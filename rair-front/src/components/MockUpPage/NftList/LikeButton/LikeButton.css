@@ -1,0 +1,9 @@
+:root {
+  --box-size: 48px;
+}
+
+.like-button {
+  color: #e882d5;
+  font-size: 24px;
+  line-height: var(--box-size);
+}

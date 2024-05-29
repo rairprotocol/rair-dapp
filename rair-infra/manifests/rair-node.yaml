@@ -1,0 +1,151 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rair-node
+  name: rair-node
+spec:
+  ports:
+    - name: "3000"
+      port: 3000
+      targetPort: 3000
+    - name: "5000"
+      port: 5000
+      targetPort: 5000
+  selector:
+    io.kompose.service: rair-node
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rair-node
+  name: rair-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rair-node
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: rair-node
+    spec:
+      containers:
+        - image: rairprotocol/rair-node:cb1d2042ecd68d145e82147d71f03acb419b4a22
+          name: rair-node
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credential
+                  key: MONGO_URI
+            - name: GCP_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: rair-manager-key
+                  key: key.json
+            - name: PINATA_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pinata-secret
+                  key: PINATA_SECRET
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET
+            - name: MORALIS_MASTER_KEY_MAIN
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-main
+                  key: MORALIS_MASTER_KEY_MAIN
+            - name: MORALIS_MASTER_KEY_TEST
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-test
+                  key: MORALIS_MASTER_KEY_TEST
+            - name: VAULT_RAIR-NODE_APP_ROLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vault-rair-node-app-role-id
+                  key: VAULT_RAIR-NODE_APP_ROLE_ID
+            - name: VAULT_RAIR-NODE_APP_ROLE_SECRET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vault-rair-node-app-role-secret-id
+                  key: VAULT_RAIR-NODE_APP_ROLE_SECRET_ID
+          envFrom:
+          - configMapRef:
+              name: rair-node-env
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/src/rair-node/db
+              name: rair-node-claim0
+            - mountPath: /usr/src/rair-node/bin/Videos
+              name: rair-node-claim1
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+      volumes:
+        - name: rair-node-claim0
+          persistentVolumeClaim:
+            claimName: rair-node-claim0
+            readOnly: false
+        - name: rair-node-claim1
+          persistentVolumeClaim:
+            claimName: rair-node-claim1
+            readOnly: false
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rair-node-claim0
+  name: rair-node-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rair-node-claim1
+  name: rair-node-claim1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+status: {}
+

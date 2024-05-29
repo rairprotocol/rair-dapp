@@ -1,0 +1,17 @@
+.mainBox {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-left: -100px;
+}
+
+.boxContent {
+}
+
+.boxThank {
+  padding: 20px;
+  border-radius: 16px;
+  background: #fff;
+  color: #000;
+  width: 600px;
+}

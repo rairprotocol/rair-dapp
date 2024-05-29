@@ -1,0 +1,199 @@
+/* use .wrapper-splash-page.ukraineglitch selector to override any general styling*/
+
+.wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper .join-pic-main img,
+.wrapper-splash-page.ukraineglitch .list-of-greymans-pic .join-pic img {
+  border-radius: 16px;
+}
+
+.wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
+  width: 90vw;
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens-content .tokens-description {
+  width: 100%;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens {
+  max-width: 1600px;
+}
+
+.ukranian-custom-button {
+  background-color: #035bbc !important;
+}
+
+/* .btn-help {
+    position: absolute;
+    top: 20px;
+    right: 5vw;
+    width: 200px;
+    height: 48px;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    background: #FFD505;
+    cursor: pointer;
+} */
+
+@media screen and (max-width: 1320px) {
+  .wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
+    margin-left: 0rem;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .wrapper-splash-page.ukraineglitch .left-tokens-content .tokens-description {
+    width: 100% !important;
+  }
+
+  .wrapper-splash-page.ukraineglitch .left-tokens {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-splash-page.ukraineglitch .template-author-card {
+    background-position: center 15vw;
+    background-size: 38vw auto;
+    padding: 0 0 5vw 0;
+    max-width: 88vw;
+    height: 100vw;
+    padding-bottom: 0;
+  }
+
+  .wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
+    width: 90vw;
+    display: -webkit-inline-box !important;
+    margin-left: -2rem;
+  }
+
+  .wrapper-splash-page.ukraineglitch .left-tokens {
+    flex-direction: column;
+  }
+
+  .wrapper-splash-page.ukraineglitch .block-left-content-greyman {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.ukraineglitch .left-tokens .block-left-tokens {
+    width: 472px;
+    height: 472px;
+    margin-right: 0 !important;
+  }
+}
+
+/* @media screen and (min-width: 600px) and (max-width: 1100px) {
+    .btn-help {
+        height: 30px;
+        width: 150px;
+        top: 10px;
+        left: 40px;
+    }
+} */
+
+@media screen and (max-width: 900px) {
+  .wrapper-splash-page.ukraineglitch .template-author-card {
+    background-size: 45vw auto;
+    height: 120vw;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .wrapper-splash-page.ukraineglitch .template-author-card {
+    background-position: center 21vw;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper-splash-page.ukraineglitch
+    .template-author-card
+    .text-splash
+    .title-splash
+    h3.text-gradient-template {
+    margin-bottom: 50vw;
+    font-size: 10vw !important;
+    height: 10vw;
+  }
+
+  .wrapper-splash-page.ukraineglitch
+    .left-tokens-content
+    .tokens-description
+    p {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .wrapper-splash-page.ukraineglitch .template-author-card {
+    background-position: center 22vw;
+    height: 150vw;
+  }
+
+  .wrapper-splash-page.ukraineglitch .left-tokens .block-left-tokens {
+    width: 350px;
+    height: 350px;
+  }
+
+  .wrapper-splash-page.ukraineglitch
+    .left-tokens
+    .block-left-tokens
+    .down-text {
+    left: 10px;
+  }
+
+  .wrapper-splash-page.ukraineglitch
+    .left-tokens
+    .text-progress
+    .progress-info {
+    width: 130px;
+    height: 130px;
+  }
+
+  .wrapper-splash-page.ukraineglitch .text-progress.progress-text-template {
+    top: 25%;
+  }
+
+  .wrapper-splash-page.ukraineglitch
+    .text-progress.progress-text-template
+    .text-whole-tokens {
+    font-size: 14px;
+  }
+
+  .wrapper-splash-page.ukraineglitch
+    .text-progress.progress-text-template
+    .text-numbers {
+    font-size: 33px;
+  }
+
+  .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
+    bottom: 0;
+    left: 0 !important;
+  }
+
+  .wrapper-splash-page.ukraineglitch
+    .box-progress.progress-template
+    .css-1l24ewf-MuiCircularProgress-root {
+    left: 6px;
+  }
+
+  .wrapper-splash-page.ukraineglitch .left-tokens .progress-main svg {
+    width: 200px;
+  }
+
+  .wrapper-splash-page.ukraineglitch
+    .box-progress.progress-template
+    .MuiCircularProgress-svg.css-1idz92c-MuiCircularProgress-svg {
+    width: 200px;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .template-home-splash-page .splash-team-greyman {
+    margin-bottom: 900px;
+  }
+}

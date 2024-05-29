@@ -1,0 +1,928 @@
+.wrapper-splash-page.greyman-page {
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper-splash-page.greyman-page
+  .block-left-content-greyman
+  .btn-buy-metamask {
+  margin-left: 4rem;
+}
+
+.wrapper-splash-page.greyman-page
+  .block-left-content-greyman
+  .btn-claim-airdrop {
+  margin-left: 4rem;
+}
+
+.wrapper-splash-page.greyman-page
+  .block-left-content-greyman
+  .btn-submit-with-form {
+  margin-left: 4rem;
+}
+
+.greyman-royalties-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  text-align: start;
+  width: 60%;
+  margin-left: 24px;
+  margin-top: -2rem;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 40px;
+  line-height: 60px;
+}
+.greyman-royalties-wrapper strong {
+  margin-bottom: 10px;
+}
+
+.greyman-royalties {
+  display: flex;
+  flex-direction: column;
+  color: #a7a6a6;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 28px;
+}
+.wrapper-splash-page.greyman-page .join-community .exclusive-nfts {
+  display: none;
+}
+
+.wrapper-splash-page.greyman-page {
+  background-image: none;
+}
+
+.modal-mint-matic {
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: 'Plus Jakarta Text';
+  border-radius: 16px;
+}
+.tutorial-checklist {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: 18px;
+  width: 100%;
+  padding: 10px 0;
+  z-index: 3;
+}
+.tutorial-checklist .tutorial-close {
+  position: absolute;
+  right: 20px;
+  top: 2px;
+  font-size: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tutorial-show-list {
+  position: absolute;
+  right: 80px;
+  top: 2px;
+  font-size: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tutorial-checklist .tutorial-close:hover,
+.tutorial-checklist .tutorial-show-list:hover {
+  color: rgb(231, 130, 213);
+}
+.tutorial-checklist h5 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0;
+}
+.tutorial-checklist ul {
+  line-height: 30px;
+  margin: 10px 0 0 0;
+  padding: 0 10px;
+}
+.tutorial-checklist ul li a {
+  border-bottom: 1px solid white;
+}
+
+@media screen and (max-width: 1400px) {
+  .home-splash--page .information-author.immersiverse-page-author {
+    background-size: 450px auto;
+    background-position: 90% 7rem;
+    height: 600px;
+  }
+}
+
+@media screen and (max-width: 1335px) {
+  .home-splash--page .information-author.immersiverse-page-author {
+    background-size: 300px auto;
+    background-position: 88% 9rem;
+  }
+}
+
+@media screen and (max-width: 1320px) {
+  .list-of-greymans-pic {
+    width: 450px;
+    justify-content: space-between;
+    align-content: center;
+  }
+
+  .main-greyman-pic-wrapper {
+    max-height: 1000px;
+    margin-top: 20px;
+    margin-left: 2rem;
+  }
+
+  .show-more-wrap .show-more {
+    bottom: -365px;
+    width: 452px;
+  }
+
+  .join-pic-img {
+    width: 220px;
+    height: 220px;
+  }
+
+  .join-pic-main-img {
+    width: 452px;
+    height: 452px;
+  }
+
+  .list-of-greymans-pic .join-pic:first-child {
+    margin-bottom: 10px;
+  }
+
+  .list-of-greymans-pic .join-pic:nth-child(2) {
+    margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .home-splash--page .information-author {
+    background-size: 300px auto;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .about-metadata-wrapper {
+    max-width: 1000px;
+  }
+
+  /* .join-pic-main-img {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .join-pic-img {
+        width: 195px;
+        height: 195px;
+    }
+
+    .show-more {
+
+    } */
+}
+
+@media screen and (max-width: 1100px) {
+  .information-author.greyman-page-author {
+    height: 100%;
+  }
+
+  .home-splash--page .information-author.greyman-page-author {
+    padding: 90px 80px 20px 80px;
+  }
+
+  .home-splash--page .information-author {
+    justify-content: center;
+  }
+
+  .information-author.greyman-page-author .block-splash {
+    width: 100%;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3:first-child {
+    margin-bottom: 400px;
+  }
+
+  .information-author.immersiverse-page-author {
+    height: 100%;
+  }
+
+  .information-author.immersiverse-page-author .block-splash {
+    width: 100%;
+  }
+
+  .home-splash--page .information-author {
+    background-position: center 220px;
+    background-size: 350px auto;
+  }
+
+  .about-metadata-wrapper {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .left-tokens.greyman-page .tokens-description {
+    padding: 0 20px;
+  }
+
+  .about-metadata {
+    width: 100% !important;
+  }
+
+  .about-metadata-second-block {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .about-metadata-second-block-wrapper {
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100% !important;
+  }
+
+  .non-commercial-content {
+    background-position: 100% 10% !important;
+  }
+
+  .information-author.greyman-page-author .block-splash .text-splash {
+    text-align: center;
+  }
+
+  .information-author.greyman-page-author .text-splash .text-description {
+    width: 100%;
+  }
+
+  .information-author.greyman-page-author .btn-buy-metamask {
+    display: flex;
+    justify-content: center;
+  }
+
+  .information-author.immersiverse-page-author .block-splash .text-splash {
+    text-align: center;
+  }
+
+  .information-author.immersiverse-page-author .text-splash .text-description {
+    width: 100%;
+  }
+
+  .information-author.immersiverse-page-author .btn-claim-airdrop {
+    display: flex;
+    justify-content: center;
+  }
+
+  .information-author.immersiverse-page-author .btn-submit-with-form {
+    display: flex;
+    justify-content: center;
+  }
+
+  .home-splash--page .information-author.immersiverse-page-author {
+    background-position: center 190px;
+    background-size: 350px auto;
+    padding: 60px 80px 40px 80px;
+    height: 100%;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3:first-child {
+    margin-bottom: 400px;
+  }
+}
+
+@media screen and (max-width: 1077px) {
+  .col-1 {
+    width: inherit;
+  }
+
+  .col-1 img {
+    float: left;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .join-pic-img {
+    width: 190px;
+    height: 190px;
+  }
+
+  .list-of-greymans-pic {
+    width: 390px;
+  }
+
+  .join-pic-main-img {
+    width: 395px;
+    height: 395px;
+  }
+
+  .show-more-wrap .show-more {
+    bottom: -310px;
+    width: 395px;
+  }
+
+  .main-greyman-pic-wrapper {
+    padding: 0 20px;
+  }
+
+  .wrapper-splash-page.greyman-page .join-community .title-join {
+    padding: 0 20px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .non-commercial-content {
+    background-image: none !important;
+  }
+}
+
+@media screen and (max-width: 845px) {
+  .home-splash--page .information-author.greyman-page-author {
+    background-image: url('./../images/greyMan/greyman1.webp');
+  }
+
+  .main-greyman-pic-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .show-more-wrap .show-more {
+    bottom: -305px;
+    left: 0px;
+    width: 400px;
+  }
+
+  .join-pic-main {
+    margin-right: 0rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .ReactModal__Content.ReactModal__Content--after-open {
+    /* width: 80%; */
+    overflow: hidden;
+  }
+  .home-splash--page .information-author.immersiverse-page-author {
+    background-position: center 220px;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .tutorial-checklist h5 {
+    font-size: 20px;
+  }
+
+  .tutorial-checklist ul li {
+    font-size: 16px;
+  }
+
+  .tutorial-checklist .tutorial-close,
+  .tutorial-checklist .tutorial-show-list {
+    font-size: 24px;
+  }
+}
+
+@media screen and (max-width: 670px) {
+  .modal-text-wrapper span {
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 610px) {
+  .wrapper-splash-page.greyman-page .splash-team {
+    margin-bottom: 100px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .home-splash--page .information-author.immersiverse-page-author {
+    background-position: center 120px;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3 {
+    font-size: 20px;
+    width: 100%;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3.text-gradient-grey {
+    font-size: 40px !important;
+    text-align: center;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3:first-child {
+    margin-bottom: 450px;
+  }
+
+  .home-splash--page .information-author {
+    background-position: center 130px;
+  }
+
+  .information-author.greyman-page-author .btn-buy-metamask {
+    justify-content: center;
+    display: flex;
+    margin-top: 40px;
+  }
+
+  .home-splash--page .information-author.greyman-page-author {
+    padding: 20px 20px;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3 {
+    font-size: 20px;
+    width: 100%;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3.text-gradient-blue {
+    font-size: 40px !important;
+    text-align: center;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3:first-child {
+    margin-bottom: 350px;
+  }
+
+  .home-splash--page .information-author {
+    background-position: center 130px;
+  }
+
+  .information-author.immersiverse-page-author .btn-claim-airdrop {
+    justify-content: center;
+    display: flex;
+    margin-top: 40px;
+  }
+
+  .information-author.immersiverse-page-author .btn-submit-with-form {
+    justify-content: center;
+    display: flex;
+    margin-top: 15px;
+  }
+
+  .home-splash--page .information-author.immersiverse-page-author {
+    padding: 20px 20px;
+  }
+
+  .property-wrapper {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .property-wrapper .property {
+    width: 150px;
+    justify-content: space-around;
+  }
+
+  .wrapper-splash-page.greyman-page .join-community .exclusive-nfts {
+    display: block;
+    margin: 50px 0;
+  }
+
+  .main-greyman-pic-wrapper {
+    display: none;
+  }
+
+  .wrapper-splash-page.greyman-page
+    .home-splash--page
+    .information-author
+    .root-time
+    .time {
+    font-size: 26px;
+  }
+
+  .wrapper-splash-page.greyman-page .information-author .root-time {
+    padding: 10px 15px;
+  }
+
+  .information-author .btn-help {
+    height: 30px;
+    width: 150px;
+    top: 10px;
+    left: 40px;
+    margin: auto;
+  }
+
+  .tutorial-checklist .tutorial-show-list {
+    right: 60px;
+  }
+
+  .tutorial-checklist h5 {
+    font-size: 18px;
+    text-align: left;
+    padding-left: 10px;
+  }
+
+  .tutorial-checklist ul {
+    line-height: 25px;
+    text-align: left;
+  }
+
+  .tutorial-checklist ul li {
+    font-size: 14px;
+  }
+
+  .information-author .btn-help {
+    height: 30px;
+    width: 150px;
+    top: 10px;
+    left: 40px;
+    margin: auto;
+  }
+  .tutorial-checklist .tutorial-show-list {
+    right: 60px;
+  }
+  .tutorial-checklist h5 {
+    font-size: 18px;
+    text-align: left;
+    padding-left: 10px;
+  }
+  .tutorial-checklist ul {
+    line-height: 25px;
+    text-align: left;
+  }
+  .tutorial-checklist ul li {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .container-commercial {
+    padding: 20px 20px !important;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .modal-text-wrapper img {
+    width: 80px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .tutorial-checklist h5 {
+    font-size: 16px;
+  }
+  .tutorial-checklist ul li {
+    font-size: 12px;
+  }
+  .tutorial-checklist .tutorial-close,
+  .tutorial-checklist .tutorial-show-list {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .tutorial-checklist .tutorial-show-list {
+    right: 45px;
+  }
+  .tutorial-checklist .tutorial-close {
+    right: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .wrapper-splash-page.greyman-page .home-splash--page .box-progress {
+    margin-top: 90px;
+    margin-left: 60px !important;
+  }
+
+  .block-left-tokens {
+    margin-right: 0rem !important;
+  }
+
+  .wrapper-splash-page.greyman-page
+    .block-left-content-greyman
+    .btn-buy-metamask {
+    margin-left: 0rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wrapper-splash-page.greyman-page
+    .block-left-content-greyman
+    .btn-claim-airdrop {
+    margin-left: 0rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wrapper-splash-page.greyman-page
+    .block-left-content-greyman
+    .btn-submit-with-form {
+    margin-left: 0rem;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 456px) {
+  .home-splash--page .information-author.immersiverse-page-author {
+    background-position: center 160px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .tutorial-checklist h5 {
+    font-size: 16px;
+  }
+
+  .tutorial-checklist ul li {
+    font-size: 12px;
+  }
+
+  .tutorial-checklist .tutorial-close,
+  .tutorial-checklist .tutorial-show-list {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .home-splash--page .information-author.immersiverse-page-author {
+    background-position: center 120px;
+  }
+
+  .home-splash--page .information-author {
+    background-position: center 150px;
+    background-size: 300px auto;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3 {
+    font-size: 18px;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3.text-gradient-grey {
+    font-size: 32px !important;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3 {
+    font-size: 18px;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3.text-gradient-blue {
+    font-size: 32px !important;
+  }
+
+  .property-wrapper .property {
+    width: 130px;
+    height: 70px;
+    font-size: 12px;
+    justify-content: space-around;
+  }
+
+  .property-btn {
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  /* .property-btn-ipfs {
+        font-size: 16px;
+        width: 100%;
+        height: 100%;
+        line-height: 20px;
+    } */
+
+  .swal-img-greyman img.swal2-image {
+    height: auto;
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .tutorial-checklist .tutorial-show-list {
+    right: 45px;
+  }
+
+  .tutorial-checklist .tutorial-close {
+    right: 10px;
+  }
+}
+
+@media screen and (max-width: 385px) {
+  .left-tokens .block-left-tokens {
+    width: 300px;
+  }
+
+  .left-tokens .block-left-tokens .progress-main svg,
+  .left-tokens .block-left-tokens .progress-grey svg {
+    width: 200px;
+  }
+
+  .left-tokens .block-left-tokens .progress-grey svg {
+    margin-top: 0px;
+    margin-left: 0px;
+  }
+
+  .left-tokens.greyman-page .text-progress .text-numbers {
+    margin-top: 25px;
+    margin-left: 20px;
+  }
+
+  .title-progress-left {
+    font-size: 30px;
+  }
+
+  .block-left-tokens .down-text {
+    left: 20px;
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .home-splash--page .information-author {
+    background-position: center 150px;
+    background-size: 250px auto;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3 {
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3.text-gradient-grey {
+    font-size: 30px !important;
+  }
+
+  .information-author.greyman-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3:first-child {
+    margin-bottom: 350px;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3 {
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3.text-gradient-blue {
+    font-size: 30px !important;
+  }
+
+  .information-author.immersiverse-page-author
+    .text-splash
+    .title-splash.greyman-page
+    h3:first-child {
+    margin-bottom: 325px;
+  }
+
+  .home-splash--page .text-splash .text-description {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .information-author.greyman-page-author .btn-buy-metamask {
+    width: 250px;
+  }
+
+  .information-author.immersiverse-page-author .btn-claim-airdrop {
+    width: 250px;
+  }
+
+  .information-author.immersiverse-page-author .btn-submit-with-form {
+    width: 250px;
+  }
+
+  .wrapper-splash-page.greyman-page .splash-team {
+    margin-bottom: 100px;
+  }
+
+  .information-author.greyman-page-author .btn-buy-metamask {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  .information-author.greyman-page-author .btn-buy-metamask button {
+    width: 250px;
+    height: 48px;
+  }
+
+  .tutorial-checklist h5 {
+    margin-top: 15px;
+    text-align: center;
+  }
+
+  .tutorial-checklist .tutorial-show-list {
+    right: 90%;
+  }
+
+  .information-author.immersiverse-page-author .btn-claim-airdrop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  .information-author.immersiverse-page-author .btn-claim-airdrop button {
+    width: 250px;
+    height: 48px;
+  }
+
+  .information-author.immersiverse-page-author .btn-submit-with-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  .information-author.immersiverse-page-author .btn-submit-with-form button {
+    width: 250px;
+    height: 48px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .wrapper-splash-page.greyman-page .information-author .root-time {
+    padding: 5px;
+  }
+
+  .information-author.immersiverse-page-author .btn-submit-with-form {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 350px) {
+  .home-splash--page .information-author.immersiverse-page-author {
+    background-position: center 140px;
+  }
+
+  .information-author.greyman-page-author .btn-buy-metamask {
+    width: 100%;
+  }
+
+  .tutorial-checklist ul {
+    line-height: 15px;
+  }
+  .information-author.immersiverse-page-author .btn-submit-with-form {
+    width: 100%;
+  }
+
+  .information-author.immersiverse-page-author .btn-claim-airdrop {
+    width: 100%;
+  }
+}

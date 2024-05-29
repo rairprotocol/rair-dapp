@@ -1,0 +1,23 @@
+import vv_background from './vaporverse_authorcard_background.webp';
+import vv_videoBackground from './vaporverse_video_background.webp';
+import vv0 from './vv_NFT_0.webp';
+import vv1 from './vv_NFT_1.webp';
+import vv2 from './vv_NFT_2.webp';
+import vv3 from './vv_NFT_3.webp';
+import vv4 from './vv_NFT_4.webp';
+import teammate_VV from './vv_Rair_logo.webp';
+import vv_test_transmission from './vv_test_transmission.webp';
+import vv_warning_1 from './vv_warning_1.webp';
+import vv_warning_2 from './vv_warning_2.webp';
+
+export const VV0 = vv0;
+export const VV1 = vv1;
+export const VV2 = vv2;
+export const VV3 = vv3;
+export const VV4 = vv4;
+export const VV_warning_1 = vv_warning_1;
+export const VV_warning_2 = vv_warning_2;
+export const VV_test_transmission = vv_test_transmission;
+export const vaporverse_background = vv_background;
+export const videoBackground = vv_videoBackground;
+export const Teammate_VV = teammate_VV;

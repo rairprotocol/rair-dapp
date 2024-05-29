@@ -1,0 +1,7 @@
+npm-debug.log
+Dockerfile
+db
+dev/db-data/
+node_modules
+bin/Videos
+go-ipfs

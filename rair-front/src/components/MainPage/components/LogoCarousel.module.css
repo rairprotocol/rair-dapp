@@ -1,0 +1,41 @@
+.outer_wrapper {
+  width: 1440px;
+  height: 218px;
+  padding: 57px 0;
+  background: #f7f7f7;
+}
+
+.inner_wrappers {
+}
+
+.logo_img {
+  margin: auto;
+  width: 318px;
+  height: 100px;
+}
+
+@media screen and (max-width: 1440px) {
+  .outer_wrapper {
+    width: 100%;
+    height: 15.139vw;
+    padding: 3.958vw 0;
+  }
+
+  .logo_img {
+    width: 22.083vw;
+    height: 6.944vw;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .outer_wrapper {
+    width: 100%;
+    height: 31.143vw;
+    padding: 8.429vw 0;
+  }
+
+  .logo_img {
+    width: 45.429vw;
+    height: 14.286vw;
+  }
+}

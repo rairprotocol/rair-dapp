@@ -1,0 +1,25 @@
+# build environment
+
+FROM node:21.2.0 as build
+
+WORKDIR /usr/src/minting
+
+
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
+COPY . /usr/src/minting
+#RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
+RUN yarn build
+
+
+# production environment
+
+FROM nginx:stable-alpine
+
+COPY --from=build /usr/src/minting/dist /usr/share/nginx/html
+COPY --from=build /usr/src/minting/nginx-prod/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+
+# The default parameters to ENTRYPOINT (unless overruled on the command line)
+CMD ["nginx", "-g", "daemon off;"]

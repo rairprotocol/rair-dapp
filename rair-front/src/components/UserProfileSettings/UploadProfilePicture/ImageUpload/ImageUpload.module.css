@@ -1,0 +1,71 @@
+.customFileUpload input[type='file'] {
+  display: none;
+}
+
+.customFileUpload {
+  height: 212px;
+  width: 212px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  padding: 6px;
+  cursor: pointer;
+  /* background: linear-gradient(270deg, #3fa1a9, #79f1a4); */
+  background: linear-gradient(217deg, #af6fd8, #ffc107);
+  margin-bottom: 10px;
+}
+
+.customFileUpload input {
+  border-radius: 15px;
+  border: 1px solid #b7b7b7;
+  padding: 5px 5px 5px 10px;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.customFileUpload input:focus {
+  outline: none;
+  border: 1px solid #64d488;
+}
+
+.customFileUpload input::placeholder {
+  color: #bebebe;
+}
+
+.imgWrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.imgWrap img {
+  /* width: auto; */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imgUpload:before {
+  content: '\f093';
+  font-size: 90px;
+  position: absolute;
+  padding-top: 51px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  /* color: #63d3a6; */
+  color: #f0b90a;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: 0.5s ease;
+  background-color: #fff;
+}
+
+.imgUpload:hover:before {
+  opacity: 1;
+}

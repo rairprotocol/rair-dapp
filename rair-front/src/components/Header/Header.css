@@ -1,0 +1,277 @@
+.col-12.header-master {
+  display: flex;
+  filter: drop-shadow(1px 0.5px 3px black);
+  padding: 20px 120px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  z-index: 3;
+}
+
+.header-master .main-search {
+  position: relative;
+  margin: 0 2vw;
+  width: 100%;
+}
+
+.header-master .main-search i.fas.fa-search {
+  position: absolute;
+  left: 1vw;
+  top: 32%;
+  color: #e882d5;
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.header-master .main-search i.fas.fa-times {
+  color: #e882d5;
+  position: absolute;
+  right: 10px;
+  top: 30%;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.header-master .main-search.hotdrops-header i.fas.fa-times {
+  color: var(--hot-drops);
+}
+
+.header-master .main-search input {
+  background: none;
+  border-radius: 12px;
+  width: 100%;
+  padding: 8px 16px 8px 42px;
+  border: 1px solid #666666;
+  color: white;
+  transition: all 0.1s ease;
+  position: relative;
+}
+
+.header-master .main-search input.rhyno {
+  border: 1px solid #dedede;
+  color: #4f4f4f;
+}
+
+.header-master .container-admin-panel {
+  position: absolute;
+  width: 5vw;
+  top: 80px;
+}
+
+.header-master .main-search input.input-search-black:hover,
+.header-master .main-search input.input-search-black:focus {
+  background: #fffa;
+}
+
+.header-master .main-search.hidden {
+  display: none;
+}
+
+.header-master .main-search input:focus {
+  outline: none;
+  box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+}
+
+.header-master .box-header-info {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.header-master .box-connect-btn {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.header-master .social-media {
+  display: flex;
+}
+
+.header-master button.btn-connect-wallet {
+  border-radius: 12px;
+  width: 200px;
+  height: 45px;
+  /* background: #bb73d7 !important; */
+  font-size: 18px;
+  font-weight: 700;
+  /* color: white; */
+}
+
+.header-master button.btn-connect-wallet.hotdrops-bg {
+  background: var(--hot-drops-gradient) !important;
+}
+
+.header-master .admin-panel-btn {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background: black;
+  border: 1px solid #000;
+}
+
+.header-master .admin-panel-btn.super {
+  background: #ffd700;
+  color: #000;
+}
+
+.header-master .admin-panel-btn.super:hover {
+  color: #756300;
+}
+
+.header-master .admin-panel-btn:hover {
+  color: grey;
+}
+
+.header-master .social-media .box-social {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin-right: 16px;
+}
+
+.header-master .social-media .box-social a {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-master .social-media .box-social:last-child {
+  margin-right: 16px;
+}
+
+.header-master .social-media .box-social:hover {
+  background: #4561ed !important;
+  border: 1px solid #4561ed !important;
+}
+
+.header-master .social-media .box-social:first-child:hover {
+  background: #1d9bf0 !important;
+  border: 1px solid #1d9bf0 !important;
+}
+
+.popup-content.popup-admin-panel-content {
+  position: absolute !important;
+  top: 90px;
+  right: 80px;
+  filter: drop-shadow(black 0.4px 0.5px 1px);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.container-admin-panel .col-12.py-3 {
+  text-align: center;
+  width: 70px;
+}
+
+.hotdrops-menu-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hotdrops-menu-list ul {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.hotdrops-menu-list ul li {
+  margin-right: 30px;
+}
+
+.hotdrops-menu-list ul li:last-child {
+  margin-right: 0;
+}
+
+@media screen and (max-width: 1320px) {
+  .col-12.header-master {
+    padding: 20px 40px;
+    z-index: 3;
+  }
+}
+
+@media screen and (max-width: 1235px) {
+  .hotdrops-menu-list ul li {
+    margin-right: 10px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .col-12.header-master {
+    padding: 20px 20px;
+    z-index: 3;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .col-12.header-master {
+    z-index: 3;
+  }
+
+  button.metamask-on-boarding {
+    background: #bb73d7;
+    display: flex;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    font-weight: 700;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .col-12.header-master {
+    z-index: 3;
+  }
+
+  .header-master button.btn-connect-wallet {
+    width: 150px;
+    height: 35px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header-master .social-media .box-social:last-child {
+    margin-right: 15px;
+  }
+
+  .col-12.header-master {
+    padding: 10px 20px;
+  }
+}
+
+@media screen and (max-width: 470px) {
+  .col-12.header-master {
+    z-index: 3;
+  }
+
+  button.metamask-on-boarding {
+    font-size: 12px;
+    padding: 0;
+    height: 40px;
+    width: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

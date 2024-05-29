@@ -1,0 +1,140 @@
+.wrapper-splash-page.ukraineglitch .left-tokens-content {
+  justify-content: flex-start;
+  text-align: center;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 25px;
+}
+
+.template-royalties-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.template-royalties-wrapper h4 {
+  font-size: 30px;
+}
+
+.template-royalties-wrapper .tempalte-royalties-block .template-royalties-box {
+  color: rgb(255, 213, 5);
+  text-align: left;
+}
+
+.template-royalties-wrapper
+  .tempalte-royalties-block
+  .template-royalties-box:first-child {
+  color: #025cbd;
+  margin-right: 20px;
+}
+
+.template-royalties-wrapper .tempalte-royalties-block {
+  margin-top: 10px;
+  display: flex;
+}
+
+.wrapper-splash-page.ukraineglitch
+  .left-tokens
+  .property-wrapper
+  .property-first:first-child {
+  margin-right: 30px;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens .progress-main svg {
+  color: #035bbc;
+}
+
+.wrapper-splash-page.ukraineglitch .block-after-ipfs {
+  width: 472px;
+  text-align: left;
+}
+
+.wrapper-splash-page.ukraineglitch .block-after-ipfs a {
+  color: #5865f2;
+}
+
+@media screen and (max-width: 1300px) {
+  .wrapper-splash-page.ukraineglitch .left-tokens-content .tokens-description {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper {
+    margin-bottom: 40px;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
+    left: 35px;
+  }
+
+  .wrapper-splash-page.ukraineglitch .block-after-ipfs {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .wrapper-splash-page.ukraineglitch .text-progress.progress-text-template {
+    bottom: 0;
+    left: 35%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .wrapper-splash-page.ukraineglitch .exclusive-nfts .exclusive-nfts {
+    margin: 10px 0 0 0;
+  }
+
+  .wrapper-splash-page.ukraineglitch .exclusive-nfts .title-nft {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
+    margin-left: 70px !important;
+  }
+
+  .template-royalties-wrapper
+    .tempalte-royalties-block
+    .template-royalties-box {
+    text-align: center;
+  }
+
+  .template-royalties-wrapper
+    .tempalte-royalties-block
+    .template-royalties-box:first-child {
+    margin-bottom: 20px;
+    margin-right: 0;
+  }
+
+  .template-royalties-wrapper {
+    align-items: center;
+  }
+
+  .template-royalties-wrapper .tempalte-royalties-block {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 385px) {
+  .wrapper-splash-page.ukraineglitch .block-left-tokens .down-text {
+    left: 60px;
+  }
+
+  .wrapper-splash-page.ukraineglitch
+    .box-progress.progress-template
+    .MuiCircularProgress-root.MuiCircularProgress-determinate.MuiCircularProgress-colorPrimary.progress-main.css-1l24ewf-MuiCircularProgress-root {
+    margin-top: 0px;
+    margin-left: -6px;
+  }
+}

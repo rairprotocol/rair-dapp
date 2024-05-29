@@ -1,0 +1,30 @@
+{
+  "description": "Events that are deprecated (they don't exist in the current ABIs but are still necessary for historical data)",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "NewContractDeployed",
+      "type": "event"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "env": {
+      "browser": true,
+      "es2021": true
+  },
+  "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "ecmaFeatures": {
+          "jsx": true
+      },
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+  },
+  "plugins": [
+      "react",
+      "react-hooks",
+      "@typescript-eslint",
+      "simple-import-sort"
+  ],
+  "settings": {
+      "import/resolver": {
+          "typescript": {}
+      },
+      "react": {
+        "version": "detect"
+      }
+  },
+  "rules": {
+      "semi": [
+          "error",
+          "always"
+      ],
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "no-unsafe-optional-chaining": "warn",
+      "no-constant-condition": "warn",
+      "react/react-in-jsx-scope": "off",
+      "no-mixed-spaces-and-tabs": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/ban-types": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "prefer-rest-params": "off",
+      "react/prop-types": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+      "no-console": [
+          "error",
+          {
+              "allow": [
+                  "warn",
+                  "error",
+                  "info"
+              ]
+          }
+      ]
+  },
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
+      "rules": {
+        "simple-import-sort/imports": [
+          "error",
+          {
+            "groups": [
+              // Packages `react` related packages come first.
+              ["^react", "^@?\\w"],
+              // Internal packages.
+              ["[a-zA-Z]","^(@|components)(/.*|$)"],
+              // Side effect imports.
+              ["^\\u0000"],
+              // Parent imports. Put `..` last.
+              ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+              // Other relative imports. Put same-folder imports and `.` last.
+              ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+              // Style imports.
+              ["^.+\\.?(css)$"]
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

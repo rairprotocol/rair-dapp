@@ -1,0 +1,200 @@
+.more-unlockables-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 85vw;
+}
+
+.share-button-linear-border {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  background: linear-gradient(
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.62%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+  padding: 1px;
+  border-radius: 16px;
+}
+
+.more-unlock {
+  width: 288px;
+}
+
+.share-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  height: 46px;
+  border-radius: 16px;
+  border: none;
+  transition: 0.3s all ease;
+  padding: 0px;
+}
+
+.share-button:hover {
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  ) !important;
+}
+
+.share-button.hotdrops-border:hover {
+  background: var(--hot-drops-gradient) !important;
+}
+
+.share-button:focus {
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  ) !important;
+}
+
+.share-button-more-unlock {
+  padding: 10px 54px;
+}
+
+.share-pop-up {
+  position: absolute;
+  width: 164px;
+  background: rgb(56, 54, 55);
+  border-radius: 16px;
+  right: 0;
+  top: 70px;
+  overflow: hidden;
+
+  transition: all 0.3s ease;
+}
+
+.share-pop-up button.share-copy-link,
+.share-pop-up div.share-copy-link {
+  padding: 15px 0;
+  background: rgb(56, 54, 55);
+  border: none;
+  border-radius: 0;
+  width: 100%;
+}
+
+.share-pop-up button.share-copy-link,
+.share-pop-up div.share-copy-link {
+  border-bottom: 1px solid grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+
+  transition: all 0.2s ease;
+}
+
+.share-pop-up button.share-copy-link:last-child,
+.share-pop-up div.share-copy-link:last-child {
+  border-bottom: 0;
+}
+
+.share-pop-up button.share-copy-link:hover,
+.share-pop-up div.share-copy-link:hover {
+  background: grey;
+}
+
+.share-pop-up button.share-copy-link img {
+  width: 1.5rem;
+  height: auto;
+  margin-right: 10px;
+}
+
+.share-pop-up button.share-copy-link i {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.share-pop-up .react-share__ShareButton.network__share-button {
+  width: 100%;
+  height: 100% !important;
+  border-radius: none;
+  background-color: none !important;
+}
+
+.share-pop-up .react-share__ShareButton.network__share-button:focus {
+  background-color: none !important;
+  border-radius: none !important;
+}
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  background-color: grey !important;
+  border-radius: 16px !important;
+}
+
+@media screen and (max-width: 500px) {
+  .share-button-linear-border,
+  .share-button {
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    background: linear-gradient(
+      #725bdb 0%,
+      #805fda 10.31%,
+      #8c63da 20.62%,
+      #9867d9 30.94%,
+      #a46bd9 41.25%,
+      #af6fd8 51.56%,
+      #af6fd8 51.56%,
+      #bb73d7 61.25%,
+      #c776d7 70.94%,
+      #d27ad6 80.62%,
+      #dd7ed6 90.31%,
+      #e882d5 100%
+    );
+    padding: 1px; */
+    border-radius: 8px;
+  }
+
+  .share-button-linear-border {
+    height: 40px;
+  }
+
+  .share-button {
+    height: 37px;
+    font-size: 16px;
+  }
+
+  .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+    border-radius: 8px !important;
+  }
+}

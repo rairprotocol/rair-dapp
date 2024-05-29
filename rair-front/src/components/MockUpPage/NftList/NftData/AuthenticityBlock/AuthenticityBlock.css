@@ -1,0 +1,49 @@
+.block-authenticity {
+  width: 100%;
+}
+
+.block-authenticity .table-authenticity {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.nftDataPageTest-a-hover {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.block-authenticity .authenticity-title {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.table-authenticity .table-authenticity-title {
+  text-align: left;
+  padding: 0 24px;
+}
+
+.authenticity-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+
+  transition: 0.2s all ease;
+}
+
+.authenticity-box:nth-child(2) {
+  margin-top: 10px;
+}
+
+.authenticity-box .link-block {
+  display: flex;
+  align-items: baseline;
+}
+
+@media screen and (max-width: 1000px) {
+  .block-authenticity .table-authenticity {
+    max-width: 100%;
+  }
+}

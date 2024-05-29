@@ -1,0 +1,37 @@
+.mainWrapper {
+  margin: auto;
+  margin-top: 56px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+/* unused-className */
+.main {
+}
+
+.unlockText {
+  font-size: 18px;
+}
+
+.iconKey {
+  background: white;
+  padding: 6px;
+  border-radius: 10px;
+}
+
+.rarity {
+  padding-left: 15px;
+  font-weight: 700;
+}
+
+@media screen and (max-width: 500px) {
+  .rarity,
+  .unlockText {
+    font-size: 12px;
+  }
+}

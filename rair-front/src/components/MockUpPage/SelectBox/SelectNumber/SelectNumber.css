@@ -1,0 +1,165 @@
+.select-number-container {
+  position: relative;
+  margin-right: 16px;
+}
+
+.select-field {
+  cursor: pointer;
+  width: 288px;
+  height: 48px;
+  border-radius: 16px;
+  border: 1px solid #d37ad6;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.number-item {
+  font-size: 20px;
+}
+
+.select-number-popup {
+  flex-wrap: wrap;
+  border-radius: 16px;
+  position: absolute;
+  top: 60px;
+  width: auto;
+  padding: 50px 0px 24px 15px;
+  z-index: 1;
+  border: 1px solid #d37ad6;
+  gap: 12px;
+  grid-template-columns: 72px 72px 72px 72px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 288px;
+  max-height: 456px;
+  z-index: 1;
+}
+.select-number-box.sold-token {
+  background: rgba(113, 36, 255, 0.796);
+}
+.select-number-box.sold-token:hover::after {
+  content: attr(data-title);
+  position: relative;
+  top: -56px;
+  left: -5px;
+  background: darkgrey;
+  width: 72px;
+  display: inline-block;
+  height: 25px;
+  border: 1px solid cornflowerblue;
+  border-radius: 16px;
+}
+.select-number-title {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 14px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  width: 100%;
+  left: 0px;
+}
+
+.select-number-popup .select-number-box {
+  cursor: pointer;
+  color: #a7a6a6;
+  border-radius: 12px;
+  width: 74px;
+  height: 32px;
+  padding: 4px;
+  transition: all 0.1s ease;
+  margin-top: 6px;
+}
+
+.select-number-popup .selected-box {
+  background: #d37ad6;
+  color: #fff;
+}
+
+.select-number-popup .selected-box.hotdrops-border {
+  background: var(--hot-drops-gradient) !important;
+  color: #fff;
+}
+
+.select-number-popup .select-number-box.select-number-box:hover {
+  color: #fff;
+  background: #d37ad6 !important;
+}
+
+.select-number-popup
+  .select-number-box.hotdrops-border.select-number-box:hover {
+  background: var(--hot-drops-gradient) !important;
+  color: #fff;
+}
+
+.select-number-popup::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.select-number-popup::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 12px;
+}
+
+/* Handle */
+.select-number-popup::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+  border-radius: 12px;
+}
+
+.select-number-popup.hotdrops::-webkit-scrollbar-thumb {
+  background: var(--hot-drops-gradient);
+  border-radius: 12px;
+}
+
+/* Handle on hover */
+.select-number-popup::-webkit-scrollbar-thumb:hover {
+  background: #a46bd9;
+}
+
+.select-number-popup.hotdrops::-webkit-scrollbar-thumb:hover {
+  background: var(--hot-drops-hover);
+}
+
+.backClose-list-tokens {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.backClose-list-tokens:hover {
+  color: #d37ad6;
+}
+
+.backClose-current-tokens-close-sign {
+  cursor: pointer;
+  padding-right: 17px;
+}
+
+.backClose-current-tokens-back-sign {
+  cursor: pointer;
+  padding-left: 18px;
+}
+
+.backClose-current-tokens:hover {
+  color: #d37ad6;
+}

@@ -1,0 +1,25 @@
+.main {
+  text-align: start;
+  font-size: large;
+}
+.content ol li ul li {
+  list-style: disc;
+  padding-bottom: 20px;
+}
+.content ol li {
+  list-style: decimal;
+}
+.content li {
+  list-style: auto;
+}
+.content ol li strong {
+  display: inline-block;
+  padding-bottom: 20px;
+}
+.content li::marker {
+  font-size: x-large;
+}
+.adc li {
+  font-size: large;
+  list-style: lower-alpha !important;
+}

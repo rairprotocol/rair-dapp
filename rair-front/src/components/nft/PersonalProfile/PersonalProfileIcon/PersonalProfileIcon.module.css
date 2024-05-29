@@ -1,0 +1,422 @@
+.root {
+  width: auto;
+  height: 8.625rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  position: relative;
+}
+
+.profileIcon {
+  width: 8.625rem;
+  height: 8.625rem;
+  margin-top: -4.3rem;
+  margin-left: 5.875rem;
+  border-radius: 1rem;
+  transition: 0.3s all ease;
+  background: linear-gradient(
+    96.34deg,
+    #19a7f6 0%,
+    #4099f1 20%,
+    #548aeb 40%,
+    #617be6 60%,
+    #6b6be0 80%,
+    #725bdb 100%
+  );
+}
+.profileIcon.emptyAcc {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+.profileIcon.emptyAcc:hover {
+  cursor: default;
+}
+.profileIcon:hover .plus {
+  transform: scale(1.4);
+}
+.profileIcon:hover {
+  cursor: pointer;
+  border: 1px solid white;
+  background: linear-gradient(
+    160.34deg,
+    #19a7f6 0%,
+    #4099f1 20%,
+    #548aeb 40%,
+    #617be6 60%,
+    #6b6be0 80%,
+    #725bdb 100%
+  );
+}
+.profileIconPicWrapper {
+  width: 8.625rem;
+  height: 8.625rem;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  margin-top: -4.3rem;
+  margin-left: 5.875rem;
+  border-radius: 1rem;
+}
+
+.verifiedIcon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: -10px;
+  right: -10px;
+}
+
+.profileIconPic {
+  width: 8.625rem;
+  height: 8.625rem;
+  border-radius: 1rem;
+  transition: 0.3s all ease;
+  object-fit: cover;
+}
+.profileIconPic:hover {
+  transform: scale(1.2);
+}
+
+.profileName {
+  margin-left: 1.625rem;
+  margin-top: 1.4rem;
+  width: auto;
+  height: 2.5rem;
+  word-break: break-all;
+
+  font-family: 'Plus Jakarta Sans' sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2.188rem;
+  line-height: 2.5rem;
+  display: flex;
+  align-items: flex-start;
+  color: #ffffff;
+}
+.profileName .edit {
+  cursor: pointer;
+  transform: scale(0.7);
+  margin-left: 1.2rem;
+  transition: 0.3s all ease;
+}
+.profileName .edit:hover {
+  color: #19a7f6 !important;
+}
+.profileName .edit.white {
+  color: white;
+}
+.profileName .edit.black {
+  color: black;
+}
+.profileNamewhite {
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 30px;
+  transition: all 0.2s ease;
+}
+.profileNameblack {
+  color: #222021;
+  cursor: pointer;
+  font-size: 30px;
+  transition: all 0.2s ease;
+}
+
+.profileNamewhite:hover,
+.profileNameblack:hover {
+  color: grey;
+  transition: all 0.2s ease;
+}
+
+.formEdit {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+}
+
+.editMode {
+  display: flex;
+  align-items: center;
+}
+
+.editName {
+  /* margin-right: 1rem; */
+}
+
+.editEmail::before {
+  content: \00D7;
+}
+
+.editName,
+.editEmail {
+  outline: none;
+  height: 40px;
+  width: 248px;
+  background: transparent;
+  border-radius: 1rem;
+  border: 1px solid #19a7f6;
+  color: white;
+  font-size: 1rem;
+  padding-left: 10px;
+}
+.editName::placeholder,
+.editEmail::placeholder {
+  font-size: 1rem;
+  color: #a7a6a6;
+  border: none;
+}
+.editName:focus,
+.editEmail:focus {
+  border: 1px solid #00d0ff;
+}
+
+.editModeOn.black {
+  background: #dedede;
+}
+.editModeOff.black {
+  background: #dedede;
+}
+
+.editModeOn {
+  margin-left: 1rem;
+  margin-right: 0.8rem;
+}
+.editModeOn:disabled {
+  background: transparent;
+}
+.editModeOn:disabled:hover {
+  background: #ff1500;
+  cursor: not-allowed;
+}
+.editModeOn,
+.editModeOff {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  background: #4e4d4d;
+  border-radius: 11.6289px;
+  border: none;
+}
+.editModeOn:hover,
+.editModeOff:hover {
+  background: #00ffae;
+  transition: 0.3s all ease;
+}
+.editModeOn i,
+.editModeOff i {
+  transform: scale(0.6);
+  color: #2aa1f4;
+}
+.labelForFile {
+  width: 8.625rem;
+  height: 8.625rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: copy;
+}
+.inputForFile {
+  display: none;
+}
+
+.inputBefore {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  align-content: center;
+  margin-right: 1rem;
+}
+
+.cleanInputwhite:hover {
+  cursor: pointer;
+  color: #19a7f6;
+}
+.cleanInputwhite::after {
+  display: inline-block;
+  content: '\00D7';
+  margin-left: -3rem;
+  margin-right: 1rem;
+  transform: scale(0.5);
+}
+
+.cleanInputblack:hover {
+  cursor: pointer;
+
+  color: #19a7f6 !important;
+}
+.cleanInputblack::after {
+  display: inline-block;
+  content: '\00D7';
+  margin-left: -3rem;
+  margin-right: 1rem;
+  transform: scale(0.5);
+  color: #222021;
+}
+#white {
+  color: white;
+  padding-right: 3rem;
+}
+#black {
+  color: black;
+  padding-right: 3rem;
+}
+
+.containerBtn,
+.containerInput {
+  display: flex;
+}
+
+@media screen and (max-width: 1260px) {
+  .profileIconPicWrapper,
+  .profileIcon {
+    margin-left: 3rem;
+  }
+}
+
+@media screen and (max-width: 1025px) {
+  .profileIconPicWrapper,
+  .profileIcon {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  .root.editMode {
+    margin-bottom: 100px;
+  }
+
+  .formEdit,
+  .containerInput {
+    flex-direction: column;
+  }
+
+  .formEdit input {
+    margin: 0 0 20px 0;
+  }
+
+  .cleanInputblack::after,
+  .cleanInputwhite::after {
+    margin-right: 0px;
+    margin-bottom: 15px;
+  }
+
+  .editName,
+  .editEmail {
+    width: 400px;
+  }
+
+  .inputBefore {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .labelForFile,
+  .profileIconPic,
+  .profileIcon {
+    width: 91px;
+    height: 91px;
+    /* margin-top: -2.3rem; */
+  }
+
+  .profileIcon {
+    margin-top: -2rem;
+  }
+
+  .profileNameblack,
+  .profileNamewhite {
+    font-size: 22px;
+  }
+
+  .profileName {
+    margin-left: 0.5rem;
+    margin-top: 5px;
+  }
+
+  .root.editMode {
+    margin-left: 4rem;
+    margin-top: -2rem;
+  }
+
+  .verifiedIcon {
+    top: 20px;
+    width: 30px;
+    height: 30px;
+    right: 10px;
+  }
+}
+
+@media screen and (max-width: 775px) {
+  .profileIconPicWrapper,
+  .profileIcon {
+    margin-left: 0rem;
+  }
+
+  .root.editMode {
+    margin-left: 2rem;
+    margin-top: -2rem;
+  }
+}
+
+@media screen and (max-width: 775px) {
+  .editName,
+  .editEmail {
+    width: 280px;
+  }
+
+  .editModeOn {
+    margin-left: 0rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .root {
+    /* height: 100%; */
+  }
+
+  .root.editMode {
+    margin-left: 0px;
+    /* padding-top: 4rem 0; */
+    /* height: 8.625px; */
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .root.editMode {
+    margin-left: 0rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .root.editMode {
+    margin-left: 2rem;
+  }
+
+  .editName {
+    width: 180px;
+    height: 34px;
+  }
+
+  .editEmail {
+    width: 276px;
+    height: 34px;
+  }
+
+  .containerInput .inputBefore:last-child {
+    margin-left: -6rem;
+  }
+
+  .profileNameblack,
+  .profileNamewhite {
+    font-size: 16px;
+  }
+}
