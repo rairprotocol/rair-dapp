@@ -31,15 +31,29 @@ const ImportExternalContract = () => {
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   useEffect(() => {
-    sockets.nodeSocket.on('importProgress', ({ progress, message }) => {
-      console.info(progress, message);
+    const report = ({
+      progress,
+      message,
+      contractAddress,
+      blockchain,
+      creator,
+      limit
+    }) => {
       setSendingData(true);
       setProgress(progress);
       setResultData(message);
+      setSelectedContract(contractAddress);
+      setSelectedBlockchain(blockchain);
+      setOwner(creator);
+      setLimit(limit);
       if (progress === 100) {
         setSendingData(false);
       }
-    });
+    };
+    sockets.nodeSocket.on('importProgress', report);
+    return () => {
+      sockets.nodeSocket.off('importProgress', report);
+    };
   }, []);
 
   const blockchainOptions = Object.keys(chainData)

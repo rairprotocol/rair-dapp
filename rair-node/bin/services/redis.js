@@ -1,7 +1,7 @@
 const { promisify } = require('util');
 
 module.exports = (context) => {
-  const getAsync = promisify(context.redis.client.get).bind(context.redis.client);
+  const getAsync = promisify(context.redis.client.getDel).bind(context.redis.client);
   const setAsync = promisify(context.redis.client.set).bind(context.redis.client);
 
   const set = (key, object) => {

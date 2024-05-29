@@ -132,6 +132,10 @@ module.exports = {
     socket.to(importerAddress).emit('importProgress', {
       progress: 0,
       message: `${contractMetadata.totalSupply} tokens found`,
+      contractAddress,
+      blockchain: networkId,
+      creator: contractCreator,
+      limit,
     });
 
     if (!contract) {
@@ -193,6 +197,10 @@ module.exports = {
       socket.to(importerAddress).emit('importProgress', {
         progress: (numberOfTokensAdded / importTarget) * 100,
         message: `${numberOfTokensAdded} NFTs imported so far...`,
+        contractAddress,
+        blockchain: networkId,
+        creator: contractCreator,
+        limit,
       });
       const ownerResponse = await alchemySDK.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
       [nft.owner] = ownerResponse.owners;
@@ -221,6 +229,10 @@ module.exports = {
       socket.to(importerAddress).emit('importProgress', {
         progress: 100,
         message: 'Complete',
+        contractAddress,
+        blockchain: networkId,
+        creator: contractCreator,
+        limit,
       });
 
       return {

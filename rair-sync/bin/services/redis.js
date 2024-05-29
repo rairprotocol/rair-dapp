@@ -1,24 +1,24 @@
 const { promisify } = require('util');
 
-module.exports = (context) => {
-  const getAsync = promisify(context.redis.client.get).bind(context.redis.client);
-  const setAsync = promisify(context.redis.client.set).bind(context.redis.client);
+const redis = require('redis');
+const config = require('../config');
+// Create Redis client
+const redisClient = redis.createClient({
+  url: `redis://${config.redis.connection.host}:${config.redis.connection.port}`,
+  legacyMode: true,
+});
 
-  const set = (key, object) => {
-    const value = JSON.stringify(object);
+const getAsync = promisify(redisClient.get).bind(redisClient);
+const setAsync = promisify(redisClient.set).bind(redisClient);
 
-    return setAsync(key, value);
-  };
-  const get = async (key) => {
-    const value = await getAsync(key);
-
-    if (!value) return value;
-
-    return JSON.parse(value);
-  };
-
-  return {
-    set,
-    get,
-  };
+const set = (key, object) => {
+  const value = JSON.stringify(object);
+  return setAsync(key, value);
 };
+const get = async (key) => {
+  const value = await getAsync(key);
+  if (!value) return value;
+  return JSON.parse(value);
+};
+
+module.exports = { redisClient, set, get };

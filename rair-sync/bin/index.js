@@ -1,11 +1,9 @@
 const port = process.env.PORT || 5001;
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const redis = require('redis');
 const morgan = require('morgan');
 const _ = require('lodash');
 const { MongoClient } = require('mongodb');
@@ -22,7 +20,7 @@ const tasks = require('./tasks');
 const routes = require('./routes/api/v1');
 
 const config = require('./config');
-const redisService = require('./services/redis');
+const { redisClient } = require('./services/redis');
 
 async function main() {
   const connectionString = await getMongoConnectionStringURI({ appSecretManager });
@@ -53,23 +51,15 @@ async function main() {
   const client = await MongoClient.connect(connectionString, { useNewUrlParser: true });
   const _db = client.db(client.s.options.dbName);
 
-  // Create Redis client
-  const redisClient = redis.createClient({
-    url: `redis://${config.redis.connection.host}:${config.redis.connection.port}`,
-    legacyMode: true,
-  });
-
   await redisClient.connect().catch(log.error);
 
   const context = {
     mongo: _db,
     config,
     redis: {
-      client: redisClient,
+      redisService: redisClient,
     },
   };
-
-  context.redis.redisService = redisService(context);
 
   // run scheduled tasks flow
   context.agenda = await tasks(context);

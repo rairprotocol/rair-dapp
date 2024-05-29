@@ -2,7 +2,7 @@ import BatchERC20Transfer from './BatchERC20Transfer';
 import BlockChainSwitcher from './BlockchainSwitcher';
 import ImportExternalContract from './ImportExternalContracts';
 import TransferTokens from './transferTokens';
-import UserManager from './userManager';
+import UserManager from './UserManager';
 const ImportAndTransfer = () => {
   return (
     <div>

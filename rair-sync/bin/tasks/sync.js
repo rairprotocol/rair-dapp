@@ -24,7 +24,7 @@ module.exports = (context) => {
         // eslint-disable-next-line no-restricted-syntax
         for await (const chain of chainsToProcess) {
           const { network, name } = blockchain.networks[chain];
-          console.info(AgendaTaskEnum.SyncContracts, { network, name });
+          // console.info(AgendaTaskEnum.SyncContracts, { network, name });
           await context.agenda.create(
             AgendaTaskEnum.SyncContracts,
             { network, name },

@@ -102,7 +102,6 @@ async function main() {
   app.set('trust proxy', 1);
 
   app.use(sessionMiddleware);
-  socketIo.engine.use(sessionMiddleware);
 
   app.use('/stream', streamRoute(context));
 
