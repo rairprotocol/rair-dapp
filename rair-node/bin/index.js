@@ -108,7 +108,7 @@ async function main() {
   redisSubscriber.subscribe('notifications', (notificationData) => {
     try {
       console.info(notificationData);
-      const { type, message, address, data } = JSON.parse(notificationData);
+      const { type, message, address, data = [] } = JSON.parse(notificationData);
       emitEvent(socketIo)(address, type, message, data);
     } catch (err) {
       log.error(err);

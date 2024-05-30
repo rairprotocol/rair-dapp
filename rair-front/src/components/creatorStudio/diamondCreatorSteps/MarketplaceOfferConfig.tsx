@@ -30,7 +30,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
     );
-  const { textColor, primaryButtonColor } = useSelector<
+  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -187,9 +187,11 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                 array[index].selected = !array[index].selected;
                 rerender();
               }}
-              className={`btn col-12 btn-${
-                array[index].selected ? 'royal-ice' : 'danger'
-              } rounded-rair`}>
+              style={{
+                background: array[index].selected ? primaryButtonColor : 'red',
+                color: textColor
+              }}
+              className={`btn col-12 rair-button rounded-rair`}>
               {!array[index]?.selected && 'Not'} Selected{' '}
               <i
                 className={`fas fa-${
@@ -201,6 +203,12 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
           {!simpleMode && (
             <button
               disabled={!array[index].selected && !item._id}
+              style={{
+                background: array[index]?.marketData?.visible
+                  ? secondaryButtonColor
+                  : 'red',
+                color: textColor
+              }}
               onClick={() => {
                 array[index].marketData.visible =
                   !array[index].marketData.visible;
@@ -209,9 +217,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                   setMarketValuesChanged(true);
                 }
               }}
-              className={`btn col-12 btn-${
-                array[index]?.marketData?.visible ? 'royal-ice' : 'danger'
-              } rounded-rair`}>
+              className={`btn col-12 rair-button rounded-rair`}>
               <abbr
                 title={
                   array[index]?.marketData?.visible

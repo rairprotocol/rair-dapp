@@ -93,7 +93,7 @@ import { detectBlockchain } from './utils/blockchainData';
 // import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
 // views
-import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
+import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -310,7 +310,7 @@ function App() {
   }, [settings]);
 
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
+    <ErrorBoundary fallback={<ErrorFallback />}>
       <MetaTags seoMetaTags={seo} />
       {showAlert === true && (
         <AlertMetamask
