@@ -101,13 +101,15 @@ async function main() {
     socket.on('disconnect', () => {
       log.info('User disconnected');
     });
-    socket.on('subscribe', (roomName) => {
+    socket.on('login', (roomName) => {
       socket.join(roomName);
+    });
+    socket.on('logout', (roomName) => {
+      socket.leave(roomName);
     });
   });
   redisSubscriber.subscribe('notifications', (notificationData) => {
     try {
-      console.info(notificationData);
       const { type, message, address, data = [] } = JSON.parse(notificationData);
       emitEvent(socketIo)(address, type, message, data);
     } catch (err) {

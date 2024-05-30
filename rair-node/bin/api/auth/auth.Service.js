@@ -4,7 +4,6 @@ const { File, User, MediaViewLog, Unlock, ServerSetting } = require('../../model
 const AppError = require('../../utils/errors/AppError');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../../integrations/ethers/tokenValidation');
 const { superAdminInstance } = require('../../utils/vaultSuperAdmin');
-const { emitEvent } = require('../../integrations/socket.io');
 
 module.exports = {
   generateChallengeMessage: async (req, res, next) => {
@@ -88,11 +87,6 @@ module.exports = {
       }
 
       userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
-      emitEvent(req.app.get('socket'))(
-        userData.publicAddress,
-        'message',
-        `Logged in as ${userData.publicAddress}`,
-      );
       const { superAdmins, superAdminsOnVault } = await ServerSetting.findOne({});
       userData.superAdmin = superAdminsOnVault
         ? await superAdminInstance.hasSuperAdminRights(userData.publicAddress)

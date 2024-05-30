@@ -90,6 +90,17 @@ const useConnectUser = () => {
     setMetamaskInstalled(window?.ethereum && window?.ethereum?.isMetaMask);
   }, [setMetamaskInstalled]);
 
+  useEffect(() => {
+    if (currentUserAddress) {
+      sockets.nodeSocket.on('connect', () => {
+        sockets.nodeSocket.emit('login', currentUserAddress.toLowerCase());
+      });
+    }
+    return () => {
+      sockets.nodeSocket.off('connect');
+    };
+  }, [currentUserAddress]);
+
   const loginWithWeb3Auth = useCallback(async () => {
     if (!currentChain) {
       return;
@@ -381,10 +392,6 @@ const useConnectUser = () => {
           });
           dispatch(setLogInStatus(true));
           sockets.nodeSocket.connect();
-          sockets.nodeSocket.emit(
-            'subscribe',
-            loginResponse.user.publicAddress.toLowerCase()
-          );
         }
       }
       dispatch(setLoginProcessStatus(false));
@@ -445,6 +452,7 @@ const useConnectUser = () => {
   const logoutUser = useCallback(async () => {
     const { success } = await rFetch('/api/auth/logout');
     if (success) {
+      sockets.nodeSocket.emit('logout', currentUserAddress.toLowerCase());
       sockets.nodeSocket.disconnect();
       dispatch(getTokenComplete(null));
       dispatch(setUserAddress(undefined));
@@ -456,7 +464,7 @@ const useConnectUser = () => {
       dispatch(setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
       navigate('/');
     }
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, currentUserAddress]);
 
   return {
     connectUserData,

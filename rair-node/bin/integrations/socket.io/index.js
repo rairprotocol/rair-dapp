@@ -10,14 +10,21 @@ const emitEvent = (socketIo) => async (address, type, message, data = []) => {
         if (!userData) {
             log.info(`Cannot emit event, invalid address ${address}`);
         }
-        const notification = new Notification({
-            user: address,
-            type,
-            message,
-            data,
-        });
+        // Array to be expanded as more event types are made
+        if ([
+            'message',
+            'resalePurchase',
+            'tokenMint',
+        ].includes(type)) {
+            const notification = new Notification({
+                user: address,
+                type,
+                message,
+                data,
+            });
+            await notification.save();
+        }
         socketIo.to(address).emit(type, { message, data });
-        await notification.save();
     } catch (err) {
         log.info('Cannot emit event', err);
     }

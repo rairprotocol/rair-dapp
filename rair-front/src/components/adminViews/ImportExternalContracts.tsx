@@ -31,7 +31,7 @@ const ImportExternalContract = () => {
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   useEffect(() => {
-    const report = ({ socketData }) => {
+    const report = (socketData) => {
       const { message, data } = socketData;
       const [progress, contractAddress, blockchain, creator, limit] = data;
 
