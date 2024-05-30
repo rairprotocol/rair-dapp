@@ -192,6 +192,11 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
     * [x] /upload
         * [x] /validate - GET - Validate information for the media file ([details](readme/current/upload/upload_validate.md))
         * [x] /file - POST - Insert a media file in the database ([details](readme/current/upload/upload_file.md))
+    * [x] /notifications
+        * [x] / - GET - List of notifications ([details](readme/current/notifications/get_list.md))
+        * [x] /:id - GET - Get a single notification ([details](readme/current/notifications/get_single.md))
+        * [x] /:id - PUT - Mark a notification as read ([details](readme/current/notifications/mark_read.md))
+        * [x] /:id - DELETE - Delete a notification ([details](readme/current/notifications/delete.md))
 
 # Contributors
 Valerii Kovalov \
