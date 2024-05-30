@@ -17,4 +17,14 @@ redisPublisher.connect().catch(log.error);
 redisSubscriber.connect().catch(log.error);
 redisClient.connect().catch(log.error);
 
+redisPublisher.on('error', (error) => {
+  log.error('Redis publisher error:', error);
+});
+redisSubscriber.on('error', (error) => {
+  log.error('Redis subscriber error:', error);
+});
+redisClient.on('error', (error) => {
+  log.error('Redis client error:', error);
+});
+
 module.exports = { redisPublisher, redisSubscriber, redisClient };
