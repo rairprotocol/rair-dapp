@@ -63,6 +63,12 @@ async function main() {
     },
   };
 
+  try {
+    console.info(await redisClient.ping('Test'));
+  } catch (err) {
+    console.error(err);
+  }
+
   const sessionMiddleware = session({
     store: new RedisStorage({
       client: redisClient,
