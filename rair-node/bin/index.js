@@ -48,7 +48,7 @@ async function main() {
   app.use(cors({ origin }));
   const socketIo = new Server(httpServer, {
     cors: {
-      origin: '*',
+      origin,
     },
   });
 
