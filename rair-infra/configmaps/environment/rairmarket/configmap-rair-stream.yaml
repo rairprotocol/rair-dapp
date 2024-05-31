@@ -22,6 +22,6 @@ data:
   VAULT_MEDIA_SERVICE_APP_ROLE_ID: ""
   VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: ""
   VAULT_MEDIA_SERVICE_use_x509_cert_auth: "false"
-  SERVICE_HOST: ms.rair.market
+  SERVICE_HOST: https://ms.rair.market
   REDIS_HOST: rair-redis
   REDIS_PORT: "6379"

@@ -43,7 +43,7 @@ async function main() {
   const httpServer = createServer(app);
 
   /* CORS */
-  const origin = `https://${process.env.SERVICE_HOST}`;
+  const origin = process.env.SERVICE_HOST;
 
   app.use(cors({ origin }));
   const socketIo = new Server(httpServer, {

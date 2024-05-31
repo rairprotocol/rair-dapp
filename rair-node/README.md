@@ -76,7 +76,7 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
 | SYNC_CONTRACT_REPEAT_EVERY |Int | Long-term Sync|
 | SYNC_CONTRACT_TASK_INTERVAL| int| Long-term Sync|
 | SUPER_ADMIN_VAULT_STORE | String | Vault data for Super Admin List |
-| SERVICE_HOST | String | Service hostname |
+| SERVICE_HOST | String | Server URL (used for CORS) |
 | MEDIA_SERVICE_PORT | Int | Media-Service Port Number|
 | MONGO_LOG_COLLECTION | String|  |
 | LOCALDBUSER | String | Local Mongo Username|
