@@ -45,4 +45,5 @@ export interface IRangeDataType {
   end: string;
   product: string;
   price: string;
+  sponsored?: boolean;
 }

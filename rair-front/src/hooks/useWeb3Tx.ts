@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { SendUserOperationResult } from '@alchemy/aa-core';
 import { Contract, ContractReceipt, ContractTransaction } from 'ethers';
 import { encodeFunctionData } from 'viem';
@@ -14,6 +14,13 @@ import { rFetch } from '../utils/rFetch';
 
 const confirmationsRequired = 2;
 
+type web3Options = {
+  failureMessage?: string;
+  callback?: () => void;
+  intendedBlockchain: BlockchainType;
+  sponsored?: Boolean;
+};
+
 const useWeb3Tx = () => {
   const { currentChain, currentUserAddress, programmaticProvider } =
     useSelector<RootState, ContractsInitialType>(
@@ -23,7 +30,6 @@ const useWeb3Tx = () => {
     (store) => store.userStore
   );
   const reactSwal = useSwal();
-  const dispatch = useDispatch();
   const handleReceipt = useCallback(
     async (transactionHash: string, callback?: (() => void) | undefined) => {
       try {
@@ -159,14 +165,7 @@ const useWeb3Tx = () => {
   );
 
   const verifyAAUserOperation = useCallback(
-    async (
-      userOperation: SendUserOperationResult,
-      options: {
-        failureMessage?: string;
-        callback?: () => void;
-        intendedBlockchain: BlockchainType;
-      }
-    ) => {
+    async (userOperation: SendUserOperationResult, options: web3Options) => {
       if (!programmaticProvider) {
         console.error('Provider not found');
         return;
@@ -190,7 +189,7 @@ const useWeb3Tx = () => {
         reactSwal.fire('Error', err.toString(), 'error');
       }
     },
-    [programmaticProvider]
+    [programmaticProvider, handleReceipt, reactSwal]
   );
 
   const web3AuthCall = useCallback(
@@ -198,11 +197,7 @@ const useWeb3Tx = () => {
       contract: Contract,
       method: string,
       args: any[],
-      options: {
-        failureMessage?: string;
-        callback?: () => void;
-        intendedBlockchain: BlockchainType;
-      }
+      options: web3Options
     ) => {
       if (!currentUserAddress || !programmaticProvider) {
         return;
@@ -230,15 +225,17 @@ const useWeb3Tx = () => {
         args: args
       });
 
-      const elegibleForSponsorship = await (
-        programmaticProvider.account as any
-      ).checkGasSponsorshipEligibility({
-        uo: {
-          target: contract.address as `0x${string}`,
-          data: uoCallData,
-          value: transactionValue
-        }
-      });
+      const elegibleForSponsorship =
+        options.sponsored &&
+        (await (
+          programmaticProvider.account as any
+        ).checkGasSponsorshipEligibility({
+          uo: {
+            target: contract.address as `0x${string}`,
+            data: uoCallData,
+            value: transactionValue
+          }
+        }));
 
       const userOperation = await (programmaticProvider.account as any)
         .sendUserOperation({
@@ -260,13 +257,7 @@ const useWeb3Tx = () => {
       }
       return await verifyAAUserOperation(userOperation, options);
     },
-    [
-      currentUserAddress,
-      programmaticProvider,
-      handleReceipt,
-      reactSwal,
-      verifyAAUserOperation
-    ]
+    [currentUserAddress, programmaticProvider, reactSwal, verifyAAUserOperation]
   );
 
   const metamaskSwitch = async (chainId: BlockchainType) => {
@@ -318,11 +309,9 @@ const useWeb3Tx = () => {
       contract: Contract,
       method: string,
       args: any[] = [],
-      options: {
-        failureMessage?: string;
-        callback?: () => void;
-        intendedBlockchain: BlockchainType;
-      } = { intendedBlockchain: currentChain as BlockchainType }
+      options: web3Options = {
+        intendedBlockchain: currentChain as BlockchainType
+      }
     ) => {
       if (!currentUserAddress) {
         console.error(`Login required for Web3 call ${method}`);
@@ -361,7 +350,7 @@ const useWeb3Tx = () => {
           return await metamaskSwitch(chainId);
       }
     },
-    [currentUserAddress, dispatch, loginType, reactSwal]
+    [currentUserAddress, loginType, reactSwal]
   );
 
   const correctBlockchain = useCallback(
