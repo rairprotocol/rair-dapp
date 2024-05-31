@@ -57,7 +57,7 @@ const insertToken = async (token, contractId) => {
       // Special case where there's only one attribute in the metadata
       metadata.attributes = [metadata.attributes];
     }
-    if (metadata?.attributes && (typeof metadata?.attributes?.at(0)) === 'string') {
+    if (metadata?.attributes && (typeof metadata?.attributes?.at?.(0)) === 'string') {
       metadata.attributes = metadata.attributes.map((item) => ({
         trait_type: '',
         value: item,
@@ -109,7 +109,13 @@ module.exports = {
       network: alchemy.networkMapping[networkId], // Replace with your network.
     };
     if (!settings.network) {
-      return { success: false, result: undefined, message: 'Invalid blockchain' };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: Invalid blockchain`,
+        [],
+      );
+      return;
     }
     const alchemySDK = new Alchemy(settings);
 
@@ -124,12 +130,24 @@ module.exports = {
     const contractMetadata = await alchemySDK.nft.getContractMetadata(contractAddress);
 
     if (!contractMetadata.totalSupply) {
-      return { success: false, result: undefined, message: 'Error fetching total supply of tokens' };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: Cannot get total supply`,
+        [],
+      );
+      log.error(contractMetadata);
+      return;
     }
     if (contractMetadata.tokenType !== 'ERC721') {
-      return { success: false, result: undefined, message: `Only ERC721 is supported, tried to process a ${contractMetadata.tokenType} contract` };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: Only ERC721 contracts are supported`,
+        [],
+      );
+      return;
     }
-
     emitEvent(socket)(
       importerAddress,
       'importProgress',
@@ -222,10 +240,13 @@ module.exports = {
     }
 
     if (numberOfTokensAdded === 0) {
-      return {
-        success: false,
-        message: 'An error has occurred, 0 tokens imported from the contract',
-      };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: 0 tokens imported`,
+        [],
+      );
+      return;
     }
 
     try {
@@ -248,13 +269,13 @@ module.exports = {
         ],
       );
 
-      return {
-        success: true,
-        result: {
-          contract,
-          numberOfTokensAdded,
-        },
-      };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Import of ${contractAddress} complete!`,
+        [],
+      );
+      return;
     } catch (err) {
       log.error(err);
       if (contract && !update) {
@@ -262,10 +283,12 @@ module.exports = {
         Offer.deleteMany({ contract: contract._id });
         Product.deleteMany({ contract: contract._id });
       }
-      return {
-        success: false,
-        message: 'An error has ocurred!',
-      };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing ${contractAddress}`,
+        [],
+      );
     }
   },
 };

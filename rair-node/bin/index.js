@@ -63,12 +63,6 @@ async function main() {
     },
   };
 
-  try {
-    console.info(await redisClient.ping('Test'));
-  } catch (err) {
-    console.error(err);
-  }
-
   const sessionMiddleware = session({
     store: new RedisStorage({
       client: redisClient,
@@ -108,9 +102,11 @@ async function main() {
       log.info('User disconnected');
     });
     socket.on('login', (roomName) => {
+      // console.info(`${roomName} connected`);
       socket.join(roomName);
     });
     socket.on('logout', (roomName) => {
+      // console.info(`${roomName} disconnected`);
       socket.leave(roomName);
     });
   });

@@ -135,13 +135,8 @@ function App() {
   const navigate = useNavigate();
 
   // Redux
-  const {
-    primaryColor,
-    textColor,
-    backgroundImage,
-    backgroundImageEffect,
-    secondaryColor
-  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { adminRights, loggedIn } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );

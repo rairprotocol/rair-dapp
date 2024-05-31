@@ -2,7 +2,9 @@ import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
 
 const socketIo = io(import.meta.env.VITE_NODE_SOCKET_URI, {
-  autoConnect: false
+  autoConnect: false,
+  reconnectionDelay: 10000,
+  reconnectionDelayMax: 20000
 });
 
 const events = {
