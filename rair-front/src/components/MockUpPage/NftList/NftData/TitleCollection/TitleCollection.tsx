@@ -40,7 +40,6 @@ const TitleCollection: React.FC<ITitleCollection> = ({
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
-  console.info(primaryButtonColor, 'primaryButtonColor');
 
   const [mintPopUp, setMintPopUp] = useState<boolean>(false);
   const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);

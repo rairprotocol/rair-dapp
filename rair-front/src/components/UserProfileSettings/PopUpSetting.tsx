@@ -37,9 +37,9 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const [userBalance, setUserBalance] = useState<string>('');
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [userBalanceTrigger, setUserBalanceTrigger] = useState<boolean>(false);
-  const [userRairBalance, setUserRairBalance] = useState<any>(
-    BigNumber.from(0)
-  );
+  const [userRairBalance, setUserRairBalance] = useState<
+    BigNumber | undefined
+  >();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -62,7 +62,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const { web3TxHandler } = useWeb3Tx();
 
   const getUserRairBalance = useCallback(async () => {
-    if (!erc777Instance || userRairBalance?.gt(0)) {
+    if (!erc777Instance || userRairBalance) {
       return;
     }
     const result = await web3TxHandler(erc777Instance, 'balanceOf', [
@@ -345,7 +345,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                   {isLoadingBalance ? (
                     <LoadingComponent size={18} />
                   ) : (
-                    formatEther(userRairBalance)
+                    formatEther(userRairBalance || 0)
                   )}
                 </div>
                 <div>

@@ -449,7 +449,7 @@ const useConnectUser = () => {
       dispatch(setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
       navigate('/');
     }
-  }, [dispatch, navigate, loginType]);
+  }, [dispatch, navigate]);
 
   return {
     connectUserData,
