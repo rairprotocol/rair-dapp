@@ -58,6 +58,7 @@ const WorkflowSteps: FC = () => {
   const [MINTERHash, setMINTERHash] = useState<string | undefined>(undefined);
 
   const [contractData, setContractData] = useState<TContractData>();
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   const [tokenInstance, setTokenInstance] = useState<
     TContractData | ethers.Contract
@@ -454,10 +455,13 @@ const WorkflowSteps: FC = () => {
     tokenInstance,
     simpleMode,
     forceRefetch: () => {
-      setTimeout(() => {
-        setForceFetchData(!forceFetchData);
+      setFetchingData(true);
+      setTimeout(async () => {
+        await setForceFetchData(!forceFetchData);
+        setFetchingData(false);
       }, 2000);
     },
+    fetchingData,
     refreshNFTMetadata
   };
 

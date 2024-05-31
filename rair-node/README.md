@@ -155,6 +155,7 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
                 * [x] /pinning - POST - Pin the metadata of a single token ([details](readme/current/nft/nft_pin_metadata.md))
     * [x] /offers
         * [x] / - GET - Get all offers ([details](readme/current/offers/offers_list.md))
+        * [x] /:id - PUT - Update offer ([details](readme/current/offers/offers_update.md))
     * [x] /products
         * [x] / - GET - Get all products ([details](readme/current/products/products_list.md))
         * [x] /user/:userAddress - GET - Get all products from an user ([details](readme/current/products/products_user_list.md))

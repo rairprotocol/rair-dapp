@@ -7,6 +7,7 @@ import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { validateInteger } from '../../../utils/metamaskUtils';
+import { rFetch } from '../../../utils/rFetch';
 // import colors from '../../../utils/offerLockColors';
 import InputField from '../../common/InputField';
 import { IDiamondOfferRow } from '../creatorStudio.types';
@@ -25,12 +26,13 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   allowedCopies,
   simpleMode,
   instance,
-  diamondRangeIndex
+  diamondRangeIndex,
+  sponsored,
+  forceRefetch,
+  fetchingData
 }) => {
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor, secondaryButtonColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const [itemName, setItemName] = useState(offerName);
   const [startingToken, setStartingToken] = useState<string>(range[0]);
@@ -202,6 +204,19 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
     }
   };
 
+  const updateOffer = useCallback(async () => {
+    await rFetch(`/api/offers/${_id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        sponsored: !sponsored
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    forceRefetch();
+  }, [_id, sponsored, forceRefetch]);
+
   return (
     <div className="col-12 row px-5">
       <div className={`col-12 col-md-11 px-2`}>
@@ -281,70 +296,84 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
         </div>
       </div>
       {!simpleMode && (
-        <div className={`col-12 col-md-6`}>
-          Tokens allowed to mint:
-          {!_id && (
-            <button
-              onClick={() =>
-                updater(
-                  'tokensAllowed',
-                  setAllowedTokenCount,
-                  BigNumber.from(endingToken)
-                    .sub(startingToken)
-                    .add(1)
-                    .toString()
-                )
-              }
-              className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
-              Max
-            </button>
-          )}
-          <div className={`${disabledClass} w-100`}>
-            <InputField
-              getter={allowedTokenCount}
-              setter={(value) =>
-                updater('tokensAllowed', setAllowedTokenCount, value)
-              }
-              type="number"
-              min={0}
-              max={Number(endingToken) - Number(startingToken) + 1}
-              customClass="form-control rounded-rair"
-            />
+        <>
+          <div className="col-12 col-md-5">
+            Tokens allowed to mint:
+            {!_id && (
+              <button
+                onClick={() =>
+                  updater(
+                    'tokensAllowed',
+                    setAllowedTokenCount,
+                    BigNumber.from(endingToken)
+                      .sub(startingToken)
+                      .add(1)
+                      .toString()
+                  )
+                }
+                className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+                Max
+              </button>
+            )}
+            <div className={`${disabledClass} w-100`}>
+              <InputField
+                getter={allowedTokenCount}
+                setter={(value) =>
+                  updater('tokensAllowed', setAllowedTokenCount, value)
+                }
+                type="number"
+                min={0}
+                max={Number(endingToken) - Number(startingToken) + 1}
+                customClass="form-control rounded-rair"
+              />
+            </div>
           </div>
-        </div>
-      )}
-      {!simpleMode && (
-        <div className={`col-12 col-md-6`}>
-          Minted tokens needed before trades are unlocked:
-          {!_id && (
-            <button
-              onClick={() =>
-                updater(
-                  'lockedTokens',
-                  setLockedTokenCount,
-                  BigNumber.from(endingToken)
-                    .sub(startingToken)
-                    .add(1)
-                    .toString()
-                )
-              }
-              className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
-              Max
-            </button>
-          )}
-          <div className={`${disabledClass} w-100`}>
-            <InputField
-              getter={lockedTokenCount}
-              setter={(value) =>
-                updater('lockedTokens', setLockedTokenCount, value)
-              }
-              type="number"
-              min={0}
-              max={Number(endingToken) - Number(startingToken) + 1}
-              customClass="form-control rounded-rair"
-            />
+          <div className="col-12 col-md-5">
+            Minted tokens needed before trades are unlocked:
+            {!_id && (
+              <button
+                onClick={() =>
+                  updater(
+                    'lockedTokens',
+                    setLockedTokenCount,
+                    BigNumber.from(endingToken)
+                      .sub(startingToken)
+                      .add(1)
+                      .toString()
+                  )
+                }
+                className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+                Max
+              </button>
+            )}
+            <div className={`${disabledClass} w-100`}>
+              <InputField
+                getter={lockedTokenCount}
+                setter={(value) =>
+                  updater('lockedTokens', setLockedTokenCount, value)
+                }
+                type="number"
+                min={0}
+                max={Number(endingToken) - Number(startingToken) + 1}
+                customClass="form-control rounded-rair"
+              />
+            </div>
           </div>
-        </div>
+          <div className="col-12 col-md-2">
+            <button
+              onClick={updateOffer}
+              disabled={fetchingData}
+              className="btn mt-4 rair-button"
+              style={{
+                color: textColor,
+                background: sponsored
+                  ? primaryButtonColor
+                  : secondaryButtonColor
+              }}>
+              Minting {sponsored ? 'sponsored' : 'paid by user'}
+            </button>
+          </div>
+        </>
       )}
       {validateInteger(individualPrice) &&
         validateInteger(endingToken) &&
