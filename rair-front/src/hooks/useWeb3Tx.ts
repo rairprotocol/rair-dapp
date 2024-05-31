@@ -227,6 +227,7 @@ const useWeb3Tx = () => {
 
       const elegibleForSponsorship =
         options.sponsored &&
+        !!transactionValue &&
         (await (
           programmaticProvider.account as any
         ).checkGasSponsorshipEligibility({
