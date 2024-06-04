@@ -4,15 +4,15 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const cors = require('cors');
-const Socket = require('socket.io');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 const morgan = require('morgan');
 const session = require('express-session');
 const RedisStorage = require('connect-redis')(session);
-const redis = require('redis');
 const seedDB = require('./seeds');
 const log = require('./utils/logger')(module);
 const StartHLS = require('./hls-starter');
-const redisService = require('./services/redis');
+const { redisPublisher, redisSubscriber, redisClient } = require('./services/redis');
 const streamRoute = require('./routes/stream');
 const apiV1Routes = require('./routes');
 const mainErrorHandler = require('./utils/errors/mainErrorHandler');
@@ -25,17 +25,10 @@ const config = require('./config');
 const { mongoConnectionManager } = require('./mongooseConnect');
 
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
+const { emitEvent } = require('./integrations/socket.io');
 
 async function main() {
   const mediaDirectories = ['./bin/banners'];
-
-  // Create Redis client
-  const client = redis.createClient({
-    url: `redis://${config.redis.connection.host}:${config.redis.connection.port}`,
-    legacyMode: true,
-  });
-
-  client.connect().catch(log.error);
 
   mediaDirectories.forEach((folder) => {
     if (!fs.existsSync(folder)) {
@@ -47,11 +40,17 @@ async function main() {
   await mongoConnectionManager.getMongooseConnection();
 
   const app = express();
+  const httpServer = createServer(app);
 
   /* CORS */
-  const origin = `https://${process.env.SERVICE_HOST}`;
+  const origin = process.env.SERVICE_HOST;
 
   app.use(cors({ origin }));
+  const socketIo = new Server(httpServer, {
+    cors: {
+      origin,
+    },
+  });
 
   const hls = await StartHLS();
 
@@ -60,12 +59,28 @@ async function main() {
     config,
     textPurify,
     redis: {
-      client,
+      redisService: redisPublisher,
     },
   };
 
-  // connect redisService
-  context.redis.redisService = redisService(context);
+  const sessionMiddleware = session({
+    store: new RedisStorage({
+      client: redisClient,
+      // config.session.ttl was removed from here and used
+      //    for maxAge, because when maxAge used it will have no effect.
+    }),
+    secret: config.session.secret,
+    saveUninitialized: true,
+    resave: true,
+    proxy: config.production,
+    rolling: true,
+    cookie: {
+      sameSite: config.production ? 'none' : 'lax',
+      httpOnly: config.production,
+      secure: config.production,
+      maxAge: (`${config.session.ttl}` * 60 * 60 * 1000), // TTL * hour
+    },
+  });
 
   await seedDB(context);
 
@@ -74,65 +89,40 @@ async function main() {
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(cookieParser());
   app.set('trust proxy', 1);
-  app.use(
-    session({
-      store: new RedisStorage({
-        client,
-        // config.session.ttl was removed from here and used
-        //    for maxAge, because when maxAge used it will have no effect.
-      }),
-      secret: config.session.secret,
-      saveUninitialized: true,
-      resave: true,
-      proxy: config.production,
-      rolling: true,
-      cookie: {
-        sameSite: config.production ? 'none' : 'lax',
-        path: '/',
-        httpOnly: config.production,
-        secure: config.production,
-        maxAge: (`${config.session.ttl}` * 60 * 60 * 1000), // TTL * hour
-      },
-    }),
-  );
+
+  app.use(sessionMiddleware);
+
   app.use('/stream', streamRoute(context));
-  app.use(
-    '/api',
-    (req, res, next) => {
-      req.redisService = context.redis.redisService;
-      return next();
-    },
-    apiV1Routes,
-  );
+
+  app.use('/api', apiV1Routes);
   app.use(mainErrorHandler);
 
-  const server = app.listen(config.port, () => {
+  socketIo.on('connection', (socket) => {
+    socket.on('disconnect', () => {
+      log.info('User disconnected');
+    });
+    socket.on('login', (roomName) => {
+      // console.info(`${roomName} connected`);
+      socket.join(roomName);
+    });
+    socket.on('logout', (roomName) => {
+      // console.info(`${roomName} disconnected`);
+      socket.leave(roomName);
+    });
+  });
+  redisSubscriber.subscribe('notifications', (notificationData) => {
+    try {
+      const { type, message, address, data = [] } = JSON.parse(notificationData);
+      emitEvent(socketIo)(address, type, message, data);
+    } catch (err) {
+      log.error(err);
+    }
+  });
+  app.set('socket', socketIo);
+
+  httpServer.listen(config.port, () => {
     log.info(`Rairnode server listening at http://localhost:${config.port}`);
   });
-
-  const io = Socket(server);
-  const sockets = {};
-
-  io.on('connection', (socket) => {
-    log.info(`Client connected: ${socket.id}`);
-    socket.on('init', (sessionId) => {
-      log.info(`Opened connection: ${sessionId}`);
-
-      sockets[sessionId] = socket.id;
-      app.set('sockets', sockets);
-    });
-
-    socket.on('end', (sessionId) => {
-      delete sockets[sessionId];
-
-      socket.disconnect(0);
-      app.set('sockets', sockets);
-
-      log.info(`Close connection ${sessionId}`);
-    });
-  });
-
-  app.set('io', io);
 }
 
 (async () => {

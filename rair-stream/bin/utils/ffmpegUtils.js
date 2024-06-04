@@ -12,6 +12,7 @@ const {
   genericConversionParams,
   standardResolutions,
 } = require('../videoConfig');
+const { redisPublisher } = require('../services/redis');
 
 function intToByteArray(num) {
   const byteArray = new Uint8Array(16);
@@ -72,7 +73,7 @@ const encryptFolderContents = async (mediaData, encryptExtensions) => {
 const convertToHLS = async (
   mediaData,
   speed,
-  socketInstance,
+  uploaderAddress,
 ) => {
   try {
     log.info('Converting');
@@ -124,11 +125,12 @@ const convertToHLS = async (
           let conversionProgress = data.toString()?.split('time=')[1]?.split(' bitrate')[0];
           if (conversionProgress) {
             conversionProgress = conversionProgress.replace('.', '').replace(':', '').replace(':', '');
-            socketInstance.emit('uploadProgress', {
+            redisPublisher.publish('notifications', JSON.stringify({
+              type: 'uploadProgress',
               message: `Converting File (${((conversionProgress / totalRuntime) * 100).toFixed(2)}%)`,
-              last: false,
-              done: 35,
-            });
+              address: uploaderAddress.toLowerCase(),
+              data: [mediaData.originalname, 33],
+            }));
           }
         });
         videoConversion[5].on('close', () => {
@@ -142,11 +144,12 @@ const convertToHLS = async (
 
     await promise;
     rm(mediaData.path, log.info);
-    socketInstance.emit('uploadProgress', {
-      message: 'Raw file deleted',
-      last: false,
-      done: 30,
-    });
+    redisPublisher.publish('notifications', JSON.stringify({
+      type: 'uploadProgress',
+      message: 'Finished conversion',
+      address: uploaderAddress.toLowerCase(),
+      data: [mediaData.originalname, 36],
+    }));
     copyFileSync(
       path.join(mediaData.destination, '..', '..', 'templates', 'stream.m3u8.template'),
       path.join(mediaData.destination, 'stream.m3u8'),

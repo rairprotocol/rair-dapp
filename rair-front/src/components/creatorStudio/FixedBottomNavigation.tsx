@@ -42,16 +42,11 @@ const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
                 })
                 .map((item, index) => {
                   return (
-                    <div
-                      key={index}
-                      style={{
-                        background: primaryButtonColor
-                      }}
-                      className="rounded-rair btn p-0 mx-2">
+                    <div key={index} className="rounded-rair btn p-0 mx-2">
                       <button
                         style={{
-                          border: 'none',
-                          background: primaryColor,
+                          borderColor: textColor,
+                          background: primaryButtonColor,
                           color: textColor
                         }}
                         disabled={item.disabled}

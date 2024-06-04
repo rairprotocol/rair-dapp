@@ -10,7 +10,7 @@ const { gateway, key, secret } = config.pinata;
 const pinata = pinataSDK(key, secret);
 const retrieveMediaInfo = (CID) => axios.get(`${gateway}/${CID}/rair.json`);
 
-const addPin = async (CID, name, socketInstance) => {
+const addPin = async (CID, name) => {
   try {
     const response = await pinata.pinByHash(CID, {
       pinataMetadata: {
@@ -19,14 +19,6 @@ const addPin = async (CID, name, socketInstance) => {
     });
 
     log.info(`Pinned to PINATA: ${JSON.stringify(response)}`);
-
-    if (!_.isUndefined(socketInstance)) {
-      socketInstance.emit('uploadProgress', {
-        message: 'Stream stored',
-        last: true,
-        done: 100,
-      });
-    }
   } catch (err) {
     log.error(`Pinning to PINATA: ${err.message}`);
   }
@@ -45,17 +37,13 @@ const removePin = async (CID) => {
   }
 };
 
-const addFolder = async (pathTo, folderName, socketInstance) => {
+const addFolder = async (pathTo, folderName) => {
   try {
     const response = await pinata.pinFromFS(pathTo, {
       pinataMetadata: {
         name: folderName,
       },
     });
-
-    if (!_.isUndefined(socketInstance)) {
-      socketInstance.emit('uploadProgress', { message: 'added files to Pinata', last: false, part: false });
-    }
 
     return _.get(response, 'IpfsHash');
   } catch (e) {

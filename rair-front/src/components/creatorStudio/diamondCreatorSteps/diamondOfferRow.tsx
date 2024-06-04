@@ -123,7 +123,11 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
         false
       );
     }
-    if (!_id && correctCount.lt(allowedTokenCount)) {
+    if (
+      !_id &&
+      validateInteger(allowedTokenCount) &&
+      correctCount.lt(allowedTokenCount)
+    ) {
       updater(
         'tokensAllowed',
         setAllowedTokenCount,
@@ -131,7 +135,11 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
         false
       );
     }
-    if (!_id && correctCount.lt(lockedTokenCount)) {
+    if (
+      !_id &&
+      validateInteger(lockedTokenCount) &&
+      correctCount.lt(lockedTokenCount)
+    ) {
       updater(
         'lockedTokens',
         setLockedTokenCount,
@@ -322,10 +330,12 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
                 updater(
                   'lockedTokens',
                   setLockedTokenCount,
-                  BigNumber.from(endingToken)
-                    .sub(startingToken)
-                    .add(1)
-                    .toString()
+                  validateInteger(endingToken)
+                    ? BigNumber.from(endingToken)
+                        .sub(startingToken)
+                        .add(1)
+                        .toString()
+                    : ''
                 )
               }
               className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
