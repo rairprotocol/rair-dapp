@@ -1,5 +1,6 @@
 //@ts-nocheck
 import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 // React Redux types
@@ -92,7 +93,7 @@ import { detectBlockchain } from './utils/blockchainData';
 // import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
 // views
-import { ErrorFallback } from './views/ErrorFallback/ErrorFallback';
+import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -304,7 +305,7 @@ function App() {
   }, [settings]);
 
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
+    <ErrorBoundary fallback={<ErrorFallback />}>
       <MetaTags seoMetaTags={seo} />
       {showAlert === true && (
         <AlertMetamask
@@ -322,6 +323,17 @@ function App() {
         primaryColor={primaryColor}
         backgroundImage={hotDropsVar === 'true' ? '' : backgroundImage}>
         <div className="row w-100 m-0 p-0">
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                backgroundColor: primaryColor,
+                color: textColor,
+                border: `solid 1px ${textColor}`,
+                marginRight: '2vw'
+              }
+            }}
+          />
           {carousel && !isIframePage ? (
             <MainHeader
               goHome={goHome}

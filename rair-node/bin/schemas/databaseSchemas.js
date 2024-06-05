@@ -117,4 +117,9 @@ module.exports = {
         display: Joi.boolean(),
         sync: Joi.boolean(),
     }),
+    dbNotifications: () => ({
+        user: ethAddress,
+        type: Joi.string(),
+        read: Joi.boolean(),
+    }),
 };

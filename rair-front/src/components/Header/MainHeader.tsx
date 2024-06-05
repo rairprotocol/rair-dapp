@@ -200,9 +200,11 @@ const MainHeader: React.FC<IMainHeader> = ({
           />
         ) : (
           <input
-            className={
-              primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
-            }
+            style={{
+              color: textColor,
+              borderColor: textColor,
+              backgroundColor: primaryColor
+            }}
             type="text"
             placeholder="Search the rairverse..."
             onChange={handleChangeText}

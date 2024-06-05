@@ -9,19 +9,11 @@ const config = require('../../config');
 
 const { api } = config.ipfs;
 
-const addPin = async (CID, name, socketInstance) => {
+const addPin = async (CID, name) => {
   try {
     const response = await axios.post(`${api}/api/v0/pin/add?arg=${CID}`);
 
     log.info(`Pinned to IPFS: ${JSON.stringify(response.data)}`);
-
-    if (socketInstance) {
-      socketInstance.emit('uploadProgress', {
-        message: 'Upload complete',
-        last: true,
-        done: 100,
-      });
-    }
   } catch (err) {
     log.error(`Pinning to IPFS: ${err.message}`);
   }

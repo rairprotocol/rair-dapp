@@ -22,7 +22,7 @@ exports.setAppLogo = async (req, res, next) => {
   try {
     const { target } = req.body;
     const settings = await ServerSetting.findOne({});
-    let value = undefined;
+    let value;
     if (req.file && req.file.mimetype.includes('image')) {
       const ipfsHash = await addFile(req.file.destination, req.file.filename);
       if (!ipfsHash) {
@@ -160,7 +160,7 @@ exports.getTheme = async (req, res, next) => {
         lightModeMobileLogo,
         buttonPrimaryColor,
         buttonFadeColor,
-        buttonSecondaryColor
+        buttonSecondaryColor,
       },
     });
   } catch (error) {

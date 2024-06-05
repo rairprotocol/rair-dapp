@@ -38,7 +38,7 @@ module.exports = (config) => {
     }
   };
 
-  const uploadDirectory = async (bucketName, directoryPath, socketInstance) => {
+  const uploadDirectory = async (bucketName, directoryPath) => {
     try {
       let dirCtr = 1;
       let itemCtr = 0;
@@ -94,14 +94,6 @@ module.exports = (config) => {
               }),
             );
           }
-        }
-
-        if (socketInstance) {
-          socketInstance.emit('uploadProgress', {
-            message: `${successfulUploads} files added to ${folderName} and uploaded to Google Cloud successfully.`,
-            last: false,
-            part: false,
-          });
         }
 
         return folderName;

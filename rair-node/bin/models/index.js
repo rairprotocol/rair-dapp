@@ -22,6 +22,7 @@ const UserCreditMovement = require('./userCreditMovement');
 const ServerSetting = require('./serverSettings');
 const Unlock = require('./unlock');
 const TokenMetadata = require('./tokenMetadata');
+const Notification = require('./notification');
 
 module.exports = {
   Contract: mongoose.model('Contract', Contract, 'Contract'),
@@ -46,4 +47,5 @@ module.exports = {
   ServerSetting: mongoose.model('ServerSetting', ServerSetting, 'ServerSetting'),
   Unlock: mongoose.model('Unlock', Unlock, 'Unlock'),
   TokenMetadata: mongoose.model('TokenMetadata', TokenMetadata, 'TokenMetadata'),
+  Notification: mongoose.model('Notification', Notification, 'Notification'),
 };

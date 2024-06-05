@@ -1,5 +1,6 @@
 const { Contract } = require('../../models');
 const { handleDuplicateKey } = require('./eventsCommonUtils');
+const { redisPublisher } = require('../../services/redis');
 
 module.exports = async (
   transactionData,
@@ -27,6 +28,13 @@ module.exports = async (
   })
     .save()
     .catch(handleDuplicateKey);
+
+  redisPublisher.publish('notifications', JSON.stringify({
+    type: 'message',
+    message: `Contract ${deploymentName} deployed!`,
+    address: deployerAddress.toLowerCase(),
+    data: [deploymentAddress.toLowerCase()],
+  }));
 
   return [contract];
 };
