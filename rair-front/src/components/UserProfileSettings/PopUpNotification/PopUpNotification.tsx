@@ -159,7 +159,7 @@ const PopUpNotification = () =>
                 </div>
               </div>
               {notificationArray.map((el, key) => {
-                return <NotificationBox el={el} key={key} setNotificationArray={setNotificationArray} title={el.title} time={el.time} primaryColor={primaryColor} />
+                return <NotificationBox el={el} notificationArray={notificationArray} key={key} setNotificationArray={setNotificationArray} title={el.title} time={el.time} primaryColor={primaryColor} />
               })}
             </div>
           )}
