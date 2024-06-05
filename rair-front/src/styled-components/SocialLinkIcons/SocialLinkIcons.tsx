@@ -48,12 +48,30 @@ export const SocialBox = styled.div<ISocialBox>`
       props.primaryColor === '#dedede' ? '1px solid #E882D5' : 'none'};
   }
 
+  &.social-bell-icon.notifications {
+    .red-circle-notifications {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: red;
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      display: block;
+    }
+  }
+
   &.social-bell-icon {
     background: none;
     border: ${(props) =>
       props.primaryColor === '#dedede'
         ? '1px solid #fff'
         : '1px solid #D0D0D0'};
+
+
+    .red-circle-notifications {
+      display: none;
+    }
 
     svg path {
       fill: ${(props) =>

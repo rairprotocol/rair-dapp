@@ -13,13 +13,41 @@ import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLink
 import NotificationPage from '../NotificationPage/NotificationPage';
 
 import NftImg from './images/image.png';
+import NotificationBox from './NotificationBox/NotificationBox';
 
 const PopUpNotification = () =>
   // props was - isNotification
   {
     const currentName =
       import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
-    const [openModal, setOpenModal] = useState(false);
+    const [openModal, setOpenModal] = useState();
+    const arrayExample = [{
+      title: "Factory updates",
+      id: 1,
+      time: 'Right now'
+    },
+    {
+      title: "Factory updates",
+      id: 2,
+      time: '2 hours ago'
+    },
+    {
+      title: "Factory updates",
+      id: 3,
+      time: '3 hours ago'
+    },
+    {
+      title: "Factory updates",
+      id: 4,
+      time: 'two weeks ago'
+    },
+    {
+      title: "Factory updates",
+      id: 5,
+      time: 'yesterday'
+    }
+  ];
+    const [notificationArray, setNotificationArray] = useState(arrayExample);
     const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
       RootState,
       ColorStoreType
@@ -54,11 +82,12 @@ const PopUpNotification = () =>
       <>
         <SocialBox
           onClick={() => setOpenModal((prev) => !prev)}
-          className="social-bell-icon"
+          className="social-bell-icon notifications"
           marginRight={'17px'}
           notification={true}>
           {uploadVideo && userRd?.email && <span></span>}
           <BellIcon primaryColor={primaryColor} />
+          <div className="red-circle-notifications"></div>
         </SocialBox>
         <Popup
           className="popup-notification-block"
@@ -67,43 +96,47 @@ const PopUpNotification = () =>
           onClose={() => {
             setOpenModal(false);
           }}>
-          {openModal && userRd?.email && (
+          {openModal && (
             <div
               className="pop-up-notification"
               style={{
                 backgroundColor: `${
                   primaryColor === 'rhyno' ? 'rgb(246 246 246)' : '#383637'
                 }`,
+                maxHeight: "400px",
+                overflowY: "scroll",
                 border: '1px solid #fff',
                 color: `${primaryColor === 'rhyno' && '#000'}`
+                
               }}
-              onClick={() => {
-                setOpenModal(false);
-                reactSwal.fire({
-                  html: (
-                    <NotificationPage
-                      NftImg={NftImg}
-                      primaryColor={primaryColor}
-                      headerLogo={headerLogo}
-                    />
-                  ),
-                  width: '90vw',
-                  customClass: {
-                    popup: `bg-${primaryColor}`
-                  },
-                  onBeforeOpen: () => {
-                    Swal.showLoading();
-                  },
-                  showConfirmButton: false,
-                  showCloseButton: true
-                  // cancelButtonText:
-                  //     '<i class="fa fa-thumbs-down"></i>',
-                  // cancelButtonAriaLabel: 'Thumbs down'
-                });
-              }}>
+              // onClick={() => {
+              //   setOpenModal(true);
+              //   reactSwal.fire({
+              //     html: (
+              //       <NotificationPage
+              //         NftImg={NftImg}
+              //         primaryColor={primaryColor}
+              //         headerLogo={headerLogo}
+              //       />
+              //     ),
+              //     width: '90vw',
+              //     customClass: {
+              //       popup: `bg-${primaryColor}`
+              //     },
+              //     onBeforeOpen: () => {
+              //       Swal.showLoading();
+              //     },
+              //     showConfirmButton: false,
+              //     showCloseButton: true
+              //     // cancelButtonText:
+              //     //     '<i class="fa fa-thumbs-down"></i>',
+              //     // cancelButtonAriaLabel: 'Thumbs down'
+              //   });
+              // }}
+              >
               <div className="notification-from-rair">
                 <div className="box-notification">
-                  <div className="dot-notification" />
+                  {/* <div className="dot-notification" /> */}
                   <div className="notification-img">
                     <img src={headerLogoMobile} alt="Rair Tech" />
                   </div>
@@ -125,27 +158,9 @@ const PopUpNotification = () =>
                 </div> */}
                 </div>
               </div>
-              {/* <div className="notification-from-factory">
-              <div className="box-notification">
-                <div className="dot-notification" />
-                <div className="notification-img">
-                  <img src={NftImg} alt="Exclusive NFT token by RAIR" />
-                </div>
-                <div className="text-notification">
-                  <div className="title-notif">Factory updates</div>
-                  <div className="text-notif">
-                    Your nft “<span>Pegayo</span>” has been listed
-                  </div>
-                </div>
-                <div
-                  className="time-notification"
-                  style={{
-                    color: `${primaryColor === 'rhyno' && '#000'}`
-                  }}>
-                  5 hours ago
-                </div>
-              </div>
-            </div> */}
+              {notificationArray.map((el, key) => {
+                return <NotificationBox el={el} key={key} setNotificationArray={setNotificationArray} title={el.title} time={el.time} primaryColor={primaryColor} />
+              })}
             </div>
           )}
         </Popup>
