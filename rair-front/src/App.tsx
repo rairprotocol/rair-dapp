@@ -182,10 +182,15 @@ function App() {
 
   useEffect(() => {
     if (window.ethereum) {
-      window.ethereum.on('chainChanged', async (chainId) => {
+      const foo = async (chainId) => {
         dispatch(setChainId(chainId));
-      });
+      };
+      window.ethereum.on('chainChanged', foo);
       window.ethereum.on('accountsChanged', logoutUser);
+      return () => {
+        window.ethereum.off('chainChanged', foo);
+        window.ethereum.off('accountsChanged', logoutUser);
+      };
     }
   }, [dispatch, logoutUser]);
 

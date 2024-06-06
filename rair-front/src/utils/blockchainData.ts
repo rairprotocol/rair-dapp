@@ -68,7 +68,9 @@ const chainData: TChainData = {
     },
     viem: undefined,
     alchemy: Network.ASTAR_MAINNET,
-    coingecko: 'astar'
+    coingecko: 'astar',
+    alchemyAppKey: import.meta.env.VITE_ASTAR_MAINNET_ALCHEMY_KEY,
+    alchemyGasPolicy: import.meta.env.VITE_ASTAR_MAINNET_GAS_POLICY
   },
   '0x89': {
     image: MaticLogo,
@@ -88,7 +90,9 @@ const chainData: TChainData = {
     },
     viem: polygon,
     alchemy: Network.MATIC_MAINNET,
-    coingecko: 'matic-network'
+    coingecko: 'matic-network',
+    alchemyAppKey: import.meta.env.VITE_MATIC_MAINNET_ALCHEMY_KEY,
+    alchemyGasPolicy: import.meta.env.VITE_MATIC_MAINNET_GAS_POLICY
   },
   // '0x13881': {
   //   testnet: true,
@@ -124,7 +128,9 @@ const chainData: TChainData = {
     },
     viem: mainnet,
     alchemy: Network.ETH_MAINNET,
-    coingecko: 'ethereum'
+    coingecko: 'ethereum',
+    alchemyAppKey: import.meta.env.VITE_ETH_MAINNET_ALCHEMY_KEY,
+    alchemyGasPolicy: import.meta.env.VITE_ETH_MAINNET_GAS_POLICY
   },
   '0xaa36a7': {
     testnet: true,
@@ -136,11 +142,13 @@ const chainData: TChainData = {
       chainId: '0xaa36a7',
       chainName: 'Sepolia (Ethereum)',
       blockExplorerUrls: ['https://sepolia.etherscan.io/'],
-      rpcUrls: ['https://eth-sepolia.g.alchemy.com/v2/demo']
+      rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com']
     },
     viem: sepolia,
     alchemy: Network.ETH_SEPOLIA,
-    coingecko: undefined
+    coingecko: undefined,
+    alchemyAppKey: import.meta.env.VITE_ETH_SEPOLIA_ALCHEMY_KEY,
+    alchemyGasPolicy: import.meta.env.VITE_ETH_SEPOLIA_GAS_POLICY
   },
   // '0x5': {
   //   testnet: true,
@@ -173,7 +181,9 @@ const chainData: TChainData = {
     },
     viem: base,
     alchemy: Network.BASE_MAINNET,
-    coingecko: 'base'
+    coingecko: 'base',
+    alchemyAppKey: import.meta.env.VITE_BASE_MAINNET_ALCHEMY_KEY,
+    alchemyGasPolicy: import.meta.env.VITE_BASE_MAINNET_GAS_POLICY
   }
 };
 
