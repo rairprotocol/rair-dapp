@@ -15,9 +15,6 @@ module.exports = {
     productId: () => ({
         productId: mongoId,
     }),
-    offerId: () => ({
-        offerId: mongoId,
-    }),
     userAddress: () => ({
         userAddress: ethAddress,
     }),
