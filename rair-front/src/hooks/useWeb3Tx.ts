@@ -426,6 +426,14 @@ const useWeb3Tx = () => {
         case 'metamask':
           return await metamaskSwitch(chainId);
         case 'web3auth':
+          if (!chainData[chainId]?.alchemyAppKey) {
+            reactSwal.fire(
+              'Sorry!',
+              `${chainData[chainId].name} is not supported currently`,
+              'info'
+            );
+            return;
+          }
           return await connectWeb3AuthProgrammaticProvider(chainData[chainId]);
       }
     },
