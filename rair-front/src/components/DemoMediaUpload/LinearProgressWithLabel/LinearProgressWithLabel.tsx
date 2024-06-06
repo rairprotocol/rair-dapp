@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { Box, LinearProgress, LinearProgressProps } from '@mui/material';
 import Typography from '@mui/material/Typography';

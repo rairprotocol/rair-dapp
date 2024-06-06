@@ -125,7 +125,11 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
         false
       );
     }
-    if (!_id && correctCount.lt(allowedTokenCount)) {
+    if (
+      !_id &&
+      validateInteger(allowedTokenCount) &&
+      correctCount.lt(allowedTokenCount)
+    ) {
       updater(
         'tokensAllowed',
         setAllowedTokenCount,
@@ -133,7 +137,11 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
         false
       );
     }
-    if (!_id && correctCount.lt(lockedTokenCount)) {
+    if (
+      !_id &&
+      validateInteger(lockedTokenCount) &&
+      correctCount.lt(lockedTokenCount)
+    ) {
       updater(
         'lockedTokens',
         setLockedTokenCount,

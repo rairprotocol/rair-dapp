@@ -1,9 +1,6 @@
 const express = require('express');
-const transactions = require('./transactions');
+const transactionRoutes = require('./transactions');
 
-module.exports = (context) => {
-  const router = express.Router();
-  router.use('/transaction', transactions(context));
-
-  return router;
-};
+const router = express.Router();
+router.use('/transaction', transactionRoutes);
+module.exports = router;

@@ -65,7 +65,7 @@ const getTransaction = async (
 
     // Check if the Transaction comes from the same user that sent the request
     if (!userData.adminRights &&
-        transactionReceipt[fromAddressLabel].toLowerCase() !== userData.userPublicAddress) {
+        transactionReceipt[fromAddressLabel].toLowerCase() !== userData.publicAddress) {
       // Just in case check if the event comes from an erc721 contract from our database
       const findContractAddress = Contract.findOne({
         contractAddress: transactionReceipt[fromAddressLabel].toLowerCase(),
@@ -76,7 +76,7 @@ const getTransaction = async (
         await newTransaction.save();
         await Transaction.deleteOne({ _id: newTransaction._id });
         throw Error(
-          `Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userData.userPublicAddress}`,
+          `Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userData.publicAddress}`,
         );
       }
     }

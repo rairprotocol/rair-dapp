@@ -698,7 +698,7 @@ exports.createTokensViaCSV = async (req, res, next) => {
                   : offer.offerIndex;
 
                 const externalURL = encodeURI(
-                  `https://${process.env.SERVICE_HOST}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`,
+                  `${process.env.SERVICE_HOST}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`,
                 );
 
                 const validReasonsToUpdateAToken =
