@@ -434,7 +434,7 @@ const useWeb3Tx = () => {
             );
             return;
           }
-          return await connectWeb3AuthProgrammaticProvider(chainData[chainId]);
+          await connectWeb3AuthProgrammaticProvider(chainData[chainId]);
       }
     },
     [
