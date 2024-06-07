@@ -196,7 +196,7 @@ const useWeb3Tx = () => {
           reactSwal.fire('Please wait', 'Verifying user operation', 'info');
           return await verifyAAUserOperation(userOperation, options);
         }
-        console.info(err);
+        console.error(err);
         reactSwal.fire('Error', err.toString(), 'error');
       }
     },
@@ -274,7 +274,6 @@ const useWeb3Tx = () => {
 
   const connectWeb3AuthProgrammaticProvider = useCallback(
     async (chainData?: TChainItemData) => {
-      console.info(chainData?.alchemyAppKey);
       if (!chainData) {
         return;
       }
@@ -283,7 +282,6 @@ const useWeb3Tx = () => {
         network: chainData?.alchemy,
         maxRetries: 10
       });
-      console.info(alchemy);
       const ethersProvider = await alchemy.config.getProvider();
 
       const alchemyProvider =

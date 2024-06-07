@@ -192,7 +192,6 @@ const BatchERC20Transfer = () => {
                   </button>
                 </td>
                 {Object.keys(data).map((key, keyIndex) => {
-                  console.info(key, keyIndex, structure[keyIndex]);
                   return (
                     <th key={keyIndex}>
                       <InputField
