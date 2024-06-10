@@ -129,6 +129,15 @@ module.exports = {
 
     const contractMetadata = await alchemySDK.nft.getContractMetadata(contractAddress);
 
+    if (contractMetadata.tokenType !== 'ERC721') {
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: Only ERC721 contracts are supported`,
+        [],
+      );
+      return;
+    }
     if (!contractMetadata.totalSupply) {
       emitEvent(socket)(
         importerAddress,
@@ -137,15 +146,6 @@ module.exports = {
         [],
       );
       log.error(contractMetadata);
-      return;
-    }
-    if (contractMetadata.tokenType !== 'ERC721') {
-      emitEvent(socket)(
-        importerAddress,
-        'message',
-        `Error importing contract ${contractAddress}: Only ERC721 contracts are supported`,
-        [],
-      );
       return;
     }
     emitEvent(socket)(
