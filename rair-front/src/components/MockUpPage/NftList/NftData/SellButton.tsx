@@ -128,12 +128,20 @@ const SellButton: React.FC<ISellButton> = ({
         }
       });
     } else if (
-      await web3TxHandler(diamondMarketplaceInstance, 'createGasTokenOffer', [
-        contract, // ERC721 address
-        tokenId, // Token number
-        parseEther(sellingPrice).toString(), // Token Price
-        nodeAddress // Node address
-      ])
+      await web3TxHandler(
+        diamondMarketplaceInstance,
+        'createGasTokenOffer',
+        [
+          contract, // ERC721 address
+          tokenId, // Token number
+          parseEther(sellingPrice).toString(), // Token Price
+          nodeAddress // Node address
+        ],
+        {
+          intendedBlockchain: item.contract.blockchain,
+          sponsored: tokenInformation.offer.sponsored
+        }
+      )
     ) {
       response = { success: true };
     }
