@@ -2,7 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 const _ = require('lodash');
 const config = require('../../config/index');
-const gcp = require('../../integrations/gcp')(config);
+const gcp = require('../../integrations/gcp');
 const { addPin, addFolder } = require('../../integrations/ipfsService')();
 const log = require('../../utils/logger')(module);
 const { textPurify } = require('../../utils/helpers');
@@ -82,6 +82,14 @@ module.exports = {
 
     if (validData instanceof Error) return next(validData);
 
+    try {
+      if (storage === 'gcp') {
+        gcp();
+      }
+    } catch (error) {
+      return next(new AppError('Cannot initialize storage'));
+    }
+
     const { ok } = validData.data;
     if (!ok) {
       return next(new AppError('Validation failed'));
@@ -90,6 +98,9 @@ module.exports = {
 
     if (req.file) {
       try {
+        // Send response because video was uploaded successfully
+        //    any errors from now on are sent by socket
+        res.json({ success: true, result: req.file.filename });
         const storageName = {
           ipfs: 'IPFS',
           gcp: 'Google Cloud',
@@ -98,7 +109,6 @@ module.exports = {
           type: 'message',
           message: `Uploaded video ${req.file.originalname}`,
           address: publicAddress.toLowerCase(),
-          data: [10],
         }));
         redisPublisher.publish('notifications', JSON.stringify({
           type: 'uploadProgress',
@@ -108,8 +118,6 @@ module.exports = {
         }));
         log.info(`Processing: ${req.file.originalname}`);
         log.info(`${req.file.originalname} generating thumbnails`);
-
-        res.json({ success: true, result: req.file.filename });
 
         // Adds 'duration' to the req.file object
         await getMediaData(req.file);
@@ -196,19 +204,16 @@ module.exports = {
             );
             break;
           case 'gcp':
-            cid = await gcp.uploadDirectory(
-              config.gcp.videoBucketName,
-              req.file.destination,
-            );
-            defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
-            storageLink = defaultGateway;
-            break;
           default:
-            // gcp -> default
-            cid = await gcp.uploadDirectory(
+            // eslint-disable-next-line no-case-declarations
+            const gcpService = gcp();
+            cid = await gcpService.uploadDirectory(
               config.gcp.videoBucketName,
               req.file.destination,
             );
+            if (!cid) {
+              throw new Error('Directory upload failed');
+            }
             defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
             storageLink = defaultGateway;
             break;
@@ -323,7 +328,7 @@ module.exports = {
           data: [],
         }));
         log.error(e);
-        return next(e);
+        return next();
       }
     } else {
       return next(new AppError('File not provided.', 400));

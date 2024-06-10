@@ -33,7 +33,6 @@ module.exports = {
     if (session.userData) {
       const secret = nanoid();
       // Tell redis about it
-      console.info(secret, session.userData);
       redisClient.set(secret, JSON.stringify(session.userData));
       // Store current token in case the token is unused
       session.uploadToken = secret;

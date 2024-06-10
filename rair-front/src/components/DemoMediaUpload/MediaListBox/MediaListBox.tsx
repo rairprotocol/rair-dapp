@@ -413,13 +413,11 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           body: formData
         });
 
-        if (request && request.status === 'faild') {
+        if (request?.status === 'error') {
           setUploading(false);
           setUploadProgress(0);
           setUploadSuccess(false);
           setSocketMessage('');
-        } else {
-          reactSwal.close();
         }
       } catch (e) {
         console.error(e);
