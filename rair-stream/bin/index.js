@@ -25,10 +25,10 @@ async function main() {
 
   const app = express();
   /* CORS */
-  const origin = `https://${serviceHost}`;
-  const allowedHeaders = ['abcd'];
-  const credentials = true;
-  const methods = ['GET', 'POST'];
+  const origin = `${serviceHost}`;
+  // const allowedHeaders = ['abcd'];
+  // const credentials = true;
+  // const methods = ['GET', 'POST'];
   app.use(cors(origin /* allowedHeaders, credentials, methods */));
 
   app.use(morgan('dev'));
