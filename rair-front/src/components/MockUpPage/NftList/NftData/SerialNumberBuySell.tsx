@@ -289,8 +289,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               getResaleData();
               handleTokenBoughtButton();
             },
-            intendedBlockchain: blockchain as BlockchainType,
-            sponsored: tokenData[params.tokenId].offer.sponsored
+            intendedBlockchain: blockchain as BlockchainType
           }
         ))
       ) {
