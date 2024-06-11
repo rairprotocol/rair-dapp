@@ -93,10 +93,15 @@ const SellButton: React.FC<ISellButton> = ({
         showConfirmButton: false
       });
       if (
-        !(await web3TxHandler(instance, 'setApprovalForAll', [
-          diamondMarketplaceInstance.address,
-          true
-        ]))
+        !(await web3TxHandler(
+          instance,
+          'setApprovalForAll',
+          [diamondMarketplaceInstance.address, true],
+          {
+            intendedBlockchain: item.contract.blockchain,
+            sponsored: tokenInformation.range.sponsored
+          }
+        ))
       ) {
         return;
       }
@@ -139,7 +144,7 @@ const SellButton: React.FC<ISellButton> = ({
         ],
         {
           intendedBlockchain: item.contract.blockchain,
-          sponsored: tokenInformation.offer.sponsored
+          sponsored: tokenInformation.range.sponsored
         }
       )
     ) {

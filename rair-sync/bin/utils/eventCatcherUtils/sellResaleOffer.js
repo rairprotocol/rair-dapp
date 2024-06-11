@@ -41,7 +41,7 @@ module.exports = async (
     type: 'resalePurchase',
     message: `Your token #${token} was purchased!`,
     address: seller.toLowerCase(),
-    data: [foundOffer._id],
+    data: [contract.contractAddress, token.toString()],
   }));
 
   return foundOffer;
