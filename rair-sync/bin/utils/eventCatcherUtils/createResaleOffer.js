@@ -34,6 +34,7 @@ module.exports = async (
     blockchainOfferId: offerId,
     buyer: undefined,
   });
+  await foundOffer.save();
 
   return foundOffer;
 };
