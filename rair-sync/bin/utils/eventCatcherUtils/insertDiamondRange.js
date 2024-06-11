@@ -54,6 +54,7 @@ module.exports = async (
       diamond: true,
       diamondRangeIndex: rangeIndex,
       transactionHash: transactionData.transactionHash,
+      sponsored: false,
     });
     await offer.save().catch(handleDuplicateKey);
 

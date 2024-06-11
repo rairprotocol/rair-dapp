@@ -84,6 +84,7 @@ module.exports = {
         diamond: Joi.boolean(),
         diamondRangeIndex: Joi.string(),
         transactionHash: ethTransaction,
+        sponsored: Joi.boolean(),
     }),
     dbResales: () => ({
         tokenContract: mongoId,

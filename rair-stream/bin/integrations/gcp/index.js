@@ -2,18 +2,18 @@ const { Storage } = require('@google-cloud/storage');
 const { nanoid } = require('nanoid');
 const fs = require('fs').promises;
 const path = require('path');
-const AppError = require('../../utils/errors/AppError');
 const log = require('../../utils/logger')(module);
+const { gcp } = require('../../config');
 
-module.exports = (config) => {
+module.exports = () => {
   let storage = {};
 
   try {
-    const credentials = JSON.parse(config.gcp.credentials);
+    const credentials = JSON.parse(gcp.credentials);
 
     storage = new Storage({
       credentials,
-      projectId: config.gcp.projectId,
+      projectId: gcp.projectId,
       retryOptions: {
         autoRetry: true,
         retryDelayMultiplier: 3,
@@ -24,6 +24,7 @@ module.exports = (config) => {
     });
   } catch (e) {
     log.error(e);
+    throw new Error('Cannot initialize GCP storage');
   }
 
   const uploadFile = async (bucketName, file) => {
@@ -34,7 +35,7 @@ module.exports = (config) => {
       return uploadData[0].metadata.name;
     } catch (e) {
       log.error(e.message);
-      throw new AppError('Can\'t store image.', 500);
+      throw new Error('Can\'t store image.');
     }
   };
 
@@ -65,7 +66,8 @@ module.exports = (config) => {
                   );
                 successfulUploads += 1;
               } catch (e) {
-                log.error(`Error uploading ${filePath}:`, e);
+                log.error(e);
+                throw new Error(`Error uploading ${filePath}`);
               }
             }),
           );
@@ -74,8 +76,10 @@ module.exports = (config) => {
             groupsOffileList.push(fileList.slice(i, i + size));
           }
 
+          // eslint-disable-next-line no-restricted-syntax
           for await (const groupOffileList of groupsOffileList) {
             await Promise.allSettled(
+              // eslint-disable-next-line no-loop-func
               groupOffileList.map(async (filePath) => {
                 try {
                   const fileName = path.relative(directoryPath, filePath);
@@ -89,7 +93,8 @@ module.exports = (config) => {
                     );
                   successfulUploads += 1;
                 } catch (e) {
-                  log.error(`Error uploading ${filePath}:`, e);
+                  log.error(e);
+                  throw new Error(`Error uploading ${filePath}`);
                 }
               }),
             );
@@ -104,7 +109,8 @@ module.exports = (config) => {
           const items = await fs.readdir(directory);
           dirCtr -= 1;
           itemCtr += items.length;
-          for (const item of items) {
+          // eslint-disable-next-line no-restricted-syntax
+          for await (const item of items) {
             const fullPath = path.join(directory, item);
             const stat = await fs.stat(fullPath);
             itemCtr -= 1;
@@ -117,14 +123,15 @@ module.exports = (config) => {
           }
         } catch (e) {
           log.error(e);
+          throw new Error(`Cannot list files in dir ${directory}`);
         }
       };
       await getFiles(directoryPath);
 
-      return onComplete();
+      return await onComplete();
     } catch (e) {
       log.error(e.message);
-      throw new AppError('Can\'t store folder.', 500);
+      throw new Error('Can\'t store folder.');
     }
   };
 

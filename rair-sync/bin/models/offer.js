@@ -21,6 +21,7 @@ const Offer = new Schema(
     diamondRangeIndex: { type: String, required: false },
     transactionHash: { type: String, required: false },
     hidden: { type: Boolean, default: false },
+    sponsored: { type: Boolean, default: false },
   },
   { versionKey: false },
 );

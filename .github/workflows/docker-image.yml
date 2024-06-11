@@ -40,6 +40,8 @@ jobs:
           run: cp rair-front/.env.sample rair-front/.env
         - name: appending VITE_ALCHEMY_KEY in .env file
           run: echo "VITE_ALCHEMY_KEY"=${{ secrets.VITE_ALCHEMY_KEY }} >> rair-front/.env
+        - name: appending VITE_ALCHEMY_GAS_POLICY in .env file
+          run: echo "VITE_ALCHEMY_GAS_POLICY"=${{ secrets.VITE_ALCHEMY_GAS_POLICY }} >> rair-front/.env
         - name: build rair-front docker image
           run: sudo docker build -t rair-front:${{github.sha}} -f rair-front/Dockerfile.prod rair-front
         - name: tag image

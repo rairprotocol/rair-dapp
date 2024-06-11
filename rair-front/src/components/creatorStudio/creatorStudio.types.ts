@@ -31,6 +31,7 @@ export type TListOffers = Pick<
   | 'switchBlockchain'
   | 'gotoNextStep'
   | 'forceRefetch'
+  | 'fetchingData'
 > & {
   stepNumber: number;
   contractData: TDiamondContractData | undefined;
@@ -114,6 +115,9 @@ export interface IDiamondOfferRow {
   simpleMode: boolean;
   instance: ethers.Contract | undefined;
   diamondRangeIndex: string;
+  sponsored?: boolean;
+  forceRefetch: () => void;
+  fetchingData: boolean;
 }
 
 export type TMarketplaceOfferConfigArrayItem = {
@@ -190,6 +194,7 @@ export type TWorkflowContextType = {
   simpleMode: boolean;
   forceRefetch: () => void;
   refreshNFTMetadata: () => Promise<TNftItemResult | undefined>;
+  fetchingData: boolean;
 };
 
 export type TParamsDiamondListOffers = {
