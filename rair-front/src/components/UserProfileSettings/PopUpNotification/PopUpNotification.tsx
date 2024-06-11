@@ -11,6 +11,7 @@ import useSwal from '../../../hooks/useSwal';
 import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import NotificationPage from '../NotificationPage/NotificationPage';
+import { rFetch } from "./../../../utils/rFetch";
 
 import NftImg from './images/image.png';
 import NotificationBox from './NotificationBox/NotificationBox';
@@ -69,6 +70,17 @@ const PopUpNotification = () =>
     useEffect(() => {
       onCloseNext();
     }, [onCloseNext]);
+
+    const getNotifications = useCallback(async () => {
+      const result = await rFetch(
+        `/api/notifications/`
+      );
+      console.info(result, 'result')
+    }, [rFetch])
+
+    useEffect(() => {
+      getNotifications();
+    }, [getNotifications])
 
     useEffect(() => {
       if (uploadVideo) {

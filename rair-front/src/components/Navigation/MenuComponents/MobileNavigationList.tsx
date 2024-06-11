@@ -14,6 +14,7 @@ import { BigNumber, utils } from 'ethers';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { formatEther } from 'ethers/lib/utils';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
+import NotificationBox from '../../UserProfileSettings/PopUpNotification/NotificationBox/NotificationBox';
 
 interface IMobileNavigationList {
   messageAlert: string | null;
@@ -35,6 +36,34 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   click
 }) => {
   const hotDropsVar = import.meta.env.VITE_TESTNET;
+
+  const arrayExample = [{
+    title: "Factory updates",
+    id: 1,
+    time: 'Right now'
+  },
+  {
+    title: "Factory updates",
+    id: 2,
+    time: '2 hours ago'
+  },
+  {
+    title: "Factory updates",
+    id: 3,
+    time: '3 hours ago'
+  },
+  {
+    title: "Factory updates",
+    id: 4,
+    time: 'two weeks ago'
+  },
+  {
+    title: "Factory updates",
+    id: 5,
+    time: 'yesterday'
+  }
+];
+  const [notificationArray, setNotificationArray] = useState(arrayExample);
 
   const [userBalance, setUserBalance] = useState<string>('');
   const [userRairBalance, setUserRairBalance] = useState<any>(
@@ -105,7 +134,17 @@ const getBalance = useCallback(async () => {
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
             <i className="fas fa-chevron-left"></i>
           </BackBtnMobileNav>
-          <li>You don’t have notifications yet</li>
+          <div style={{
+            width: "80vw",
+            height: "80vh",
+            overflowY: "auto",
+            marginTop: "20px",
+            padding: "20px 0"
+          }}>
+          {notificationArray.length > 0 ? notificationArray.map((el, key) => {
+                return <NotificationBox el={el} notificationArray={notificationArray} key={key} setNotificationArray={setNotificationArray} title={el.title} time={el.time} primaryColor={primaryColor} />
+              }) : notificationArray.length === 0 && <li>You don’t have notifications yet</li>}
+          </div>
         </NavFooterBox>
       ) : messageAlert === 'profile' ? (
         <NavFooterBox
