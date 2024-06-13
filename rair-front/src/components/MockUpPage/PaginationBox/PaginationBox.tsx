@@ -88,7 +88,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
           pagesArray.length > 0 && (
             <PaginationBoxStyled
               primarycolor={primaryColor}
-              primaryButtonColor={primaryButtonColor}
+              primarybuttoncolor={primaryButtonColor}
               // className={
               //   primaryColor === '#dedede'
               //     ? `pagination-white ${

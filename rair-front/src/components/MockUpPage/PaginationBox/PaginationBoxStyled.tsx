@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 interface IPaginationBoxStyled {
   primarycolor: string;
-  primaryButtonColor?: any;
+  primarybuttoncolor?: any;
 }
 
 export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
@@ -26,11 +26,11 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
                   ? 'var(--hot-drops)'
                   : 'linear-gradient(to right, #e882d5, #725bdb)'
                 : import.meta.env.VITE_TESTNET === 'true'
-                  ? props.primaryButtonColor ===
+                  ? props.primarybuttoncolor ===
                     'linear-gradient(to right, #e882d5, #725bdb)'
                     ? 'var(--hot-drops)'
-                    : props.primaryButtonColor
-                  : props.primaryButtonColor
+                    : props.primarybuttoncolor
+                  : props.primarybuttoncolor
             }`};
           color: #fff;
           border: none;
@@ -46,11 +46,11 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
                   ? 'var(--hot-drops)'
                   : 'linear-gradient(to right, #e882d5, #725bdb)'
                 : import.meta.env.VITE_TESTNET === 'true'
-                  ? props.primaryButtonColor ===
+                  ? props.primarybuttoncolor ===
                     'linear-gradient(to right, #e882d5, #725bdb)'
                     ? 'var(--hot-drops)'
-                    : props.primaryButtonColor
-                  : props.primaryButtonColor
+                    : props.primarybuttoncolor
+                  : props.primarybuttoncolor
             }`};
           color: #fff;
         }
