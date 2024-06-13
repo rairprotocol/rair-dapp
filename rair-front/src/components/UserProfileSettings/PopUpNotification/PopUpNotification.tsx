@@ -49,6 +49,8 @@ const PopUpNotification = () =>
     }
   ];
     const [notificationArray, setNotificationArray] = useState(arrayExample);
+    const [realData, setRealData] = useState([]);
+    console.info(realData, 'realData')
     const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
       RootState,
       ColorStoreType
@@ -72,11 +74,16 @@ const PopUpNotification = () =>
     }, [onCloseNext]);
 
     const getNotifications = useCallback(async () => {
-      const result = await rFetch(
-        `/api/notifications/`
-      );
-      console.info(result, 'result')
-    }, [rFetch])
+      if(openModal) {
+        const result = await rFetch(
+          `/api/notifications/`
+        );
+        if(result.success) {
+          setRealData(result.notifications);
+        }
+        console.info(result, 'result')
+      }
+    }, [openModal])
 
     useEffect(() => {
       getNotifications();

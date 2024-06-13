@@ -1,13 +1,9 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, { lazy, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-
-import { NftCollectionPage } from './NftCollectionPage';
-import NftDataPageMain from './NftDataPageMain';
-import NftUnlockablesPage from './NftUnlockablesPage';
 
 import {
   IOffersResponseType,
@@ -35,6 +31,10 @@ import {
   INftDataCommonLinkComponent,
   TParamsNftDataCommonLink
 } from '../nftList.types';
+
+const NftUnlockablesPage = lazy(() => import('./NftUnlockablesPage'));
+const NftDataPageMain = lazy(() => import('./NftDataPageMain'));
+const NftCollectionPage = lazy(() => import('./NftCollectionPage'));
 
 const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   embeddedParams,

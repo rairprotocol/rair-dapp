@@ -825,4 +825,4 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   );
 };
 
-export const NftCollectionPage = memo(NftCollectionPageComponent);
+export default NftCollectionPageComponent;

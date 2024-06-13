@@ -1,8 +1,10 @@
 //@ts-nocheck
+import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { rFetch } from '../../../utils/rFetch';
 
 import IconRemove from './images/icon-remove.png';
 
@@ -15,6 +17,18 @@ const NotificationPage = () => {
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  
+
+  const getNotifications = useCallback(async () => {
+    const result = await rFetch(
+      `/api/notifications/`
+    );
+    console.info(result, 'result')
+  }, [rFetch])
+
+  useEffect(() => {
+    getNotifications();
+  }, [getNotifications])
 
   return (
     <div className="wrapper-notification">
