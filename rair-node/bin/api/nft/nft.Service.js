@@ -570,7 +570,8 @@ module.exports = {
 
             const totalCount = _.chain(
                 await MintedToken.aggregate(aggregateOptions)
-                .count('tokens'),
+                .count('tokens')
+                .collation({ locale: 'en_US', numericOrdering: true }),
             )
                 .head()
                 .get('tokens', 0)
@@ -578,6 +579,7 @@ module.exports = {
 
             const tokensSorted = await MintedToken.aggregate(aggregateOptions)
                 .sort(_.assign({}, sortByPrice ? { 'offer.price': Number(sortByPrice) } : {}, sortByToken ? { token: Number(sortByToken) } : {}))
+                .collation({ locale: 'en_US', numericOrdering: true })
                 .limit(tokenLimit);
 
             const tokens = attributesCounter(tokensSorted);
