@@ -401,14 +401,13 @@ module.exports = {
                 onResale = false,
             } = req.query;
             let { metadataFilters } = req.query;
-            const firstToken = ((
-                BigInt(fromToken) > 0
-                ? BigInt(fromToken) - 1n
-                : BigInt(fromToken)
-            ) + BigInt(product.firstTokenIndex)).toString();
-            const tokenLimit = BigInt(firstToken) + BigInt(toToken) || 1n;
+            const firstToken = (
+              BigInt(fromToken) + BigInt(product.firstTokenIndex)
+            );
+            const tokenLimit = BigInt(toToken) - BigInt(fromToken) + 1n || 1n;
+
             let options = {
-                token: { $gte: firstToken },
+                $expr: { $gte: [{ $toDouble: '$uniqueIndexInContract' }, firstToken] },
             };
             const filterOptions = {};
             const populateOptions = {
@@ -448,6 +447,7 @@ module.exports = {
                 }
 
                 options = {
+                    ...options,
                     contract: contract._id,
                     offer: { $in: offers },
                 };
@@ -471,6 +471,7 @@ module.exports = {
                 }
 
                 options = {
+                    ...options,
                     contract: contract._id,
                     offerPool: offerPool.marketplaceCatalogIndex,
                 };
@@ -567,13 +568,8 @@ module.exports = {
                 }
             }
 
-            const optionsForTotalCount = [...aggregateOptions];
-
-            optionsForTotalCount.shift();
-            optionsForTotalCount.unshift({ $match: options });
-
             const totalCount = _.chain(
-                await MintedToken.aggregate(optionsForTotalCount)
+                await MintedToken.aggregate(aggregateOptions)
                 .count('tokens')
                 .collation({ locale: 'en_US', numericOrdering: true }),
             )
