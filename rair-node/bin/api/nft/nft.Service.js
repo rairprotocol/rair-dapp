@@ -404,7 +404,7 @@ module.exports = {
             const firstToken = (
               BigInt(fromToken) + BigInt(product.firstTokenIndex)
             );
-            const tokenLimit = BigInt(toToken) - BigInt(firstToken) + 1n || 1n;
+            const tokenLimit = BigInt(toToken) - BigInt(fromToken) + 1n || 1n;
 
             let options = {
                 $expr: { $gte: [{ $toDouble: '$uniqueIndexInContract' }, firstToken] },
