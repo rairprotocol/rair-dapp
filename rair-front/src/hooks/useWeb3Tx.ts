@@ -2,7 +2,10 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
-import { SendUserOperationResult } from '@alchemy/aa-core';
+import {
+  SendUserOperationResult,
+  UserOperationOverrides
+} from '@alchemy/aa-core';
 import { EthersProviderAdapter } from '@alchemy/aa-ethers';
 import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import { Alchemy } from 'alchemy-sdk';
@@ -249,6 +252,10 @@ const useWeb3Tx = () => {
           }
         }));
 
+      const overrides: UserOperationOverrides = {
+        paymasterAndData: '0x'
+      };
+
       const userOperation = await (programmaticProvider.account as any)
         .sendUserOperation({
           uo: {
@@ -256,9 +263,7 @@ const useWeb3Tx = () => {
             data: uoCallData,
             value: transactionValue
           },
-          overrides: elegibleForSponsorship
-            ? undefined
-            : { paymasterAndData: '0x' }
+          overrides: elegibleForSponsorship ? undefined : overrides
         })
         .catch((err) => {
           // console.info(err);
