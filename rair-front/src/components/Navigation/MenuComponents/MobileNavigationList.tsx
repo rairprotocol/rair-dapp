@@ -146,8 +146,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                     key={el._id}
                     title={el.message}
                     primaryColor={primaryColor}
-                  />;
-                );
+                  />
+                )
               })
             ) : (
               <div
