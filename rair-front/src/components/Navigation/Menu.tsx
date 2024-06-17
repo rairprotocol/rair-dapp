@@ -252,7 +252,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                             <i className="fas fa-search" aria-hidden="true"></i>
                           </SocialBoxSearch>
                           {/* this is where the aikon widget should go: */}
-                          {currentUserAddress && userBalance.length < 7 && (
+                          {/* {currentUserAddress && userBalance.length < 7 && (
                             <>
                               <SocialBox
                                 onClick={() => {
@@ -267,10 +267,29 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                                 <BellIcon primaryColor={primaryColor} />
                               </SocialBox>
                             </>
-                          )}
+                          )} */}
                         </>
                       )}
                     </>
+                    <div
+                      style={{
+                        marginRight: '10px'
+                      }}
+                      onClick={() => {
+                        handleMessageAlert('notification');
+                        toggleMenu('nav');
+                      }}
+                      className="social-media-profile">
+                      {currentUserAddress && (
+                        <SocialBox
+                          className="social-bell-icon"
+                          width="40px"
+                          height="40px"
+                          marginLeft={'17px'}>
+                          <BellIcon primaryColor={primaryColor} />
+                        </SocialBox>
+                      )}
+                    </div>
                     <div
                       onClick={() => {
                         handleMessageAlert('profileEdit');
@@ -287,9 +306,17 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         className={`profile-user-balance ${
                           primaryColor === 'rhyno' ? 'rhyno' : ''
                         }`}>
-                         <img style={{
-              marginRight: "5px"
-            }} src={primaryColor === '#dedede' ?  RairFavicon : RairTokenLogo} alt="logo" />
+                        <img
+                          style={{
+                            marginRight: '5px'
+                          }}
+                          src={
+                            primaryColor === '#dedede'
+                              ? RairFavicon
+                              : RairTokenLogo
+                          }
+                          alt="logo"
+                        />
                         {currentChain && chainData[currentChain] && (
                           <img
                             src={chainData[currentChain]?.image}

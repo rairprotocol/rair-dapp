@@ -9,7 +9,7 @@ import IconRemove from './images/icon-remove.png';
 // import { useSelector } from 'react-redux';
 import './NotificationPage.css';
 
-const NotificationPage = () => {
+const NotificationPage = ({ el }) => {
   const currentName =
     import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
@@ -41,10 +41,7 @@ const NotificationPage = () => {
                 <div className="title-notif">
                   Notification from {currentName}
                 </div>
-                <div className="text-notif">
-                  Don’t click away! You can navigate away from the page once
-                  your video is done uploading
-                </div>
+                <div className="text-notif">{el.title}</div>
               </div>
             </div>
             <div className="notification-right">

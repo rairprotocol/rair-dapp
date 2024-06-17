@@ -11,6 +11,7 @@ import avatar from './defaultAvatarProfile.webp';
 import discordIconWhiteNoBorder from './discord-white-no-border.webp';
 import documentIcon from './documentIcon.svg';
 import ethereum from './ethereum-logo.svg';
+import tokenLogoRair from './favicon2.png';
 import grandpaGif from './grandpa.gif';
 import hotdropsDefaultBanner from './hotDrops_defaultBanner.png';
 import defaultHotDropsImg from './hotdrops-default.png';
@@ -35,7 +36,6 @@ import rairTechLogoWhite from './rairTechLogoWhite.webp';
 import rarible from './rarible-logo.webp';
 import verifiedIcon from './verify-icon.png';
 import yotiLogo from './yoti-logo.png';
-import tokenLogoRair from './favicon2.png';
 
 // images
 export const bgLogoBlack = blackBg;

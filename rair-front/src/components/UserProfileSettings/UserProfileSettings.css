@@ -532,3 +532,9 @@ span.profile-input-edit:hover {
   color: #fff;
   border: solid 1px #fff;
 }
+
+@media screen and (max-width: 500px) {
+  .notification-from-factory {
+    padding: 10px;
+  }
+}
