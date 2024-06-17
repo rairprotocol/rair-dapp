@@ -88,7 +88,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
           setDisabledBtn(false);
         }
       } catch (e) {
-        console.info(e);
+        console.error(e);
         toggleTitleVideo();
         setDisabledBtn(false);
       }

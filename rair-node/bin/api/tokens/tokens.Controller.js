@@ -27,7 +27,6 @@ router.get(
   getTokenNumbers,
 );
 
-
 router.get(
   '/:token',
   validation(['tokenNumber'], 'params'),
@@ -36,9 +35,9 @@ router.get(
   (req, res, next) => {
     const { contract, offers, offerPool } = req.query;
     if (contract?.diamond && offers) {
-        req.specificFilterOptions = { offer: { $in: offers } }
+        req.specificFilterOptions = { offer: { $in: offers } };
     } else if (offerPool) {
-      req.specificFilterOptions = { offerPool: offerPool.marketplaceCatalogIndex }
+      req.specificFilterOptions = { offerPool: offerPool.marketplaceCatalogIndex };
     }
     return next();
   },

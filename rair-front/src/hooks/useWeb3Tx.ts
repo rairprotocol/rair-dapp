@@ -1,16 +1,29 @@
+//@ts-nocheck
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { SendUserOperationResult } from '@alchemy/aa-core';
+import { useDispatch, useSelector } from 'react-redux';
+import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
+import {
+  SendUserOperationResult,
+  UserOperationOverrides
+} from '@alchemy/aa-core';
+import { EthersProviderAdapter } from '@alchemy/aa-ethers';
+import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
+import { Alchemy } from 'alchemy-sdk';
 import { Contract, ContractReceipt, ContractTransaction } from 'ethers';
 import { encodeFunctionData } from 'viem';
 
 import useSwal from './useSwal';
 
 import { RootState } from '../ducks';
+import {
+  setChainId,
+  setProgrammaticProvider
+} from '../ducks/contracts/actions';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../ducks/users/users.types';
 import chainData from '../utils/blockchainData';
 import { rFetch } from '../utils/rFetch';
+import { TChainItemData } from '../utils/utils.types';
 
 const confirmationsRequired = 2;
 
@@ -22,6 +35,7 @@ type web3Options = {
 };
 
 const useWeb3Tx = () => {
+  const dispatch = useDispatch();
   const { currentChain, currentUserAddress, programmaticProvider } =
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
@@ -185,7 +199,7 @@ const useWeb3Tx = () => {
           reactSwal.fire('Please wait', 'Verifying user operation', 'info');
           return await verifyAAUserOperation(userOperation, options);
         }
-        console.info(err);
+        console.error(err);
         reactSwal.fire('Error', err.toString(), 'error');
       }
     },
@@ -238,6 +252,10 @@ const useWeb3Tx = () => {
           }
         }));
 
+      const overrides: UserOperationOverrides = {
+        paymasterAndData: '0x'
+      };
+
       const userOperation = await (programmaticProvider.account as any)
         .sendUserOperation({
           uo: {
@@ -245,9 +263,7 @@ const useWeb3Tx = () => {
             data: uoCallData,
             value: transactionValue
           },
-          overrides: elegibleForSponsorship
-            ? undefined
-            : { paymasterAndData: '0x' }
+          overrides: elegibleForSponsorship ? undefined : overrides
         })
         .catch((err) => {
           // console.info(err);
@@ -259,6 +275,69 @@ const useWeb3Tx = () => {
       return await verifyAAUserOperation(userOperation, options);
     },
     [currentUserAddress, programmaticProvider, reactSwal, verifyAAUserOperation]
+  );
+
+  const connectWeb3AuthProgrammaticProvider = useCallback(
+    async (chainData?: TChainItemData) => {
+      if (!chainData) {
+        return;
+      }
+      const alchemy = new Alchemy({
+        apiKey: chainData.alchemyAppKey,
+        network: chainData?.alchemy,
+        maxRetries: 10
+      });
+      const ethersProvider = await alchemy.config.getProvider();
+
+      const alchemyProvider =
+        EthersProviderAdapter.fromEthersProvider(ethersProvider);
+
+      const web3AuthSigner = new Web3AuthSigner({
+        clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+        chainConfig: {
+          chainNamespace: 'eip155',
+          chainId: chainData.chainId,
+          rpcTarget: chainData.addChainData.rpcUrls[0],
+          displayName: chainData.name,
+          blockExplorer: chainData.addChainData.blockExplorerUrls[0],
+          ticker: chainData.symbol,
+          tickerName: chainData.name
+        },
+        web3AuthNetwork: chainData.testnet
+          ? 'sapphire_devnet'
+          : 'sapphire_mainnet'
+      });
+
+      await web3AuthSigner.authenticate({
+        init: async () => {
+          await web3AuthSigner.inner.initModal();
+        },
+        connect: async () => {
+          await web3AuthSigner.inner.connect();
+        }
+      });
+
+      const a = await createModularAccountAlchemyClient({
+        apiKey: chainData.alchemyAppKey,
+        chain: chainData.viem!,
+        signer: web3AuthSigner,
+        gasManagerConfig: chainData.alchemyGasPolicy
+          ? {
+              policyId: chainData.alchemyGasPolicy
+            }
+          : undefined
+      });
+
+      const provider = alchemyProvider.connectToAccount(a);
+
+      dispatch(setProgrammaticProvider(provider));
+      dispatch(setChainId(chainData.addChainData.chainId));
+      provider.signTypedData = web3AuthSigner.signTypedData;
+      provider.userDetails = web3AuthSigner.getAuthDetails;
+
+      return provider;
+    },
+    [dispatch]
   );
 
   const metamaskSwitch = async (chainId: BlockchainType) => {
@@ -343,15 +422,30 @@ const useWeb3Tx = () => {
         reactSwal.fire('Please login');
         return;
       }
+      if (chainData[chainId]?.disabled) {
+        return;
+      }
       switch (loginType) {
         case 'metamask':
-          if (chainData[chainId]?.disabled) {
+          return await metamaskSwitch(chainId);
+        case 'web3auth':
+          if (!chainData[chainId]?.alchemyAppKey) {
+            reactSwal.fire(
+              'Sorry!',
+              `${chainData[chainId].name} is not supported currently`,
+              'info'
+            );
             return;
           }
-          return await metamaskSwitch(chainId);
+          await connectWeb3AuthProgrammaticProvider(chainData[chainId]);
       }
     },
-    [currentUserAddress, loginType, reactSwal]
+    [
+      currentUserAddress,
+      loginType,
+      reactSwal,
+      connectWeb3AuthProgrammaticProvider
+    ]
   );
 
   const correctBlockchain = useCallback(
@@ -365,7 +459,8 @@ const useWeb3Tx = () => {
     correctBlockchain,
     web3Switch,
     web3TxHandler,
-    web3TxSignMessage
+    web3TxSignMessage,
+    connectWeb3AuthProgrammaticProvider
   };
 };
 

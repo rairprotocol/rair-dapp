@@ -364,7 +364,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
         }
       }
     };
-    console.info(1);
     sockets.nodeSocket.on('uploadProgress', report);
 
     return () => {
