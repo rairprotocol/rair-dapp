@@ -113,8 +113,8 @@ const PopUpNotification = () =>
                       key={el._id}
                       title={el.message}
                       primaryColor={primaryColor}
-                    />;
-                  );
+                    />
+                  )
                 })
               ) : (
                 <div
