@@ -33,7 +33,7 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({ videoId }) => {
 
         setWatchCounter(req.totalCount);
       } catch (e) {
-        console.info(e);
+        console.error(e);
       }
     }
   }, [videoId]);
@@ -102,7 +102,7 @@ const PopUpContainer = (videoId) => {
         setTotalCount(req.totalCount);
         setUniqueAddresses(req.uniqueAddresses.length);
       } catch (e) {
-        console.info(e);
+        console.error(e);
       }
     }
   }, [videoId]);

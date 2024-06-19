@@ -367,20 +367,22 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
               />
             </div>
           </div>
-          <div className="col-12 col-md-2">
-            <button
-              onClick={updateOffer}
-              disabled={fetchingData}
-              className="btn mt-4 rair-button"
-              style={{
-                color: textColor,
-                background: sponsored
-                  ? primaryButtonColor
-                  : secondaryButtonColor
-              }}>
-              Minting {sponsored ? 'sponsored' : 'paid by user'}
-            </button>
-          </div>
+          {_id && (
+            <div className="col-12 col-md-2">
+              <button
+                onClick={updateOffer}
+                disabled={fetchingData}
+                className="btn mt-4 rair-button"
+                style={{
+                  color: textColor,
+                  background: sponsored
+                    ? primaryButtonColor
+                    : secondaryButtonColor
+                }}>
+                Minting {sponsored ? 'sponsored' : 'paid by user'}
+              </button>
+            </div>
+          )}
         </>
       )}
       {validateInteger(individualPrice) &&

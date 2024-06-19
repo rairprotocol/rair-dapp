@@ -8,7 +8,7 @@ const {
   getFeaturedCollection,
   setBlockchainSetting,
   setAppLogo,
-  getTheme
+  getTheme,
 } = require('./settings.Service');
 
 const router = express.Router();

@@ -25,6 +25,8 @@ export type TChainItemData = {
   viem?: chains.Chain;
   alchemy?: Network;
   coingecko?: string;
+  alchemyAppKey?: string;
+  alchemyGasPolicy?: string;
 };
 export type TChainData = {
   [key in BlockchainType]?: TChainItemData;

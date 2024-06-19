@@ -36,7 +36,7 @@ const queryRangeDataFromDatabase = async (
     if (diamond) {
       for (const product of products) {
         for (const offer of product.offers) {
-          if (offerIndex?.includes(offer.diamondRangeIndex)) {
+          if (offerIndex?.includes(offer.offerIndex)) {
             return {
               start: offer.range[0],
               end: offer.range[1],
