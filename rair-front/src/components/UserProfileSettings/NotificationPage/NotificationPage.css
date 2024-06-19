@@ -93,3 +93,21 @@
 .wrapper-notification .text-notification .text-notif {
   font-size: 14px;
 }
+
+@media screen and (max-width: 500px) {
+  .wrapper-notification {
+    height: 50vh;
+  }
+
+  .notification-from-rair {
+    padding: 0;
+  }
+
+  .wrapper-notification .notification-left {
+    flex-direction: column;
+  }
+
+  .title-notif {
+    margin-top: 10px;
+  }
+}

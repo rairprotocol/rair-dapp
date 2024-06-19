@@ -90,7 +90,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   const getNotifications = useCallback(async () => {
     if (messageAlert) {
       setFlagLoading(true);
-      const result = await rFetch(`/api/notifications/`);
+      const result = await rFetch(`/api/notifications`);
       if (result.success) {
         setNotificationArray(result.notifications);
         setFlagLoading(false);

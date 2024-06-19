@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider, useStore } from 'react-redux';
 import Swal from 'sweetalert2';
 
 import useSwal from '../../../../hooks/useSwal';
@@ -11,8 +12,9 @@ import NftImg from './../images/image.png';
 
 import './NotificationBox.css';
 
-const NotificationBox = ({ primaryColor, title, el, getNotifications }) => {
+const NotificationBox = ({ primaryColor, title, el, getNotifications, openNotificationModal }) => {
   const reactSwal = useSwal();
+  const store = useStore();
 
   const removeItem = async () => {
     const result = await rFetch(`/api/notifications/${el._id}`, {
@@ -28,7 +30,7 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications }) => {
 
   const readNotification = async () => {
     const result = await rFetch(`/api/notifications/${el._id}`, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify({
         ...el,
         read: true
@@ -42,7 +44,9 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications }) => {
 
   const showMoreDetails = () => {
     reactSwal.fire({
-      html: <NotificationPage el={el} />,
+      html: <Provider store={store}>
+        <NotificationPage el={el} readNotification={readNotification} removeItem={removeItem} />
+      </Provider>,
       width: '90vw',
       customClass: {
         popup: `bg-${primaryColor}`
@@ -67,10 +71,11 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications }) => {
         <div className="text-notification">
           <div
             onClick={() => {
-              readNotification();
+            //   readNotification();
+            showMoreDetails()
             }}
             className="title-notif">
-            {title}
+            {title && title.length > 35 ? title.substr(0, 35) + "..." : title}
           </div>
         </div>
         <div>

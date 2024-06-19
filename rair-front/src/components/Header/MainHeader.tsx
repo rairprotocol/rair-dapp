@@ -37,6 +37,7 @@ import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComp
 
 //styles
 import './Header.css';
+import { rFetch } from '../../utils/rFetch';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -70,6 +71,7 @@ const MainHeader: React.FC<IMainHeader> = ({
   );
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
+  const [realDataNotification, setRealDataNotification] = useState([]);
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
@@ -121,6 +123,18 @@ const MainHeader: React.FC<IMainHeader> = ({
     navigate(`/${userAddress}`);
     setTextSearch('');
   };
+
+  const getNotifications = useCallback(async () => {
+      const result = await rFetch(`/api/notifications`);
+      if (result.success) {
+        setRealDataNotification(result.notifications);
+      }
+  }, []);
+
+
+  useEffect(() => {
+    getNotifications();
+  }, [])
 
   const Highlight = (props) => {
     const { filter, str } = props;
@@ -414,7 +428,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            {currentUserAddress && <PopUpNotification />}
+            {currentUserAddress && <PopUpNotification getNotifications={getNotifications} realDataNotification={realDataNotification} />}
 
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}

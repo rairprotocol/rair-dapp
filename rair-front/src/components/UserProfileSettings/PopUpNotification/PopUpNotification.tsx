@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { Provider, useSelector, useStore } from 'react-redux';
 import { Popup } from 'reactjs-popup';
 import Swal from 'sweetalert2';
 
@@ -17,12 +17,13 @@ import { rFetch } from "./../../../utils/rFetch";
 import NftImg from './images/image.png';
 import NotificationBox from './NotificationBox/NotificationBox';
 
-const PopUpNotification = () =>
+const PopUpNotification = ({getNotifications, realDataNotification}) =>
   // props was - isNotification
   {
     const currentName =
       import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
     const [openModal, setOpenModal] = useState(false);
+    const store = useStore();
     const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
       RootState,
       ColorStoreType
@@ -30,27 +31,28 @@ const PopUpNotification = () =>
     const { uploadVideo } = useSelector<RootState, any>(
       (store) => store.videoDemoStore
     );
-    const [realData, setRealData] = useState([]);
-    const [flagLoading, setFlagLoading] = useState(false);
     const { userRd } = useSelector<RootState, TUsersInitialState>(
       (store) => store.userStore
     );
     const reactSwal = useSwal();
 
-    const getNotifications = useCallback(async () => {
-      if (openModal) {
-        setFlagLoading(true);
-        const result = await rFetch(`/api/notifications/`);
-        if (result.success) {
-          setRealData(result.notifications);
-          setFlagLoading(false);
-        }
-      }
-    }, [openModal]);
+    const openNotificationModal = () => {
+      reactSwal.fire({
+        html: (
+          <Provider store={store}>
+            123
+          </Provider>
+        ),
+        showConfirmButton: false,
+        showCloseButton: true
+      });
+    }
 
     useEffect(() => {
-      getNotifications();
-    }, [getNotifications]);
+      if(openModal) {
+        getNotifications();
+      }
+    }, [openModal]);
 
     const onCloseNext = useCallback(() => {
       if (!openModal) {
@@ -79,7 +81,7 @@ const PopUpNotification = () =>
           notification={true}>
           {uploadVideo && userRd?.email && <span></span>}
           <BellIcon primaryColor={primaryColor} />
-          {realData && realData.length > 0 && (
+          {realDataNotification && realDataNotification.length > 0 && (
             <div className="red-circle-notifications"></div>
           )}
         </SocialBox>
@@ -102,12 +104,11 @@ const PopUpNotification = () =>
                 maxHeight: '400px',
                 overflowY: 'auto'
               }}>
-              {flagLoading ? (
-                <LoadingComponent />
-              ) : realData && realData.length > 0 ? (
-                realData.map((el) => {
+              {realDataNotification && realDataNotification.length > 0 ? (
+                realDataNotification.map((el) => {
                   return (
                     <NotificationBox
+                    openNotificationModal={openNotificationModal}
                       getNotifications={getNotifications}
                       el={el}
                       key={el._id}

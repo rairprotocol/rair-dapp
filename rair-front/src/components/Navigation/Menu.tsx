@@ -38,6 +38,7 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
+import { rFetch } from '../../utils/rFetch';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -78,6 +79,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
+  const [realDataNotification, setRealDataNotification] = useState([]);
   const { erc777Instance, currentUserAddress, currentChain } = useSelector<
     RootState,
     ContractsInitialType
@@ -96,6 +98,18 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const handleActiveSearch = () => {
     setActiveSearch((prev) => !prev);
   };
+
+  const getNotifications = useCallback(async () => {
+    const result = await rFetch(`/api/notifications`);
+    if (result.success) {
+      setRealDataNotification(result.notifications);
+    }
+}, []);
+
+
+useEffect(() => {
+  getNotifications();
+}, [])
 
   const toggleMenu = (otherPage?: string | undefined) => {
     if (otherPage === 'nav') {
@@ -282,11 +296,14 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                       className="social-media-profile">
                       {currentUserAddress && (
                         <SocialBox
-                          className="social-bell-icon"
+                          className="social-bell-icon notifications"
                           width="40px"
                           height="40px"
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
+                          {realDataNotification && realDataNotification.length > 0 && (
+            <div className="red-circle-notifications"></div>
+          )}
                         </SocialBox>
                       )}
                     </div>
