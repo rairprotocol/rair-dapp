@@ -12,7 +12,7 @@ import NftImg from './../images/image.png';
 
 import './NotificationBox.css';
 
-const NotificationBox = ({ primaryColor, title, el, getNotifications, openNotificationModal }) => {
+const NotificationBox = ({ primaryColor, title, el, getNotifications }) => {
   const reactSwal = useSwal();
   const store = useStore();
 
