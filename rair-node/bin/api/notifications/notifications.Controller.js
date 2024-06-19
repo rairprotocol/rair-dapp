@@ -7,7 +7,7 @@ const router = express.Router();
 router.get(
     '/',
     requireUserSession,
-    validation(['dbNotifications', 'pagination'], 'query'),
+    validation(['notificationsQuery', 'dbNotifications', 'pagination'], 'query'),
     listNotifications,
 );
 router.get(
