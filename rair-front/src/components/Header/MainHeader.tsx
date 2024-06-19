@@ -125,11 +125,13 @@ const MainHeader: React.FC<IMainHeader> = ({
   };
 
   const getNotifications = useCallback(async () => {
+    if(currentUserAddress) {
       const result = await rFetch(`/api/notifications`);
       if (result.success) {
         setRealDataNotification(result.notifications);
       }
-  }, []);
+    }
+  }, [currentUserAddress]);
 
 
   useEffect(() => {

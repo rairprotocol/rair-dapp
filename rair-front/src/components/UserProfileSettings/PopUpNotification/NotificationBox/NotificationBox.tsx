@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Provider, useStore } from 'react-redux';
 import Swal from 'sweetalert2';
 
@@ -12,35 +12,39 @@ import NftImg from './../images/image.png';
 
 import './NotificationBox.css';
 
-const NotificationBox = ({ primaryColor, title, el, getNotifications }) => {
+const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUserAddress }) => {
   const reactSwal = useSwal();
   const store = useStore();
 
-  const removeItem = async () => {
-    const result = await rFetch(`/api/notifications/${el._id}`, {
-      method: 'DELETE'
-    });
-
-    if (result.success) {
-      getNotifications();
+  const removeItem = useCallback(async () => {
+    if(currentUserAddress) {
+      const result = await rFetch(`/api/notifications/${el._id}`, {
+        method: 'DELETE'
+      });
+  
+      if (result.success) {
+        getNotifications();
+      }
     }
+  }, [currentUserAddress])
 
-    console.info(result, 'result');
-  };
-
-  const readNotification = async () => {
-    const result = await rFetch(`/api/notifications/${el._id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        ...el,
-        read: true
-      })
-    });
-
-    if (result.success) {
-      getNotifications();
+  const readNotification = useCallback(() => {
+    async () => {
+     if(currentUserAddress) {
+      const result = await rFetch(`/api/notifications/${el._id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          ...el,
+          read: true
+        })
+      });
+  
+      if (result.success) {
+        getNotifications();
+      }
+     }
     }
-  };
+  }, [currentUserAddress])
 
   const showMoreDetails = () => {
     reactSwal.fire({

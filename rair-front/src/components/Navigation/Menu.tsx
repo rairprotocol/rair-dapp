@@ -100,11 +100,13 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   };
 
   const getNotifications = useCallback(async () => {
-    const result = await rFetch(`/api/notifications`);
+    if(currentUserAddress) {
+      const result = await rFetch(`/api/notifications`);
     if (result.success) {
       setRealDataNotification(result.notifications);
     }
-}, []);
+    }
+}, [currentUserAddress]);
 
 
 useEffect(() => {

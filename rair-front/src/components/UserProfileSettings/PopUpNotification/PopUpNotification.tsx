@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useSwal from '../../../hooks/useSwal';
 import { BellIcon } from '../../../images';
@@ -24,6 +25,10 @@ const PopUpNotification = ({getNotifications, realDataNotification}) =>
       import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
     const [openModal, setOpenModal] = useState(false);
     const store = useStore();
+    const { currentUserAddress } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
     const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
       RootState,
       ColorStoreType
@@ -35,18 +40,6 @@ const PopUpNotification = ({getNotifications, realDataNotification}) =>
       (store) => store.userStore
     );
     const reactSwal = useSwal();
-
-    const openNotificationModal = () => {
-      reactSwal.fire({
-        html: (
-          <Provider store={store}>
-            123
-          </Provider>
-        ),
-        showConfirmButton: false,
-        showCloseButton: true
-      });
-    }
 
     useEffect(() => {
       if(openModal) {
@@ -108,7 +101,7 @@ const PopUpNotification = ({getNotifications, realDataNotification}) =>
                 realDataNotification.map((el) => {
                   return (
                     <NotificationBox
-                    openNotificationModal={openNotificationModal}
+                    currentUserAddress={currentUserAddress}
                       getNotifications={getNotifications}
                       el={el}
                       key={el._id}

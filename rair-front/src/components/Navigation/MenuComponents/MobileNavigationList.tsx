@@ -142,6 +142,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                 return (
                   <NotificationBox
                     getNotifications={getNotifications}
+                    currentUserAddress={currentUserAddress}
                     el={el}
                     key={el._id}
                     title={el.message}
