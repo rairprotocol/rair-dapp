@@ -30,5 +30,5 @@ echo $path
 openssl req -x509 -nodes -newkey rsa:$rsa_key_size -days 1\
     -keyout "$path/privkey.pem" \
     -out "$path/fullchain.pem" \
-    -subj "/CN=wallstreet80sclub.xyz"
+    -subj "/CN=localhost"
 
