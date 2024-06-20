@@ -6,18 +6,24 @@ module.exports = {
     listNotifications: async (req, res, next) => {
         try {
             const {
-                read = false,
+                onlyRead,
+                onlyUnread,
                 type,
                 user, pageNum = 0,
                 itemsPerPage = 10,
             } = req.query;
             const { publicAddress, adminRights } = req.user;
             const filter = {
-                read,
                 user: publicAddress.toLowerCase(),
             };
             if (type) {
                 filter.type = type;
+            }
+            if (onlyRead) {
+                filter.read = true;
+            }
+            if (onlyUnread) {
+                filter.read = false;
             }
             if (user && adminRights) {
                 filter.user = user.toLowerCase();
