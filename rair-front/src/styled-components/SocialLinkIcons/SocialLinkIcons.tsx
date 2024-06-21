@@ -50,13 +50,13 @@ export const SocialBox = styled.div<ISocialBox>`
 
   &.social-bell-icon.notifications {
     .red-circle-notifications {
-      width: 10px;
-      height: 10px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: red;
       position: absolute;
-      top: -2px;
-      right: -2px;
+      top: -7px;
+      right: -7px;
       display: block;
     }
   }

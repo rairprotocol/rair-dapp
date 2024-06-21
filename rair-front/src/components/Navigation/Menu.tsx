@@ -304,7 +304,13 @@ useEffect(() => {
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
                           {realDataNotification && realDataNotification.length > 0 && (
-            <div className="red-circle-notifications"></div>
+            <div className="red-circle-notifications" style={{
+              fontSize: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontWeight: "bold"
+            }}>{realDataNotification.length  > 9 ? "9+" : realDataNotification.length}</div>
           )}
                         </SocialBox>
                       )}

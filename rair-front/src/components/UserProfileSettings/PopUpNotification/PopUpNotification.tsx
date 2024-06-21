@@ -75,12 +75,18 @@ const PopUpNotification = ({getNotifications, realDataNotification}) =>
           {uploadVideo && userRd?.email && <span></span>}
           <BellIcon primaryColor={primaryColor} />
           {realDataNotification && realDataNotification.length > 0 && (
-            <div className="red-circle-notifications"></div>
+            <div style={{
+              fontSize: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontWeight: "bold"
+            }} className="red-circle-notifications">{realDataNotification.length  > 9 ? "9+" : realDataNotification.length}</div>
           )}
         </SocialBox>
         <Popup
           className="popup-notification-block"
-          open={openModal}
+          open={openModal}s
           closeOnDocumentClick
           onClose={() => {
             setOpenModal(false);

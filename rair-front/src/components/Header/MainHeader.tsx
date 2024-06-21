@@ -136,7 +136,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   useEffect(() => {
     getNotifications();
-  }, [])
+  }, [currentUserAddress])
 
   const Highlight = (props) => {
     const { filter, str } = props;
