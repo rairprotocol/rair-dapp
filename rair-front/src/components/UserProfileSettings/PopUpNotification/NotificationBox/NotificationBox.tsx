@@ -28,7 +28,7 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUse
     }
   }, [currentUserAddress])
 
-  const readNotification = useCallback(() => {
+  const readNotification = useCallback(
     async () => {
      if(currentUserAddress) {
       const result = await rFetch(`/api/notifications/${el._id}`, {
@@ -43,8 +43,7 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUse
         getNotifications();
       }
      }
-    }
-  }, [currentUserAddress])
+    }, [currentUserAddress])
 
   const showMoreDetails = () => {
     reactSwal.fire({
@@ -76,7 +75,8 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUse
           <div
             onClick={() => {
             //   readNotification();
-            showMoreDetails()
+            showMoreDetails();
+            readNotification();
             }}
             className="title-notif">
             {title && title.length > 35 ? title.substr(0, 35) + "..." : title}
