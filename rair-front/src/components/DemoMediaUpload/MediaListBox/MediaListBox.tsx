@@ -418,6 +418,8 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           setUploadProgress(0);
           setUploadSuccess(false);
           setSocketMessage('');
+        } else if (request?.success) {
+          reactSwal.close();
         }
       } catch (e) {
         console.error(e);
