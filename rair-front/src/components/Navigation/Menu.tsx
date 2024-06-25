@@ -76,6 +76,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const [activeSearch, setActiveSearch] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [messageAlert, setMessageAlert] = useState<string | null>(null);
+  const [notificationCount, setNotificationCount] = useState<number>(0);
   const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
@@ -95,6 +96,16 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     setMessageAlert(pageNav);
   };
 
+  const getNotificationsCount = useCallback( async () => {
+    if (currentUserAddress) {
+      const result = await rFetch(`/api/notifications?read=false`);
+      if (result.success && result.notifications.length > 0) {
+        const readNotifications = result.notifications.filter(el => el.read === false);
+        setNotificationCount(readNotifications.length);
+      }
+    }
+  }, [currentUserAddress, messageAlert, click])
+
   const handleActiveSearch = () => {
     setActiveSearch((prev) => !prev);
   };
@@ -107,6 +118,10 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     }
     }
 }, [currentUserAddress]);
+
+useEffect(() => {
+  getNotificationsCount();
+}, [getNotificationsCount])
 
 
 useEffect(() => {
@@ -194,6 +209,7 @@ useEffect(() => {
   useEffect(() => {
     getBalance();
   }, [getBalance]);
+
 
   return (
     <MenuMobileWrapper
@@ -303,14 +319,14 @@ useEffect(() => {
                           height="40px"
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
-                          {realDataNotification && realDataNotification.length > 0 && (
+                          {notificationCount > 0 && (
             <div className="red-circle-notifications" style={{
               fontSize: "10px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               fontWeight: "bold"
-            }}>{realDataNotification.length  > 9 ? "9+" : realDataNotification.length}</div>
+            }}>{notificationCount  > 9 ? "9+" : notificationCount}</div>
           )}
                         </SocialBox>
                       )}

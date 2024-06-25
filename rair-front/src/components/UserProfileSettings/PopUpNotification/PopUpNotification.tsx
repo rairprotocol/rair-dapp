@@ -18,7 +18,7 @@ import { rFetch } from "./../../../utils/rFetch";
 import NftImg from './images/image.png';
 import NotificationBox from './NotificationBox/NotificationBox';
 
-const PopUpNotification = ({getNotifications, realDataNotification}) =>
+const PopUpNotification = ({getNotifications, realDataNotification, notificationCount, getNotificationsCount}) =>
   // props was - isNotification
   {
     const currentName =
@@ -44,6 +44,7 @@ const PopUpNotification = ({getNotifications, realDataNotification}) =>
     useEffect(() => {
       if(openModal) {
         getNotifications();
+        getNotificationsCount();
       }
     }, [openModal]);
 
@@ -74,14 +75,14 @@ const PopUpNotification = ({getNotifications, realDataNotification}) =>
           notification={true}>
           {uploadVideo && userRd?.email && <span></span>}
           <BellIcon primaryColor={primaryColor} />
-          {realDataNotification && realDataNotification.length > 0 && (
+          {notificationCount > 0 && (
             <div style={{
               fontSize: "10px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               fontWeight: "bold"
-            }} className="red-circle-notifications">{realDataNotification.length  > 9 ? "9+" : realDataNotification.length}</div>
+            }} className="red-circle-notifications">{notificationCount  > 9 ? "9+" : notificationCount}</div>
           )}
         </SocialBox>
         <Popup
@@ -108,6 +109,7 @@ const PopUpNotification = ({getNotifications, realDataNotification}) =>
                   return (
                     <NotificationBox
                     currentUserAddress={currentUserAddress}
+                    getNotificationsCount={getNotificationsCount}
                       getNotifications={getNotifications}
                       el={el}
                       key={el._id}

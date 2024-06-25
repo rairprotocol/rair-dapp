@@ -12,7 +12,7 @@ import NftImg from './../images/image.png';
 
 import './NotificationBox.css';
 
-const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUserAddress }) => {
+const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUserAddress, getNotificationsCount }) => {
   const reactSwal = useSwal();
   const store = useStore();
 
@@ -24,6 +24,7 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUse
   
       if (result.success) {
         getNotifications();
+        getNotificationsCount();
       }
     }
   }, [currentUserAddress])
@@ -41,6 +42,7 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUse
   
       if (result.success) {
         getNotifications();
+        getNotificationsCount();
       }
      }
     }, [currentUserAddress])

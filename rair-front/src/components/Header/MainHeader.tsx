@@ -72,6 +72,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [realDataNotification, setRealDataNotification] = useState([]);
+  const [notificationCount, setNotificationCount] = useState<number>(0);
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
@@ -132,6 +133,20 @@ const MainHeader: React.FC<IMainHeader> = ({
       }
     }
   }, [currentUserAddress]);
+
+  const getNotificationsCount = useCallback( async () => {
+    if(currentUserAddress) {
+      const result = await rFetch(`/api/notifications?read=false`);
+      if (result.success && result.notifications.length > 0) {
+        const readNotifications = result.notifications.filter(el => el.read === false);
+        setNotificationCount(readNotifications.length);
+      }
+    }
+  }, [currentUserAddress])
+
+  useEffect(() => {
+    getNotificationsCount();
+  }, [getNotificationsCount])
 
 
   useEffect(() => {
@@ -430,7 +445,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            {currentUserAddress && <PopUpNotification getNotifications={getNotifications} realDataNotification={realDataNotification} />}
+            {currentUserAddress && <PopUpNotification notificationCount={notificationCount} getNotificationsCount={getNotificationsCount} getNotifications={getNotifications} realDataNotification={realDataNotification} />}
 
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}

@@ -83,12 +83,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
   const [notificationArray, setNotificationArray] = useState<any>();
+  const [notificationCount, setNotificationCount] = useState<number>(0);
   const [flagLoading, setFlagLoading] = useState(false);
 
   const { logoutUser } = useConnectUser();
 
   const getNotifications = useCallback(async () => {
-    if (messageAlert) {
+    if (messageAlert && currentUserAddress) {
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications`);
       if (result.success) {
@@ -96,7 +97,23 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         setFlagLoading(false);
       }
     }
-  }, [messageAlert]);
+  }, [messageAlert, currentUserAddress]);
+
+  const getNotificationsCount = useCallback( async () => {
+    if (messageAlert && currentUserAddress) {
+      setFlagLoading(true);
+      const result = await rFetch(`/api/notifications?read=false`);
+      if (result.success && result.notifications.length > 0) {
+        const readNotifications = result.notifications.filter(el => el.read === false);
+        setNotificationCount(readNotifications.length);
+        setFlagLoading(true);
+      }
+    }
+  }, [currentUserAddress])
+
+  useEffect(() => {
+    getNotificationsCount();
+  }, [getNotificationsCount])
 
   useEffect(() => {
     getNotifications();
@@ -147,6 +164,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                     key={el._id}
                     title={el.message}
                     primaryColor={primaryColor}
+                    getNotificationsCount={getNotificationsCount}
                   />
                 )
               })
