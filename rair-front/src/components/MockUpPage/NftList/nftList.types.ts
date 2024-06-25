@@ -30,6 +30,7 @@ export interface INftItemComponent {
   playing: number | null;
   setPlaying: (arg: null | number) => void;
   className?: string;
+  userData: UserType;
 }
 
 export type TSortChoice = 'down' | 'up';

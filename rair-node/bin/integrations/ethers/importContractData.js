@@ -2,7 +2,7 @@
 const { Alchemy } = require('alchemy-sdk');
 const fetch = require('node-fetch');
 const log = require('../../utils/logger')(module);
-const { Contract, Product, Offer, OfferPool, MintedToken } = require('../../models');
+const { Contract, Product, Offer, MintedToken } = require('../../models');
 const { alchemy } = require('../../config');
 const { processMetadata } = require('../../utils/metadataClassify');
 const { emitEvent } = require('../socket.io');
@@ -77,7 +77,6 @@ const insertToken = async (token, contractId) => {
         uniqueIndexInContract: token.tokenId,
         isMinted: true,
         offer: 0,
-        offerPool: 0,
         product: 0,
       }, {
         upsert: true,
@@ -101,7 +100,6 @@ module.exports = {
     let contract;
     let product;
     let offer;
-    let offerPool;
 
     // Optional Config object, but defaults to demo api-key and eth-mainnet.
     const settings = {
@@ -185,7 +183,6 @@ module.exports = {
         offerIndex: 0,
         contract: contract._id,
         product: 0,
-        offerPool: 0,
         copies: contractMetadata.totalSupply,
         soldCopies: contractMetadata.totalSupply - 1,
         sold: true,
@@ -195,18 +192,10 @@ module.exports = {
         diamondRangeIndex: 0,
         transactionHash: 'UNKNOWN - External Import',
       });
-      offerPool = new OfferPool({
-        marketplaceCatalogIndex: 0,
-        contract: contract._id,
-        product: 0,
-        rangeNumber: 0,
-        transactionHash: 'UNKNOWN - External Import',
-      });
     } else {
       update = true;
       product = await Product.findOne({ contract: contract._id });
       offer = await Offer.findOne({ contract: contract._id });
-      offerPool = await OfferPool.findOne({ contract: contract._id });
     }
 
     // Can't be used, it doesn't say which NFT they own
@@ -253,7 +242,6 @@ module.exports = {
       await contract.save();
       await product.save();
       await offer.save();
-      await offerPool.save();
       await processMetadata(contract._id, product.collectionIndexInContract);
 
       emitEvent(socket)(
