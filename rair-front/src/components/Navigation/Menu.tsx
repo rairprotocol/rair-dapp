@@ -54,6 +54,8 @@ interface IMenuNavigation {
   isSplashPage: boolean;
   isAboutPage: boolean;
   realChainId: string | undefined;
+  notificationCount?: number;
+  getNotificationsCount?: any;
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
@@ -62,7 +64,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   setTabIndexItems,
   isSplashPage,
   isAboutPage,
-  realChainId
+  realChainId,
+  notificationCount,
+  getNotificationsCount
 }) => {
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
@@ -76,7 +80,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const [activeSearch, setActiveSearch] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [messageAlert, setMessageAlert] = useState<string | null>(null);
-  const [notificationCount, setNotificationCount] = useState<number>(0);
   const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
@@ -96,16 +99,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     setMessageAlert(pageNav);
   };
 
-  const getNotificationsCount = useCallback( async () => {
-    if (currentUserAddress) {
-      const result = await rFetch(`/api/notifications?read=false`);
-      if (result.success && result.notifications.length > 0) {
-        const readNotifications = result.notifications.filter(el => el.read === false);
-        setNotificationCount(readNotifications.length);
-      }
-    }
-  }, [currentUserAddress, messageAlert, click])
-
   const handleActiveSearch = () => {
     setActiveSearch((prev) => !prev);
   };
@@ -121,7 +114,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
 
 useEffect(() => {
   getNotificationsCount();
-}, [getNotificationsCount])
+}, [click])
 
 
 useEffect(() => {
@@ -319,7 +312,7 @@ useEffect(() => {
                           height="40px"
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
-                          {notificationCount > 0 && (
+                          {notificationCount && notificationCount > 0 ? (
             <div className="red-circle-notifications" style={{
               fontSize: "10px",
               display: "flex",
@@ -327,7 +320,7 @@ useEffect(() => {
               alignItems: "center",
               fontWeight: "bold"
             }}>{notificationCount  > 9 ? "9+" : notificationCount}</div>
-          )}
+          ) : ''}
                         </SocialBox>
                       )}
                     </div>
