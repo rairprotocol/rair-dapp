@@ -117,7 +117,7 @@ module.exports = {
     }
     const alchemySDK = new Alchemy(settings);
 
-    let update = false;
+    let update = true;
 
     contract = await Contract.findOne({
       contractAddress,
@@ -166,20 +166,32 @@ module.exports = {
         contractAddress,
         blockchain: networkId,
         importedBy: importerAddress,
-        diamond: false,
+        diamond: true,
         external: true,
       });
+      update = false;
+    }
+
+    product = await Product.findOne({ contract: contract._id });
+    if (!product) {
       product = new Product({
         name: contractMetadata.name,
         collectionIndexInContract: 0,
         contract: contract._id,
         copies: contractMetadata.totalSupply,
         soldCopies: contractMetadata.totalSupply,
+        diamond: true,
         sold: true,
         firstTokenIndex: 0,
         transactionHash: 'UNKNOWN - External Import',
       });
+      update = false;
+    }
+
+    offer = await Offer.findOne({ contract: contract._id });
+    if (!offer) {
       offer = new Offer({
+        diamond: true,
         offerIndex: 0,
         contract: contract._id,
         product: 0,
@@ -192,10 +204,7 @@ module.exports = {
         diamondRangeIndex: 0,
         transactionHash: 'UNKNOWN - External Import',
       });
-    } else {
-      update = true;
-      product = await Product.findOne({ contract: contract._id });
-      offer = await Offer.findOne({ contract: contract._id });
+      update = false;
     }
 
     // Can't be used, it doesn't say which NFT they own
@@ -239,6 +248,9 @@ module.exports = {
     }
 
     try {
+      if (!contract || !product || !offer) {
+        throw Error('Missing information for database');
+      }
       await contract.save();
       await product.save();
       await offer.save();
