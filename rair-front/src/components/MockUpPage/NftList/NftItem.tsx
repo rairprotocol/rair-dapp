@@ -8,17 +8,11 @@ import React, {
 import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { constants, utils } from 'ethers';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { INftItemComponent } from './nftList.types';
 
-import {
-  TNftItemResponse,
-  TTokenData,
-  TUserResponse
-} from '../../../axios.responseTypes';
-import { UserType } from '../../../ducks/users/users.types';
+import { TNftItemResponse, TTokenData } from '../../../axios.responseTypes';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { defaultHotDrops } from '../../../images';
@@ -44,15 +38,13 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   index,
   playing,
   setPlaying,
-  className
+  className,
+  userData
 }) => {
   const navigate = useNavigate();
   const [metaDataProducts, setMetaDataProducts] = useStateIfMounted<
     TTokenData | undefined
   >(undefined);
-  const [accountData, setAccountData] = useStateIfMounted<UserType | null>(
-    null
-  );
   const [isFileUrl, setIsFileUrl] = useState<string>();
 
   const { width } = useWindowDimensions();
@@ -78,20 +70,6 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
       setIsFileUrl(ext);
     }
   }, [metaDataProducts, setIsFileUrl]);
-
-  const getInfoFromUser = useCallback(async () => {
-    // find user
-    if (
-      ownerCollectionUser &&
-      utils.isAddress(ownerCollectionUser) &&
-      ownerCollectionUser !== constants.AddressZero
-    ) {
-      const result = await axios
-        .get<TUserResponse>(`/api/users/${ownerCollectionUser}`)
-        .then((res) => res.data);
-      setAccountData(result.user);
-    }
-  }, [ownerCollectionUser, setAccountData]);
 
   const handlePlaying = (el?: unknown) => {
     if (el === null) {
@@ -222,10 +200,6 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   useEffect(() => {
     getProductAsync();
   }, [getProductAsync]);
-
-  useEffect(() => {
-    getInfoFromUser();
-  }, [getInfoFromUser]);
 
   const displayImage = metaDataProducts?.metadata?.image_thumbnail
     ? metaDataProducts.metadata.image_thumbnail
@@ -366,25 +340,23 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 {collectionName.length > 12 ? '...' : ''}
                 <div className="brief-info-nftItem">
                   <div>
-                    {accountData ? (
+                    {userData ? (
                       <div className="collection-block-user-creator">
                         <img
                           src={
-                            accountData.avatar
-                              ? accountData.avatar
-                              : defaultAvatar
+                            userData.avatar ? userData.avatar : defaultAvatar
                           }
                           alt="User Avatar"
                         />
                         <h5 style={{ wordBreak: 'break-all', ...mobileFont }}>
-                          {accountData.nickName
-                            ? accountData.nickName.length > 16
-                              ? accountData.nickName.slice(0, 5) +
+                          {userData.nickName
+                            ? userData.nickName.length > 16
+                              ? userData.nickName.slice(0, 5) +
                                 '...' +
-                                accountData.nickName.slice(
-                                  accountData.nickName.length - 4
+                                userData.nickName.slice(
+                                  userData.nickName.length - 4
                                 )
-                              : accountData.nickName
+                              : userData.nickName
                             : ownerCollectionUser.slice(0, 5) +
                               '...' +
                               ownerCollectionUser.slice(
