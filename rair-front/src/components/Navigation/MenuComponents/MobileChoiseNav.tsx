@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import {
   SocialBox,
   UserIconMobile
 } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { rFetch } from '../../../utils/rFetch';
 import { SvgUserIcon } from '../../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 interface IMobileChoiseNav {
@@ -36,6 +37,21 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (state) => state.userStore
   );
+  const [notificationCount, setNotificationCount] = useState<number>(0);
+
+  const getNotificationsCount = useCallback( async () => {
+    if (currentUserAddress) {
+      const result = await rFetch(`/api/notifications?read=false`);
+      if (result.success && result.notifications.length > 0) {
+        const readNotifications = result.notifications.filter(el => el.read === false);
+        setNotificationCount(readNotifications.length);
+      }
+    }
+  }, [currentUserAddress, messageAlert])
+
+  useEffect(() => {
+    getNotificationsCount();
+  }, [getNotificationsCount])
 
   return (
     <div className="burder-menu-logo">
@@ -70,11 +86,20 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
             <div className="social-media-profile">
               {currentUserAddress && (
                 <SocialBox
-                  className="social-bell-icon"
+                  className="social-bell-icon notifications"
                   width="40px"
                   height="40px"
                   marginLeft={'17px'}>
                   <BellIcon primaryColor={primaryColor} />
+                  {notificationCount > 0 && (
+            <div style={{
+              fontSize: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontWeight: "bold"
+            }} className="red-circle-notifications">{notificationCount  > 9 ? "9+" : notificationCount}</div>
+          )}
                 </SocialBox>
               )}
               <div className="social-media-user-icon">Notifications</div>
