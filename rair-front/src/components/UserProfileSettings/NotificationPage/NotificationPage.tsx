@@ -13,7 +13,7 @@ import './NotificationPage.css';
 const NotificationPage = ({ el, readNotification, removeItem }) => {
   const currentName =
     import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
-  const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
+  const { headerLogoMobile, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
@@ -39,7 +39,7 @@ const NotificationPage = ({ el, readNotification, removeItem }) => {
             }}>
             <div className="notification-left">
               <div className="notification-img">
-                <img src={headerLogo} alt="Rair Tech" />
+                <img src={headerLogoMobile} alt="Rair Tech" />
               </div>
               <div className="text-notification">
                 <div className="title-notif">

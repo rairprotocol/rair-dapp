@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
-import { Provider, useStore } from 'react-redux';
-import Swal from 'sweetalert2';
+import { Provider, useSelector, useStore } from 'react-redux';
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 
 import useSwal from '../../../../hooks/useSwal';
 import { CloseIconMobile } from '../../../../images';
@@ -8,11 +9,14 @@ import { SocialMenuMobile } from '../../../../styled-components/SocialLinkIcons/
 import { rFetch } from '../../../../utils/rFetch';
 import NotificationPage from '../../NotificationPage/NotificationPage';
 
-import NftImg from './../images/image.png';
-
 import './NotificationBox.css';
 
 const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUserAddress, getNotificationsCount }) => {
+  const { headerLogoMobile } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
+
   const reactSwal = useSwal();
   const store = useStore();
 
@@ -70,7 +74,7 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUse
         <div className="box-dot-img">
           {!el.read && <div className="dot-notification" />}
           <div className="notification-img">
-            <img src={NftImg} alt="Exclusive NFT token by RAIR" />
+            <img src={headerLogoMobile} alt="Exclusive NFT token by RAIR" />
           </div>
         </div>
         <div className="text-notification">
