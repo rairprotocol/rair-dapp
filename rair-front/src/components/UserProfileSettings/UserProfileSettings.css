@@ -91,10 +91,9 @@
 }
 
 .notification-img {
-  border: 1px solid #fff;
   border-radius: 16px;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,8 +101,8 @@
 }
 
 .notification-img img {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 }
 
