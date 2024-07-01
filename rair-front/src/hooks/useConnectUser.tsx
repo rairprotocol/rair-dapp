@@ -3,13 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { MultiOwnerModularAccount } from '@alchemy/aa-accounts';
-import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
-import { AccountSigner, EthersProviderAdapter } from '@alchemy/aa-ethers';
-import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
-import { Alchemy } from 'alchemy-sdk';
+import { AccountSigner } from '@alchemy/aa-ethers';
 import axios from 'axios';
 
 import useSwal from './useSwal';
+import useWeb3Tx from './useWeb3Tx';
 
 import { TUserResponse } from '../axios.responseTypes';
 import { OnboardingButton } from '../components/common/OnboardingButton/OnboardingButton';
@@ -35,6 +33,7 @@ import {
 import { TUsersInitialState } from '../ducks/users/users.types';
 import chainData from '../utils/blockchainData';
 import { rFetch, signWeb3Message } from '../utils/rFetch';
+import sockets from '../utils/sockets';
 
 const getCoingeckoRates = async () => {
   try {
@@ -64,7 +63,7 @@ const getCoingeckoRates = async () => {
 
 const useConnectUser = () => {
   const dispatch = useDispatch();
-  const { adminRights, loginProcess, loggedIn, loginType } = useSelector<
+  const { adminRights, loginProcess, loggedIn } = useSelector<
     RootState,
     TUsersInitialState
   >((store) => store.userStore);
@@ -74,6 +73,7 @@ const useConnectUser = () => {
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
     );
+  const { connectWeb3AuthProgrammaticProvider } = useWeb3Tx();
 
   const { textColor, primaryButtonColor, primaryColor } = useSelector<
     RootState,
@@ -89,64 +89,32 @@ const useConnectUser = () => {
     setMetamaskInstalled(window?.ethereum && window?.ethereum?.isMetaMask);
   }, [setMetamaskInstalled]);
 
+  useEffect(() => {
+    if (currentUserAddress) {
+      sockets.nodeSocket.on('connect', () => {
+        sockets.nodeSocket.emit('login', currentUserAddress.toLowerCase());
+      });
+    }
+    return () => {
+      sockets.nodeSocket.off('connect');
+    };
+  }, [currentUserAddress]);
+
   const loginWithWeb3Auth = useCallback(async () => {
     if (!currentChain) {
       return;
     }
     const chainInformation = chainData[currentChain];
-    if (!chainInformation?.alchemy || !chainInformation?.viem) {
+    if (
+      !chainInformation?.alchemy ||
+      !chainInformation?.viem ||
+      !chainInformation?.alchemyAppKey
+    ) {
       return;
     }
-    const alchemy = new Alchemy({
-      apiKey: import.meta.env.VITE_ALCHEMY_KEY,
-      network: chainInformation?.alchemy,
-      maxRetries: 10
-    });
-    const ethersProvider = await alchemy.config.getProvider();
 
-    const alchemyProvider =
-      EthersProviderAdapter.fromEthersProvider(ethersProvider);
-
-    // 1. Create a provider using EthersProviderAdapter
-    const web3AuthSigner = new Web3AuthSigner({
-      clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
-      chainConfig: {
-        chainNamespace: 'eip155',
-        chainId: chainInformation.chainId,
-        rpcTarget: chainInformation.addChainData.rpcUrls[0],
-        displayName: chainInformation.name,
-        blockExplorer: chainInformation.addChainData.blockExplorerUrls[0],
-        ticker: chainInformation.symbol,
-        tickerName: chainInformation.name
-      },
-      web3AuthNetwork: chainInformation.testnet
-        ? 'sapphire_devnet'
-        : 'sapphire_mainnet'
-    });
-
-    await web3AuthSigner.authenticate({
-      init: async () => {
-        await web3AuthSigner.inner.initModal();
-      },
-      connect: async () => {
-        await web3AuthSigner.inner.connect();
-      }
-    });
-
-    const a = await createModularAccountAlchemyClient({
-      apiKey: import.meta.env.VITE_ALCHEMY_KEY,
-      chain: chainInformation.viem,
-      signer: web3AuthSigner,
-      gasManagerConfig: {
-        policyId: import.meta.env.VITE_ALCHEMY_GAS_POLICY
-      }
-    });
-
-    const provider = alchemyProvider.connectToAccount(a);
-
-    dispatch(setProgrammaticProvider(provider));
-    provider.signTypedData = web3AuthSigner.signTypedData;
-    provider.userDetails = web3AuthSigner.getAuthDetails;
+    const provider =
+      await connectWeb3AuthProgrammaticProvider(chainInformation);
 
     return {
       userAddress: provider.account.account.address,
@@ -154,7 +122,7 @@ const useConnectUser = () => {
       blockchain: currentChain,
       alchemyProvider: provider
     };
-  }, [currentChain, dispatch]);
+  }, [currentChain, connectWeb3AuthProgrammaticProvider]);
 
   const loginWithMetamask = useCallback(async () => {
     const accounts = await window.ethereum.request({
@@ -237,7 +205,14 @@ const useConnectUser = () => {
         //   }
         // });
       }),
-    [hotdropsVar, metamaskInstalled, reactSwal]
+    [
+      hotdropsVar,
+      metamaskInstalled,
+      reactSwal,
+      primaryButtonColor,
+      textColor,
+      primaryColor
+    ]
   );
 
   const connectUserData = useCallback(async () => {
@@ -379,6 +354,7 @@ const useConnectUser = () => {
             dispatch(dispatchItem);
           });
           dispatch(setLogInStatus(true));
+          sockets.nodeSocket.connect();
         }
       }
       dispatch(setLoginProcessStatus(false));
@@ -439,6 +415,8 @@ const useConnectUser = () => {
   const logoutUser = useCallback(async () => {
     const { success } = await rFetch('/api/auth/logout');
     if (success) {
+      sockets.nodeSocket.emit('logout', currentUserAddress.toLowerCase());
+      sockets.nodeSocket.disconnect();
       dispatch(getTokenComplete(null));
       dispatch(setUserAddress(undefined));
       dispatch(setAdminRights(false));
@@ -449,7 +427,7 @@ const useConnectUser = () => {
       dispatch(setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
       navigate('/');
     }
-  }, [dispatch, navigate, loginType]);
+  }, [dispatch, navigate, currentUserAddress]);
 
   return {
     connectUserData,

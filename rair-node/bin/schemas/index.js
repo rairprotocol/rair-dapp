@@ -32,6 +32,7 @@ const importContract = require('./importContract');
 const { analyticsParams, analyticsQuery } = require('./analytics');
 const { tokenCreditQuery, tokenCreditWithdraw } = require('./credits');
 const { resaleQuery, resaleUpdate, resaleCreate } = require('./resales');
+const { notificationsQuery } = require('./notifications');
 // V2 validations
 const textSearch = require('./textSearch');
 const {
@@ -51,8 +52,6 @@ const {
   pagination,
   dbId,
   fileId,
-  productId,
-  offerId,
   userAddress,
   resaleFlag,
   metadataSearch,
@@ -128,12 +127,13 @@ module.exports = {
   getTokenNumbers,
   tokenNumber,
 
+  // Notifications
+  notificationsQuery,
+
   // Common schemas
   pagination,
   dbId,
   fileId,
-  productId,
-  offerId,
   userAddress,
   resaleFlag,
   metadataSearch,

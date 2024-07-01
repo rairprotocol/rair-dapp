@@ -10,21 +10,30 @@ const {
   User,
 } = require('../../models/index');
 const { checkAdminTokenOwns } = require('../../integrations/ethers/tokenValidation');
+const { redisClient } = require('../../services/redis');
 
 module.exports = {
   getUploadToken: async (req, res, next) => {
-    const { session, redisService } = req;
+    const { session } = req;
     // If the upload token already exists, keep using it
     if (session.uploadToken) {
-      const userDataOnRedis = await redisService.get(session.uploadToken);
-      if (userDataOnRedis.publicAddress === session.userData.publicAddress) {
-        return res.json({ success: true, secret: session.uploadToken });
+      try {
+        const userDataOnRedis = await redisClient.get(session.uploadToken);
+        if (
+          userDataOnRedis &&
+          JSON.parse(userDataOnRedis.publicAddress) === session.userData.publicAddress
+        ) {
+          return res.json({ success: true, secret: session.uploadToken });
+        }
+      } catch (err) {
+        console.info(err);
+        return new AppError('Token error, please try again');
       }
     }
     if (session.userData) {
       const secret = nanoid();
       // Tell redis about it
-      redisService.set(secret, session.userData);
+      redisClient.set(secret, JSON.stringify(session.userData));
       // Store current token in case the token is unused
       session.uploadToken = secret;
       // Give it to the frontend

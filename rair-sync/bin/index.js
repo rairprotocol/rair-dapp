@@ -1,11 +1,9 @@
-const port = process.env.PORT || 5001;
-
+// const port = process.env.PORT || 5001;
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const redis = require('redis');
 const morgan = require('morgan');
 const _ = require('lodash');
 const { MongoClient } = require('mongodb');
@@ -19,10 +17,11 @@ const {
 } = require('./vault');
 
 const tasks = require('./tasks');
-const routes = require('./routes/api/v1');
+// const routes = require('./routes/api/v1');
 
 const config = require('./config');
-const redisService = require('./services/redis');
+const { redisPublisher, redisSubscriber } = require('./services/redis');
+const { getTransaction } = require('./integrations/ethers/transactionCatcher');
 
 async function main() {
   const connectionString = await getMongoConnectionStringURI({ appSecretManager });
@@ -53,23 +52,13 @@ async function main() {
   const client = await MongoClient.connect(connectionString, { useNewUrlParser: true });
   const _db = client.db(client.s.options.dbName);
 
-  // Create Redis client
-  const redisClient = redis.createClient({
-    url: `redis://${config.redis.connection.host}:${config.redis.connection.port}`,
-    legacyMode: true,
-  });
-
-  await redisClient.connect().catch(log.error);
-
   const context = {
     mongo: _db,
     config,
     redis: {
-      client: redisClient,
+      redisService: redisPublisher,
     },
   };
-
-  context.redis.redisService = redisService(context);
 
   // run scheduled tasks flow
   context.agenda = await tasks(context);
@@ -83,17 +72,28 @@ async function main() {
   });
 
   app.use(morgan('dev'));
-  app.use(bodyParser.raw());
-  app.use(bodyParser.json());
-  app.use('/api/v1', routes(context));
+  // app.use(bodyParser.raw());
+  // app.use(bodyParser.json());
+  // app.use('/api/v1', routes);
+  redisSubscriber.subscribe('transactions', async (data) => {
+    if (!data) {
+      return;
+    }
+    try {
+      const { network, hash, userData } = JSON.parse(data);
+      await getTransaction(network, hash, userData);
+    } catch (err) {
+      log.error(err);
+    }
+  });
   app.use((err, req, res, next) => {
     log.error(err);
     res.status(500).json({ success: false, error: true, message: err.message });
   });
 
-  app.listen(port, () => {
-    log.info(`Blockchain networks service listening on port ${port}`);
-  });
+  // app.listen(port, () => {
+  //   log.info(`Blockchain networks service listening on port ${port}`);
+  // });
 }
 
 (async () => {

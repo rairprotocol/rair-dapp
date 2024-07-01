@@ -13,11 +13,11 @@
     "prepare": "cd ../ && husky install ./minting-marketplace/.husky"
   },
   "dependencies": {
-    "@alchemy/aa-accounts": "^3.5.1",
-    "@alchemy/aa-alchemy": "^3.5.1",
-    "@alchemy/aa-core": "^3.5.1",
-    "@alchemy/aa-ethers": "^3.5.1",
-    "@alchemy/aa-signers": "^3.5.1",
+    "@alchemy/aa-accounts": "^3.18.2",
+    "@alchemy/aa-alchemy": "^3.18.2",
+    "@alchemy/aa-core": "^3.18.2",
+    "@alchemy/aa-ethers": "^3.18.2",
+    "@alchemy/aa-signers": "^3.18.2",
     "@analytics/google-analytics": "^1.0.7",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
@@ -38,8 +38,8 @@
     "@types/uuid": "^9.0.7",
     "@walletconnect/sign-client": "^2.10.6",
     "@walletconnect/utils": "^2.11.0",
-    "@web3auth/base": "^8.0.0",
-    "@web3auth/modal": "^8.0.1",
+    "@web3auth/base": "^8.6.2",
+    "@web3auth/modal": "^8.6.2",
     "alchemy-sdk": "^3.2.0",
     "analytics": "^0.8.9",
     "axios": "^1.6.2",
@@ -58,6 +58,7 @@
     "react-ga": "^3.3.1",
     "react-helmet-async": "^2.0.3",
     "react-hook-form": "^7.49.0",
+    "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
     "react-moment": "^1.1.3",
     "react-multi-carousel": "^2.8.4",
@@ -72,7 +73,7 @@
     "redux": "^4.2.1",
     "redux-saga": "^1.2.3",
     "slick-carousel": "^1.8.1",
-    "socket.io-client": "^4.7.2",
+    "socket.io-client": "^4.7.5",
     "styled-components": "^5.3.3",
     "sweetalert2": "^11.10.1",
     "sweetalert2-react-content": "^5.0.7",
@@ -98,7 +99,7 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "typescript": "^5.4.2",
-    "vite": "^5.1.6",
+    "vite": "^5.2.11",
     "vite-plugin-node-polyfills": "^0.21.0"
   }
 }

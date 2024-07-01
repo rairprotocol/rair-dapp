@@ -1,10 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { utils } from 'ethers';
 import { isAddress } from 'ethers/lib/utils';
-
-import BatchERC20Transfer from './BatchERC20Transfer';
 
 import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
@@ -15,17 +12,9 @@ import useWeb3Tx from '../../hooks/useWeb3Tx';
 import chainData from '../../utils/blockchainData';
 import { validateInteger } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
+import sockets from '../../utils/sockets';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
-
-type userType = {
-  publicAddress: string;
-  nickName: string;
-  creationDate: Date;
-  email: string;
-  _id: string;
-  blocked: string;
-};
 
 const ImportExternalContract = () => {
   const [selectedContract, setSelectedContract] = useState<string>('');
@@ -36,13 +25,32 @@ const ImportExternalContract = () => {
   const [owner, setOwner] = useState<string>('');
   const [sendingData, setSendingData] = useState<boolean>(false);
   const [limit, setLimit] = useState<number>(0);
-  const [currentTokens /*, setCurrentTokens*/] = useState<number>();
-  const [totalTokens /*, setTotalTokens */] = useState<number>();
-  const [sessionId, setSessionId] = useState('');
-  const [userList, setUserList] = useState<userType[]>([]);
+  const [progress, setProgress] = useState<number>();
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+
+  useEffect(() => {
+    const report = (socketData) => {
+      const { message, data } = socketData;
+      const [progress, contractAddress, blockchain, creator, limit] = data;
+
+      setSendingData(true);
+      setProgress(progress);
+      setResultData(message);
+      setSelectedContract(contractAddress);
+      setSelectedBlockchain(blockchain);
+      setOwner(creator);
+      setLimit(limit);
+      if (progress === 100) {
+        setSendingData(false);
+      }
+    };
+    sockets.nodeSocket.on('importProgress', report);
+    return () => {
+      sockets.nodeSocket.off('importProgress', report);
+    };
+  }, []);
 
   const blockchainOptions = Object.keys(chainData)
     .filter((chain) => chainData[chain].disabled !== true)
@@ -61,54 +69,13 @@ const ImportExternalContract = () => {
     ColorStoreType
   >((store) => store.colorStore);
 
-  useEffect(() => {
-    const sessionId = Math.random().toString(36).slice(2, 9);
-    setSessionId(sessionId);
-    /*
-    Disabled until sessions are implemented
-
-    const so = io(`/`, {
-      transports: ['websocket'],
-      protocols: ['http'],
-      path: '/socket'
-    });
-    console.info(so);
-
-    so.emit('init', sessionId);
-
-    so.on('importReport', (data) => {
-      const { current, total } = data;
-      setResultData(`${current} of ${total}`);
-      setCurrentTokens(current);
-      setTotalTokens(total);
-    });
-
-    return () => {
-      so.removeListener('importReport');
-      so.emit('end', sessionId);
-    };
-    */
-  }, []);
-
-  const getUserData = useCallback(async () => {
-    const { success, data } = await rFetch('/api/users/list');
-    if (success) {
-      setUserList(data);
-    }
-  }, []);
-
-  useEffect(() => {
-    getUserData();
-  }, [getUserData]);
-
   const callImport = async () => {
     if (!validateInteger(limit)) {
       return;
     }
     setSendingData(true);
-    reactSwal.fire('Importing contract', 'Please wait', 'info');
 
-    const { success, result } = await rFetch(`/api/contracts/import/`, {
+    const { success } = await rFetch(`/api/contracts/import/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -117,19 +84,14 @@ const ImportExternalContract = () => {
         networkId: selectedBlockchain,
         contractAddress: selectedContract.toLowerCase(),
         limit: limit,
-        contractCreator: owner.toLowerCase(),
-        socketSessionId: sessionId
+        contractCreator: owner.toLowerCase()
       })
     });
-    setSendingData(false);
     if (success) {
       reactSwal.fire(
-        'Success',
-        `Imported ${result.numberOfTokensAdded} tokens from ${result.contract.title}`,
-        'success'
-      );
-      setResultData(
-        `Imported ${result.numberOfTokensAdded} tokens from ${result.contract.title}`
+        'Importing contract',
+        'You can navigate away while the tokens are being imported',
+        'info'
       );
     }
   };
@@ -162,7 +124,6 @@ const ImportExternalContract = () => {
 
   return (
     <div className="col-12 row px-5">
-      <h3>Import non-RAIR Contract</h3>
       <div className="col-12 col-md-6">
         <InputSelect
           getter={selectedBlockchain}
@@ -231,79 +192,8 @@ const ImportExternalContract = () => {
       <hr />
       <h5 className="text-center">{resultData}</h5>
       <br />
-      {totalTokens && <progress value={currentTokens} max={totalTokens} />}
+      {progress && <progress value={progress} max={100} />}
       <br />
-      <hr />
-      <div className="row mb-5">
-        <div className="text-start col-10 h4">MANAGE USER</div>
-        <button
-          onClick={async () => {
-            axios
-              .get('/api/users/export', { responseType: 'blob' })
-              .then((response) => response.data)
-              .then((blob) => {
-                // Create blob link to download
-                const url = window.URL.createObjectURL(new Blob([blob]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `template.csv`);
-
-                // Append to html link element page
-                document.body.appendChild(link);
-
-                // Start download
-                link.click();
-
-                // Clean up and remove the link
-                link.parentNode?.removeChild(link);
-              });
-          }}
-          className="col-2 btn btn-primary">
-          Export
-        </button>
-      </div>
-      <table className="table table-dark table-responsive">
-        <thead>
-          <th />
-          <th>Date Created</th>
-          <th>Username</th>
-          <th>Public Address</th>
-          <th>Email</th>
-        </thead>
-        <tbody>
-          {userList.map((user, index) => {
-            return (
-              <tr key={index}>
-                <td>
-                  <button
-                    onClick={async () => {
-                      await rFetch(`/api/users/${user.publicAddress}`, {
-                        method: 'PATCH',
-                        body: JSON.stringify({
-                          blocked: !user.blocked
-                        }),
-                        headers: {
-                          'content-type': 'application/json'
-                        }
-                      });
-                      getUserData();
-                    }}
-                    className={`btn btn-${
-                      user.blocked ? 'success' : 'danger'
-                    }`}>
-                    {user.blocked ? 'Unban' : 'Ban'}
-                  </button>
-                </td>
-                <td>{user.creationDate.toString()}</td>
-                <td>{user.nickName}</td>
-                <td>{user.publicAddress}</td>
-                <td>{user.email}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <BatchERC20Transfer />
     </div>
   );
 };

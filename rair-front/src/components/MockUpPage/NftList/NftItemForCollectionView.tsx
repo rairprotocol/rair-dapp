@@ -357,11 +357,6 @@ const NftItemForCollectionViewComponent: React.FC<
             metadataFilter && 'with-modal'
           }`}
           id={id}>
-          {item && !resaleFlag && item.isMinted && !resalePrice && (
-            <div className="nft-item-collection-sold-out">
-              <div className="sold-out-box">Sold out</div>
-            </div>
-          )}
           <>
             {item && resaleFlag && currentUserAddress === userAddress && (
               <button
@@ -582,6 +577,11 @@ const NftItemForCollectionViewComponent: React.FC<
                         </div>
                       )}
                     </div>
+                    {item && !resaleFlag && item.isMinted && !resalePrice && (
+            <div className="nft-item-collection-sold-out">
+              <div className="sold-out-box">Sold out</div>
+            </div>
+          )}
                     <div
                       className="collection-block-price"
                       style={{ alignItems: 'flex-end' }}>

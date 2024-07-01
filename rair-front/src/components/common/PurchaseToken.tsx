@@ -36,12 +36,13 @@ const queryRangeDataFromDatabase = async (
     if (diamond) {
       for (const product of products) {
         for (const offer of product.offers) {
-          if (offerIndex?.includes(offer.diamondRangeIndex)) {
+          if (offerIndex?.includes(offer.offerIndex)) {
             return {
               start: offer.range[0],
               end: offer.range[1],
               product: offer.product,
-              price: offer.price.toString()
+              price: offer.price.toString(),
+              sponsored: offer.sponsored
             };
           }
         }
@@ -59,7 +60,8 @@ const queryRangeDataFromDatabase = async (
             start: selectedOffer.range[0],
             end: selectedOffer.range[1],
             product: selectedOffer.product,
-            price: selectedOffer.price.toString()
+            price: selectedOffer.price.toString(),
+            sponsored: false
           };
         }
       }
@@ -159,7 +161,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
           : minterOfferPool.productIndex.toString(),
         price: diamond
           ? minterOffer.rangeData.rangePrice.toString()
-          : minterOffer.price.toString()
+          : minterOffer.price.toString(),
+        // Blockchain queries cannot be verified as being sponsored, only database calls
+        sponsored: false
       };
     }
   };
@@ -169,7 +173,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
     offerIndex: string[] | undefined,
     nextToken: any,
     price: string,
-    diamond = false
+    diamond = false,
+    sponsored = false
   ) => {
     if (!minterInstance) {
       reactSwal.fire({
@@ -202,7 +207,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
     return await web3TxHandler(minterInstance, method, args, {
       intendedBlockchain: requiredBlockchain as BlockchainType,
       failureMessage:
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
+      sponsored
     });
   };
 
@@ -318,7 +324,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 
             setButtonMessage('Finding mintable NFT...');
 
-            let rangeData;
+            let rangeData: IRangeDataType | undefined;
             if (!blockchainOnly) {
               // Get the range's data (start token, ending token, price)
               rangeData = await queryRangeDataFromDatabase(
@@ -346,7 +352,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               return;
             }
 
-            const { start, end, product, price } = rangeData;
+            const { start, end, product, price, sponsored } = rangeData;
 
             const nextToken = await findNextToken(
               contractInstance,
@@ -391,7 +397,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               offerIndex,
               nextToken,
               price,
-              diamond
+              diamond,
+              sponsored
             );
 
             if (purchaseResult && customSuccessAction) {

@@ -23,6 +23,7 @@ export type TOfferType = {
   _id: string;
   diamondRangeIndex?: string;
   hidden: boolean;
+  sponsored?: boolean;
 };
 
 export type TOfferData = TOfferType & {

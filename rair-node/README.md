@@ -76,7 +76,7 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
 | SYNC_CONTRACT_REPEAT_EVERY |Int | Long-term Sync|
 | SYNC_CONTRACT_TASK_INTERVAL| int| Long-term Sync|
 | SUPER_ADMIN_VAULT_STORE | String | Vault data for Super Admin List |
-| SERVICE_HOST | String | Service hostname |
+| SERVICE_HOST | String | Server URL (used for CORS) |
 | MEDIA_SERVICE_PORT | Int | Media-Service Port Number|
 | MONGO_LOG_COLLECTION | String|  |
 | LOCALDBUSER | String | Local Mongo Username|
@@ -155,6 +155,7 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
                 * [x] /pinning - POST - Pin the metadata of a single token ([details](readme/current/nft/nft_pin_metadata.md))
     * [x] /offers
         * [x] / - GET - Get all offers ([details](readme/current/offers/offers_list.md))
+        * [x] /:id - PUT - Update offer ([details](readme/current/offers/offers_update.md))
     * [x] /products
         * [x] / - GET - Get all products ([details](readme/current/products/products_list.md))
         * [x] /user/:userAddress - GET - Get all products from an user ([details](readme/current/products/products_user_list.md))
@@ -192,6 +193,11 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
     * [x] /upload
         * [x] /validate - GET - Validate information for the media file ([details](readme/current/upload/upload_validate.md))
         * [x] /file - POST - Insert a media file in the database ([details](readme/current/upload/upload_file.md))
+    * [x] /notifications
+        * [x] / - GET - List of notifications ([details](readme/current/notifications/get_list.md))
+        * [x] /:id - GET - Get a single notification ([details](readme/current/notifications/get_single.md))
+        * [x] /:id - PUT - Mark a notification as read ([details](readme/current/notifications/mark_read.md))
+        * [x] /:id - DELETE - Delete a notification ([details](readme/current/notifications/delete.md))
 
 # Contributors
 Valerii Kovalov \

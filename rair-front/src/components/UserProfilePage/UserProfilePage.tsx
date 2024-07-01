@@ -143,7 +143,7 @@ const UserProfilePage: React.FC = () => {
 
       const covers = contractsFiltered.map((item: TContract) => ({
         id: item._id,
-        productId: item.products?._id ?? 'wut',
+        productId: item.products?._id,
         blockchain: item.blockchain,
         collectionIndexInContract: item.products.collectionIndexInContract,
         contract: item.contractAddress,

@@ -26,7 +26,8 @@ const ListOffers: React.FC<TListOffers> = ({
   stepNumber,
   switchBlockchain,
   gotoNextStep,
-  forceRefetch
+  forceRefetch,
+  fetchingData
 }) => {
   const [offerList, setOfferList] = useState<
     TMarketplaceOfferConfigArrayItem[]
@@ -157,6 +158,8 @@ const ListOffers: React.FC<TListOffers> = ({
                     rerender={rerender}
                     simpleMode={simpleMode}
                     maxCopies={Number(contractData?.product?.copies) - 1}
+                    forceRefetch={forceRefetch}
+                    fetchingData={fetchingData}
                   />
                 );
               })}

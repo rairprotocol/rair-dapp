@@ -176,7 +176,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
             {ranges.map((i) => {
               return (
                 <button
-                  disabled={availableRanges[i] ? false : true}
+                  disabled={availableRanges?.[i] ? false : true}
                   key={i}
                   onClick={(e) => getPaginationToken(e)}
                   className={`serial-box serial-numb check-disable ${

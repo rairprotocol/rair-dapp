@@ -140,7 +140,6 @@ const BatchERC20Transfer = () => {
 
   return (
     <div className="w-100 row">
-      <h5>ERC20 tool</h5>
       <Dropzone onDrop={onCSVDrop}>
         {({ getRootProps, getInputProps, isDragActive }) => (
           <section>
@@ -193,7 +192,6 @@ const BatchERC20Transfer = () => {
                   </button>
                 </td>
                 {Object.keys(data).map((key, keyIndex) => {
-                  console.info(key, keyIndex, structure[keyIndex]);
                   return (
                     <th key={keyIndex}>
                       <InputField

@@ -1,7 +1,7 @@
 const { addFile } = require('../../integrations/ipfsService')();
 const { ServerSetting, Product, Contract, User, Blockchain } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
-const { ipfsGateways } = require('../../config')
+const { ipfsGateways } = require('../../config');
 
 exports.createSettingsIfTheyDontExist = async (req, res, next) => {
   try {
@@ -22,7 +22,7 @@ exports.setAppLogo = async (req, res, next) => {
   try {
     const { target } = req.body;
     const settings = await ServerSetting.findOne({});
-    let value = undefined;
+    let value;
     if (req.file && req.file.mimetype.includes('image')) {
       const ipfsHash = await addFile(req.file.destination, req.file.filename);
       if (!ipfsHash) {
@@ -38,7 +38,7 @@ exports.setAppLogo = async (req, res, next) => {
   } catch (error) {
     return next(new AppError(error));
   }
-}
+};
 
 exports.getFeaturedCollection = async (req, res, next) => {
   try {
@@ -146,7 +146,7 @@ exports.getTheme = async (req, res, next) => {
       lightModeMobileLogo,
       buttonPrimaryColor,
       buttonFadeColor,
-      buttonSecondaryColor, 
+      buttonSecondaryColor,
     } = await ServerSetting.findOne({}).lean();
     return res.json({
       success: true,
@@ -160,10 +160,10 @@ exports.getTheme = async (req, res, next) => {
         lightModeMobileLogo,
         buttonPrimaryColor,
         buttonFadeColor,
-        buttonSecondaryColor
+        buttonSecondaryColor,
       },
     });
   } catch (error) {
     return next(new AppError(error));
   }
-}
+};

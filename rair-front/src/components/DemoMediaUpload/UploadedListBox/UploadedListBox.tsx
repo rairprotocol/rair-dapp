@@ -78,7 +78,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
         getMediaList();
       }
     } catch (e) {
-      console.info(e);
+      console.error(e);
     }
   };
 

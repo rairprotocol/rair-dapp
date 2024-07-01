@@ -79,7 +79,7 @@ module.exports = {
           userData.blocked = true;
         }
       } catch (error) {
-        log.error("Cannot read OFAC list");
+        log.error('Cannot read OFAC list');
       }
       if (userData.blocked) {
         log.error(`Blocked user tried to login: ${ethAddress}`);

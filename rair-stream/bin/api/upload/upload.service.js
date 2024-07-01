@@ -1,19 +1,20 @@
 const axios = require('axios');
 const fs = require('fs');
 const _ = require('lodash');
-const config = require('../config/index');
-const gcp = require('../integrations/gcp')(config);
-const { addPin, addFolder } = require('../integrations/ipfsService')();
-const log = require('../utils/logger')(module);
-const { textPurify } = require('../utils/helpers');
+const config = require('../../config/index');
+const gcp = require('../../integrations/gcp');
+const { addPin, addFolder } = require('../../integrations/ipfsService')();
+const log = require('../../utils/logger')(module);
+const { textPurify } = require('../../utils/helpers');
 const {
   generateThumbnails,
   getMediaData,
   convertToHLS,
   encryptFolderContents,
-} = require('../utils/ffmpegUtils');
-const { vaultKeyManager, vaultAppRoleTokenManager } = require('../vault');
-const AppError = require('../utils/errors/AppError');
+} = require('../../utils/ffmpegUtils');
+const { vaultKeyManager, vaultAppRoleTokenManager } = require('../../vault');
+const AppError = require('../../utils/errors/AppError');
+const { redisPublisher } = require('../../services/redis');
 
 const { baseUri } = config.rairnode;
 
@@ -56,7 +57,6 @@ module.exports = {
     // Get the user information
     const { publicAddress } = req.user;
     // Get the socket ID from the request's query
-    const { socketSessionId } = req.query;
 
     // default value for parameter 'preset'.
     // Currently remains unchanged and is not used in frontend
@@ -82,76 +82,80 @@ module.exports = {
 
     if (validData instanceof Error) return next(validData);
 
+    try {
+      if (storage === 'gcp') {
+        gcp();
+      }
+    } catch (error) {
+      return next(new AppError('Cannot initialize storage'));
+    }
+
     const { ok } = validData.data;
     if (!ok) {
       return next(new AppError('Validation failed'));
     }
     offers = validData.data.offers;
 
-    // Get the socket connection from Express app
-    const io = req.app.get('io');
-    const sockets = req.app.get('sockets');
-    const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
-    const socketInstance = !_.isNull(thisSocketId)
-      ? io.to(thisSocketId)
-      : {
-        emit: (eventName, eventData) => {
-          log.info(
-            `Dummy event: "${eventName}" socket emitter fired with message: "${eventData.message}" `,
-          );
-        },
-      };
-
     if (req.file) {
       try {
+        // Send response because video was uploaded successfully
+        //    any errors from now on are sent by socket
+        res.json({ success: true, result: req.file.filename });
         const storageName = {
           ipfs: 'IPFS',
           gcp: 'Google Cloud',
         }[storage];
-        socketInstance.emit('uploadProgress', {
-          message: 'File uploaded, processing...',
-          last: false,
-          done: 10,
-        });
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'message',
+          message: `Uploaded video ${req.file.originalname}`,
+          address: publicAddress.toLowerCase(),
+        }));
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'uploadProgress',
+          message: 'Processing video',
+          address: publicAddress.toLowerCase(),
+          data: [req.file.originalname, 0],
+        }));
         log.info(`Processing: ${req.file.originalname}`);
         log.info(`${req.file.originalname} generating thumbnails`);
-
-        res.json({ success: true, result: req.file.filename });
 
         // Adds 'duration' to the req.file object
         await getMediaData(req.file);
 
-        socketInstance.emit('uploadProgress', {
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'uploadProgress',
           message: 'Generating thumbnails',
-          last: false,
-          done: 20,
-        });
+          address: publicAddress.toLowerCase(),
+          data: [req.file.originalname, 10],
+        }));
         // Adds 'thumbnailName' to the req.file object
         // Generates a static webp thumbnail and an animated gif thumbnail
         // ONLY for videos
         await generateThumbnails(req.file);
 
         log.info(`${req.file.originalname} converting to stream`);
-        socketInstance.emit('uploadProgress', {
-          message: 'Converting file to stream',
-          last: false,
-          done: 30,
-        });
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'uploadProgress',
+          message: 'Converting to stream',
+          address: publicAddress.toLowerCase(),
+          data: [req.file.originalname, 20],
+        }));
 
         // Converts the file with FFMPEG
         // 35% socket update comes from here
         await convertToHLS(
           req.file,
           speed,
-          socketInstance,
+          publicAddress,
         );
         log.info('ffmpeg DONE: converted to stream.');
 
-        socketInstance.emit('uploadProgress', {
-          message: 'Encrypting...',
-          last: false,
-          done: 40,
-        });
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'uploadProgress',
+          message: 'Encrypting',
+          address: publicAddress.toLowerCase(),
+          data: [req.file.originalname, 40],
+        }));
         // % 40, 50 happen inside here
         const { exportedKey, totalEncryptedFiles } = await encryptFolderContents(
           req.file,
@@ -175,12 +179,14 @@ module.exports = {
         );
 
         log.info(`${req.file.originalname} uploading to ${storageName}`);
-        socketInstance.emit('uploadProgress', {
-          message: 'Uploading stream',
-          last: false,
-          done: 40,
-        });
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'uploadProgress',
+          message: 'Uploading files',
+          address: publicAddress.toLowerCase(),
+          data: [req.file.originalname, 50],
+        }));
 
+        // Storage function releases 60% notification
         switch (storage) {
           case 'ipfs':
             cid = await addFolder(
@@ -198,25 +204,26 @@ module.exports = {
             );
             break;
           case 'gcp':
-            cid = await gcp.uploadDirectory(
-              config.gcp.videoBucketName,
-              req.file.destination,
-              socketInstance,
-            );
-            defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
-            storageLink = defaultGateway;
-            break;
           default:
-            // gcp -> default
-            cid = await gcp.uploadDirectory(
+            // eslint-disable-next-line no-case-declarations
+            const gcpService = gcp();
+            cid = await gcpService.uploadDirectory(
               config.gcp.videoBucketName,
               req.file.destination,
-              socketInstance,
             );
+            if (!cid) {
+              throw new Error('Directory upload failed');
+            }
             defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
             storageLink = defaultGateway;
             break;
         }
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'uploadProgress',
+          message: 'Files uploaded',
+          address: publicAddress.toLowerCase(),
+          data: [req.file.originalname, 60],
+        }));
 
         fs.rm(req.file.destination, { recursive: true }, (err) => {
           if (err) log.error(err);
@@ -254,12 +261,13 @@ module.exports = {
           meta.description = textPurify.sanitize(description);
         }
 
-        log.info(`${req.file.originalname} storing to DB.`);
-        socketInstance.emit('uploadProgress', {
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'uploadProgress',
           message: 'Storing stream data',
-          last: false,
-          done: 60,
-        });
+          address: publicAddress.toLowerCase(),
+          data: [req.file.originalname, 70],
+        }));
+        log.info(`${req.file.originalname} storing to DB.`);
 
         const key = { ...exportedKey, key: exportedKey.key.toJSON() };
 
@@ -273,11 +281,12 @@ module.exports = {
         });
 
         log.info('Key written to vault.');
-        socketInstance.emit('uploadProgress', {
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'uploadProgress',
           message: 'Storing stream data',
-          last: false,
-          done: 70,
-        });
+          address: publicAddress.toLowerCase(),
+          data: [req.file.originalname, 80],
+        }));
 
         const uploadData = await axios({
           method: 'POST',
@@ -290,28 +299,36 @@ module.exports = {
 
         if (uploadData?.data?.ok) {
           log.info(`${req.file.originalname} stored to DB.`);
-          socketInstance.emit('uploadProgress', {
-            message: 'Stored to database.',
-            last: !!['gcp'].includes(storage),
-            done: ['gcp'].includes(storage) ? 100 : 80,
-          });
+          redisPublisher.publish('notifications', JSON.stringify({
+            type: 'uploadProgress',
+            message: 'Storing stream data',
+            address: publicAddress.toLowerCase(),
+            data: [req.file.originalname, ['gcp'].includes(storage) ? 100 : 90],
+          }));
 
           log.info(`${req.file.originalname} pinning to ${storageName}.`);
-          socketInstance.emit('uploadProgress', {
-            message: 'Storing stream',
-            last: false,
-            done: 90,
-          });
 
           if (storage === 'ipfs') {
-            await addPin(cid, title, socketInstance);
+            await addPin(cid, title);
+            redisPublisher.publish('notifications', JSON.stringify({
+              type: 'uploadProgress',
+              message: 'Storing stream data',
+              address: publicAddress.toLowerCase(),
+              data: [req.file.originalname, 90],
+            }));
           }
         }
         return true;
       } catch (e) {
         log.error('An error has occurred encoding the file');
+        redisPublisher.publish('notifications', JSON.stringify({
+          type: 'message',
+          message: `An error has occurred encoding the file ${req.file.originalname}`,
+          address: publicAddress.toLowerCase(),
+          data: [],
+        }));
         log.error(e);
-        return next(e);
+        return next();
       }
     } else {
       return next(new AppError('File not provided.', 400));

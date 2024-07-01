@@ -1,5 +1,6 @@
 const { findContractFromAddress } = require('./eventsCommonUtils');
 const { ResaleTokenOffer } = require('../../models');
+const { redisPublisher } = require('../../services/redis');
 
 module.exports = async (
   transactionData,
@@ -35,6 +36,13 @@ module.exports = async (
   }, {
     buyer: buyer.toString().toLowerCase(),
   });
+
+  redisPublisher.publish('notifications', JSON.stringify({
+    type: 'resalePurchase',
+    message: `Your token #${token} was purchased!`,
+    address: seller.toLowerCase(),
+    data: [contract.contractAddress, token.toString()],
+  }));
 
   return foundOffer;
 };

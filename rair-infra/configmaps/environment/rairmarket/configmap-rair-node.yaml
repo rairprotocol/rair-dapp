@@ -8,7 +8,7 @@ data:
   ADMIN_NETWORK: matic
   ADMIN_CONTRACT: ""
   INFURA_PROJECT_ID: 92a88973a28d41318792f77451db4c5b
-  SERVICE_HOST: api.rair.market
+  SERVICE_HOST: https://api.rair.market
   DEFAULT_PRODUCT_COVER: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
   GCP_PROJECT_ID: rair-market
   GCP_IMAGE_BUCKET_NAME: rair_images

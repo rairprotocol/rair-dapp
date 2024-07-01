@@ -166,14 +166,16 @@ module.exports = {
   importExternalContract: async (req, res, next) => {
     try {
       const { networkId, contractAddress, limit, contractCreator } = req.body;
-      const { success, result, message } = await importContractData(
+      const socket = req.app.get('socket');
+      importContractData(
         networkId,
         contractAddress,
         limit,
         contractCreator,
         req.user.publicAddress,
+        socket,
       );
-      return res.json({ success, result, message });
+      return res.json({ success: true });
     } catch (err) {
       log.error(err);
       return next(err);
@@ -218,6 +220,34 @@ module.exports = {
         },
       };
       options.push(lookupProduct, { $unwind: '$products' });
+      const lookupUser = {
+        $lookup: {
+          from: 'User',
+          let: {
+            usr: '$user',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $eq: ['$publicAddress', '$$usr'],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'userData',
+        },
+      };
+      options.push(lookupUser, {
+        $unwind: {
+          path: '$userData',
+          preserveNullAndEmptyArrays: true,
+        },
+      });
 
       if (category.length > 0) {
         const categoryIds = category.map((cat) => new ObjectId(cat));
@@ -262,38 +292,6 @@ module.exports = {
       options.push(
         {
           $lookup: {
-            from: 'OfferPool',
-            let: {
-              contr: '$_id',
-              prod: '$products.collectionIndexInContract',
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: ['$contract', '$$contr'],
-                      },
-                      {
-                        $eq: ['$product', '$$prod'],
-                      },
-                    ],
-                  },
-                },
-              },
-            ],
-            as: 'offerPool',
-          },
-        },
-        {
-          $unwind: {
-            path: '$offerPool',
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $lookup: {
             from: 'Offer',
             let: {
               prod: '$products.collectionIndexInContract',
@@ -324,7 +322,6 @@ module.exports = {
               { diamond: true, 'products.offers': { $not: { $size: 0 } } },
               {
                 diamond: { $in: [false, undefined] },
-                offerPool: { $ne: null },
                 'products.offers': { $not: { $size: 0 } },
               },
             ],

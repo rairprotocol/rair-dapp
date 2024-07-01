@@ -84,6 +84,7 @@ module.exports = {
         diamond: Joi.boolean(),
         diamondRangeIndex: Joi.string(),
         transactionHash: ethTransaction,
+        sponsored: Joi.boolean(),
     }),
     dbResales: () => ({
         tokenContract: mongoId,
@@ -116,5 +117,10 @@ module.exports = {
     dbBlockchains: () => ({
         display: Joi.boolean(),
         sync: Joi.boolean(),
+    }),
+    dbNotifications: () => ({
+        user: ethAddress,
+        type: Joi.string(),
+        read: Joi.boolean(),
     }),
 };

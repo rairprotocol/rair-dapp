@@ -1,11 +1,12 @@
 const fs = require('graceful-fs');
-const fsPromises = fs.promises;
-const { addPin, addFolder, addMetadata, removePin } = require('../../integrations/ipfsService')();
 const { nanoid } = require('nanoid');
-const config = require('../../config');
 const path = require('path');
-const log = require('../../utils/logger')(module);
 const _ = require('lodash');
+
+const fsPromises = fs.promises;
+const { addPin, addFolder, addMetadata, removePin, addFile } = require('../../integrations/ipfsService')();
+const config = require('../../config');
+const log = require('../../utils/logger')(module);
 const {
   Product,
   OfferPool,
@@ -15,11 +16,12 @@ const {
   TokenMetadata,
   ServerSetting,
   File,
-  Unlock
-} = require("../../models");
+  Unlock,
+} = require('../../models');
 const { processMetadata } = require('../../utils/metadataClassify');
 const { textPurify, attributesCounter, checkFileAccess } = require('../../utils/helpers');
 const AppError = require('../../utils/errors/AppError');
+
 const ipfsGateway = config.ipfsGateways[process.env.IPFS_SERVICE];
 
 module.exports = {
@@ -127,80 +129,80 @@ module.exports = {
         let singleMetadataFor = '';
         let metadataURI = '';
         let CID = '';
-    
+
         try {
         const contract = await Contract.findById(contractId);
-    
+
         if (!contract) {
             return next(new AppError('Contract not found.', 404));
         }
-    
+
         if (user.publicAddress !== contract.user) {
             return next(new AppError('You have no permissions for uploading metadata.', 403));
         }
-    
+
         let options = {
             contract: contract._id,
             'metadata.name': { $nin: ['', 'none'] },
         };
-    
+
         // If we are not overwriting, find all tokens that aren't pinned already
         if (overwritePin !== 'true') {
             options.isMetadataPinned = false;
         }
-    
+
         if (product) {
             foundProduct = await Product.findOne({
             contract: contract._id,
             collectionIndexInContract: product,
             });
-    
+
             if (!foundProduct) {
               return next(new AppError('Product not found.', 404));
             }
         }
-    
+
         if (contract.singleMetadata) {
           singleMetadataFor = 'contract';
         }
         if (!!foundProduct && foundProduct.singleMetadata) {
           singleMetadataFor = 'product';
         }
-    
+
         if (singleMetadataFor !== 'contract') {
           if (contract.diamond) {
             const offers = await Offer.find({
                 contract: contract._id,
                 product,
             }).distinct('diamondRangeIndex');
-    
+
             if (_.isEmpty(offers)) {
                 return next(new AppError('Offers not found.', 404));
             }
-    
+
             options.offer = { $in: offers };
             } else {
             const offerPool = await OfferPool.findOne({
                 contract: contract._id,
                 product,
             });
-    
+
             if (!offerPool) {
                 return next(new AppError('OfferPool not found.', 404));
             }
-    
+
             options = _.assign(options, {
                 offerPool: offerPool.marketplaceCatalogIndex,
             });
           }
         }
-    
+
         let foundTokens = await MintedToken.find(options);
-    
+
         if (!foundTokens?.length) {
             return next(new AppError(`No tokens found ${overwritePin === true ? '' : ' with unpinned metadata'}`, 400));
         }
-    
+
         // create a folder with all metadata files for uploading
         if (!singleMetadataFor) {
             // create directory
@@ -210,7 +212,7 @@ module.exports = {
             log.info(`Create directory ${pathTo}/${folderName}`);
             await fsPromises.mkdir(`${pathTo}/${folderName}`);
             }
-    
+
             // eslint-disable-next-line no-restricted-syntax
             for (const token of foundTokens) {
             // console.info(`Writing file for token #${token.uniqueIndexInContract}`);
@@ -229,7 +231,7 @@ module.exports = {
                 return next(new AppError(`Error writing file for NFT ${token.uniqueIndexInContract}`));
             }
             }
-    
+
             // upload folder to cloud
             CID = await addFolder(`${pathTo}/${folderName}`, folderName);
             await addPin(CID, `metadata_folder_${folderName}`);
@@ -243,14 +245,14 @@ module.exports = {
                   uniqueIndexInContract: foundProduct.firstTokenIndex,
               });
             }
-    
+
             commonMetadataToken = commonMetadataToken || _.first(foundTokens);
-    
+
             // store common metadata to cloud
             CID = await addMetadata(commonMetadataToken.metadata, _.get(commonMetadataToken.metadata, 'name', 'none'));
             await addPin(CID, `metadata_${_.get(commonMetadataToken.metadata, 'name', 'none')}`);
         }
-    
+
         // prepare all data for updating of tokens, contract or product
         const storageLink = _.get(
             {
@@ -260,16 +262,16 @@ module.exports = {
             config.ipfsService,
             `${config.pinata.gateway}/${CID}`,
         );
-    
+
         if (singleMetadataFor) metadataURI = storageLink;
-    
+
         foundTokens = foundTokens.map((item) => ({
             updateOne: {
             filter: { contract: contract._id, uniqueIndexInContract: item.uniqueIndexInContract },
             update: { metadataURI: !singleMetadataFor ? `${storageLink}/${item.uniqueIndexInContract}.json` : 'none', isMetadataPinned: true, isURIStoredToBlockchain: false },
             },
         }));
-    
+
         // updating data in DB
         switch (singleMetadataFor) {
             case 'contract':
@@ -281,19 +283,19 @@ module.exports = {
             default:
             break;
         }
-    
+
         try {
             await MintedToken.bulkWrite(foundTokens, { ordered: false });
         } catch (err) { log.error(err); }
-    
+
         // removed the temporary folder
         if (!singleMetadataFor) await fsPromises.rm(`${pathTo}/${folderName}`, { recursive: true });
-    
+
         if (typeof CID !== 'string') {
             log.error(`Invalid CID detected: ${CID}`);
             CID = '';
         }
-    
+
         return res.json(!singleMetadataFor ? {
             success: true,
             CID,
@@ -307,7 +309,7 @@ module.exports = {
         } catch (e) {
             // console.error('There was an error removing files');
         }
-    
+
         return next(err);
         }
     },
@@ -334,12 +336,12 @@ module.exports = {
         const { contract } = req;
         const { tokenInContract } = req.params;
         const uniqueIndexInContract = tokenInContract;
-    
+
         const result = await MintedToken.findOne({
             contract: contract._id,
             uniqueIndexInContract,
         });
-    
+
         res.json({ success: true, result });
         } catch (err) {
         next(err);
@@ -379,7 +381,7 @@ module.exports = {
             }
             return res.json({
                 success: true,
-                attributes
+                attributes,
             });
         } catch (err) {
             return next(err);
@@ -399,14 +401,13 @@ module.exports = {
                 onResale = false,
             } = req.query;
             let { metadataFilters } = req.query;
-            const firstToken = ((
-                BigInt(fromToken) > 0
-                ? BigInt(fromToken) - 1n
-                : BigInt(fromToken)
-            ) + BigInt(product.firstTokenIndex)).toString();
-            const tokenLimit = BigInt(firstToken) + BigInt(toToken) || 1n;
+            const firstToken = (
+              BigInt(fromToken) + BigInt(product.firstTokenIndex)
+            );
+            const tokenLimit = BigInt(toToken) - BigInt(fromToken) + 1n || 1n;
+
             let options = {
-                token: { $gte: firstToken },
+                $expr: { $gte: [{ $toDouble: '$uniqueIndexInContract' }, firstToken] },
             };
             const filterOptions = {};
             const populateOptions = {
@@ -446,6 +447,7 @@ module.exports = {
                 }
 
                 options = {
+                    ...options,
                     contract: contract._id,
                     offer: { $in: offers },
                 };
@@ -469,6 +471,7 @@ module.exports = {
                 }
 
                 options = {
+                    ...options,
                     contract: contract._id,
                     offerPool: offerPool.marketplaceCatalogIndex,
                 };
@@ -561,17 +564,12 @@ module.exports = {
                         },
                     });
                 } catch (err) {
-                    logger.error(`Error parsing metadata filters ${err}`);
+                  log.error(`Error parsing metadata filters ${err}`);
                 }
             }
 
-            const optionsForTotalCount = [...aggregateOptions];
-
-            optionsForTotalCount.shift();
-            optionsForTotalCount.unshift({ $match: options });
-
             const totalCount = _.chain(
-                await MintedToken.aggregate(optionsForTotalCount)
+                await MintedToken.aggregate(aggregateOptions)
                 .count('tokens')
                 .collation({ locale: 'en_US', numericOrdering: true }),
             )
@@ -595,19 +593,19 @@ module.exports = {
         try {
             const { contract, product } = req;
             let options = {};
-        
+
             if (contract.diamond) {
                 const offers = await Offer.find({
                     contract: contract._id,
                     product: product.collectionIndexInContract,
                 }).distinct('diamondRangeIndex');
-        
+
                 if (_.isEmpty(offers)) {
                     return res
                         .status(404)
                         .send({ success: false, message: 'Offers not found.' });
                 }
-        
+
                 options = {
                     contract: contract._id,
                     offer: { $in: offers },
@@ -617,24 +615,24 @@ module.exports = {
                     contract: contract._id,
                     product: product.collectionIndexInContract,
                 });
-        
+
                 if (_.isEmpty(offerPool)) {
                     return res
                         .status(404)
                         .send({ success: false, message: 'OfferPools not found.' });
                 }
-        
+
                 options = {
                     contract: contract._id,
                     offerPool: offerPool.marketplaceCatalogIndex,
                 };
             }
-        
+
             const tokens = await MintedToken.find(options)
                 .sort([['token', 1]])
                 .collation({ locale: 'en_US', numericOrdering: true })
                 .distinct('token');
-        
+
             return res.json({ success: true, tokens });
         } catch (err) {
             return next(err);
@@ -644,20 +642,22 @@ module.exports = {
         try {
           const { token } = req.params;
           const { contract, product } = req;
-    
+
           let foundOffers = await Offer.find({
             contract: contract._id,
             product: product.collectionIndexInContract,
           });
-          foundOffers = foundOffers.filter((offer) => offer.range[0] < token && offer.range[1] > token);
+          foundOffers = foundOffers.filter(
+            (offer) => offer.range[0] < token && offer.range[1] > token,
+          );
           const offerArray = foundOffers.map((item) => item._id);
           const foundUnlocks = await Unlock.find({
             offers: { $all: offerArray },
           }).populate('file');
-    
+
           let files = foundUnlocks.map((unlock) => unlock.file);
           files = await checkFileAccess(files, req.user);
-    
+
           return res.json({ success: true, files });
         } catch (err) {
           return next(err);
@@ -666,7 +666,7 @@ module.exports = {
       getFilesForProduct: async (req, res, next) => {
         try {
           const { contract, product } = req;
-    
+
           const pipeline = [
             {
               $lookup: {
@@ -705,11 +705,11 @@ module.exports = {
               },
             },
           ];
-    
+
           const data = (await File.aggregate([
             ...pipeline,
           ]));
-    
+
           // verify the user have needed tokens for unlock the files
           const files = await checkFileAccess(data, req.user);
           const loadedFiles = [];
@@ -729,9 +729,12 @@ module.exports = {
       getOffersForProduct: async (req, res, next) => {
         try {
           const { contract, product: productData } = req;
-    
+
           const [product] = await Product.aggregate([
-            { $match: { contract: contract._id, collectionIndexInContract: productData.collectionIndexInContract } },
+            { $match: {
+              contract: contract._id,
+              collectionIndexInContract: productData.collectionIndexInContract,
+            } },
             {
               $lookup: {
                 from: 'Offer',
@@ -759,12 +762,12 @@ module.exports = {
               },
             },
           ]);
-    
+
           if (!product) {
             res.json({ success: false, message: 'Product not found.' });
             return;
           }
-    
+
           res.json({
             success: true,
             product: { ...product, owner: contract.user },
@@ -776,19 +779,19 @@ module.exports = {
       getLockedOffersForProduct: async (req, res, next) => {
         try {
           const { contract, product } = req;
-    
+
           const locks = await Offer.find({
             contract: contract._id,
             product: product.collectionIndexInContract,
             lockedCopies: { $gt: 0 },
           });
-    
+
           if (!locks?.length) {
             return res
               .status(404)
               .send({ success: false, message: 'No locks found' });
           }
-    
+
           return res.json({ success: true, locks });
         } catch (err) {
           return next(err);
@@ -798,7 +801,7 @@ module.exports = {
         try {
           const { contract, product } = req;
           req.token = req.params.token;
-  
+
           if (contract.diamond) {
             const offers = await Offer.find({
               contract: contract._id,
@@ -839,13 +842,13 @@ module.exports = {
               ? { offer: { $in: offers } }
               : { offerPool: offerPool.marketplaceCatalogIndex },
           );
-    
+
           const result = await MintedToken.findOne(options);
-    
+
           if (result === null) {
-            return next(new AppError('Token not found.', 404))
+            return next(new AppError('Token not found.', 404));
           }
-    
+
           return res.json({ success: true, result });
         } catch (err) {
           return next(err);
@@ -873,7 +876,7 @@ module.exports = {
               ? { offer: { $in: offers } }
               : { offerPool: offerPool.marketplaceCatalogIndex },
           );
-  
+
           if (user.publicAddress !== contract.user) {
             if (req.files?.length) {
               await Promise.all(
@@ -883,10 +886,10 @@ module.exports = {
                 }),
               );
             }
-  
+
             return next(new AppError(`You have no permissions for updating token ${token}.`, 403));
           }
-  
+
           if (_.isEmpty(fieldsForUpdate)) {
             if (req.files.length) {
               await Promise.all(
@@ -896,14 +899,14 @@ module.exports = {
                 }),
               );
             }
-  
+
             return next(new AppError('Nothing to update.', 400));
           }
-  
+
           const countDocuments = await MintedToken.countDocuments(
             options,
           );
-  
+
           if (countDocuments === 0) {
             if (req.files?.length) {
               await Promise.all(
@@ -913,30 +916,31 @@ module.exports = {
                 }),
               );
             }
-  
+
             return next(new AppError('Token not found.', 400));
           }
-  
+
           if (req.files?.length) {
             const files = await Promise.all(
               _.map(req.files, async (file) => {
                 try {
                   const cid = await addFile(file.destination, file.filename);
                   await addPin(cid, file.filename);
-  
+
                   log.info(`File ${file.filename} has added to ipfs.`);
-  
+
+                  // eslint-disable-next-line no-param-reassign
                   file.link = `${config.pinata.gateway}/${cid}/${file.filename}`;
-  
+
                   return file;
                 } catch (err) {
                   log.error(err);
-  
+
                   return err;
                 }
               }),
             );
-  
+
             _.chain(fieldsForUpdate)
               .pick(['image', 'animation_url'])
               .forEach((value, key) => {
@@ -944,13 +948,13 @@ module.exports = {
                   .find((f) => f.originalname === value)
                   .get('link')
                   .value();
-  
+
                 if (v) fieldsForUpdate[key] = v;
                 else delete fieldsForUpdate[key];
               })
               .value();
           }
-  
+
           // sanitize fields
           let sanitizedFieldsForUpdate = {};
           _.forEach(fieldsForUpdate, (v, k) => {
@@ -961,12 +965,12 @@ module.exports = {
               ? v
               : textPurify.sanitize(v);
           });
-  
+
           sanitizedFieldsForUpdate = _.mapKeys(
             sanitizedFieldsForUpdate,
             (v, k) => `metadata.${k}`,
           );
-  
+
           const updatedToken = await MintedToken.findOneAndUpdate(
             options,
             {
@@ -976,7 +980,7 @@ module.exports = {
             },
             { new: true },
           );
-  
+
           if (req.files?.length) {
             await Promise.all(
               _.map(req.files, async (file) => {
@@ -985,7 +989,7 @@ module.exports = {
               }),
             );
           }
-  
+
           return res.json({ success: true, token: updatedToken });
         } catch (err) {
           if (req.files?.length) {
@@ -996,7 +1000,7 @@ module.exports = {
               }),
             );
           }
-  
+
           return next(err);
         }
       },
@@ -1008,11 +1012,11 @@ module.exports = {
             /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
           );
           let metadataURI = 'none';
-    
+
           if (user.publicAddress !== contract.user) {
             return next(new AppError(`You have no permissions for updating token ${token}.`, 403));
           }
-    
+
           const options = _.assign(
             {
               contract: contract._id,
@@ -1022,15 +1026,15 @@ module.exports = {
               ? { offer: { $in: offers } }
               : { offerPool: offerPool.marketplaceCatalogIndex },
           );
-    
+
           const foundToken = await MintedToken.findOne(options);
-    
+
           if (!foundToken) {
             return next(new AppError('Token not found.', 400));
           }
-    
+
           metadataURI = foundToken.metadataURI;
-    
+
           if (!_.isEmpty(foundToken.metadata)) {
             const CID = await addMetadata(foundToken.metadata, _.get(foundToken.metadata, 'name', 'none'));
             if (!CID) {
@@ -1044,12 +1048,12 @@ module.exports = {
             const CID = _.chain(foundToken.metadataURI).split('/').last().value();
             await removePin(CID);
           }
-    
+
           await foundToken.updateOne({ metadataURI, isMetadataPinned: true });
-    
+
           return res.json({ success: true, metadataURI });
         } catch (err) {
           return next(err);
         }
-      }
-}
+      },
+};

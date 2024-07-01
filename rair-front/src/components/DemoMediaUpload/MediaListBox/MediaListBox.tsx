@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, useDispatch, useSelector, useStore } from 'react-redux';
-import { io } from 'socket.io-client';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
@@ -11,6 +10,7 @@ import {
 import useSwal from '../../../hooks/useSwal';
 import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
+import sockets from '../../../utils/sockets';
 import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 import LinearProgressWithLabel from '../LinearProgressWithLabel/LinearProgressWithLabel';
@@ -298,7 +298,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   newUserStatus,
   rerender
 }) => {
-  const [thisSessionId, setThisSessionId] = useState<string>('');
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   const [contract, setContract] = useState<string>(item.contractAddress);
@@ -314,12 +313,15 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   const [uploading, setUploading] = useState<boolean>(false);
   const [socketMessage, setSocketMessage] = useState<string>('');
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
-  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState<Options[]>([]);
 
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const {
+    primaryColor,
+    secondaryColor,
+    textColor,
+    primaryButtonColor,
+    secondaryButtonColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const store = useStore();
   const reactSwal = useSwal();
   const dispatch = useDispatch();
@@ -341,32 +343,34 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   }, [getCategories]);
 
   useEffect(() => {
-    const sessionId = Math.random().toString(36).slice(2, 9);
-    setThisSessionId(sessionId);
-    const so = io();
-    so.emit('init', sessionId);
-    so.on('uploadProgress', (data) => {
-      const { last, message, done } = data;
-      setSocketMessage(message);
-      setUploadProgress(done);
-      if (last) {
-        setSocketMessage('');
-        setUploading(false);
-        setUploadSuccess(true);
-        setTimeout(() => {
-          dispatch(uploadVideoEnd());
-          rerender?.();
-          deleter(index);
-        }, 3000);
+    const report = (socketData) => {
+      if (!socketData) {
+        return;
       }
-    });
+      setUploading(true);
+      const { message, data } = socketData;
+      const [videoTitle, progress] = data;
+      if (item.file.name === videoTitle) {
+        setSocketMessage(message);
+        setUploadProgress(progress);
+        if (progress === 100) {
+          setSocketMessage('');
+          setUploading(false);
+          setUploadSuccess(true);
+          setTimeout(() => {
+            dispatch(uploadVideoEnd());
+            rerender?.();
+            deleter(index);
+          }, 3000);
+        }
+      }
+    };
+    sockets.nodeSocket.on('uploadProgress', report);
 
     return () => {
-      so.removeListener('uploadProgress');
-      so.emit('end', sessionId);
+      sockets.nodeSocket.off('uploadProgress', report);
     };
-    //eslint-disable-next-line
-  }, []);
+  }, [deleter, dispatch, index, item.file.name, rerender]);
 
   const uploadVideo = useCallback(
     async (storage) => {
@@ -400,27 +404,21 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           icon: 'info',
           showConfirmButton: false
         });
-        const request = await rFetch(
-          `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
-          // `${import.meta.env.VITE_UPLOAD_PROGRESS_HOST}/ms/api/v1/media/upload${
-          //   newUserStatus ? '/demo' : ''
-          // }?socketSessionId=${thisSessionId}`,
-          {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'x-rair-token': tokenRequest.secret
-            },
-            body: formData
-          }
-        );
+        const request = await rFetch(`/ms/api/v1/media/upload`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'x-rair-token': tokenRequest.secret
+          },
+          body: formData
+        });
 
-        if (request && request.status === 'faild') {
+        if (request?.status === 'error') {
           setUploading(false);
           setUploadProgress(0);
           setUploadSuccess(false);
           setSocketMessage('');
-        } else {
+        } else if (request?.success) {
           reactSwal.close();
         }
       } catch (e) {
@@ -441,7 +439,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
       demo,
       category,
       rerender,
-      thisSessionId,
       reactSwal
     ]
   );
@@ -479,137 +476,142 @@ const MediaListBox: React.FC<IMediaListBox> = ({
       showCancelButton: true,
       width: '40vw'
     });
-  }, [reactSwal, uploadVideo]);
+  }, [reactSwal, uploadVideo, primaryButtonColor, textColor]);
+
+  const editVideoTitle = useCallback(() => {
+    reactSwal.fire({
+      html: (
+        <Provider store={store}>
+          <BasicDataModal
+            {...{
+              title,
+              setTitle,
+              description,
+              setDescription,
+              category,
+              setCategory,
+              categoryOptions
+            }}
+          />
+        </Provider>
+      ),
+      showConfirmButton: false
+    });
+  }, [reactSwal, category, categoryOptions, description, store, title]);
+
+  const selectVideoOffer = useCallback(() => {
+    reactSwal.fire({
+      html: (
+        <Provider store={store}>
+          <ContractDataModal
+            {...{
+              contract,
+              setContract,
+              product,
+              setProduct,
+              offer,
+              setOffer,
+              setOfferName,
+              demo,
+              setDemo
+            }}
+          />
+        </Provider>
+      ),
+      showConfirmButton: false
+    });
+  }, [reactSwal, store, contract, product, offer, demo]);
 
   return (
     <div
-      className="medialist-box"
+      className="row w-100"
       style={{
-        backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
+        backgroundColor: primaryColor,
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: secondaryColor,
         color: textColor,
         borderRadius: '15px',
         marginTop: '20px'
       }}>
-      <div className="mediaitem-block col-12">
+      <div className="col-12 col-md-3">
         <video className="w-100" src={item.preview} />
-        <div>
-          {title}
+      </div>
+      <div className="col-12 col-md-9 row mt-3">
+        <div className="col-12 text-start col-md-9">
+          <span className="b h4">{title}</span>
           <br />
-          <button
-            disabled={uploadProgress > 0}
-            onClick={() => {
-              reactSwal.fire({
-                html: (
-                  <Provider store={store}>
-                    <BasicDataModal
-                      {...{
-                        title,
-                        setTitle,
-                        description,
-                        setDescription,
-                        category,
-                        setCategory,
-                        categoryOptions
-                      }}
-                    />
-                  </Provider>
-                ),
-                showConfirmButton: false
-              });
-            }}
-            className={`btn btn-outline-success rounded-rair text-${textColor}`}>
-            Edit <i className="far fa-pen" />
-          </button>
+          <small>
+            {categoryOptions?.find((cat) => cat.value === category)?.label}
+          </small>
         </div>
-        {uploadProgress > 0 ? (
-          <button
-            style={{
-              outline: 'none',
-              background: primaryButtonColor,
-              color: textColor
-            }}
-            className={`rair-button btn rounded-rair white`}>
-            {socketMessage}
-            <br />
-            <LinearProgressWithLabel value={uploadProgress} />
-          </button>
-        ) : (
-          <button
-            onClick={() => alertChoiceCloud()}
-            disabled={
-              offer === 'null' ||
-              (newUserStatus ? !newUserStatus : uploading && !uploadSuccess)
-            }
-            style={{
-              background: primaryButtonColor,
-              color: textColor
-            }}
-            className="rair-button btn rounded-rair white">
+        <div className="col-12 col-md-3 text-end">
+          {offerName !== '' && (
             <>
-              {uploading && !uploadSuccess ? (
-                <>{socketMessage !== '' ? socketMessage : '...Loading'}</>
-              ) : (
-                <>
-                  <i className="fas fa-upload" />
-                  {''} Upload
-                </>
-              )}
+              Unlocked by: {offerName} ({demo ? 'Demo' : 'Unlockable'})
             </>
-          </button>
-        )}
-        <div>
-          {offerName !== '' ? (
-            <>
-              {offerName} ({demo ? 'Demo' : 'Unlockable'})
-              <br />
-            </>
-          ) : (
-            <></>
           )}
-          <button
-            disabled={uploadProgress > 0}
-            onClick={() => {
-              reactSwal.fire({
-                html: (
-                  <Provider store={store}>
-                    <ContractDataModal
-                      {...{
-                        contract,
-                        setContract,
-                        product,
-                        setProduct,
-                        offer,
-                        setOffer,
-                        setOfferName,
-                        demo,
-                        setDemo
-                      }}
-                    />
-                  </Provider>
-                ),
-                showConfirmButton: false
-              });
-            }}
-            style={{
-              background: primaryButtonColor,
-              color: textColor
-            }}
-            className={`btn rair-button rounded-rair`}>
-            {offerName === '' ? (
-              <>Select offer</>
-            ) : (
-              <>
-                Edit <i className="far fa-pen" />
-              </>
-            )}
-          </button>
         </div>
-        <button
-          disabled={uploadProgress > 0 || uploading}
-          onClick={() => deleter(index)}
-          className={`btn btn-outline-danger rounded-rair text-${textColor}`}>
-          Remove <i className="far fa-trash"></i>
-        </button>
+        {uploading ? (
+          <div className="col-12 text-center">
+            <LinearProgressWithLabel value={uploadProgress} />
+            <span>{socketMessage}</span>
+          </div>
+        ) : (
+          <>
+            <div className="col-12 col-md-3 text-start">
+              <button
+                disabled={uploadProgress > 0 || uploading}
+                onClick={() => deleter(index)}
+                style={{ color: textColor }}
+                className={`btn btn-outline-danger rounded-rair`}>
+                Remove <i className="far fa-trash"></i>
+              </button>
+            </div>
+            <div className="col-12 col-md-3">
+              <button
+                disabled={uploadProgress > 0}
+                style={{ background: primaryButtonColor, color: textColor }}
+                onClick={editVideoTitle}
+                className={`btn rair-button rounded-rair`}>
+                Edit Video Information <i className="far fa-pen" />
+              </button>
+            </div>
+            <div className="col-12 col-md-3">
+              <button
+                disabled={uploading}
+                onClick={selectVideoOffer}
+                style={{
+                  background: secondaryButtonColor,
+                  color: textColor
+                }}
+                className={`btn rair-button rounded-rair`}>
+                {offerName === '' ? (
+                  <>Select offer</>
+                ) : (
+                  <>
+                    Edit Offer <i className="far fa-pen" />
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="col-12 col-md-3 text-end">
+              <button
+                onClick={() => alertChoiceCloud()}
+                disabled={
+                  offer === 'null' ||
+                  (newUserStatus ? !newUserStatus : uploading && !uploadSuccess)
+                }
+                style={{
+                  background: primaryButtonColor,
+                  color: textColor
+                }}
+                className="rair-button btn rounded-rair">
+                Upload File <i className="fas fa-upload" />
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,20 +1,41 @@
+//@ts-nocheck
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { SendUserOperationResult } from '@alchemy/aa-core';
+import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
+import {
+  SendUserOperationResult,
+  UserOperationOverrides
+} from '@alchemy/aa-core';
+import { EthersProviderAdapter } from '@alchemy/aa-ethers';
+import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
+import { Alchemy } from 'alchemy-sdk';
 import { Contract, ContractReceipt, ContractTransaction } from 'ethers';
 import { encodeFunctionData } from 'viem';
 
 import useSwal from './useSwal';
 
 import { RootState } from '../ducks';
+import {
+  setChainId,
+  setProgrammaticProvider
+} from '../ducks/contracts/actions';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../ducks/users/users.types';
 import chainData from '../utils/blockchainData';
 import { rFetch } from '../utils/rFetch';
+import { TChainItemData } from '../utils/utils.types';
 
 const confirmationsRequired = 2;
 
+type web3Options = {
+  failureMessage?: string;
+  callback?: () => void;
+  intendedBlockchain: BlockchainType;
+  sponsored?: Boolean;
+};
+
 const useWeb3Tx = () => {
+  const dispatch = useDispatch();
   const { currentChain, currentUserAddress, programmaticProvider } =
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
@@ -23,7 +44,6 @@ const useWeb3Tx = () => {
     (store) => store.userStore
   );
   const reactSwal = useSwal();
-  const dispatch = useDispatch();
   const handleReceipt = useCallback(
     async (transactionHash: string, callback?: (() => void) | undefined) => {
       try {
@@ -159,14 +179,7 @@ const useWeb3Tx = () => {
   );
 
   const verifyAAUserOperation = useCallback(
-    async (
-      userOperation: SendUserOperationResult,
-      options: {
-        failureMessage?: string;
-        callback?: () => void;
-        intendedBlockchain: BlockchainType;
-      }
-    ) => {
+    async (userOperation: SendUserOperationResult, options: web3Options) => {
       if (!programmaticProvider) {
         console.error('Provider not found');
         return;
@@ -186,11 +199,11 @@ const useWeb3Tx = () => {
           reactSwal.fire('Please wait', 'Verifying user operation', 'info');
           return await verifyAAUserOperation(userOperation, options);
         }
-        console.info(err);
+        console.error(err);
         reactSwal.fire('Error', err.toString(), 'error');
       }
     },
-    [programmaticProvider]
+    [programmaticProvider, handleReceipt, reactSwal]
   );
 
   const web3AuthCall = useCallback(
@@ -198,11 +211,7 @@ const useWeb3Tx = () => {
       contract: Contract,
       method: string,
       args: any[],
-      options: {
-        failureMessage?: string;
-        callback?: () => void;
-        intendedBlockchain: BlockchainType;
-      }
+      options: web3Options
     ) => {
       if (!currentUserAddress || !programmaticProvider) {
         return;
@@ -230,15 +239,22 @@ const useWeb3Tx = () => {
         args: args
       });
 
-      const elegibleForSponsorship = await (
-        programmaticProvider.account as any
-      ).checkGasSponsorshipEligibility({
-        uo: {
-          target: contract.address as `0x${string}`,
-          data: uoCallData,
-          value: transactionValue
-        }
-      });
+      const elegibleForSponsorship =
+        options.sponsored &&
+        !transactionValue &&
+        (await (
+          programmaticProvider.account as any
+        ).checkGasSponsorshipEligibility({
+          uo: {
+            target: contract.address as `0x${string}`,
+            data: uoCallData,
+            value: transactionValue
+          }
+        }));
+
+      const overrides: UserOperationOverrides = {
+        paymasterAndData: '0x'
+      };
 
       const userOperation = await (programmaticProvider.account as any)
         .sendUserOperation({
@@ -247,9 +263,7 @@ const useWeb3Tx = () => {
             data: uoCallData,
             value: transactionValue
           },
-          overrides: elegibleForSponsorship
-            ? undefined
-            : { paymasterAndData: '0x' }
+          overrides: elegibleForSponsorship ? undefined : overrides
         })
         .catch((err) => {
           // console.info(err);
@@ -260,13 +274,70 @@ const useWeb3Tx = () => {
       }
       return await verifyAAUserOperation(userOperation, options);
     },
-    [
-      currentUserAddress,
-      programmaticProvider,
-      handleReceipt,
-      reactSwal,
-      verifyAAUserOperation
-    ]
+    [currentUserAddress, programmaticProvider, reactSwal, verifyAAUserOperation]
+  );
+
+  const connectWeb3AuthProgrammaticProvider = useCallback(
+    async (chainData?: TChainItemData) => {
+      if (!chainData) {
+        return;
+      }
+      const alchemy = new Alchemy({
+        apiKey: chainData.alchemyAppKey,
+        network: chainData?.alchemy,
+        maxRetries: 10
+      });
+      const ethersProvider = await alchemy.config.getProvider();
+
+      const alchemyProvider =
+        EthersProviderAdapter.fromEthersProvider(ethersProvider);
+
+      const web3AuthSigner = new Web3AuthSigner({
+        clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+        chainConfig: {
+          chainNamespace: 'eip155',
+          chainId: chainData.chainId,
+          rpcTarget: chainData.addChainData.rpcUrls[0],
+          displayName: chainData.name,
+          blockExplorer: chainData.addChainData.blockExplorerUrls[0],
+          ticker: chainData.symbol,
+          tickerName: chainData.name
+        },
+        web3AuthNetwork: chainData.testnet
+          ? 'sapphire_devnet'
+          : 'sapphire_mainnet'
+      });
+
+      await web3AuthSigner.authenticate({
+        init: async () => {
+          await web3AuthSigner.inner.initModal();
+        },
+        connect: async () => {
+          await web3AuthSigner.inner.connect();
+        }
+      });
+
+      const a = await createModularAccountAlchemyClient({
+        apiKey: chainData.alchemyAppKey,
+        chain: chainData.viem!,
+        signer: web3AuthSigner,
+        gasManagerConfig: chainData.alchemyGasPolicy
+          ? {
+              policyId: chainData.alchemyGasPolicy
+            }
+          : undefined
+      });
+
+      const provider = alchemyProvider.connectToAccount(a);
+
+      dispatch(setProgrammaticProvider(provider));
+      dispatch(setChainId(chainData.addChainData.chainId));
+      provider.signTypedData = web3AuthSigner.signTypedData;
+      provider.userDetails = web3AuthSigner.getAuthDetails;
+
+      return provider;
+    },
+    [dispatch]
   );
 
   const metamaskSwitch = async (chainId: BlockchainType) => {
@@ -318,11 +389,9 @@ const useWeb3Tx = () => {
       contract: Contract,
       method: string,
       args: any[] = [],
-      options: {
-        failureMessage?: string;
-        callback?: () => void;
-        intendedBlockchain: BlockchainType;
-      } = { intendedBlockchain: currentChain as BlockchainType }
+      options: web3Options = {
+        intendedBlockchain: currentChain as BlockchainType
+      }
     ) => {
       if (!currentUserAddress) {
         console.error(`Login required for Web3 call ${method}`);
@@ -353,15 +422,30 @@ const useWeb3Tx = () => {
         reactSwal.fire('Please login');
         return;
       }
+      if (chainData[chainId]?.disabled) {
+        return;
+      }
       switch (loginType) {
         case 'metamask':
-          if (chainData[chainId]?.disabled) {
+          return await metamaskSwitch(chainId);
+        case 'web3auth':
+          if (!chainData[chainId]?.alchemyAppKey) {
+            reactSwal.fire(
+              'Sorry!',
+              `${chainData[chainId].name} is not supported currently`,
+              'info'
+            );
             return;
           }
-          return await metamaskSwitch(chainId);
+          await connectWeb3AuthProgrammaticProvider(chainData[chainId]);
       }
     },
-    [currentUserAddress, dispatch, loginType, reactSwal]
+    [
+      currentUserAddress,
+      loginType,
+      reactSwal,
+      connectWeb3AuthProgrammaticProvider
+    ]
   );
 
   const correctBlockchain = useCallback(
@@ -375,7 +459,8 @@ const useWeb3Tx = () => {
     correctBlockchain,
     web3Switch,
     web3TxHandler,
-    web3TxSignMessage
+    web3TxSignMessage,
+    connectWeb3AuthProgrammaticProvider
   };
 };
 

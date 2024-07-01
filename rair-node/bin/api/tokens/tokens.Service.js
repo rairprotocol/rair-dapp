@@ -101,13 +101,13 @@ exports.getTokenNumbers = async (req, res, next) => {
   try {
     const { contract, offerPool, offers } = req.query;
     const options = {
-      contract: contract
-    }
+      contract,
+    };
     if (offerPool) {
       options.offerPool = offerPool.marketplaceCatalogIndex;
     }
     if (offers) {
-      options.offer = { $in: offers }
+      options.offer = { $in: offers };
     }
     const tokens = await MintedToken.find(options)
       .sort([['token', 1]])
@@ -698,7 +698,7 @@ exports.createTokensViaCSV = async (req, res, next) => {
                   : offer.offerIndex;
 
                 const externalURL = encodeURI(
-                  `https://${process.env.SERVICE_HOST}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`,
+                  `${process.env.SERVICE_HOST}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`,
                 );
 
                 const validReasonsToUpdateAToken =

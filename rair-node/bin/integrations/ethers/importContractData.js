@@ -2,9 +2,10 @@
 const { Alchemy } = require('alchemy-sdk');
 const fetch = require('node-fetch');
 const log = require('../../utils/logger')(module);
-const { Contract, Product, Offer, OfferPool, MintedToken } = require('../../models');
+const { Contract, Product, Offer, MintedToken } = require('../../models');
 const { alchemy } = require('../../config');
 const { processMetadata } = require('../../utils/metadataClassify');
+const { emitEvent } = require('../socket.io');
 
 // Contract ABIs
 // The RAIR721 contract is still an ERC721 compliant contract,
@@ -56,7 +57,7 @@ const insertToken = async (token, contractId) => {
       // Special case where there's only one attribute in the metadata
       metadata.attributes = [metadata.attributes];
     }
-    if (metadata?.attributes && (typeof metadata?.attributes?.at(0)) === 'string') {
+    if (metadata?.attributes && (typeof metadata?.attributes?.at?.(0)) === 'string') {
       metadata.attributes = metadata.attributes.map((item) => ({
         trait_type: '',
         value: item,
@@ -76,10 +77,9 @@ const insertToken = async (token, contractId) => {
         uniqueIndexInContract: token.tokenId,
         isMinted: true,
         offer: 0,
-        offerPool: 0,
         product: 0,
       }, {
-        upsert: true
+        upsert: true,
       });
     } catch (error) {
       log.error(`Error upserting token ${token.token_id}, ${error.name}`);
@@ -89,8 +89,17 @@ const insertToken = async (token, contractId) => {
 };
 
 module.exports = {
-  importContractData: async (networkId, contractAddress, limit, contractCreator, importerUser) => {
-    let contract, product, offer, offerPool;
+  importContractData: async (
+    networkId,
+    contractAddress,
+    limit,
+    contractCreator,
+    importerAddress,
+    socket,
+  ) => {
+    let contract;
+    let product;
+    let offer;
 
     // Optional Config object, but defaults to demo api-key and eth-mainnet.
     const settings = {
@@ -98,11 +107,17 @@ module.exports = {
       network: alchemy.networkMapping[networkId], // Replace with your network.
     };
     if (!settings.network) {
-      return { success: false, result: undefined, message: 'Invalid blockchain' };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: Invalid blockchain`,
+        [],
+      );
+      return;
     }
     const alchemySDK = new Alchemy(settings);
 
-    let update = false;
+    let update = true;
 
     contract = await Contract.findOne({
       contractAddress,
@@ -112,12 +127,37 @@ module.exports = {
 
     const contractMetadata = await alchemySDK.nft.getContractMetadata(contractAddress);
 
-    if (!contractMetadata.totalSupply) {
-      return { success: false, result: undefined, message: 'Error fetching total supply of tokens' };
-    }
     if (contractMetadata.tokenType !== 'ERC721') {
-      return { success: false, result: undefined, message: `Only ERC721 is supported, tried to process a ${contractMetadata.tokenType} contract` };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: Only ERC721 contracts are supported`,
+        [],
+      );
+      return;
     }
+    if (!contractMetadata.totalSupply) {
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: Cannot get total supply`,
+        [],
+      );
+      log.error(contractMetadata);
+      return;
+    }
+    emitEvent(socket)(
+      importerAddress,
+      'importProgress',
+      `${contractMetadata.totalSupply} tokens found`,
+      [
+        0, // progress
+        contractAddress,
+        networkId,
+        contractCreator,
+        limit,
+      ],
+    );
 
     if (!contract) {
       contract = new Contract({
@@ -125,25 +165,36 @@ module.exports = {
         title: contractMetadata.name,
         contractAddress,
         blockchain: networkId,
-        importedBy: importerUser,
-        diamond: false,
+        importedBy: importerAddress,
+        diamond: true,
         external: true,
       });
+      update = false;
+    }
+
+    product = await Product.findOne({ contract: contract._id });
+    if (!product) {
       product = new Product({
         name: contractMetadata.name,
         collectionIndexInContract: 0,
         contract: contract._id,
         copies: contractMetadata.totalSupply,
         soldCopies: contractMetadata.totalSupply,
+        diamond: true,
         sold: true,
         firstTokenIndex: 0,
         transactionHash: 'UNKNOWN - External Import',
       });
+      update = false;
+    }
+
+    offer = await Offer.findOne({ contract: contract._id });
+    if (!offer) {
       offer = new Offer({
+        diamond: true,
         offerIndex: 0,
         contract: contract._id,
         product: 0,
-        offerPool: 0,
         copies: contractMetadata.totalSupply,
         soldCopies: contractMetadata.totalSupply - 1,
         sold: true,
@@ -153,27 +204,29 @@ module.exports = {
         diamondRangeIndex: 0,
         transactionHash: 'UNKNOWN - External Import',
       });
-      offerPool = new OfferPool({
-        marketplaceCatalogIndex: 0,
-        contract: contract._id,
-        product: 0,
-        rangeNumber: 0,
-        transactionHash: 'UNKNOWN - External Import',
-      });
-    } else {
-      update = true;
-      product = await Product.findOne({ contract: contract._id });
-      offer = await Offer.findOne({ contract: contract._id });
-      offerPool = await OfferPool.findOne({ contract: contract._id });
+      update = false;
     }
 
     // Can't be used, it doesn't say which NFT they own
     // console.log(await alchemySDK.nft.getOwnersForContract(contractAddress));
 
     let numberOfTokensAdded = 0;
+    const importTarget = Number(limit === '0' ? contractMetadata.totalSupply : Number(limit));
     for await (const nft of alchemySDK.nft.getNftsForContractIterator(contractAddress, {
       omitMetadata: false,
     })) {
+      emitEvent(socket)(
+        importerAddress,
+        'importProgress',
+        `${numberOfTokensAdded} / ${importTarget} NFTs imported so far...`,
+        [
+          (numberOfTokensAdded / importTarget) * 100,
+          contractAddress,
+          networkId,
+          contractCreator,
+          limit,
+        ],
+      );
       const ownerResponse = await alchemySDK.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
       [nft.owner] = ownerResponse.owners;
       if (insertToken(nft, contract._id)) {
@@ -185,26 +238,44 @@ module.exports = {
     }
 
     if (numberOfTokensAdded === 0) {
-      return {
-        success: false,
-        message: 'An error has occurred, 0 tokens imported from the contract',
-      };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing contract ${contractAddress}: 0 tokens imported`,
+        [],
+      );
+      return;
     }
 
     try {
+      if (!contract || !product || !offer) {
+        throw Error('Missing information for database');
+      }
       await contract.save();
       await product.save();
       await offer.save();
-      await offerPool.save();
       await processMetadata(contract._id, product.collectionIndexInContract);
 
-      return {
-        success: true,
-        result: {
-          contract,
-          numberOfTokensAdded,
-        },
-      };
+      emitEvent(socket)(
+        importerAddress,
+        'importProgress',
+        'Complete',
+        [
+          100,
+          contractAddress,
+          networkId,
+          contractCreator,
+          limit,
+        ],
+      );
+
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Import of ${contractAddress} complete!`,
+        [],
+      );
+      return;
     } catch (err) {
       log.error(err);
       if (contract && !update) {
@@ -212,10 +283,12 @@ module.exports = {
         Offer.deleteMany({ contract: contract._id });
         Product.deleteMany({ contract: contract._id });
       }
-      return {
-        success: false,
-        message: 'An error has ocurred!',
-      };
+      emitEvent(socket)(
+        importerAddress,
+        'message',
+        `Error importing ${contractAddress}`,
+        [],
+      );
     }
   },
 };

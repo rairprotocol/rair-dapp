@@ -139,7 +139,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           intendedBlockchain: blockchain as BlockchainType,
           failureMessage:
             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
-          callback: handleTokenBoughtButton
+          callback: handleTokenBoughtButton,
+          sponsored: offerData.sponsored
         }
       )
     ) {

@@ -42,7 +42,7 @@ const NftListComponent: React.FC<INftListComponent> = ({
       ? defaultHotDrops
       : `${
           import.meta.env.VITE_IPFS_GATEWAY
-        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
+        }QmcV94NurwfWVGpXTST1we8uDbYiVQamKe87WEHK6DRzqa`;
 
   const filteredData =
     data &&
@@ -79,15 +79,14 @@ const NftListComponent: React.FC<INftListComponent> = ({
             if (contractData.cover !== 'none') {
               return (
                 <NftItem
-                  key={`${
-                    contractData.id + '-' + contractData.productId + index
-                  }`}
+                  key={index}
                   pict={contractData.cover ? contractData.cover : defaultImg}
                   contractName={contractData.contract}
                   price={contractData.offerData.map((p) => String(p.price))}
                   blockchain={contractData.blockchain}
                   collectionName={contractData.name}
                   ownerCollectionUser={contractData.user}
+                  userData={contractData.userData}
                   index={index}
                   playing={playing}
                   setPlaying={setPlaying}
