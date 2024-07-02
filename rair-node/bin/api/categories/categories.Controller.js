@@ -1,9 +1,7 @@
 const { Router } = require('express');
 const {
+    updateCategories,
     getCategories,
-    createCategory,
-    updateCategory,
-    deleteCategory,
 } = require('./categories.Service');
 const { requireUserSession } = require('../../middleware/verifyUserSession');
 const validation = require('../../middleware/validation');
@@ -21,24 +19,8 @@ router.post(
     validation(['dbCategory'], 'body'),
     requireUserSession,
     verifySuperAdmin,
-    createCategory,
-);
-
-router.put(
-    '/:id',
-    validation(['dbCategory'], 'body'),
-    validation(['dbId'], 'params'),
-    requireUserSession,
-    verifySuperAdmin,
-    updateCategory,
-);
-
-router.delete(
-    '/:id',
-    validation(['dbId'], 'params'),
-    requireUserSession,
-    verifySuperAdmin,
-    deleteCategory,
+    updateCategories,
+    getCategories,
 );
 
 module.exports = router;

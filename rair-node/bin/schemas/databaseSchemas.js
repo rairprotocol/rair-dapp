@@ -125,6 +125,9 @@ module.exports = {
         read: Joi.boolean(),
     }),
     dbCategory: () => ({
-        name: Joi.string(),
+        list: Joi.array().items(Joi.object({
+            name: Joi.string().required(),
+            _id: mongoId,
+        })),
     }),
 };
