@@ -652,6 +652,7 @@ const ServerSettings = ({ fullContractData }) => {
                 }
               });
               if (result.success) {
+                reactSwal.fire('Success', 'Categories updated', 'success');
                 getCategories();
               }
             }}>
