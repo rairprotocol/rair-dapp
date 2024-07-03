@@ -655,7 +655,12 @@ const ServerSettings = ({ fullContractData }) => {
             onClick={async () => {
               const result = await rFetch('/api/categories', {
                 method: 'POST',
-                body: JSON.stringify({ list: categoryList }),
+                body: JSON.stringify({
+                  list: categoryList.map((item) => ({
+                    _id: item._id,
+                    name: item.name
+                  }))
+                }),
                 headers: {
                   'Content-Type': 'application/json'
                 }
