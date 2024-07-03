@@ -16,6 +16,7 @@ import InputSelect from '../common/InputSelect';
 type Category = {
   name: string;
   _id?: string;
+  files?: number;
 };
 
 const ServerSettings = ({ fullContractData }) => {
@@ -621,7 +622,7 @@ const ServerSettings = ({ fullContractData }) => {
           {categoryList.map((categoryData, index) => {
             return (
               <div key={index} className="row">
-                <div className="col-12 col-md-11">
+                <div className="col-12 col-md-10">
                   <InputField
                     customClass="rounded-rair form-control"
                     getter={categoryData.name}
@@ -630,9 +631,17 @@ const ServerSettings = ({ fullContractData }) => {
                   />
                 </div>
                 <button
+                  disabled={!!categoryData.files}
                   onClick={() => deleteCategory(index)}
-                  className="col-12 col-md-1 btn btn-danger">
-                  <i className="fa-trash fas" />
+                  className="col-12 col-md-2 btn btn-danger">
+                  {categoryData.files ? (
+                    <>
+                      {categoryData.files}{' '}
+                      <small>files using this category</small>
+                    </>
+                  ) : (
+                    <i className="fa-trash fas" />
+                  )}
                 </button>
               </div>
             );
