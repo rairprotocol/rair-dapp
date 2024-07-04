@@ -1,21 +1,40 @@
+events {}
+http {
 server {
     listen 80;
-    listen [::]:80;
+    server_name {domain};
+    location / {
+        return 301 https://$host$request_uri;
+    }
+    location ~ /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+}
+server {
+    listen 443 ssl;
+    #listen [::]:80;
 
   #Docker DNS
   #resolver 127.0.0.11;
 
-  server_name localhost;
+  server_name {domain};
   access_log /var/log/nginx/appstore.access.log;
   error_log /var/log/nginx/appstore.error.log;
-
+  ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
   add_header 'Access-Control-Allow-Origin' 'https://new-api.rair.tech';
   add_header 'Access-Control-Allow-Origin' 'https://new-ms.rair.tech';
   add_header 'Access-Control-Allow-Origin' 'https://api.hotdrops.live';
   
+    location ~ /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
   location / {
     root   /usr/share/nginx/html;
     index  index.html index.htm;
+    include /etc/nginx/mime.types;
     try_files $uri $uri/ /index.html;
     # add header Cache-Control "public, max-age=3600, must-revalidate";
   }
@@ -39,7 +58,8 @@ server {
     }
 
     location /socket.io {
-      proxy_pass http://rair-node:5000;
+      proxy_pass http://rair-stream:5002;
       client_max_body_size 200000M;
     }
+}
 }

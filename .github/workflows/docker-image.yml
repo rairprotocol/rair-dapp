@@ -38,10 +38,22 @@ jobs:
 
         - name: build and push rair-front docker image to registry
           run: cp rair-front/.env.sample rair-front/.env
-        - name: appending VITE_ALCHEMY_KEY in .env file
-          run: echo "VITE_ALCHEMY_KEY"=${{ secrets.VITE_ALCHEMY_KEY }} >> rair-front/.env
-        - name: appending VITE_ALCHEMY_GAS_POLICY in .env file
-          run: echo "VITE_ALCHEMY_GAS_POLICY"=${{ secrets.VITE_ALCHEMY_GAS_POLICY }} >> rair-front/.env
+        - name: appending VITE_MATIC_MAINNET_ALCHEMY_KEY in .env file
+          run: echo "VITE_MATIC_MAINNET_ALCHEMY_KEY"=${{ secrets.VITE_MATIC_MAINNET_ALCHEMY_KEY }} >> rair-front/.env
+        - name: appending VITE_MATIC_MAINNET_GAS_POLICY in .env file
+          run: echo "VITE_MATIC_MAINNET_GAS_POLICY"=${{ secrets.VITE_MATIC_MAINNET_GAS_POLICY }} >> rair-front/.env
+        - name: appending VITE_ETH_MAINNET_ALCHEMY_KEY in .env file
+          run: echo "VITE_ETH_MAINNET_ALCHEMY_KEY"=${{ secrets.VITE_ETH_MAINNET_ALCHEMY_KEY }} >> rair-front/.env
+        - name: appending VITE_ETH_MAINNET_GAS_POLICY in .env file
+          run: echo "VITE_ETH_MAINNET_GAS_POLICY"=${{ secrets.VITE_ETH_MAINNET_GAS_POLICY }} >> rair-front/.env
+        - name: appending VITE_BASE_MAINNET_ALCHEMY_KEY in .env file
+          run: echo "VITE_BASE_MAINNET_ALCHEMY_KEY"=${{ secrets.VITE_BASE_MAINNET_ALCHEMY_KEY }} >> rair-front/.env
+        - name: appending VITE_BASE_MAINNET_GAS_POLICY in .env file
+          run: echo "VITE_BASE_MAINNET_GAS_POLICY"=${{ secrets.VITE_BASE_MAINNET_GAS_POLICY }} >> rair-front/.env
+        - name: appending VITE_ETH_SEPOLIA_ALCHEMY_KEY in .env file
+          run: echo "VITE_ETH_SEPOLIA_ALCHEMY_KEY"=${{ secrets.VITE_ETH_SEPOLIA_ALCHEMY_KEY }} >> rair-front/.env
+        - name: appending VITE_ETH_SEPOLIA_GAS_POLICY in .env file
+          run: echo "VITE_ETH_SEPOLIA_GAS_POLICY"=${{ secrets.VITE_ETH_SEPOLIA_GAS_POLICY }} >> rair-front/.env
         - name: build rair-front docker image
           run: sudo docker build -t rair-front:${{github.sha}} -f rair-front/Dockerfile.prod rair-front
         - name: tag image

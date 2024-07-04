@@ -97,6 +97,7 @@ import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { rFetch } from './utils/rFetch';
 /* Track a page view */
 // const analytics = getInformationGoogleAnalytics();
 // analytics.page();
@@ -133,6 +134,7 @@ function App() {
   const [tabIndexItems, setTabIndexItems] = useState(0);
   const [tokenNumber, setTokenNumber] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
+  const [notificationCount, setNotificationCount] = useState<number>(0);
 
   // Redux
   const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
@@ -182,12 +184,31 @@ function App() {
 
   useEffect(() => {
     if (window.ethereum) {
-      window.ethereum.on('chainChanged', async (chainId) => {
+      const foo = async (chainId) => {
         dispatch(setChainId(chainId));
-      });
+      };
+      window.ethereum.on('chainChanged', foo);
       window.ethereum.on('accountsChanged', logoutUser);
+      return () => {
+        window.ethereum.off('chainChanged', foo);
+        window.ethereum.off('accountsChanged', logoutUser);
+      };
     }
   }, [dispatch, logoutUser]);
+
+  const getNotificationsCount = useCallback( async () => {
+    if (currentUserAddress) {
+      const result = await rFetch(`/api/notifications?read=false`);
+      if (result.success && result.notifications.length > 0) {
+        const readNotifications = result.notifications.filter(el => el.read === false);
+        setNotificationCount(readNotifications.length);
+      }
+    }
+  }, [currentUserAddress]);
+
+  useEffect(() => {
+    getNotificationsCount();
+  }, [getNotificationsCount])
 
   // gtag
 
@@ -362,6 +383,8 @@ function App() {
                 selectedChain={correctBlockchain(realChain)}
                 setTabIndexItems={setTabIndexItems}
                 isAboutPage={isAboutPage}
+                notificationCount={notificationCount}
+                getNotificationsCount={getNotificationsCount}
               />
             )
           )}

@@ -316,6 +316,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
   const [categoryOptions, setCategoryOptions] = useState<Options[]>([]);
 
   const {
+    primaryColor,
     secondaryColor,
     textColor,
     primaryButtonColor,
@@ -364,7 +365,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
         }
       }
     };
-    console.info(1);
     sockets.nodeSocket.on('uploadProgress', report);
 
     return () => {
@@ -418,6 +418,8 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           setUploadProgress(0);
           setUploadSuccess(false);
           setSocketMessage('');
+        } else if (request?.success) {
+          reactSwal.close();
         }
       } catch (e) {
         console.error(e);
@@ -524,7 +526,10 @@ const MediaListBox: React.FC<IMediaListBox> = ({
     <div
       className="row w-100"
       style={{
-        backgroundColor: secondaryColor,
+        backgroundColor: primaryColor,
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: secondaryColor,
         color: textColor,
         borderRadius: '15px',
         marginTop: '20px'

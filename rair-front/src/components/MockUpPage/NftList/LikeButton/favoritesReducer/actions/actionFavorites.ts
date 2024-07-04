@@ -5,33 +5,33 @@ import * as types from './../actionTypes/types';
 const addItemFavoriteStart = () =>
   ({
     type: types.ADD_ITEM_FAVORITES_START
-  } as const);
+  }) as const;
 
 const addItemFavoriteEnd = () =>
   ({
     type: types.ADD_ITEM_FAVORITES_END
-  } as const);
+  }) as const;
 
 const removeItemFavoriteEnd = () =>
   ({
     type: types.REMOVE_ITEM_FAVORITES_END
-  } as const);
+  }) as const;
 
 const getCurrentItemSuccess = (item: TTokenData | null) =>
   ({
     type: types.GET_CURRENT_ITEM_SUCCESS,
     item
-  } as const);
+  }) as const;
 
 const getCurrentItemFalse = () =>
   ({
     type: types.GET_CURRENT_ITEM_FALSE
-  } as const);
+  }) as const;
 
 const errorFavorites = () =>
   ({
     type: types.ERROR_FAVORITES
-  } as const);
+  }) as const;
 
 export {
   addItemFavoriteEnd,
