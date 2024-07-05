@@ -59,14 +59,13 @@ module.exports = {
     },
     markNotificationAsRead: async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const notification = await Notification.findByIdAndUpdate(id, { $set: { read: true } });
-            if (!notification) {
-                return next(new AppError('Notification not found', 404));
-            }
+            const { ids } = req.body;
+            const result = await Notification.updateMany({
+                _id: { $in: ids },
+            }, { $set: { read: true } });
             return res.json({
                 success: true,
-                notification,
+                updated: result.nModified,
             });
         } catch (err) {
             logger.error(err);
