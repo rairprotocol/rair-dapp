@@ -1,4 +1,5 @@
 //@ts-nocheck
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../ducks';
@@ -9,12 +10,16 @@ import IconRemove from './images/icon-remove.png';
 // import { useSelector } from 'react-redux';
 import './NotificationPage.css';
 
-const NotificationPage = () => {
+const NotificationPage = ({ el, readNotification, removeItem }) => {
   const currentName =
     import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
-  const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
+  const { headerLogoMobile, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  useEffect(() => {
+    readNotification();
+  }, [])
 
   return (
     <div className="wrapper-notification">
@@ -25,7 +30,7 @@ const NotificationPage = () => {
             style={{
               color: `${primaryColor === 'rhyno' && '#000'}`
             }}>
-            New
+            Viewed
           </div>
           <div
             className="box-notification"
@@ -33,18 +38,14 @@ const NotificationPage = () => {
               backgroundColor: `${primaryColor === 'rhyno' && '#c0c0c0'}`
             }}>
             <div className="notification-left">
-              <div className="dot-notification" />
               <div className="notification-img">
-                <img src={headerLogo} alt="Rair Tech" />
+                <img src={headerLogoMobile} alt="Rair Tech" />
               </div>
               <div className="text-notification">
                 <div className="title-notif">
-                  Notification from {currentName}
+                  {el.message}
                 </div>
-                <div className="text-notif">
-                  Don’t click away! You can navigate away from the page once
-                  your video is done uploading
-                </div>
+                <div className="text-notif">{el.title}</div>
               </div>
             </div>
             <div className="notification-right">
@@ -55,20 +56,13 @@ const NotificationPage = () => {
                 }}>
                 3 hours ago
               </div> */}
-              <div className="icon-remove">
+              {/* <div onClick={() => {removeItem}} className="icon-remove">
                 <img src={IconRemove} alt="Close notification item" />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
         <div className="notification-viewed">
-          <div
-            className="notification-main-text"
-            style={{
-              color: `${primaryColor === 'rhyno' && '#000'}`
-            }}>
-            Viewed
-          </div>
           {/* <div
             className="box-notification"
             style={{

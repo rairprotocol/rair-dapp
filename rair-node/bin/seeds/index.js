@@ -6,18 +6,21 @@ const { Blockchain, Category, ServerSetting, Contract } = require('../models');
 
 module.exports = async () => {
   try {
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const category of categories) {
-      await Category.findOneAndUpdate(
-        category,
-        category,
-        { upsert: true, new: true },
-      );
+    const count = await Category.estimatedDocumentCount();
+    if (count === 0) {
+      // eslint-disable-next-line no-restricted-syntax
+      for await (const category of categories) {
+        await Category.findOneAndUpdate(
+          category,
+          category,
+          { upsert: true, new: true },
+        );
+      }
+      log.info('Categories empty, populating with default values.');
     }
   } catch (e) {
     log.error(`Error seeding categories: ${e}`);
   }
-  log.info('Categories seeded.');
 
   try {
     // eslint-disable-next-line no-restricted-syntax
