@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 
 import { RootState } from '../../../../../ducks';
 import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
@@ -17,11 +18,27 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   selectedToken,
   handleIsOpen,
   onClickItem,
-  numberRef
+  numberRef,
+  totalCount
 }) => {
   const { primaryButtonColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const [arrayCount, setArrayCount] = useState<any>(undefined);
+  const {tokenId} = useParams();
+
+  // for (let i = 0; i <= totalCount; i++) {
+  //   array[i] = i;
+  // }
+
+
+  useEffect(() => {
+    if(totalCount > 0) {
+      const array = new Array(totalCount).fill().map((_, index) => index);
+      setArrayCount(array);
+    }
+  }, [totalCount])
+
   return (
     <>
       <div ref={numberRef} className="select-number-container">
@@ -72,14 +89,15 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
               &#10007;
             </div>
           </div>
-          {items &&
-            items.map((el, index) => {
+          {totalCount &&
+            Array.from({ length: totalCount }, (_, index) => index + 1).map((_,indexId) => {
               return (
                 <div
-                  className={`select-number-box ${
-                    selectedToken === el.token ? 'selected-box' : ''
-                  } ${el.sold ? 'sold-token' : ''}`}
-                  data-title={` #${el.token}`}
+                className={`select-number-box ${tokenId && Number(tokenId) === indexId ? "selected-box" : ''}`}
+                  // className={`select-number-box ${
+                  //   selectedToken === el.token ? 'selected-box' : ''
+                  // } ${el.sold ? 'sold-token' : ''}`}
+                  // data-title={` #${el.token}`}
                   style={{
                     background: `${
                       primaryColor === '#dedede'
@@ -95,9 +113,10 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                     }`,
                     color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`
                   }}
-                  key={el.id + index}
-                  onClick={() => onClickItem(el.token)}>
-                  {el.sold ? 'Sold' : el.token}
+                  key={indexId}
+                  onClick={() => onClickItem(indexId)}>
+                  {/* {el.sold ? 'Sold' : el.token} */}
+                  {indexId}
                 </div>
               );
             })}

@@ -24,6 +24,7 @@ export interface ICurrentTokensComponent {
   handleIsOpen: () => void;
   onClickItem: (element: string) => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
+  totalCount?: any;
 }
 
 export type SelectNumberItem = {

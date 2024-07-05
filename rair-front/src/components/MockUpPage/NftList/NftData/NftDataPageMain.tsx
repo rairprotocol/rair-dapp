@@ -153,10 +153,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   };
 
   const fetchTokenOneData = useCallback( async() => {
-    console.info(tokenId, 'tokenId')
     if(tokenId) {
       const { data } = await axios.get<TNftItemResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=33&toToken=34`
+        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${tokenId}&toToken=${tokenId}`
       );
 
       console.info(data, 'data fetchTokenOneData');
@@ -169,13 +168,14 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
 
   const fetchTokenFullData = useCallback(async () => {
     const { data } = await axios.get<TNftItemResponse>(
-      `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=1`
+      `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${tokenId}&toToken=${tokenId}`
     );
 
-    if (data.success) {
+    if (data.success && tokenId) {
       const response = await axios.get<TNftItemResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=${data.result.totalCount}`
+        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${tokenId}&toToken=${tokenId}`
       );
+
       const mapping = {};
       response.data.result.tokens.forEach((token) => {
         mapping[token.token] = token;

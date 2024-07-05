@@ -62,6 +62,7 @@ const SelectNumber: React.FC<ISelectNumber> = ({
       numberRef={numberRef}
       handleIsOpen={handleIsOpen}
       onClickItem={onClickItem}
+      totalCount={totalCount}
     />
   ) : (
     <ListOfTokens

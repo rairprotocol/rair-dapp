@@ -208,6 +208,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
             numberRef={numberRef}
             handleIsOpen={handleIsOpen}
             onClickItem={onClickItem}
+            totalCount={totalCount}
           />
         )}
       </>
