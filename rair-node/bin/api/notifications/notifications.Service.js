@@ -65,7 +65,7 @@ module.exports = {
             }, { $set: { read: true } });
             return res.json({
                 success: true,
-                updated: result.nModified,
+                updated: result.modifiedCount,
             });
         } catch (err) {
             logger.error(err);
