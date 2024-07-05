@@ -155,7 +155,12 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
             {flagLoading ? (
               <LoadingComponent />
             ) : notificationArray && notificationArray.length > 0 ? (
-              notificationArray.map((el) => {
+              notificationArray.sort((a,b) => {
+                if (a.read === b.read) {
+                  return 0; 
+                }
+                return a.read ? 1 : -1;
+              }).map((el) => {
                 return (
                   <NotificationBox
                     getNotifications={getNotifications}

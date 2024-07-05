@@ -105,7 +105,12 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
                 overflowY: 'auto'
               }}>
               {realDataNotification && realDataNotification.length > 0 ? (
-                realDataNotification.map((el) => {
+                realDataNotification.sort((a, b) => {
+                  if (a.read === b.read) {
+                    return 0; 
+                  }
+                  return a.read ? 1 : -1;
+                }).map((el) => {
                   return (
                     <NotificationBox
                     currentUserAddress={currentUserAddress}
