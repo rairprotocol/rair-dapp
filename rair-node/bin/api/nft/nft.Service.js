@@ -427,6 +427,7 @@ module.exports = {
           },
         ]).collation({ locale: 'en_US', numericOrdering: true });
         return res.json({
+          success: true,
           tokens: offerData.reduce((total, offer) => total.concat(offer.tokens), []),
         });
       } catch (err) {
