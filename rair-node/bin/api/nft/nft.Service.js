@@ -4,6 +4,7 @@ const path = require('path');
 const _ = require('lodash');
 
 const fsPromises = fs.promises;
+const { ZeroAddress } = require('ethers');
 const { addPin, addFolder, addMetadata, removePin, addFile } = require('../../integrations/ipfsService')();
 const config = require('../../config');
 const log = require('../../utils/logger')(module);
@@ -21,7 +22,6 @@ const {
 const { processMetadata } = require('../../utils/metadataClassify');
 const { textPurify, attributesCounter, checkFileAccess } = require('../../utils/helpers');
 const AppError = require('../../utils/errors/AppError');
-const { ZeroAddress } = require('ethers');
 
 const ipfsGateway = config.ipfsGateways[process.env.IPFS_SERVICE];
 
