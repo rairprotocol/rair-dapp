@@ -25,7 +25,6 @@ import {
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import chainData from '../../utils/blockchainData';
-import LoadingComponent from '../common/LoadingComponent';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
@@ -318,7 +317,8 @@ useEffect(() => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              fontWeight: "bold"
+              fontWeight: "bold",
+              color: '#fff'
             }}>{notificationCount  > 9 ? "9+" : notificationCount}</div>
           ) : ''}
                         </SocialBox>

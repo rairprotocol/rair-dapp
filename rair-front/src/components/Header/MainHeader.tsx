@@ -445,7 +445,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            {currentUserAddress && <PopUpNotification notificationCount={notificationCount} getNotificationsCount={getNotificationsCount} getNotifications={getNotifications} realDataNotification={realDataNotification} />}
+            {currentUserAddress && <PopUpNotification setRealDataNotification={setRealDataNotification} notificationCount={notificationCount} getNotificationsCount={getNotificationsCount} getNotifications={getNotifications} realDataNotification={realDataNotification} />}
 
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}

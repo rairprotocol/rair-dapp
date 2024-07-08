@@ -45,6 +45,28 @@
   top: 85px;
 }
 
+.btn-clear-nofitications button {
+  border-radius: 12px;
+  border: 1px solid #fff;
+  background: none;
+  color: #fff;
+  padding: 2px 10px;
+}
+
+.notification-title {
+  font-size: 20px;
+}
+
+.btn-clear-nofitications button:hover {
+  background: #000;
+}
+
+.btn-clear-nofitications {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 25px 0px 25px;
+}
+
 .user-block {
   position: relative;
 }
@@ -71,18 +93,26 @@
   overflow: hidden;
 }
 
+.pop-up-notification.rhyno {
+  color: #000;
+}
+
 .notification-from-rair,
 .notification-from-factory {
   cursor: pointer;
 }
 
 .notification-from-rair {
-  padding: 25px 16px;
+  padding: 25px;
   border-bottom: 1px solid #2d2d2d;
 }
 
 .notification-from-factory {
-  padding: 25px 16px;
+  padding: 20px 25px;
+}
+
+.pop-up-notification .notification-from-factory:last-child {
+  padding-bottom: 30px;
 }
 
 .pop-up-notification .notification-from-rair .box-notification img {
@@ -97,7 +127,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 16px;
 }
 
 .notification-img img {
@@ -109,6 +138,7 @@
 .pop-up-notification .box-notification {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .pop-up-notification .time-notification {
@@ -141,6 +171,8 @@
   height: 8px;
   background-color: #19a7f6;
   border-radius: 50%;
+  position: absolute;
+  left: -15px;
 }
 
 .list-popup {

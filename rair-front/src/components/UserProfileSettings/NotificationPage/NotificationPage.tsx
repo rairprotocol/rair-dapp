@@ -5,14 +5,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
-import IconRemove from './images/icon-remove.png';
+// import IconRemove from './images/icon-remove.png';
 
 // import { useSelector } from 'react-redux';
 import './NotificationPage.css';
 
 const NotificationPage = ({ el, readNotification, removeItem }) => {
-  const currentName =
-    import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
   const { headerLogoMobile, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -22,7 +20,7 @@ const NotificationPage = ({ el, readNotification, removeItem }) => {
   }, [])
 
   return (
-    <div className="wrapper-notification">
+    <div className={`wrapper-notification ${primaryColor === '#dedede' ? 'rhyno' : ''}`}>
       <div className="notification-from-rair">
         <div className="notification-new">
           <div

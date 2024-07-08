@@ -1,24 +1,18 @@
 //@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import { Popup } from 'reactjs-popup';
-import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
-import useSwal from '../../../hooks/useSwal';
 import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import LoadingComponent from '../../common/LoadingComponent';
-import NotificationPage from '../NotificationPage/NotificationPage';
 
-import { rFetch } from "./../../../utils/rFetch";
-import NftImg from './images/image.png';
 import NotificationBox from './NotificationBox/NotificationBox';
 
-const PopUpNotification = ({getNotifications, realDataNotification, notificationCount, getNotificationsCount}) =>
+const PopUpNotification = ({getNotifications, realDataNotification, notificationCount, getNotificationsCount, setRealDataNotification}) =>
   // props was - isNotification
   {
     const currentName =
@@ -29,7 +23,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
-    const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
+    const { primaryColor, primaryButtonColor, textColor } = useSelector<
       RootState,
       ColorStoreType
     >((store) => store.colorStore);
@@ -39,7 +33,6 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
     const { userRd } = useSelector<RootState, TUsersInitialState>(
       (store) => store.userStore
     );
-    const reactSwal = useSwal();
 
     useEffect(() => {
       if(openModal) {
@@ -81,12 +74,13 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              fontWeight: "bold"
+              fontWeight: "bold",
+              color: '#fff'
             }} className="red-circle-notifications">{notificationCount  > 9 ? "9+" : notificationCount}</div>
           )}
         </SocialBox>
         <Popup
-          className="popup-notification-block"
+          className={`popup-notification-block`}
           open={openModal}s
           closeOnDocumentClick
           onClose={() => {
@@ -94,16 +88,36 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
           }}>
           {openModal && (
             <div
-              className="pop-up-notification"
+              className={`pop-up-notification ${primaryColor === '#dedede' ? 'rhyno' : ''}`}
               style={{
-                backgroundColor: `${
-                  primaryColor === 'rhyno' ? 'rgb(246 246 246)' : '#383637'
+                background: `${
+                  primaryColor === '#dedede'
+                    ? '#fff'
+                    : `color-mix(in srgb, ${primaryColor}, #888888)`
                 }`,
                 border: '1px solid #fff',
                 color: `${primaryColor === 'rhyno' && '#000'}`,
                 maxHeight: '400px',
                 overflowY: 'auto'
               }}>
+                <div className="btn-clear-nofitications">
+                 <div className="notification-title">Notifications</div>
+                 <button onClick={() => setRealDataNotification([])} style={{
+            color: textColor,
+            background: `${
+              primaryColor === '#dedede'
+                ? import.meta.env.VITE_TESTNET === 'true'
+                  ? 'var(--hot-drops)'
+                  : 'linear-gradient(to right, #e882d5, #725bdb)'
+                : import.meta.env.VITE_TESTNET === 'true'
+                  ? primaryButtonColor ===
+                    'linear-gradient(to right, #e882d5, #725bdb)'
+                    ? 'var(--hot-drops)'
+                    : primaryButtonColor
+                  : primaryButtonColor
+            }`
+          }}>Clear all</button>
+                </div>
               {realDataNotification && realDataNotification.length > 0 ? (
                 realDataNotification.map((el) => {
                   return (
@@ -121,7 +135,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
               ) : (
                 <div
                   style={{
-                    padding: '25px 16px'
+                    padding: '25px'
                   }}>
                   You don't have any notifications now
                 </div>

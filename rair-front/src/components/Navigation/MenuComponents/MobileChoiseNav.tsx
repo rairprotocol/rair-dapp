@@ -97,7 +97,8 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              fontWeight: "bold"
+              fontWeight: "bold",
+              color: '#fff'
             }} className="red-circle-notifications">{notificationCount  > 9 ? "9+" : notificationCount}</div>
           )}
                 </SocialBox>
