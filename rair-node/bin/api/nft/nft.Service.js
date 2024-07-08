@@ -21,6 +21,7 @@ const {
 const { processMetadata } = require('../../utils/metadataClassify');
 const { textPurify, attributesCounter, checkFileAccess } = require('../../utils/helpers');
 const AppError = require('../../utils/errors/AppError');
+const { ZeroAddress } = require('ethers');
 
 const ipfsGateway = config.ipfsGateways[process.env.IPFS_SERVICE];
 
@@ -313,18 +314,43 @@ module.exports = {
         return next(err);
         }
     },
-    findContractMiddleware: async (req, res, next) => {
+    findContractAndProductMiddleware: async (req, res, next) => {
         try {
-            const contract = await Contract.findOne({
-                contractAddress: req.params.contract.toLowerCase(),
-                blockchain: req.params.networkId,
-            });
+            const { contract, networkId, product } = req.params;
+            const data = await Contract.aggregate([
+              {
+                $match: {
+                  blockchain: networkId,
+                  contractAddress: contract.toLowerCase(),
+                },
+              },
+              {
+                $lookup: {
+                  from: 'Product',
+                  as: 'productData',
+                  let: { contractId: '$_id' },
+                  pipeline: [
+                    {
+                      $match: {
+                        $expr: {
+                          $eq: ['$$contractId', '$contract'],
+                        },
+                        collectionIndexInContract: product,
+                      },
+                    },
+                  ],
+                },
+              },
+            ]);
 
             if (!contract) {
-                return next(new AppError('Contract not found.', 404));
+                return next(new AppError('Data not found.', 404));
             }
 
-            req.contract = contract;
+            const { productData, ...contractData } = data[0];
+
+            req.contract = contractData;
+            [req.product] = productData;
 
             return next();
         } catch (e) {
@@ -347,23 +373,65 @@ module.exports = {
         next(err);
         }
     },
-    findProductMiddleware: async (req, res, next) => {
-        try {
-          const product = await Product.findOne({
-              contract: req.contract._id,
-              collectionIndexInContract: req.params.product,
-          });
-
-          if (!product) {
-              return next(new AppError('Product not found.', 404));
-          }
-
-          req.product = product;
-
-          return next();
-        } catch (e) {
-            return next(e);
-        }
+    getTokenNumbers: async (req, res, next) => {
+      try {
+        const { contract, product } = req;
+        const offerData = await Offer.aggregate([
+          {
+            $match: {
+              $expr: {
+                $eq: [contract._id, '$contract'],
+              },
+              product: product.collectionIndexInContract,
+            },
+          },
+          {
+            $lookup: {
+              from: 'MintedToken',
+              let: { offerIndex: '$diamondRangeIndex' },
+              as: 'tokens',
+              pipeline: [{
+                $match: {
+                  $expr: { $eq: ['$offer', '$$offerIndex'] },
+                  contract: contract._id,
+                },
+              },
+              {
+                $sort: { uniqueIndexInContract: 1 },
+              },
+              {
+                $addFields: {
+                  sold: {
+                    $cond: {
+                      if: { $eq: ['$ownerAddress', ZeroAddress] },
+                      then: false,
+                      else: true,
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  token: 1,
+                  sold: 1,
+                },
+              },
+            ],
+            },
+          },
+          {
+            $project: {
+              tokens: 1,
+            },
+          },
+        ]).collation({ locale: 'en_US', numericOrdering: true });
+        return res.json({
+          tokens: offerData.reduce((total, offer) => total.concat(offer.tokens), []),
+        });
+      } catch (err) {
+        return next(err);
+      }
     },
     getProductAttributes: async (req, res, next) => {
         try {
