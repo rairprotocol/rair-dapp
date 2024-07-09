@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { BigNumber, utils } from 'ethers';
 import { stringToHex } from 'viem';
 
-import CreditManager from './CreditManager';
 import NavigatorFactory from './NavigatorFactory';
 
 import { RootState } from '../../ducks';
@@ -368,14 +367,6 @@ const Factory = () => {
           <br />
           <hr />
         </div>
-        <CreditManager
-          tokenSymbol={tokenSymbol}
-          updateUserBalance={() => {
-            getLegacyDeploymentCost();
-            getDiamondDeploymentCost();
-            getUserBalance();
-          }}
-        />
       </NavigatorFactory>
     </div>
   );
