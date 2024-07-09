@@ -176,6 +176,7 @@ const useServerSettings = () => {
     signupMessage,
     setSignupMessage,
     blockchainSettings,
+    setBlockchainSettings,
     isLoading
   };
 };

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { AlchemyChainMap } from '@alchemy/aa-core';
 import { isAddress } from 'ethers/lib/utils';
 
 import useServerSettings from './useServerSettings';
@@ -96,18 +97,20 @@ const ServerSettings = ({ fullContractData }) => {
   );
 
   const setBlockchainSetting = useCallback(
-    async (chain: string, setting: string, value: string) => {
+    async (chain: string, method = 'PUT') => {
+      const settings = serverSettings.blockchainSettings.find(
+        (chainData) => chainData.hash === chain
+      );
+      const { _id, ...cleanChainData } = settings;
       const { success } = await rFetch(`/api/settings/${chain}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          [setting]: value
-        }),
+        method,
+        body: JSON.stringify(cleanChainData),
         headers: {
           'Content-Type': 'application/json'
         }
       });
       if (success) {
-        reactSwal.fire('Success', 'Setting set', 'success');
+        reactSwal.fire('Success', 'Blockchain settings updated', 'success');
         serverSettings.getServerSettings();
       }
     },
@@ -203,6 +206,19 @@ const ServerSettings = ({ fullContractData }) => {
 
     setProductOptions(options);
   }, [serverSettings.featuredContract, fullContractData]);
+
+  const updateBlockchainSetting = useCallback(
+    (chain: string, setting: string, value: string | number | boolean) => {
+      const aux = serverSettings.blockchainSettings.map((chainData) => {
+        if (chainData.hash === chain) {
+          chainData[setting] = value;
+        }
+        return chainData;
+      });
+      serverSettings.setBlockchainSettings(aux);
+    },
+    [serverSettings.blockchainSettings]
+  );
 
   return (
     <div className="row text-start w-100 p-5 mx-5">
@@ -330,65 +346,253 @@ const ServerSettings = ({ fullContractData }) => {
         {serverSettings.blockchainSettings?.map((chain, index) => {
           return (
             <details className="row" key={index}>
-              <summary className="h5">{chain.name}</summary>
-              <div className="col-12">
-                <span className="me-4">Sync contracts:</span>
-                <button
-                  disabled={!!chain?.sync}
-                  className="btn rair-button"
-                  style={{
-                    background: secondaryButtonColor,
-                    color: textColor
-                  }}
-                  onClick={() =>
-                    setBlockchainSetting(chain.hash, 'sync', 'true')
-                  }>
-                  Yes
-                </button>
-                <button
-                  disabled={!chain?.sync}
-                  className="btn rair-button"
-                  style={{
-                    background: primaryButtonColor,
-                    color: textColor
-                  }}
-                  onClick={() =>
-                    setBlockchainSetting(chain.hash, 'sync', 'false')
-                  }>
-                  No
-                </button>
-              </div>
-              <div className="col-12">
-                <span className="me-4">Display contracts:</span>
-                <button
-                  disabled={!!chain?.display}
-                  className="btn rair-button"
-                  style={{
-                    background: secondaryButtonColor,
-                    color: textColor
-                  }}
-                  onClick={() =>
-                    setBlockchainSetting(chain.hash, 'display', 'true')
-                  }>
-                  Yes
-                </button>
-                <button
-                  disabled={!chain?.display}
-                  className="btn rair-button"
-                  style={{
-                    background: primaryButtonColor,
-                    color: textColor
-                  }}
-                  onClick={() =>
-                    setBlockchainSetting(chain.hash, 'display', 'false')
-                  }>
-                  No
-                </button>
-              </div>
+              <summary className="h5">
+                {chain.testnet ? (
+                  <span>
+                    <i className="fas fa-vial" />
+                  </span>
+                ) : (
+                  ''
+                )}{' '}
+                {chain.name} ({chain.hash})
+              </summary>
+              {[
+                {
+                  label: 'Sync contracts',
+                  setting: 'sync'
+                },
+                {
+                  label: 'Display contracts',
+                  setting: 'display'
+                },
+                {
+                  label: 'Test network',
+                  setting: 'testnet'
+                },
+                {
+                  label: 'Supported by Alchemy SDK',
+                  setting: 'alchemy'
+                }
+              ].map((booleanSetting, boolSettingIndex) => {
+                return (
+                  <div key={boolSettingIndex} className="row w-100">
+                    <div className="col-12 col-md-6 text-start">
+                      <span className="me-4">{booleanSetting.label}</span>
+                    </div>
+                    <div className="col-12 col-md-6 text-end">
+                      <button
+                        disabled={!!chain?.[booleanSetting.setting]}
+                        className="btn rair-button"
+                        style={{
+                          background: secondaryButtonColor,
+                          color: textColor
+                        }}
+                        onClick={() =>
+                          updateBlockchainSetting(
+                            chain.hash,
+                            booleanSetting.setting,
+                            true
+                          )
+                        }>
+                        Yes
+                      </button>
+                      <button
+                        disabled={!chain?.[booleanSetting.setting]}
+                        className="btn rair-button"
+                        style={{
+                          background: primaryButtonColor,
+                          color: textColor
+                        }}
+                        onClick={() =>
+                          updateBlockchainSetting(
+                            chain.hash,
+                            booleanSetting.setting,
+                            false
+                          )
+                        }>
+                        No
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+              {[
+                {
+                  label: 'Chain Id (Hexadecimal)',
+                  type: 'text',
+                  setting: 'hash',
+                  effect: (chain) => {
+                    const alchemyData = AlchemyChainMap.get(Number(chain));
+                    updateBlockchainSetting(chain, 'alchemy', !!alchemyData);
+                    if (alchemyData) {
+                      updateBlockchainSetting(
+                        chain,
+                        'testnet',
+                        !!alchemyData?.testnet
+                      );
+                      updateBlockchainSetting(
+                        chain,
+                        'blockExplorerGateway',
+                        alchemyData.blockExplorers?.default?.url || ''
+                      );
+                      updateBlockchainSetting(
+                        chain,
+                        'rpcEndpoint',
+                        alchemyData.rpcUrls.default.http.at(0) || ''
+                      );
+                      updateBlockchainSetting(
+                        chain,
+                        'numericalId',
+                        alchemyData.id
+                      );
+                      updateBlockchainSetting(chain, 'name', alchemyData.name);
+                      updateBlockchainSetting(
+                        chain,
+                        'symbol',
+                        alchemyData.nativeCurrency.symbol
+                      );
+                    }
+                  }
+                },
+                {
+                  label: 'Name',
+                  type: 'text',
+                  setting: 'name'
+                },
+                {
+                  label: 'Symbol',
+                  type: 'text',
+                  setting: 'symbol'
+                },
+                {
+                  label: 'Block Explorere URL',
+                  type: 'text',
+                  setting: 'blockExplorerGateway'
+                },
+                {
+                  label: 'RPC endpoint',
+                  type: 'text',
+                  setting: 'rpcEndpoint'
+                },
+                {
+                  label: 'Chain ID (Decimal)',
+                  type: 'number',
+                  setting: 'numericalId'
+                },
+                {
+                  label: 'Classic Factory Address',
+                  type: 'text',
+                  setting: 'classicFactoryAddress'
+                },
+                {
+                  label: 'Diamond Factory Address',
+                  type: 'text',
+                  setting: 'diamondFactoryAddress'
+                },
+                {
+                  label: 'Marketplace Address',
+                  type: 'text',
+                  setting: 'diamondMarketplaceAddress'
+                },
+                {
+                  label: 'Main ERC20 address',
+                  type: 'text',
+                  setting: 'mainTokenAddress'
+                }
+              ].map((inputSetting, inputSettingIndex) => {
+                return (
+                  <div key={inputSettingIndex} className="col-12">
+                    <InputField
+                      label={inputSetting.label}
+                      customClass="rounded-rair form-control text-center col-12"
+                      onBlur={() => {
+                        if (inputSetting.effect) {
+                          inputSetting.effect(chain[inputSetting.setting]);
+                        }
+                      }}
+                      getter={chain[inputSetting.setting]}
+                      setter={(value) =>
+                        updateBlockchainSetting(
+                          chain.hash,
+                          inputSetting.setting,
+                          value
+                        )
+                      }
+                      type={inputSetting.type}
+                    />
+                  </div>
+                );
+              })}
+              <button
+                className="btn rair-button"
+                style={{
+                  background: secondaryButtonColor,
+                  color: textColor
+                }}
+                onClick={() => {
+                  setBlockchainSetting(
+                    chain.hash,
+                    chain.isNew ? 'POST' : 'PUT'
+                  );
+                }}>
+                {chain.isNew ? 'Add Blockchain' : 'Update Settings'}
+              </button>
+              <button
+                className="btn small btn-danger"
+                onClick={() => {
+                  reactSwal
+                    .fire({
+                      title: 'Deleting Blockchain',
+                      html: (
+                        <>
+                          This action will remove the blockchain and all{' '}
+                          associated contracts and tokens from the database
+                          <br />
+                          <b>Are you sure?</b>
+                        </>
+                      ),
+                      icon: 'warning',
+                      showConfirmButton: true,
+                      showDenyButton: true,
+                      confirmButtonText: 'Delete',
+                      denyButtonText: 'Cancel'
+                    })
+                    .then((userResponse) => {
+                      if (userResponse.isConfirmed) {
+                        setBlockchainSetting(chain.hash, 'DELETE');
+                      }
+                    });
+                }}>
+                Delete Blockchain
+              </button>
               <hr />
             </details>
           );
         })}
+        <button
+          className="btn small btn-success"
+          onClick={() => {
+            const aux = [...serverSettings.blockchainSettings];
+            aux.push({
+              name: '',
+              hash: '0x0',
+              display: false,
+              sync: false,
+              testnet: false,
+              isNew: true,
+              classicFactoryAddress: '',
+              diamondFactoryAddress: '',
+              diamondMarketplaceAddress: '',
+              mainTokenAddress: '',
+              rpcEndpoint: '',
+              blockExplorerGateway: '',
+              numericalId: 0,
+              symbol: ''
+            });
+            serverSettings.setBlockchainSettings(aux);
+          }}>
+          Add Blockchain
+        </button>
       </div>
       <div className="col-12 text-end col-md-6 px-5 my-2">
         <h3>Super admins:</h3>

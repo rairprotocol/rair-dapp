@@ -99,9 +99,21 @@ export type Settings = {
 };
 
 export type BlockchainSetting = {
-  hash: string;
+  hash: BlockchainType;
   display: Boolean;
   sync: Boolean;
-  name: String;
-  _id: String;
+  name: string;
+
+  diamondFactoryAddress: string;
+  classicFactoryAddress: string;
+  diamondMarketplaceAddress: string;
+  mainTokenAddress: string;
+  rpcEndpoint: string;
+  blockExplorerGateway: string;
+  numericalId: number;
+  testnet: Boolean;
+  symbol: string;
+
+  _id?: string;
+  isNew?: boolean;
 };
