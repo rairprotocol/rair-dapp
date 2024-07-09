@@ -97,32 +97,6 @@ exports.getOfferPoolByContractAndProduct = async (req, res, next) => {
   }
 };
 
-exports.getTokenNumbers = async (req, res, next) => {
-  try {
-    const { contract, offerPool, offers } = req.query;
-    const options = {
-      contract,
-    };
-    if (offerPool) {
-      options.offerPool = offerPool.marketplaceCatalogIndex;
-    }
-    if (offers) {
-      options.offer = { $in: offers };
-    }
-    const tokens = await MintedToken.find(options)
-      .sort([['token', 1]])
-      .collation({ locale: 'en_US', numericOrdering: true })
-      .distinct('token');
-    // handle respond \|/
-    if (!tokens || tokens.length === 0) {
-      return next(new AppError('No Tokens found', 404));
-    }
-    return res.json({ success: true, tokens });
-  } catch (err) {
-    return next(err);
-  }
-};
-
 exports.getAllTokens = async (req, res, next) => {
   try {
     const { skip, limit, query } = processPaginationQuery(req.query);
@@ -134,7 +108,7 @@ exports.getAllTokens = async (req, res, next) => {
   } catch (err) {
     return next(new AppError(err));
   }
-}
+};
 
 exports.updateTokenCommonMetadata = async (req, res, next) => {
   try {
