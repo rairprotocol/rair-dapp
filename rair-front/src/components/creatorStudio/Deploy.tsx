@@ -32,7 +32,6 @@ const Factory = () => {
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
 
   const [deploying, setDeploying] = useState<boolean>(false);
-  const [exchangeData, setExchangeData] = useState({});
 
   const { web3TxHandler, web3Switch } = useWeb3Tx();
   const reactSwal = useSwal();
@@ -40,10 +39,9 @@ const Factory = () => {
   const {
     currentUserAddress,
     factoryInstance,
-    erc777Instance,
+    mainTokenInstance,
     diamondFactoryInstance,
-    currentChain,
-    tokenPurchaserInstance
+    currentChain
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -54,15 +52,16 @@ const Factory = () => {
   );
 
   const getAllowance = useCallback(async () => {
-    if (erc777Instance && diamondFactoryInstance) {
-      const allowanceCheck = await web3TxHandler(erc777Instance, 'allowance', [
-        currentUserAddress,
-        diamondFactoryInstance.address
-      ]);
+    if (mainTokenInstance && diamondFactoryInstance) {
+      const allowanceCheck = await web3TxHandler(
+        mainTokenInstance,
+        'allowance',
+        [currentUserAddress, diamondFactoryInstance.address]
+      );
       setAllowance(allowanceCheck);
     }
   }, [
-    erc777Instance,
+    mainTokenInstance,
     diamondFactoryInstance,
     currentUserAddress,
     web3TxHandler
@@ -75,35 +74,25 @@ const Factory = () => {
     getAllowance();
   }, [getAllowance, allowance]);
 
-  const getExchangeData = useCallback(async () => {
-    if (tokenPurchaserInstance) {
-      const [ethPrices, rairPrices] = await web3TxHandler(
-        tokenPurchaserInstance,
-        'getExhangeRates'
-      );
-      const exchanges = {};
-      ethPrices.forEach((item, index) => {
-        exchanges[item] = rairPrices[index];
-      });
-      setExchangeData(exchanges);
-    }
-  }, [tokenPurchaserInstance, web3TxHandler]);
-
   const getLegacyDeploymentCost = useCallback(async () => {
-    if (factoryInstance && erc777Instance && deploymentPrice.eq(0)) {
+    if (factoryInstance && mainTokenInstance && deploymentPrice.eq(0)) {
       const value = await web3TxHandler(
         factoryInstance,
         'deploymentCostForERC777',
-        [erc777Instance.address]
+        [mainTokenInstance.address]
       );
       if (value?._isBigNumber) {
         setDeploymentPrice(value);
       }
     }
-  }, [factoryInstance, erc777Instance, deploymentPrice, web3TxHandler]);
+  }, [factoryInstance, mainTokenInstance, deploymentPrice, web3TxHandler]);
 
   const getDiamondDeploymentCost = useCallback(async () => {
-    if (diamondFactoryInstance && erc777Instance && !deploymentPriceDiamond) {
+    if (
+      diamondFactoryInstance &&
+      mainTokenInstance &&
+      !deploymentPriceDiamond
+    ) {
       const value = await web3TxHandler(
         diamondFactoryInstance,
         'getDeploymentCost'
@@ -114,32 +103,25 @@ const Factory = () => {
     }
   }, [
     diamondFactoryInstance,
-    erc777Instance,
+    mainTokenInstance,
     deploymentPriceDiamond,
     web3TxHandler
   ]);
 
   const getUserBalance = useCallback(async () => {
-    if (erc777Instance && userBalance?.eq(0)) {
-      const userBalance = await web3TxHandler(erc777Instance, 'balanceOf', [
+    if (mainTokenInstance && userBalance?.eq(0)) {
+      const userBalance = await web3TxHandler(mainTokenInstance, 'balanceOf', [
         currentUserAddress
       ]);
       if (userBalance?._isBigNumber) {
-        getExchangeData();
         setUserBalance(userBalance);
       }
-      const symbolValue = await web3TxHandler(erc777Instance, 'symbol');
+      const symbolValue = await web3TxHandler(mainTokenInstance, 'symbol');
       if (symbolValue) {
         setTokenSymbol(symbolValue);
       }
     }
-  }, [
-    erc777Instance,
-    currentUserAddress,
-    getExchangeData,
-    userBalance,
-    web3TxHandler
-  ]);
+  }, [mainTokenInstance, currentUserAddress, userBalance, web3TxHandler]);
 
   useEffect(() => {
     getLegacyDeploymentCost();
@@ -165,7 +147,7 @@ const Factory = () => {
   );
 
   const deployClassic = useCallback(async () => {
-    if (!erc777Instance || !factoryInstance) {
+    if (!mainTokenInstance || !factoryInstance) {
       return;
     }
     setDeploying(true);
@@ -175,7 +157,7 @@ const Factory = () => {
       icon: 'info',
       showConfirmButton: false
     });
-    const success = await web3TxHandler(erc777Instance, 'send', [
+    const success = await web3TxHandler(mainTokenInstance, 'send', [
       factoryInstance.address,
       deploymentPrice,
       stringToHex(contractName)
@@ -191,7 +173,7 @@ const Factory = () => {
       setContractName('');
     }
   }, [
-    erc777Instance,
+    mainTokenInstance,
     contractName,
     deploymentPrice,
     factoryInstance,
@@ -201,7 +183,7 @@ const Factory = () => {
 
   const deployDiamond = useCallback(async () => {
     if (
-      !erc777Instance ||
+      !mainTokenInstance ||
       !diamondFactoryInstance ||
       contractName === '' ||
       !deploymentPriceDiamond ||
@@ -219,7 +201,7 @@ const Factory = () => {
         icon: 'info',
         showConfirmButton: false
       });
-      const approveResult = await web3TxHandler(erc777Instance, 'approve', [
+      const approveResult = await web3TxHandler(mainTokenInstance, 'approve', [
         diamondFactoryInstance.address,
         deploymentPriceDiamond
       ]);
@@ -252,7 +234,7 @@ const Factory = () => {
   }, [
     tokenSymbol,
     contractName,
-    erc777Instance,
+    mainTokenInstance,
     diamondFactoryInstance,
     allowance,
     deploymentPriceDiamond,
@@ -321,7 +303,7 @@ const Factory = () => {
                 deploymentPrice === BigNumber.from(0) ||
                 userBalance === BigNumber.from(0) ||
                 deploying ||
-                !erc777Instance
+                !mainTokenInstance
               }
               style={{
                 background: primaryButtonColor,
@@ -358,7 +340,7 @@ const Factory = () => {
                 userBalance === BigNumber.from(0) ||
                 deploying ||
                 diamondFactoryInstance === undefined ||
-                !erc777Instance
+                !mainTokenInstance
               }
               style={{
                 background: primaryButtonColor,
@@ -386,51 +368,6 @@ const Factory = () => {
           <br />
           <hr />
         </div>
-        {tokenPurchaserInstance &&
-          Object.keys(exchangeData).map((ethPrice, index) => {
-            return (
-              <button
-                style={{
-                  background: primaryButtonColor,
-                  color: textColor
-                }}
-                className="btn rair-button col-12 mt-3 rounded-rair"
-                key={index}
-                onClick={async () => {
-                  reactSwal.fire({
-                    title: 'Please wait',
-                    text: 'Wating for user verification',
-                    icon: 'info',
-                    showConfirmButton: false
-                  });
-                  if (
-                    await web3TxHandler(tokenPurchaserInstance, 'getRAIR', [
-                      {
-                        value: ethPrice.toString()
-                      }
-                    ])
-                  ) {
-                    reactSwal.fire({
-                      title: 'Success',
-                      html: `${utils
-                        .formatEther(exchangeData[ethPrice])
-                        .toString()} ${
-                        currentChain && chainData[currentChain]?.symbol
-                      }`,
-                      icon: 'success',
-                      showConfirmButton: true
-                    });
-                    await getLegacyDeploymentCost();
-                    await getDiamondDeploymentCost();
-                    await getUserBalance();
-                  }
-                }}>
-                Purchase {utils.formatEther(exchangeData[ethPrice]).toString()}{' '}
-                {tokenSymbol} for {utils.formatEther(ethPrice).toString()}{' '}
-                {currentChain && chainData[currentChain]?.symbol}
-              </button>
-            );
-          })}
         <CreditManager
           tokenSymbol={tokenSymbol}
           updateUserBalance={() => {

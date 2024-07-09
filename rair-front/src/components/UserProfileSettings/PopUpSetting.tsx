@@ -54,7 +54,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
 
   const { userData } = useSelector((store) => store.userStore);
 
-  const { currentUserAddress, erc777Instance, currentChain } = useSelector<
+  const { currentUserAddress, mainTokenInstance, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
@@ -62,16 +62,16 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const { web3TxHandler } = useWeb3Tx();
 
   const getUserRairBalance = useCallback(async () => {
-    if (!erc777Instance || userRairBalance) {
+    if (!mainTokenInstance || userRairBalance) {
       return;
     }
-    const result = await web3TxHandler(erc777Instance, 'balanceOf', [
+    const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
       currentUserAddress
     ]);
     if (result?._isBigNumber) {
       setUserRairBalance(result);
     }
-  }, [erc777Instance, currentUserAddress, userRairBalance, web3TxHandler]);
+  }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
 
   useEffect(() => {
     getUserRairBalance();
@@ -92,10 +92,10 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   }, [userData]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && erc777Instance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.provider) {
       setIsLoadingBalance(true);
       const balance =
-        await erc777Instance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -106,7 +106,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, erc777Instance, userData]);
+  }, [currentUserAddress, mainTokenInstance, userData]);
 
   useEffect(() => {
     getBalance();

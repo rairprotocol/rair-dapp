@@ -14,6 +14,7 @@ import { encodeFunctionData } from 'viem';
 
 import useSwal from './useSwal';
 
+import useServerSettings from '../components/adminViews/useServerSettings';
 import { RootState } from '../ducks';
 import {
   setChainId,
@@ -36,6 +37,7 @@ type web3Options = {
 
 const useWeb3Tx = () => {
   const dispatch = useDispatch();
+  const { blockchainSettings } = useServerSettings();
   const { currentChain, currentUserAddress, programmaticProvider } =
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
@@ -331,13 +333,13 @@ const useWeb3Tx = () => {
       const provider = alchemyProvider.connectToAccount(a);
 
       dispatch(setProgrammaticProvider(provider));
-      dispatch(setChainId(chainData.addChainData.chainId));
+      dispatch(setChainId(chainData.addChainData.chainId, blockchainSettings));
       provider.signTypedData = web3AuthSigner.signTypedData;
       provider.userDetails = web3AuthSigner.getAuthDetails;
 
       return provider;
     },
-    [dispatch]
+    [dispatch, blockchainSettings]
   );
 
   const metamaskSwitch = async (chainId: BlockchainType) => {

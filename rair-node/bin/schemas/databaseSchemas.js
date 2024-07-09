@@ -129,6 +129,8 @@ module.exports = {
         numericalId: Joi.number(),
         testnet: Joi.boolean(),
         symbol: Joi.string(),
+        licenseExchangeAddress: ethAddress,
+        alchemySupport: Joi.boolean().required(),
     }),
     dbNotifications: () => ({
         user: ethAddress,

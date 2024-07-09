@@ -24,7 +24,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
   const reactSwal = useSwal();
 
   const {
-    erc777Instance,
+    mainTokenInstance,
     creditHandlerInstance,
     currentUserAddress,
     currentChain
@@ -40,23 +40,23 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
   } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const getCredits = useCallback(async () => {
-    if (!erc777Instance || !currentUserAddress) {
+    if (!mainTokenInstance || !currentUserAddress) {
       return;
     }
     const { success, credits } = await rFetch(
-      `/api/credits/${currentChain}/${erc777Instance.address}`
+      `/api/credits/${currentChain}/${mainTokenInstance.address}`
     );
     if (success) {
       setUserCredits(formatEther(credits));
     }
-  }, [currentUserAddress, erc777Instance, currentChain]);
+  }, [currentUserAddress, mainTokenInstance, currentChain]);
 
   useEffect(() => {
     getCredits();
   }, [getCredits]);
 
   const sendTokens = useCallback(async () => {
-    if (!erc777Instance || !creditHandlerInstance) {
+    if (!mainTokenInstance || !creditHandlerInstance) {
       return;
     }
     Swal.fire({
@@ -66,7 +66,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
       showConfirmButton: false
     });
     if (
-      await web3TxHandler(erc777Instance, 'send', [
+      await web3TxHandler(mainTokenInstance, 'send', [
         creditHandlerInstance?.address,
         tokenAmount,
         stringToHex('RAIR Credit Deposit')
@@ -85,7 +85,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
   }, [
     creditHandlerInstance,
     tokenAmount,
-    erc777Instance,
+    mainTokenInstance,
     tokenSymbol,
     getCredits,
     updateUserBalance,
@@ -93,14 +93,14 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
   ]);
 
   const tryWithdraw = useCallback(async () => {
-    if (!currentChain || !erc777Instance || !creditHandlerInstance) {
+    if (!currentChain || !mainTokenInstance || !creditHandlerInstance) {
       return;
     }
     const { success, hash } = await rFetch(`/api/credits/withdraw`, {
       method: 'POST',
       body: JSON.stringify({
         blockchain: currentChain,
-        tokenAddress: erc777Instance.address,
+        tokenAddress: mainTokenInstance.address,
         amount: tokenAmount.toString()
       }),
       headers: {
@@ -116,7 +116,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
       });
       if (
         await web3TxHandler(creditHandlerInstance, 'withdraw', [
-          erc777Instance.address,
+          mainTokenInstance.address,
           tokenAmount,
           hash
         ])
@@ -134,7 +134,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
     }
   }, [
     currentChain,
-    erc777Instance,
+    mainTokenInstance,
     creditHandlerInstance,
     tokenAmount,
     tokenSymbol,
@@ -176,7 +176,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
       />
       <div className="col-12">
         <button
-          disabled={!erc777Instance || !creditHandlerInstance}
+          disabled={!mainTokenInstance || !creditHandlerInstance}
           style={{
             background: secondaryButtonColor,
             color: textColor
@@ -186,7 +186,7 @@ const CreditManager = ({ tokenSymbol, updateUserBalance }) => {
           Purchase {formatEther(tokenAmount)} {tokenSymbol} credits
         </button>
         <button
-          disabled={!erc777Instance || !creditHandlerInstance}
+          disabled={!mainTokenInstance || !creditHandlerInstance}
           className="btn rair-button rounded-rair col-6"
           style={{
             background: primaryButtonColor,

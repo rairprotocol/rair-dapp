@@ -52,7 +52,7 @@ const BatchERC20Transfer = () => {
   const [data, setData] = useState<RowData[]>([]);
   const { textColor, primaryColor, primaryButtonColor, secondaryButtonColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
-  const { erc777Instance } = useSelector<RootState, ContractsInitialType>(
+  const { mainTokenInstance } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
   const { web3TxHandler } = useWeb3Tx();
@@ -90,7 +90,7 @@ const BatchERC20Transfer = () => {
   }, []);
 
   const transferProcess = useCallback(async () => {
-    if (!erc777Instance) {
+    if (!mainTokenInstance) {
       reactSwal.fire('No ERC20 connected');
       return;
     }
@@ -105,7 +105,7 @@ const BatchERC20Transfer = () => {
         html: `Sending ${dataItem.Amount} tokens to ${dataItem.Name} (${dataItem.Address})`,
         showConfirmButton: false
       });
-      const txHash = await web3TxHandler(erc777Instance, 'transfer', [
+      const txHash = await web3TxHandler(mainTokenInstance, 'transfer', [
         dataItem.Address,
         parseUnits(dataItem.Amount, 18)
       ]);
@@ -127,7 +127,7 @@ const BatchERC20Transfer = () => {
       }
     }
     setData(aux);
-  }, [erc777Instance, data, web3TxHandler, reactSwal]);
+  }, [mainTokenInstance, data, web3TxHandler, reactSwal]);
 
   const deleteRow = useCallback(
     (index: number) => {

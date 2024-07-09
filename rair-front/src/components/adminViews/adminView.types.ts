@@ -107,6 +107,7 @@ export type BlockchainSetting = {
   diamondFactoryAddress: string;
   classicFactoryAddress: string;
   diamondMarketplaceAddress: string;
+  licenseExchangeAddress: string;
   mainTokenAddress: string;
   rpcEndpoint: string;
   blockExplorerGateway: string;

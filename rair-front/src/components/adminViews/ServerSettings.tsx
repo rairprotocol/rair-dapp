@@ -371,7 +371,7 @@ const ServerSettings = ({ fullContractData }) => {
                 },
                 {
                   label: 'Supported by Alchemy SDK',
-                  setting: 'alchemy'
+                  setting: 'alchemySupport'
                 }
               ].map((booleanSetting, boolSettingIndex) => {
                 return (
@@ -423,7 +423,11 @@ const ServerSettings = ({ fullContractData }) => {
                   setting: 'hash',
                   effect: (chain) => {
                     const alchemyData = AlchemyChainMap.get(Number(chain));
-                    updateBlockchainSetting(chain, 'alchemy', !!alchemyData);
+                    updateBlockchainSetting(
+                      chain,
+                      'alchemySupport',
+                      !!alchemyData
+                    );
                     if (alchemyData) {
                       updateBlockchainSetting(
                         chain,
@@ -480,6 +484,11 @@ const ServerSettings = ({ fullContractData }) => {
                   setting: 'numericalId'
                 },
                 {
+                  label: 'Main ERC20 address',
+                  type: 'text',
+                  setting: 'mainTokenAddress'
+                },
+                {
                   label: 'Classic Factory Address',
                   type: 'text',
                   setting: 'classicFactoryAddress'
@@ -495,9 +504,9 @@ const ServerSettings = ({ fullContractData }) => {
                   setting: 'diamondMarketplaceAddress'
                 },
                 {
-                  label: 'Main ERC20 address',
+                  label: 'License exchange address',
                   type: 'text',
-                  setting: 'mainTokenAddress'
+                  setting: 'licenseExchangeAddress'
                 }
               ].map((inputSetting, inputSettingIndex) => {
                 return (

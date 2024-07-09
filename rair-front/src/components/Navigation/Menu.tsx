@@ -25,6 +25,7 @@ import {
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import chainData from '../../utils/blockchainData';
+import { rFetch } from '../../utils/rFetch';
 import LoadingComponent from '../common/LoadingComponent';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -38,7 +39,6 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
-import { rFetch } from '../../utils/rFetch';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -84,7 +84,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     (store) => store.userStore
   );
   const [realDataNotification, setRealDataNotification] = useState([]);
-  const { erc777Instance, currentUserAddress, currentChain } = useSelector<
+  const { mainTokenInstance, currentUserAddress, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
@@ -104,22 +104,21 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   };
 
   const getNotifications = useCallback(async () => {
-    if(currentUserAddress) {
+    if (currentUserAddress) {
       const result = await rFetch(`/api/notifications`);
-    if (result.success) {
-      setRealDataNotification(result.notifications);
+      if (result.success) {
+        setRealDataNotification(result.notifications);
+      }
     }
-    }
-}, [currentUserAddress]);
+  }, [currentUserAddress]);
 
-useEffect(() => {
-  getNotificationsCount();
-}, [click])
+  useEffect(() => {
+    getNotificationsCount();
+  }, [click]);
 
-
-useEffect(() => {
-  getNotifications();
-}, [])
+  useEffect(() => {
+    getNotifications();
+  }, []);
 
   const toggleMenu = (otherPage?: string | undefined) => {
     if (otherPage === 'nav') {
@@ -169,10 +168,10 @@ useEffect(() => {
   }, [currentUserAddress, setUserData]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && erc777Instance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.provider) {
       setIsLoadingBalance(true);
       const balance =
-        await erc777Instance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -183,7 +182,7 @@ useEffect(() => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, erc777Instance, userData]);
+  }, [currentUserAddress, mainTokenInstance, userData]);
 
   const onScrollClick = useCallback(() => {
     if (!click) {
@@ -202,7 +201,6 @@ useEffect(() => {
   useEffect(() => {
     getBalance();
   }, [getBalance]);
-
 
   return (
     <MenuMobileWrapper
@@ -313,14 +311,20 @@ useEffect(() => {
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
                           {notificationCount && notificationCount > 0 ? (
-            <div className="red-circle-notifications" style={{
-              fontSize: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontWeight: "bold"
-            }}>{notificationCount  > 9 ? "9+" : notificationCount}</div>
-          ) : ''}
+                            <div
+                              className="red-circle-notifications"
+                              style={{
+                                fontSize: '10px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                fontWeight: 'bold'
+                              }}>
+                              {notificationCount > 9 ? '9+' : notificationCount}
+                            </div>
+                          ) : (
+                            ''
+                          )}
                         </SocialBox>
                       )}
                     </div>

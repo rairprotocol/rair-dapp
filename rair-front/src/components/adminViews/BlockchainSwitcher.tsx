@@ -8,6 +8,7 @@ import {
   ChainDataType,
   MetamaskError
 } from './adminView.types';
+import useServerSettings from './useServerSettings';
 
 import { RootState } from '../../ducks';
 import {
@@ -39,6 +40,8 @@ const blockchains: BlockchainInfo[] = Object.keys(chainData)
 const BlockChainSwitcher = () => {
   const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
 
+  const { blockchainSettings } = useServerSettings();
+
   const { currentChain } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
@@ -66,7 +69,7 @@ const BlockChainSwitcher = () => {
         provider
       );
       await dispatch(setProgrammaticProvider(currentWallet));
-      dispatch(setChainId(chainId));
+      dispatch(setChainId(chainId, blockchainSettings));
     } catch (err) {
       const error = err as Error;
       console.error(error);

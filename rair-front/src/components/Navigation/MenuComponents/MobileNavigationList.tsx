@@ -49,15 +49,15 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 
   const { web3TxHandler } = useWeb3Tx();
 
-  const { erc777Instance, currentChain } = useSelector<
+  const { mainTokenInstance, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && erc777Instance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.provider) {
       const balance =
-        await erc777Instance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -67,19 +67,19 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, erc777Instance, userData]);
+  }, [currentUserAddress, mainTokenInstance, userData]);
 
   const getUserRairBalance = useCallback(async () => {
-    if (!erc777Instance || userRairBalance?.gt(0)) {
+    if (!mainTokenInstance || userRairBalance?.gt(0)) {
       return;
     }
-    const result = await web3TxHandler(erc777Instance, 'balanceOf', [
+    const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
       currentUserAddress
     ]);
     if (result?._isBigNumber) {
       setUserRairBalance(result);
     }
-  }, [erc777Instance, currentUserAddress, userRairBalance, web3TxHandler]);
+  }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
   const [notificationArray, setNotificationArray] = useState<any>();
@@ -99,21 +99,23 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     }
   }, [messageAlert, currentUserAddress]);
 
-  const getNotificationsCount = useCallback( async () => {
+  const getNotificationsCount = useCallback(async () => {
     if (messageAlert && currentUserAddress) {
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications?read=false`);
       if (result.success && result.notifications.length > 0) {
-        const readNotifications = result.notifications.filter(el => el.read === false);
+        const readNotifications = result.notifications.filter(
+          (el) => el.read === false
+        );
         setNotificationCount(readNotifications.length);
         setFlagLoading(true);
       }
     }
-  }, [currentUserAddress])
+  }, [currentUserAddress]);
 
   useEffect(() => {
     getNotificationsCount();
-  }, [getNotificationsCount])
+  }, [getNotificationsCount]);
 
   useEffect(() => {
     getNotifications();
@@ -166,7 +168,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                     primaryColor={primaryColor}
                     getNotificationsCount={getNotificationsCount}
                   />
-                )
+                );
               })
             ) : (
               <div

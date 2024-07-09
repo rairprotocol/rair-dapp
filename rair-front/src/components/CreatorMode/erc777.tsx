@@ -17,7 +17,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
   const [targetValue, setTargetValue] = useState<number>(0);
   const [refetchingFlag, setRefetchingFlag] = useState<boolean>(false);
 
-  const { erc777Instance, currentUserAddress } = useSelector<
+  const { mainTokenInstance, currentUserAddress } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
@@ -32,13 +32,15 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
   const refreshData = useCallback(async () => {
     setRefetchingFlag(true);
     setERC777Data({
-      balance: (await erc777Instance?.balanceOf(currentUserAddress)).toString(),
-      name: await erc777Instance?.name(),
-      symbol: await erc777Instance?.symbol(),
-      decimals: await erc777Instance?.decimals()
+      balance: (
+        await mainTokenInstance?.balanceOf(currentUserAddress)
+      ).toString(),
+      name: await mainTokenInstance?.name(),
+      symbol: await mainTokenInstance?.symbol(),
+      decimals: await mainTokenInstance?.decimals()
     });
     setRefetchingFlag(false);
-  }, [erc777Instance, currentUserAddress]);
+  }, [mainTokenInstance, currentUserAddress]);
 
   useEffect(() => {
     if (currentUserAddress) {
@@ -51,7 +53,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
       className="col py-4 border border-white rounded"
       style={{ position: 'relative' }}>
       <h5> ERC777 </h5>
-      <small>({erc777Instance?.address})</small>
+      <small>({mainTokenInstance?.address})</small>
       <button
         style={{ position: 'absolute', left: 0, top: 0, color: 'inherit' }}
         onClick={refreshData}
@@ -87,7 +89,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
             <button
               disabled={targetValue <= 0 || targetAddress === ''}
               onClick={async () => {
-                if (!erc777Instance) {
+                if (!mainTokenInstance) {
                   return;
                 }
                 reactSwal.fire({
@@ -97,7 +99,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
                   showConfirmButton: true
                 });
                 if (
-                  await web3TxHandler(erc777Instance, 'send', [
+                  await web3TxHandler(mainTokenInstance, 'send', [
                     targetAddress,
                     targetValue,
                     stringToHex('')
@@ -126,7 +128,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
                     params: {
                       type: 'ERC20', // Initially only supports ERC20, but eventually more!
                       options: {
-                        address: erc777Instance?.address, // The address that the token is at.
+                        address: mainTokenInstance?.address, // The address that the token is at.
                         symbol: erc777Data.symbol, // A ticker symbol or shorthand, up to 5 chars.
                         decimals: 18 // The number of decimals in the token
                       }
