@@ -6,7 +6,7 @@
 **Body Parameters**
 ```json
 {
-    "ids": { "required": false, "content": { "type": "string[]" } },
+    "ids": { "required": true, "content": { "type": "string[]" } },
 }
 ```
 

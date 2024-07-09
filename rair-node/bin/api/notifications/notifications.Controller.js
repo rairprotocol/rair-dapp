@@ -23,9 +23,9 @@ router.put(
     markNotificationAsRead,
 );
 router.delete(
-    '/:id',
+    '/',
     requireUserSession,
-    validation(['dbId'], 'params'),
+    validation(['dbIdArray'], 'params'),
     deleteNotification,
 );
 
