@@ -196,8 +196,8 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
     * [x] /notifications
         * [x] / - GET - List of notifications ([details](readme/current/notifications/get_list.md))
         * [x] /:id - GET - Get a single notification ([details](readme/current/notifications/get_single.md))
-        * [x] /:id - PUT - Mark a notification as read ([details](readme/current/notifications/mark_read.md))
-        * [x] /:id - DELETE - Delete a notification ([details](readme/current/notifications/delete.md))
+        * [x] / - PUT - Mark a notification as read ([details](readme/current/notifications/mark_read.md))
+        * [x] / - DELETE - Delete a notification ([details](readme/current/notifications/delete.md))
 
 # Contributors
 Valerii Kovalov \
