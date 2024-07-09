@@ -9,6 +9,8 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
 import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { rFetch } from '../../../utils/rFetch';
+import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
 
 import NotificationBox from './NotificationBox/NotificationBox';
 
@@ -23,6 +25,8 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+  const [totalPageForPagination, setTotalPageForPagination] = useState(0);
+  const [currentPageForNotification, setCurrentPageNotification] = useState<number>(1);
     const { primaryColor, primaryButtonColor, textColor } = useSelector<
       RootState,
       ColorStoreType
@@ -34,12 +38,31 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
       (store) => store.userStore
     );
 
+    const changePageForVideo = (currentPage: number) => {
+      setCurrentPageNotification(currentPage);
+      getNotifications(4, Number(currentPage));
+    };
+
+    const getNotificationsCountPagitation = useCallback( async () => {
+      if(currentUserAddress) {
+        const result = await rFetch(`/api/notifications?read=false`);
+        console.info(result, 'resultresult')
+        if (result.success && result.notifications.length > 0) {
+          setTotalPageForPagination(result.notifications.length);
+        }
+      }
+    }, [currentUserAddress])
+
     useEffect(() => {
       if(openModal) {
-        getNotifications();
+        getNotifications(4, 1);
         getNotificationsCount();
       }
     }, [openModal]);
+
+    useEffect(() => {
+      getNotificationsCountPagitation();
+    }, [getNotificationsCountPagitation])
 
     const onCloseNext = useCallback(() => {
       if (!openModal) {
@@ -58,6 +81,8 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
         setOpenModal(false);
       }
     }, [uploadVideo]);
+
+    console.info(notificationCount, 'notificationCount')
 
     return (
       <>
@@ -140,6 +165,19 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
                   You don't have any notifications now
                 </div>
               )}
+              <div style={{paddingBottom: "15px"}}>
+              {
+
+totalPageForPagination && notificationCount > 0 && <PaginationBox
+            totalPageForPagination={totalPageForPagination}
+            primaryColor={primaryColor}
+            changePage={changePageForVideo}
+            currentPage={currentPageForNotification}
+            itemsPerPageNotifications={4}
+            whatPage={"notifications"}
+          />
+              }
+              </div>
             </div>
           )}
         </Popup>

@@ -125,9 +125,9 @@ const MainHeader: React.FC<IMainHeader> = ({
     setTextSearch('');
   };
 
-  const getNotifications = useCallback(async () => {
+  const getNotifications = useCallback(async (itemsPerPage?: number, pageNum?: number) => {
     if(currentUserAddress) {
-      const result = await rFetch(`/api/notifications`);
+      const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
       if (result.success) {
         setRealDataNotification(result.notifications);
       }
@@ -150,7 +150,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
 
   useEffect(() => {
-    getNotifications();
+    getNotifications(4, 1);
   }, [currentUserAddress])
 
   const Highlight = (props) => {
