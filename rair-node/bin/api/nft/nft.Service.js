@@ -376,6 +376,22 @@ module.exports = {
     getTokenNumbers: async (req, res, next) => {
       try {
         const { contract, product } = req;
+        const { fromToken, toToken } = req.query;
+        const tokenLimitFilter = [];
+        if (fromToken) {
+          tokenLimitFilter.push(
+            {
+              $gte: ['$token', fromToken],
+            },
+          );
+        }
+        if (toToken) {
+          tokenLimitFilter.push(
+            {
+              $lte: ['$token', toToken],
+            },
+          );
+        }
         const offerData = await Offer.aggregate([
           {
             $match: {
@@ -392,7 +408,14 @@ module.exports = {
               as: 'tokens',
               pipeline: [{
                 $match: {
-                  $expr: { $eq: ['$offer', '$$offerIndex'] },
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: ['$offer', '$$offerIndex'],
+                      },
+                      ...tokenLimitFilter,
+                    ],
+                  },
                   contract: contract._id,
                 },
               },
