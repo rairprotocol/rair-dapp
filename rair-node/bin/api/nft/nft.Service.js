@@ -591,6 +591,12 @@ module.exports = {
                       as: 'ownerData',
                   },
                 },
+                {
+                  $unwind: {
+                    path: '$ownerData',
+                    preserveNullAndEmptyArrays: true,
+                  },
+                },
                 { $unwind: '$offer' },
                 { $match: filterOptions },
             ];
