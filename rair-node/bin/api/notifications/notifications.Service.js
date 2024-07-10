@@ -108,14 +108,11 @@ module.exports = {
     },
     deleteNotification: async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const notification = await Notification.findByIdAndDelete(id);
-            if (!notification) {
-                return next(new AppError('Notification not found', 404));
-            }
+            const { ids } = req.body;
+            const result = await Notification.deleteMany({ _id: { $in: ids } });
             return res.json({
                 success: true,
-                notification,
+                deleted: result.deletedCount,
             });
         } catch (err) {
             logger.error(err);
