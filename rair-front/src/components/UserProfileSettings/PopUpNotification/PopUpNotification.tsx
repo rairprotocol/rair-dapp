@@ -40,22 +40,22 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
 
     const changePageForVideo = (currentPage: number) => {
       setCurrentPageNotification(currentPage);
-      getNotifications(4, Number(currentPage));
+      const currentPageNumber = currentPage === 0 ? currentPage : currentPage - 1;
+      getNotifications(Number(currentPageNumber));
     };
 
     const getNotificationsCountPagitation = useCallback( async () => {
       if(currentUserAddress) {
-        const result = await rFetch(`/api/notifications?read=false`);
-        console.info(result, 'resultresult')
-        if (result.success && result.notifications.length > 0) {
-          setTotalPageForPagination(result.notifications.length);
+        const result = await rFetch(`/api/notifications`);
+        if (result.success && result.totalCount > 0) {
+          setTotalPageForPagination(result.totalCount);
         }
       }
     }, [currentUserAddress])
 
     useEffect(() => {
       if(openModal) {
-        getNotifications(4, 1);
+        getNotifications(0);
         getNotificationsCount();
       }
     }, [openModal]);
@@ -82,7 +82,6 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
       }
     }, [uploadVideo]);
 
-    console.info(notificationCount, 'notificationCount')
 
     return (
       <>
@@ -122,8 +121,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
                 }`,
                 border: '1px solid #fff',
                 color: `${primaryColor === 'rhyno' && '#000'}`,
-                maxHeight: '400px',
-                overflowY: 'auto'
+                maxHeight: '500px',
               }}>
                 <div className="btn-clear-nofitications">
                  <div className="notification-title">Notifications</div>
@@ -143,6 +141,11 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
             }`
           }}>Clear all</button>
                 </div>
+              <div className="notification-wrapper-block" style={{
+                overflowY: 'auto',
+                maxHeight: "400px",
+                // marginTop: "20px"
+              }}>
               {realDataNotification && realDataNotification.length > 0 ? (
                 realDataNotification.map((el) => {
                   return (
@@ -173,10 +176,11 @@ totalPageForPagination && notificationCount > 0 && <PaginationBox
             primaryColor={primaryColor}
             changePage={changePageForVideo}
             currentPage={currentPageForNotification}
-            itemsPerPageNotifications={4}
+            itemsPerPageNotifications={10}
             whatPage={"notifications"}
           />
               }
+              </div>
               </div>
             </div>
           )}

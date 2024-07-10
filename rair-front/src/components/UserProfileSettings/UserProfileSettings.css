@@ -64,7 +64,8 @@
 .btn-clear-nofitications {
   display: flex;
   justify-content: space-between;
-  padding: 20px 25px 0px 25px;
+  padding: 20px 25px 20px 25px;
+  border-bottom: 1px solid #fff;
 }
 
 .user-block {
@@ -567,5 +568,13 @@ span.profile-input-edit:hover {
 @media screen and (max-width: 500px) {
   .notification-from-factory {
     padding: 10px;
+  }
+
+  .box-notification .dot-notification {
+    left: 0px;
+  }
+
+  .notification-img {
+    padding-left: 25px;
   }
 }
