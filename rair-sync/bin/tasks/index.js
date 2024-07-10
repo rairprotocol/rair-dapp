@@ -4,6 +4,8 @@ const log = require('../utils/logger')(module);
 const { AgendaTaskEnum } = require('../enums/agenda-task');
 const { Task, Versioning } = require('../models');
 
+const { SYNC_CONTRACT_REPEAT_EVERY } = process.env;
+
 module.exports = async (context) => {
   const db = context.mongo;
 
@@ -47,7 +49,8 @@ module.exports = async (context) => {
 
     // start sync processes
     await agenda
-      .create('sync')
+      .create(AgendaTaskEnum.Sync)
+      .repeatEvery(`${SYNC_CONTRACT_REPEAT_EVERY} minutes`)
       .schedule(moment().utc().toDate())
       // .schedule(moment().utc().add(1, 'minutes').toDate())
       .save();
@@ -83,9 +86,6 @@ module.exports = async (context) => {
         nextFunction = AgendaTaskEnum.SyncAllDiamond721Events;
         break;
       case AgendaTaskEnum.SyncAllDiamond721Events:
-        nextFunction = AgendaTaskEnum.SyncClassicMarketplaceEvents;
-        break;
-      case AgendaTaskEnum.SyncClassicMarketplaceEvents:
         nextFunction = AgendaTaskEnum.SyncDiamondMarketplaceEvents;
         break;
       default:

@@ -3,7 +3,6 @@ const { getTransactionHistory, getLatestBlock } = require('./logUtils');
 const { Transaction, Blockchain } = require('../models');
 const log = require('./logger')(module);
 const { Versioning } = require('../models');
-const { blockchain } = require('../config');
 
 const processLogEvents = async (
   event, // Raw data of the event
@@ -111,11 +110,7 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
       return done();
     }
 
-    // Get network data using the task's blockchain hash
-    // This includes minter address and factory address
-    const networkData = blockchain.networks[network];
-
-    if (contractName && !networkData[contractName]) {
+    if (!blockchainData[contractName]) {
       log.info(`[${network}] Skipping ${taskName} events, address is not defined.`);
       return done();
     }
@@ -157,7 +152,7 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
 
     // Queries the blockchain / alchemy for the latest events
     const processedResult = await getTransactionHistory(
-      networkData[contractName],
+      blockchainData[contractName],
       network,
       version.number,
     );
@@ -175,7 +170,7 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
       const result = await processLogEvents(
         event,
         network,
-        networkData[contractName],
+        blockchainData[contractName],
         transactionArray,
       );
         // An undefined value means there was nothing to process from that event

@@ -5,7 +5,7 @@ const { getAlchemy } = require('../../utils/alchemySdk');
 const log = require('../../utils/logger')(module);
 const { masterMapping, insertionMapping } = require('../../utils/eventCatcherMapping');
 
-const { providersMapping } = require('../../utils/speedyNodeProviders');
+const { getProvider } = require('../../utils/etherProvider');
 
 const getTransaction = async (
   network,
@@ -56,9 +56,8 @@ const getTransaction = async (
       log.error(
         `Validation failed for tx ${transactionHash}, couldn't get a response from Alchemy`,
       );
-      transactionReceipt = await providersMapping[
-        network
-      ].provider.getTransactionReceipt(transactionHash);
+      transactionReceipt = await getProvider(network)
+        .getTransactionReceipt(transactionHash);
       // Values to get the data in the ethers.js format
       // logIndexLabel = 'logIndex';
     }

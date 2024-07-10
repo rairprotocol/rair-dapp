@@ -1,7 +1,12 @@
 const { BigNumber } = require('ethers');
 const log = require('../utils/logger')(module);
 const { AgendaTaskEnum } = require('../enums/agenda-task');
-const { wasteTime, getTransactionHistory, getLatestBlock } = require('../utils/logUtils');
+const {
+  wasteTime,
+  getTransactionHistoryWithAlchemy,
+  getTransactionHistoryWithRPC,
+  getLatestBlock,
+} = require('../utils/logUtils');
 const { Contract, Versioning, Blockchain } = require('../models');
 const { processLogEvents } = require('../utils/reusableTransactionHandler');
 
@@ -116,9 +121,13 @@ module.exports = (context) => {
 
             let lastSuccessfullBlock = contract.lastSyncedBlock;
 
-            const processedResult = await getTransactionHistory(
+            const syncingFunction = blockchainData.alchemySupport
+              ? getTransactionHistoryWithAlchemy
+              : getTransactionHistoryWithRPC;
+
+            const processedResult = await syncingFunction(
               contract.contractAddress,
-              network,
+              blockchainData,
               contract.lastSyncedBlock,
             );
 
