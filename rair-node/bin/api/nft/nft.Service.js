@@ -568,20 +568,34 @@ module.exports = {
                     },
                 },
                 {
-                $lookup: {
-                    from: 'Offer',
-                    let: populateOptions.let,
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: populateOptions.and,
-                                },
-                            },
-                        },
-                    ],
-                    as: 'offer',
+                  $lookup: {
+                      from: 'Offer',
+                      let: populateOptions.let,
+                      pipeline: [
+                          {
+                              $match: {
+                                  $expr: {
+                                      $and: populateOptions.and,
+                                  },
+                              },
+                          },
+                      ],
+                      as: 'offer',
+                  },
                 },
+                {
+                  $lookup: {
+                      from: 'User',
+                      localField: 'ownerAddress',
+                      foreignField: 'publicAddress',
+                      as: 'ownerData',
+                  },
+                },
+                {
+                  $unwind: {
+                    path: '$ownerData',
+                    preserveNullAndEmptyArrays: true,
+                  },
                 },
                 { $unwind: '$offer' },
                 { $match: filterOptions },
