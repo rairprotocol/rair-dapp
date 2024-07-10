@@ -237,7 +237,7 @@ const MainHeader: React.FC<IMainHeader> = ({
               backgroundColor: primaryColor
             }}
             type="text"
-            placeholder="Search the rairverse..."
+            placeholder="Search..."
             onChange={handleChangeText}
             value={textSearch}
             onClick={() => setIsComponentVisible(true)}
