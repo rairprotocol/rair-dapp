@@ -94,11 +94,11 @@ module.exports = {
     markNotificationAsRead: async (req, res, next) => {
         try {
             const { publicAddress } = req.user;
-            const { ids } = req.body;
+            const { ids = [] } = req.body;
             const filter = {
                 user: publicAddress,
             };
-            if (ids.length) {
+            if (ids?.length) {
                 filter._id = { $in: ids };
             }
             const result = await Notification.updateMany(
@@ -117,11 +117,11 @@ module.exports = {
     deleteNotification: async (req, res, next) => {
         try {
             const { publicAddress } = req.user;
-            const { ids } = req.body;
+            const { ids = [] } = req.body;
             const filter = {
                 user: publicAddress,
             };
-            if (ids.length) {
+            if (ids?.length) {
                 filter._id = { $in: ids };
             }
             const result = await Notification.deleteMany(filter);
