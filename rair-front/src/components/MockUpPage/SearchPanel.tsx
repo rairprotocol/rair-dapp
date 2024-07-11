@@ -226,7 +226,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
               primaryColor === '#dedede' ? 'default' : 'dark'
             }`}
             className="category-button-nft category-button">
-              MARKET
+            {hotdropsVar === 'true' ? 'Collectible' : 'NFT'}
           </Tab>
           <Tab
             onClick={() => {

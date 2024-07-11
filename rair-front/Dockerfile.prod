@@ -1,6 +1,6 @@
 # build environment
 
-FROM node:22.4.0 as build
+FROM node:21.2.0 as build
 
 WORKDIR /usr/src/minting
 

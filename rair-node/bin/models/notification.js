@@ -6,6 +6,6 @@ const Notification = new Schema({
   message: { type: String, required: false, default: true },
   data: [{ type: String, required: false }],
   read: { type: Boolean, required: true, default: false },
-}, { versionKey: false, timestamps: true });
+}, { versionKey: false });
 
 module.exports = Notification;

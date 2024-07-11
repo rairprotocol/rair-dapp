@@ -6,5 +6,5 @@ export const Col = styled.div`
   display: flex;
   flex-direction: ${(props) => (props.direction ? props.direction : 'row')};
   justify-content: center;
-  align-items: ${(props) => (props.align ? props.align : '')};
+  align-items: ${(props) => (props.align ? props.align : '')}; ;
 `;

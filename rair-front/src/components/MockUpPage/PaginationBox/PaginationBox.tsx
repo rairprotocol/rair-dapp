@@ -11,15 +11,11 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   changePage,
   currentPage,
   totalPageForPagination,
-  whatPage,
-  itemsPerPageNotifications
+  whatPage
 }) => {
   const itemsPerPage = useSelector<RootState, number>(
     (store) => store.nftDataStore.itemsPerPage
   );
-
-  console.info(totalPageForPagination, 'totalPageForPagination');
-  console.info(itemsPerPageNotifications, 'itemsPerPageNotifications')
 
   const { primaryColor, primaryButtonColor } = useSelector<
     RootState,
@@ -30,8 +26,6 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   const [totalPage, setTotalPages] = useState<number>();
   const [totalPageVideo, setTotalPagesVideo] = useState<number>();
 
-  console.info(totalPage, 'totalPage')
-
   // const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const pagesArray: number[] = [];
@@ -41,10 +35,6 @@ const PaginationBox: React.FC<IPaginationBox> = ({
     }
   } else if (whatPage && whatPage === 'video' && totalPageVideo) {
     for (let i = 0; i < totalPageVideo; i++) {
-      pagesArray.push(i + 1);
-    }
-  } else if(whatPage && whatPage === 'notifications' && totalPage) {
-    for (let i = 0; i < totalPage; i++) {
       pagesArray.push(i + 1);
     }
   }
@@ -66,10 +56,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
     } else if (totalPageForPagination && whatPage === 'video') {
       setTotalPagesVideo(getPagesCount(totalPageForPagination, itemsPerPage));
     }
-    else if(totalPageForPagination && whatPage === 'notifications' && itemsPerPageNotifications){
-        setTotalPages(getPagesCount(totalPageForPagination, itemsPerPageNotifications));
-    }
-  }, [setTotalPages, totalPageForPagination, itemsPerPage, whatPage, itemsPerPageNotifications]);
+  }, [setTotalPages, totalPageForPagination, itemsPerPage, whatPage]);
 
   if (totalPageForPagination === 0) {
     return null;

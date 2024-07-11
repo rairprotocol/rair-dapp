@@ -7,10 +7,10 @@ const {
     getUserTokensProfile,
     metadataCSVSample,
     pinMetadataToIPFS,
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     getProductAttributes,
     getTokensForProduct,
-    getTokenNumbers,
     filesForTokenInProduct,
     getFilesForProduct,
     findOffersForProductMiddleware,
@@ -55,58 +55,60 @@ router.post(
 router.get(
     '/network/:networkId/:contract/:product',
     validation(['nftContract', 'nftProduct'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     validation(['getTokensByContractProduct', 'resaleFlag', 'metadataSearch'], 'query'),
     getTokensForProduct,
 );
 router.get(
-    '/network/:networkId/:contract/:product/numbers',
-    validation(['nftContract', 'nftProduct'], 'params'),
-    findContractAndProductMiddleware,
-    getTokenNumbers,
-);
-router.get(
     '/network/:networkId/:contract/:product/attributes',
     validation(['nftContract', 'nftProduct'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     getProductAttributes,
 );
 router.get(
     '/network/:networkId/:contract/:product/files/',
     validation(['nftContract', 'nftProduct'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     loadUserSession,
     getFilesForProduct,
 );
 router.get(
     '/network/:networkId/:contract/:product/files/:token',
     validation(['nftContract', 'nftProduct', 'tokenNumber'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     filesForTokenInProduct,
 );
 router.get(
     '/network/:networkId/:contract/:product/offers',
     validation(['nftContract', 'nftProduct'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     getOffersForProduct,
 );
 router.get(
     '/network/:networkId/:contract/:product/locks',
     validation(['nftContract', 'nftProduct'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     getLockedOffersForProduct,
 );
 router.get(
     '/network/:networkId/:contract/:product/token/:token',
     validation(['nftContract', 'nftProduct', 'tokenNumber'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     findOffersForProductMiddleware,
     getSingleToken,
 );
 router.post(
     '/network/:networkId/:contract/:product/token/:token',
     validation(['nftContract', 'nftProduct', 'tokenNumber'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     findOffersForProductMiddleware,
     requireUserSession,
     upload.array('files', 2),
@@ -117,7 +119,8 @@ router.post(
 router.post(
     '/network/:networkId/:contract/:product/token/:token/pinning',
     validation(['nftContract', 'nftProduct', 'tokenNumber'], 'params'),
-    findContractAndProductMiddleware,
+    findContractMiddleware,
+    findProductMiddleware,
     findOffersForProductMiddleware,
     requireUserSession,
     pinSingleTokenMetadata,
