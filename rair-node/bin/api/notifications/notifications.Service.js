@@ -28,13 +28,47 @@ module.exports = {
             if (user && adminRights) {
                 filter.user = user.toLowerCase();
             }
-            const list = await Notification.find(filter)
-                .sort({ createdAt: 'descending' })
-                .skip(itemsPerPage * pageNum)
-                .limit(itemsPerPage);
+            const list = await Notification.aggregate([
+                {
+                    $match: filter,
+                },
+                {
+                    $lookup: {
+                        from: 'MintedToken',
+                        let: {
+                            tokenId: '$data',
+                        },
+                        pipeline: [
+                            {
+                            $match: {
+                                $expr: {
+                                    $in: [
+                                        {
+                                            $toString: '$_id',
+                                        },
+                                        '$$tokenId',
+                                    ],
+                                },
+                            },
+                            },
+                        ],
+                        as: 'tokenData',
+                    },
+                },
+                {
+                    $addFields: {
+                        tokenData: '$tokenData.metadata.image',
+                    },
+                },
+                { $sort: { createdAt: 1 } },
+                { $skip: itemsPerPage * pageNum },
+                { $limit: itemsPerPage },
+            ]);
+            const count = await Notification.count(filter);
             return res.json({
                 success: true,
                 notifications: list,
+                totalCount: count,
             });
         } catch (err) {
             logger.error(err);
@@ -59,14 +93,13 @@ module.exports = {
     },
     markNotificationAsRead: async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const notification = await Notification.findByIdAndUpdate(id, { $set: { read: true } });
-            if (!notification) {
-                return next(new AppError('Notification not found', 404));
-            }
+            const { ids } = req.body;
+            const result = await Notification.updateMany({
+                _id: { $in: ids },
+            }, { $set: { read: true } });
             return res.json({
                 success: true,
-                notification,
+                updated: result.modifiedCount,
             });
         } catch (err) {
             logger.error(err);
@@ -75,14 +108,11 @@ module.exports = {
     },
     deleteNotification: async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const notification = await Notification.findByIdAndDelete(id);
-            if (!notification) {
-                return next(new AppError('Notification not found', 404));
-            }
+            const { ids } = req.body;
+            const result = await Notification.deleteMany({ _id: { $in: ids } });
             return res.json({
                 success: true,
-                notification,
+                deleted: result.deletedCount,
             });
         } catch (err) {
             logger.error(err);

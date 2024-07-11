@@ -78,8 +78,16 @@
     url('./images/splashPageImages/or.webp'),
     url('./images/splashPageImages/humble.webp'); */
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
-  background-size: 891px 353px, 1203px 432px, 992px 420px, 1202px 415px;
-  background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;
+  background-size:
+    891px 353px,
+    1203px 432px,
+    992px 420px,
+    1202px 415px;
+  background-position:
+    600px 730px,
+    200px 2750px,
+    0 1400px,
+    0px 3800px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1501,7 +1509,8 @@
   -webkit-appearance: none;
   background-color: transparent;
   /* border: 2px solid #0079bf; */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
     inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
   padding: 10px;
   display: inline-block;

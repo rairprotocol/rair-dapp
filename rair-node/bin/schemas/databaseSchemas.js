@@ -21,6 +21,7 @@ module.exports = {
             url: Joi.string(),
         })),
         legal: Joi.string(),
+        signupMessage: Joi.string(),
     }),
     dbContracts: () => ({
         title: Joi.string(),
@@ -122,5 +123,11 @@ module.exports = {
         user: ethAddress,
         type: Joi.string(),
         read: Joi.boolean(),
+    }),
+    dbCategory: () => ({
+        list: Joi.array().items(Joi.object({
+            name: Joi.string().required(),
+            _id: mongoId,
+        })),
     }),
 };

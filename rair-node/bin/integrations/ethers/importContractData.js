@@ -227,8 +227,15 @@ module.exports = {
           limit,
         ],
       );
-      const ownerResponse = await alchemySDK.nft.getOwnersForNft(nft.contract.address, nft.tokenId);
-      [nft.owner] = ownerResponse.owners;
+      try {
+        const ownerResponse = await alchemySDK.nft.getOwnersForNft(
+          nft.contract.address,
+          nft.tokenId,
+        );
+        [nft.owner] = ownerResponse.owners;
+      } catch (err) {
+        log.error(`Could not query owner of NFT #${nft.tokenId}`);
+      }
       if (insertToken(nft, contract._id)) {
         numberOfTokensAdded += 1;
       }
