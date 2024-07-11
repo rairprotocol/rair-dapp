@@ -39,7 +39,7 @@ export interface ISelectNumber {
   items: SelectNumberItem[];
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   selectedToken: string | undefined;
-  totalCount: number | undefined;
+  totalCount: any;
   product: string | undefined;
   contract: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;

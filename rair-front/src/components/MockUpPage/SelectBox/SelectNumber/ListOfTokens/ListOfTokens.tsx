@@ -14,6 +14,7 @@ import { IListOfTokensComponent } from '../../selectBox.types';
 import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
 
 import '../../styles.css';
+import { useParams } from 'react-router';
 
 const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   blockchain,
@@ -29,7 +30,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   setIsOpen,
   totalCount
 }) => {
-  const [productTokenNumbers, setProductTokenNumbers] = useState<string[]>([]);
+  const [productTokenNumbers, setProductTokenNumbers] = useState<any>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
   const listOfTokensRef = useRef<HTMLDivElement>(null);
@@ -37,6 +38,8 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const [isOpens, setIsOpens] = useState<boolean>(false);
   const [isBack /*setIsBack*/] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(true);
+
+  const {} = useParams();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -58,16 +61,17 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   };
 
   const getPaginationData = useCallback(
-    async (target: HTMLElement) => {
+    async (target: HTMLElement, from, to) => {
       const indexes = getNumberFromStr(target?.innerText);
       const responseAllProduct = await axios.get<TNftItemResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${indexes[0]}&toToken=${indexes[1]}&limit=${limit}`
+        `/api/nft/network/${blockchain}/${contract}/${product}/numbers?fromToken=${indexes[0]}&toToken=${indexes[1]}`
       );
       const tokenMapping = {};
       if (responseAllProduct.data.success) {
         responseAllProduct.data.result.tokens.forEach((item) => {
           tokenMapping[item.token] = item;
         });
+        console.info(tokenMapping, 'tokenMapping')
         dispatch(setTokenData(tokenMapping));
       }
       setSelectedToken(selectedToken);
@@ -99,6 +103,20 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
     [listOfTokensRef, isOpens]
   );
 
+    const fetchSerialData = useCallback(async() => {
+      const {data} = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${blockchain}/${contract}/${product}/numbers`
+      );
+
+      console.info(data,'data')
+
+
+      if(data.success && data.tokens) {
+        console.info(data.tokens, 'data.result.tokens')
+        setProductTokenNumbers(data.tokens);
+      }
+    }, [blockchain,contract,product ])
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutSideListOfTokens);
     return () =>
@@ -106,18 +124,10 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   }, [handleClickOutSideListOfTokens, isOpen]);
 
   useEffect(() => {
-    let isDestroyed = false;
-    fetch(`/api/nft/network/${blockchain}/${contract}/${product}/`)
-      .then((res) => res.json())
-      .then((response) => {
-        if (!isDestroyed) {
-          setProductTokenNumbers(response.tokens);
-        }
-      });
-    return () => {
-      isDestroyed = true;
-    };
-  }, [blockchain, product, contract, setProductTokenNumbers]);
+    fetchSerialData();
+  }, [fetchSerialData]);
+
+  console.info(productTokenNumbers, 'productTokenNumbers')
 
   const availableRanges = useMemo(
     () =>
@@ -130,6 +140,8 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
       }, {}),
     [productTokenNumbers]
   );
+
+  console.info(availableRanges, 'availableRanges')
 
   const getPaginationToken = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -176,9 +188,9 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
             {ranges.map((i) => {
               return (
                 <button
-                  disabled={availableRanges?.[i] ? false : true}
+                  // disabled={availableRanges?.[i] ? false : true}
                   key={i}
-                  onClick={(e) => getPaginationToken(e)}
+                  onClick={(e) => getPaginationToken(e, i, i + 99)}
                   className={`serial-box serial-numb check-disable ${
                     hotdropsVar === 'true' ? 'hotdrops-bg' : ''
                   }`}>

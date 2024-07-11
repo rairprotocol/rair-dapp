@@ -59,6 +59,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const myRef = useRef(null);
   const hotdropsVar = import.meta.env.VITE_TESTNET === 'true';
+  const [serialNumberData, setSerialNumberData] = useState<any>([]);
   const [playing, setPlaying] = useState<boolean>(false);
   const [tokenDataForResale, setTokenDataForResale] = useState<any>(undefined);
   const [, /*offersIndexesData*/ setOffersIndexesData] =
@@ -152,13 +153,28 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     setOpenVideoPlayer(true);
   };
 
+  const fetchSerialNumberData = useCallback( async() => {
+    if(tokenId) {
+      const { data } = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${blockchain}/${contract}/${product}/numbers`
+      );
+
+      if(data.success && data?.tokens) {
+        setSerialNumberData(data.tokens);
+      }
+
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchSerialNumberData();
+  }, [fetchSerialNumberData])
+
   const fetchTokenOneData = useCallback( async() => {
     if(tokenId) {
       const { data } = await axios.get<TNftItemResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${tokenId}&toToken=${tokenId}`
       );
-
-      console.info(data, 'data fetchTokenOneData');
     }
   }, [tokenId])
 
@@ -180,11 +196,12 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
       response.data.result.tokens.forEach((token) => {
         mapping[token.token] = token;
       });
+
       setTokenFullData(mapping);
       getProductsFromOffer();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain, contract, product, setTokenFullData]);
+  }, [blockchain, contract, product, setTokenFullData, tokenId]);
 
   useEffect(() => {
     fetchTokenFullData();
@@ -400,7 +417,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               tokenData={tokenFullData}
               handleClickToken={handleClickToken}
               setSelectedToken={setSelectedToken}
-              totalCount={totalCount}
+              totalCount={serialNumberData}
               blockchain={blockchain as BlockchainType}
               offerData={offerData}
               product={product}

@@ -27,18 +27,6 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   const [arrayCount, setArrayCount] = useState<any>(undefined);
   const {tokenId} = useParams();
 
-  // for (let i = 0; i <= totalCount; i++) {
-  //   array[i] = i;
-  // }
-
-
-  useEffect(() => {
-    if(totalCount > 0) {
-      const array = new Array(totalCount).fill().map((_, index) => index);
-      setArrayCount(array);
-    }
-  }, [totalCount])
-
   return (
     <>
       <div ref={numberRef} className="select-number-container">
@@ -89,15 +77,15 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
               &#10007;
             </div>
           </div>
-          {totalCount &&
-            Array.from({ length: totalCount }, (_, index) => index + 1).map((_,indexId) => {
+          {totalCount && totalCount.length > 0 &&
+            totalCount.map((el,index) => {
               return (
                 <div
-                className={`select-number-box ${tokenId && Number(tokenId) === indexId ? "selected-box" : ''}`}
-                  // className={`select-number-box ${
-                  //   selectedToken === el.token ? 'selected-box' : ''
-                  // } ${el.sold ? 'sold-token' : ''}`}
-                  // data-title={` #${el.token}`}
+                // className={`select-number-box ${tokenId && Number(tokenId) === el.token ? "selected-box" : ''}`}
+                  className={`select-number-box ${
+                    tokenId === el.token ? 'selected-box' : ''
+                  } ${el.sold ? 'sold-token' : ''}`}
+                  data-title={` #${el.token}`}
                   style={{
                     background: `${
                       primaryColor === '#dedede'
@@ -111,12 +99,12 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                             : primaryButtonColor
                           : primaryButtonColor
                     }`,
-                    color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`
+                    color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`,
+                    fontWeight: "bold"
                   }}
-                  key={indexId}
-                  onClick={() => onClickItem(indexId)}>
-                  {/* {el.sold ? 'Sold' : el.token} */}
-                  {indexId}
+                  key={index}
+                  onClick={() => onClickItem(el.token)}>
+                  {el.sold ? 'Sold' : el.token}
                 </div>
               );
             })}

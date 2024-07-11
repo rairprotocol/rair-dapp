@@ -52,7 +52,7 @@ const SelectNumber: React.FC<ISelectNumber> = ({
     handleIsOpen();
   };
 
-  return totalCount && totalCount < 100 ? (
+  return totalCount && totalCount.length < 100 ? (
     <CurrentTokens
       primaryColor={primaryColor}
       items={items}
