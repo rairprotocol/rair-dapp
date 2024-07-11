@@ -51,7 +51,6 @@ const {
 const {
   pagination,
   dbId,
-  dbIdArray,
   fileId,
   userAddress,
   resaleFlag,
@@ -134,7 +133,6 @@ module.exports = {
   // Common schemas
   pagination,
   dbId,
-  dbIdArray,
   fileId,
   userAddress,
   resaleFlag,

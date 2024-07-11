@@ -60,14 +60,13 @@ export interface ISvgLock {
   color: string;
 }
 
-export type TWhatPage = 'nft' | 'video' | 'notifications';
+export type TWhatPage = 'nft' | 'video';
 
 export interface IPaginationBox {
   changePage: (currentPage: number) => void;
   currentPage: number;
   totalPageForPagination: number | undefined;
   whatPage: TWhatPage;
-  itemsPerPageNotifications?: number;
 }
 
 export interface ILikeButton {
