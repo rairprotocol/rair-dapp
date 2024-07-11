@@ -236,7 +236,6 @@ export const RightSideMenu = styled.div`
     width: 90px;
     height: 40px;
     box-shadow: inset 0px 3.11351px 3.11351px rgba(74, 74, 74, 0.25);
-    background: #bb73d7 !important;
     border: 1px solid #f1b4e6;
     border-radius: 10px;
     margin-right: 16px;

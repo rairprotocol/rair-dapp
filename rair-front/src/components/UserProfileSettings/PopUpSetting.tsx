@@ -24,6 +24,7 @@ import {
   SvgUpload,
   SvgUserIcon
 } from './SettingsIcons/SettingsIcons';
+import useServerSettings from '../adminViews/useServerSettings';
 
 const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const settingBlockRef = useRef();
@@ -40,6 +41,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   const [userRairBalance, setUserRairBalance] = useState<
     BigNumber | undefined
   >();
+  const {customSecondaryButtonColor} = useServerSettings();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -265,12 +267,12 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                   ? `${
                       textColor === '#FFF' || textColor === 'black'
                         ? '#F95631'
-                        : textColor
+                        : customSecondaryButtonColor
                     }`
                   : `${
                       textColor === '#FFF' || textColor === 'black'
                         ? '#E882D5'
-                        : textColor
+                        : customSecondaryButtonColor
                     }`,
               WebkitBackgroundClip: 'text'
             }}></i>

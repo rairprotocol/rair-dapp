@@ -43,6 +43,7 @@ import MetadataAttributesProperties from './TitleCollection/FilterMetadataTokens
 import TitleCollection from './TitleCollection/TitleCollection';
 
 import './../../GeneralCollectionStyles.css';
+import useServerSettings from '../../../adminViews/useServerSettings';
 
 const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   embeddedParams,
@@ -76,6 +77,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [newAttr, setNewAttr] = useState<any>();
   const [selectedAttributeValues, setSelectedAttributeValues] =
     useState<any>(undefined);
+
+    const {customSecondaryButtonColor} = useServerSettings();
 
   const { primaryColor, textColor, primaryButtonColor } = useSelector<
     RootState,
@@ -447,12 +450,12 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                       ? `${
                           textColor === '#FFF' || textColor === 'black'
                             ? '#F95631'
-                            : textColor
+                            : customSecondaryButtonColor
                         }`
                       : `${
                           textColor === '#FFF' || textColor === 'black'
                             ? '#E882D5'
-                            : textColor
+                            : customSecondaryButtonColor
                         }`
                 }}
                 aria-hidden="true"></i>

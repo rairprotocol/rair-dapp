@@ -38,6 +38,7 @@ import UserProfileCreated from './UserProfileCreated/UserProfileCreated';
 import UserProfileFavoritesTab from './UserProfileFavorites/UserProfileFavoritesTab';
 
 import './UserProfilePage.css';
+import useServerSettings from '../adminViews/useServerSettings';
 
 const UserProfilePage: React.FC = () => {
   const { primaryColor, textColor, headerLogo } = useSelector<
@@ -73,6 +74,7 @@ const UserProfilePage: React.FC = () => {
     undefined
   );
   const [metadataFilter, setMetadataFilter] = useState<boolean>(false);
+  const {customSecondaryButtonColor} = useServerSettings();
 
   const { width } = useWindowDimensions();
 
@@ -528,12 +530,12 @@ const UserProfilePage: React.FC = () => {
                           ? `${
                               textColor === '#FFF' || textColor === 'black'
                                 ? '#F95631'
-                                : textColor
+                                : customSecondaryButtonColor
                             }`
                           : `${
                               textColor === '#FFF' || textColor === 'black'
                                 ? '#E882D5'
-                                : textColor
+                                : customSecondaryButtonColor
                             }`
                     }}
                     aria-hidden="true"></i>

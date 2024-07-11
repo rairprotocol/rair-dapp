@@ -37,6 +37,7 @@ import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComp
 
 //styles
 import './Header.css';
+import useServerSettings from '../adminViews/useServerSettings';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -51,6 +52,8 @@ const MainHeader: React.FC<IMainHeader> = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const {customSecondaryButtonColor} = useServerSettings();
 
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(true);
@@ -359,12 +362,12 @@ const MainHeader: React.FC<IMainHeader> = ({
                 ? `${
                     textColor === '#FFF' || textColor === 'black'
                       ? '#F95631'
-                      : textColor
+                      : customSecondaryButtonColor
                   }`
                 : `${
                     textColor === '#FFF' || textColor === 'black'
                       ? '#E882D5'
-                      : textColor
+                      : customSecondaryButtonColor
                   }`
           }}
           aria-hidden="true"></i>

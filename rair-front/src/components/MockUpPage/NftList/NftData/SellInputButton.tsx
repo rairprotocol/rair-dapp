@@ -8,6 +8,7 @@ import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import InputField from '../../../common/InputField';
 import { ISellInputButton } from '../../mockupPage.types';
+import useServerSettings from '../../../adminViews/useServerSettings';
 
 const SellInputButton: React.FC<ISellInputButton> = ({
   tokenData,
@@ -19,6 +20,7 @@ const SellInputButton: React.FC<ISellInputButton> = ({
   const { textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const {customSecondaryButtonColor} = useServerSettings();
 
   const handleInputClear = useCallback(() => {
     if (inputSellValue) {
@@ -40,6 +42,20 @@ const SellInputButton: React.FC<ISellInputButton> = ({
             placeholder="Your price"
           />
           <CloseIcon
+           style={{
+            color:
+              import.meta.env.VITE_TESTNET === 'true'
+                ? `${
+                    textColor === '#FFF' || textColor === 'black'
+                      ? '#F95631'
+                      : customSecondaryButtonColor
+                  }`
+                : `${
+                    textColor === '#FFF' || textColor === 'black'
+                      ? '#E882D5'
+                      : customSecondaryButtonColor
+                  }`
+          }}
             className="input-sell-close-icon"
             fontSize="small"
             onClick={handleInputClear}

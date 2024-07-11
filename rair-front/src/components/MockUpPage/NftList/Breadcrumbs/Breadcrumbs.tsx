@@ -15,6 +15,7 @@ import { TParamsBreadcrumbsComponent } from '../../mockupPage.types';
 import { IBreadcrumbsComponent } from '../nftList.types';
 
 import './Breadcrumbs.css';
+import useServerSettings from '../../../adminViews/useServerSettings';
 
 const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
   embeddedParams
@@ -27,6 +28,7 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+  const {customSecondaryButtonColor} = useServerSettings();
 
   function handleClick(event: MouseEvent) {
     event.preventDefault();
@@ -71,12 +73,12 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
                   ? `${
                       textColor === '#FFF' || textColor === 'black'
                         ? '#F95631'
-                        : textColor
+                        : customSecondaryButtonColor
                     }`
                   : `${
                       textColor === '#FFF' || textColor === 'black'
                         ? '#E882D5'
-                        : textColor
+                        : customSecondaryButtonColor
                     }`
             }}
             width={24}
@@ -110,12 +112,12 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
                     ? `${
                         textColor === '#FFF' || textColor === 'black'
                           ? '#F95631'
-                          : textColor
+                          : customSecondaryButtonColor
                       }`
                     : `${
                         textColor === '#FFF' || textColor === 'black'
                           ? '#E882D5'
-                          : textColor
+                          : customSecondaryButtonColor
                       }`
               }}
               width={24}

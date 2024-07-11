@@ -26,6 +26,7 @@ import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 
 import './FilteringBlock.css';
+import useServerSettings from '../../adminViews/useServerSettings';
 
 const FilteringBlock = ({
   sortItem,
@@ -55,6 +56,8 @@ const FilteringBlock = ({
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
+
+  const {customSecondaryButtonColor} = useServerSettings();
 
   const [isOpenCategories, setIsOpenCategories] = useState(false);
   const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
@@ -159,10 +162,12 @@ const FilteringBlock = ({
                   textColor={textColor}
                   sortItem={sortItem}
                   primaryColor={primaryColor}
+                  customSecondaryButtonColor={customSecondaryButtonColor}
                   className="fas fa-arrow-up"
                 />
                 <StyledArrowDownIcon
                   textColor={textColor}
+                  customSecondaryButtonColor={customSecondaryButtonColor}
                   sortItem={sortItem}
                   primaryColor={primaryColor}
                   className="fas fa-arrow-down"
@@ -182,6 +187,7 @@ const FilteringBlock = ({
                     rotate="true"
                     primaryColor={primaryColor}
                     textColor={textColor}
+                    customSecondaryButtonColor={customSecondaryButtonColor}
                   />
                 ) : (
                   // <i className="fas fa-chevron-down"></i>
@@ -189,6 +195,7 @@ const FilteringBlock = ({
                     className="fas fa-chevron-up"
                     primaryColor={primaryColor}
                     textColor={textColor}
+                    customSecondaryButtonColor={customSecondaryButtonColor}
                   />
                 )}
               </div>
@@ -268,11 +275,25 @@ const FilteringBlock = ({
                       {filterCloseText ? (
                         <CloseIcon
                           style={{
-                            marginRight: '5px'
-                          }}
+                            marginRight: '5px',
+                            color: import.meta.env.VITE_TESTNET === 'true'
+                            ? `${
+                                textColor === '#FFF' || textColor === 'black'
+                                  ? '#F95631'
+                                  : customSecondaryButtonColor
+                              }`
+                            : filterPopUp
+                              ? '#fff'
+                              : `${
+                                  textColor === '#FFF' || textColor === 'black'
+                                    ? '#E882D5'
+                                    : customSecondaryButtonColor
+                                }`}
+                          }
                         />
                       ) : (
                         <StyledFilterIcon
+                          customSecondaryButtonColor={customSecondaryButtonColor}
                           primaryColor={primaryColor}
                           textColor={textColor}
                           filterPopUp={filterPopUp}></StyledFilterIcon>
@@ -280,6 +301,7 @@ const FilteringBlock = ({
                     </>
                   ) : (
                     <StyledFilterIcon
+                      customSecondaryButtonColor={customSecondaryButtonColor}
                       primaryColor={primaryColor}
                       textColor={textColor}
                       filterPopUp={filterPopUp}></StyledFilterIcon>
@@ -301,18 +323,37 @@ const FilteringBlock = ({
                     <>
                       {filterCloseText ? (
                         <StyledFilterIcon
-                          filterPopUp={filterPopUp}></StyledFilterIcon>
+                        customSecondaryButtonColor={customSecondaryButtonColor}
+                        primaryColor={primaryColor}
+                        textColor={textColor}
+                        filterPopUp={filterPopUp}></StyledFilterIcon>
                       ) : (
                         <CloseIcon
                           style={{
-                            marginRight: '5px'
-                          }}
+                            marginRight: '5px',
+                            color: import.meta.env.VITE_TESTNET === 'true'
+                            ? `${
+                                textColor === '#FFF' || textColor === 'black'
+                                  ? '#F95631'
+                                  : customSecondaryButtonColor
+                              }`
+                            : filterPopUp
+                              ? '#fff'
+                              : `${
+                                  textColor === '#FFF' || textColor === 'black'
+                                    ? '#E882D5'
+                                    : customSecondaryButtonColor
+                                }`}
+                          }
                         />
                       )}
                     </>
                   ) : (
                     <StyledFilterIcon
-                      filterPopUp={filterPopUp}></StyledFilterIcon>
+                    customSecondaryButtonColor={customSecondaryButtonColor}
+                    primaryColor={primaryColor}
+                    textColor={textColor}
+                    filterPopUp={filterPopUp}></StyledFilterIcon>
                   )}
                   {width > 700 && <span>Filters</span>}
                 </div>

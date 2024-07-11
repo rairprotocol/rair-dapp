@@ -38,6 +38,7 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
+import useServerSettings from '../adminViews/useServerSettings';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -78,10 +79,14 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
+  const {customSecondaryButtonColor} = useServerSettings();
   const { erc777Instance, currentUserAddress, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+
+  const {primaryButtonColor, textColor } =
+  useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -223,10 +228,22 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                 <div>
                   {isAboutPage ? null : (
                     <button
-                      style={{ backgroundColor: primaryColor }}
-                      className={`btn btn-connect-wallet-mobile ${
-                        hotdropsVar === 'true' ? 'hotdrops-bg' : ''
-                      }`}
+                      className={`btn rair-button btn-connect-wallet-mobile`}
+                      style={{
+                        background: `${
+                          primaryColor === '#dedede'
+                            ? import.meta.env.VITE_TESTNET === 'true'
+                              ? 'var(--hot-drops)'
+                              : 'linear-gradient(to right, #e882d5, #725bdb)'
+                            : import.meta.env.VITE_TESTNET === 'true'
+                              ? primaryButtonColor ===
+                                'linear-gradient(to right, #e882d5, #725bdb)'
+                                ? 'var(--hot-drops)'
+                                : primaryButtonColor
+                              : primaryButtonColor
+                        }`,
+                        color: textColor
+                      }}
                       onClick={() => connectUserData()}>
                       {loginProcess ? 'Please wait...' : 'Connect'}
                     </button>
@@ -249,7 +266,20 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                             }}
                             activeSearch={activeSearch}
                             marginRight={'10px'}>
-                            <i className="fas fa-search" aria-hidden="true"></i>
+                            <i className="fas fa-search"  style={{
+                  color:
+                    import.meta.env.VITE_TESTNET === 'true'
+                      ? `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#F95631'
+                            : customSecondaryButtonColor
+                        }`
+                      : `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#E882D5'
+                            : customSecondaryButtonColor
+                        }`
+                }} aria-hidden="true"></i>
                           </SocialBoxSearch>
                           {/* this is where the aikon widget should go: */}
                           {currentUserAddress && userBalance.length < 7 && (
@@ -343,7 +373,20 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               }}
               activeSearch={activeSearch}
               marginRight={'17px'}>
-              <i className="fas fa-search" aria-hidden="true"></i>
+              <i className="fas fa-search" style={{
+                  color:
+                    import.meta.env.VITE_TESTNET === 'true'
+                      ? `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#F95631'
+                            : customSecondaryButtonColor
+                        }`
+                      : `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#E882D5'
+                            : customSecondaryButtonColor
+                        }`
+                }} aria-hidden="true"></i>
             </SocialBoxSearch>
           )}
           {click ? (

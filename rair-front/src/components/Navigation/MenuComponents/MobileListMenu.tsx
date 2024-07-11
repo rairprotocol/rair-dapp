@@ -21,6 +21,8 @@ import { TAxiosCollectionData } from '../../Header/header.types';
 import ImageCustomForSearch from '../../MockUpPage/utils/image/ImageCustomForSearch';
 
 import { List, SearchInputMobile } from './../NavigationItems/NavigationItems';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import useServerSettings from '../../adminViews/useServerSettings';
 
 interface IMobileListMenu {
   click: boolean;
@@ -52,6 +54,10 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
     (store) => store.allInformationFromSearch
   );
   const hotdropsVar = import.meta.env.VITE_TESTNET;
+
+  const { textColor } =
+  useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const {customSecondaryButtonColor} = useServerSettings();
 
   const [textSearch, setTextSearch] = useState<string>('');
 
@@ -155,7 +161,20 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
             <SearchInputMobile
               hotdrops={hotdropsVar}
               primaryColor={primaryColor}>
-              <i className="fas fa-search" aria-hidden="true"></i>
+              <i className="fas fa-search" style={{
+                  color:
+                    import.meta.env.VITE_TESTNET === 'true'
+                      ? `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#F95631'
+                            : customSecondaryButtonColor
+                        }`
+                      : `${
+                          textColor === '#FFF' || textColor === 'black'
+                            ? '#E882D5'
+                            : customSecondaryButtonColor
+                        }`
+                }} aria-hidden="true"></i>
               {import.meta.env.VITE_TESTNET === 'true' ? (
                 <input
                   className={

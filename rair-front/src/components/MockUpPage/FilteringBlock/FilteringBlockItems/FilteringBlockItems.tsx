@@ -103,14 +103,14 @@ export const StyledFilterIcon = styled(FilterIconNew)`
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
-              : props.textColor
+              : props.customSecondaryButtonColor
           }`
         : props.filterPopUp
           ? '#fff'
           : `${
               props.textColor === '#FFF' || props.textColor === 'black'
                 ? '#E882D5'
-                : props.textColor
+                : props.customSecondaryButtonColor
             }`};
   }
   margin-right: 8px;
@@ -123,13 +123,13 @@ export const StyledArrowUpIcon = styled(ArrowUp)`
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
-              : props.textColor
+              : props.customSecondaryButtonColor
           }`
         : props.sortItem === 'up'
           ? `${
               props.textColor === '#FFF' || props.textColor === 'black'
                 ? '#E882D5'
-                : props.textColor
+                : props.customSecondaryButtonColor
             }`
           : '#A7A6A6'};
   }
@@ -141,13 +141,13 @@ export const StyledArrowDownIcon = styled(ArrowDown)`
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
-              : props.textColor
+              : props.customSecondaryButtonColor
           }`
         : props.sortItem === 'down' &&
           `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#E882D5'
-              : props.textColor
+              : props.customSecondaryButtonColor
           }`};
   }
 `;
@@ -162,12 +162,12 @@ export const StyledShevronIcon = styled(SimpleFilterArrow)`
         ? `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#F95631'
-              : props.textColor
+              : props.customSecondaryButtonColor
           }`
         : `${
             props.textColor === '#FFF' || props.textColor === 'black'
               ? '#E882D5'
-              : props.textColor
+              : props.customSecondaryButtonColor
           }`};
   }
 `;

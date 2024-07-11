@@ -42,6 +42,7 @@ import {
 } from './FilteringBlock/filteringBlock.types';
 import { NftList } from './NftList/NftList';
 import PaginationBox from './PaginationBox/PaginationBox';
+import useServerSettings from '../adminViews/useServerSettings';
 
 const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const [videoUnlocked, setVideoUnlocked] = useState<boolean>(false);
@@ -65,6 +66,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const currentPage = useSelector<RootState, number>(
     (store) => store.getPageStore.currentPage
   );
+  const {customSecondaryButtonColor} = useServerSettings();
   const { nftListTotal, nftList, itemsPerPage } = useSelector<
     RootState,
     InitialNftDataStateType
@@ -270,12 +272,12 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
                     ? `${
                         textColor === '#FFF' || textColor === 'black'
                           ? '#F95631'
-                          : textColor
+                          : customSecondaryButtonColor
                       }`
                     : `${
                         textColor === '#FFF' || textColor === 'black'
                           ? '#E882D5'
-                          : textColor
+                          : customSecondaryButtonColor
                       }`
               }}
               aria-hidden="true"></i>
