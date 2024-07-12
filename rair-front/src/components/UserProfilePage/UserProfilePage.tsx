@@ -38,10 +38,9 @@ import UserProfileCreated from './UserProfileCreated/UserProfileCreated';
 import UserProfileFavoritesTab from './UserProfileFavorites/UserProfileFavoritesTab';
 
 import './UserProfilePage.css';
-import useServerSettings from '../adminViews/useServerSettings';
 
 const UserProfilePage: React.FC = () => {
-  const { primaryColor, textColor, headerLogo } = useSelector<
+  const { primaryColor, textColor, headerLogo, iconColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -74,7 +73,6 @@ const UserProfilePage: React.FC = () => {
     undefined
   );
   const [metadataFilter, setMetadataFilter] = useState<boolean>(false);
-  const {customSecondaryButtonColor} = useServerSettings();
 
   const { width } = useWindowDimensions();
 
@@ -526,17 +524,11 @@ const UserProfilePage: React.FC = () => {
                     className="fas fa-search fa-lg fas-custom"
                     style={{
                       color:
-                        import.meta.env.VITE_TESTNET === 'true'
-                          ? `${
-                              textColor === '#FFF' || textColor === 'black'
-                                ? '#F95631'
-                                : customSecondaryButtonColor
-                            }`
-                          : `${
-                              textColor === '#FFF' || textColor === 'black'
-                                ? '#E882D5'
-                                : customSecondaryButtonColor
-                            }`
+              import.meta.env.VITE_TESTNET === 'true'
+                ? 
+                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                : `${
+                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                     }}
                     aria-hidden="true"></i>
                   <FilteringBlock

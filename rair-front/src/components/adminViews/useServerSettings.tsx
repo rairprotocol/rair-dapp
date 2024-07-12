@@ -99,7 +99,7 @@ const useServerSettings = () => {
       setFooterLinks(settings.footerLinks);
     }
     setIsLoading(false);
-  }, [dispatch]);
+  }, [dispatch, ]);
 
   useEffect(() => {
     getServerSettings();
@@ -175,5 +175,6 @@ const useServerSettings = () => {
     isLoading
   };
 };
+
 
 export default useServerSettings;

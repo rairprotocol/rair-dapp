@@ -38,7 +38,6 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
-import useServerSettings from '../adminViews/useServerSettings';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -79,13 +78,12 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
-  const {customSecondaryButtonColor} = useServerSettings();
   const { erc777Instance, currentUserAddress, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
 
-  const {primaryButtonColor, textColor } =
+  const {primaryButtonColor, textColor, iconColor } =
   useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
@@ -268,17 +266,11 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                             marginRight={'10px'}>
                             <i className="fas fa-search"  style={{
                   color:
-                    import.meta.env.VITE_TESTNET === 'true'
-                      ? `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#F95631'
-                            : customSecondaryButtonColor
-                        }`
-                      : `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#E882D5'
-                            : customSecondaryButtonColor
-                        }`
+                  import.meta.env.VITE_TESTNET === 'true'
+                    ? 
+                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                    : `${
+                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                 }} aria-hidden="true"></i>
                           </SocialBoxSearch>
                           {/* this is where the aikon widget should go: */}
@@ -374,18 +366,12 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               activeSearch={activeSearch}
               marginRight={'17px'}>
               <i className="fas fa-search" style={{
-                  color:
-                    import.meta.env.VITE_TESTNET === 'true'
-                      ? `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#F95631'
-                            : customSecondaryButtonColor
-                        }`
-                      : `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#E882D5'
-                            : customSecondaryButtonColor
-                        }`
+                 color:
+                 import.meta.env.VITE_TESTNET === 'true'
+                   ? 
+                   `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                   : `${
+                     iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                 }} aria-hidden="true"></i>
             </SocialBoxSearch>
           )}

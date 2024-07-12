@@ -26,7 +26,6 @@ import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 
 import './FilteringBlock.css';
-import useServerSettings from '../../adminViews/useServerSettings';
 
 const FilteringBlock = ({
   sortItem,
@@ -52,12 +51,10 @@ const FilteringBlock = ({
   const [sortPopUp, setSortPopUp] = useState(false);
   const sortRef = useRef();
 
-  const { primaryColor, secondaryColor, textColor } = useSelector<
+  const { primaryColor, secondaryColor, textColor, iconColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
-
-  const {customSecondaryButtonColor} = useServerSettings();
 
   const [isOpenCategories, setIsOpenCategories] = useState(false);
   const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
@@ -162,12 +159,12 @@ const FilteringBlock = ({
                   textColor={textColor}
                   sortItem={sortItem}
                   primaryColor={primaryColor}
-                  customSecondaryButtonColor={customSecondaryButtonColor}
+                  customSecondaryButtonColor={iconColor}
                   className="fas fa-arrow-up"
                 />
                 <StyledArrowDownIcon
                   textColor={textColor}
-                  customSecondaryButtonColor={customSecondaryButtonColor}
+                  customSecondaryButtonColor={iconColor}
                   sortItem={sortItem}
                   primaryColor={primaryColor}
                   className="fas fa-arrow-down"
@@ -187,7 +184,7 @@ const FilteringBlock = ({
                     rotate="true"
                     primaryColor={primaryColor}
                     textColor={textColor}
-                    customSecondaryButtonColor={customSecondaryButtonColor}
+                    customSecondaryButtonColor={iconColor}
                   />
                 ) : (
                   // <i className="fas fa-chevron-down"></i>
@@ -195,7 +192,7 @@ const FilteringBlock = ({
                     className="fas fa-chevron-up"
                     primaryColor={primaryColor}
                     textColor={textColor}
-                    customSecondaryButtonColor={customSecondaryButtonColor}
+                    customSecondaryButtonColor={iconColor}
                   />
                 )}
               </div>
@@ -277,23 +274,16 @@ const FilteringBlock = ({
                           style={{
                             marginRight: '5px',
                             color: import.meta.env.VITE_TESTNET === 'true'
-                            ? `${
-                                textColor === '#FFF' || textColor === 'black'
-                                  ? '#F95631'
-                                  : customSecondaryButtonColor
-                              }`
+                            ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
                             : filterPopUp
                               ? '#fff'
                               : `${
-                                  textColor === '#FFF' || textColor === 'black'
-                                    ? '#E882D5'
-                                    : customSecondaryButtonColor
-                                }`}
+                                iconColor === '#1486c5' ? '#E882D5' : iconColor}`}
                           }
                         />
                       ) : (
                         <StyledFilterIcon
-                          customSecondaryButtonColor={customSecondaryButtonColor}
+                          customSecondaryButtonColor={iconColor}
                           primaryColor={primaryColor}
                           textColor={textColor}
                           filterPopUp={filterPopUp}></StyledFilterIcon>
@@ -301,7 +291,7 @@ const FilteringBlock = ({
                     </>
                   ) : (
                     <StyledFilterIcon
-                      customSecondaryButtonColor={customSecondaryButtonColor}
+                      customSecondaryButtonColor={iconColor}
                       primaryColor={primaryColor}
                       textColor={textColor}
                       filterPopUp={filterPopUp}></StyledFilterIcon>
@@ -323,7 +313,7 @@ const FilteringBlock = ({
                     <>
                       {filterCloseText ? (
                         <StyledFilterIcon
-                        customSecondaryButtonColor={customSecondaryButtonColor}
+                        customSecondaryButtonColor={iconColor}
                         primaryColor={primaryColor}
                         textColor={textColor}
                         filterPopUp={filterPopUp}></StyledFilterIcon>
@@ -332,25 +322,18 @@ const FilteringBlock = ({
                           style={{
                             marginRight: '5px',
                             color: import.meta.env.VITE_TESTNET === 'true'
-                            ? `${
-                                textColor === '#FFF' || textColor === 'black'
-                                  ? '#F95631'
-                                  : customSecondaryButtonColor
-                              }`
+                            ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
                             : filterPopUp
                               ? '#fff'
                               : `${
-                                  textColor === '#FFF' || textColor === 'black'
-                                    ? '#E882D5'
-                                    : customSecondaryButtonColor
-                                }`}
+                                iconColor === '#1486c5' ? '#E882D5' : iconColor}`}
                           }
                         />
                       )}
                     </>
                   ) : (
                     <StyledFilterIcon
-                    customSecondaryButtonColor={customSecondaryButtonColor}
+                    customSecondaryButtonColor={iconColor}
                     primaryColor={primaryColor}
                     textColor={textColor}
                     filterPopUp={filterPopUp}></StyledFilterIcon>

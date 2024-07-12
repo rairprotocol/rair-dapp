@@ -37,7 +37,6 @@ import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComp
 
 //styles
 import './Header.css';
-import useServerSettings from '../adminViews/useServerSettings';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -53,11 +52,9 @@ const MainHeader: React.FC<IMainHeader> = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {customSecondaryButtonColor} = useServerSettings();
-
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(true);
-  const { primaryColor, headerLogo, primaryButtonColor, textColor } =
+  const { primaryColor, headerLogo, primaryButtonColor, textColor, secondaryButtonColor, iconColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { connectUserData } = useConnectUser();
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
@@ -71,6 +68,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
+  console.info(iconColor, 'iconColor')
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -124,6 +123,8 @@ const MainHeader: React.FC<IMainHeader> = ({
     navigate(`/${userAddress}`);
     setTextSearch('');
   };
+
+  console.info(secondaryButtonColor, 'secondaryButtonColor')
 
   const Highlight = (props) => {
     const { filter, str } = props;
@@ -359,16 +360,10 @@ const MainHeader: React.FC<IMainHeader> = ({
           style={{
             color:
               import.meta.env.VITE_TESTNET === 'true'
-                ? `${
-                    textColor === '#FFF' || textColor === 'black'
-                      ? '#F95631'
-                      : customSecondaryButtonColor
-                  }`
+                ? 
+                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
                 : `${
-                    textColor === '#FFF' || textColor === 'black'
-                      ? '#E882D5'
-                      : customSecondaryButtonColor
-                  }`
+                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
           }}
           aria-hidden="true"></i>
       </div>

@@ -16,7 +16,6 @@ import InputSelect from '../common/InputSelect';
 const ServerSettings = ({ fullContractData }) => {
   const serverSettings = useServerSettings();
   const [productOptions, setProductOptions] = useState<OptionsType[]>();
-
   const [customLightModeLogo, setCustomLightModeLogo] = useState({ name: '' });
   const [customDarkModeLogo, setCustomDarkModeLogo] = useState({ name: '' });
   const [customLightModeMobileLogo, setCustomLightModeMobileLogo] = useState({
@@ -74,7 +73,7 @@ const ServerSettings = ({ fullContractData }) => {
         reactSwal.fire('Success', 'Setting updated', 'success');
       }
     },
-    [reactSwal, serverSettings.getServerSettings]
+    [reactSwal, serverSettings.getServerSettings, serverSettings.customPrimaryColor, serverSettings.customTextColor, serverSettings.customPrimaryButtonColor, serverSettings.customSecondaryButtonColor]
   );
 
   const setBlockchainSetting = useCallback(

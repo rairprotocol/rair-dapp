@@ -22,7 +22,6 @@ import ImageCustomForSearch from '../../MockUpPage/utils/image/ImageCustomForSea
 
 import { List, SearchInputMobile } from './../NavigationItems/NavigationItems';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import useServerSettings from '../../adminViews/useServerSettings';
 
 interface IMobileListMenu {
   click: boolean;
@@ -55,9 +54,8 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   );
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { textColor } =
+  const { iconColor } =
   useSelector<RootState, ColorStoreType>((store) => store.colorStore);
-  const {customSecondaryButtonColor} = useServerSettings();
 
   const [textSearch, setTextSearch] = useState<string>('');
 
@@ -163,17 +161,11 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
               primaryColor={primaryColor}>
               <i className="fas fa-search" style={{
                   color:
-                    import.meta.env.VITE_TESTNET === 'true'
-                      ? `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#F95631'
-                            : customSecondaryButtonColor
-                        }`
-                      : `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#E882D5'
-                            : customSecondaryButtonColor
-                        }`
+                  import.meta.env.VITE_TESTNET === 'true'
+                    ? 
+                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                    : `${
+                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                 }} aria-hidden="true"></i>
               {import.meta.env.VITE_TESTNET === 'true' ? (
                 <input

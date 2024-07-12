@@ -42,7 +42,6 @@ import {
 } from './FilteringBlock/filteringBlock.types';
 import { NftList } from './NftList/NftList';
 import PaginationBox from './PaginationBox/PaginationBox';
-import useServerSettings from '../adminViews/useServerSettings';
 
 const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const [videoUnlocked, setVideoUnlocked] = useState<boolean>(false);
@@ -66,7 +65,6 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const currentPage = useSelector<RootState, number>(
     (store) => store.getPageStore.currentPage
   );
-  const {customSecondaryButtonColor} = useServerSettings();
   const { nftListTotal, nftList, itemsPerPage } = useSelector<
     RootState,
     InitialNftDataStateType
@@ -74,7 +72,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const totalNumberVideo = useSelector<RootState, number | undefined>(
     (store) => store.videosStore.totalNumberVideo
   );
-  const { primaryColor, textColor, secondaryColor, primaryButtonColor } =
+  const { primaryColor, textColor, secondaryColor, primaryButtonColor, iconColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const videos = useSelector<RootState, MediaListResponseType | null>(
     (store) => store.videosStore.videos
@@ -268,17 +266,11 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
               className={`fas fa-search fa-lg fas-custom`}
               style={{
                 color:
-                  import.meta.env.VITE_TESTNET === 'true'
-                    ? `${
-                        textColor === '#FFF' || textColor === 'black'
-                          ? '#F95631'
-                          : customSecondaryButtonColor
-                      }`
-                    : `${
-                        textColor === '#FFF' || textColor === 'black'
-                          ? '#E882D5'
-                          : customSecondaryButtonColor
-                      }`
+              import.meta.env.VITE_TESTNET === 'true'
+                ? 
+                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                : `${
+                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
               }}
               aria-hidden="true"></i>
             <FilteringBlock

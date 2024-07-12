@@ -21,7 +21,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   onClickItem,
   numberRef
 }) => {
-  const { primaryButtonColor, textColor } = useSelector<RootState, ColorStoreType>(
+  const { primaryButtonColor, textColor, iconColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
