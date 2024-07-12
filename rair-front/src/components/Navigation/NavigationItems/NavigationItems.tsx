@@ -11,6 +11,7 @@ interface IMenuMobileWrapper {
   isSplashPage?: boolean;
   hotdrops?: string;
   realChainId?: string | undefined;
+  secondaryColor?: string;
 }
 
 export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
@@ -28,10 +29,10 @@ export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
 `;
 
 export const Nav = styled.nav<IMenuMobileWrapper>`
-  background: ${(props) =>
-    props.primaryColor === '#dedede'
-      ? '#fff'
-      : `${props.hotdrops === 'true' ? 'rgb(11 11 11)' : '#383637'}`};
+background: ${(props) =>
+  props.primaryColor === '#dedede'
+    ? '#fff'
+    : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -83,10 +84,10 @@ export const TitleEditProfile = styled.h4`
 `;
 
 export const List = styled.ul<IMenuMobileWrapper>`
-  background: ${(props) =>
-    props.primaryColor === '#dedede'
-      ? '#fff'
-      : `${props.hotdrops === 'true' ? 'rgb(11 11 11)' : 'rgb(56, 54, 55)'}`};
+background: ${(props) =>
+  props.primaryColor === '#dedede'
+    ? '#fff'
+    : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
   overflow: ${(props) => props.click && 'hidden'};
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;

@@ -7,13 +7,14 @@ interface IHeaderContainerStyled {
   isSplashPage?: boolean;
   hotdrops?: string;
   realChainId?: string | undefined;
+  secondaryColor?: string;
 }
 
 export const HeaderContainer = styled.div<IHeaderContainerStyled>`
   background: ${(props) =>
     props.primaryColor === '#dedede'
       ? '#fff'
-      : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
+      : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
   margin-top: ${(props) =>
     props.realChainId &&
     props.showAlert &&

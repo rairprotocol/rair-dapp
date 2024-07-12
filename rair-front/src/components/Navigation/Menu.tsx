@@ -88,7 +88,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     ContractsInitialType
   >((state) => state.contractStore);
 
-  const {primaryButtonColor, textColor, iconColor } =
+  const {primaryButtonColor, textColor, iconColor, secondaryColor } =
   useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
@@ -210,10 +210,11 @@ useEffect(() => {
     <MenuMobileWrapper
       className="col-1 rounded burder-menu"
       showAlert={showAlert}
+      secondaryColor={secondaryColor}
       selectedChain={selectedChain}
       isSplashPage={isSplashPage}
       realChainId={realChainId}>
-      <Nav hotdrops={hotdropsVar} primaryColor={primaryColor}>
+      <Nav hotdrops={hotdropsVar} secondaryColor={secondaryColor} primaryColor={primaryColor}>
         <MobileChoiseNav
           click={click}
           messageAlert={messageAlert}
@@ -233,6 +234,7 @@ useEffect(() => {
           </Suspense>
         ) : (
           <MobileListMenu
+          secondaryColor={secondaryColor}
             primaryColor={primaryColor}
             click={click}
             toggleMenu={toggleMenu}

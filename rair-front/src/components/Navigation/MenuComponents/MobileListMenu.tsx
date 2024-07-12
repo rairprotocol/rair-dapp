@@ -32,6 +32,7 @@ interface IMobileListMenu {
   toggleMenu: (otherPage?: string | undefined) => void;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
+  secondaryColor?: string;
 }
 
 const MobileListMenu: React.FC<IMobileListMenu> = ({
@@ -42,7 +43,8 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   messageAlert,
   setMessageAlert,
   setTabIndexItems,
-  isSplashPage
+  isSplashPage,
+  secondaryColor
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -152,7 +154,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   }, [currentUserAddress, dispatch]);
 
   return (
-    <List hotdrops={hotdropsVar} primaryColor={primaryColor} click={click}>
+    <List secondaryColor={secondaryColor} hotdrops={hotdropsVar} primaryColor={primaryColor} click={click}>
       <div>
         {activeSearch && (
           <>

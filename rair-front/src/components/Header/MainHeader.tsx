@@ -55,7 +55,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(true);
-  const { primaryColor, headerLogo, primaryButtonColor, textColor, secondaryButtonColor, iconColor } =
+  const { primaryColor, headerLogo, primaryButtonColor, textColor, secondaryColor, iconColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { connectUserData } = useConnectUser();
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
@@ -207,6 +207,7 @@ const MainHeader: React.FC<IMainHeader> = ({
       isSplashPage={isSplashPage}
       selectedChain={selectedChain}
       realChainId={realChainId}
+      secondaryColor={secondaryColor}
       ref={ref}>
       <div>
         <MainLogo
