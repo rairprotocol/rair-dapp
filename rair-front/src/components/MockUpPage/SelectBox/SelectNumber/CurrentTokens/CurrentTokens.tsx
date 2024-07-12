@@ -60,14 +60,14 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
             rotate="true"
             primaryColor={primaryColor}
             textColor={textColor}
-            customSecondaryButtonColor={customSecondaryButtonColor}
+            customSecondaryButtonColor={iconColor}
           />
           ) : (
             <StyledShevronIcon
                     className="fas fa-chevron-up"
                     primaryColor={primaryColor}
                     textColor={textColor}
-                    customSecondaryButtonColor={customSecondaryButtonColor}
+                    customSecondaryButtonColor={iconColor}
                   />
           )}
         </div>
