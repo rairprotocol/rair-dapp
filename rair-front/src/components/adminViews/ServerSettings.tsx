@@ -13,9 +13,17 @@ import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
+type Category = {
+  name: string;
+  _id?: string;
+  files?: number;
+};
+
 const ServerSettings = ({ fullContractData }) => {
   const serverSettings = useServerSettings();
   const [productOptions, setProductOptions] = useState<OptionsType[]>();
+  const [categoryList, setCategoryList] = useState<Category[]>([]);
+
   const [customLightModeLogo, setCustomLightModeLogo] = useState({ name: '' });
   const [customDarkModeLogo, setCustomDarkModeLogo] = useState({ name: '' });
   const [customLightModeMobileLogo, setCustomLightModeMobileLogo] = useState({
@@ -58,6 +66,17 @@ const ServerSettings = ({ fullContractData }) => {
     aux.splice(index, 1);
     serverSettings.setFooterLinks(aux);
   };
+
+  const getCategories = useCallback(async () => {
+    const { success, result } = await rFetch('/api/categories');
+    if (success) {
+      setCategoryList(result);
+    }
+  }, []);
+
+  useEffect(() => {
+    getCategories();
+  }, [getCategories]);
 
   const setServerSetting = useCallback(
     async (setting) => {
@@ -142,6 +161,27 @@ const ServerSettings = ({ fullContractData }) => {
   useEffect(() => {
     serverSettings.getServerSettings();
   }, [serverSettings.getServerSettings]);
+
+  const deleteCategory = useCallback(
+    (index) => {
+      const aux = [...categoryList];
+      aux.splice(index, 1);
+      setCategoryList(aux);
+    },
+    [categoryList]
+  );
+
+  const updateCategory = useCallback(
+    (index) => (value) => {
+      const aux = [...categoryList];
+      aux[index] = {
+        ...aux[index],
+        name: value
+      };
+      setCategoryList(aux);
+    },
+    [categoryList]
+  );
 
   useEffect(() => {
     serverSettings.setFeaturedProduct('null');
@@ -578,6 +618,73 @@ const ServerSettings = ({ fullContractData }) => {
           })}
         </div>
         <div className="col-12 px-5 my-2">
+          <h3>Categories</h3>
+          {categoryList.map((categoryData, index) => {
+            return (
+              <div key={index} className="row">
+                <div className="col-12 col-md-10">
+                  <InputField
+                    customClass="rounded-rair form-control"
+                    getter={categoryData.name}
+                    setter={updateCategory(index)}
+                    type="text"
+                  />
+                </div>
+                <button
+                  disabled={!!categoryData.files}
+                  onClick={() => deleteCategory(index)}
+                  className="col-12 col-md-2 btn btn-danger">
+                  {categoryData.files ? (
+                    <>
+                      {categoryData.files}{' '}
+                      <small>files using this category</small>
+                    </>
+                  ) : (
+                    <i className="fa-trash fas" />
+                  )}
+                </button>
+              </div>
+            );
+          })}
+          <button
+            className="float-start btn"
+            style={{
+              color: textColor,
+              background: primaryButtonColor
+            }}
+            onClick={async () => {
+              const result = await rFetch('/api/categories', {
+                method: 'POST',
+                body: JSON.stringify({
+                  list: categoryList.map((item) => ({
+                    _id: item._id,
+                    name: item.name
+                  }))
+                }),
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              });
+              if (result.success) {
+                reactSwal.fire('Success', 'Categories updated', 'success');
+                getCategories();
+              }
+            }}>
+            Set
+          </button>
+          <button
+            className="btn btn-success float-end"
+            onClick={() => {
+              const aux = categoryList ? [...categoryList] : [];
+              aux.push({
+                name: ''
+              });
+              setCategoryList(aux);
+            }}>
+            Add
+          </button>
+        </div>
+        <div className="col-12 px-5 my-2">
           <h3>Footer items</h3>
           {serverSettings.footerLinks &&
             serverSettings.footerLinks.map((footerLink, index) => {
@@ -653,6 +760,26 @@ const ServerSettings = ({ fullContractData }) => {
               color: textColor
             }}
             onClick={() => setServerSetting({ legal: serverSettings.legal })}>
+            Set
+          </button>
+        </div>
+        <div className="col-12 px-5 my-2">
+          <h3>Default Signup Message</h3>
+          <InputField
+            customClass="rounded-rair form-control"
+            getter={serverSettings.signupMessage}
+            setter={serverSettings.setSignupMessage}
+            placeholder="Message sent through notifications"
+          />
+          <button
+            className="btn rair-button"
+            style={{
+              background: secondaryButtonColor,
+              color: textColor
+            }}
+            onClick={() =>
+              setServerSetting({ signupMessage: serverSettings.signupMessage })
+            }>
             Set
           </button>
         </div>

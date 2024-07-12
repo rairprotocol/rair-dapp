@@ -1,8 +1,6 @@
 const Joi = require('joi');
 
 module.exports = () => ({
-  fromToken: Joi.string(),
-  toToken: Joi.string(),
   limit: Joi.number(),
   forSale: Joi.any()
     .valid('true', 'false'),

@@ -185,7 +185,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                   type="text"
                   onChange={handleChangeText}
                   value={textSearch}
-                  placeholder="Search the rairverse..."
+                  placeholder="Search..."
                 />
               )}
             </SearchInputMobile>

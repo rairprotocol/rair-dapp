@@ -51,10 +51,12 @@ const {
 const {
   pagination,
   dbId,
+  dbIdArray,
   fileId,
   userAddress,
   resaleFlag,
   metadataSearch,
+  tokenLimits,
 } = require('./commonApiSchemas');
 const {
   fullContracts,
@@ -133,10 +135,12 @@ module.exports = {
   // Common schemas
   pagination,
   dbId,
+  dbIdArray,
   fileId,
   userAddress,
   resaleFlag,
   metadataSearch,
+  tokenLimits,
 
   // Contract schemas
   fullContracts,
