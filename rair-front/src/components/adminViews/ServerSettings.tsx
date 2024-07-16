@@ -92,7 +92,7 @@ const ServerSettings = ({ fullContractData }) => {
         reactSwal.fire('Success', 'Setting updated', 'success');
       }
     },
-    [reactSwal, serverSettings.getServerSettings]
+    [reactSwal, serverSettings.getServerSettings, serverSettings.customPrimaryColor, serverSettings.customTextColor, serverSettings.customPrimaryButtonColor, serverSettings.customSecondaryButtonColor]
   );
 
   const setBlockchainSetting = useCallback(

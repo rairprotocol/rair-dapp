@@ -16,7 +16,7 @@ const SellInputButton: React.FC<ISellInputButton> = ({
 }) => {
   const [inputSellValue, setInputSellValue] = useState<string>('');
   const [isInputPriceExist, setIsInputPriceExist] = useState<boolean>(false);
-  const { textColor } = useSelector<RootState, ColorStoreType>(
+  const { textColor, iconColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
@@ -40,6 +40,14 @@ const SellInputButton: React.FC<ISellInputButton> = ({
             placeholder="Your price"
           />
           <CloseIcon
+           style={{
+            color:
+              import.meta.env.VITE_TESTNET === 'true'
+                ? 
+                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                : `${
+                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+          }}
             className="input-sell-close-icon"
             fontSize="small"
             onClick={handleInputClear}
