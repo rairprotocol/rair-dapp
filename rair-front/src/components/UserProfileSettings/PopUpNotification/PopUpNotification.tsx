@@ -53,6 +53,20 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
       }
     }, [currentUserAddress])
 
+    const deleteAllNotifications = useCallback( async () => {
+      if(currentUserAddress) {
+        const result = await rFetch(`/api/notifications`, {
+          method: 'DELETE',
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+        if (result.success && result.totalCount > 0) {
+          setTotalPageForPagination(result.totalCount);
+        }
+      }
+    }, [currentUserAddress])
+
     useEffect(() => {
       if(openModal) {
         getNotifications(0);
@@ -125,7 +139,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
               }}>
                 <div className="btn-clear-nofitications">
                  <div className="notification-title">Notifications</div>
-                 <button onClick={() => setRealDataNotification([])} style={{
+                 <button onClick={() => deleteAllNotifications()} style={{
             color: textColor,
             background: `${
               primaryColor === '#dedede'
