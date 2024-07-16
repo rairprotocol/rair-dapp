@@ -37,6 +37,7 @@ import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComp
 
 //styles
 import './Header.css';
+import { rFetch } from '../../utils/rFetch';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -70,6 +71,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   );
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
+  const [realDataNotification, setRealDataNotification] = useState([]);
+  const [notificationCount, setNotificationCount] = useState<number>(0);
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
@@ -121,6 +124,35 @@ const MainHeader: React.FC<IMainHeader> = ({
     navigate(`/${userAddress}`);
     setTextSearch('');
   };
+
+  const getNotifications = useCallback(async (pageNum?: number) => {
+    if(currentUserAddress) {
+      // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
+      const result = await rFetch(`/api/notifications${`?pageNum=${Number(pageNum)}`}`);
+
+      if (result.success) {
+        setRealDataNotification(result.notifications);
+      }
+    }
+  }, [currentUserAddress]);
+
+  const getNotificationsCount = useCallback( async () => {
+    if(currentUserAddress) {
+      const result = await rFetch(`/api/notifications?onlyUnread=true`);
+      if (result.success && result.totalCount > 0) {
+        setNotificationCount(result.totalCount);
+      }
+    }
+  }, [currentUserAddress])
+
+  useEffect(() => {
+    getNotificationsCount();
+  }, [getNotificationsCount])
+
+
+  useEffect(() => {
+    getNotifications(0);
+  }, [currentUserAddress])
 
   const Highlight = (props) => {
     const { filter, str } = props;
@@ -206,7 +238,7 @@ const MainHeader: React.FC<IMainHeader> = ({
               backgroundColor: primaryColor
             }}
             type="text"
-            placeholder="Search the rairverse..."
+            placeholder="Search..."
             onChange={handleChangeText}
             value={textSearch}
             onClick={() => setIsComponentVisible(true)}
@@ -414,7 +446,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            {currentUserAddress && <PopUpNotification />}
+            {currentUserAddress && <PopUpNotification setRealDataNotification={setRealDataNotification} notificationCount={notificationCount} getNotificationsCount={getNotificationsCount} getNotifications={getNotifications} realDataNotification={realDataNotification} />}
 
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}

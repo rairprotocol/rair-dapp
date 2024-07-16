@@ -17,6 +17,7 @@ const nftController = require('../api/nft/nft.Controller');
 const uploadController = require('../api/upload/upload.Controller');
 const favoritesController = require('../api/favorites/favorites.Controller');
 const notificationsController = require('../api/notifications/notifications.Controller');
+const categoriesController = require('../api/categories/categories.Controller');
 
 const router = Router();
 router.use('/analytics', analyticsController);
@@ -36,6 +37,7 @@ router.use('/settings', settingsRouter);
 router.use('/tokens', tokensController);
 router.use('/upload', uploadController);
 router.use('/notifications', notificationsController);
+router.use('/categories', categoriesController);
 
 // Custom temporary endpoint for the monaco2021
 router.use('/', require('./monaco2021'));
