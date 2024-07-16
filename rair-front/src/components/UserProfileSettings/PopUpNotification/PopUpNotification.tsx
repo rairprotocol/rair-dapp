@@ -1,33 +1,26 @@
 //@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector, useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Popup } from 'reactjs-popup';
+import Swal from 'sweetalert2';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
+import useSwal from '../../../hooks/useSwal';
 import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { rFetch } from '../../../utils/rFetch';
-import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
+import NotificationPage from '../NotificationPage/NotificationPage';
 
-import NotificationBox from './NotificationBox/NotificationBox';
+import NftImg from './images/image.png';
 
-const PopUpNotification = ({getNotifications, realDataNotification, notificationCount, getNotificationsCount, setRealDataNotification}) =>
+const PopUpNotification = () =>
   // props was - isNotification
   {
     const currentName =
       import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
     const [openModal, setOpenModal] = useState(false);
-    const store = useStore();
-    const { currentUserAddress } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
-  const [totalPageForPagination, setTotalPageForPagination] = useState(0);
-  const [currentPageForNotification, setCurrentPageNotification] = useState<number>(1);
-    const { primaryColor, primaryButtonColor, textColor } = useSelector<
+    const { headerLogo, primaryColor, headerLogoMobile } = useSelector<
       RootState,
       ColorStoreType
     >((store) => store.colorStore);
@@ -37,32 +30,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
     const { userRd } = useSelector<RootState, TUsersInitialState>(
       (store) => store.userStore
     );
-
-    const changePageForVideo = (currentPage: number) => {
-      setCurrentPageNotification(currentPage);
-      const currentPageNumber = currentPage === 0 ? currentPage : currentPage - 1;
-      getNotifications(Number(currentPageNumber));
-    };
-
-    const getNotificationsCountPagitation = useCallback( async () => {
-      if(currentUserAddress) {
-        const result = await rFetch(`/api/notifications`);
-        if (result.success && result.totalCount > 0) {
-          setTotalPageForPagination(result.totalCount);
-        }
-      }
-    }, [currentUserAddress])
-
-    useEffect(() => {
-      if(openModal) {
-        getNotifications(0);
-        getNotificationsCount();
-      }
-    }, [openModal]);
-
-    useEffect(() => {
-      getNotificationsCountPagitation();
-    }, [getNotificationsCountPagitation])
+    const reactSwal = useSwal();
 
     const onCloseNext = useCallback(() => {
       if (!openModal) {
@@ -82,106 +50,102 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
       }
     }, [uploadVideo]);
 
-
     return (
       <>
         <SocialBox
           onClick={() => setOpenModal((prev) => !prev)}
-          className="social-bell-icon notifications"
+          className="social-bell-icon"
           marginRight={'17px'}
           notification={true}>
           {uploadVideo && userRd?.email && <span></span>}
           <BellIcon primaryColor={primaryColor} />
-          {notificationCount > 0 && (
-            <div style={{
-              fontSize: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontWeight: "bold",
-              color: '#fff'
-            }} className="red-circle-notifications">{notificationCount  > 9 ? "9+" : notificationCount}</div>
-          )}
         </SocialBox>
         <Popup
-          className={`popup-notification-block`}
-          open={openModal}s
+          className="popup-notification-block"
+          open={openModal}
           closeOnDocumentClick
           onClose={() => {
             setOpenModal(false);
           }}>
-          {openModal && (
+          {openModal && userRd?.email && (
             <div
-              className={`pop-up-notification ${primaryColor === '#dedede' ? 'rhyno' : ''}`}
+              className="pop-up-notification"
               style={{
-                background: `${
-                  primaryColor === '#dedede'
-                    ? '#fff'
-                    : `color-mix(in srgb, ${primaryColor}, #888888)`
+                backgroundColor: `${
+                  primaryColor === 'rhyno' ? 'rgb(246 246 246)' : '#383637'
                 }`,
                 border: '1px solid #fff',
-                color: `${primaryColor === 'rhyno' && '#000'}`,
-                maxHeight: '500px',
-              }}>
-                <div className="btn-clear-nofitications">
-                 <div className="notification-title">Notifications</div>
-                 <button onClick={() => setRealDataNotification([])} style={{
-            color: textColor,
-            background: `${
-              primaryColor === '#dedede'
-                ? import.meta.env.VITE_TESTNET === 'true'
-                  ? 'var(--hot-drops)'
-                  : 'linear-gradient(to right, #e882d5, #725bdb)'
-                : import.meta.env.VITE_TESTNET === 'true'
-                  ? primaryButtonColor ===
-                    'linear-gradient(to right, #e882d5, #725bdb)'
-                    ? 'var(--hot-drops)'
-                    : primaryButtonColor
-                  : primaryButtonColor
-            }`
-          }}>Clear all</button>
-                </div>
-              <div className="notification-wrapper-block" style={{
-                overflowY: 'auto',
-                maxHeight: "400px",
-                // marginTop: "20px"
-              }}>
-              {realDataNotification && realDataNotification.length > 0 ? (
-                realDataNotification.map((el) => {
-                  return (
-                    <NotificationBox
-                    currentUserAddress={currentUserAddress}
-                    getNotificationsCount={getNotificationsCount}
-                      getNotifications={getNotifications}
-                      el={el}
-                      key={el._id}
-                      title={el.message}
+                color: `${primaryColor === 'rhyno' && '#000'}`
+              }}
+              onClick={() => {
+                setOpenModal(false);
+                reactSwal.fire({
+                  html: (
+                    <NotificationPage
+                      NftImg={NftImg}
                       primaryColor={primaryColor}
+                      headerLogo={headerLogo}
                     />
-                  )
-                })
-              ) : (
-                <div
+                  ),
+                  width: '90vw',
+                  customClass: {
+                    popup: `bg-${primaryColor}`
+                  },
+                  onBeforeOpen: () => {
+                    Swal.showLoading();
+                  },
+                  showConfirmButton: false,
+                  showCloseButton: true
+                  // cancelButtonText:
+                  //     '<i class="fa fa-thumbs-down"></i>',
+                  // cancelButtonAriaLabel: 'Thumbs down'
+                });
+              }}>
+              <div className="notification-from-rair">
+                <div className="box-notification">
+                  <div className="dot-notification" />
+                  <div className="notification-img">
+                    <img src={headerLogoMobile} alt="Rair Tech" />
+                  </div>
+                  <div className="text-notification">
+                    <div className="title-notif">
+                      Notification from {currentName}
+                    </div>
+                    <div className="text-notif">
+                      Don’t click away! You can navigate away from the page once
+                      your video is done uploading
+                    </div>
+                  </div>
+                  {/* <div
+                  className="time-notification"
                   style={{
-                    padding: '25px'
+                    color: `${primaryColor === 'rhyno' && '#000'}`
                   }}>
-                  You don't have any notifications now
+                  3 hours ago
+                </div> */}
                 </div>
-              )}
-              <div style={{paddingBottom: "15px"}}>
-              {
-
-totalPageForPagination && notificationCount > 0 && <PaginationBox
-            totalPageForPagination={totalPageForPagination}
-            primaryColor={primaryColor}
-            changePage={changePageForVideo}
-            currentPage={currentPageForNotification}
-            itemsPerPageNotifications={10}
-            whatPage={"notifications"}
-          />
-              }
               </div>
+              {/* <div className="notification-from-factory">
+              <div className="box-notification">
+                <div className="dot-notification" />
+                <div className="notification-img">
+                  <img src={NftImg} alt="Exclusive NFT token by RAIR" />
+                </div>
+                <div className="text-notification">
+                  <div className="title-notif">Factory updates</div>
+                  <div className="text-notif">
+                    Your nft “<span>Pegayo</span>” has been listed
+                  </div>
+                </div>
+                <div
+                  className="time-notification"
+                  style={{
+                    color: `${primaryColor === 'rhyno' && '#000'}`
+                  }}>
+                  5 hours ago
+                </div>
               </div>
+            </div> */}
             </div>
           )}
         </Popup>

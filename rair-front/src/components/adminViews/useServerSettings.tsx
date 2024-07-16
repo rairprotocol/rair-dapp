@@ -20,7 +20,6 @@ const useServerSettings = () => {
     import.meta.env.VITE_NODE_ADDRESS
   );
   const [legal, setLegal] = useState('');
-  const [signupMessage, setSignupMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [featuredContract, setFeaturedContract] = useState('null');
   const [featuredProduct, setFeaturedProduct] = useState('null');
@@ -48,7 +47,6 @@ const useServerSettings = () => {
         settings?.nodeAddress || import.meta.env.VITE_NODE_ADDRESS
       );
       setLegal(settings?.legal || '');
-      setSignupMessage(settings?.signupMessage || '');
       if (settings.featuredCollection) {
         setFeaturedContract(settings?.featuredCollection?.contract?._id);
         setFeaturedProduct(settings?.featuredCollection?._id);
@@ -173,8 +171,6 @@ const useServerSettings = () => {
     setFooterLinks,
     legal,
     setLegal,
-    signupMessage,
-    setSignupMessage,
     blockchainSettings,
     isLoading
   };

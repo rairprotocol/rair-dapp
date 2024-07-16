@@ -28,47 +28,13 @@ module.exports = {
             if (user && adminRights) {
                 filter.user = user.toLowerCase();
             }
-            const list = await Notification.aggregate([
-                {
-                    $match: filter,
-                },
-                {
-                    $lookup: {
-                        from: 'MintedToken',
-                        let: {
-                            tokenId: '$data',
-                        },
-                        pipeline: [
-                            {
-                            $match: {
-                                $expr: {
-                                    $in: [
-                                        {
-                                            $toString: '$_id',
-                                        },
-                                        '$$tokenId',
-                                    ],
-                                },
-                            },
-                            },
-                        ],
-                        as: 'tokenData',
-                    },
-                },
-                {
-                    $addFields: {
-                        tokenData: '$tokenData.metadata.image',
-                    },
-                },
-                { $sort: { createdAt: 1 } },
-                { $skip: itemsPerPage * pageNum },
-                { $limit: itemsPerPage },
-            ]);
-            const count = await Notification.count(filter);
+            const list = await Notification.find(filter)
+                .sort({ createdAt: 'descending' })
+                .skip(itemsPerPage * pageNum)
+                .limit(itemsPerPage);
             return res.json({
                 success: true,
                 notifications: list,
-                totalCount: count,
             });
         } catch (err) {
             logger.error(err);
@@ -107,7 +73,7 @@ module.exports = {
             );
             return res.json({
                 success: true,
-                updated: result.modifiedCount,
+                notification,
             });
         } catch (err) {
             logger.error(err);
@@ -127,7 +93,7 @@ module.exports = {
             const result = await Notification.deleteMany(filter);
             return res.json({
                 success: true,
-                deleted: result.deletedCount,
+                notification,
             });
         } catch (err) {
             logger.error(err);

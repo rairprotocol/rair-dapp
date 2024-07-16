@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
@@ -11,7 +11,6 @@ import {
   SocialBox,
   UserIconMobile
 } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { rFetch } from '../../../utils/rFetch';
 import { SvgUserIcon } from '../../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 interface IMobileChoiseNav {
@@ -37,20 +36,6 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (state) => state.userStore
   );
-  const [notificationCount, setNotificationCount] = useState<number>(0);
-
-  const getNotificationsCount = useCallback( async () => {
-    if (currentUserAddress) {
-      const result = await rFetch(`/api/notifications?onlyUnread=true`);
-      if (result.success && result.totalCount > 0) {
-        setNotificationCount(result.totalCount);
-      }
-    }
-  }, [currentUserAddress, messageAlert])
-
-  useEffect(() => {
-    getNotificationsCount();
-  }, [getNotificationsCount])
 
   return (
     <div className="burder-menu-logo">
@@ -85,21 +70,11 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
             <div className="social-media-profile">
               {currentUserAddress && (
                 <SocialBox
-                  className="social-bell-icon notifications"
+                  className="social-bell-icon"
                   width="40px"
                   height="40px"
                   marginLeft={'17px'}>
                   <BellIcon primaryColor={primaryColor} />
-                  {notificationCount > 0 && (
-            <div style={{
-              fontSize: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontWeight: "bold",
-              color: '#fff'
-            }} className="red-circle-notifications">{notificationCount  > 9 ? "9+" : notificationCount}</div>
-          )}
                 </SocialBox>
               )}
               <div className="social-media-user-icon">Notifications</div>

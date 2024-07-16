@@ -1,12 +1,12 @@
 # Delete single notification
 
-**URL** : `/api/notifications/`
+**URL** : `/api/notifications/:id`
 **Method** : `DELETE`
 
-**Body Parameters**
+**Parameters**
 ```json
 {
-    "ids": { "required": true, "content": { "type": "string[]" } },
+    "id": { "required": false, "content": { "type": "string" } },
 }
 ```
 
@@ -17,6 +17,13 @@
 ```json
 {
   "success": true,
-  "deleted": 1
+  "notification": {
+    "_id": "6657edb4d1f06c7b91e39089",
+    "user": "0xec30759d0a3f3ce0a730111dc29d74e441f492c3",
+    "type": "message",
+    "message": "Logged in as 0xec30759d0a3f3ce0a730111dc29d74e441f492c3",
+    "data": [],
+    "read": true
+  },
 }
 ```

@@ -22,15 +22,15 @@ router.get(
     getSingleNotification,
 );
 router.put(
-    '/',
+    '/:id/',
     requireUserSession,
-    validation(['dbIdArray'], 'params'),
+    validation(['dbId'], 'params'),
     markNotificationAsRead,
 );
 router.delete(
-    '/',
+    '/:id',
     requireUserSession,
-    validation(['dbIdArray'], 'params'),
+    validation(['dbId'], 'params'),
     deleteNotification,
 );
 

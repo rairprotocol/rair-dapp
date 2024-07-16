@@ -91,11 +91,17 @@ Search using network and address
 }
 ```
 
-**Condition** : Contract or Product not found
+**Condition** : Contract not found
 **Code** : `404 NOT FOUND`
 **Content** : 
 ```json
-{ "success": false, "error": true, "message": "Data not found" }
+{ "success": false, "error": true, "message": "Contract not found" }
+```
+**Condition** : Product not found
+**Code** : `404 NOT FOUND`
+**Content** : 
+```json
+{ "success": false, "error": true, "message": "Product not found" }
 ```
 **Condition** : There are no offers with locked tokens
 **Code** : `404 NOT FOUND`
