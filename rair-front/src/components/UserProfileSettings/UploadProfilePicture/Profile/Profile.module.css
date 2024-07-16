@@ -14,9 +14,7 @@
   /* --- */
   /* background-image: url('../assets/leaf2.png'), url('../assets/leaf2.png');
     background-repeat: no-repeat, no-repeat; */
-  background-position:
-    120% -5%,
-    200% -40%;
+  background-position: 120% -5%, 200% -40%;
   /* ---- */
   /* background-image: url('../../../../images/binance-diamond.svg'), url('../../../../images/ethereum-logo.svg'); */
   background-repeat: no-repeat, no-repeat;
@@ -31,14 +29,10 @@
 
 @keyframes open {
   0% {
-    background-position:
-      166% -25%,
-      220% -69%;
+    background-position: 166% -25%, 220% -69%;
   }
   100% {
-    background-position:
-      120% -5%,
-      200% -40%;
+    background-position: 120% -5%, 200% -40%;
   }
 }
 

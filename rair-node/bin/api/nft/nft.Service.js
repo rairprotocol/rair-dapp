@@ -4,7 +4,6 @@ const path = require('path');
 const _ = require('lodash');
 
 const fsPromises = fs.promises;
-const { ZeroAddress } = require('ethers');
 const { addPin, addFolder, addMetadata, removePin, addFile } = require('../../integrations/ipfsService')();
 const config = require('../../config');
 const log = require('../../utils/logger')(module);
@@ -67,21 +66,21 @@ module.exports = {
             if (onResale.toString() === 'true') {
                 pipeline.push({
                     $lookup: {
-                      from: 'ResaleTokenOffer',
-                      localField: 'uniqueIndexInContract',
-                      foreignField: 'tokenIndex',
-                      as: 'resaleData',
-                      let: {
-                          tokenContract: '$tokenContract',
-                      },
-                      pipeline: [{
-                          $match: {
-                          $expr: {
-                              $eq: ['$$tokenContract', '$contract'],
-                          },
-                          buyer: { $exists: false },
-                          },
-                      }],
+                    from: 'ResaleTokenOffer',
+                    localField: 'uniqueIndexInContract',
+                    foreignField: 'tokenIndex',
+                    as: 'resaleData',
+                    let: {
+                        tokenContract: '$tokenContract',
+                    },
+                    pipeline: [{
+                        $match: {
+                        $expr: {
+                            $eq: ['$$tokenContract', '$contract'],
+                        },
+                        buyer: { $exists: false },
+                        },
+                    }],
                     },
                 }, {
                     $addFields: {
@@ -314,43 +313,18 @@ module.exports = {
         return next(err);
         }
     },
-    findContractAndProductMiddleware: async (req, res, next) => {
+    findContractMiddleware: async (req, res, next) => {
         try {
-            const { contract, networkId, product } = req.params;
-            const data = await Contract.aggregate([
-              {
-                $match: {
-                  blockchain: networkId,
-                  contractAddress: contract.toLowerCase(),
-                },
-              },
-              {
-                $lookup: {
-                  from: 'Product',
-                  as: 'productData',
-                  let: { contractId: '$_id' },
-                  pipeline: [
-                    {
-                      $match: {
-                        $expr: {
-                          $eq: ['$$contractId', '$contract'],
-                        },
-                        collectionIndexInContract: product,
-                      },
-                    },
-                  ],
-                },
-              },
-            ]);
+            const contract = await Contract.findOne({
+                contractAddress: req.params.contract.toLowerCase(),
+                blockchain: req.params.networkId,
+            });
 
             if (!contract) {
-                return next(new AppError('Data not found.', 404));
+                return next(new AppError('Contract not found.', 404));
             }
 
-            const { productData, ...contractData } = data[0];
-
-            req.contract = contractData;
-            [req.product] = productData;
+            req.contract = contract;
 
             return next();
         } catch (e) {
@@ -376,6 +350,22 @@ module.exports = {
     getTokenNumbers: async (req, res, next) => {
       try {
         const { contract, product } = req;
+        const { fromToken, toToken } = req.query;
+        const tokenLimitFilter = [];
+        if (fromToken) {
+          tokenLimitFilter.push(
+            {
+              $gte: ['$token', fromToken],
+            },
+          );
+        }
+        if (toToken) {
+          tokenLimitFilter.push(
+            {
+              $lte: ['$token', toToken],
+            },
+          );
+        }
         const offerData = await Offer.aggregate([
           {
             $match: {
@@ -392,7 +382,14 @@ module.exports = {
               as: 'tokens',
               pipeline: [{
                 $match: {
-                  $expr: { $eq: ['$offer', '$$offerIndex'] },
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: ['$offer', '$$offerIndex'],
+                      },
+                      ...tokenLimitFilter,
+                    ],
+                  },
                   contract: contract._id,
                 },
               },
@@ -568,20 +565,34 @@ module.exports = {
                     },
                 },
                 {
-                $lookup: {
-                    from: 'Offer',
-                    let: populateOptions.let,
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: populateOptions.and,
-                                },
-                            },
-                        },
-                    ],
-                    as: 'offer',
+                  $lookup: {
+                      from: 'Offer',
+                      let: populateOptions.let,
+                      pipeline: [
+                          {
+                              $match: {
+                                  $expr: {
+                                      $and: populateOptions.and,
+                                  },
+                              },
+                          },
+                      ],
+                      as: 'offer',
+                  },
                 },
+                {
+                  $lookup: {
+                      from: 'User',
+                      localField: 'ownerAddress',
+                      foreignField: 'publicAddress',
+                      as: 'ownerData',
+                  },
+                },
+                {
+                  $unwind: {
+                    path: '$ownerData',
+                    preserveNullAndEmptyArrays: true,
+                  },
                 },
                 { $unwind: '$offer' },
                 { $match: filterOptions },

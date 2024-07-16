@@ -2,11 +2,13 @@ const { Router } = require('express');
 const {
   getSingleToken,
   getAllTokens,
+  getTokenNumbers,
   getFullTokenInfo,
 } = require('./tokens.Service');
 const { getSpecificContracts } = require('../contracts/contracts.Service');
 const {
   validation,
+  requireUserSession,
 } = require('../../middleware');
 
 const router = Router();
@@ -16,6 +18,13 @@ router.get(
   validation(['dbTokens', 'pagination'], 'query'),
   getSpecificContracts,
   getAllTokens,
+);
+
+router.get(
+  '/tokenNumbers',
+  requireUserSession,
+  validation(['getTokenNumbers'], 'query'),
+  getTokenNumbers,
 );
 
 router.get(

@@ -1,6 +1,11 @@
 const express = require('express');
 const { requireUserSession, validation } = require('../../middleware');
-const { markNotificationAsRead, getSingleNotification, listNotifications, deleteNotification } = require('./notifications.Service');
+const {
+    markNotificationAsRead,
+    getSingleNotification,
+    listNotifications,
+    deleteNotification,
+} = require('./notifications.Service');
 
 const router = express.Router();
 
@@ -17,15 +22,15 @@ router.get(
     getSingleNotification,
 );
 router.put(
-    '/',
+    '/:id/',
     requireUserSession,
-    validation(['dbIdArray'], 'params'),
+    validation(['dbId'], 'params'),
     markNotificationAsRead,
 );
 router.delete(
-    '/',
+    '/:id',
     requireUserSession,
-    validation(['dbIdArray'], 'params'),
+    validation(['dbId'], 'params'),
     deleteNotification,
 );
 

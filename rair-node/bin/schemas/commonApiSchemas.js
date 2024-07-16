@@ -9,9 +9,6 @@ module.exports = {
     dbId: () => ({
         id: mongoId,
     }),
-    dbIdArray: () => ({
-        ids: Joi.array().items(mongoId),
-    }),
     fileId: () => ({
         id: Joi.string().required(),
     }),
@@ -26,5 +23,9 @@ module.exports = {
     }),
     metadataSearch: () => ({
         metadataFilters: Joi.string(),
+    }),
+    tokenLimits: () => ({
+        fromToken: Joi.string(),
+        toToken: Joi.string(),
     }),
 };
