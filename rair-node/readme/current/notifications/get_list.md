@@ -11,7 +11,8 @@ Uses pagination and filtering, user search is only available to admins
     "itemsPerPage": { "required": false, "content": { "type": "number" } },
     "user": { "required": false, "content": { "type": "string" } },
     "type": { "required": false, "content": { "type": "string" } },
-    "read": { "required": false, "content": { "type": "boolean" } },
+    "onlyRead": { "required": false, "content": { "type": "boolean" } },
+    "onlyUnread": { "required": false, "content": { "type": "boolean" } },
 }
 ```
 
@@ -22,6 +23,7 @@ Uses pagination and filtering, user search is only available to admins
 ```json
 {
   "success": true,
+  "totalCount": 90,
   "notifications": [
     {
       "_id": "6657edb4d1f06c7b91e39089",

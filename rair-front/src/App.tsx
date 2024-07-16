@@ -97,6 +97,7 @@ import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { rFetch } from './utils/rFetch';
 /* Track a page view */
 // const analytics = getInformationGoogleAnalytics();
 // analytics.page();
@@ -133,6 +134,7 @@ function App() {
   const [tabIndexItems, setTabIndexItems] = useState(0);
   const [tokenNumber, setTokenNumber] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
+  const [notificationCount, setNotificationCount] = useState<number>(0);
 
   // Redux
   const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
@@ -193,6 +195,19 @@ function App() {
       };
     }
   }, [dispatch, logoutUser]);
+
+  const getNotificationsCount = useCallback( async () => {
+    if (currentUserAddress) {
+      const result = await rFetch(`/api/notifications?onlyUnread=true`);
+      if (result.success && result.totalCount > 0) {
+        setNotificationCount(result.totalCount);
+      }
+    }
+  }, [currentUserAddress]);
+
+  useEffect(() => {
+    getNotificationsCount();
+  }, [getNotificationsCount])
 
   // gtag
 
@@ -367,6 +382,8 @@ function App() {
                 selectedChain={correctBlockchain(realChain)}
                 setTabIndexItems={setTabIndexItems}
                 isAboutPage={isAboutPage}
+                notificationCount={notificationCount}
+                getNotificationsCount={getNotificationsCount}
               />
             )
           )}

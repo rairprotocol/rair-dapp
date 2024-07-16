@@ -1,18 +1,22 @@
 @font-face {
   font-family: 'Plus Jakarta Sans';
-  src: local('Plus Jakarta Sans'),
+  src:
+    local('Plus Jakarta Sans'),
     url(./fonts/webfonts/PlusJakartaSans-Regular.woff) format('woff');
 }
 
 @font-face {
   font-family: 'Plus Jakarta Sans Bold';
-  src: local('Plus Jakarta Sans Bold'),
+  src:
+    local('Plus Jakarta Sans Bold'),
     url(./fonts/webfonts/PlusJakartaSans-Bold.woff) format('woff');
 }
 
 @font-face {
   font-family: 'Bazar';
-  src: local('Bazar'), url(./fonts/Bazar.ttf) format('truetype');
+  src:
+    local('Bazar'),
+    url(./fonts/Bazar.ttf) format('truetype');
 }
 
 @font-face {
@@ -29,58 +33,68 @@
 
 @font-face {
   font-family: 'Acme';
-  src: local('Acme'), url(./fonts/Acme/Acme-Regular.ttf) format('truetype');
+  src:
+    local('Acme'),
+    url(./fonts/Acme/Acme-Regular.ttf) format('truetype');
 }
 
 @font-face {
   font-family: 'Nunito';
-  src: local('Nunito'),
+  src:
+    local('Nunito'),
     url(./fonts/Nunito/Nunito-VariableFont_wght.ttf) format('truetype');
 }
 
 @font-face {
   font-family: 'Inter';
-  src: local('Inter'),
+  src:
+    local('Inter'),
     url(./fonts/Inter/Inter-VariableFontwght.ttf) format('truetype');
 }
 
 @font-face {
   font-family: 'Charriot Deluxe';
-  src: local('Charriot Deluxe'),
+  src:
+    local('Charriot Deluxe'),
     url(./fonts/charriot_deluxe/CharriotDeluxe.ttf) format('truetype');
 }
 
 @font-face {
   font-family: 'Cooper Std Black';
-  src: local('Cooper Std Black'),
+  src:
+    local('Cooper Std Black'),
     url(./fonts/Cooper\ Std\ Black/Cooper\ Std\ Black.ttf) format('truetype');
 }
 
 @font-face {
   font-family: 'Copperplate';
   font-weight: normal;
-  src: local('Copperplate'),
+  src:
+    local('Copperplate'),
     url(./fonts/copperplate/OPTICopperplate.otf) format('opentype');
 }
 
 @font-face {
   font-family: 'Copperplate';
   font-weight: heavy;
-  src: local('Copperplate'),
+  src:
+    local('Copperplate'),
     url(./fonts/copperplate/OPTICopperplate-Heavy.otf) format('opentype');
 }
 
 @font-face {
   font-family: 'Copperplate';
   font-weight: normal;
-  src: local('Copperplate'),
+  src:
+    local('Copperplate'),
     url(./fonts/copperplate/OPTICopperplate.otf) format('opentype');
 }
 
 @font-face {
   font-family: 'Copperplate';
   font-weight: light;
-  src: local('Copperplate'),
+  src:
+    local('Copperplate'),
     url(./fonts/copperplate/OPTICopperplate-Light.otf) format('opentype');
 }
 

@@ -8,8 +8,7 @@ module.exports = {
         forceOverwrite: Joi.boolean(),
     }),
     getTokenNumbers: () => ({
-        contract: mongoId,
-        product: Joi.string(),
+        contract: mongoId.required(),
         offerPool: Joi.string(),
         offers: Joi.string(),
     }),
