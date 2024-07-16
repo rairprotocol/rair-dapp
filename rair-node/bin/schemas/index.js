@@ -55,6 +55,7 @@ const {
   userAddress,
   resaleFlag,
   metadataSearch,
+  tokenLimits,
 } = require('./commonApiSchemas');
 const {
   fullContracts,
@@ -137,6 +138,7 @@ module.exports = {
   userAddress,
   resaleFlag,
   metadataSearch,
+  tokenLimits,
 
   // Contract schemas
   fullContracts,

@@ -59,11 +59,18 @@ module.exports = {
     },
     markNotificationAsRead: async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const notification = await Notification.findByIdAndUpdate(id, { $set: { read: true } });
-            if (!notification) {
-                return next(new AppError('Notification not found', 404));
+            const { publicAddress } = req.user;
+            const { ids = [] } = req.body;
+            const filter = {
+                user: publicAddress,
+            };
+            if (ids?.length) {
+                filter._id = { $in: ids };
             }
+            const result = await Notification.updateMany(
+                filter,
+                { $set: { read: true } },
+            );
             return res.json({
                 success: true,
                 notification,
@@ -75,11 +82,15 @@ module.exports = {
     },
     deleteNotification: async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const notification = await Notification.findByIdAndDelete(id);
-            if (!notification) {
-                return next(new AppError('Notification not found', 404));
+            const { publicAddress } = req.user;
+            const { ids = [] } = req.body;
+            const filter = {
+                user: publicAddress,
+            };
+            if (ids?.length) {
+                filter._id = { $in: ids };
             }
+            const result = await Notification.deleteMany(filter);
             return res.json({
                 success: true,
                 notification,

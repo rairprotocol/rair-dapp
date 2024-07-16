@@ -55,10 +55,16 @@ router.post(
 router.get(
     '/network/:networkId/:contract/:product',
     validation(['nftContract', 'nftProduct'], 'params'),
-    findContractMiddleware,
-    findProductMiddleware,
-    validation(['getTokensByContractProduct', 'resaleFlag', 'metadataSearch'], 'query'),
+    findContractAndProductMiddleware,
+    validation(['getTokensByContractProduct', 'resaleFlag', 'metadataSearch', 'tokenLimits'], 'query'),
     getTokensForProduct,
+);
+router.get(
+    '/network/:networkId/:contract/:product/numbers',
+    validation(['nftContract', 'nftProduct'], 'params'),
+    validation(['tokenLimits'], 'query'),
+    findContractAndProductMiddleware,
+    getTokenNumbers,
 );
 router.get(
     '/network/:networkId/:contract/:product/attributes',

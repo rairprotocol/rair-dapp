@@ -347,23 +347,89 @@ module.exports = {
         next(err);
         }
     },
-    findProductMiddleware: async (req, res, next) => {
-        try {
-          const product = await Product.findOne({
-              contract: req.contract._id,
-              collectionIndexInContract: req.params.product,
-          });
-
-          if (!product) {
-              return next(new AppError('Product not found.', 404));
-          }
-
-          req.product = product;
-
-          return next();
-        } catch (e) {
-            return next(e);
+    getTokenNumbers: async (req, res, next) => {
+      try {
+        const { contract, product } = req;
+        const { fromToken, toToken } = req.query;
+        const tokenLimitFilter = [];
+        if (fromToken) {
+          tokenLimitFilter.push(
+            {
+              $gte: ['$token', fromToken],
+            },
+          );
         }
+        if (toToken) {
+          tokenLimitFilter.push(
+            {
+              $lte: ['$token', toToken],
+            },
+          );
+        }
+        const offerData = await Offer.aggregate([
+          {
+            $match: {
+              $expr: {
+                $eq: [contract._id, '$contract'],
+              },
+              product: product.collectionIndexInContract,
+            },
+          },
+          {
+            $lookup: {
+              from: 'MintedToken',
+              let: { offerIndex: '$diamondRangeIndex' },
+              as: 'tokens',
+              pipeline: [{
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: ['$offer', '$$offerIndex'],
+                      },
+                      ...tokenLimitFilter,
+                    ],
+                  },
+                  contract: contract._id,
+                },
+              },
+              {
+                $sort: { uniqueIndexInContract: 1 },
+              },
+              {
+                $addFields: {
+                  sold: {
+                    $cond: {
+                      if: { $eq: ['$ownerAddress', ZeroAddress] },
+                      then: false,
+                      else: true,
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  token: 1,
+                  sold: 1,
+                },
+              },
+            ],
+            },
+          },
+          {
+            $project: {
+              tokens: 1,
+            },
+          },
+        ]).collation({ locale: 'en_US', numericOrdering: true });
+        return res.json({
+          success: true,
+          tokens: offerData.reduce((total, offer) => total.concat(offer.tokens), []),
+        });
+      } catch (err) {
+        return next(err);
+      }
     },
     getProductAttributes: async (req, res, next) => {
         try {
@@ -499,20 +565,34 @@ module.exports = {
                     },
                 },
                 {
-                $lookup: {
-                    from: 'Offer',
-                    let: populateOptions.let,
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: populateOptions.and,
-                                },
-                            },
-                        },
-                    ],
-                    as: 'offer',
+                  $lookup: {
+                      from: 'Offer',
+                      let: populateOptions.let,
+                      pipeline: [
+                          {
+                              $match: {
+                                  $expr: {
+                                      $and: populateOptions.and,
+                                  },
+                              },
+                          },
+                      ],
+                      as: 'offer',
+                  },
                 },
+                {
+                  $lookup: {
+                      from: 'User',
+                      localField: 'ownerAddress',
+                      foreignField: 'publicAddress',
+                      as: 'ownerData',
+                  },
+                },
+                {
+                  $unwind: {
+                    path: '$ownerData',
+                    preserveNullAndEmptyArrays: true,
+                  },
                 },
                 { $unwind: '$offer' },
                 { $match: filterOptions },

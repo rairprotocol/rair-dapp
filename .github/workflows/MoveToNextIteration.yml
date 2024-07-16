@@ -1,0 +1,20 @@
+on:
+  schedule:
+    # Runs "at 05:00, only on Tuesday" (see https://crontab.guru)
+    - cron: '0 5 * * 2'
+
+jobs:
+  move-to-next-iteration:
+    name: Move to next iteration
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: blombard/move-to-next-iteration@master
+      with:
+        owner: rairprotocol
+        number: 1
+        token: ${{ secrets.PROJECT_PAT }}
+        iteration-field: Iteration
+        iteration: last
+        new-iteration: current
+        excluded-statuses: "Done,Won't Fix"
