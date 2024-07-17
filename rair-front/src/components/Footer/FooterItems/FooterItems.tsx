@@ -5,13 +5,14 @@ type TFooterMainStyled = {
   messageAlert?: string;
   hotdrops?: string;
   textColor?: any;
+  secondaryColor?: string;
 };
 
 export const FooterMain = styled.footer<TFooterMainStyled>`
   background: ${(props) =>
     props.primaryColor === '#dedede'
       ? '#fff'
-      : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
+      : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
   padding: 40px 120px 25px 120px;
   color: ${(props) => props.textColor};
 

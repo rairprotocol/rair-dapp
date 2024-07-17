@@ -145,6 +145,7 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
         * [x] /network/:networkId/:contract/:product
             * [x] / - GET - Get the tokens in product ([details](readme/current/nft/nft_manual_product.md))
             * [x] /attributes - GET - Get all attributes from the NFTs in a product ([details](readme/current/nft/nft_manual_attributes.md))
+            * [x] /numbers - GET - Get all tokens numbers in the product ([details](readme/current/nft/nft_manual_numbers.md))
             * [x] /files - GET - Get all files associated with the product ([details](readme/current/nft/nft_manual_files.md))
             * [x] /files/:token - GET - Get all files associated with a token in the product ([details](readme/current/nft/nft_manual_files_token.md))
             * [x] /offers - GET - Get the product data and the offers associated ([details](readme/current/nft/nft_manual_offers.md))
@@ -180,7 +181,6 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
     * [x] /tokens
         * [x] / - GET - Search tokens ([details](readme/current/tokens/tokens_list.md))
         * [x] /id/:id - GET - Get data for a specific token ([details](readme/current/tokens/tokens_single.md))
-        * [x] /tokenNumbers - GET - Get all tokens on a specific contract and offer ([details](readme/current/tokens/tokens_numbers.md))
         * [x] /:token - GET - Get information for a single token ([details](readme/current/tokens/tokens_single_number.md))
     * [x] /transaction/:network/:hash - POST - Process a blockchain transaction ([details](readme/current/transactions/transaction_hash.md))
     * [x] /users
@@ -196,8 +196,8 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
     * [x] /notifications
         * [x] / - GET - List of notifications ([details](readme/current/notifications/get_list.md))
         * [x] /:id - GET - Get a single notification ([details](readme/current/notifications/get_single.md))
-        * [x] /:id - PUT - Mark a notification as read ([details](readme/current/notifications/mark_read.md))
-        * [x] /:id - DELETE - Delete a notification ([details](readme/current/notifications/delete.md))
+        * [x] / - PUT - Mark a notification as read ([details](readme/current/notifications/mark_read.md))
+        * [x] / - DELETE - Delete a notification ([details](readme/current/notifications/delete.md))
 
 # Contributors
 Valerii Kovalov \

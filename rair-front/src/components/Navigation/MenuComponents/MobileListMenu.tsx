@@ -21,6 +21,7 @@ import { TAxiosCollectionData } from '../../Header/header.types';
 import ImageCustomForSearch from '../../MockUpPage/utils/image/ImageCustomForSearch';
 
 import { List, SearchInputMobile } from './../NavigationItems/NavigationItems';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
 interface IMobileListMenu {
   click: boolean;
@@ -31,6 +32,7 @@ interface IMobileListMenu {
   toggleMenu: (otherPage?: string | undefined) => void;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
+  secondaryColor?: string;
 }
 
 const MobileListMenu: React.FC<IMobileListMenu> = ({
@@ -41,7 +43,8 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   messageAlert,
   setMessageAlert,
   setTabIndexItems,
-  isSplashPage
+  isSplashPage,
+  secondaryColor
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,6 +55,9 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
     (store) => store.allInformationFromSearch
   );
   const hotdropsVar = import.meta.env.VITE_TESTNET;
+
+  const { iconColor } =
+  useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const [textSearch, setTextSearch] = useState<string>('');
 
@@ -148,14 +154,21 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   }, [currentUserAddress, dispatch]);
 
   return (
-    <List hotdrops={hotdropsVar} primaryColor={primaryColor} click={click}>
+    <List secondaryColor={secondaryColor} hotdrops={hotdropsVar} primaryColor={primaryColor} click={click}>
       <div>
         {activeSearch && (
           <>
             <SearchInputMobile
               hotdrops={hotdropsVar}
               primaryColor={primaryColor}>
-              <i className="fas fa-search" aria-hidden="true"></i>
+              <i className="fas fa-search" style={{
+                  color:
+                  import.meta.env.VITE_TESTNET === 'true'
+                    ? 
+                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                    : `${
+                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }} aria-hidden="true"></i>
               {import.meta.env.VITE_TESTNET === 'true' ? (
                 <input
                   className={
@@ -174,7 +187,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                   type="text"
                   onChange={handleChangeText}
                   value={textSearch}
-                  placeholder="Search the rairverse..."
+                  placeholder="Search..."
                 />
               )}
             </SearchInputMobile>

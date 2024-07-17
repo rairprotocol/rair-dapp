@@ -3,8 +3,10 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../../../ducks';
 import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
+import useServerSettings from '../../../../adminViews/useServerSettings';
 import ArrowDown from '../../../assets/ArrowDown.svg?react';
 import ArrowUp from '../../../assets/ArrowUp.svg?react';
+import { StyledShevronIcon } from '../../../FilteringBlock/FilteringBlockItems/FilteringBlockItems';
 import { ICurrentTokensComponent } from '../../selectBox.types';
 
 const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
@@ -19,9 +21,14 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   onClickItem,
   numberRef
 }) => {
-  const { primaryButtonColor } = useSelector<RootState, ColorStoreType>(
+  const { primaryButtonColor, textColor, iconColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  const {customSecondaryButtonColor, customSecondaryColor} = useServerSettings();
+
+
+
   return (
     <>
       <div ref={numberRef} className="select-number-container">
@@ -29,6 +36,17 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
           onClick={handleIsOpen}
           className="select-field"
           style={{
+            borderColor:  import.meta.env.VITE_TESTNET === 'true'
+            ? `${
+              primaryColor === '#dedede'
+                  ? 'var(--hot-drops)'
+                  : `color-mix(in srgb, ${customSecondaryColor}, #888888)`
+              }`
+            : `${
+              primaryColor === '#dedede'
+                  ? '#E882D5'
+                  : `color-mix(in srgb, ${customSecondaryColor}, #888888)`
+              }`,
             backgroundColor: `${
               primaryColor === '#dedede'
                 ? 'var(--rhyno-40)'
@@ -37,9 +55,20 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
           }}>
           <div className="number-item">{selectedToken}</div>
           {isOpen ? (
-            <ArrowUp className="arrow-select" />
+            <StyledShevronIcon
+            className="fas fa-chevron-down"
+            rotate="true"
+            primaryColor={primaryColor}
+            textColor={textColor}
+            customSecondaryButtonColor={iconColor}
+          />
           ) : (
-            <ArrowDown className="arrow-select" />
+            <StyledShevronIcon
+                    className="fas fa-chevron-up"
+                    primaryColor={primaryColor}
+                    textColor={textColor}
+                    customSecondaryButtonColor={iconColor}
+                  />
           )}
         </div>
         <div

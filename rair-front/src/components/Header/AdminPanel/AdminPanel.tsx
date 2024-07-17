@@ -16,7 +16,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
   const { adminRights, loggedIn } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
-  const { primaryColor, secondaryColor, textColor } = useSelector<
+  const { primaryColor, textColor, iconColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -42,7 +42,14 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   <TooltipBox position={'top'} title="Server Settings">
                     {' '}
                     <div>
-                      <i className="fa fa-cog" aria-hidden="true" />
+                      <i style={{
+                        color:
+                        import.meta.env.VITE_TESTNET === 'true'
+                          ? 
+                          `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                          : `${
+                            iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                      }} className="fa fa-cog" aria-hidden="true" />
                     </div>
                   </TooltipBox>
                 ),
@@ -54,7 +61,14 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   <TooltipBox position={'top'} title="License">
                     {' '}
                     <div>
-                      <i className="fa fa-id-card" aria-hidden="true" />
+                      <i style={{
+                        color:
+                        import.meta.env.VITE_TESTNET === 'true'
+                          ? 
+                          `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                          : `${
+                            iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                      }} className="fa fa-id-card" aria-hidden="true" />
                     </div>
                   </TooltipBox>
                 ),
@@ -67,7 +81,14 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                     position={'top'}
                     title="Import / Export / Transfer">
                     <div>
-                      <i className="fas fa-city" />
+                      <i style={{
+                        color:
+                        import.meta.env.VITE_TESTNET === 'true'
+                          ? 
+                          `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                          : `${
+                            iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                      }} className="fas fa-city" />
                     </div>
                   </TooltipBox>
                 ),
@@ -78,7 +99,14 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                 name: (
                   <TooltipBox position={'top'} title="Streaming">
                     <div style={{ width: '70px' }}>
-                      <i className="fas fa-film" />
+                      <i style={{
+                        color:
+                        import.meta.env.VITE_TESTNET === 'true'
+                          ? 
+                          `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                          : `${
+                            iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                      }} className="fas fa-film" />
                     </div>
                   </TooltipBox>
                 ),
@@ -89,7 +117,14 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                 name: (
                   <TooltipBox position={'top'} title="Old Market (diamond)">
                     <div style={{ width: '70px' }}>
-                      <i className="fas fa-gem" />
+                      <i style={{
+                        color:
+                        import.meta.env.VITE_TESTNET === 'true'
+                          ? 
+                          `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                          : `${
+                            iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                      }} className="fas fa-gem" />
                     </div>
                   </TooltipBox>
                 ),
@@ -100,7 +135,14 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                 name: (
                   <TooltipBox position={'top'} title="Old Market (classic)">
                     <div style={{ width: '70px' }}>
-                      <i className="fa fa-shopping-cart" aria-hidden="true" />
+                      <i style={{
+                        color:
+                        import.meta.env.VITE_TESTNET === 'true'
+                          ? 
+                          `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                          : `${
+                            iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                      }} className="fa fa-shopping-cart" aria-hidden="true" />
                     </div>
                   </TooltipBox>
                 ),

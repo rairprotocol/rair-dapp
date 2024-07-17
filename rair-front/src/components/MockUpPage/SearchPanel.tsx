@@ -72,7 +72,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const totalNumberVideo = useSelector<RootState, number | undefined>(
     (store) => store.videosStore.totalNumberVideo
   );
-  const { primaryColor, textColor, secondaryColor, primaryButtonColor } =
+  const { primaryColor, textColor, secondaryColor, primaryButtonColor, iconColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const videos = useSelector<RootState, MediaListResponseType | null>(
     (store) => store.videosStore.videos
@@ -226,7 +226,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
               primaryColor === '#dedede' ? 'default' : 'dark'
             }`}
             className="category-button-nft category-button">
-            {hotdropsVar === 'true' ? 'Collectible' : 'NFT'}
+              MARKET
           </Tab>
           <Tab
             onClick={() => {
@@ -266,17 +266,11 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
               className={`fas fa-search fa-lg fas-custom`}
               style={{
                 color:
-                  import.meta.env.VITE_TESTNET === 'true'
-                    ? `${
-                        textColor === '#FFF' || textColor === 'black'
-                          ? '#F95631'
-                          : textColor
-                      }`
-                    : `${
-                        textColor === '#FFF' || textColor === 'black'
-                          ? '#E882D5'
-                          : textColor
-                      }`
+              import.meta.env.VITE_TESTNET === 'true'
+                ? 
+                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                : `${
+                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
               }}
               aria-hidden="true"></i>
             <FilteringBlock

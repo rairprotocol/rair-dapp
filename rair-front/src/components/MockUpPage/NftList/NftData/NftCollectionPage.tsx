@@ -77,7 +77,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [selectedAttributeValues, setSelectedAttributeValues] =
     useState<any>(undefined);
 
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
+  const { primaryColor, textColor, primaryButtonColor, iconColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -443,17 +443,11 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                 className={`fas fa-search fa-lg fas-custom`}
                 style={{
                   color:
-                    import.meta.env.VITE_TESTNET === 'true'
-                      ? `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#F95631'
-                            : textColor
-                        }`
-                      : `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#E882D5'
-                            : textColor
-                        }`
+                  import.meta.env.VITE_TESTNET === 'true'
+                    ? 
+                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                    : `${
+                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                 }}
                 aria-hidden="true"></i>
               {isMobileDesign ? (

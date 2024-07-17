@@ -30,7 +30,7 @@ const Footer: React.FC<IFooter> = () => {
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { headerLogo, primaryColor, textColor, primaryButtonColor } =
+  const { headerLogo, primaryColor, textColor, secondaryColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const onChangeEmail = (e) => {
@@ -52,7 +52,9 @@ const Footer: React.FC<IFooter> = () => {
     <FooterMain
       hotdrops={hotdropsVar}
       primaryColor={primaryColor}
-      textColor={textColor}>
+      textColor={textColor}
+      secondaryColor={secondaryColor}
+      >
       <FooterWrapper
         className="footer-wrapper-hotdrops"
         primaryColor={primaryColor}>

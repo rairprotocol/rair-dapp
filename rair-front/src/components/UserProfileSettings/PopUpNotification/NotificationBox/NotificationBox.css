@@ -1,0 +1,18 @@
+.box-dot-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+@media screen and (max-width: 1024px) {
+  .box-notification {
+    border: 1px solid #fff;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+}

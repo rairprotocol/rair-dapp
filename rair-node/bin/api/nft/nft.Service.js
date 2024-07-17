@@ -4,6 +4,7 @@ const path = require('path');
 const _ = require('lodash');
 
 const fsPromises = fs.promises;
+const { ZeroAddress } = require('ethers');
 const { addPin, addFolder, addMetadata, removePin, addFile } = require('../../integrations/ipfsService')();
 const config = require('../../config');
 const log = require('../../utils/logger')(module);
@@ -66,21 +67,21 @@ module.exports = {
             if (onResale.toString() === 'true') {
                 pipeline.push({
                     $lookup: {
-                    from: 'ResaleTokenOffer',
-                    localField: 'uniqueIndexInContract',
-                    foreignField: 'tokenIndex',
-                    as: 'resaleData',
-                    let: {
-                        tokenContract: '$tokenContract',
-                    },
-                    pipeline: [{
-                        $match: {
-                        $expr: {
-                            $eq: ['$$tokenContract', '$contract'],
-                        },
-                        buyer: { $exists: false },
-                        },
-                    }],
+                      from: 'ResaleTokenOffer',
+                      localField: 'uniqueIndexInContract',
+                      foreignField: 'tokenIndex',
+                      as: 'resaleData',
+                      let: {
+                          tokenContract: '$tokenContract',
+                      },
+                      pipeline: [{
+                          $match: {
+                          $expr: {
+                              $eq: ['$$tokenContract', '$contract'],
+                          },
+                          buyer: { $exists: false },
+                          },
+                      }],
                     },
                 }, {
                     $addFields: {
@@ -313,18 +314,43 @@ module.exports = {
         return next(err);
         }
     },
-    findContractMiddleware: async (req, res, next) => {
+    findContractAndProductMiddleware: async (req, res, next) => {
         try {
-            const contract = await Contract.findOne({
-                contractAddress: req.params.contract.toLowerCase(),
-                blockchain: req.params.networkId,
-            });
+            const { contract, networkId, product } = req.params;
+            const data = await Contract.aggregate([
+              {
+                $match: {
+                  blockchain: networkId,
+                  contractAddress: contract.toLowerCase(),
+                },
+              },
+              {
+                $lookup: {
+                  from: 'Product',
+                  as: 'productData',
+                  let: { contractId: '$_id' },
+                  pipeline: [
+                    {
+                      $match: {
+                        $expr: {
+                          $eq: ['$$contractId', '$contract'],
+                        },
+                        collectionIndexInContract: product,
+                      },
+                    },
+                  ],
+                },
+              },
+            ]);
 
             if (!contract) {
-                return next(new AppError('Contract not found.', 404));
+                return next(new AppError('Data not found.', 404));
             }
 
-            req.contract = contract;
+            const { productData, ...contractData } = data[0];
+
+            req.contract = contractData;
+            [req.product] = productData;
 
             return next();
         } catch (e) {
