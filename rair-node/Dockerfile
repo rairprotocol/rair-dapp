@@ -1,11 +1,11 @@
 #Copy OFAC banned addresses
-FROM python:3.13-rc-bookworm as ofac
+FROM python:3.13-rc-bookworm AS ofac
 COPY ofac-sanctioned-digital-currency-addresses/ ./
 ADD https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml sdn_advanced.xml
 RUN python3 generate-address-list.py ETH -f JSON
 
 #Backend
-FROM node:lts as build
+FROM node:lts AS build
 #version management
 COPY VERSION /
 #install dependencies
