@@ -83,13 +83,13 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     (store) => store.userStore
   );
   const [realDataNotification, setRealDataNotification] = useState([]);
-  const { erc777Instance, currentUserAddress, currentChain } = useSelector<
+  const { mainTokenInstance, currentUserAddress, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
 
-  const {primaryButtonColor, textColor, iconColor, secondaryColor } =
-  useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const { primaryButtonColor, textColor, iconColor, secondaryColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -171,10 +171,10 @@ useEffect(() => {
   }, [currentUserAddress, setUserData]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && erc777Instance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.provider) {
       setIsLoadingBalance(true);
       const balance =
-        await erc777Instance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -185,7 +185,7 @@ useEffect(() => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, erc777Instance, userData]);
+  }, [currentUserAddress, mainTokenInstance, userData]);
 
   const onScrollClick = useCallback(() => {
     if (!click) {

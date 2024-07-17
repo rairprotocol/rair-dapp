@@ -9,6 +9,7 @@ import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.t
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
 import { rFetch } from '../../../../../utils/rFetch';
+import useServerSettings from '../../../../adminViews/useServerSettings';
 import InputField from '../../../../common/InputField';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
 import { ImageLazy } from '../../../../MockUpPage/ImageLazy/ImageLazy';
@@ -45,6 +46,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
+
+  const { blockchainSettings } = useServerSettings();
 
   const [resaleData, setResaleData] = useState<any>();
   const [resaleOffer, setResaleOffer] = useState<any>(undefined);
@@ -258,9 +261,9 @@ const ResaleModal: React.FC<IResaleModal> = ({
         <div className="resale-modal-blockchain-block">
           {item.contract.blockchain in chainData ? (
             <>
-              <div>{chainData[item.contract.blockchain].symbol}</div>
+              <div>{blockchainSettings[item.contract.blockchain].symbol}</div>
               <img
-                src={chainData[item.contract.blockchain].image}
+                src={blockchainSettings[item.contract.blockchain].image}
                 alt="blockchain"
               />
             </>
@@ -367,7 +370,9 @@ const ResaleModal: React.FC<IResaleModal> = ({
               <div className="resale-modal-infotmation-subtitle">
                 <div className="resale-modal-infotmation-subtitle-usd">USD</div>
                 <div>
-                  <div>{chainData[item.contract.blockchain].symbol}</div>
+                  <div>
+                    {blockchainSettings[item.contract.blockchain].symbol}
+                  </div>
                 </div>
               </div>
             </div>
