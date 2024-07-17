@@ -37,7 +37,8 @@ const schemes: SchemaType = {
       hotdropsVar === 'true' ? HotDropsLogoMobile : headerLogoBlackMobile,
     textColor: 'black',
     backgroundImage: bgLogoWhite,
-    backgroundImageEffect: { backgroundBlendMode: undefined }
+    backgroundImageEffect: { backgroundBlendMode: undefined },
+    iconColor: '#F95631'
   },
   charcoal: {
     primaryColor: charcoal,
@@ -47,7 +48,8 @@ const schemes: SchemaType = {
       hotdropsVar === 'true' ? HotDropsLogoMobile : headerLogoWhiteMobile,
     textColor: 'white',
     backgroundImage: bgLogoBlack,
-    backgroundImageEffect: { backgroundBlendMode: 'lighten' }
+    backgroundImageEffect: { backgroundBlendMode: 'lighten' },
+    iconColor: '#F95631'
   }
 };
 
@@ -85,6 +87,8 @@ export default function colorStore(
         buttons.secondaryButtonColor = action.value.secondaryButton;
         if (action.value.fadeButton) {
           buttons.secondaryButtonColor = `linear-gradient(to right, ${action.value.secondaryButton}, ${action.value.fadeButton})`;
+          schemes.rhyno.iconColor = action.value.secondaryButton;
+          schemes.charcoal.iconColor = action.value.secondaryButton;
         }
       }
       return {

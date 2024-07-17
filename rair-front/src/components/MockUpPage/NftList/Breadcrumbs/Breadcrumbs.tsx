@@ -24,7 +24,7 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
     ? embeddedParams
     : params;
   const navigate = useNavigate();
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+  const { primaryColor, textColor, iconColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
@@ -67,17 +67,11 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
           <SingleTokenHome
             style={{
               fill:
-                import.meta.env.VITE_TESTNET === 'true'
-                  ? `${
-                      textColor === '#FFF' || textColor === 'black'
-                        ? '#F95631'
-                        : textColor
-                    }`
-                  : `${
-                      textColor === '#FFF' || textColor === 'black'
-                        ? '#E882D5'
-                        : textColor
-                    }`
+              import.meta.env.VITE_TESTNET === 'true'
+              ? 
+              `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+              : `${
+                iconColor === '#1486c5' ? '#E882D5' : iconColor}`
             }}
             width={24}
             height={24}
@@ -106,17 +100,11 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
             <SingleTokenHome
               style={{
                 fill:
-                  import.meta.env.VITE_TESTNET === 'true'
-                    ? `${
-                        textColor === '#FFF' || textColor === 'black'
-                          ? '#F95631'
-                          : textColor
-                      }`
-                    : `${
-                        textColor === '#FFF' || textColor === 'black'
-                          ? '#E882D5'
-                          : textColor
-                      }`
+                import.meta.env.VITE_TESTNET === 'true'
+                ? 
+                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                : `${
+                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
               }}
               width={24}
               height={24}

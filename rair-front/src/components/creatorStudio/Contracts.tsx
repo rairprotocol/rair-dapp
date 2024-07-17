@@ -24,7 +24,7 @@ const Contracts = () => {
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { primaryColor, secondaryColor, textColor, primaryButtonColor } =
+  const { primaryColor, secondaryColor, textColor, primaryButtonColor, iconColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const fetchContracts = useCallback(async () => {
@@ -172,7 +172,12 @@ const Contracts = () => {
                       position: 'absolute',
                       right: '10px',
                       top: '10px',
-                      color: 'var(--bubblegum)'
+                      color:
+              import.meta.env.VITE_TESTNET === 'true'
+                ? 
+                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                : `${
+                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                     }}
                   />
                 </NavLink>

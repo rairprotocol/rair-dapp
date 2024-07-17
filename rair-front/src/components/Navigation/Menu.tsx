@@ -88,6 +88,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     ContractsInitialType
   >((state) => state.contractStore);
 
+  const {primaryButtonColor, textColor, iconColor, secondaryColor } =
+  useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
@@ -207,10 +210,11 @@ useEffect(() => {
     <MenuMobileWrapper
       className="col-1 rounded burder-menu"
       showAlert={showAlert}
+      secondaryColor={secondaryColor}
       selectedChain={selectedChain}
       isSplashPage={isSplashPage}
       realChainId={realChainId}>
-      <Nav hotdrops={hotdropsVar} primaryColor={primaryColor}>
+      <Nav hotdrops={hotdropsVar} secondaryColor={secondaryColor} primaryColor={primaryColor}>
         <MobileChoiseNav
           click={click}
           messageAlert={messageAlert}
@@ -230,6 +234,7 @@ useEffect(() => {
           </Suspense>
         ) : (
           <MobileListMenu
+          secondaryColor={secondaryColor}
             primaryColor={primaryColor}
             click={click}
             toggleMenu={toggleMenu}
@@ -247,10 +252,22 @@ useEffect(() => {
                 <div>
                   {isAboutPage ? null : (
                     <button
-                      style={{ backgroundColor: primaryColor }}
-                      className={`btn btn-connect-wallet-mobile ${
-                        hotdropsVar === 'true' ? 'hotdrops-bg' : ''
-                      }`}
+                      className={`btn rair-button btn-connect-wallet-mobile`}
+                      style={{
+                        background: `${
+                          primaryColor === '#dedede'
+                            ? import.meta.env.VITE_TESTNET === 'true'
+                              ? 'var(--hot-drops)'
+                              : 'linear-gradient(to right, #e882d5, #725bdb)'
+                            : import.meta.env.VITE_TESTNET === 'true'
+                              ? primaryButtonColor ===
+                                'linear-gradient(to right, #e882d5, #725bdb)'
+                                ? 'var(--hot-drops)'
+                                : primaryButtonColor
+                              : primaryButtonColor
+                        }`,
+                        color: textColor
+                      }}
                       onClick={() => connectUserData()}>
                       {loginProcess ? 'Please wait...' : 'Connect'}
                     </button>
@@ -273,7 +290,14 @@ useEffect(() => {
                             }}
                             activeSearch={activeSearch}
                             marginRight={'10px'}>
-                            <i className="fas fa-search" aria-hidden="true"></i>
+                            <i className="fas fa-search"  style={{
+                  color:
+                  import.meta.env.VITE_TESTNET === 'true'
+                    ? 
+                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                    : `${
+                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }} aria-hidden="true"></i>
                           </SocialBoxSearch>
                           {/* this is where the aikon widget should go: */}
                           {/* {currentUserAddress && userBalance.length < 7 && (
@@ -404,7 +428,14 @@ useEffect(() => {
               }}
               activeSearch={activeSearch}
               marginRight={'17px'}>
-              <i className="fas fa-search" aria-hidden="true"></i>
+              <i className="fas fa-search" style={{
+                 color:
+                 import.meta.env.VITE_TESTNET === 'true'
+                   ? 
+                   `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                   : `${
+                     iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }} aria-hidden="true"></i>
             </SocialBoxSearch>
           )}
           {click ? (
