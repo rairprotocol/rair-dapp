@@ -55,7 +55,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(true);
-  const { primaryColor, headerLogo, primaryButtonColor, textColor } =
+  const { primaryColor, headerLogo, primaryButtonColor, textColor, secondaryColor, iconColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { connectUserData } = useConnectUser();
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
@@ -69,6 +69,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
+  console.info(iconColor, 'iconColor')
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [realDataNotification, setRealDataNotification] = useState([]);
@@ -125,9 +127,11 @@ const MainHeader: React.FC<IMainHeader> = ({
     setTextSearch('');
   };
 
-  const getNotifications = useCallback(async () => {
+  const getNotifications = useCallback(async (pageNum?: number) => {
     if(currentUserAddress) {
-      const result = await rFetch(`/api/notifications`);
+      // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
+      const result = await rFetch(`/api/notifications${`?pageNum=${Number(pageNum)}`}`);
+
       if (result.success) {
         setRealDataNotification(result.notifications);
       }
@@ -136,10 +140,9 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const getNotificationsCount = useCallback( async () => {
     if(currentUserAddress) {
-      const result = await rFetch(`/api/notifications?read=false`);
-      if (result.success && result.notifications.length > 0) {
-        const readNotifications = result.notifications.filter(el => el.read === false);
-        setNotificationCount(readNotifications.length);
+      const result = await rFetch(`/api/notifications?onlyUnread=true`);
+      if (result.success && result.totalCount > 0) {
+        setNotificationCount(result.totalCount);
       }
     }
   }, [currentUserAddress])
@@ -150,7 +153,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
 
   useEffect(() => {
-    getNotifications();
+    getNotifications(0);
   }, [currentUserAddress])
 
   const Highlight = (props) => {
@@ -204,6 +207,7 @@ const MainHeader: React.FC<IMainHeader> = ({
       isSplashPage={isSplashPage}
       selectedChain={selectedChain}
       realChainId={realChainId}
+      secondaryColor={secondaryColor}
       ref={ref}>
       <div>
         <MainLogo
@@ -387,16 +391,10 @@ const MainHeader: React.FC<IMainHeader> = ({
           style={{
             color:
               import.meta.env.VITE_TESTNET === 'true'
-                ? `${
-                    textColor === '#FFF' || textColor === 'black'
-                      ? '#F95631'
-                      : textColor
-                  }`
+                ? 
+                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
                 : `${
-                    textColor === '#FFF' || textColor === 'black'
-                      ? '#E882D5'
-                      : textColor
-                  }`
+                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
           }}
           aria-hidden="true"></i>
       </div>
@@ -445,7 +443,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            {currentUserAddress && <PopUpNotification notificationCount={notificationCount} getNotificationsCount={getNotificationsCount} getNotifications={getNotifications} realDataNotification={realDataNotification} />}
+            {currentUserAddress && <PopUpNotification setRealDataNotification={setRealDataNotification} notificationCount={notificationCount} getNotificationsCount={getNotificationsCount} getNotifications={getNotifications} realDataNotification={realDataNotification} />}
 
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}

@@ -33,6 +33,7 @@ export type ColorSchemaType = {
   backgroundImageEffect: {
     backgroundBlendMode: BackgroundBlendModeType | undefined;
   };
+  iconColor: string;
 };
 export type ColorStoreType = ColorSchemaType & {
   primaryButtonColor: string;

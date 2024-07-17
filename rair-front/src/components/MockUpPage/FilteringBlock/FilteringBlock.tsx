@@ -51,7 +51,7 @@ const FilteringBlock = ({
   const [sortPopUp, setSortPopUp] = useState(false);
   const sortRef = useRef();
 
-  const { primaryColor, secondaryColor, textColor } = useSelector<
+  const { primaryColor, secondaryColor, textColor, iconColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -159,10 +159,12 @@ const FilteringBlock = ({
                   textColor={textColor}
                   sortItem={sortItem}
                   primaryColor={primaryColor}
+                  customSecondaryButtonColor={iconColor}
                   className="fas fa-arrow-up"
                 />
                 <StyledArrowDownIcon
                   textColor={textColor}
+                  customSecondaryButtonColor={iconColor}
                   sortItem={sortItem}
                   primaryColor={primaryColor}
                   className="fas fa-arrow-down"
@@ -182,6 +184,7 @@ const FilteringBlock = ({
                     rotate="true"
                     primaryColor={primaryColor}
                     textColor={textColor}
+                    customSecondaryButtonColor={iconColor}
                   />
                 ) : (
                   // <i className="fas fa-chevron-down"></i>
@@ -189,6 +192,7 @@ const FilteringBlock = ({
                     className="fas fa-chevron-up"
                     primaryColor={primaryColor}
                     textColor={textColor}
+                    customSecondaryButtonColor={iconColor}
                   />
                 )}
               </div>
@@ -268,11 +272,18 @@ const FilteringBlock = ({
                       {filterCloseText ? (
                         <CloseIcon
                           style={{
-                            marginRight: '5px'
-                          }}
+                            marginRight: '5px',
+                            color: import.meta.env.VITE_TESTNET === 'true'
+                            ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                            : filterPopUp
+                              ? '#fff'
+                              : `${
+                                iconColor === '#1486c5' ? '#E882D5' : iconColor}`}
+                          }
                         />
                       ) : (
                         <StyledFilterIcon
+                          customSecondaryButtonColor={iconColor}
                           primaryColor={primaryColor}
                           textColor={textColor}
                           filterPopUp={filterPopUp}></StyledFilterIcon>
@@ -280,6 +291,7 @@ const FilteringBlock = ({
                     </>
                   ) : (
                     <StyledFilterIcon
+                      customSecondaryButtonColor={iconColor}
                       primaryColor={primaryColor}
                       textColor={textColor}
                       filterPopUp={filterPopUp}></StyledFilterIcon>
@@ -301,18 +313,30 @@ const FilteringBlock = ({
                     <>
                       {filterCloseText ? (
                         <StyledFilterIcon
-                          filterPopUp={filterPopUp}></StyledFilterIcon>
+                        customSecondaryButtonColor={iconColor}
+                        primaryColor={primaryColor}
+                        textColor={textColor}
+                        filterPopUp={filterPopUp}></StyledFilterIcon>
                       ) : (
                         <CloseIcon
                           style={{
-                            marginRight: '5px'
-                          }}
+                            marginRight: '5px',
+                            color: import.meta.env.VITE_TESTNET === 'true'
+                            ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                            : filterPopUp
+                              ? '#fff'
+                              : `${
+                                iconColor === '#1486c5' ? '#E882D5' : iconColor}`}
+                          }
                         />
                       )}
                     </>
                   ) : (
                     <StyledFilterIcon
-                      filterPopUp={filterPopUp}></StyledFilterIcon>
+                    customSecondaryButtonColor={iconColor}
+                    primaryColor={primaryColor}
+                    textColor={textColor}
+                    filterPopUp={filterPopUp}></StyledFilterIcon>
                   )}
                   {width > 700 && <span>Filters</span>}
                 </div>

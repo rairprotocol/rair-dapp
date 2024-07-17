@@ -17,11 +17,13 @@ import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import { NavFooter, NavFooterBox } from '../../Footer/FooterItems/FooterItems';
 import NotificationBox from '../../UserProfileSettings/PopUpNotification/NotificationBox/NotificationBox';
 import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
+import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
 interface IMobileNavigationList {
   messageAlert: string | null;
   setMessageAlert: (arg: string | null) => void;
-  primaryColor: string;
+  primaryColor?: string;
   currentUserAddress: string | undefined;
   toggleMenu: (otherPage?: string) => void;
   setTabIndexItems: (arg: number) => void;
@@ -32,7 +34,6 @@ interface IMobileNavigationList {
 const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   messageAlert,
   setMessageAlert,
-  primaryColor,
   toggleMenu,
   currentUserAddress,
   click
@@ -47,17 +48,22 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     (store) => store.userStore
   );
 
+  const { primaryColor } = useSelector<
+  RootState,
+  ColorStoreType
+>((store) => store.colorStore);
+
   const { web3TxHandler } = useWeb3Tx();
 
-  const { mainTokenInstance, currentChain } = useSelector<
+  const { erc777Instance, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && mainTokenInstance?.provider) {
+    if (currentUserAddress && erc777Instance?.provider) {
       const balance =
-        await mainTokenInstance.provider.getBalance(currentUserAddress);
+        await erc777Instance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -67,31 +73,32 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, mainTokenInstance, userData]);
+  }, [currentUserAddress, erc777Instance, userData]);
 
   const getUserRairBalance = useCallback(async () => {
-    if (!mainTokenInstance || userRairBalance?.gt(0)) {
+    if (!erc777Instance || userRairBalance?.gt(0)) {
       return;
     }
-    const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
+    const result = await web3TxHandler(erc777Instance, 'balanceOf', [
       currentUserAddress
     ]);
     if (result?._isBigNumber) {
       setUserRairBalance(result);
     }
-  }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
+  }, [erc777Instance, currentUserAddress, userRairBalance, web3TxHandler]);
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
   const [notificationArray, setNotificationArray] = useState<any>();
   const [notificationCount, setNotificationCount] = useState<number>(0);
   const [flagLoading, setFlagLoading] = useState(false);
+  const [currentPageNotification, setCurrentPageNotification] = useState<number>(1);
 
   const { logoutUser } = useConnectUser();
 
-  const getNotifications = useCallback(async () => {
+  const getNotifications = useCallback(async (pageNum: number) => {
     if (messageAlert && currentUserAddress) {
       setFlagLoading(true);
-      const result = await rFetch(`/api/notifications`);
+      const result = await rFetch(`/api/notifications${`?pageNum=${Number(pageNum)}`}`);
       if (result.success) {
         setNotificationArray(result.notifications);
         setFlagLoading(false);
@@ -99,26 +106,29 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     }
   }, [messageAlert, currentUserAddress]);
 
-  const getNotificationsCount = useCallback(async () => {
-    if (messageAlert && currentUserAddress) {
+  const getNotificationsCount = useCallback( async () => {
+    if (currentUserAddress) {
       setFlagLoading(true);
-      const result = await rFetch(`/api/notifications?read=false`);
-      if (result.success && result.notifications.length > 0) {
-        const readNotifications = result.notifications.filter(
-          (el) => el.read === false
-        );
-        setNotificationCount(readNotifications.length);
+      const result = await rFetch(`/api/notifications`);
+      if (result.success && result.totalCount > 0) {
+        setNotificationCount(result.totalCount);
         setFlagLoading(true);
       }
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress])
+
+  const changePageForVideo = (currentPage: number) => {
+    setCurrentPageNotification(currentPage);
+    const currentPageNumber = currentPage === 0 ? currentPage : currentPage - 1;
+    getNotifications(Number(currentPageNumber));
+  };
 
   useEffect(() => {
     getNotificationsCount();
-  }, [getNotificationsCount]);
+  }, [getNotificationsCount])
 
   useEffect(() => {
-    getNotifications();
+    getNotifications(0);
   }, [getNotifications]);
 
   useEffect(() => {
@@ -149,7 +159,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           <div
             style={{
               width: '90vw',
-              height: '80vh',
+              height: '65vh',
               overflowY: 'auto',
               marginTop: '20px',
               padding: '20px 0'
@@ -168,7 +178,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                     primaryColor={primaryColor}
                     getNotificationsCount={getNotificationsCount}
                   />
-                );
+                )
               })
             ) : (
               <div
@@ -179,6 +189,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               </div>
             )}
           </div>
+          {notificationCount && <PaginationBox
+            totalPageForPagination={notificationCount}
+            changePage={changePageForVideo}
+            currentPage={currentPageNotification}
+            itemsPerPageNotifications={10}
+            whatPage={"notifications"}
+          />}
         </NavFooterBox>
       ) : messageAlert === 'profile' ? (
         <NavFooterBox

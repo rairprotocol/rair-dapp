@@ -25,8 +25,6 @@ import {
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import chainData from '../../utils/blockchainData';
-import { rFetch } from '../../utils/rFetch';
-import LoadingComponent from '../common/LoadingComponent';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
@@ -39,6 +37,7 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
+import { rFetch } from '../../utils/rFetch';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -84,10 +83,13 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     (store) => store.userStore
   );
   const [realDataNotification, setRealDataNotification] = useState([]);
-  const { mainTokenInstance, currentUserAddress, currentChain } = useSelector<
+  const { erc777Instance, currentUserAddress, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+
+  const {primaryButtonColor, textColor, iconColor, secondaryColor } =
+  useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -104,21 +106,22 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   };
 
   const getNotifications = useCallback(async () => {
-    if (currentUserAddress) {
+    if(currentUserAddress) {
       const result = await rFetch(`/api/notifications`);
-      if (result.success) {
-        setRealDataNotification(result.notifications);
-      }
+    if (result.success) {
+      setRealDataNotification(result.notifications);
     }
-  }, [currentUserAddress]);
+    }
+}, [currentUserAddress]);
 
-  useEffect(() => {
-    getNotificationsCount();
-  }, [click]);
+useEffect(() => {
+  getNotificationsCount();
+}, [click])
 
-  useEffect(() => {
-    getNotifications();
-  }, []);
+
+useEffect(() => {
+  getNotifications();
+}, [])
 
   const toggleMenu = (otherPage?: string | undefined) => {
     if (otherPage === 'nav') {
@@ -168,10 +171,10 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   }, [currentUserAddress, setUserData]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && mainTokenInstance?.provider) {
+    if (currentUserAddress && erc777Instance?.provider) {
       setIsLoadingBalance(true);
       const balance =
-        await mainTokenInstance.provider.getBalance(currentUserAddress);
+        await erc777Instance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -182,7 +185,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, mainTokenInstance, userData]);
+  }, [currentUserAddress, erc777Instance, userData]);
 
   const onScrollClick = useCallback(() => {
     if (!click) {
@@ -202,14 +205,16 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     getBalance();
   }, [getBalance]);
 
+
   return (
     <MenuMobileWrapper
       className="col-1 rounded burder-menu"
       showAlert={showAlert}
+      secondaryColor={secondaryColor}
       selectedChain={selectedChain}
       isSplashPage={isSplashPage}
       realChainId={realChainId}>
-      <Nav hotdrops={hotdropsVar} primaryColor={primaryColor}>
+      <Nav hotdrops={hotdropsVar} secondaryColor={secondaryColor} primaryColor={primaryColor}>
         <MobileChoiseNav
           click={click}
           messageAlert={messageAlert}
@@ -229,6 +234,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
           </Suspense>
         ) : (
           <MobileListMenu
+          secondaryColor={secondaryColor}
             primaryColor={primaryColor}
             click={click}
             toggleMenu={toggleMenu}
@@ -246,10 +252,22 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                 <div>
                   {isAboutPage ? null : (
                     <button
-                      style={{ backgroundColor: primaryColor }}
-                      className={`btn btn-connect-wallet-mobile ${
-                        hotdropsVar === 'true' ? 'hotdrops-bg' : ''
-                      }`}
+                      className={`btn rair-button btn-connect-wallet-mobile`}
+                      style={{
+                        background: `${
+                          primaryColor === '#dedede'
+                            ? import.meta.env.VITE_TESTNET === 'true'
+                              ? 'var(--hot-drops)'
+                              : 'linear-gradient(to right, #e882d5, #725bdb)'
+                            : import.meta.env.VITE_TESTNET === 'true'
+                              ? primaryButtonColor ===
+                                'linear-gradient(to right, #e882d5, #725bdb)'
+                                ? 'var(--hot-drops)'
+                                : primaryButtonColor
+                              : primaryButtonColor
+                        }`,
+                        color: textColor
+                      }}
                       onClick={() => connectUserData()}>
                       {loginProcess ? 'Please wait...' : 'Connect'}
                     </button>
@@ -272,7 +290,14 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                             }}
                             activeSearch={activeSearch}
                             marginRight={'10px'}>
-                            <i className="fas fa-search" aria-hidden="true"></i>
+                            <i className="fas fa-search"  style={{
+                  color:
+                  import.meta.env.VITE_TESTNET === 'true'
+                    ? 
+                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                    : `${
+                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }} aria-hidden="true"></i>
                           </SocialBoxSearch>
                           {/* this is where the aikon widget should go: */}
                           {/* {currentUserAddress && userBalance.length < 7 && (
@@ -311,20 +336,15 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
                           {notificationCount && notificationCount > 0 ? (
-                            <div
-                              className="red-circle-notifications"
-                              style={{
-                                fontSize: '10px',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                fontWeight: 'bold'
-                              }}>
-                              {notificationCount > 9 ? '9+' : notificationCount}
-                            </div>
-                          ) : (
-                            ''
-                          )}
+            <div className="red-circle-notifications" style={{
+              fontSize: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontWeight: "bold",
+              color: '#fff'
+            }}>{notificationCount  > 9 ? "9+" : notificationCount}</div>
+          ) : ''}
                         </SocialBox>
                       )}
                     </div>
@@ -408,7 +428,14 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               }}
               activeSearch={activeSearch}
               marginRight={'17px'}>
-              <i className="fas fa-search" aria-hidden="true"></i>
+              <i className="fas fa-search" style={{
+                 color:
+                 import.meta.env.VITE_TESTNET === 'true'
+                   ? 
+                   `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                   : `${
+                     iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }} aria-hidden="true"></i>
             </SocialBoxSearch>
           )}
           {click ? (

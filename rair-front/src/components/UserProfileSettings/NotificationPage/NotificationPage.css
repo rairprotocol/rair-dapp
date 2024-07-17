@@ -15,6 +15,15 @@
   transition: all 0.3s ease;
 }
 
+.wrapper-notification.rhyno .box-notification {
+  background: #fff;
+  color: #000;
+}
+
+.wrapper-notification.rhyno .box-notification:hover {
+  background-color: #a9a9a9;
+}
+
 .wrapper-notification .box-notification:hover {
   background-color: #4e4e4e;
 }
