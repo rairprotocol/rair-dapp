@@ -1,6 +1,8 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
@@ -800,16 +802,12 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             <div
               style={{
                 cursor: 'pointer',
-                color: 'rgb(232, 130, 213)',
+                color: textColor,
                 fontSize: '2rem'
               }}
               onClick={() => goBack()}
               className="arrow-back">
-              {import.meta.env.VITE_TESTNET === 'true' ? (
-                <i className="fas fa-arrow-alt-circle-left hotdrops-color"></i>
-              ) : (
-                <i className="fas fa-arrow-alt-circle-left"></i>
-              )}
+              <FontAwesomeIcon icon={faArrowAltCircleLeft} />
             </div>
           )}
           <h2>{"Don't have product"}</h2>

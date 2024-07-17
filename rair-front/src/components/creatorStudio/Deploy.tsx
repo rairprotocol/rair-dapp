@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faGem, faLandmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 import { stringToHex } from 'viem';
 
@@ -329,7 +331,7 @@ const Factory = () => {
               }}
               className="btn rair-button col-12 col-md-5 rounded-rair"
               onClick={deployClassic}>
-              <i className="fas h1 fa-landmark" />
+              <FontAwesomeIcon icon={faLandmark} className="h1" />
               <br />
               Deploy a classic contract
               <br />
@@ -366,7 +368,7 @@ const Factory = () => {
               }}
               className="btn rair-button col-12 rounded-rair mt-3"
               onClick={deployDiamond}>
-              <i className="fas h1 fa-gem" />
+              <FontAwesomeIcon icon={faGem} className="h1" />
               <br />
               Deploy a diamond contract
               <br />

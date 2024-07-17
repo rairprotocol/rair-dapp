@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { MultiOwnerModularAccount } from '@alchemy/aa-accounts';
 import { AccountSigner } from '@alchemy/aa-ethers';
+import { faRedo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as ethers from 'ethers';
 
 import ProductManager from './CollectionManager';
@@ -95,7 +97,7 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
         onClick={refreshData}
         disabled={refetchingFlag}
         className="btn">
-        {refetchingFlag ? '...' : <i className="fas fa-redo" />}
+        {refetchingFlag ? '...' : <FontAwesomeIcon icon={faRedo} />}
       </button>
       <br />
       <br />

@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Breadcrumbs, Typography } from '@mui/material';
@@ -155,7 +157,7 @@ const MyItems: React.FC<IMyItems> = ({
       <div className="my-items-header-wrapper">
         <PersonalProfileIcon userData={userData} />
         {/* <div onClick={() => navigate(-1)} className="my-items-title-wrapper">
-          <i className="fas fa-arrow-left fa-arrow-custom"></i>
+          <FontAwesomeIcon icon={faArrowLeft} />
           <h1 className="my-items-title">My Items</h1>
         </div> */}
         <>
@@ -206,7 +208,11 @@ const MyItems: React.FC<IMyItems> = ({
                   primaryColor === 'rhyno' ? 'default' : 'dark'
                 }`}
                 className="category-button-videos category-button">
-                {width <= 700 ? <i className="fas fa-heart" /> : 'My favorites'}
+                {width <= 700 ? (
+                  <FontAwesomeIcon icon={faHeart} />
+                ) : (
+                  'My favorites'
+                )}
               </Tab>
               <Tab
                 style={{
@@ -287,7 +293,7 @@ const MyItems: React.FC<IMyItems> = ({
           </Tabs>
         </>
       </div>
-      {isOpenBlockchain ? (
+      {isOpenBlockchain && (
         <ModalItem
           setIsOpenBlockchain={setIsOpenBlockchain}
           isOpenBlockchain={isOpenBlockchain}
@@ -297,13 +303,7 @@ const MyItems: React.FC<IMyItems> = ({
           isCreatedTab={isCreatedTab}
           setIsCreatedTab={setIsCreatedTab}
         />
-      ) : (
-        <></>
       )}
-      {/* <div className="container-diamond-items">
-        <h3>Diamond Items <i className='fas h5 fa-gem' /></h3>
-        <MyDiamondItems {...{ openModal, setSelectedData }} /> 
-      </div>*/}
     </div>
   );
 };

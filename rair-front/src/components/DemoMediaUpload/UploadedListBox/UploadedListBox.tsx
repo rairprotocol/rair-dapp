@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
+import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
@@ -170,7 +172,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               color: textColor
             }}
             className="rair-button btn rounded-rair white">
-            <i className="fas fa-check" /> Copy embed code
+            <FontAwesomeIcon icon={faCheck} /> Copy embed code
           </button>
         )}
         <button
@@ -179,7 +181,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
           className={`btn btn-danger rounded-rairo ${
             primaryColor === 'rhyno' ? 'rhyno' : ''
           }`}>
-          <i className="fas fa-trash" />
+          <FontAwesomeIcon icon={faTrash} />
         </button>
         {!editTitleVideo && <AnalyticsPopUp videoId={fileData?._id} />}
       </div>

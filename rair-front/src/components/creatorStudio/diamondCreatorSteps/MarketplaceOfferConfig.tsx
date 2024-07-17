@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 
 import { RootState } from '../../../ducks';
@@ -293,7 +295,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                     color: textColor
                   }}
                   className="col-12 col-md-2 rounded-rair btn rair-button">
-                  <i className="fas fa-plus" /> Add
+                  <FontAwesomeIcon icon={faPlus} /> Add
                 </button>
               </div>
             )}

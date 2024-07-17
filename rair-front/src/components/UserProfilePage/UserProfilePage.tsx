@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -474,7 +476,11 @@ const UserProfilePage: React.FC = () => {
                     }`
                   }}
                   className="category-button-videos category-button">
-                  {width > 676 ? 'Favorited' : <i className="fas fa-heart" />}
+                  {width > 676 ? (
+                    'Favorited'
+                  ) : (
+                    <FontAwesomeIcon icon={faHeart} />
+                  )}
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${

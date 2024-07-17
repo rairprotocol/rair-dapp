@@ -178,7 +178,7 @@ const FilteringBlock = ({
                   hotdropsVar === 'true' ? 'hotdrops-color' : ''
                 }`}>
                 {sortPopUp ? (
-                  // <i className="fas fa-chevron-up"></i>
+                  // <FontAwesome icon={faChevronUp} />
                   <StyledShevronIcon
                     className="fas fa-chevron-down"
                     rotate="true"
@@ -187,7 +187,7 @@ const FilteringBlock = ({
                     customSecondaryButtonColor={iconColor}
                   />
                 ) : (
-                  // <i className="fas fa-chevron-down"></i>
+                  // <FontAwesome icon={faChevronDown} />
                   <StyledShevronIcon
                     className="fas fa-chevron-up"
                     primaryColor={primaryColor}

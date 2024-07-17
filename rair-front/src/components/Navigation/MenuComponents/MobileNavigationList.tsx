@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { faChevronLeft, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
@@ -38,8 +40,6 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   currentUserAddress,
   click
 }) => {
-  const hotDropsVar = import.meta.env.VITE_TESTNET;
-
   const [userBalance, setUserBalance] = useState<string>('');
   const [userRairBalance, setUserRairBalance] = useState<any>(
     BigNumber.from(0)
@@ -154,7 +154,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           className="nav-header-box-mobile"
           primaryColor={primaryColor}>
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
-            <i className="fas fa-chevron-left"></i>
+            <FontAwesomeIcon icon={faChevronLeft} />
           </BackBtnMobileNav>
           <div
             style={{
@@ -202,10 +202,10 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           className="nav-header-box-mobile"
           primaryColor={primaryColor}>
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
-            <i className="fas fa-chevron-left"></i>
+            <FontAwesomeIcon icon={faChevronLeft} />
           </BackBtnMobileNav>
           {/* <li onClick={() => setMessageAlert('profileEdit')}>
-            Personal Profile <i className="fal fa-edit" />
+            Personal Profile <FontAwesomeIcon icon={faLeft} />
           </li> */}
           <li onClick={() => toggleMenu()}>
             <NavLink to={`/${currentUserAddress}`}>View Profile</NavLink>
@@ -337,7 +337,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           </div>
           {currentUserAddress && (
             <li className="logout" onClick={logoutUser}>
-              <i className="fas fa-sign-out-alt"></i>Logout
+              <FontAwesomeIcon icon={faSignOutAlt} />
+              Logout
             </li>
           )}
         </NavFooterBox>
@@ -347,7 +348,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           primaryColor={primaryColor}>
           {currentUserAddress && (
             <li className="logout" onClick={logoutUser}>
-              <i className="fas fa-sign-out-alt"></i>Logout
+              <FontAwesomeIcon icon={faSignOutAlt} />
+              Logout
             </li>
           )}
         </NavFooterBox>

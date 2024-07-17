@@ -1,6 +1,8 @@
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddIcon from '@mui/icons-material/Add';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
@@ -377,12 +379,12 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
                   )}
                   type="submit"
                   className={`${cl.editModeOn} ${textColor && cl[textColor]}`}>
-                  <i className="far fa-check" />
+                  <FontAwesomeIcon icon={faCheck} />
                 </button>
                 <button
                   className={`${cl.editModeOff} ${textColor && cl[textColor]}`}
                   onClick={() => resetAllStatesOnCancel(userRd)}>
-                  <i className="fal fa-times" />
+                  <FontAwesomeIcon icon={faTimes} />
                 </button>
               </div>
             </form>

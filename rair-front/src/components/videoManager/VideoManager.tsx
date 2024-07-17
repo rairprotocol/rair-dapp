@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { formatEther } from 'ethers/lib/utils';
 
 import OfferSelector from './OfferSelector';
@@ -267,7 +269,7 @@ const VideoManager = () => {
                   <button
                     onClick={deleteFile}
                     className="btn btn-outline-danger">
-                    <i className="fa fa-trash" /> Delete
+                    <FontAwesomeIcon icon={faTrash} /> Delete
                   </button>
                 </div>
               </div>
@@ -299,7 +301,7 @@ const VideoManager = () => {
                     <button
                       className="btn float-end btn-danger"
                       onClick={() => deleteUnlock(unlock._id)}>
-                      <i className="fa fa-trash" />{' '}
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
                 );

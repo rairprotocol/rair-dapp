@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber } from 'ethers';
 
 import { RootState } from '../../../ducks';
@@ -73,7 +75,7 @@ const TokenURIRow: React.FC<ITokenURIRow> = ({
       </th>
       <th>
         <button onClick={() => deleter(index)} className="btn btn-danger">
-          <i className="fas fa-trash" />
+          <FontAwesomeIcon icon={faTrash} />
         </button>
       </th>
     </tr>
@@ -564,7 +566,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                       color: textColor
                     }}
                     className="btn rair-button">
-                    Add <i className="fas fa-plus" />
+                    Add <FontAwesomeIcon icon={faPlus} />
                   </button>
                 </th>
               </tr>

@@ -1,4 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { TBatchRowPropsType } from './marketplace.types';
 
@@ -44,7 +46,7 @@ const BatchRow: React.FC<TBatchRowPropsType> = ({ index, deleter, array }) => {
         />
       </div>
       <button onClick={deleter} className="col-1 btn btn-danger">
-        <i className="fas fa-trash" />
+        <FontAwesomeIcon icon={faTrash} />
       </button>
     </div>
   );

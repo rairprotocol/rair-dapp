@@ -1,4 +1,6 @@
 import React from 'react';
+import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
   Curios,
@@ -267,7 +269,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
             </div>
             <div className="select-mobile-text">
               <div className="circle-table">
-                <i className="fas fa-check fas_custom_main"></i>
+                <FontAwesomeIcon icon={faCheck} className="fas_custom_main" />
               </div>
             </div>
           </div>
@@ -279,7 +281,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
             </div>
             <div className="select-mobile-text">
               <div className="circle-table">
-                <i className="fa fa-minus fas_custom fas_custom"></i>
+                <FontAwesomeIcon icon={faMinus} className="fas_custom" />
               </div>
             </div>
           </div>
@@ -291,7 +293,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
             </div>
             <div className="select-mobile-text">
               <div className="circle-table">
-                <i className="fa fa-minus fas_custom fas_custom"></i>
+                <FontAwesomeIcon icon={faMinus} className="fas_custom" />
               </div>
             </div>
           </div>
@@ -303,7 +305,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
             </div>
             <div className="select-mobile-text">
               <div className="circle-table">
-                <i className="fa fa-minus fas_custom fas_custom"></i>
+                <FontAwesomeIcon icon={faMinus} className="fas_custom" />
               </div>
             </div>
           </div>
@@ -315,7 +317,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
             </div>
             <div className="select-mobile-text">
               <div className="circle-table">
-                <i className="fa fa-minus fas_custom fas_custom"></i>
+                <FontAwesomeIcon icon={faMinus} className="fas_custom" />
               </div>
             </div>
           </div>
@@ -327,7 +329,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
             </div>
             <div className="select-mobile-text">
               <div className="circle-table">
-                <i className="fa fa-minus fas_custom fas_custom"></i>
+                <FontAwesomeIcon icon={faMinus} className="fas_custom" />
               </div>
             </div>
           </div>
@@ -339,7 +341,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
             </div>
             <div className="select-mobile-text">
               <div className="circle-table">
-                <i className="fa fa-minus fas_custom fas_custom"></i>
+                <FontAwesomeIcon icon={faMinus} className="fas_custom" />
               </div>
             </div>
           </div>

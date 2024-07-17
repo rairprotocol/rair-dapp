@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { faGem } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { BannerCollection } from './BannerCollection';
 import {
@@ -13,7 +15,6 @@ import {
   TProductDataLocal,
   TSetDataUseState
 } from './creatorStudio.types';
-import FixedBottomNavigation from './FixedBottomNavigation';
 import NavigatorContract from './NavigatorContract';
 
 import { TProducts } from '../../axios.responseTypes';
@@ -116,7 +117,8 @@ const ListCollections = () => {
                       backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`
                     }}
                     className={`col-10 btn btn-${primaryColor} text-start rounded-rair my-1`}>
-                    {item.diamond && <i className="fas fa-gem" />} {item.name}
+                    {item.diamond && <FontAwesomeIcon icon={faGem} />}{' '}
+                    {item.name}
                     <i
                       className="fas fa-arrow-right"
                       style={{

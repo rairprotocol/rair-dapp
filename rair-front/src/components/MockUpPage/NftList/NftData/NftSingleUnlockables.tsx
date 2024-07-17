@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import {
@@ -106,7 +108,7 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
                         ) : (
                           <div className="block-rariry-unlock-video lock">
                             <div className="custom-lock">
-                              <i className="fa fa-lock" aria-hidden="true"></i>
+                              <FontAwesomeIcon icon={faLock} />
                               <p
                                 className={`video-rarity-preview-text ${
                                   v.description.length > 20 ? 'long' : ''

@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { faKey, faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ethers, utils } from 'ethers';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
@@ -63,7 +65,7 @@ const LockRow: React.FC<ILockRow> = ({
     <tr>
       <th>
         <button disabled className={`btn btn-${primaryColor} rounded-rair`}>
-          <i style={{ color: `${randColor}` }} className="fas fa-key" />
+          <FontAwesomeIcon icon={faKey} style={{ color: randColor }} />
         </button>
       </th>
       <th className="p-1">
@@ -151,7 +153,7 @@ const LockRow: React.FC<ILockRow> = ({
           <button
             onClick={locker}
             className={`btn btn-${primaryColor} rounded-rair`}>
-            <i className="fas fa-lock" />
+            <FontAwesomeIcon icon={faLock} />
           </button>
         </div>
       </th>

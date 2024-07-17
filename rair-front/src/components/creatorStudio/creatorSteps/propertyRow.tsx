@@ -1,4 +1,6 @@
 import React from 'react';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import InputField from '../../common/InputField';
 import { IPropertyRow } from '../creatorStudio.types';
@@ -43,7 +45,7 @@ const PropertyRow: React.FC<IPropertyRow> = ({
       </th>
       <th>
         <button onClick={deleter} className="btn btn-danger rounded-rair">
-          <i className="fas fa-trash" />
+          <FontAwesomeIcon icon={faTrash} />
         </button>
       </th>
     </tr>

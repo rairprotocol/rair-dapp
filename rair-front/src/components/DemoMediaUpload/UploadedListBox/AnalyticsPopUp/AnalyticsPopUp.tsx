@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
@@ -80,7 +82,7 @@ const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({ videoId }) => {
         });
       }}
       title="Click to the watch analytics page.">
-      <i className="fa fa-eye" /> {CounterDisplay(watchCounter)}
+      <FontAwesomeIcon icon={faEye} /> {CounterDisplay(watchCounter)}
     </button>
   );
 };

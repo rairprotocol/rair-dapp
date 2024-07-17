@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -227,7 +229,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-      <i className="fas fa-exclamation text-danger" />
+      <FontAwesomeIcon icon={faExclamation} className="text-danger" />
     </div>
   );
 

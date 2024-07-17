@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { faGem, faVial } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { TContractsArray } from './creatorStudio.types';
 import NavigatorFactory from './NavigatorFactory';
@@ -77,7 +79,7 @@ const Contracts = () => {
               className={`col-xs-12 col-md-6 rair-rounded btn btn-${
                 diamondFilter ? 'light' : 'outline-secondary'
               }`}>
-              <i className="fa fa-gem" /> Only Diamonds
+              <FontAwesomeIcon icon={faGem} /> Only Diamonds
             </button>
             {Object.keys(chainData)
               .filter((chain) => chainData[chain].disabled !== true)
@@ -157,12 +159,12 @@ const Contracts = () => {
                   )}
                   {item.diamond === true && (
                     <abbr title={'Diamond Contract'}>
-                      <i className="fas fa-gem me-2" />
+                      <FontAwesomeIcon icon={faGem} className="me-2" />
                     </abbr>
                   )}
                   {item?.blockchain && chainData[item.blockchain]?.testnet && (
                     <abbr title={'Testnet Contract'}>
-                      <i className="fas fa-vial me-2" />
+                      <FontAwesomeIcon icon={faVial} className="me-2" />
                     </abbr>
                   )}
                   {item.name}

@@ -16,6 +16,7 @@ import useComponentVisible from '../../hooks/useComponentVisible';
 import useConnectUser from '../../hooks/useConnectUser';
 //images
 import { headerLogoBlack, headerLogoWhite } from '../../images';
+import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import MainLogo from '../GroupLogos/MainLogo';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
@@ -37,7 +38,6 @@ import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComp
 
 //styles
 import './Header.css';
-import { rFetch } from '../../utils/rFetch';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -55,8 +55,14 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(true);
-  const { primaryColor, headerLogo, primaryButtonColor, textColor, secondaryColor, iconColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const {
+    primaryColor,
+    headerLogo,
+    primaryButtonColor,
+    textColor,
+    secondaryColor,
+    iconColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { connectUserData } = useConnectUser();
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
     (store) => store.allInformationFromSearch
@@ -70,7 +76,7 @@ const MainHeader: React.FC<IMainHeader> = ({
     (store) => store.contractStore
   );
 
-  console.info(iconColor, 'iconColor')
+  console.info(iconColor, 'iconColor');
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [realDataNotification, setRealDataNotification] = useState([]);
@@ -127,34 +133,38 @@ const MainHeader: React.FC<IMainHeader> = ({
     setTextSearch('');
   };
 
-  const getNotifications = useCallback(async (pageNum?: number) => {
-    if(currentUserAddress) {
-      // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
-      const result = await rFetch(`/api/notifications${`?pageNum=${Number(pageNum)}`}`);
+  const getNotifications = useCallback(
+    async (pageNum?: number) => {
+      if (currentUserAddress) {
+        // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
+        const result = await rFetch(
+          `/api/notifications${`?pageNum=${Number(pageNum)}`}`
+        );
 
-      if (result.success) {
-        setRealDataNotification(result.notifications);
+        if (result.success) {
+          setRealDataNotification(result.notifications);
+        }
       }
-    }
-  }, [currentUserAddress]);
+    },
+    [currentUserAddress]
+  );
 
-  const getNotificationsCount = useCallback( async () => {
-    if(currentUserAddress) {
+  const getNotificationsCount = useCallback(async () => {
+    if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
       if (result.success && result.totalCount > 0) {
         setNotificationCount(result.totalCount);
       }
     }
-  }, [currentUserAddress])
+  }, [currentUserAddress]);
 
   useEffect(() => {
     getNotificationsCount();
-  }, [getNotificationsCount])
-
+  }, [getNotificationsCount]);
 
   useEffect(() => {
     getNotifications(0);
-  }, [currentUserAddress])
+  }, [currentUserAddress]);
 
   const Highlight = (props) => {
     const { filter, str } = props;
@@ -391,10 +401,8 @@ const MainHeader: React.FC<IMainHeader> = ({
           style={{
             color:
               import.meta.env.VITE_TESTNET === 'true'
-                ? 
-                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                : `${
-                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
           }}
           aria-hidden="true"></i>
       </div>
@@ -443,7 +451,15 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            {currentUserAddress && <PopUpNotification setRealDataNotification={setRealDataNotification} notificationCount={notificationCount} getNotificationsCount={getNotificationsCount} getNotifications={getNotifications} realDataNotification={realDataNotification} />}
+            {currentUserAddress && (
+              <PopUpNotification
+                setRealDataNotification={setRealDataNotification}
+                notificationCount={notificationCount}
+                getNotificationsCount={getNotificationsCount}
+                getNotifications={getNotifications}
+                realDataNotification={realDataNotification}
+              />
+            )}
 
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}

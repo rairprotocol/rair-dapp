@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { rFetch } from '../../../../../utils/rFetch';
 import {
   IModalCategories,
   TModalCategoriesItem,
@@ -35,7 +38,7 @@ const ModalCategories: React.FC<IModalCategories> = ({
   setIsShowCategories,
   click
 }) => {
-  const [arrCategories /*setArrCategories*/] =
+  const [arrCategories, setArrCategories] =
     useState<TModalCategoriesItem[]>(categories);
   const [, /*clearAll*/ setClearAll] = useState<boolean>(false);
 
@@ -68,12 +71,27 @@ const ModalCategories: React.FC<IModalCategories> = ({
     onCloseModal();
   };
 
+  const getCategories = useCallback(async () => {
+    const data = await rFetch('/api/categories');
+    if (data.success) {
+      setArrCategories(
+        data.result.map((item) => {
+          return { name: item.name, clicked: false };
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    getCategories();
+  }, [getCategories]);
+
   return (
     <Modal onClose={onCloseModal} open={isOpenCategories}>
       <div className="modal-content-metadata">
         <div className="block-close">
           <button className="modal-content-close" onClick={onCloseModal}>
-            <i className="fas fa-times"></i>
+            <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
         <div className="modal-filtering">
@@ -109,7 +127,7 @@ const ModalCategories: React.FC<IModalCategories> = ({
                 <option value="0">Select</option>
                 <option value="1">Ethereum(ETH)</option>
                 <option value="2">Bitcoin(BTC)</option> */}
-            {/* <span className="price-arrow"><i className="fas fa-chevron-down"></i></span> */}
+            {/* <span className="price-arrow"><FontAwesomeIcon icon={faChevronDown} /></span> */}
             {/* </select>
               <BlockMinMax clearAll={clearAll} />
             </div> */}

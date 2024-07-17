@@ -10,6 +10,8 @@ import {
 import ReactPlayer from 'react-player';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { utils } from 'ethers';
 
 import { BreadcrumbsView } from '../components/MockUpPage/NftList/Breadcrumbs/Breadcrumbs';
@@ -49,8 +51,7 @@ const NftDataPageMain = ({
   offerPrice,
   userData,
   someUsersData,
-  ownerInfo,
-  getAllProduct
+  ownerInfo
 }) => {
   const { minterInstance } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
@@ -381,11 +382,11 @@ const NftDataPageMain = ({
           return {
             pkey:
               e.offerIndex === '0' ? (
-                <i style={{ color: 'red' }} className="fas fa-key" />
+                <FontAwesomeIcon icon={faKey} style={{ color: 'red' }} />
               ) : e.offerIndex === '1' ? (
                 '🔑'
               ) : (
-                <i style={{ color: 'silver' }} className="fas fa-key" />
+                <FontAwesomeIcon icon={faKey} style={{ color: 'silver' }} />
               ),
             value:
               e.offerIndex === '0'

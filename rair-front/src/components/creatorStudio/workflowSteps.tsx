@@ -7,6 +7,8 @@ import {
   useNavigate,
   useParams
 } from 'react-router-dom';
+import { faArrowLeft, faGem } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withSentryReactRouterV6Routing } from '@sentry/react';
 import { ethers } from 'ethers';
 
@@ -499,12 +501,12 @@ const WorkflowSteps: FC = () => {
                         backgroundColor: primaryColor
                       }}
                       className="btn rounded-rair w-100 rair-button">
-                      <i className="fas fa-arrow-left" /> Back
+                      <FontAwesomeIcon icon={faArrowLeft} /> Back
                     </button>
                   </div>
                   {contractData && contractData.diamond && (
                     <div className="w-100 text-center h1">
-                      <i className="fas fa-gem" />
+                      <FontAwesomeIcon icon={faGem} />
                     </div>
                   )}
                   <h4>{contractData?.title}</h4>

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { TableAuthenticity } from './AuthenticityBlockItems';
 
@@ -85,7 +87,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                         rel="noreferrer">
                         <div className="link-block">
                           <span>
-                            <i className="fas fa-external-link-alt"></i>
+                            <FontAwesomeIcon icon={faExternalLinkAlt} />
                           </span>
                           Etherscan transaction
                         </div>
@@ -127,7 +129,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
               rel="noreferrer">
               <div className="link-block">
                 <span>
-                  <i className="fas fa-external-link-alt"></i>
+                  <FontAwesomeIcon icon={faExternalLinkAlt} />
                 </span>
                 Etherscan transaction
               </div>
@@ -160,7 +162,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
             rel="noreferrer">
             <div className="link-block">
               <span>
-                <i className="fas fa-external-link-alt"></i>
+                <FontAwesomeIcon icon={faExternalLinkAlt} />
               </span>
               View on IPFS
             </div>
