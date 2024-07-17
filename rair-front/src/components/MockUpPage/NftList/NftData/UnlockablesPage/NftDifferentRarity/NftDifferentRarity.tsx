@@ -195,10 +195,6 @@ const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
   return (
     <div className={cl.mainWrapper}>
       <div className={cl.main}>
-        {/* <i
-          style={{ color: colorRarity }}
-          className={`fas fa-key ${cl.iconKey}`}
-        /> */}
         <span style={{ color: colorRarity }} className={cl.rarity}>
           {title}
         </span>

@@ -1,3 +1,5 @@
+import { faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
+
 import {
   Carston,
   David,
@@ -26,7 +28,7 @@ export const teamMainPage: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/ed-prado-a8526a4/',
         classLink: ''
       }
@@ -48,7 +50,7 @@ export const teamMainPage: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/garrettminks/',
         classLink: ''
       }
@@ -76,7 +78,7 @@ export const teamMainPage: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/martin-casado-484b353/',
         classLink: ''
       }
@@ -99,7 +101,7 @@ export const teamAboutRair: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/ed-prado-a8526a4/',
         classLink: ''
       }
@@ -121,7 +123,7 @@ export const teamAboutRair: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/garrettminks/',
         classLink: ''
       }
@@ -162,7 +164,7 @@ export const teamAboutRair: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/martin-casado-484b353/',
         classLink: ''
       }
@@ -197,7 +199,7 @@ export const rairAdvisorsTeam: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/michaelterpin/',
         classLink: ''
       }
@@ -220,7 +222,7 @@ export const rairAdvisorsTeam: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/juliayan',
         classLink: ''
       }
@@ -260,7 +262,7 @@ export const rairAdvisorsTeam: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/davidnjensen/',
         classLink: ''
       }
@@ -343,7 +345,7 @@ export const rairAdvisorsTeam: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/mattneco/',
         classLink: ''
       }

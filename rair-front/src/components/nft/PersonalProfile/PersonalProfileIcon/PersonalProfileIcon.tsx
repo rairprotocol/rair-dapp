@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddIcon from '@mui/icons-material/Add';
 import axios, { AxiosError } from 'axios';
@@ -440,7 +440,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
                       : 'Copied!'}
                   </span>
                 </TooltipBox>
-                <i
+                <FontAwesomeIcon
                   onClick={() => {
                     setEditMode(true);
                     setCopyState(false);
@@ -448,9 +448,8 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
                       setEditModeUpper(true);
                     }
                   }}
-                  className={`${cl.edit} ${
-                    textColor && cl[textColor]
-                  } fal fa-edit`}
+                  icon={faEdit}
+                  className={`${cl.edit} ${textColor && cl[textColor]}`}
                 />
               </>
             )}

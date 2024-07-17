@@ -2,6 +2,12 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import {
+  faSearch,
+  faTimes,
+  faUserSecret
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
 import { IMainHeader, TAxiosCollectionData } from './header.types';
@@ -391,20 +397,18 @@ const MainHeader: React.FC<IMainHeader> = ({
         )}
         {!isComponentVisible && null}
         {textSearch && textSearch.length > 0 && (
-          <i
-            onClick={handleClearText}
-            className="fas fa-times"
-            aria-hidden="true"></i>
+          <FontAwesomeIcon onClick={handleClearText} icon={faTimes} />
         )}
-        <i
-          className={`fas fa-search`}
+        <FontAwesomeIcon
+          icon={faSearch}
           style={{
             color:
               import.meta.env.VITE_TESTNET === 'true'
                 ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
                 : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
           }}
-          aria-hidden="true"></i>
+          aria-hidden="true"
+        />
       </div>
       <div className="box-header-info">
         {!loggedIn && (
@@ -439,7 +443,7 @@ const MainHeader: React.FC<IMainHeader> = ({
               <div
                 onClick={() => setAdminPanel((prev) => !prev)}
                 className={`admin-panel-btn ${superAdmin ? 'super' : ''}`}>
-                <i className="fa fa-user-secret" aria-hidden="true" />
+                <FontAwesomeIcon icon={faUserSecret} />
               </div>
             </TooltipBox>
           )}

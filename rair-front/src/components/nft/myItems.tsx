@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -252,9 +252,12 @@ const MyItems: React.FC<IMyItems> = ({
                 }}
                 customClass="form-control input-styled my-items-search"
               />
-              <i
-                className="fas fa-search fa-lg fas-custom"
-                aria-hidden="true"></i>
+              <FontAwesomeIcon
+                icon={faSearch}
+                size="lg"
+                className="fas-custom"
+                aria-hidden="true"
+              />
               <FilteringBlock
                 primaryColor={primaryColor}
                 setSortItem={setSortItem}

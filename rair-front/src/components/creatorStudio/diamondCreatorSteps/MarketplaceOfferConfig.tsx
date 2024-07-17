@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck,
+  faEye,
+  faEyeSlash,
+  faPlus,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 
@@ -195,10 +201,8 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
               }}
               className={`btn col-12 rair-button rounded-rair`}>
               {!array[index]?.selected && 'Not'} Selected{' '}
-              <i
-                className={`fas fa-${
-                  array[index].selected ? 'check' : 'times'
-                }`}
+              <FontAwesomeIcon
+                icon={array[index].selected ? faCheck : faTimes}
               />
             </button>
           )}
@@ -227,10 +231,8 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                     : "Tokens won't be sold"
                 }>
                 {!array[index]?.marketData?.visible && 'Not'} Visible{' '}
-                <i
-                  className={`fas fa-${
-                    array[index]?.marketData?.visible ? 'eye' : 'eye-slash'
-                  }`}
+                <FontAwesomeIcon
+                  icon={array[index]?.marketData.visible ? faEye : faEyeSlash}
                 />
               </abbr>
             </button>

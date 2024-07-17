@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleLeft, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -79,10 +79,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [selectedAttributeValues, setSelectedAttributeValues] =
     useState<any>(undefined);
 
-  const { primaryColor, textColor, primaryButtonColor, iconColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor, iconColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const toggleMetadataFilter = () => {
     setMetadataFilter((prev) => !prev);
@@ -441,15 +439,15 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               customClass="form-control input-styled border-top-radius-tablet search-mobile"
             />
             <div className="nft-form-control-icon">
-              <i
-                className={`fas fa-search fa-lg fas-custom`}
+              <FontAwesomeIcon
+                icon={faSearch}
+                size="lg"
+                className="fas-custom"
                 style={{
                   color:
-                  import.meta.env.VITE_TESTNET === 'true'
-                    ? 
-                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                    : `${
-                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                    import.meta.env.VITE_TESTNET === 'true'
+                      ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                      : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                 }}
                 aria-hidden="true"></i>
               {isMobileDesign ? (

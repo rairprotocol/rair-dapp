@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRight,
+  faExternalLinkAlt
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { TableAuthenticity } from './AuthenticityBlockItems';
@@ -92,8 +95,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                           Etherscan transaction
                         </div>
                         <div className={`block-arrow`}>
-                          <i
-                            className="fas fa-arrow-right"
+                          <FontAwesomeIcon
+                            icon={faArrowRight}
                             style={{
                               color:
                                 import.meta.env.VITE_TESTNET === 'true'
@@ -109,7 +112,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                                         ? '#E882D5'
                                         : textColor
                                     }`
-                            }}></i>
+                            }}
+                          />
                         </div>
                       </a>
                     )}
@@ -134,8 +138,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                 Etherscan transaction
               </div>
               <div className="block-arrow">
-                <i
-                  className="fas fa-arrow-right"
+                <FontAwesomeIcon
+                  icon={faArrowRight}
                   style={{
                     color:
                       import.meta.env.VITE_TESTNET === 'true'
@@ -149,7 +153,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                               ? '#E882D5'
                               : textColor
                           }`
-                  }}></i>
+                  }}
+                />
               </div>
             </a>
           </div>
@@ -170,8 +175,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
               className={`block-arrow ${
                 hotdropsVar === 'true' ? 'hotdrops-color' : ''
               }`}>
-              <i
-                className="fas fa-arrow-right"
+              <FontAwesomeIcon
+                icon={faArrowRight}
                 style={{
                   color:
                     import.meta.env.VITE_TESTNET === 'true'
@@ -185,7 +190,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                             ? '#E882D5'
                             : textColor
                         }`
-                }}></i>
+                }}
+              />
             </div>
           </a>
         </div>

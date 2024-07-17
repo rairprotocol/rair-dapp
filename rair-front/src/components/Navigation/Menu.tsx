@@ -38,6 +38,8 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -291,8 +293,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                             }}
                             activeSearch={activeSearch}
                             marginRight={'10px'}>
-                            <i
-                              className="fas fa-search"
+                            <FontAwesomeIcon
+                              icon={faSearch}
                               style={{
                                 color:
                                   import.meta.env.VITE_TESTNET === 'true'
@@ -307,7 +309,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                                           : iconColor
                                       }`
                               }}
-                              aria-hidden="true"></i>
+                              aria-hidden="true"
+                            />
                           </SocialBoxSearch>
                           {/* this is where the aikon widget should go: */}
                           {/* {currentUserAddress && userBalance.length < 7 && (
@@ -444,15 +447,15 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               }}
               activeSearch={activeSearch}
               marginRight={'17px'}>
-              <i
-                className="fas fa-search"
+              <FontAwesomeIcon
+                icon={faSearch}
                 style={{
                   color:
                     import.meta.env.VITE_TESTNET === 'true'
                       ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
                       : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                 }}
-                aria-hidden="true"></i>
+              />
             </SocialBoxSearch>
           )}
           {click ? (

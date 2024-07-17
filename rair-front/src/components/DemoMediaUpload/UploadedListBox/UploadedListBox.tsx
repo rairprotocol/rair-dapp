@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
-import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck,
+  faLock,
+  faTimes,
+  faTrash
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { RootState } from '../../../ducks';
@@ -197,9 +202,10 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
                 <>
                   <TooltipBox enterDelay={200} title="You need to buy an NFT.">
                     <>
-                      <i
+                      <FontAwesomeIcon
                         data-title="You need to buy an NFT."
-                        className="fa fa-lock modal-content-video-lock"
+                        icon={faLock}
+                        className="modal-content-video-lock"
                       />
                     </>
                   </TooltipBox>
@@ -231,8 +237,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
                 <ModalContentCloseBtn
                   onClick={closeModal}
                   primaryColor={primaryColor}>
-                  <i
-                    className="fas fa-times"
+                  <FontAwesomeIcon
+                    icon={faTimes}
                     style={{ lineHeight: 'inherit' }}
                   />
                 </ModalContentCloseBtn>

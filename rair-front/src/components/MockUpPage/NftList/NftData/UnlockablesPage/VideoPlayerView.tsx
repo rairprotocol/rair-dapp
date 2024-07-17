@@ -8,6 +8,8 @@ import {
 import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
 
 import cl from './VideoPlayerView.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
 
 const VideoPlayerView: React.FC<IVideoPlayerView> = ({
   productsFromOffer,
@@ -52,9 +54,10 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                   className={cl.ListOfVideosOneVideo}>
                   <div className={cl.previewWrapper}>
                     <span className={cl.preview}>Preview</span>
-                    <i
+                    <FontAwesomeIcon
                       style={{ color: `red` }}
-                      className={`fas fa-key ${cl.iconKey}`}
+                      icon={faKey}
+                      className={cl.iconKey}
                     />
                   </div>
                   <div className={cl.play}>
@@ -91,9 +94,10 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                 className={cl.ListOfVideosOneVideo}>
                 <div className={cl.previewWrapper}>
                   <span className={cl.preview}>Preview</span>
-                  <i
+                  <FontAwesomeIcon
                     style={{ color: `${colorRarity[data.offer[0]]}` }}
-                    className={`fas fa-key ${cl.iconKey}`}
+                    icon={faKey}
+                    className={cl.iconKey}
                   />
                 </div>
                 <div className={cl.play}>

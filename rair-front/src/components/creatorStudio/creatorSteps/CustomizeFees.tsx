@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
 
@@ -227,8 +227,8 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
             onClick={addPayment}
             className={`btn btn-${primaryColor} rounded-rair px-4`}>
             Add new{' '}
-            <i
-              className="fas fa-plus"
+            <FontAwesomeIcon
+              icon={faPlus}
               style={{
                 border: `solid 1px ${textColor}`,
                 borderRadius: '50%',
