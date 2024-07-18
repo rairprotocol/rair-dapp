@@ -449,7 +449,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                       ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
                       : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                 }}
-                aria-hidden="true"></i>
+                aria-hidden="true"
+              />
               {isMobileDesign ? (
                 <FilteringBlock
                   click={metadataFilter}
