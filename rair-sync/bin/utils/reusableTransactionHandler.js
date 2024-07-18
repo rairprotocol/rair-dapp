@@ -1,5 +1,9 @@
 const { BigNumber } = require('ethers');
-const { getTransactionHistory, getLatestBlock } = require('./logUtils');
+const { isAddress } = require('ethers/lib/utils');
+const {
+  getTransactionHistory,
+  getLatestBlock,
+} = require('./logUtils');
 const { Transaction, Blockchain } = require('../models');
 const logger = require('./logger')(module);
 const { Versioning } = require('../models');
@@ -111,8 +115,8 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
       return done();
     }
 
-    if (!blockchainData[contractName]) {
-      log(`Skipping sync, address for ${contractName} is not defined`);
+    if (!isAddress(blockchainData[contractName]) || !blockchainData[contractName]) {
+      log(`Skipping sync, address for ${contractName} is not valid`);
       return done();
     }
 
@@ -135,7 +139,7 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
     }
     version.running = true;
 
-    const latestBlock = await getLatestBlock(hash);
+    const latestBlock = await getLatestBlock(blockchainData);
 
     if (latestBlock < version.number) {
       log(`Error, latest block is ${version.number} but the last mined block is ${latestBlock}, the contract's last synced block will be reset to 0, expect a lot of duplicate transaction messages!`);
@@ -154,9 +158,10 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
     // Queries the blockchain / alchemy for the latest events
     const processedResult = await getTransactionHistory(
       blockchainData[contractName],
-      hash,
+      blockchainData,
       version.number,
     );
+
     // If there are no new events, stop
     if (processedResult.length === 0) {
       version.running = false;

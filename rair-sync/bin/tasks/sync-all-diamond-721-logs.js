@@ -83,7 +83,7 @@ module.exports = (context) => {
 
         let transactionArray = [];
 
-        const latestBlock = await getLatestBlock(network);
+        const latestBlock = await getLatestBlock(blockchainData);
 
         const insertions = {};
 

@@ -91,7 +91,7 @@ module.exports = (context) => {
         let transactionArray = [];
 
         // Keep track of the latest block number processed
-        const latestBlock = await getLatestBlock(network);
+        const latestBlock = await getLatestBlock(blockchainData);
 
         const insertions = {};
 
