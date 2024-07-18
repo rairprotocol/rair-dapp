@@ -1,7 +1,4 @@
 const Joi = require('joi');
-const config = require('../config');
-
-const supportedNetworks = Object.keys(config.blockchain.networks);
 
 module.exports = {
     ethAddress: Joi.string()
@@ -11,7 +8,7 @@ module.exports = {
         .pattern(/^[a-f\d]{24}$/i)
         .messages({ 'string.pattern.base': 'Invalid Identifier' }),
     blockchainNetworks: Joi.string()
-        .valid(...supportedNetworks),
+        .pattern(/^0x\w{64}$/),
     ethTransaction: Joi.string()
         .pattern(/^0x\w{64}$/)
         .messages({ 'string.pattern.base': 'Invalid Transaction Hash' }),

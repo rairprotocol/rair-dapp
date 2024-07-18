@@ -15,8 +15,3 @@ export type TSingleOfferDataObject = {
 };
 
 export type TOfferDataType = TSingleOfferDataObject[];
-
-export type TCreatorMode = {
-  account: any;
-  addresses: any;
-};

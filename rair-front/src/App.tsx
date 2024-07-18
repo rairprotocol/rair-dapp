@@ -26,7 +26,6 @@ import useServerSettings from './components/adminViews/useServerSettings';
 import AlertMetamask from './components/AlertMetamask/index';
 import ConsumerMode from './components/consumerMode';
 import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
-import CreatorMode from './components/creatorMode';
 import ContractDetails from './components/creatorStudio/ContractDetails';
 import Contracts from './components/creatorStudio/Contracts';
 import Deploy from './components/creatorStudio/Deploy';
@@ -92,12 +91,12 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 // import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
+import { rFetch } from './utils/rFetch';
 // views
 import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { rFetch } from './utils/rFetch';
 /* Track a page view */
 // const analytics = getInformationGoogleAnalytics();
 // analytics.page();
@@ -196,7 +195,7 @@ function App() {
     }
   }, [dispatch, logoutUser]);
 
-  const getNotificationsCount = useCallback( async () => {
+  const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
       if (result.success && result.totalCount > 0) {
@@ -207,7 +206,7 @@ function App() {
 
   useEffect(() => {
     getNotificationsCount();
-  }, [getNotificationsCount])
+  }, [getNotificationsCount]);
 
   // gtag
 
@@ -651,17 +650,6 @@ function App() {
                     path: '/token/:blockchain/:contract/:identifier',
                     content: Token,
                     requirement: loggedIn && !creatorViewsDisabled
-                  },
-
-                  // Classic Factory (Uses the blockchain)
-                  {
-                    path: '/factory',
-                    content: CreatorMode,
-                    requirement:
-                      loggedIn &&
-                      !creatorViewsDisabled &&
-                      adminRights &&
-                      factoryInstance !== undefined
                   },
 
                   // Classic Minter Marketplace (Uses the blockchain)
