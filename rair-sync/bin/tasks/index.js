@@ -54,7 +54,7 @@ module.exports = async (context) => {
       .schedule(moment().utc().toDate())
       // .schedule(moment().utc().add(1, 'minutes').toDate())
       .save();
-    log.info('Sync tasks will start in a minute!');
+    log.info(`Starting tasks, will repeat in ${SYNC_CONTRACT_REPEAT_EVERY} minutes!`);
   });
 
   agenda.on('error', (err) => {
@@ -64,7 +64,6 @@ module.exports = async (context) => {
 
   agenda.on('success', async (task) => {
     const { data, name } = task.attrs;
-    const additionalInfo = '';
     /*
       Sync Classic Deployments ->
       Sync Diamond Deployments ->
@@ -73,8 +72,7 @@ module.exports = async (context) => {
       Sync Classic Marketplace Events ->
       Sync Diamond Marketplace Events
     */
-    log.info(`Finished task: ${name}!`, data);
-    let nextFunction = '';
+    let nextFunction;
     switch (name) {
       case AgendaTaskEnum.SyncContracts:
         nextFunction = AgendaTaskEnum.SyncDiamondContracts;
@@ -92,17 +90,14 @@ module.exports = async (context) => {
         break;
     }
 
-    log.info(`Completed task ${name}, scheduling next task: ${nextFunction}`);
-    await agenda
-      .create(nextFunction, data)
-      .schedule(moment().utc().toDate())
-      .save();
-
-    log.info(
-      `Agenda [${name}][${
-        task.attrs._id
-      }] > processed with data ${JSON.stringify(data)}. ${additionalInfo}`,
-    );
+    log.info(`[${data.hash}][${name}] Task complete.`);
+    if (nextFunction) {
+      log.info(`[${data.hash}][${nextFunction}] Scheduled to start.`);
+      await agenda
+        .create(nextFunction, data)
+        .schedule(moment().utc().toDate())
+        .save();
+    }
   });
 
   agenda.on('fail', (err) => {

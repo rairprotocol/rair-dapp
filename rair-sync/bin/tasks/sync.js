@@ -20,16 +20,17 @@ module.exports = (context) => {
         // eslint-disable-next-line no-restricted-syntax
         for await (const chain of chainsToProcess) {
           const { hash, name } = chain;
+          const scheduledTime = moment()
+            .utc()
+            .add(Number(SYNC_CONTRACT_TASK_INTERVAL) * startupTime, 'minutes')
+            .toDate();
           await context.agenda.create(
             AgendaTaskEnum.SyncContracts,
             { hash, name },
           )
-            .schedule(moment()
-              .utc()
-              .add(Number(SYNC_CONTRACT_TASK_INTERVAL) * startupTime, 'minutes')
-              .toDate())
+            .schedule(scheduledTime)
             .save();
-          log.info(`[${hash}] '${AgendaTaskEnum.SyncContracts}' will start in ${startupTime} minutes`);
+          log.info(`[${hash}] '${AgendaTaskEnum.SyncContracts}' will start in ${Number(SYNC_CONTRACT_TASK_INTERVAL) * startupTime} minutes`);
           startupTime += 1;
         }
         return done();
