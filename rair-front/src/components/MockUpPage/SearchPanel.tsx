@@ -248,36 +248,31 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
-            placeholder={`${
+            placeholder={
               tabIndex === 0 ? 'Search collections' : 'Search videos'
-            }`}
+            }
             customCSS={{
-              backgroundColor:
-                primaryColor === '#dedede'
-                  ? 'var(--rhyno-40)'
-                  : `color-mix(in srgb, ${primaryColor} 90%, #888888)`,
+              backgroundColor: `color-mix(in srgb, ${primaryColor} 90%, #888888)`,
               color: textColor,
               borderTopLeftRadius: '0',
-              borderColor:
-                primaryColor === '#dedede'
-                  ? 'var(--rhyno)'
-                  : `color-mix(in srgb, ${secondaryColor}, #888888)`,
+              borderColor: `color-mix(in srgb, ${secondaryColor}, #888888)`,
               paddingLeft: '2rem'
             }}
             customClass="form-control input-styled border-top-radius-tablet search-mobile"
           />
           <div className="nft-form-control-icon">
-            <FontAwesomeIcon
-              icon={faSearch}
-              size="lg"
-              className="fas-custom"
-              style={{
-                color:
-                  import.meta.env.VITE_TESTNET === 'true'
-                    ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                    : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
-              }}
-            />
+            <i className="fas-custom" style={{ marginTop: '-5px' }}>
+              <FontAwesomeIcon
+                icon={faSearch}
+                size="lg"
+                style={{
+                  color:
+                    import.meta.env.VITE_TESTNET === 'true'
+                      ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                      : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }}
+              />
+            </i>
             <FilteringBlock
               click={click}
               setIsClick={setClick}

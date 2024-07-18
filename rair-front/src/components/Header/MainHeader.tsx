@@ -82,8 +82,6 @@ const MainHeader: React.FC<IMainHeader> = ({
     (store) => store.contractStore
   );
 
-  console.info(iconColor, 'iconColor');
-
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [realDataNotification, setRealDataNotification] = useState([]);
   const [notificationCount, setNotificationCount] = useState<number>(0);
@@ -399,16 +397,21 @@ const MainHeader: React.FC<IMainHeader> = ({
         {textSearch && textSearch.length > 0 && (
           <FontAwesomeIcon onClick={handleClearText} icon={faTimes} />
         )}
-        <FontAwesomeIcon
-          icon={faSearch}
-          style={{
-            color:
-              import.meta.env.VITE_TESTNET === 'true'
-                ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
-          }}
-          aria-hidden="true"
-        />
+        <i
+          className="fas-custom"
+          style={{ marginTop: '-7px', marginLeft: '3px' }}>
+          <FontAwesomeIcon
+            icon={faSearch}
+            size="lg"
+            style={{
+              color:
+                import.meta.env.VITE_TESTNET === 'true'
+                  ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                  : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+            }}
+            aria-hidden="true"
+          />
+        </i>
       </div>
       <div className="box-header-info">
         {!loggedIn && (
