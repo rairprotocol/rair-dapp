@@ -90,7 +90,7 @@ module.exports = async (context) => {
         break;
     }
 
-    log.info(`[${data.hash}][${name}] Task complete.`);
+    log.info(`[${data?.hash}][${name}] Task complete.`);
     if (nextFunction) {
       log.info(`[${data.hash}][${nextFunction}] Scheduled to start.`);
       await agenda

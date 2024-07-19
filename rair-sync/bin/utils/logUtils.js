@@ -108,7 +108,7 @@ const getTransactionHistory = async (address, blockchainData, fromBlock = 0) => 
       options.fromBlock = options.toBlock;
     } catch (error) {
       log.error(`Error querying ${address} with ${tiers[speedTier]} blocks`);
-      console.error(error);
+      // console.error(Object.keys(error), error.reason);
       speedTier = 0;
     }
   } while ((options.fromBlock + tiers[speedTier]) < latestBlock);
