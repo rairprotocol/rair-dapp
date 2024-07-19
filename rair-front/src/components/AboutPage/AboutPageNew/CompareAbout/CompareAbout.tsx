@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FormControl from '@mui/material/FormControl';
 // import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -77,7 +79,10 @@ const CompareAbout = () => {
                 <th>
                   {' '}
                   <div className="circle-table">
-                    <i className="fas fa-check fas_custom_main"></i>
+                    <FontAwesomeIcon
+                      icon={faCheck}
+                      className="fas_custom_main"
+                    />
                   </div>
                 </th>
               </tr>
@@ -99,7 +104,7 @@ const CompareAbout = () => {
                 <td>
                   {' '}
                   <div className="circle-table">
-                    <i className="fa fa-minus fas_custom fas_custom"></i>
+                    <FontAwesomeIcon icon={faMinus} className="fas_custom" />
                   </div>
                 </td>
               </tr>
@@ -118,7 +123,7 @@ const CompareAbout = () => {
                 <td>Lazyminted</td>
                 <td>
                   <div className="circle-table">
-                    <i className="fa fa-minus fas_custom fas_custom"></i>
+                    <FontAwesomeIcon icon={faMinus} className="fas_custom" />
                   </div>
                 </td>
               </tr>
@@ -137,7 +142,7 @@ const CompareAbout = () => {
                 <td>Stuck on Tezos</td>
                 <td>
                   <div className="circle-table">
-                    <i className="fa fa-minus fas_custom fas_custom"></i>
+                    <FontAwesomeIcon icon={faMinus} className="fas_custom" />
                   </div>
                 </td>
               </tr>
@@ -156,7 +161,7 @@ const CompareAbout = () => {
                 <td>Stuck on Flow</td>
                 <td>
                   <div className="circle-table">
-                    <i className="fa fa-minus fas_custom fas_custom"></i>
+                    <FontAwesomeIcon icon={faMinus} className="fas_custom" />
                   </div>
                 </td>
               </tr>
@@ -175,7 +180,7 @@ const CompareAbout = () => {
                 <td>Lazyminted</td>
                 <td>
                   <div className="circle-table">
-                    <i className="fa fa-minus fas_custom fas_custom"></i>
+                    <FontAwesomeIcon icon={faMinus} className="fas_custom" />
                   </div>
                 </td>
               </tr>
@@ -194,7 +199,7 @@ const CompareAbout = () => {
                 <td>Lazyminted</td>
                 <td>
                   <div className="circle-table">
-                    <i className="fa fa-minus fas_custom fas_custom"></i>
+                    <FontAwesomeIcon icon={faMinus} className="fas_custom" />
                   </div>
                 </td>
               </tr>

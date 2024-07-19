@@ -1,6 +1,8 @@
 //@ts-nocheck
 //unused-component
 import React, { useEffect, useRef, useState } from 'react';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ItemRankContainer, SelectBoxItemRank } from './ItemRankItems';
 
@@ -102,7 +104,7 @@ const ItemRank = ({
           )}
         </div>
         <div className="select-box--arrow">
-          <i className={`fas fa-chevron-${showItems ? 'up' : 'down'}`}></i>
+          <FontAwesomeIcon icon={showItems ? faChevronUp : faChevronDown} />
         </div>
         <SelectBoxItemRank
           className={'select-box--items items-rank'}

@@ -1,3 +1,5 @@
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import { NFTLA_ICON, Teammate_4 } from '../../images/teamMeetList/teamMeetList';
 import { TTeamArrayItemType } from '../../splashPage.types';
 
@@ -11,7 +13,7 @@ export const teamNFTLAarray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://www.nftla.live/',
         classLink: 'arrrow-right'
       }
@@ -36,7 +38,7 @@ export const teamNFTLAarray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

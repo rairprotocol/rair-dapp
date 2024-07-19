@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 
@@ -119,23 +121,16 @@ const LikeButton: React.FC<ILikeButton> = ({
         <>
           <TooltipBox
             title={`${liked ? 'Remove from Favorites' : 'Add to Favorites'}`}>
-            {liked ? (
-              <div
-                className={likeButtonStyle}
-                onClick={() => {
+            <div
+              className={likeButtonStyle}
+              onClick={() => {
+                if (liked) {
                   removeFavotite();
-                }}>
-                <i className="fas fa-heart like-button" />
-              </div>
-            ) : (
-              <div
-                className={likeButtonStyle}
-                onClick={() => {
-                  addFavorite(tokenId);
-                }}>
-                <i className="far fa-heart like-button" />
-              </div>
-            )}
+                }
+                addFavorite(tokenId);
+              }}>
+              <FontAwesomeIcon icon={faHeart} className="like-button" />
+            </div>
           </TooltipBox>
         </>
       )}

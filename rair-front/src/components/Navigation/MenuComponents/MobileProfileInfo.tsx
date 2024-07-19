@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import MobileEditProfile from './MobileEditProfile';
@@ -57,7 +59,7 @@ const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
         <ListProfileItem>
           <ListProfileLoading>
             <ProfileButtonBack onClick={toggleOpenProfile}>
-              <i className="fas fa-chevron-left"></i>
+              <FontAwesomeIcon icon={faChevronLeft} />
             </ProfileButtonBack>
             <div className="mobile-profile-preloader">
               <CircularProgress />
@@ -75,7 +77,7 @@ const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
       ) : (
         <ListProfileItem>
           <ProfileButtonBack onClick={toggleOpenProfile}>
-            <i className="fas fa-chevron-left"></i>
+            <FontAwesomeIcon icon={faChevronLeft} />
           </ProfileButtonBack>
           {profileData && (
             <div className="burger-menu-profile">

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 
@@ -130,8 +132,8 @@ export const AgreementsPopUp = ({
                       } rounded-rair`}
                       id={String(id)}
                       onClick={() => item.setter(!item.getter)}>
-                      <i
-                        className={'fas fa-check'}
+                      <FontAwesomeIcon
+                        icon={faCheck}
                         style={{
                           color: item.getter ? 'inherit' : 'transparent'
                         }}

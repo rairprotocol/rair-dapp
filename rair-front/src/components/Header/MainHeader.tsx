@@ -2,6 +2,12 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import {
+  faSearch,
+  faTimes,
+  faUserSecret
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
 import { IMainHeader, TAxiosCollectionData } from './header.types';
@@ -16,6 +22,8 @@ import useComponentVisible from '../../hooks/useComponentVisible';
 import useConnectUser from '../../hooks/useConnectUser';
 //images
 import { headerLogoBlack, headerLogoWhite } from '../../images';
+import { rFetch } from '../../utils/rFetch';
+import InputField from '../common/InputField';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import MainLogo from '../GroupLogos/MainLogo';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
@@ -37,7 +45,6 @@ import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComp
 
 //styles
 import './Header.css';
-import { rFetch } from '../../utils/rFetch';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -55,8 +62,14 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(true);
-  const { primaryColor, headerLogo, primaryButtonColor, textColor, secondaryColor, iconColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const {
+    primaryColor,
+    headerLogo,
+    primaryButtonColor,
+    textColor,
+    secondaryColor,
+    iconColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { connectUserData } = useConnectUser();
   const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
     (store) => store.allInformationFromSearch
@@ -69,8 +82,6 @@ const MainHeader: React.FC<IMainHeader> = ({
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-
-  console.info(iconColor, 'iconColor')
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [realDataNotification, setRealDataNotification] = useState([]);
@@ -127,34 +138,38 @@ const MainHeader: React.FC<IMainHeader> = ({
     setTextSearch('');
   };
 
-  const getNotifications = useCallback(async (pageNum?: number) => {
-    if(currentUserAddress) {
-      // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
-      const result = await rFetch(`/api/notifications${`?pageNum=${Number(pageNum)}`}`);
+  const getNotifications = useCallback(
+    async (pageNum?: number) => {
+      if (currentUserAddress) {
+        // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
+        const result = await rFetch(
+          `/api/notifications${`?pageNum=${Number(pageNum)}`}`
+        );
 
-      if (result.success) {
-        setRealDataNotification(result.notifications);
+        if (result.success) {
+          setRealDataNotification(result.notifications);
+        }
       }
-    }
-  }, [currentUserAddress]);
+    },
+    [currentUserAddress]
+  );
 
-  const getNotificationsCount = useCallback( async () => {
-    if(currentUserAddress) {
+  const getNotificationsCount = useCallback(async () => {
+    if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
       if (result.success && result.totalCount > 0) {
         setNotificationCount(result.totalCount);
       }
     }
-  }, [currentUserAddress])
+  }, [currentUserAddress]);
 
   useEffect(() => {
     getNotificationsCount();
-  }, [getNotificationsCount])
-
+  }, [getNotificationsCount]);
 
   useEffect(() => {
     getNotifications(0);
-  }, [currentUserAddress])
+  }, [currentUserAddress]);
 
   const Highlight = (props) => {
     const { filter, str } = props;
@@ -222,31 +237,18 @@ const MainHeader: React.FC<IMainHeader> = ({
         className={`main-search ${isSplashPage ? 'hidden' : ''} ${
           hotdropsVar === 'true' ? 'hotdrops-header' : ''
         }`}>
-        {hotdropsVar === 'true' ? (
-          <input
-            className={
-              primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
-            }
-            type="text"
-            placeholder="Search"
-            onChange={handleChangeText}
-            value={textSearch}
-            onClick={() => setIsComponentVisible(true)}
-          />
-        ) : (
-          <input
-            style={{
-              color: textColor,
-              borderColor: textColor,
-              backgroundColor: primaryColor
-            }}
-            type="text"
-            placeholder="Search..."
-            onChange={handleChangeText}
-            value={textSearch}
-            onClick={() => setIsComponentVisible(true)}
-          />
-        )}
+        <InputField
+          customCSS={{
+            color: textColor,
+            borderColor: textColor,
+            backgroundColor: primaryColor
+          }}
+          type="text"
+          placeholder="Search..."
+          setter={handleChangeText}
+          getter={textSearch}
+          onClick={() => setIsComponentVisible(true)}
+        />
         {isComponentVisible && (
           <div
             style={{
@@ -381,22 +383,23 @@ const MainHeader: React.FC<IMainHeader> = ({
         )}
         {!isComponentVisible && null}
         {textSearch && textSearch.length > 0 && (
-          <i
-            onClick={handleClearText}
-            className="fas fa-times"
-            aria-hidden="true"></i>
+          <FontAwesomeIcon onClick={handleClearText} icon={faTimes} />
         )}
         <i
-          className={`fas fa-search`}
-          style={{
-            color:
-              import.meta.env.VITE_TESTNET === 'true'
-                ? 
-                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                : `${
-                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
-          }}
-          aria-hidden="true"></i>
+          className="fas-custom"
+          style={{ marginTop: '-5px', marginLeft: '5px' }}>
+          <FontAwesomeIcon
+            icon={faSearch}
+            size="lg"
+            style={{
+              color:
+                import.meta.env.VITE_TESTNET === 'true'
+                  ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                  : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+            }}
+            aria-hidden="true"
+          />
+        </i>
       </div>
       <div className="box-header-info">
         {!loggedIn && (
@@ -431,7 +434,7 @@ const MainHeader: React.FC<IMainHeader> = ({
               <div
                 onClick={() => setAdminPanel((prev) => !prev)}
                 className={`admin-panel-btn ${superAdmin ? 'super' : ''}`}>
-                <i className="fa fa-user-secret" aria-hidden="true" />
+                <FontAwesomeIcon icon={faUserSecret} />
               </div>
             </TooltipBox>
           )}
@@ -443,7 +446,15 @@ const MainHeader: React.FC<IMainHeader> = ({
             isSplashPage={isSplashPage}
           />
           <div className="social-media">
-            {currentUserAddress && <PopUpNotification setRealDataNotification={setRealDataNotification} notificationCount={notificationCount} getNotificationsCount={getNotificationsCount} getNotifications={getNotifications} realDataNotification={realDataNotification} />}
+            {currentUserAddress && (
+              <PopUpNotification
+                setRealDataNotification={setRealDataNotification}
+                notificationCount={notificationCount}
+                getNotificationsCount={getNotificationsCount}
+                getNotifications={getNotifications}
+                realDataNotification={realDataNotification}
+              />
+            )}
 
             <AdminPanel
               creatorViewsDisabled={creatorViewsDisabled}

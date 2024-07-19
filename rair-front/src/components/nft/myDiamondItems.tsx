@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faGem } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
 import {
@@ -60,7 +62,7 @@ const TokenLayout: React.FC<ITokenLayout> = ({
             top: 10,
             left: 10
           }}>
-          <i className="fas h5 fa-gem" />
+          <FontAwesomeIcon icon={faGem} />
         </div>
         <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
           <span className="description-title">

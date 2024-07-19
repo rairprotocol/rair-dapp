@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
@@ -210,8 +212,8 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
             onClick={addPayment}
             className={`btn btn-${primaryColor} rounded-rair px-4`}>
             Add new{' '}
-            <i
-              className="fas fa-plus"
+            <FontAwesomeIcon
+              icon={faPlus}
               style={{
                 border: `solid 1px ${textColor}`,
                 borderRadius: '50%',

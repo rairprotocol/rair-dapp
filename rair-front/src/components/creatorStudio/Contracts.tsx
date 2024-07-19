@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { faArrowRight, faGem, faVial } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { TContractsArray } from './creatorStudio.types';
 import NavigatorFactory from './NavigatorFactory';
@@ -24,8 +26,13 @@ const Contracts = () => {
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const { primaryColor, secondaryColor, textColor, primaryButtonColor, iconColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const {
+    primaryColor,
+    secondaryColor,
+    textColor,
+    primaryButtonColor,
+    iconColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const fetchContracts = useCallback(async () => {
     const response = await rFetch('/api/contracts/factoryList', undefined, {
@@ -77,7 +84,7 @@ const Contracts = () => {
               className={`col-xs-12 col-md-6 rair-rounded btn btn-${
                 diamondFilter ? 'light' : 'outline-secondary'
               }`}>
-              <i className="fa fa-gem" /> Only Diamonds
+              <FontAwesomeIcon icon={faGem} /> Only Diamonds
             </button>
             {Object.keys(chainData)
               .filter((chain) => chainData[chain].disabled !== true)
@@ -157,27 +164,25 @@ const Contracts = () => {
                   )}
                   {item.diamond === true && (
                     <abbr title={'Diamond Contract'}>
-                      <i className="fas fa-gem me-2" />
+                      <FontAwesomeIcon icon={faGem} className="me-2" />
                     </abbr>
                   )}
                   {item?.blockchain && chainData[item.blockchain]?.testnet && (
                     <abbr title={'Testnet Contract'}>
-                      <i className="fas fa-vial me-2" />
+                      <FontAwesomeIcon icon={faVial} className="me-2" />
                     </abbr>
                   )}
                   {item.name}
-                  <i
-                    className="fas fa-arrow-right"
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
                     style={{
                       position: 'absolute',
                       right: '10px',
                       top: '10px',
                       color:
-              import.meta.env.VITE_TESTNET === 'true'
-                ? 
-                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                : `${
-                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                        import.meta.env.VITE_TESTNET === 'true'
+                          ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                          : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
                     }}
                   />
                 </NavLink>

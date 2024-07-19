@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
+import { faPause } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
@@ -253,7 +255,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                   handlePlaying(null);
                 }}>
                 <div>
-                  <i className="fas fa-pause"></i>
+                  <FontAwesomeIcon icon={faPause} />
                 </div>
               </div>
             ) : (
@@ -263,7 +265,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 }}
                 className="btn-play">
                 <div>
-                  <i className="fas fa-play"></i>
+                  <FontAwesomeIcon icon={faPause} />
                 </div>
               </div>
             ))}

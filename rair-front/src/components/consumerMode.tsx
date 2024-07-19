@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { MultiOwnerModularAccount } from '@alchemy/aa-accounts';
 import { AccountSigner } from '@alchemy/aa-ethers';
+import { faRedo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as ethers from 'ethers';
 
 import { IConsumerMode, TOfferDataType } from './creatorAndConsumerModes.types';
@@ -76,7 +78,7 @@ const ConsumerMode: React.FC<IConsumerMode> = () => {
         disabled={refetchingFlag}
         style={{ position: 'absolute', right: 0, color: 'inherit' }}
         className="btn btn-warning">
-        {refetchingFlag ? '...' : <i className="fas fa-redo" />}
+        {refetchingFlag ? '...' : <FontAwesomeIcon icon={faRedo} />}
       </button>
 
       {collectionsData && (

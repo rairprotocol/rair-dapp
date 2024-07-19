@@ -12,6 +12,8 @@ import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 type Category = {
   name: string;
@@ -603,7 +605,7 @@ const ServerSettings = ({ fullContractData }) => {
                     background: primaryButtonColor,
                     color: textColor
                   }}>
-                  <i className="fa fa-arrow-up" />
+                  <FontAwesomeIcon icon={faArrowUp} />
                 </button>
                 <button
                   onClick={() => {
@@ -611,7 +613,7 @@ const ServerSettings = ({ fullContractData }) => {
                     serverSettings.getServerSettings();
                   }}
                   className="col-12 col-md-1 btn btn-danger">
-                  <i className="fa fa-trash" />
+                  <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>
             );
@@ -640,7 +642,7 @@ const ServerSettings = ({ fullContractData }) => {
                       <small>files using this category</small>
                     </>
                   ) : (
-                    <i className="fa-trash fas" />
+                    <FontAwesomeIcon icon={faTrash} />
                   )}
                 </button>
               </div>

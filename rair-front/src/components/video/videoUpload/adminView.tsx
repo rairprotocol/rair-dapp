@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { v1 } from 'uuid';
 
@@ -155,7 +157,7 @@ const AdminView = ({
                 <button
                   className="btn btn-danger rounded-rair"
                   onClick={() => removeInput(index)}>
-                  <i className="fas fa-trash"></i>
+                  <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>
             </div>

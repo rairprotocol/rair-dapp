@@ -1,3 +1,5 @@
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import {
   MarkJKohler,
   RairLogoKohler
@@ -14,7 +16,7 @@ export const teamTaxHacksSummit: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://markjkohler.com',
         classLink: 'arrrow-right'
       }
@@ -31,7 +33,7 @@ export const teamTaxHacksSummit: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

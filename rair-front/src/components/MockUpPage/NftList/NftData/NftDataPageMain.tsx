@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
 import EtherscanIconComponent from './EtherscanIconComponent';
@@ -202,11 +204,11 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
           return {
             pkey:
               e.offerIndex === '0' ? (
-                <i style={{ color: 'red' }} className="fas fa-key" />
+                <FontAwesomeIcon icon={faKey} style={{ color: 'red' }} />
               ) : e.offerIndex === '1' ? (
                 '🔑'
               ) : (
-                <i style={{ color: 'silver' }} className="fas fa-key" />
+                <FontAwesomeIcon icon={faKey} style={{ color: 'silver' }} />
               ),
             value:
               e.offerIndex === '0'

@@ -1,5 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
 
 import { RootState } from '../../ducks';
@@ -91,7 +93,7 @@ export const BannerCollection = ({ item, getContractData }) => {
             color: '#fff'
           }}
           className={`col-1 btn btn-${primaryColor} text-start rounded-rair my-1 m-1 banner-collection`}>
-          <i className="fas fa-plus" />
+          <FontAwesomeIcon icon={faPlus} />
           <label className={'inputFile'}>
             <input
               className="col-1"

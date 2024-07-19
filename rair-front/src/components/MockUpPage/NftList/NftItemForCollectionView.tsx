@@ -2,6 +2,8 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios, { AxiosError } from 'axios';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
@@ -396,7 +398,7 @@ const NftItemForCollectionViewComponent: React.FC<
                     handlePlaying(null);
                   }}>
                   <div>
-                    <i className="fas fa-pause"></i>
+                    <FontAwesomeIcon icon={faPause} />
                   </div>
                 </div>
               ) : (
@@ -406,7 +408,7 @@ const NftItemForCollectionViewComponent: React.FC<
                   }}
                   className="btn-play">
                   <div>
-                    <i className="fas fa-play"></i>
+                    <FontAwesomeIcon icon={faPlay} />
                   </div>
                 </div>
               ))}
