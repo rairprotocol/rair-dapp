@@ -265,7 +265,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             icon={faBars}
             className="icon-menu"
             style={{
-              backgroundColor:
+              color:
                 import.meta.env.VITE_TESTNET === 'true'
                   ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
                   : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`,
