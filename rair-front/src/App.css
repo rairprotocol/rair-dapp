@@ -932,10 +932,8 @@ img.video-locked-modal {
 
 i.fas-custom {
   position: absolute;
-  top: 1.1rem;
+  top: 0.8rem;
   color: #e882d5;
-  left: 1.3rem;
-  margin-bottom: -1rem;
   font-weight: lighter;
   transform: scale(0.7);
   left: 0.5rem;

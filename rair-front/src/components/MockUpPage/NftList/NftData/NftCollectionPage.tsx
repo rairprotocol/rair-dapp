@@ -442,18 +442,19 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               customClass="form-control input-styled border-top-radius-tablet search-mobile"
             />
             <div className="nft-form-control-icon">
-              <FontAwesomeIcon
-                icon={faSearch}
-                size="lg"
-                className="fas-custom"
-                style={{
-                  color:
-                    import.meta.env.VITE_TESTNET === 'true'
-                      ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                      : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
-                }}
-                aria-hidden="true"
-              />
+              <i className="fas-custom">
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  size="lg"
+                  style={{
+                    color:
+                      import.meta.env.VITE_TESTNET === 'true'
+                        ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                        : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                  }}
+                  aria-hidden="true"
+                />
+              </i>
               {isMobileDesign ? (
                 <FilteringBlock
                   click={metadataFilter}

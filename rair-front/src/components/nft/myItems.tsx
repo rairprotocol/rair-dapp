@@ -252,12 +252,9 @@ const MyItems: React.FC<IMyItems> = ({
                 }}
                 customClass="form-control input-styled my-items-search"
               />
-              <FontAwesomeIcon
-                icon={faSearch}
-                size="lg"
-                className="fas-custom"
-                aria-hidden="true"
-              />
+              <i className="fas-custom">
+                <FontAwesomeIcon icon={faSearch} size="lg" />
+              </i>
               <FilteringBlock
                 primaryColor={primaryColor}
                 setSortItem={setSortItem}

@@ -23,6 +23,7 @@ import useConnectUser from '../../hooks/useConnectUser';
 //images
 import { headerLogoBlack, headerLogoWhite } from '../../images';
 import { rFetch } from '../../utils/rFetch';
+import InputField from '../common/InputField';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import MainLogo from '../GroupLogos/MainLogo';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
@@ -236,31 +237,18 @@ const MainHeader: React.FC<IMainHeader> = ({
         className={`main-search ${isSplashPage ? 'hidden' : ''} ${
           hotdropsVar === 'true' ? 'hotdrops-header' : ''
         }`}>
-        {hotdropsVar === 'true' ? (
-          <input
-            className={
-              primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
-            }
-            type="text"
-            placeholder="Search"
-            onChange={handleChangeText}
-            value={textSearch}
-            onClick={() => setIsComponentVisible(true)}
-          />
-        ) : (
-          <input
-            style={{
-              color: textColor,
-              borderColor: textColor,
-              backgroundColor: primaryColor
-            }}
-            type="text"
-            placeholder="Search..."
-            onChange={handleChangeText}
-            value={textSearch}
-            onClick={() => setIsComponentVisible(true)}
-          />
-        )}
+        <InputField
+          customCSS={{
+            color: textColor,
+            borderColor: textColor,
+            backgroundColor: primaryColor
+          }}
+          type="text"
+          placeholder="Search..."
+          setter={handleChangeText}
+          getter={textSearch}
+          onClick={() => setIsComponentVisible(true)}
+        />
         {isComponentVisible && (
           <div
             style={{
@@ -399,7 +387,7 @@ const MainHeader: React.FC<IMainHeader> = ({
         )}
         <i
           className="fas-custom"
-          style={{ marginTop: '-7px', marginLeft: '3px' }}>
+          style={{ marginTop: '-5px', marginLeft: '5px' }}>
           <FontAwesomeIcon
             icon={faSearch}
             size="lg"

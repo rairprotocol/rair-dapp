@@ -261,7 +261,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
             customClass="form-control input-styled border-top-radius-tablet search-mobile"
           />
           <div className="nft-form-control-icon">
-            <i className="fas-custom" style={{ marginTop: '-5px' }}>
+            <i className="fas-custom">
               <FontAwesomeIcon
                 icon={faSearch}
                 size="lg"
