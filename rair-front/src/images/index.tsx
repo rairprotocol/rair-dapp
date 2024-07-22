@@ -25,6 +25,7 @@ import minTable from './mintable-logo.webp';
 import hotdropsLogoMobile from './mobile-logo-hotdrops.png';
 import oneOf from './oneOf-logo.webp';
 import openSea from './openSea-logo.webp';
+import loadingFavicon from "./loading-favicon.svg";
 // import Icons
 import polygonMatic from './polygon-matic.svg';
 import RairFaviconDefault from './rair_favicon.ico';
@@ -76,6 +77,7 @@ export const EthereumLogo = ethereum;
 export const DocumentIcon = documentIcon;
 export const AstarLogo = astar;
 export const BaseLogo = baseMainnet;
+export const LoadingDefaultFavicon = loadingFavicon;
 
 export const DiscordIcon = ({ color, primaryColor }) => {
   return (
