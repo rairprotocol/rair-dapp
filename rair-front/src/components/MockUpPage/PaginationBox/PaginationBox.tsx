@@ -18,9 +18,6 @@ const PaginationBox: React.FC<IPaginationBox> = ({
     (store) => store.nftDataStore.itemsPerPage
   );
 
-  console.info(totalPageForPagination, 'totalPageForPagination');
-  console.info(itemsPerPageNotifications, 'itemsPerPageNotifications')
-
   const { primaryColor, primaryButtonColor } = useSelector<
     RootState,
     ColorStoreType
@@ -29,8 +26,6 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   const [page, setPage] = useState<number>(currentPage);
   const [totalPage, setTotalPages] = useState<number>();
   const [totalPageVideo, setTotalPagesVideo] = useState<number>();
-
-  console.info(totalPage, 'totalPage')
 
   // const hotdropsVar = import.meta.env.VITE_TESTNET;
 
