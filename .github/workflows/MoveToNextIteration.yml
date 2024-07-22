@@ -12,7 +12,7 @@ jobs:
     - uses: blombard/move-to-next-iteration@master
       with:
         owner: rairprotocol
-        number: 1
+        number: 3
         token: ${{ secrets.PROJECT_PAT }}
         iteration-field: Iteration
         iteration: last
