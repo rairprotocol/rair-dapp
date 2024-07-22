@@ -68,9 +68,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
-  );
-
-  console.info(iconColor, 'iconColor')
+  )
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [realDataNotification, setRealDataNotification] = useState([]);
