@@ -558,13 +558,13 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
               primaryColor={primaryColor}
             />
           }>
-          <Dropdown
+          {blockchainsArray && <Dropdown
             onDropdownChange={onOptionChange}
-            options={blockchains}
+            options={blockchainsArray}
             selectedOptions={selectedBchItems && selectedBchItems}
             key={Math.random() * 1_000_000}
             isMobileDesign={isMobileDesign && isMobileDesign}
-          />
+          />}
         </AccordionItem>
       </CustomAccordion>
       <div className="filter-modal-btn-container ">
