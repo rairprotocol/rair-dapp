@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Provider, useStore } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 import { TUserResponse } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
@@ -125,7 +126,11 @@ const EditMode = ({
 
         onChangeEditMode();
       } catch (err) {
-        Swal.fire('Info', `The name ${userName} already exists`, 'question');
+        reactSwal.fire(
+          'Info',
+          `The name ${userName} already exists`,
+          'question'
+        );
       }
     }
   };
@@ -138,7 +143,7 @@ const EditMode = ({
             hotdropsVar === 'true' ? 'hotdrops-color' : ''
           }`}
           onClick={handlePopUp}>
-          <i className="fas fa-chevron-left"></i>
+          <FontAwesomeIcon icon={faChevronLeft} />
         </div>
         <div
           className="profile-title"

@@ -1,3 +1,6 @@
+import { faFacebook } from '@fortawesome/free-brands-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import { Teammate_4, Teammate_8 } from '../../images/teamMeetList/teamMeetList';
 import { TTeamArrayItemType } from '../../splashPage.types';
 
@@ -11,11 +14,11 @@ export const teamSlideLockArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-facebook',
+        classIcon: faFacebook,
         link: ''
       },
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: '',
         classLink: 'arrrow-right'
       }
@@ -39,7 +42,7 @@ export const teamSlideLockArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

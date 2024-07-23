@@ -1,3 +1,6 @@
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import {
   GreymanAuthor,
   Teammate_4,
@@ -25,7 +28,7 @@ export const teamGreymanArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-twitter',
+        classIcon: faTwitter,
         link: 'https://twitter.com/Dadaratopia'
       }
     ]
@@ -43,7 +46,7 @@ export const teamGreymanArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://movementontheground.com/',
         classLink: 'arrrow-right'
       }
@@ -67,7 +70,7 @@ export const teamGreymanArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

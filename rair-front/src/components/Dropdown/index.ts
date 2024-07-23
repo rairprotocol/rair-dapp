@@ -4,6 +4,7 @@ export type TOption = {
   clicked?: boolean;
   dropDownImg?: boolean;
   optionId?: number;
+  display?: boolean;
 };
 export type TDropdownProps = {
   options: Array<TOption>;

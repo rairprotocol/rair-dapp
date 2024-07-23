@@ -1,4 +1,6 @@
 import React from 'react';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import MobileCarouselNfts from '../../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
@@ -41,7 +43,7 @@ const NFTImages: React.FC<INFTImages> = ({
                 <div className="join-pic-main">
                   <div className="show-more-wrap">
                     <span className="show-more" style={{ color: '#fff' }}>
-                      Coming Soon <i className="fas fa-arrow-right"></i>{' '}
+                      Coming Soon <FontAwesomeIcon icon={faArrowRight} />
                     </span>
                   </div>
                   <ImageLazy

@@ -25,6 +25,7 @@ import {
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import chainData from '../../utils/blockchainData';
+import { rFetch } from '../../utils/rFetch';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
@@ -37,7 +38,8 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
-import { rFetch } from '../../utils/rFetch';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -106,22 +108,21 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   };
 
   const getNotifications = useCallback(async () => {
-    if(currentUserAddress) {
+    if (currentUserAddress) {
       const result = await rFetch(`/api/notifications`);
-    if (result.success) {
-      setRealDataNotification(result.notifications);
+      if (result.success) {
+        setRealDataNotification(result.notifications);
+      }
     }
-    }
-}, [currentUserAddress]);
+  }, [currentUserAddress]);
 
-useEffect(() => {
-  getNotificationsCount();
-}, [click])
+  useEffect(() => {
+    getNotificationsCount();
+  }, [click]);
 
-
-useEffect(() => {
-  getNotifications();
-}, [])
+  useEffect(() => {
+    getNotifications();
+  }, []);
 
   const toggleMenu = (otherPage?: string | undefined) => {
     if (otherPage === 'nav') {
@@ -205,7 +206,6 @@ useEffect(() => {
     getBalance();
   }, [getBalance]);
 
-
   return (
     <MenuMobileWrapper
       className="col-1 rounded burder-menu"
@@ -214,7 +214,10 @@ useEffect(() => {
       selectedChain={selectedChain}
       isSplashPage={isSplashPage}
       realChainId={realChainId}>
-      <Nav hotdrops={hotdropsVar} secondaryColor={secondaryColor} primaryColor={primaryColor}>
+      <Nav
+        hotdrops={hotdropsVar}
+        secondaryColor={secondaryColor}
+        primaryColor={primaryColor}>
         <MobileChoiseNav
           click={click}
           messageAlert={messageAlert}
@@ -234,7 +237,7 @@ useEffect(() => {
           </Suspense>
         ) : (
           <MobileListMenu
-          secondaryColor={secondaryColor}
+            secondaryColor={secondaryColor}
             primaryColor={primaryColor}
             click={click}
             toggleMenu={toggleMenu}
@@ -290,14 +293,24 @@ useEffect(() => {
                             }}
                             activeSearch={activeSearch}
                             marginRight={'10px'}>
-                            <i className="fas fa-search"  style={{
-                  color:
-                  import.meta.env.VITE_TESTNET === 'true'
-                    ? 
-                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                    : `${
-                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
-                }} aria-hidden="true"></i>
+                            <FontAwesomeIcon
+                              icon={faSearch}
+                              style={{
+                                color:
+                                  import.meta.env.VITE_TESTNET === 'true'
+                                    ? `${
+                                        iconColor === '#1486c5'
+                                          ? '#F95631'
+                                          : iconColor
+                                      }`
+                                    : `${
+                                        iconColor === '#1486c5'
+                                          ? '#E882D5'
+                                          : iconColor
+                                      }`
+                              }}
+                              aria-hidden="true"
+                            />
                           </SocialBoxSearch>
                           {/* this is where the aikon widget should go: */}
                           {/* {currentUserAddress && userBalance.length < 7 && (
@@ -336,15 +349,21 @@ useEffect(() => {
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
                           {notificationCount && notificationCount > 0 ? (
-            <div className="red-circle-notifications" style={{
-              fontSize: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontWeight: "bold",
-              color: '#fff'
-            }}>{notificationCount  > 9 ? "9+" : notificationCount}</div>
-          ) : ''}
+                            <div
+                              className="red-circle-notifications"
+                              style={{
+                                fontSize: '10px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                fontWeight: 'bold',
+                                color: '#fff'
+                              }}>
+                              {notificationCount > 9 ? '9+' : notificationCount}
+                            </div>
+                          ) : (
+                            ''
+                          )}
                         </SocialBox>
                       )}
                     </div>
@@ -428,14 +447,15 @@ useEffect(() => {
               }}
               activeSearch={activeSearch}
               marginRight={'17px'}>
-              <i className="fas fa-search" style={{
-                 color:
-                 import.meta.env.VITE_TESTNET === 'true'
-                   ? 
-                   `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                   : `${
-                     iconColor === '#1486c5' ? '#E882D5' : iconColor}`
-                }} aria-hidden="true"></i>
+              <FontAwesomeIcon
+                icon={faSearch}
+                style={{
+                  color:
+                    import.meta.env.VITE_TESTNET === 'true'
+                      ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                      : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }}
+              />
             </SocialBoxSearch>
           )}
           {click ? (

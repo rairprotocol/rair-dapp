@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 
 import { RootState } from '../../../ducks';
@@ -254,7 +256,7 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
           <button
             onClick={deleter}
             className="btn w-100 btn-danger rounded-rair">
-            <i className="fas fa-trash" />
+            <FontAwesomeIcon icon={faTrash} />
           </button>
         )}
       </div>

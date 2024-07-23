@@ -146,6 +146,7 @@ export type TContract = {
   title: string;
   transactionHash?: string;
   user: string;
+  userData: UserType | null;
   _id: string;
 };
 

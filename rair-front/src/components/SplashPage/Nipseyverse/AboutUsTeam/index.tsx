@@ -1,4 +1,11 @@
 import {
+  faInstagram,
+  faLinkedinIn,
+  faTwitter
+} from '@fortawesome/free-brands-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
+import {
   Estate_Teammate,
   Teammate_1,
   Teammate_2,
@@ -30,11 +37,11 @@ export const teamNipseyverseArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-twitter',
+        classIcon: faTwitter,
         link: 'https://twitter.com/mrlee713'
       },
       {
-        classIcon: 'fab fa-instagram',
+        classIcon: faInstagram,
         link: 'https://www.instagram.com/mrlee713/'
       }
     ]
@@ -61,11 +68,11 @@ export const teamNipseyverseArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/johnpatillo/'
       },
       {
-        classIcon: 'fab fa-instagram',
+        classIcon: faInstagram,
         link: 'https://www.instagram.com/mrjfpster/?hl=en'
       }
     ]
@@ -90,7 +97,7 @@ export const teamNipseyverseArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://www.facebook.com/neighborhoodnipfoundation/',
         classLink: 'arrrow-right'
       }
@@ -114,7 +121,7 @@ export const teamNipseyverseArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://swdd.io',
         classLink: 'arrrow-right'
       }
@@ -137,7 +144,7 @@ export const teamNipseyverseArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

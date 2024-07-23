@@ -1,4 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 
 import {
@@ -51,7 +53,7 @@ const BatchRow: React.FC<IBatchRow> = ({ index, deleter, array }) => {
         />
       </div>
       <button onClick={deleter} className="col-1 btn btn-danger">
-        <i className="fas fa-trash" />
+        <FontAwesomeIcon icon={faTrash} />
       </button>
     </div>
   );
@@ -93,7 +95,7 @@ const BatchMinting: React.FC<IBatchMinting> = ({
         disabled={rows.length > Number(end) - Number(start)}
         onClick={addRow}
         className="col-2 btn btn-success">
-        Add <i className="fas fa-plus" />
+        Add <FontAwesomeIcon icon={faPlus} />
       </button>
       <button onClick={addRow} disabled className="col btn btn-white">
         Total:{' '}

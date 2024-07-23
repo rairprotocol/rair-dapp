@@ -1,4 +1,6 @@
-import React, { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const MailchimpComponent = () => {
   const [emailField, setEmailField] = useState<string>('');
@@ -35,7 +37,7 @@ const MailchimpComponent = () => {
               value="Subscribe"
               name="subscribe"
               id="mc-embedded-subscribe">
-              <i className="fas fa-chevron-right"></i>
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
           <div

@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import {
+  faChevronDown,
+  faChevronUp,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { RootState } from '../../../ducks';
 import { IPurchaseChecklist } from '../splashPage.types';
@@ -37,10 +43,10 @@ const PurchaseChecklist: React.FC<IPurchaseChecklist> = ({
       className="tutorial-checklist">
       <h5>{nameSplash} purchase checklist</h5>
       <div className="tutorial-show-list" onClick={() => togglePurchaseList()}>
-        <i className={`fas fa-chevron-${purchaseList ? 'down' : 'up'}`}></i>
+        <FontAwesomeIcon icon={purchaseList ? faChevronDown : faChevronUp} />
       </div>
       <div className="tutorial-close" onClick={() => toggleCheckList()}>
-        <i className="fas fa-times"></i>
+        <FontAwesomeIcon icon={faTimes} />
       </div>
       <ul style={{ display: `${purchaseList ? 'block' : 'none'}` }}>
         <li>

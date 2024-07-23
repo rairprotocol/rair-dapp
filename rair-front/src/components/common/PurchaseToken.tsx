@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, Contract } from 'ethers';
 
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
@@ -258,8 +260,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
                           } rounded-rair`}
                           id={String(id)}
                           onClick={() => item.setter(!item.getter)}>
-                          <i
-                            className={'fas fa-check'}
+                          <FontAwesomeIcon
+                            icon={faCheck}
                             style={{
                               color: item.getter ? 'inherit' : 'transparent'
                             }}
