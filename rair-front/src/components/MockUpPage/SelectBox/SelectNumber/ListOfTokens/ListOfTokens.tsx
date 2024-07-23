@@ -61,7 +61,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   };
 
   const getPaginationData = useCallback(
-    async (target: HTMLElement, from, to) => {
+    async (target: HTMLElement) => {
       const indexes = getNumberFromStr(target?.innerText);
       const responseAllProduct = await axios.get<TNftItemResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}/numbers?fromToken=${indexes[0]}&toToken=${indexes[1]}`
@@ -71,7 +71,6 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
         responseAllProduct.data.result.tokens.forEach((item) => {
           tokenMapping[item.token] = item;
         });
-        console.info(tokenMapping, 'tokenMapping')
         dispatch(setTokenData(tokenMapping));
       }
       setSelectedToken(selectedToken);
@@ -103,19 +102,15 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
     [listOfTokensRef, isOpens]
   );
 
-    const fetchSerialData = useCallback(async() => {
+    const fetchSerialData = useCallback(async(fromToken?: number, toToken?: number) => {
       const {data} = await axios.get<TNftItemResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}/numbers`
+        `/api/nft/network/${blockchain}/${contract}/${product}/numbers${fromToken && toToken ? `?fromToken=${fromToken}&toToken=${toToken}` : ''}`
       );
 
-      console.info(data,'data')
-
-
       if(data.success && data.tokens) {
-        console.info(data.tokens, 'data.result.tokens')
         setProductTokenNumbers(data.tokens);
       }
-    }, [blockchain,contract,product ])
+    }, [blockchain,contract,product])
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutSideListOfTokens);
@@ -125,23 +120,19 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
 
   useEffect(() => {
     fetchSerialData();
-  }, [fetchSerialData]);
+  }, []);
 
-  console.info(productTokenNumbers, 'productTokenNumbers')
-
-  const availableRanges = useMemo(
-    () =>
-      productTokenNumbers?.reduce((acc, tokenNumber: string) => {
-        const tokenRange = Math.floor(+tokenNumber / 100) * 100;
-        return {
-          ...acc,
-          [tokenRange]: true
-        };
-      }, {}),
-    [productTokenNumbers]
-  );
-
-  console.info(availableRanges, 'availableRanges')
+const availableRanges = useMemo(
+  () =>
+  totalCount?.reduce((acc, item) => {
+      const tokenRange = Math.floor(+item.token / 100) * 100;
+      return {
+        ...acc,
+        [tokenRange]: true
+      };
+    }, {}),
+  [totalCount]
+);
 
   const getPaginationToken = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -188,9 +179,13 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
             {ranges.map((i) => {
               return (
                 <button
-                  // disabled={availableRanges?.[i] ? false : true}
+                  disabled={availableRanges?.[i] ? false : true}
                   key={i}
-                  onClick={(e) => getPaginationToken(e, i, i + 99)}
+                  onClick={(e) => {
+                    console.info(i, i + 99)
+                    fetchSerialData(i, i + 99);
+                    getPaginationToken(e);
+                  }}
                   className={`serial-box serial-numb check-disable ${
                     hotdropsVar === 'true' ? 'hotdrops-bg' : ''
                   }`}>
@@ -208,10 +203,10 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
       </div>
     ) : (
       <>
-        {tokenData !== undefined && (
+        {productTokenNumbers !== undefined && (
           <CurrentTokens
             primaryColor={primaryColor}
-            items={currentTokenData(tokenData)}
+            items={productTokenNumbers}
             isOpen={isOpen}
             isBack={isBack}
             selectedToken={selectedToken}
@@ -220,7 +215,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
             numberRef={numberRef}
             handleIsOpen={handleIsOpen}
             onClickItem={onClickItem}
-            totalCount={totalCount}
+            totalCount={productTokenNumbers.filter((el, index) => index <= 99)}
           />
         )}
       </>
