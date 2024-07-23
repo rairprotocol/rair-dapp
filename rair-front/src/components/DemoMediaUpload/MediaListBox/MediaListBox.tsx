@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, useDispatch, useSelector, useStore } from 'react-redux';
+import {
+  faCheck,
+  faPen,
+  faTimes,
+  faTrash,
+  faUpload
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
@@ -208,7 +216,7 @@ const ContractDataModal = ({
         onClick={() => {
           reactSwal.close();
         }}>
-        Close <i className="fas fa-times" />
+        Close <FontAwesomeIcon icon={faTimes} />
       </button>
       <button
         className="btn rair-button float-end"
@@ -224,7 +232,7 @@ const ContractDataModal = ({
           setDemo(newDemoStatus);
           reactSwal.close();
         }}>
-        Save <i className="fas fa-check" />
+        Save <FontAwesomeIcon icon={faCheck} />
       </button>
     </>
   );
@@ -274,7 +282,7 @@ const BasicDataModal = ({
         onClick={() => {
           reactSwal.close();
         }}>
-        Close <i className="fas fa-times" />
+        Close <FontAwesomeIcon icon={faTimes} />
       </button>
       <button
         className="btn rair-button float-end"
@@ -288,7 +296,7 @@ const BasicDataModal = ({
           setCategory(newCategory);
           reactSwal.close();
         }}>
-        Save <i className="fas fa-check" />
+        Save <FontAwesomeIcon icon={faCheck} />
       </button>
     </>
   );
@@ -568,7 +576,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
                 onClick={() => deleter(index)}
                 style={{ color: textColor }}
                 className={`btn btn-outline-danger rounded-rair`}>
-                Remove <i className="far fa-trash"></i>
+                Remove <FontAwesomeIcon icon={faTrash} />
               </button>
             </div>
             <div className="col-12 col-md-3">
@@ -577,7 +585,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
                 style={{ background: primaryButtonColor, color: textColor }}
                 onClick={editVideoTitle}
                 className={`btn rair-button rounded-rair`}>
-                Edit Video Information <i className="far fa-pen" />
+                Edit Video Information <FontAwesomeIcon icon={faPen} />
               </button>
             </div>
             <div className="col-12 col-md-3">
@@ -593,7 +601,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
                   <>Select offer</>
                 ) : (
                   <>
-                    Edit Offer <i className="far fa-pen" />
+                    Edit Offer <FontAwesomeIcon icon={faPen} />
                   </>
                 )}
               </button>
@@ -610,7 +618,7 @@ const MediaListBox: React.FC<IMediaListBox> = ({
                   color: textColor
                 }}
                 className="rair-button btn rounded-rair">
-                Upload File <i className="fas fa-upload" />
+                Upload File <FontAwesomeIcon icon={faUpload} />
               </button>
             </div>
           </>

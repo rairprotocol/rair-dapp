@@ -1,5 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import { IExclusiveNft } from '../splashPage.types';
@@ -39,7 +41,7 @@ const ExclusiveNft: React.FC<IExclusiveNft> = ({
           <div className="btn-open-store">
             <NavLink to={linkComing}>
               {' '}
-              <span>Open in Store</span> <i className="fas fa-arrow-right"></i>
+              <span>Open in Store</span> <FontAwesomeIcon icon={faArrowRight} />
             </NavLink>
           </div>
         </div>

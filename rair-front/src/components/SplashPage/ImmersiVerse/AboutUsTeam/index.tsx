@@ -1,3 +1,5 @@
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import { Teammate_4, Teammate_6 } from '../../images/teamMeetList/teamMeetList';
 import { TTeamArrayItemType } from '../../splashPage.types';
 
@@ -15,7 +17,7 @@ export const teamImmersiverseArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'http://iverse.events',
         classLink: 'arrrow-right'
       }
@@ -39,7 +41,7 @@ export const teamImmersiverseArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

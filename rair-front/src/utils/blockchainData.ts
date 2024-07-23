@@ -172,7 +172,7 @@ const chainData: TChainData = {
     image: BaseLogo,
     name: 'Base Mainnet',
     chainId: '0x2105',
-    symbol: 'ETH',
+    symbol: 'bETH',
     addChainData: {
       chainId: '0x2105',
       chainName: 'Base',

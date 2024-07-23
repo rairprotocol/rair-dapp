@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
 import MobileNavigationList from './MobileNavigationList';
 
 import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import {
   getDataAllClear,
@@ -21,7 +24,6 @@ import { TAxiosCollectionData } from '../../Header/header.types';
 import ImageCustomForSearch from '../../MockUpPage/utils/image/ImageCustomForSearch';
 
 import { List, SearchInputMobile } from './../NavigationItems/NavigationItems';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
 interface IMobileListMenu {
   click: boolean;
@@ -56,8 +58,9 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   );
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { iconColor } =
-  useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const { iconColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   const [textSearch, setTextSearch] = useState<string>('');
 
@@ -154,21 +157,27 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   }, [currentUserAddress, dispatch]);
 
   return (
-    <List secondaryColor={secondaryColor} hotdrops={hotdropsVar} primaryColor={primaryColor} click={click}>
+    <List
+      secondaryColor={secondaryColor}
+      hotdrops={hotdropsVar}
+      primaryColor={primaryColor}
+      click={click}>
       <div>
         {activeSearch && (
           <>
             <SearchInputMobile
               hotdrops={hotdropsVar}
               primaryColor={primaryColor}>
-              <i className="fas fa-search" style={{
+              <FontAwesomeIcon
+                style={{
                   color:
-                  import.meta.env.VITE_TESTNET === 'true'
-                    ? 
-                    `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                    : `${
-                      iconColor === '#1486c5' ? '#E882D5' : iconColor}`
-                }} aria-hidden="true"></i>
+                    import.meta.env.VITE_TESTNET === 'true'
+                      ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                      : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }}
+                icon={faSearch}
+              />
+
               {import.meta.env.VITE_TESTNET === 'true' ? (
                 <input
                   className={

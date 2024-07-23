@@ -3,6 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { teamGreymanArray } from './AboutUsTeam';
 
@@ -802,7 +804,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                   <div className="join-pic-main">
                     <div className="show-more-wrap">
                       <span className="show-more" style={{ color: '#fff' }}>
-                        Coming Soon <i className="fas fa-arrow-right"></i>{' '}
+                        Coming Soon <FontAwesomeIcon icon={faArrowRight} />
                       </span>
                     </div>
                     <ImageLazy

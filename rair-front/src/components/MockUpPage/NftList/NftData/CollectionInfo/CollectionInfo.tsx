@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { utils } from 'ethers';
 import Swal from 'sweetalert2';
@@ -204,7 +206,10 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
               <ModalContentCloseBtn
                 primaryColor={primaryColor}
                 onClick={closeModal}>
-                <i className="fas fa-times" style={{ lineHeight: 'inherit' }} />
+                <FontAwesomeIcon
+                  icon={faTimes}
+                  style={{ lineHeight: 'inherit' }}
+                />
               </ModalContentCloseBtn>
             </div>
           )}

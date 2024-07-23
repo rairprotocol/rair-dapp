@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import {
+  faArrowRight,
+  faExternalLinkAlt
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { TableAuthenticity } from './AuthenticityBlockItems';
 
@@ -85,13 +90,13 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                         rel="noreferrer">
                         <div className="link-block">
                           <span>
-                            <i className="fas fa-external-link-alt"></i>
+                            <FontAwesomeIcon icon={faExternalLinkAlt} />
                           </span>
                           Etherscan transaction
                         </div>
                         <div className={`block-arrow`}>
-                          <i
-                            className="fas fa-arrow-right"
+                          <FontAwesomeIcon
+                            icon={faArrowRight}
                             style={{
                               color:
                                 import.meta.env.VITE_TESTNET === 'true'
@@ -107,7 +112,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                                         ? '#E882D5'
                                         : textColor
                                     }`
-                            }}></i>
+                            }}
+                          />
                         </div>
                       </a>
                     )}
@@ -127,13 +133,13 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
               rel="noreferrer">
               <div className="link-block">
                 <span>
-                  <i className="fas fa-external-link-alt"></i>
+                  <FontAwesomeIcon icon={faExternalLinkAlt} />
                 </span>
                 Etherscan transaction
               </div>
               <div className="block-arrow">
-                <i
-                  className="fas fa-arrow-right"
+                <FontAwesomeIcon
+                  icon={faArrowRight}
                   style={{
                     color:
                       import.meta.env.VITE_TESTNET === 'true'
@@ -147,7 +153,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                               ? '#E882D5'
                               : textColor
                           }`
-                  }}></i>
+                  }}
+                />
               </div>
             </a>
           </div>
@@ -160,7 +167,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
             rel="noreferrer">
             <div className="link-block">
               <span>
-                <i className="fas fa-external-link-alt"></i>
+                <FontAwesomeIcon icon={faExternalLinkAlt} />
               </span>
               View on IPFS
             </div>
@@ -168,8 +175,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
               className={`block-arrow ${
                 hotdropsVar === 'true' ? 'hotdrops-color' : ''
               }`}>
-              <i
-                className="fas fa-arrow-right"
+              <FontAwesomeIcon
+                icon={faArrowRight}
                 style={{
                   color:
                     import.meta.env.VITE_TESTNET === 'true'
@@ -183,7 +190,8 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
                             ? '#E882D5'
                             : textColor
                         }`
-                }}></i>
+                }}
+              />
             </div>
           </a>
         </div>

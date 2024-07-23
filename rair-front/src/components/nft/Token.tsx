@@ -12,6 +12,8 @@ import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import MinterMarketplaceItem from '../marketplace/MinterMarketplaceItem';
 import VideoList from '../video/videoList';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faImage } from '@fortawesome/free-solid-svg-icons';
 const erc721Abi = ERC721Token.default.abi;
 
 const Token = () => {
@@ -126,8 +128,9 @@ const Token = () => {
               borderRadius: '10px',
               height: '80vh'
             }}>
-            <i
-              className="fas fa-image h1"
+            <FontAwesomeIcon
+              icon={faImage}
+              className="h1"
               style={{ position: 'absolute', top: '50%' }}
             />
           </div>

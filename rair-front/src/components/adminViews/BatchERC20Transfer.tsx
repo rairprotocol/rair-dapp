@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { parseUnits } from 'ethers/lib/utils';
 
 import { RootState } from '../../ducks';
@@ -172,7 +174,7 @@ const BatchERC20Transfer = () => {
                   color: textColor,
                   background: secondaryButtonColor
                 }}>
-                <i className="fa fa-plus" />
+                <FontAwesomeIcon icon={faPlus} />
               </button>
             </th>
             {structure.map((data, index) => {
@@ -188,7 +190,7 @@ const BatchERC20Transfer = () => {
                   <button
                     onClick={() => deleteRow(index)}
                     className="btn btn-danger">
-                    <i className="fa fa-trash" />
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </td>
                 {Object.keys(data).map((key, keyIndex) => {

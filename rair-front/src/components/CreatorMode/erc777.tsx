@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faRedo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as ethers from 'ethers';
 import { stringToHex } from 'viem';
 
@@ -59,7 +61,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
         onClick={refreshData}
         disabled={refetchingFlag}
         className="btn">
-        {refetchingFlag ? '...' : <i className="fas fa-redo" />}
+        {refetchingFlag ? '...' : <FontAwesomeIcon icon={faRedo} />}
       </button>
       <br />
       {erc777Data ? (

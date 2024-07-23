@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { faRedo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { utils } from 'ethers';
 
 import BatchMinting from './BatchMinting';
@@ -322,7 +324,7 @@ const ERC721Manager: React.FC<IERC721ManagerConsumer> = ({
         disabled={refetchingFlag}
         style={{ position: 'absolute', left: 0, top: 0, color: 'inherit' }}
         className="px-2 btn">
-        {refetchingFlag ? '...' : <i className="fas fa-redo" />}
+        {refetchingFlag ? '...' : <FontAwesomeIcon icon={faRedo} />}
       </button>
       <small>
         Contract Address: <b>{offerInfo.contractAddress}</b>

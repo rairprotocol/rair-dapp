@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { TFileType } from '../../axios.responseTypes';
 
@@ -289,7 +290,7 @@ export interface ITeamComponentCommon {
 }
 
 export type TSocialsItem = {
-  classIcon: string;
+  classIcon: IconDefinition;
   link: string;
   classLink?: string;
 };

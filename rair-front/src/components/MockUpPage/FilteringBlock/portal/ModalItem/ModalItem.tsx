@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { utils } from 'ethers';
 
 import { erc721Abi } from '../../../../../contracts';
@@ -33,8 +35,8 @@ const ModalItem: React.FC<IModalItem> = ({
   const {
     currentChain,
     currentUserAddress,
-    diamondMarketplaceInstance,
-    contractCreator
+    contractCreator,
+    diamondMarketplaceInstance
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -151,7 +153,7 @@ const ModalItem: React.FC<IModalItem> = ({
       <div className="modal-content-metadata modal-item-metadata">
         <div className="block-close">
           <button onClick={onCloseModal}>
-            <i className="fas fa-times"></i>
+            <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
         <div className="modal-main-content">

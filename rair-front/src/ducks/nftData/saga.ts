@@ -36,6 +36,7 @@ export function* setNftDataContract({ params }: TParamsNftDataProps) {
         title: item.title,
         name: item.products.name,
         user: item.user,
+        userData: item.userData,
         copiesProduct: item.products.copies,
         offerData: item.products.offers?.map((elem) => ({
           price: elem.price,

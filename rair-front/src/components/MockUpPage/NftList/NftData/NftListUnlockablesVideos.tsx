@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
 // import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
 const NftListUnlockablesVideos = ({
@@ -51,13 +53,13 @@ const NftListUnlockablesVideos = ({
                     position: 'relative'
                   }}>
                   <div className="nft-unlockable-imgContent">
-                    <i
+                    <FontAwesomeIcon
                       style={{
                         paddingLeft: '1px',
                         paddingTop: '8px'
                       }}
-                      className="fa fa-lock"
-                      aria-hidden="true"></i>
+                      icon={faLock}
+                    />
                     <p
                       style={{
                         textAlign: 'center',
@@ -127,13 +129,13 @@ const NftListUnlockablesVideos = ({
                 position: 'relative'
               }}>
               <div className="nft-unlockable-imgContent">
-                <i
+                <FontAwesomeIcon
                   style={{
                     paddingLeft: '1px',
                     paddingTop: '8px'
                   }}
-                  className="fa fa-lock"
-                  aria-hidden="true"></i>
+                  icon={faLock}
+                />
                 <p
                   style={{
                     textAlign: 'center',

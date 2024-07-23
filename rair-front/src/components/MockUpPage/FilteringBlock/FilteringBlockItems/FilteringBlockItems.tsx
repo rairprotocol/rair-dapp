@@ -100,12 +100,18 @@ export const StyledFilterIcon = styled(FilterIconNew)`
   path {
     stroke: ${(props: TFiltersTitleIconStyled) =>
       import.meta.env.VITE_TESTNET === 'true'
-        ? `${props.customSecondaryButtonColor === '#1486c5' ? '#F95631' : props.customSecondaryButtonColor}`
+        ? `${
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#F95631'
+              : props.customSecondaryButtonColor
+          }`
         : props.filterPopUp
           ? '#fff'
           : `${
-            props.customSecondaryButtonColor === '#1486c5' ? '#E882D5' : props.customSecondaryButtonColor
-          }`};
+              props.customSecondaryButtonColor === '#1486c5'
+                ? '#E882D5'
+                : props.customSecondaryButtonColor
+            }`};
   }
   margin-right: 8px;
 `;
@@ -114,10 +120,17 @@ export const StyledArrowUpIcon = styled(ArrowUp)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
       import.meta.env.VITE_TESTNET === 'true'
-        ? `${props.customSecondaryButtonColor === '#1486c5' ? '#F95631' : props.customSecondaryButtonColor}`
+        ? `${
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#F95631'
+              : props.customSecondaryButtonColor
+          }`
         : props.sortItem === 'up'
           ? `${
-            props.customSecondaryButtonColor === '#1486c5' ? '#E882D5' : props.customSecondaryButtonColor}`
+              props.customSecondaryButtonColor === '#1486c5'
+                ? '#E882D5'
+                : props.customSecondaryButtonColor
+            }`
           : '#A7A6A6'};
   }
 `;
@@ -125,10 +138,16 @@ export const StyledArrowDownIcon = styled(ArrowDown)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
       import.meta.env.VITE_TESTNET === 'true'
-        ? `${props.customSecondaryButtonColor === '#1486c5' ? '#F95631' : props.customSecondaryButtonColor}`
+        ? `${
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#F95631'
+              : props.customSecondaryButtonColor
+          }`
         : props.sortItem === 'down' &&
           `${
-            props.customSecondaryButtonColor === '#1486c5' ? '#E882D5' : props.customSecondaryButtonColor
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#E882D5'
+              : props.customSecondaryButtonColor
           }`};
   }
 `;
@@ -140,10 +159,16 @@ export const StyledShevronIcon = styled(SimpleFilterArrow)`
   path {
     stroke: ${(props) =>
       import.meta.env.VITE_TESTNET === 'true'
-        ? `${props.customSecondaryButtonColor === '#1486c5' ? '#F95631' : props.customSecondaryButtonColor}`
+        ? `${
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#F95631'
+              : props.customSecondaryButtonColor
+          }`
         : `${
-          props.customSecondaryButtonColor === '#1486c5' ? '#E882D5' : props.customSecondaryButtonColor
-        }`};
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#E882D5'
+              : props.customSecondaryButtonColor
+          }`};
   }
 `;
 
@@ -151,19 +176,31 @@ export const StyledPopupArrowUpIcon = styled(ArrowUp)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
       import.meta.env.VITE_TESTNET === 'true'
-        ? `${props.customSecondaryButtonColor === '#1486c5' ? '#F95631' : props.customSecondaryButtonColor}`
+        ? `${
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#F95631'
+              : props.customSecondaryButtonColor
+          }`
         : `${
-          props.customSecondaryButtonColor === '#1486c5' ? '#E882D5' : props.customSecondaryButtonColor
-        }`};
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#E882D5'
+              : props.customSecondaryButtonColor
+          }`};
   }
 `;
 export const StyledPopupArrowDownIcon = styled(ArrowDown)`
   path {
     stroke: ${(props: TSortArrowUpIconStyled) =>
       import.meta.env.VITE_TESTNET === 'true'
-        ? `${props.customSecondaryButtonColor === '#1486c5' ? '#F95631' : props.customSecondaryButtonColor}`
+        ? `${
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#F95631'
+              : props.customSecondaryButtonColor
+          }`
         : `${
-          props.customSecondaryButtonColor === '#1486c5' ? '#E882D5' : props.customSecondaryButtonColor
-        }`};
+            props.customSecondaryButtonColor === '#1486c5'
+              ? '#E882D5'
+              : props.customSecondaryButtonColor
+          }`};
   }
 `;

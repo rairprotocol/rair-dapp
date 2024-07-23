@@ -1,3 +1,6 @@
+import { faFacebook } from '@fortawesome/free-brands-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import { Teammate_4 } from '../../images/teamMeetList/teamMeetList';
 import { Teammate_7 } from '../../images/UkraineGlitch/urkaineGlitch';
 import { TTeamArrayItemType } from '../../splashPage.types';
@@ -12,11 +15,11 @@ export const teamUkraineArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-facebook',
+        classIcon: faFacebook,
         link: 'https://www.facebook.com/UACCusa/'
       },
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://uaccusa.org/',
         classLink: 'arrrow-right'
       }
@@ -40,7 +43,7 @@ export const teamUkraineArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

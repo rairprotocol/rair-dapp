@@ -1,5 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { INftItemComponent } from './listOffers.types';
@@ -197,11 +199,11 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
               <div onClick={handlePlaying} className="btn-play">
                 {playing ? (
                   <div>
-                    <i className="fas fa-pause"></i>
+                    <FontAwesomeIcon icon={faPause} />
                   </div>
                 ) : (
                   <div>
-                    <i className="fas fa-play"></i>
+                    <FontAwesomeIcon icon={faPlay} />
                   </div>
                 )}
               </div>

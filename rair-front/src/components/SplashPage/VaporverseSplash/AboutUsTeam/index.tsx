@@ -1,3 +1,5 @@
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import { Teammate_VV } from '../../images/vaporverse/vaporverse';
 import { TTeamArrayItemType } from '../../splashPage.types';
 
@@ -17,7 +19,7 @@ export const teamVaporVerseArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Breadcrumbs, Typography } from '@mui/material';
@@ -221,9 +223,9 @@ const UserProfile: React.FC<IMyItems> = ({
               }}
               customClass="form-control input-styled user-search"
             />
-            <i
-              className="fas fa-search fa-lg fas-custom"
-              aria-hidden="true"></i>
+            <i className="fas-custom">
+              <FontAwesomeIcon icon={faSearch} size="lg" />
+            </i>
             <FilteringBlock
               primaryColor={primaryColor}
               setSortItem={setSortItem}
@@ -273,10 +275,6 @@ const UserProfile: React.FC<IMyItems> = ({
       ) : (
         <></>
       )}
-      {/* <div className="container-diamond-items">
-        <h3>Diamond Items <i className='fas h5 fa-gem' /></h3>
-        <MyDiamondItems {...{ openModal, setSelectedData }} /> 
-      </div>*/}
     </div>
   );
 };
