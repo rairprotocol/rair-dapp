@@ -30,10 +30,14 @@ const ModalItem: React.FC<IModalItem> = ({
 
   const [price, setPrice] = useState<number>(0);
   const [isApproved, setIsApproved] = useState<boolean | undefined>(undefined);
-  const { currentChain, currentUserAddress, resaleInstance, contractCreator } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
+  const {
+    currentChain,
+    currentUserAddress,
+    diamondMarketplaceInstance,
+    contractCreator
+  } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
   const { textColor, primaryButtonColor } = useSelector<
     RootState,
     ColorStoreType
@@ -61,7 +65,7 @@ const ModalItem: React.FC<IModalItem> = ({
 
   const createResaleOffer = async () => {
     if (onMyChain && isApproved) {
-      if (!validateInteger(price) || !resaleInstance) {
+      if (!validateInteger(price) || !diamondMarketplaceInstance) {
         return;
       }
       reactSwal.fire({
@@ -71,7 +75,7 @@ const ModalItem: React.FC<IModalItem> = ({
         showConfirmButton: false
       });
       if (
-        await web3TxHandler(resaleInstance, 'createResaleOffer', [
+        await web3TxHandler(diamondMarketplaceInstance, 'createResaleOffer', [
           selectedData?.uniqueIndexInContract,
           price,
           selectedData?.contractAddress,
@@ -97,7 +101,7 @@ const ModalItem: React.FC<IModalItem> = ({
       });
       if (
         await web3TxHandler(instance, 'approve', [
-          resaleInstance?.address,
+          diamondMarketplaceInstance?.address,
           selectedData?.uniqueIndexInContract
         ])
       ) {
@@ -112,14 +116,14 @@ const ModalItem: React.FC<IModalItem> = ({
   };
 
   const checkStatusContract = useCallback(async () => {
-    if (onMyChain && instance && resaleInstance) {
+    if (onMyChain && instance && diamondMarketplaceInstance) {
       const approved =
         (await web3TxHandler(instance, 'getApproved', [
           selectedData?.uniqueIndexInContract
-        ])) === resaleInstance.address ||
+        ])) === diamondMarketplaceInstance.address ||
         (await web3TxHandler(instance, 'isApprovedForAll', [
           currentUserAddress,
-          resaleInstance.address
+          diamondMarketplaceInstance.address
         ]));
       setIsApproved(approved);
     }
@@ -127,7 +131,7 @@ const ModalItem: React.FC<IModalItem> = ({
     onMyChain,
     instance,
     currentUserAddress,
-    resaleInstance,
+    diamondMarketplaceInstance,
     selectedData,
     web3TxHandler
   ]);
@@ -213,7 +217,7 @@ const ModalItem: React.FC<IModalItem> = ({
                   color: textColor
                 }}
                 onClick={() => {
-                  if (onMyChain && resaleInstance) {
+                  if (onMyChain && diamondMarketplaceInstance) {
                     if (isApproved === false) {
                       approveToken();
                     } else if (isApproved === true) {
@@ -224,7 +228,7 @@ const ModalItem: React.FC<IModalItem> = ({
                   }
                 }}>
                 {onMyChain
-                  ? resaleInstance
+                  ? diamondMarketplaceInstance
                     ? isApproved === undefined
                       ? 'Please wait...'
                       : isApproved

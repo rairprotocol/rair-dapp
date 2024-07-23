@@ -41,10 +41,14 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
-  const { resaleInstance, currentUserAddress, currentChain, contractCreator } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
+  const {
+    diamondMarketplaceInstance,
+    currentUserAddress,
+    currentChain,
+    contractCreator
+  } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
   const getTokenMetadata = useCallback(async () => {
     if (!contractData) {
@@ -114,7 +118,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
     if (correctBlockchain(contractData.blockchain)) {
       web3Switch(contractData.blockchain);
       return;
-    } else if (resaleInstance) {
+    } else if (diamondMarketplaceInstance) {
       if (contractCreator) {
         const instance = contractCreator(
           contractData.contractAddress,
@@ -126,7 +130,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
             TRADERHash &&
             (await web3TxHandler(instance, 'hasRole', [
               TRADERHash,
-              resaleInstance.address
+              diamondMarketplaceInstance.address
             ]));
           if (!can) {
             reactSwal.fire(
@@ -140,7 +144,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
       }
       //return;
       if (
-        await web3TxHandler(resaleInstance, 'buyResaleOffer', [
+        await web3TxHandler(diamondMarketplaceInstance, 'buyResaleOffer', [
           tradeid,
           { value: price.toString() }
         ])
