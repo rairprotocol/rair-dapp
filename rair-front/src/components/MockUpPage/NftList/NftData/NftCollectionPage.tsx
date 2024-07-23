@@ -1,6 +1,11 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+  faArrowAltCircleLeft,
+  faSearch
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
@@ -77,10 +82,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   const [selectedAttributeValues, setSelectedAttributeValues] =
     useState<any>(undefined);
 
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor, iconColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const toggleMetadataFilter = () => {
     setMetadataFilter((prev) => !prev);
@@ -439,23 +442,19 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               customClass="form-control input-styled border-top-radius-tablet search-mobile"
             />
             <div className="nft-form-control-icon">
-              <i
-                className={`fas fa-search fa-lg fas-custom`}
-                style={{
-                  color:
-                    import.meta.env.VITE_TESTNET === 'true'
-                      ? `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#F95631'
-                            : textColor
-                        }`
-                      : `${
-                          textColor === '#FFF' || textColor === 'black'
-                            ? '#E882D5'
-                            : textColor
-                        }`
-                }}
-                aria-hidden="true"></i>
+              <i className="fas-custom">
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  size="lg"
+                  style={{
+                    color:
+                      import.meta.env.VITE_TESTNET === 'true'
+                        ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                        : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                  }}
+                  aria-hidden="true"
+                />
+              </i>
               {isMobileDesign ? (
                 <FilteringBlock
                   click={metadataFilter}
@@ -806,16 +805,12 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
             <div
               style={{
                 cursor: 'pointer',
-                color: 'rgb(232, 130, 213)',
+                color: textColor,
                 fontSize: '2rem'
               }}
               onClick={() => goBack()}
               className="arrow-back">
-              {import.meta.env.VITE_TESTNET === 'true' ? (
-                <i className="fas fa-arrow-alt-circle-left hotdrops-color"></i>
-              ) : (
-                <i className="fas fa-arrow-alt-circle-left"></i>
-              )}
+              <FontAwesomeIcon icon={faArrowAltCircleLeft} />
             </div>
           )}
           <h2>{"Don't have product"}</h2>

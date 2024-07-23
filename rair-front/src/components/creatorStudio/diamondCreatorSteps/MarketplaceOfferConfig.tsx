@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import {
+  faCheck,
+  faEye,
+  faEyeSlash,
+  faPlus,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 
 import { RootState } from '../../../ducks';
@@ -193,10 +201,8 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
               }}
               className={`btn col-12 rair-button rounded-rair`}>
               {!array[index]?.selected && 'Not'} Selected{' '}
-              <i
-                className={`fas fa-${
-                  array[index].selected ? 'check' : 'times'
-                }`}
+              <FontAwesomeIcon
+                icon={array[index].selected ? faCheck : faTimes}
               />
             </button>
           )}
@@ -225,10 +231,8 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                     : "Tokens won't be sold"
                 }>
                 {!array[index]?.marketData?.visible && 'Not'} Visible{' '}
-                <i
-                  className={`fas fa-${
-                    array[index]?.marketData?.visible ? 'eye' : 'eye-slash'
-                  }`}
+                <FontAwesomeIcon
+                  icon={array[index]?.marketData.visible ? faEye : faEyeSlash}
                 />
               </abbr>
             </button>
@@ -293,7 +297,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                     color: textColor
                   }}
                   className="col-12 col-md-2 rounded-rair btn rair-button">
-                  <i className="fas fa-plus" /> Add
+                  <FontAwesomeIcon icon={faPlus} /> Add
                 </button>
               </div>
             )}

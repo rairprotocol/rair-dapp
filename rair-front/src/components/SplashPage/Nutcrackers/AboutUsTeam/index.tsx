@@ -1,3 +1,5 @@
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import { NutTeam, Teammate_4 } from '../../images/teamMeetList/teamMeetList';
 import { TTeamArrayItemType } from '../../splashPage.types';
 
@@ -35,7 +37,7 @@ export const teamNutArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

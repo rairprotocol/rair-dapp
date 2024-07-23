@@ -27,4 +27,8 @@ module.exports = {
     metadataSearch: () => ({
         metadataFilters: Joi.string(),
     }),
+    tokenLimits: () => ({
+        fromToken: Joi.string(),
+        toToken: Joi.string(),
+    }),
 };

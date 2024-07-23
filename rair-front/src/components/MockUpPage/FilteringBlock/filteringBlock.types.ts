@@ -40,6 +40,7 @@ export type TFiltersTitleIconStyled = {
   className?: string;
   primaryColor: string;
   textColor?: string;
+  customSecondaryButtonColor?: string;
 };
 
 export type TSelectFiltersPopUpStyled = {
@@ -57,6 +58,7 @@ export type TSortArrowUpIconStyled = {
   sortItem?: TSortChoice;
   primaryColor: string;
   textColor?: string;
+  customSecondaryButtonColor?: any;
 };
 
 export type TSelectSortPopUpStyled = {
@@ -74,6 +76,7 @@ export type TStyledShevronIconStyled = {
   rotate?: string;
   primaryColor: string;
   textColor?: string;
+  customSecondaryButtonColor?: string;
 };
 
 export type TModalCategoriesItem = {

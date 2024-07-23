@@ -1,35 +1,10 @@
 import React, { useState } from 'react';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import blockchainData from '../../../../../utils/blockchainData';
-import {
-  IModalBlockchain,
-  TBlockchainCategory,
-  TBlockchainNames
-} from '../../filteringBlock.types';
+import { IModalBlockchain, TBlockchainNames } from '../../filteringBlock.types';
 import Modal from '../../modal';
-
-const blockchains: TBlockchainCategory[] = [
-  {
-    name: 'Matic Mainnet',
-    chainId: '0x89',
-    clicked: false
-  },
-  {
-    name: 'Matic Testnet',
-    chainId: '0x13881',
-    clicked: false
-  },
-  {
-    name: 'Sepolia Testnet',
-    chainId: '0xaa36a7',
-    clicked: false
-  },
-  {
-    name: 'Ethereum Mainnet',
-    chainId: '0x1',
-    clicked: false
-  }
-];
 
 const ModalBlockchain: React.FC<IModalBlockchain> = ({
   setBlockchain,
@@ -87,7 +62,7 @@ const ModalBlockchain: React.FC<IModalBlockchain> = ({
       <div className="modal-content-metadata">
         <div className="block-close">
           <button className="modal-content-close" onClick={onCloseModal}>
-            <i className="fas fa-times"></i>
+            <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
         <div className="modal-filtering">
@@ -101,7 +76,7 @@ const ModalBlockchain: React.FC<IModalBlockchain> = ({
                 <option value="1">Ethereum(ETH)</option>
                 <option value="2">Bitcoin(BTC)</option> */}
             {/* <span className="price-arrow">
-                    <i className="fas fa-chevron-down"></i>
+                    <FontAwesomeIcon icon={faChevronDown}/>
                   </span> */}
             {/* </select>
               <BlockMinMax clearAll={clearAll} />

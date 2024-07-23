@@ -1,3 +1,5 @@
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import {
   CoinAgenda_LOGO,
   Teammate_4
@@ -14,7 +16,7 @@ export const teamCoinAgendaArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://coinagenda.com/',
         classLink: 'arrrow-right'
       }
@@ -36,7 +38,7 @@ export const teamCoinAgendaArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

@@ -1,4 +1,6 @@
 import React from 'react';
+import { faDiamond } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { INotCommercialTemplate2 } from '../splashPage.types';
 
@@ -28,9 +30,10 @@ const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
           style={{
             color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
           }}>
-          <i
-            className="fas fa-diamond"
-            style={{ margin: '0 12px 0 0', color: '#4099F1' }}></i>
+          <FontAwesomeIcon
+            icon={faDiamond}
+            style={{ margin: '0 12px 0 0', color: '#4099F1' }}
+          />
           <b>Share</b> — copy and redistribute the material in any medium or
           format
         </p>
@@ -38,9 +41,10 @@ const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
           style={{
             color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
           }}>
-          <i
-            className="fas fa-diamond"
-            style={{ margin: '0 12px 0 0', color: '#4099F1' }}></i>
+          <FontAwesomeIcon
+            icon={faDiamond}
+            style={{ margin: '0 12px 0 0', color: '#4099F1' }}
+          />
           <b>Adapt</b> — remix, transform, and build upon the material
         </p>
         <p
@@ -60,9 +64,10 @@ const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
           style={{
             color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
           }}>
-          <i
-            className="fas fa-diamond"
-            style={{ margin: '0 12px 0 0', color: '#C776D7' }}></i>
+          <FontAwesomeIcon
+            icon={faDiamond}
+            style={{ margin: '0 12px 0 0', color: '#C776D7' }}
+          />
           <b>Attribution</b> — You must give appropriate credit, provide a link
           to the license, and indicate if changes were made. You may do so in
           any reasonable manner, but not in any way that suggests the licensor
@@ -74,9 +79,10 @@ const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
             color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
           }}>
           {/* className="non-commercial-par-under"> */}
-          <i
-            className="fas fa-diamond"
-            style={{ margin: '0 12px 0 0', color: '#C776D7' }}></i>
+          <FontAwesomeIcon
+            icon={faDiamond}
+            style={{ margin: '0 12px 0 0', color: '#C776D7' }}
+          />
           <b>NonCommercial</b> — You may not use the material for commercial
           purposes.
         </p>

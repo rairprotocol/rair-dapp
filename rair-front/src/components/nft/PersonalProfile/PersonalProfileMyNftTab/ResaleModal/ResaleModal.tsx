@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CloseIcon from '@mui/icons-material/Close';
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
 
@@ -339,7 +341,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   <button
                     onClick={() => removeVideoAlert(resaleOffer[0]._id)}
                     className="btn-remove-resale">
-                    <i className="fas fa-trash"></i>
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </TooltipBox>
               </>

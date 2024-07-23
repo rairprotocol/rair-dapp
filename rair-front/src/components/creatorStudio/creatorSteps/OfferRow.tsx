@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faKey, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { utils } from 'ethers';
 
 import { RootState } from '../../../ducks';
@@ -95,7 +97,7 @@ const OfferRow: React.FC<IOfferRow> = ({
       <tr>
         <th>
           <button disabled className={`btn btn-${primaryColor} rounded-rair"`}>
-            <i style={{ color: `${randColor}` }} className="fas fa-key" />
+            <FontAwesomeIcon icon={faKey} style={{ color: randColor }} />
           </button>
         </th>
         <th className="p-1">
@@ -170,7 +172,7 @@ const OfferRow: React.FC<IOfferRow> = ({
         <th>
           {!fixed && (
             <button onClick={deleter} className="btn btn-danger rounded-rair">
-              <i className="fas fa-trash" />
+              <FontAwesomeIcon icon={faTrash} />
             </button>
           )}
         </th>

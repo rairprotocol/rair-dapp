@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
@@ -89,7 +91,7 @@ const CustomPayRateRow: React.FC<ICustomPayRateRow> = ({
         <button
           onClick={() => deleter(index)}
           className="btn btn-danger rounded-rair">
-          <i className="fas fa-trash" />
+          <FontAwesomeIcon icon={faTrash} />
         </button>
       </th>
     </tr>
@@ -225,8 +227,8 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
             onClick={addPayment}
             className={`btn btn-${primaryColor} rounded-rair px-4`}>
             Add new{' '}
-            <i
-              className="fas fa-plus"
+            <FontAwesomeIcon
+              icon={faPlus}
               style={{
                 border: `solid 1px ${textColor}`,
                 borderRadius: '50%',

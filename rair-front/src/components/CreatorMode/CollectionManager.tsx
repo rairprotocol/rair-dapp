@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import {
+  faArrowUp,
+  faLock,
+  faPlus,
+  faTrash
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { utils } from 'ethers';
 
 import {
@@ -79,7 +86,7 @@ const RangeManager: React.FC<IRangeManager> = ({
             <button
               onClick={() => deleter(index)}
               className="btn btn-danger h-50">
-              <i className="fas fa-trash" />
+              <FontAwesomeIcon icon={faTrash} />
             </button>
           ) : (
             ''
@@ -147,7 +154,7 @@ const RangeManager: React.FC<IRangeManager> = ({
               color: textColor
             }}
             className="btn rair-button h-50">
-            <i className="fas fa-arrow-up" />
+            <FontAwesomeIcon icon={faArrowUp} />
           </button>
         </th>
         <th>
@@ -167,7 +174,7 @@ const RangeManager: React.FC<IRangeManager> = ({
               color: textColor
             }}
             className="btn rair-button h-50">
-            <i className="fas fa-lock" />
+            <FontAwesomeIcon icon={faLock} />
           </button>
         </th>
       </tr>
@@ -248,12 +255,11 @@ const ProductManager: React.FC<IProductManager> = ({
   const refresher = useCallback(async () => {
     try {
       // Marketplace Ranges
-      const offerIndex = (
-        await minterInstance?.contractToOfferRange(
-          tokenInstance?.address,
-          productIndex
-        )
-      ).toString();
+      const offerInfo = await minterInstance?.contractToOfferRange(
+        tokenInstance?.address,
+        productIndex
+      );
+      const offerIndex = offerInfo?.toString();
       if (offerIndex) {
         setOfferIndex(offerIndex);
       }
@@ -412,7 +418,7 @@ const ProductManager: React.FC<IProductManager> = ({
               top: 0
             }}
             className="btn rair-button">
-            <i className="fas fa-plus" />
+            <FontAwesomeIcon icon={faPlus} />
           </button>
           <h5> On the Minter Marketplace </h5>
           <table className="w-100">
@@ -549,7 +555,7 @@ const ProductManager: React.FC<IProductManager> = ({
 						setLocks(aux);
 					}}
 					className='btn btn-success'>
-					<i className='fas fa-plus' />
+          <FontAwesomeIcon icon={faPlus} />
 				</button>
 				<h5> Resale Locks </h5>
 				<table className='w-100'>

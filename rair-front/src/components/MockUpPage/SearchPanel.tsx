@@ -8,6 +8,8 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ISearchPanel } from './mockupPage.types';
 
@@ -72,16 +74,19 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const totalNumberVideo = useSelector<RootState, number | undefined>(
     (store) => store.videosStore.totalNumberVideo
   );
-  const { primaryColor, textColor, secondaryColor, primaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const {
+    primaryColor,
+    textColor,
+    secondaryColor,
+    primaryButtonColor,
+    iconColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const videos = useSelector<RootState, MediaListResponseType | null>(
     (store) => store.videosStore.videos
   );
   const { userRd } = useSelector<RootState, TUsersInitialState>(
     (store) => store.userStore
   );
-
-  const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
@@ -226,7 +231,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
               primaryColor === '#dedede' ? 'default' : 'dark'
             }`}
             className="category-button-nft category-button">
-              MARKET
+            MARKET
           </Tab>
           <Tab
             onClick={() => {
@@ -243,42 +248,31 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
-            placeholder={`${
+            placeholder={
               tabIndex === 0 ? 'Search collections' : 'Search videos'
-            }`}
+            }
             customCSS={{
-              backgroundColor:
-                primaryColor === '#dedede'
-                  ? 'var(--rhyno-40)'
-                  : `color-mix(in srgb, ${primaryColor} 90%, #888888)`,
+              backgroundColor: `color-mix(in srgb, ${primaryColor} 90%, #888888)`,
               color: textColor,
               borderTopLeftRadius: '0',
-              borderColor:
-                primaryColor === '#dedede'
-                  ? 'var(--rhyno)'
-                  : `color-mix(in srgb, ${secondaryColor}, #888888)`,
+              borderColor: `color-mix(in srgb, ${secondaryColor}, #888888)`,
               paddingLeft: '2rem'
             }}
             customClass="form-control input-styled border-top-radius-tablet search-mobile"
           />
           <div className="nft-form-control-icon">
-            <i
-              className={`fas fa-search fa-lg fas-custom`}
-              style={{
-                color:
-                  import.meta.env.VITE_TESTNET === 'true'
-                    ? `${
-                        textColor === '#FFF' || textColor === 'black'
-                          ? '#F95631'
-                          : textColor
-                      }`
-                    : `${
-                        textColor === '#FFF' || textColor === 'black'
-                          ? '#E882D5'
-                          : textColor
-                      }`
-              }}
-              aria-hidden="true"></i>
+            <i className="fas-custom">
+              <FontAwesomeIcon
+                icon={faSearch}
+                size="lg"
+                style={{
+                  color:
+                    import.meta.env.VITE_TESTNET === 'true'
+                      ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                      : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                }}
+              />
+            </i>
             <FilteringBlock
               click={click}
               setIsClick={setClick}

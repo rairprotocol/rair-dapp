@@ -2,6 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import {
+  faFacebookF,
+  faInstagram,
+  faTwitter,
+  faYoutube
+} from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
 import { teamNipseyverseArray } from './AboutUsTeam';
@@ -666,16 +673,16 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
               <div className="nipsey-adress-mobile">Houston, Texas</div>
               <div className="social-media-nipsey">
                 <div>
-                  <i className="fab fa-instagram"></i>
+                  <FontAwesomeIcon icon={faInstagram} />
                 </div>
                 <div>
-                  <i className="fab fa-facebook-f"></i>
+                  <FontAwesomeIcon icon={faFacebookF} />
                 </div>
                 <div>
-                  <i className="fab fa-twitter"></i>
+                  <FontAwesomeIcon icon={faTwitter} />
                 </div>
                 <div>
-                  <i className="fab fa-youtube"></i>
+                  <FontAwesomeIcon icon={faYoutube} />
                 </div>
               </div>
             </div>

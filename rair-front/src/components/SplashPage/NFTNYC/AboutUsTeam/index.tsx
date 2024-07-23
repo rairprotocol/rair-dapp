@@ -1,3 +1,5 @@
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import {
   NFTNYC_LOGO,
   Teammate_4
@@ -16,7 +18,7 @@ export const teamNFTNYCArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://www.nft.nyc/',
         classLink: 'arrrow-right'
       }
@@ -40,7 +42,7 @@ export const teamNFTNYCArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

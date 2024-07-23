@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { BigNumber } from 'ethers';
 
@@ -331,7 +333,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
               right: 0
             }}
             className="rounded-rair btn rair-button">
-            <i className="fas fa-plus" />
+            <FontAwesomeIcon icon={faPlus} />
           </button>
           {propertiesArray && propertiesArray.length > 0 && (
             <table className="w-100">

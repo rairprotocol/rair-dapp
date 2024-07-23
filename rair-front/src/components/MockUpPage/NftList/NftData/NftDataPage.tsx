@@ -15,6 +15,8 @@ import { rFetch } from '../../../../utils/rFetch';
 import ItemRank from '../../SelectBox/ItemRank';
 import SelectBox from '../../SelectBox/SelectBox';
 import OfferItem from '../OfferItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 const NftDataPage = ({ primaryColor, textColor }) => {
   const navigate = useNavigate();
@@ -450,10 +452,10 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                             transform: 'translate(-50%, -35%)',
                             zIndex: '1'
                           }}>
-                          <i
+                          <FontAwesomeIcon
                             style={{ paddingLeft: '8.5px', paddingTop: '7px' }}
-                            className="fa fa-lock"
-                            aria-hidden="true"></i>
+                            icon={faLock}
+                          />
                           <p
                             style={{
                               textAlign: 'center',

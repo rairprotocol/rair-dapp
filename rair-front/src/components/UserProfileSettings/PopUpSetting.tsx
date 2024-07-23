@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
+import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
@@ -43,7 +45,9 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+  const { primaryColor, textColor, iconColor } = useSelector(
+    (store) => store.colorStore
+  );
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const { adminRights, loggedIn } = useSelector<RootState, any>(
@@ -257,23 +261,17 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             }}>
             {cutUserAddress()}
           </span>
-          <i
-            className={`icon-menu fas fa-bars`}
+          <FontAwesomeIcon
+            icon={faBars}
+            className="icon-menu"
             style={{
-              backgroundColor:
+              color:
                 import.meta.env.VITE_TESTNET === 'true'
-                  ? `${
-                      textColor === '#FFF' || textColor === 'black'
-                        ? '#F95631'
-                        : textColor
-                    }`
-                  : `${
-                      textColor === '#FFF' || textColor === 'black'
-                        ? '#E882D5'
-                        : textColor
-                    }`,
+                  ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                  : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`,
               WebkitBackgroundClip: 'text'
-            }}></i>
+            }}
+          />
         </div>
       </button>
       <Popup
@@ -444,7 +442,11 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                     color:
                       primaryColor === '#dedede' ? 'rgb(41, 41, 41)' : 'white'
                   }}>
-                  <SvgUserIcon primaryColor={primaryColor} /> Profile settings
+                  <SvgUserIcon
+                    primaryColor={primaryColor}
+                    customSecondaryButtonColor={iconColor}
+                  />{' '}
+                  Profile settings
                 </li>
                 {/* {hotdropsVar !== 'true' && ( */}
                 {hotdropsVar === 'true'
@@ -458,7 +460,11 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                               ? 'rgb(41, 41, 41)'
                               : 'white'
                         }}>
-                        <SvgUpload primaryColor={primaryColor} /> Upload video
+                        <SvgUpload
+                          customSecondaryButtonColor={iconColor}
+                          primaryColor={primaryColor}
+                        />{' '}
+                        Upload video
                       </li>
                     )
                   : loggedIn && (
@@ -470,7 +476,11 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                               ? 'rgb(41, 41, 41)'
                               : 'white'
                         }}>
-                        <SvgUpload primaryColor={primaryColor} /> Upload video
+                        <SvgUpload
+                          customSecondaryButtonColor={iconColor}
+                          primaryColor={primaryColor}
+                        />{' '}
+                        Upload video
                       </li>
                     )}
                 {/* )} */}
@@ -500,7 +510,11 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                             ? 'rgb(41, 41, 41)'
                             : 'white'
                       }}>
-                      <SvgFactoryIcon primaryColor={primaryColor} /> Factory
+                      <SvgFactoryIcon
+                        customSecondaryButtonColor={iconColor}
+                        primaryColor={primaryColor}
+                      />{' '}
+                      Factory
                     </li>
                   )}
                 <li
@@ -509,7 +523,18 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                     color:
                       primaryColor === '#dedede' ? 'rgb(41, 41, 41)' : 'white'
                   }}>
-                  <i className="fas fa-sign-out-alt"></i>Logout
+                  <FontAwesomeIcon
+                    icon={faSignOutAlt}
+                    style={{
+                      color:
+                        iconColor === '#1486c5'
+                          ? primaryColor === '#dedede'
+                            ? '#222021'
+                            : 'white'
+                          : iconColor
+                    }}
+                  />
+                  Logout
                 </li>
               </ul>
             </div>

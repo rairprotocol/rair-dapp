@@ -93,10 +93,18 @@ module.exports = {
     },
     markNotificationAsRead: async (req, res, next) => {
         try {
-            const { ids } = req.body;
-            const result = await Notification.updateMany({
-                _id: { $in: ids },
-            }, { $set: { read: true } });
+            const { publicAddress } = req.user;
+            const { ids = [] } = req.body;
+            const filter = {
+                user: publicAddress,
+            };
+            if (ids?.length) {
+                filter._id = { $in: ids };
+            }
+            const result = await Notification.updateMany(
+                filter,
+                { $set: { read: true } },
+            );
             return res.json({
                 success: true,
                 updated: result.modifiedCount,
@@ -108,8 +116,15 @@ module.exports = {
     },
     deleteNotification: async (req, res, next) => {
         try {
-            const { ids } = req.body;
-            const result = await Notification.deleteMany({ _id: { $in: ids } });
+            const { publicAddress } = req.user;
+            const { ids = [] } = req.body;
+            const filter = {
+                user: publicAddress,
+            };
+            if (ids?.length) {
+                filter._id = { $in: ids };
+            }
+            const result = await Notification.deleteMany(filter);
             return res.json({
                 success: true,
                 deleted: result.deletedCount,

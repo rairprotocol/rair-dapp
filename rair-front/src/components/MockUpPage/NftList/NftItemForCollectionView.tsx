@@ -2,18 +2,16 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios, { AxiosError } from 'axios';
-import { BigNumber, constants, utils } from 'ethers';
+import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
-import {
-  IOffersResponseType,
-  TUserResponse
-} from '../../../axios.responseTypes';
+import { IOffersResponseType } from '../../../axios.responseTypes';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { UserType } from '../../../ducks/users/users.types';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useSwal from '../../../hooks/useSwal';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
@@ -61,7 +59,6 @@ const NftItemForCollectionViewComponent: React.FC<
   const navigate = useNavigate();
   const store = useStore();
 
-  const [userInfoMinted, setUserInfoMinted] = useState<UserType | null>(null);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const ipfsLink = useIPFSImageLink(metadata?.image);
   const [tokenInfo, setTokenInfo] = useState<any>(null);
@@ -199,20 +196,6 @@ const NftItemForCollectionViewComponent: React.FC<
     }
   }, [navigate, tokenInfo, contract, blockchain, product, index, item]);
 
-  const getInfoFromUser = useCallback(async () => {
-    // find user
-    if (
-      item &&
-      utils.isAddress(item.ownerAddress) &&
-      item.ownerAddress !== constants.AddressZero
-    ) {
-      const result = await axios
-        .get<TUserResponse>(`/api/users/${item.ownerAddress}`)
-        .then((res) => res.data);
-      setUserInfoMinted(result.user);
-    }
-  }, [item]);
-
   const initialTokenData = useCallback(() => {
     if (item && resaleFlag) {
       if (item.contract?.diamond) {
@@ -312,10 +295,6 @@ const NftItemForCollectionViewComponent: React.FC<
   useEffect(() => {
     getParticularOffer();
   }, [getParticularOffer]);
-
-  useEffect(() => {
-    getInfoFromUser();
-  }, [getInfoFromUser]);
 
   useEffect(() => {
     checkUrl();
@@ -419,7 +398,7 @@ const NftItemForCollectionViewComponent: React.FC<
                     handlePlaying(null);
                   }}>
                   <div>
-                    <i className="fas fa-pause"></i>
+                    <FontAwesomeIcon icon={faPause} />
                   </div>
                 </div>
               ) : (
@@ -429,7 +408,7 @@ const NftItemForCollectionViewComponent: React.FC<
                   }}
                   className="btn-play">
                   <div>
-                    <i className="fas fa-play"></i>
+                    <FontAwesomeIcon icon={faPlay} />
                   </div>
                 </div>
               ))}
@@ -517,25 +496,25 @@ const NftItemForCollectionViewComponent: React.FC<
                       maxHeight: '40px'
                     }}>
                     <div>
-                      {item?.isMinted && userInfoMinted ? (
+                      {item?.isMinted && item.ownerData ? (
                         <div className="collection-block-user-creator">
                           <img
                             src={
-                              userInfoMinted.avatar
-                                ? userInfoMinted.avatar
+                              item.ownerData?.avatar
+                                ? item.ownerData?.avatar
                                 : defaultImage
                             }
                             alt="User Avatar"
                           />
                           <h5 style={{ wordBreak: 'break-all' }}>
-                            {userInfoMinted.nickName
-                              ? userInfoMinted.nickName.length > 16
-                                ? userInfoMinted.nickName.slice(0, 5) +
+                            {item.ownerData?.nickName
+                              ? item.ownerData?.nickName.length > 16
+                                ? item.ownerData?.nickName.slice(0, 5) +
                                   '...' +
-                                  userInfoMinted.nickName.slice(
-                                    userInfoMinted.nickName.length - 4
+                                  item.ownerData?.nickName.slice(
+                                    item.ownerData?.nickName.length - 4
                                   )
-                                : userInfoMinted.nickName
+                                : item.ownerData?.nickName
                               : userName?.slice(0, 5) +
                                 '....' +
                                 userName?.slice(userName.length - 4)}
@@ -578,10 +557,10 @@ const NftItemForCollectionViewComponent: React.FC<
                       )}
                     </div>
                     {item && !resaleFlag && item.isMinted && !resalePrice && (
-            <div className="nft-item-collection-sold-out">
-              <div className="sold-out-box">Sold out</div>
-            </div>
-          )}
+                      <div className="nft-item-collection-sold-out">
+                        <div className="sold-out-box">Sold out</div>
+                      </div>
+                    )}
                     <div
                       className="collection-block-price"
                       style={{ alignItems: 'flex-end' }}>

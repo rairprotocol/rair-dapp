@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import { faHeart, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -40,7 +42,7 @@ import UserProfileFavoritesTab from './UserProfileFavorites/UserProfileFavorites
 import './UserProfilePage.css';
 
 const UserProfilePage: React.FC = () => {
-  const { primaryColor, textColor, headerLogo } = useSelector<
+  const { primaryColor, textColor, headerLogo, iconColor } = useSelector<
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
@@ -474,7 +476,11 @@ const UserProfilePage: React.FC = () => {
                     }`
                   }}
                   className="category-button-videos category-button">
-                  {width > 676 ? 'Favorited' : <i className="fas fa-heart" />}
+                  {width > 676 ? (
+                    'Favorited'
+                  ) : (
+                    <FontAwesomeIcon icon={faHeart} />
+                  )}
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
@@ -520,23 +526,22 @@ const UserProfilePage: React.FC = () => {
                 />
 
                 <div className="nft-form-control-icon">
-                  <i
-                    className="fas fa-search fa-lg fas-custom"
-                    style={{
-                      color:
-                        import.meta.env.VITE_TESTNET === 'true'
-                          ? `${
-                              textColor === '#FFF' || textColor === 'black'
-                                ? '#F95631'
-                                : textColor
-                            }`
-                          : `${
-                              textColor === '#FFF' || textColor === 'black'
-                                ? '#E882D5'
-                                : textColor
-                            }`
-                    }}
-                    aria-hidden="true"></i>
+                  <i className="fas-custom">
+                    <FontAwesomeIcon
+                      icon={faSearch}
+                      size="lg"
+                      style={{
+                        color:
+                          import.meta.env.VITE_TESTNET === 'true'
+                            ? `${
+                                iconColor === '#1486c5' ? '#F95631' : iconColor
+                              }`
+                            : `${
+                                iconColor === '#1486c5' ? '#E882D5' : iconColor
+                              }`
+                      }}
+                    />
+                  </i>
                   <FilteringBlock
                     primaryColor={primaryColor}
                     setSortItem={setSortItem}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ILayout } from './layout.types';
 
@@ -23,8 +25,8 @@ const Layout: React.FC<ILayout> = ({
     (store) => store.userStore
   );
   const items = [
-    { name: <i className="fas fa-search" />, route: '/search' },
-    { name: <i className="fas fa-user" />, route: '/user' },
+    { name: <FontAwesomeIcon icon={faSearch} />, route: '/search' },
+    { name: <FontAwesomeIcon icon={faUser} />, route: '/user' },
     { name: 'For Sale', route: '/on-sale' },
     { name: 'Admin', route: '/admin/fileUpload' },
     { name: 'All', route: '/all' },
