@@ -116,6 +116,11 @@ const ServerSettings = ({ fullContractData }) => {
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { _id, ...cleanChainData } = settings;
+      Object.keys(cleanChainData).forEach((field) => {
+        if (cleanChainData[field] === '') {
+          cleanChainData[field] = undefined;
+        }
+      });
       const { success } = await rFetch(`/api/settings/${chain}`, {
         method,
         body: JSON.stringify(cleanChainData),
