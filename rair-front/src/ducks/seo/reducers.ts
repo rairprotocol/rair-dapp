@@ -3,6 +3,7 @@ import * as types from './types';
 
 import HotDropsFavicon from '../../components/MockUpPage/assets/Hotdrops-favicon.ico';
 import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
+import { LoadingDefaultFavicon } from '../../images';
 
 const hotDropsVar = import.meta.env.VITE_TESTNET;
 
@@ -20,8 +21,8 @@ if (hotDropsVar === 'true') {
     ogDescription: 'Encrypted, Streaming NFTs',
     twitterDescription: 'Encrypted, Streaming NFTs',
     image: 'https://hotdrops.live/static/media/hotdrops-default.e7c4e7eb.png',
-    favicon: HotDropsFavicon,
-    faviconMobile: HotDropsFavicon
+    favicon: LoadingDefaultFavicon,
+    faviconMobile: LoadingDefaultFavicon
   };
 } else {
   InitialState = {
@@ -37,8 +38,8 @@ if (hotDropsVar === 'true') {
     image: `${
       import.meta.env.VITE_IPFS_GATEWAY
     }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
-    favicon: RairFavicon,
-    faviconMobile: RairFavicon
+    favicon: LoadingDefaultFavicon,
+    faviconMobile: LoadingDefaultFavicon
   };
 }
 
