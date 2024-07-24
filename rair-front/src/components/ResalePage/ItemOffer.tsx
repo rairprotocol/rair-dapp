@@ -14,9 +14,9 @@ import { UserType } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import { ContractType } from '../adminViews/adminView.types';
+import useServerSettings from '../adminViews/useServerSettings';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { gettingPrice } from '../MockUpPage/NftList/utils/gettingPrice';
 import defaultAvatar from '../UserProfileSettings/images/defaultUserPictures.png';
@@ -34,6 +34,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
   const [accountData, setAccountData] = useStateIfMounted<UserType | null>(
     null
   );
+  const { getBlockchainData } = useServerSettings();
   const [playing, setPlaying] = useState<boolean>(false);
   const [isFileUrl, setIsFileUrl] = useState<string>();
   const [contractData, setContractData] = useState<ContractType>();
@@ -160,7 +161,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
       return `${samePrice ? samePrice : samePrice} 
-      ${chainData['0x1']?.symbol}`;
+      ${getBlockchainData('0x1')?.symbol}`;
     }
     return (
       <div className="container-nft-fullPrice">
@@ -168,7 +169,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
           {`${minPrice} – ${maxPrice}`}
         </div>
         <div className="description description-price description-price-unlockables-page">
-          {`${chainData['0x1']?.symbol}`}
+          {`${getBlockchainData('0x1')?.symbol}`}
         </div>
       </div>
     );
@@ -267,7 +268,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
             <div className="description-big">
               <img
                 className="blockchain-img"
-                src={`${chainData['0x1']?.image}`}
+                src={`${getBlockchainData('0x1')?.image}`}
                 alt="blockchain-img"
               />
               <span className="description description-price">

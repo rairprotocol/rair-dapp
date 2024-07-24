@@ -7,9 +7,9 @@ import Popup from 'reactjs-popup';
 import { RootState } from '../../../../../ducks';
 import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
-import chainData from '../../../../../utils/blockchainData';
 import { rFetch } from '../../../../../utils/rFetch';
 import { ContractType } from '../../../../adminViews/adminView.types';
+import useServerSettings from '../../../../adminViews/useServerSettings';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
 import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
 import EtherScanCollectionLogo from '../../../assets/EtherScanCollectionLogo.svg?react';
@@ -59,6 +59,8 @@ const TitleCollection: React.FC<ITitleCollection> = ({
     setOpen(false);
     setSelectedValue(value);
   };
+
+  const { getBlockchainData } = useServerSettings();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -261,7 +263,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
             <a
               href={`${
                 blockchain &&
-                chainData[blockchain]?.addChainData.blockExplorerUrls?.[0]
+                getBlockchainData(blockchain)?.blockExplorerGateway
               }address/${contract}`}
               target="_blank"
               rel="noreferrer">

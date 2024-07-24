@@ -1,6 +1,8 @@
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { constants, ethers, utils } from 'ethers';
 
@@ -24,8 +26,8 @@ import {
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
+import useServerSettings from '../adminViews/useServerSettings';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
@@ -38,8 +40,6 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -75,6 +75,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const { userData: userDataInfo } = useSelector<RootState, TUsersInitialState>(
     (state) => state.userStore
   );
+  const { getBlockchainData } = useServerSettings();
   const { connectUserData } = useConnectUser();
   // const [loading, setLoading] = useState<boolean>(false);
   const [userBalance, setUserBalance] = useState<string>('');
@@ -394,9 +395,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                           }
                           alt="logo"
                         />
-                        {currentChain && chainData[currentChain] && (
+                        {currentChain && getBlockchainData(currentChain) && (
                           <img
-                            src={chainData[currentChain]?.image}
+                            src={getBlockchainData(currentChain)?.image}
                             alt="logo"
                           />
                         )}

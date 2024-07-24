@@ -22,8 +22,8 @@ import {
   GlobalModalContext,
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
-import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
+import useServerSettings from '../../adminViews/useServerSettings';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png';
@@ -50,6 +50,8 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   const [isFileUrl, setIsFileUrl] = useState<string>();
 
   const { width } = useWindowDimensions();
+  const { getBlockchainData } = useServerSettings();
+  const chainInfo = getBlockchainData(blockchain as `0x${string}`);
 
   const { maxPrice, minPrice } = gettingPrice(price);
   const ipfsLink = useIPFSImageLink(metaDataProducts?.metadata?.image);
@@ -121,10 +123,10 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
           samePrice
             ? `${Number(samePrice).toFixed(4)}+`
             : `${Number(samePrice).toFixed(4)}+`
-        } ${blockchain && chainData[blockchain]?.symbol}`;
+        } ${blockchain && chainInfo?.symbol}`;
       } else {
         return `${samePrice ? samePrice : samePrice} ${
-          blockchain && chainData[blockchain]?.symbol
+          blockchain && chainInfo?.symbol
         }`;
       }
     }
@@ -136,7 +138,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             {`${Number(maxPrice).toFixed(0)}+ – ${minPrice}`}
           </div>
           <div className="description description-price description-price-unlockables-page">
-            {`${blockchain && chainData[blockchain]?.symbol}`}
+            {`${blockchain && chainInfo?.symbol}`}
           </div>
         </div>
       );
@@ -147,7 +149,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             {`${maxPrice} – ${Number(minPrice).toFixed(3)}+`}
           </div>
           <div className="description description-price description-price-unlockables-page">
-            {`${blockchain && chainData[blockchain]?.symbol}`}
+            {`${blockchain && chainInfo?.symbol}`}
           </div>
         </div>
       );
@@ -160,7 +162,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             )}+`}
           </div>
           <div className="description description-price description-price-unlockables-page">
-            {`${blockchain && chainData[blockchain]?.symbol}`}
+            {`${blockchain && chainInfo?.symbol}`}
           </div>
         </div>
       );
@@ -171,7 +173,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             {`${maxPrice} – ${minPrice}`}
           </div>
           <div className="description description-price description-price-unlockables-page">
-            {`${blockchain && chainData[blockchain]?.symbol}`}
+            {`${blockchain && chainInfo?.symbol}`}
           </div>
         </div>
       );
@@ -181,18 +183,16 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
   function ifPriseSame() {
     if (minPrice === maxPrice) {
       if (minPrice.length > 5) {
-        return `${minPrice.slice(0, 5)} ${
-          blockchain && chainData[blockchain]?.symbol
-        }`;
+        return `${minPrice.slice(0, 5)} ${blockchain && chainInfo?.symbol}`;
       }
-      return `${minPrice} ${blockchain && chainData[blockchain]?.symbol}`;
+      return `${minPrice} ${blockchain && chainInfo?.symbol}`;
     } else if (maxPrice && minPrice) {
       if (minPrice.length > 5) {
         return `${minPrice.slice(0, 5) + '+'} ${
-          blockchain && chainData[blockchain]?.symbol
+          blockchain && chainInfo?.symbol
         }`;
       }
-      return `${minPrice + '+'} ${blockchain && chainData[blockchain]?.symbol}`;
+      return `${minPrice + '+'} ${blockchain && chainInfo?.symbol}`;
     }
   }
   useEffect(() => {
@@ -383,7 +383,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                   <div className="collection-block-price">
                     <img
                       className="blockchain-img"
-                      src={`${blockchain && chainData[blockchain]?.image}`}
+                      src={`${blockchain && chainInfo?.image}`}
                       alt="Blockchain network"
                     />
                     <span className="description">
@@ -396,7 +396,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             <div onClick={RedirectToMockUp} className="description-big">
               <img
                 className="blockchain-img"
-                src={`${blockchain && chainData[blockchain]?.image}`}
+                src={`${blockchain && chainInfo?.image}`}
                 alt="Blockchain network"
               />
               <span className="description description-price">

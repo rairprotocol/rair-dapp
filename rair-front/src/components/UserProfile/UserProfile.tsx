@@ -13,7 +13,6 @@ import { RootState } from '../../ducks';
 import { getTokenError } from '../../ducks/auth/actions';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import InputField from '../common/InputField';
@@ -239,7 +238,6 @@ const UserProfile: React.FC<IMyItems> = ({
               openModal={openModal}
               setSelectedData={setSelectedData}
               defaultImg={defaultImg}
-              chainData={chainData}
               textColor={textColor}
               titleSearch={titleSearch}
             />
@@ -256,7 +254,6 @@ const UserProfile: React.FC<IMyItems> = ({
               setSelectedData={setSelectedData}
               setIsCreatedTab={setIsCreatedTab}
               primaryColor={primaryColor}
-              chainData={chainData}
               tabIndex={tabIndexItems}
             />
           </TabPanel>

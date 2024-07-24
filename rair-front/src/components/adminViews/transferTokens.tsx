@@ -7,7 +7,7 @@ import {
   ContractDataType,
   ContractsResponseType
 } from './adminView.types';
-import BlockChainSwitcher from './BlockchainSwitcher';
+import useServerSettings from './useServerSettings';
 
 import { TTokenData } from '../../axios.responseTypes';
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
@@ -16,7 +16,6 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import blockchainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
@@ -56,6 +55,8 @@ const TransferTokens = () => {
   const [contractInstance, setContractInstance] = useState<
     Contract | undefined
   >();
+
+  const { getBlockchainData } = useServerSettings();
 
   const reactSwal = useSwal();
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
@@ -119,7 +120,7 @@ const TransferTokens = () => {
         title: name,
         contractAddress: instance.address
       });
-      setContractBlockchain(blockchainData[currentChain]);
+      setContractBlockchain(getBlockchainData(currentChain));
       setContractInstance(instance);
     } else {
       return;
@@ -156,7 +157,9 @@ const TransferTokens = () => {
       }
       const [, , selectedBlockchain, contractAddress] =
         selectedContract.split('/');
-      setContractBlockchain(blockchainData[selectedBlockchain]);
+      setContractBlockchain(
+        getBlockchainData(selectedBlockchain as `0x${string}`)
+      );
       if (correctBlockchain(selectedBlockchain as BlockchainType)) {
         const instance = contractCreator?.(
           contractAddress,
@@ -165,7 +168,13 @@ const TransferTokens = () => {
         setContractInstance(instance);
       }
     }
-  }, [manualAddress, selectedContract, correctBlockchain, contractCreator]);
+  }, [
+    manualAddress,
+    selectedContract,
+    getBlockchainData,
+    correctBlockchain,
+    contractCreator
+  ]);
 
   useEffect(() => {
     getContractData();

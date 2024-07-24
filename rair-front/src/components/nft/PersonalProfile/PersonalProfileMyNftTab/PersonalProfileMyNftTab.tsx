@@ -15,7 +15,6 @@ interface IPersonalProfileMyNftTabComponent {
   openModal?: any;
   setSelectedData?: any;
   defaultImg: string;
-  chainData: any;
   textColor: any;
   totalCount?: number | undefined;
   isLoading?: boolean;

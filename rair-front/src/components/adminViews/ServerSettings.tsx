@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AlchemyChainMap } from '@alchemy/aa-core';
+import { faArrowUp, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isAddress } from 'ethers/lib/utils';
 
 import useServerSettings from './useServerSettings';
@@ -8,13 +10,10 @@ import useServerSettings from './useServerSettings';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import useSwal from '../../hooks/useSwal';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUp, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 type Category = {
   name: string;
@@ -95,7 +94,14 @@ const ServerSettings = ({ fullContractData }) => {
         reactSwal.fire('Success', 'Setting updated', 'success');
       }
     },
-    [reactSwal, serverSettings.getServerSettings, serverSettings.customPrimaryColor, serverSettings.customTextColor, serverSettings.customPrimaryButtonColor, serverSettings.customSecondaryButtonColor]
+    [
+      reactSwal,
+      serverSettings.getServerSettings,
+      serverSettings.customPrimaryColor,
+      serverSettings.customTextColor,
+      serverSettings.customPrimaryButtonColor,
+      serverSettings.customSecondaryButtonColor
+    ]
   );
 
   const setBlockchainSetting = useCallback(
@@ -103,6 +109,12 @@ const ServerSettings = ({ fullContractData }) => {
       const settings = serverSettings.blockchainSettings.find(
         (chainData) => chainData.hash === chain
       );
+
+      if (!settings) {
+        return;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { _id, ...cleanChainData } = settings;
       const { success } = await rFetch(`/api/settings/${chain}`, {
         method,
@@ -281,9 +293,9 @@ const ServerSettings = ({ fullContractData }) => {
               setter={serverSettings.setFeaturedContract}
               options={Object.keys(fullContractData).map((contract) => {
                 return {
-                  label: `${fullContractData[contract].title} (${chainData[
-                    fullContractData[contract].blockchain
-                  ]?.symbol})`,
+                  label: `${fullContractData[contract].title} (${serverSettings
+                    .getBlockchainData[fullContractData[contract].blockchain]
+                    ?.symbol})`,
                   value: contract
                 };
               })}
@@ -594,6 +606,7 @@ const ServerSettings = ({ fullContractData }) => {
               classicFactoryAddress: '',
               diamondFactoryAddress: '',
               diamondMarketplaceAddress: '',
+              licenseExchangeAddress: '',
               mainTokenAddress: '',
               rpcEndpoint: '',
               blockExplorerGateway: '',

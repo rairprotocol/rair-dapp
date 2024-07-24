@@ -14,8 +14,8 @@ import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
-import chainData from '../../../utils/blockchainData';
 import { validateInteger } from '../../../utils/metamaskUtils';
+import useServerSettings from '../../adminViews/useServerSettings';
 import {
   IListOffers,
   TOfferListItem,
@@ -42,6 +42,8 @@ const ListOffers: React.FC<IListOffers> = ({
   );
   const [emptyNames, setEmptyNames] = useState<boolean>(true);
   const [validPrice, setValidPrice] = useState<boolean>(true);
+
+  const { getBlockchainData } = useServerSettings();
 
   const {
     minterInstance,
@@ -266,7 +268,7 @@ const ListOffers: React.FC<IListOffers> = ({
                       index={index}
                       {...item}
                       blockchainSymbol={
-                        chainData[contractData?.blockchain]?.symbol
+                        getBlockchainData(contractData?.blockchain)?.symbol
                       }
                       rerender={rerender}
                       maxCopies={Number(contractData?.product?.copies) - 1}
@@ -306,43 +308,40 @@ const ListOffers: React.FC<IListOffers> = ({
             , Mintable Tokens Left:{' '}
             {contractData?.product?.copies - contractData?.product?.soldCopies}
           </div>
-          {chainData && (
-            <FixedBottomNavigation
-              forwardFunctions={[
-                !onMyChain
+          <FixedBottomNavigation
+            forwardFunctions={[
+              !onMyChain
+                ? {
+                    action: () =>
+                      web3Switch(contractData?.blockchain as BlockchainType),
+                    label: `Switch to ${getBlockchainData(
+                      contractData?.blockchain
+                    )?.name}`
+                  }
+                : mintingRole === true
                   ? {
-                      action: () =>
-                        web3Switch(contractData?.blockchain as BlockchainType),
-                      label: `Switch to ${chainData[contractData?.blockchain]
-                        ?.name}`
+                      action: offerList[0]?.fixed ? appendOffers : createOffers,
+                      label: offerList[0]?.fixed
+                        ? 'Append to offer'
+                        : 'Create new offers',
+                      disabled:
+                        offerList.filter((item) => item.fixed !== true)
+                          .length === 0 ||
+                        offerList.length === 0 ||
+                        !validateTokenIndexes() ||
+                        validPrice ||
+                        emptyNames
                     }
-                  : mintingRole === true
-                    ? {
-                        action: offerList[0]?.fixed
-                          ? appendOffers
-                          : createOffers,
-                        label: offerList[0]?.fixed
-                          ? 'Append to offer'
-                          : 'Create new offers',
-                        disabled:
-                          offerList.filter((item) => item.fixed !== true)
-                            .length === 0 ||
-                          offerList.length === 0 ||
-                          !validateTokenIndexes() ||
-                          validPrice ||
-                          emptyNames
-                      }
-                    : {
-                        action: giveMinterRole,
-                        label: 'Connect to Minter Marketplace'
-                      },
-                {
-                  label: 'Continue',
-                  action: gotoNextStep
-                }
-              ]}
-            />
-          )}
+                  : {
+                      action: giveMinterRole,
+                      label: 'Connect to Minter Marketplace'
+                    },
+              {
+                label: 'Continue',
+                action: gotoNextStep
+              }
+            ]}
+          />
         </>
       ) : (
         'Fetching data...'

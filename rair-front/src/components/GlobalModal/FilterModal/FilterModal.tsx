@@ -29,16 +29,15 @@ import {
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
 import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
-import blockchainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
 import CustomAccordion from '../../Accordion/Accordion';
 import AccordionItem from '../../Accordion/AccordionItem/AccordionItem';
+import useServerSettings from '../../adminViews/useServerSettings';
 import { TOption } from '../../Dropdown';
 import Dropdown from '../../Dropdown/Dropdown';
 import { closeModal, openModal } from '../helpers/OnOpenModal';
 
 import './styles.css';
-import useServerSettings from '../../adminViews/useServerSettings';
 export type THomePageFilterModalProps = {
   isMobileDesign?: boolean;
   className?: stirng;
@@ -47,17 +46,16 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   isMobileDesign,
   className
 }) => {
-  const blockchains = Object.keys(blockchainData).map((chain, index) => {
+  const { blockchainSettings } = useServerSettings();
+  const blockchains = blockchainSettings.map((chain, index) => {
     return {
-      name: blockchainData[chain].name,
-      chainId: chain,
+      name: chain.name,
+      chainId: chain.hash,
       clicked: false,
       dropDownImg: true,
       optionId: index + 1
     };
   });
-
-  const serverSettings = useServerSettings();
 
   const [blockchainsArray, setBlockchainsArray] = useState(undefined);
 
@@ -142,21 +140,16 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   }, [selectedBchItems, setFilterText, setIsShow]);
 
   useEffect(() => {
-    if(serverSettings.blockchainSettings) {
-      const filteredblockchainSettings = serverSettings.blockchainSettings.filter((el) => {
-        if(Object.keys(blockchainData).includes(el.hash)) {
-          return el;
-        }
-      }).map((item) => {
-        const itemBlockchain = blockchains.find(element => element.chainId === item.hash);
+    if (blockchainSettings) {
+      const filteredblockchainSettings = blockchainSettings.map((item) => {
         return {
-          ...itemBlockchain,
+          ...item,
           display: item.sync
-        }
-      })
+        };
+      });
       setBlockchainsArray(filteredblockchainSettings);
     }
-  }, [serverSettings.blockchainSettings]);
+  }, [blockchainSettings]);
 
   useEffect(() => {
     if (selectedCatItems) {
@@ -558,13 +551,15 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
               primaryColor={primaryColor}
             />
           }>
-          {blockchainsArray && <Dropdown
-            onDropdownChange={onOptionChange}
-            options={blockchainsArray}
-            selectedOptions={selectedBchItems && selectedBchItems}
-            key={Math.random() * 1_000_000}
-            isMobileDesign={isMobileDesign && isMobileDesign}
-          />}
+          {blockchainsArray && (
+            <Dropdown
+              onDropdownChange={onOptionChange}
+              options={blockchainsArray}
+              selectedOptions={selectedBchItems && selectedBchItems}
+              key={Math.random() * 1_000_000}
+              isMobileDesign={isMobileDesign && isMobileDesign}
+            />
+          )}
         </AccordionItem>
       </CustomAccordion>
       <div className="filter-modal-btn-container ">

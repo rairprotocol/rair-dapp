@@ -10,8 +10,8 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
+import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 import AnalyticsPopUp from '../DemoMediaUpload/UploadedListBox/AnalyticsPopUp/AnalyticsPopUp';
 
@@ -30,6 +30,8 @@ const VideoManager = () => {
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
+
+  const { getBlockchainData } = useServerSettings();
 
   const reactSwal = useSwal();
 
@@ -281,11 +283,13 @@ const VideoManager = () => {
                   <div
                     className="text-start border-secondary col-12 rounded-rair mt-2 py-2 px-5 "
                     key={index}>
-                    {chainData[unlock.contract.blockchain]?.image && (
+                    {getBlockchainData(unlock.contract.blockchain)?.image && (
                       <img
                         className="me-5"
                         style={{ width: '2rem' }}
-                        src={chainData[unlock.contract.blockchain]?.image}
+                        src={
+                          getBlockchainData(unlock.contract.blockchain)?.image
+                        }
                       />
                     )}
                     <small className="me-3">
@@ -296,7 +300,7 @@ const VideoManager = () => {
                     </span>
                     <b>
                       {formatEther(unlock.price)}{' '}
-                      {chainData[unlock.contract.blockchain]?.symbol}
+                      {getBlockchainData(unlock.contract.blockchain)?.symbol}
                     </b>
                     <button
                       className="btn float-end btn-danger"

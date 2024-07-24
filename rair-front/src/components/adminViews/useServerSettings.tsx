@@ -10,6 +10,7 @@ import {
   setCustomLogosLight
 } from '../../ducks/colors/actions';
 import { HotdropsFavicon, RairFavicon } from '../../images';
+import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import { FooterLinkType } from '../common/commonTypes/InputSelectTypes.types';
 
@@ -37,6 +38,16 @@ const useServerSettings = () => {
   const [blockchainSettings, setBlockchainSettings] = useState<
     BlockchainSetting[]
   >([]);
+
+  const getBlockchainData = useCallback(
+    (chainId: `0x${string}`): BlockchainSetting & TChainData => {
+      return {
+        ...chainData[chainId],
+        ...blockchainSettings.find((chain) => chain.hash === chainId)
+      };
+    },
+    [blockchainSettings]
+  );
 
   const getServerSettings = useCallback(async () => {
     setIsLoading(true);
@@ -101,7 +112,7 @@ const useServerSettings = () => {
       setFooterLinks(settings.footerLinks);
     }
     setIsLoading(false);
-  }, [dispatch, ]);
+  }, [dispatch]);
 
   useEffect(() => {
     getServerSettings();
@@ -177,9 +188,9 @@ const useServerSettings = () => {
     setSignupMessage,
     blockchainSettings,
     setBlockchainSettings,
+    getBlockchainData,
     isLoading
   };
 };
-
 
 export default useServerSettings;

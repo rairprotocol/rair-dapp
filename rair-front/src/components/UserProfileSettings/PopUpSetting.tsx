@@ -14,7 +14,7 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
 import { RairFavicon, RairTokenLogo, VerifiedIcon } from '../../images';
-import chainData from '../../utils/blockchainData';
+import useServerSettings from '../adminViews/useServerSettings';
 import LoadingComponent from '../common/LoadingComponent';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 
@@ -44,6 +44,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   >();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
+  const { getBlockchainData } = useServerSettings();
 
   const { primaryColor, textColor, iconColor } = useSelector(
     (store) => store.colorStore
@@ -194,8 +195,8 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             src={primaryColor === '#dedede' ? RairFavicon : RairTokenLogo}
             alt="logo"
           />
-          {chainData[currentChain] && (
-            <img src={chainData[currentChain]?.image} alt="logo" />
+          {getBlockchainData(currentChain) && (
+            <img src={getBlockchainData(currentChain)?.image} alt="logo" />
           )}
         </div>
         <div
@@ -323,13 +324,13 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                   )}
                 </div>
                 <div>
-                  {chainData[currentChain] && (
+                  {getBlockchainData(currentChain) && (
                     <img
                       style={{
                         height: '25px',
                         marginLeft: '15px'
                       }}
-                      src={chainData[currentChain]?.image}
+                      src={getBlockchainData(currentChain)?.image}
                       alt="logo"
                     />
                   )}

@@ -64,7 +64,7 @@ const getCoingeckoRates = async () => {
 
 const useConnectUser = () => {
   const dispatch = useDispatch();
-  const { blockchainSettings } = useServerSettings();
+  const { blockchainSettings, getBlockchainData } = useServerSettings();
   const { adminRights, loginProcess, loggedIn } = useSelector<
     RootState,
     TUsersInitialState
@@ -106,7 +106,7 @@ const useConnectUser = () => {
     if (!currentChain) {
       return;
     }
-    const chainInformation = chainData[currentChain];
+    const chainInformation = getBlockchainData(currentChain);
     if (
       !chainInformation?.alchemy ||
       !chainInformation?.viem ||

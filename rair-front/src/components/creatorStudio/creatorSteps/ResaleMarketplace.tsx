@@ -10,7 +10,7 @@ import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
-import chainData from '../../../utils/blockchainData';
+import useServerSettings from '../../adminViews/useServerSettings';
 import InputField from '../../common/InputField';
 import CustomFeeRow from '../common/customFeeRow';
 import { TCustomPayments, TResaleMarketplace } from '../creatorStudio.types';
@@ -30,6 +30,8 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
+
+  const { getBlockchainData } = useServerSettings();
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
@@ -170,7 +172,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
                   deleter={removePayment}
                   rerender={() => setRerender(!rerender)}
                   minterDecimals={minterDecimals}
-                  symbol={chainData[contractData.blockchain]?.symbol}
+                  symbol={getBlockchainData(contractData.blockchain)?.symbol}
                   {...item}
                 />
               );
@@ -268,11 +270,12 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           <hr />
         </div>
       )}
-      {chainData && contractData && (
+      {contractData && (
         <FixedBottomNavigation
           forwardFunctions={[
             {
-              label: `Switch to ${chainData[contractData?.blockchain]?.name}`,
+              label: `Switch to ${getBlockchainData(contractData?.blockchain)
+                ?.name}`,
               action: () => web3Switch(contractData?.blockchain),
               disabled: correctBlockchain(
                 contractData?.blockchain as BlockchainType

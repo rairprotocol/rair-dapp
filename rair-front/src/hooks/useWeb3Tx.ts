@@ -22,7 +22,6 @@ import {
 } from '../ducks/contracts/actions';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../ducks/users/users.types';
-import chainData from '../utils/blockchainData';
 import { rFetch } from '../utils/rFetch';
 import { TChainItemData } from '../utils/utils.types';
 
@@ -37,7 +36,7 @@ type web3Options = {
 
 const useWeb3Tx = () => {
   const dispatch = useDispatch();
-  const { blockchainSettings } = useServerSettings();
+  const { blockchainSettings, getBlockchainData } = useServerSettings();
   const { currentChain, currentUserAddress, programmaticProvider } =
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
@@ -342,28 +341,31 @@ const useWeb3Tx = () => {
     [dispatch, blockchainSettings]
   );
 
-  const metamaskSwitch = async (chainId: BlockchainType) => {
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: chainId && chainData[chainId]?.chainId }]
-      });
-    } catch (switchError: any) {
-      // This error code indicates that the chain has not been added to MetaMask.
-      if (switchError.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [chainId && chainData[chainId]?.addChainData]
-          });
-        } catch (addError) {
-          console.error(addError);
+  const metamaskSwitch = useCallback(
+    async (chainId: BlockchainType) => {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: chainId && getBlockchainData(chainId)?.hash }]
+        });
+      } catch (switchError: any) {
+        // This error code indicates that the chain has not been added to MetaMask.
+        if (switchError.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [chainId && getBlockchainData(chainId)?.addChainData]
+            });
+          } catch (addError) {
+            console.error(addError);
+          }
+        } else {
+          console.error(switchError);
         }
-      } else {
-        console.error(switchError);
       }
-    }
-  };
+    },
+    [getBlockchainData]
+  );
 
   const web3TxSignMessage = useCallback(
     async (message): Promise<any> => {
@@ -424,28 +426,30 @@ const useWeb3Tx = () => {
         reactSwal.fire('Please login');
         return;
       }
-      if (chainData[chainId]?.disabled) {
+      if (getBlockchainData(chainId)?.disabled) {
         return;
       }
       switch (loginType) {
         case 'metamask':
           return await metamaskSwitch(chainId);
         case 'web3auth':
-          if (!chainData[chainId]?.alchemyAppKey) {
+          if (!getBlockchainData(chainId)?.alchemyAppKey) {
             reactSwal.fire(
               'Sorry!',
-              `${chainData[chainId].name} is not supported currently`,
+              `${getBlockchainData(chainId).name} is not supported currently`,
               'info'
             );
             return;
           }
-          await connectWeb3AuthProgrammaticProvider(chainData[chainId]);
+          await connectWeb3AuthProgrammaticProvider(getBlockchainData(chainId));
       }
     },
     [
       currentUserAddress,
+      getBlockchainData,
       loginType,
       reactSwal,
+      metamaskSwitch,
       connectWeb3AuthProgrammaticProvider
     ]
   );

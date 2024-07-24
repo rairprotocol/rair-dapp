@@ -13,7 +13,7 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../ducks/users/users.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import chainData from '../../utils/blockchainData';
+import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
@@ -28,6 +28,8 @@ const Factory = () => {
   >();
 
   const [allowance, setAllowance] = useState<BigNumber | undefined>();
+
+  const { blockchainSettings } = useServerSettings();
 
   const [userBalance, setUserBalance] = useState<BigNumber>(BigNumber.from(0));
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
@@ -260,10 +262,10 @@ const Factory = () => {
         </span>
         <div className="col-12 p-2">
           <InputSelect
-            options={Object.keys(chainData)
-              .filter((chain) => chainData[chain].disabled !== true)
-              .map((item) => {
-                return { label: chainData[item].name, value: item };
+            options={blockchainSettings
+              .filter((chain) => chain.display !== true)
+              .map((chain) => {
+                return { label: chain.name, value: chain.hash };
               })}
             getter={currentChain}
             setter={updateChain}

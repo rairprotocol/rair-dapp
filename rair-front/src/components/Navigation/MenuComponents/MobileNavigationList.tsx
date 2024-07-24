@@ -7,20 +7,20 @@ import { BigNumber, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
 import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useConnectUser from '../../../hooks/useConnectUser';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { RairFavicon, RairTokenLogo } from '../../../images';
-import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
+import useServerSettings from '../../adminViews/useServerSettings';
 import LoadingComponent from '../../common/LoadingComponent';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import { NavFooter, NavFooterBox } from '../../Footer/FooterItems/FooterItems';
+import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
 import NotificationBox from '../../UserProfileSettings/PopUpNotification/NotificationBox/NotificationBox';
 import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
-import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
 interface IMobileNavigationList {
   messageAlert: string | null;
@@ -48,22 +48,23 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     (store) => store.userStore
   );
 
-  const { primaryColor } = useSelector<
-  RootState,
-  ColorStoreType
->((store) => store.colorStore);
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   const { web3TxHandler } = useWeb3Tx();
 
-  const { erc777Instance, currentChain } = useSelector<
+  const { mainTokenInstance, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
 
+  const { getBlockchainData } = useServerSettings();
+
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && erc777Instance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.provider) {
       const balance =
-        await erc777Instance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -73,40 +74,46 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, erc777Instance, userData]);
+  }, [currentUserAddress, mainTokenInstance, userData]);
 
   const getUserRairBalance = useCallback(async () => {
-    if (!erc777Instance || userRairBalance?.gt(0)) {
+    if (!mainTokenInstance || userRairBalance?.gt(0)) {
       return;
     }
-    const result = await web3TxHandler(erc777Instance, 'balanceOf', [
+    const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
       currentUserAddress
     ]);
     if (result?._isBigNumber) {
       setUserRairBalance(result);
     }
-  }, [erc777Instance, currentUserAddress, userRairBalance, web3TxHandler]);
+  }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
   const [notificationArray, setNotificationArray] = useState<any>();
   const [notificationCount, setNotificationCount] = useState<number>(0);
   const [flagLoading, setFlagLoading] = useState(false);
-  const [currentPageNotification, setCurrentPageNotification] = useState<number>(1);
+  const [currentPageNotification, setCurrentPageNotification] =
+    useState<number>(1);
 
   const { logoutUser } = useConnectUser();
 
-  const getNotifications = useCallback(async (pageNum: number) => {
-    if (messageAlert && currentUserAddress) {
-      setFlagLoading(true);
-      const result = await rFetch(`/api/notifications${`?pageNum=${Number(pageNum)}`}`);
-      if (result.success) {
-        setNotificationArray(result.notifications);
-        setFlagLoading(false);
+  const getNotifications = useCallback(
+    async (pageNum: number) => {
+      if (messageAlert && currentUserAddress) {
+        setFlagLoading(true);
+        const result = await rFetch(
+          `/api/notifications${`?pageNum=${Number(pageNum)}`}`
+        );
+        if (result.success) {
+          setNotificationArray(result.notifications);
+          setFlagLoading(false);
+        }
       }
-    }
-  }, [messageAlert, currentUserAddress]);
+    },
+    [messageAlert, currentUserAddress]
+  );
 
-  const getNotificationsCount = useCallback( async () => {
+  const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications`);
@@ -115,7 +122,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         setFlagLoading(true);
       }
     }
-  }, [currentUserAddress])
+  }, [currentUserAddress]);
 
   const changePageForVideo = (currentPage: number) => {
     setCurrentPageNotification(currentPage);
@@ -125,7 +132,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 
   useEffect(() => {
     getNotificationsCount();
-  }, [getNotificationsCount])
+  }, [getNotificationsCount]);
 
   useEffect(() => {
     getNotifications(0);
@@ -178,24 +185,26 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                     primaryColor={primaryColor}
                     getNotificationsCount={getNotificationsCount}
                   />
-                )
+                );
               })
             ) : (
               <div
                 style={{
                   padding: '25px 16px'
                 }}>
-                You don't have any notifications now
+                {"You don't have any notifications now"}
               </div>
             )}
           </div>
-          {notificationCount && <PaginationBox
-            totalPageForPagination={notificationCount}
-            changePage={changePageForVideo}
-            currentPage={currentPageNotification}
-            itemsPerPageNotifications={10}
-            whatPage={"notifications"}
-          />}
+          {notificationCount && (
+            <PaginationBox
+              totalPageForPagination={notificationCount}
+              changePage={changePageForVideo}
+              currentPage={currentPageNotification}
+              itemsPerPageNotifications={10}
+              whatPage={'notifications'}
+            />
+          )}
         </NavFooterBox>
       ) : messageAlert === 'profile' ? (
         <NavFooterBox
@@ -255,13 +264,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                     {/* {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance} */}
                   </div>
                   <div>
-                    {currentChain && chainData[currentChain] && (
+                    {currentChain && getBlockchainData(currentChain) && (
                       <img
                         style={{
                           height: '25px',
                           marginLeft: '15px'
                         }}
-                        src={chainData[currentChain]?.image}
+                        src={getBlockchainData(currentChain)?.image}
                         alt="logo"
                       />
                     )}

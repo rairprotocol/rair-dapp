@@ -1,67 +1,50 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ethers from 'ethers';
-import Swal from 'sweetalert2';
 
-import {
-  BlockchainInfo,
-  ChainDataType,
-  MetamaskError
-} from './adminView.types';
 import useServerSettings from './useServerSettings';
 
 import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import {
   setChainId,
   setProgrammaticProvider
 } from '../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import chainData from '../../utils/blockchainData';
+import useSwal from '../../hooks/useSwal';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
 import InputField from '../common/InputField';
-
-const bootstrapColorMapping = {
-  '0x1': 'light',
-  '0xaa36a7': 'light',
-  '0x250': 'primary',
-  '0x89': 'warning',
-  '0x13881': 'warning',
-  '0x2105': 'light'
-};
-
-const blockchains: BlockchainInfo[] = Object.keys(chainData)
-  .filter((chain) => chainData[chain].disabled !== true)
-  .map((chain) => {
-    return {
-      chainData: chainData[chain].addChainData,
-      bootstrapColor: bootstrapColorMapping[chain]
-    };
-  });
 
 const BlockChainSwitcher = () => {
   const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
-
+  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const { blockchainSettings } = useServerSettings();
+  const { web3Switch } = useWeb3Tx();
 
   const { currentChain } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
   const dispatch = useDispatch();
+  const reactSwal = useSwal();
 
   const connectProgrammatically = async ({
-    rpcUrls,
+    rpcEndpoint,
     chainId,
     chainName,
-    nativeCurrency
-  }: ChainDataType) => {
+    symbol
+  }) => {
     try {
       const networkData = {
         chainId: Number(chainId),
-        symbol: nativeCurrency?.symbol,
+        symbol: symbol,
         name: chainName,
         timeout: 1000000
       };
       const provider = new ethers.providers.JsonRpcProvider(
-        rpcUrls?.[0],
+        rpcEndpoint,
         networkData
       );
       const currentWallet = await new ethers.Wallet(
@@ -73,31 +56,7 @@ const BlockChainSwitcher = () => {
     } catch (err) {
       const error = err as Error;
       console.error(error);
-      Swal.fire('Error', error.message, 'error');
-    }
-  };
-
-  const switchEthereumChain = async (chainData: ChainDataType) => {
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: chainData.chainId }]
-      });
-    } catch (switchError) {
-      const metamaskError = switchError as MetamaskError;
-      // This error code indicates that the chain has not been added to MetaMask.
-      if (metamaskError.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [chainData]
-          });
-        } catch (addError) {
-          console.error(addError);
-        }
-      } else {
-        console.error(switchError);
-      }
+      reactSwal.fire('Error', error.message, 'error');
     }
   };
 
@@ -116,23 +75,35 @@ const BlockChainSwitcher = () => {
           </div>
           <div className="col-12">
             <div className="col-12">
-              {blockchains.map((item, index) => {
-                if (!item.chainData.rpcUrls) {
+              {blockchainSettings.map((item, index) => {
+                if (!item.rpcEndpoint) {
                   return <div className="d-none" key={index}></div>;
                 }
                 return (
                   <button
                     key={index}
-                    id={`connect_${item.chainData.nativeCurrency?.symbol}`}
-                    className={`btn btn-${item.bootstrapColor}`}
+                    id={`connect_${item.symbol}`}
+                    className="btn rair-button mt-5"
+                    style={{
+                      background:
+                        index % 2 === 0
+                          ? secondaryButtonColor
+                          : primaryButtonColor,
+                      color: textColor
+                    }}
                     disabled={
-                      currentChain === item.chainData.chainId?.toLowerCase() ||
+                      currentChain === item.hash?.toLowerCase() ||
                       UNSAFE_PrivateKey.length !== 64
                     }
                     onClick={async () => {
-                      await connectProgrammatically(item.chainData);
+                      await connectProgrammatically({
+                        rpcEndpoint: item.rpcEndpoint,
+                        chainId: item.hash,
+                        chainName: item.name,
+                        symbol: item.symbol
+                      });
                     }}>
-                    {item.chainData.chainName}
+                    {item.name}
                   </button>
                 );
               })}
@@ -141,21 +112,24 @@ const BlockChainSwitcher = () => {
           <hr className="w-100" />
         </div>
       )}
-      {window.ethereum &&
-        blockchains.map((item, index) => {
-          return (
-            <button
-              key={index}
-              className={`btn btn-${item.bootstrapColor} mt-5`}
-              disabled={currentChain === item.chainData.chainId?.toLowerCase()}
-              onClick={async () => {
-                await switchEthereumChain(item.chainData);
-                dispatch(setChainId(undefined));
-              }}>
-              {item.chainData.chainName}
-            </button>
-          );
-        })}
+      {blockchainSettings.map((item, index) => {
+        return (
+          <button
+            key={index}
+            className="btn rair-button mt-5"
+            style={{
+              background:
+                index % 2 === 0 ? secondaryButtonColor : primaryButtonColor,
+              color: textColor
+            }}
+            disabled={currentChain === item.hash?.toLowerCase()}
+            onClick={() => {
+              web3Switch(item.hash);
+            }}>
+            {item.name} ({item.hash})
+          </button>
+        );
+      })}
       <hr />
     </div>
   );

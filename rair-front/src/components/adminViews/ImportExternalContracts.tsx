@@ -3,13 +3,14 @@ import { useSelector } from 'react-redux';
 import { utils } from 'ethers';
 import { isAddress } from 'ethers/lib/utils';
 
+import useServerSettings from './useServerSettings';
+
 import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import chainData from '../../utils/blockchainData';
 import { validateInteger } from '../../utils/metamaskUtils';
 import { rFetch } from '../../utils/rFetch';
 import sockets from '../../utils/sockets';
@@ -29,6 +30,8 @@ const ImportExternalContract = () => {
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+
+  const { getBlockchainData, blockchainSettings } = useServerSettings();
 
   useEffect(() => {
     const report = (socketData) => {
@@ -52,14 +55,12 @@ const ImportExternalContract = () => {
     };
   }, []);
 
-  const blockchainOptions = Object.keys(chainData)
-    .filter((chain) => chainData[chain].disabled !== true)
-    .map((blockchainId) => {
-      return {
-        label: chainData[blockchainId].name,
-        value: blockchainId
-      };
-    });
+  const blockchainOptions = blockchainSettings.map((chain) => {
+    return {
+      label: chain.name,
+      value: chain.hash
+    };
+  });
 
   const { contractCreator } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore

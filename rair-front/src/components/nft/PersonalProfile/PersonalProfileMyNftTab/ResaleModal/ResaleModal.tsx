@@ -18,8 +18,6 @@ import { ImageLazy } from '../../../../MockUpPage/ImageLazy/ImageLazy';
 import { BuySellButton } from '../../../../MockUpPage/NftList/NftData/BuySellButton';
 import SellButton from '../../../../MockUpPage/NftList/NftData/SellButton';
 
-import chainData from './../../../../../utils/blockchainData';
-
 import './ResaleModal.css';
 
 interface IResaleModal {
@@ -49,7 +47,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
     ColorStoreType
   >((store) => store.colorStore);
 
-  const { blockchainSettings } = useServerSettings();
+  const { getBlockchainData } = useServerSettings();
 
   const [resaleData, setResaleData] = useState<any>();
   const [resaleOffer, setResaleOffer] = useState<any>(undefined);
@@ -136,8 +134,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
       if (!resaleResponse.success) {
         return;
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      const [resaleData] = resaleResponse?.data;
+      const [resaleData] = resaleResponse.data;
       if (!resaleData) {
         return;
       }
@@ -245,6 +242,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
     fetchRoyalties();
   }, [fetchRoyalties]);
 
+  const chainData = getBlockchainData(item.contract.blockchain);
+
   return (
     <div
       className="container-resale-modal"
@@ -261,16 +260,11 @@ const ResaleModal: React.FC<IResaleModal> = ({
       <div className="resale-modal-blockchain-container">
         <div>{item && item.metadata && item.metadata.name}</div>
         <div className="resale-modal-blockchain-block">
-          {item.contract.blockchain in chainData ? (
+          {chainData && (
             <>
-              <div>{blockchainSettings[item.contract.blockchain].symbol}</div>
-              <img
-                src={blockchainSettings[item.contract.blockchain].image}
-                alt="blockchain"
-              />
+              <div>{chainData.symbol}</div>
+              <img src={chainData.image} alt="blockchain" />
             </>
-          ) : (
-            ''
           )}
         </div>
       </div>
@@ -372,9 +366,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
               <div className="resale-modal-infotmation-subtitle">
                 <div className="resale-modal-infotmation-subtitle-usd">USD</div>
                 <div>
-                  <div>
-                    {blockchainSettings[item.contract.blockchain].symbol}
-                  </div>
+                  <div>{chainData.symbol}</div>
                 </div>
               </div>
             </div>

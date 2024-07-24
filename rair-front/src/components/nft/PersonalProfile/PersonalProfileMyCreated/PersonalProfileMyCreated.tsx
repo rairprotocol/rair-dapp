@@ -4,12 +4,12 @@ import axios from 'axios';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
+import useServerSettings from '../../../adminViews/useServerSettings';
 
 const PersonalProfileMyCreatedComponent = ({
   openModal,
   setSelectedData,
   primaryColor,
-  chainData,
   setIsCreatedTab,
   tabIndex
 }) => {
@@ -20,6 +20,8 @@ const PersonalProfileMyCreatedComponent = ({
   const [myProducts, setMyProducts] = useStateIfMounted();
   const [load, setLoad] = useState(true);
   const { width } = useWindowDimensions();
+
+  const { getBlockchainData } = useServerSettings();
 
   const getMyContracts = useCallback(async () => {
     const response = await axios.get('/api/contracts/factoryList');
@@ -124,7 +126,7 @@ const PersonalProfileMyCreatedComponent = ({
                                 className="my-items-blockchain-img"
                                 src={
                                   item?.blc
-                                    ? `${chainData[item?.blc]?.image}`
+                                    ? `${getBlockchainData(item?.blc)?.image}`
                                     : ''
                                 }
                                 alt="Blockchain network"

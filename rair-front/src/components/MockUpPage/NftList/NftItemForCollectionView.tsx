@@ -16,10 +16,10 @@ import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useSwal from '../../../hooks/useSwal';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { BillTransferIcon, defaultHotDrops } from '../../../images';
-import chainData from '../../../utils/blockchainData';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import { getRGBValue } from '../../../utils/determineColorRange';
 import { rFetch } from '../../../utils/rFetch';
+import useServerSettings from '../../adminViews/useServerSettings';
 import ResaleModal from '../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
@@ -58,6 +58,8 @@ const NftItemForCollectionViewComponent: React.FC<
   const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
   const store = useStore();
+
+  const { getBlockchainData } = useServerSettings();
 
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const ipfsLink = useIPFSImageLink(metadata?.image);
@@ -565,7 +567,7 @@ const NftItemForCollectionViewComponent: React.FC<
                       className="collection-block-price"
                       style={{ alignItems: 'flex-end' }}>
                       <img
-                        src={blockchain && chainData[blockchain]?.image}
+                        src={blockchain && getBlockchainData(blockchain)?.image}
                         alt="Blockchain network"
                       />
                       {fullPrice()}
@@ -585,7 +587,9 @@ const NftItemForCollectionViewComponent: React.FC<
                 <div>
                   <img
                     className="blockchain-img"
-                    src={`${blockchain && chainData[blockchain]?.image}`}
+                    src={`${
+                      blockchain && getBlockchainData(blockchain)?.image
+                    }`}
                     alt="Blockchain network"
                   />
                 </div>

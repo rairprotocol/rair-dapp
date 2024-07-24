@@ -117,4 +117,6 @@ export type BlockchainSetting = {
 
   _id?: string;
   isNew?: boolean;
+
+  image?: string;
 };
