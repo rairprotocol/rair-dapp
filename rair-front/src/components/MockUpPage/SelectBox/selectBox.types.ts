@@ -10,7 +10,7 @@ export interface IListOfTokensComponent {
   setSelectedToken: (tokenId: string | undefined) => void;
   selectedToken: string | undefined;
   setIsOpen: (isOpen: boolean) => void;
-  totalCount: number | undefined;
+  totalCount: any;
 }
 
 export interface ICurrentTokensComponent {
