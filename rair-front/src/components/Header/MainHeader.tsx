@@ -143,7 +143,7 @@ const MainHeader: React.FC<IMainHeader> = ({
       if (currentUserAddress) {
         // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
         const result = await rFetch(
-          `/api/notifications${`?pageNum=${Number(pageNum)}`}`
+          `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
         );
 
         if (result.success) {

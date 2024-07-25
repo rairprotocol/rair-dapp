@@ -565,6 +565,15 @@ span.profile-input-edit:hover {
   border: solid 1px #fff;
 }
 
+@media screen and (max-width: 1024px) {
+  .btn-clear-nofitications {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+    border-bottom: none;
+  }
+}
+
 @media screen and (max-width: 500px) {
   .notification-from-factory {
     padding: 10px;
