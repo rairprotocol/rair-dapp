@@ -29,6 +29,7 @@ import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
 import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import TitleCollection from './TitleCollection/TitleCollection';
+import { useParams } from 'react-router';
 
 const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,
@@ -52,12 +53,15 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
     (state) => state.nftDataStore
   );
+  const {tokenId} = useParams();
+
   const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const [verticalImage, setVerticalImage] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const myRef = useRef(null);
   const hotdropsVar = import.meta.env.VITE_TESTNET === 'true';
+  const [serialNumberData, setSerialNumberData] = useState<any>([]);
   const [playing, setPlaying] = useState<boolean>(false);
   const [tokenDataForResale, setTokenDataForResale] = useState<any>(undefined);
   const [, /*offersIndexesData*/ setOffersIndexesData] =
@@ -74,9 +78,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const dispatch = useDispatch();
 
   const getTokenData = useCallback(async () => {
-    if (tokenData && selectedToken && tokenData[selectedToken]) {
+    if (tokenData && tokenId) {
       const response = await rFetch(
-        `/api/tokens/id/${tokenData[selectedToken]._id}`,
+        `/api/tokens/id/${tokenData[0]._id}`,
         undefined,
         undefined,
         undefined
@@ -151,24 +155,55 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     setOpenVideoPlayer(true);
   };
 
+  const fetchSerialNumberData = useCallback( async() => {
+    if(tokenId) {
+      const { data } = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${blockchain}/${contract}/${product}/numbers`
+      );
+
+      if(data.success && data?.tokens) {
+        setSerialNumberData(data.tokens);
+      }
+
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchSerialNumberData();
+  }, [fetchSerialNumberData])
+
+  const fetchTokenOneData = useCallback( async() => {
+    if(tokenId) {
+      const { data } = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${tokenId}&toToken=${tokenId}`
+      );
+    }
+  }, [tokenId])
+
+  useEffect(() => {
+    fetchTokenOneData();
+  }, [fetchTokenOneData])
+
   const fetchTokenFullData = useCallback(async () => {
     const { data } = await axios.get<TNftItemResponse>(
-      `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=1`
+      `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${tokenId}&toToken=${tokenId}`
     );
 
-    if (data.success) {
+    if (data.success && tokenId) {
       const response = await axios.get<TNftItemResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=0&toToken=${data.result.totalCount}`
+        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${tokenId}&toToken=${tokenId}`
       );
+
       const mapping = {};
       response.data.result.tokens.forEach((token) => {
         mapping[token.token] = token;
       });
+
       setTokenFullData(mapping);
       getProductsFromOffer();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain, contract, product, setTokenFullData]);
+  }, [blockchain, contract, product, setTokenFullData, tokenId]);
 
   useEffect(() => {
     fetchTokenFullData();
@@ -293,7 +328,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               blockchain={blockchain}
               contract={contract}
               currentTokenId={
-                tokenData && selectedToken && tokenData[selectedToken]?._id
+                tokenDataForResale && tokenDataForResale?._id
               }
               selectedToken={selectedToken}
               classTitle={
@@ -313,7 +348,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 contract={contract}
                 selectedToken={selectedToken}
                 currentTokenId={
-                  tokenData && selectedToken && tokenData[selectedToken]?._id
+                  tokenDataForResale && tokenDataForResale?._id
                 }
                 classTitle={
                   selectedData?.animation_url && isFileUrl !== 'gif'
@@ -384,7 +419,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               tokenData={tokenFullData}
               handleClickToken={handleClickToken}
               setSelectedToken={setSelectedToken}
-              totalCount={totalCount}
+              totalCount={serialNumberData}
               blockchain={blockchain as BlockchainType}
               offerData={offerData}
               product={product}
