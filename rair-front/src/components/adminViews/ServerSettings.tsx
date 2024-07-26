@@ -105,7 +105,10 @@ const ServerSettings = ({ fullContractData }) => {
   );
 
   const setBlockchainSetting = useCallback(
-    async (chain: string, method = 'PUT') => {
+    async (chain: BlockchainType | undefined, method = 'PUT') => {
+      if (!chain) {
+        return;
+      }
       const settings = serverSettings.blockchainSettings.find(
         (chainData) => chainData.hash === chain
       );
@@ -130,10 +133,14 @@ const ServerSettings = ({ fullContractData }) => {
       });
       if (success) {
         reactSwal.fire('Success', 'Blockchain settings updated', 'success');
-        serverSettings.getServerSettings();
+        serverSettings.refreshBlockchainData();
       }
     },
-    [reactSwal, serverSettings.getServerSettings]
+    [
+      reactSwal,
+      serverSettings.blockchainSettings,
+      serverSettings.refreshBlockchainData
+    ]
   );
 
   const loadImage = useCallback(
@@ -227,7 +234,14 @@ const ServerSettings = ({ fullContractData }) => {
   }, [serverSettings.featuredContract, fullContractData]);
 
   const updateBlockchainSetting = useCallback(
-    (chain: string, setting: string, value: string | number | boolean) => {
+    (
+      chain: BlockchainType | undefined,
+      setting: string,
+      value: string | number | boolean
+    ) => {
+      if (!chain) {
+        return;
+      }
       const aux = serverSettings.blockchainSettings.map((chainData) => {
         if (chainData.hash === chain) {
           chainData[setting] = value;

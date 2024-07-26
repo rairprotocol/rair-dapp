@@ -77,7 +77,7 @@ const useWeb3Tx = () => {
       ) {
         cleanError = 'The transaction has failed on the blockchain';
       } else if (errorMessage.receipt) {
-        //console.info('Repriced');
+        // Repriced
         handleReceipt(errorMessage.receipt);
         return true;
       }

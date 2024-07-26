@@ -1,17 +1,20 @@
-//@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { BlockchainSetting, Settings } from './adminView.types';
 
+import { RootState } from '../../ducks';
 import {
   setCustomColors,
   setCustomLogosDark,
   setCustomLogosLight
 } from '../../ducks/colors/actions';
+import { setChainId } from '../../ducks/contracts/actions';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { HotdropsFavicon, RairFavicon } from '../../images';
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
+import { TChainData } from '../../utils/utils.types';
 import { FooterLinkType } from '../common/commonTypes/InputSelectTypes.types';
 
 const useServerSettings = () => {
@@ -39,8 +42,15 @@ const useServerSettings = () => {
     BlockchainSetting[]
   >([]);
 
+  const { currentChain } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+
   const getBlockchainData = useCallback(
-    (chainId: `0x${string}`): BlockchainSetting & TChainData => {
+    (chainId: `0x${string}`): (BlockchainSetting & TChainData) | undefined => {
+      if (!chainId) {
+        return;
+      }
       return {
         ...chainData[chainId],
         ...blockchainSettings.find((chain) => chain.hash === chainId)
@@ -49,10 +59,17 @@ const useServerSettings = () => {
     [blockchainSettings]
   );
 
+  const refreshBlockchainData = useCallback(async () => {
+    const { success, blockchainSettings } = await rFetch('/api/settings');
+    if (success) {
+      setBlockchainSettings(blockchainSettings || []);
+      return blockchainSettings || [];
+    }
+  }, []);
+
   const getServerSettings = useCallback(async () => {
     setIsLoading(true);
-    const { success, settings, blockchainSettings } =
-      await rFetch('/api/settings');
+    const { success, settings } = await rFetch('/api/settings');
     if (success && settings) {
       setSettings(settings);
       setNodeAddress(
@@ -108,11 +125,15 @@ const useServerSettings = () => {
         setCustomFadeButtonColor(settings.buttonFadeColor);
       }
       setSuperAdmins(settings?.superAdmins);
-      setBlockchainSettings(blockchainSettings || []);
       setFooterLinks(settings.footerLinks);
     }
     setIsLoading(false);
   }, [dispatch]);
+
+  useEffect(() => {
+    refreshBlockchainData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getServerSettings();
@@ -121,19 +142,21 @@ const useServerSettings = () => {
   useEffect(() => {
     if (settings.favicon) {
       const changeFavicon = () => {
-        const link =
+        const link: HTMLLinkElement =
           document.querySelector("link[rel*='icon']") ||
           document.createElement('link');
         link.type = 'image/x-icon';
         link.rel = 'icon';
-        link.href = settings.favicon; // Set the href to your favicon
+        if (settings.favicon) {
+          link.href = settings.favicon; // Set the href to your favicon
+        }
         document.getElementsByTagName('head')[0].appendChild(link);
       };
 
       changeFavicon(); // Call the function to change the favicon when the component mounts
     } else {
       const changeFavicon = () => {
-        const link =
+        const link: HTMLLinkElement =
           document.querySelector("link[rel*='icon']") ||
           document.createElement('link');
         link.type = 'image/x-icon';
@@ -151,7 +174,7 @@ const useServerSettings = () => {
     // Optionally, you can remove the old favicon when the component unmounts
     return () => {
       const link = document.querySelector("link[rel*='icon']");
-      if (link) {
+      if (link?.parentNode) {
         link.parentNode.removeChild(link);
       }
     };
@@ -189,7 +212,8 @@ const useServerSettings = () => {
     blockchainSettings,
     setBlockchainSettings,
     getBlockchainData,
-    isLoading
+    isLoading,
+    refreshBlockchainData
   };
 };
 

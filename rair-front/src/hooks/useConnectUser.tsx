@@ -64,7 +64,8 @@ const getCoingeckoRates = async () => {
 
 const useConnectUser = () => {
   const dispatch = useDispatch();
-  const { blockchainSettings, getBlockchainData } = useServerSettings();
+  const { blockchainSettings, getBlockchainData, refreshBlockchainData } =
+    useServerSettings();
   const { adminRights, loginProcess, loggedIn } = useSelector<
     RootState,
     TUsersInitialState
@@ -281,7 +282,6 @@ const useConnectUser = () => {
       let user = userDataResponse.data.user;
       if (!userDataResponse.data.success || !user) {
         // If the user doesn't exist, send a request to register him using a TEMP adminNFT
-        // console.info('Address is not registered!');
         firstTimeLogin = true;
         const userCreation = await axios.post<TUserResponse>(
           '/api/users',
@@ -400,9 +400,8 @@ const useConnectUser = () => {
           dispatch(setLoginProcessStatus(false));
           return await logoutUser();
         }
-        dispatch(
-          setChainId(window.ethereum.chainId?.toLowerCase(), blockchainSettings)
-        );
+        const chains = await refreshBlockchainData();
+        dispatch(setChainId(window.ethereum.chainId, chains));
         dispatch(setLoginType('metamask')); // Because web3 logins end on page reload
         dispatch(setCoingeckoRates(await getCoingeckoRates()));
         dispatch(setUserData(user));

@@ -124,7 +124,9 @@ const BlockChainSwitcher = () => {
             }}
             disabled={currentChain === item.hash?.toLowerCase()}
             onClick={() => {
-              web3Switch(item.hash);
+              if (item.hash) {
+                web3Switch(item.hash);
+              }
             }}>
             {item.name} ({item.hash})
           </button>

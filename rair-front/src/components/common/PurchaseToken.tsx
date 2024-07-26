@@ -294,6 +294,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             color: textColor
           }}
           onClick={async () => {
+            if (!requiredBlockchain) {
+              return;
+            }
             setBuyingToken(true);
             if (setPurchaseStatus) {
               setPurchaseStatus(true);
@@ -309,8 +312,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             }
 
             // If the currentChain is different from the contract's chain, switch
-            if (!correctBlockchain(requiredBlockchain as BlockchainType)) {
-              await web3Switch(requiredBlockchain as BlockchainType);
+            if (!correctBlockchain(requiredBlockchain)) {
+              await web3Switch(requiredBlockchain);
               setBuyingToken(false);
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);

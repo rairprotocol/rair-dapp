@@ -105,7 +105,8 @@ const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const dispatch = useDispatch();
-  const { getServerSettings, settings } = useServerSettings();
+  const { getServerSettings, settings, blockchainSettings } =
+    useServerSettings();
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
@@ -116,7 +117,6 @@ function App() {
     diamondMarketplaceInstance,
     currentUserAddress,
     minterInstance,
-    factoryInstance,
     programmaticProvider
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -184,7 +184,7 @@ function App() {
   useEffect(() => {
     if (window.ethereum) {
       const foo = async (chainId) => {
-        dispatch(setChainId(chainId));
+        dispatch(setChainId(chainId, blockchainSettings));
       };
       window.ethereum.on('chainChanged', foo);
       window.ethereum.on('accountsChanged', logoutUser);
@@ -193,7 +193,7 @@ function App() {
         window.ethereum.off('accountsChanged', logoutUser);
       };
     }
-  }, [dispatch, logoutUser]);
+  }, [dispatch, logoutUser, blockchainSettings]);
 
   const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
