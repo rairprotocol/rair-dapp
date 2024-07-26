@@ -81,6 +81,10 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
     }, [openModal]);
 
     useEffect(() => {
+      getNotificationsCount();
+    }, [getNotificationsCount])
+
+    useEffect(() => {
       getNotificationsCountPagitation();
     }, [getNotificationsCountPagitation])
 

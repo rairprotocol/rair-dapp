@@ -103,8 +103,9 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       const result = await rFetch(`/api/notifications${ pageNum ? `?pageNum=${Number(pageNum)}` : ''}`);
       if (result.success) {
         setNotificationArray(result.notifications);
-        setFlagLoading(false);
       }
+
+      setFlagLoading(false);
     }
   }, [messageAlert, currentUserAddress]);
   
@@ -113,10 +114,11 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     if (currentUserAddress) {
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications`);
-      if (result.success && result.totalCount > 0) {
+      if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
-        setFlagLoading(true);
       }
+
+      setFlagLoading(false);
     }
   }, [currentUserAddress])
 
@@ -143,6 +145,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         });
         setFlagLoading(false);
       }
+      setFlagLoading(false);
     }
   }, [currentUserAddress])
 
