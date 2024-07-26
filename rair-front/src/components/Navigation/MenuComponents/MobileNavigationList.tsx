@@ -136,6 +136,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 
       if(result.success) {
         getNotifications();
+        getNotificationsCount();
         reactSwal.fire({
           title : "Success",
           icon: 'success'

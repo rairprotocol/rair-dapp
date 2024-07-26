@@ -64,6 +64,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
 
         if(result.success) {
           getNotifications();
+          getNotificationsCount();
           reactSwal.fire({
             title : "Success",
             icon: 'success'
