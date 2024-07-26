@@ -143,7 +143,7 @@ const MainHeader: React.FC<IMainHeader> = ({
       if (currentUserAddress) {
         // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
         const result = await rFetch(
-          `/api/notifications${`?pageNum=${Number(pageNum)}`}`
+          `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
         );
 
         if (result.success) {
@@ -157,7 +157,7 @@ const MainHeader: React.FC<IMainHeader> = ({
   const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
-      if (result.success && result.totalCount > 0) {
+      if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
     }
