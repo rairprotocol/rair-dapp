@@ -31,8 +31,11 @@ const NotificationBox = ({
       const result = await rFetch(`/api/notifications`, {
         method: 'DELETE',
         body: JSON.stringify({
-          "ids": [el._id]
-        })
+          ids: [el._id]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       if (result.success) {
@@ -47,9 +50,11 @@ const NotificationBox = ({
       const result = await rFetch(`/api/notifications`, {
         method: 'PUT',
         body: JSON.stringify({
-          "ids": [el._id],
-          read: true
-        })
+          ids: [el._id]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       if (result.success) {
