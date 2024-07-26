@@ -429,7 +429,7 @@ const MainHeader: React.FC<IMainHeader> = ({
           </div>
         )}
         <div className="box-connect-btn">
-          {adminRights && currentUserAddress && (
+          {(adminRights || superAdmin) && currentUserAddress && (
             <TooltipBox title="Admin Panel">
               <div
                 onClick={() => setAdminPanel((prev) => !prev)}
