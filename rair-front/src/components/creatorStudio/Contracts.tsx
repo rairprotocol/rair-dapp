@@ -22,7 +22,7 @@ const Contracts = () => {
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [contractArray, setContractArray] = useState<TContractsArray[]>();
   const [diamondFilter, setDiamondFilter] = useState<Boolean>(false);
-  const [chainFilter, setChainFilter] = useState<string[]>([]);
+  const [chainFilter, setChainFilter] = useState<BlockchainType[]>([]);
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -89,22 +89,22 @@ const Contracts = () => {
               <FontAwesomeIcon icon={faGem} /> Only Diamonds
             </button>
             {blockchainSettings
-              .filter((chain) => chain.display !== true)
+              .filter((chain) => chain.display !== true && chain.hash)
               .map((chain, index) => {
                 return (
                   <button
                     key={index}
                     onClick={() => {
                       const aux = [...chainFilter];
-                      if (chainFilter.includes(chain.hash)) {
-                        aux.splice(aux.indexOf(chain.hash), 1);
+                      if (chainFilter.includes(chain.hash!)) {
+                        aux.splice(aux.indexOf(chain.hash!), 1);
                       } else {
-                        aux.push(chain.hash);
+                        aux.push(chain.hash!);
                       }
                       setChainFilter(aux);
                     }}
                     className={`col-xs-12 col-md-6 rair-rounded btn btn-${
-                      chainFilter.includes(chain.hash)
+                      chainFilter.includes(chain.hash!)
                         ? 'light'
                         : 'outline-secondary'
                     }`}>

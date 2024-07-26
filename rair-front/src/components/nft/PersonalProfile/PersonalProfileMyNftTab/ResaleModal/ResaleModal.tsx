@@ -366,7 +366,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
               <div className="resale-modal-infotmation-subtitle">
                 <div className="resale-modal-infotmation-subtitle-usd">USD</div>
                 <div>
-                  <div>{chainData.symbol}</div>
+                  <div>{chainData?.symbol}</div>
                 </div>
               </div>
             </div>

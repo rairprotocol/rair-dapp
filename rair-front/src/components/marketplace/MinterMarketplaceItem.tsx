@@ -56,7 +56,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
                 await window.ethereum.request({
                   method: 'wallet_switchEthereumChain',
                   params: [
-                    { chainId: getBlockchainData(item.blockchain)?.chainId }
+                    { chainId: getBlockchainData(item.blockchain)?.hash }
                   ]
                 });
               } else {

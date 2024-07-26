@@ -290,8 +290,7 @@ const ListLocks: React.FC<TListLocks> = ({
                 action: !onMyChain
                   ? () =>
                       web3Switch(
-                        getBlockchainData(contractData?.blockchain)
-                          ?.chainId as BlockchainType
+                        getBlockchainData(contractData?.blockchain)?.hash
                       )
                   : gotoNextStep,
                 label: !onMyChain

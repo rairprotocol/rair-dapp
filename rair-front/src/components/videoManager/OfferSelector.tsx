@@ -34,9 +34,8 @@ const OfferSelector = ({ fileId }) => {
       setContractOptions(
         result
           .map((contract) => ({
-            label: `${contract.title} (${
-              getBlockchainData(contract.blockchain).symbol
-            })`,
+            label: `${contract.title} (${getBlockchainData(contract.blockchain)
+              ?.symbol})`,
             value: contract._id
           }))
           .sort((a, b) => {

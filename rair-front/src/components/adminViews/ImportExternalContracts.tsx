@@ -31,7 +31,7 @@ const ImportExternalContract = () => {
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
-  const { getBlockchainData, blockchainSettings } = useServerSettings();
+  const { blockchainSettings } = useServerSettings();
 
   useEffect(() => {
     const report = (socketData) => {
@@ -55,12 +55,14 @@ const ImportExternalContract = () => {
     };
   }, []);
 
-  const blockchainOptions = blockchainSettings.map((chain) => {
-    return {
-      label: chain.name,
-      value: chain.hash
-    };
-  });
+  const blockchainOptions = blockchainSettings
+    .filter((chain) => chain.name && chain.hash)
+    .map((chain) => {
+      return {
+        label: chain.name!,
+        value: chain.hash!
+      };
+    });
 
   const { contractCreator } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore

@@ -263,9 +263,11 @@ const Factory = () => {
         <div className="col-12 p-2">
           <InputSelect
             options={blockchainSettings
-              .filter((chain) => chain.display !== true)
+              .filter(
+                (chain) => chain.display !== true && chain.hash && chain.name
+              )
               .map((chain) => {
-                return { label: chain.name, value: chain.hash };
+                return { label: chain.name!, value: chain.hash! };
               })}
             getter={currentChain}
             setter={updateChain}

@@ -421,7 +421,11 @@ const useWeb3Tx = () => {
   );
 
   const web3Switch = useCallback(
-    async (chainId: BlockchainType) => {
+    async (chainId: BlockchainType | undefined) => {
+      if (!chainId) {
+        reactSwal.fire('Unsupported blockchain');
+        return;
+      }
       if (!currentUserAddress) {
         reactSwal.fire('Please login');
         return;

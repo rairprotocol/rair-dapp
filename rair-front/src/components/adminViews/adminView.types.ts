@@ -29,24 +29,6 @@ export type ContractsResponseType = {
   success: boolean;
 };
 
-export type BlockchainInfoType = {
-  image: string;
-  name: string;
-  chainId: BlockchainType;
-  symbol: string;
-  addChainData: {
-    chainId: string;
-    chainName: string;
-    nativeCurrency?: {
-      name?: string;
-      symbol?: string;
-      decimals?: number;
-    };
-    rpcUrls?: string[];
-    blockExplorerUrls?: string[];
-  };
-};
-
 type ContractInfo = {
   title: string;
   contractAddress: string;
