@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
 import {
@@ -37,6 +37,7 @@ type web3Options = {
 const useWeb3Tx = () => {
   const dispatch = useDispatch();
   const { blockchainSettings, getBlockchainData } = useServerSettings();
+
   const { currentChain, currentUserAddress, programmaticProvider } =
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore

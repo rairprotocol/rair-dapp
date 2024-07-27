@@ -31,7 +31,7 @@ const Factory = () => {
 
   const { blockchainSettings } = useServerSettings();
 
-  const [userBalance, setUserBalance] = useState<BigNumber>(BigNumber.from(0));
+  const [userBalance, setUserBalance] = useState<BigNumber>();
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
 
   const [deploying, setDeploying] = useState<boolean>(false);
@@ -112,7 +112,7 @@ const Factory = () => {
   ]);
 
   const getUserBalance = useCallback(async () => {
-    if (mainTokenInstance && userBalance?.eq(0)) {
+    if (mainTokenInstance && userBalance === undefined) {
       const userBalance = await web3TxHandler(mainTokenInstance, 'balanceOf', [
         currentUserAddress
       ]);
@@ -263,9 +263,9 @@ const Factory = () => {
         <div className="col-12 p-2">
           <InputSelect
             options={blockchainSettings
-              .filter(
-                (chain) => chain.display !== true && chain.hash && chain.name
-              )
+              .filter((chain) => {
+                return chain.display && chain.hash && chain.name;
+              })
               .map((chain) => {
                 return { label: chain.name!, value: chain.hash! };
               })}
