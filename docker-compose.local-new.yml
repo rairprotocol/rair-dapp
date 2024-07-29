@@ -34,14 +34,6 @@ services:
       IPFS_GATEWAY: ${ipfs_gateway}
       IPFS_API: ${ipfs_api}
       PINATA_GATEWAY: ${pinata_gateway}
-      MATIC_TESTNET_RPC: ${matic_testnet_rpc}
-      MATIC_MAINNET_RPC: ${matic_mainnet_rpc}
-      BINANCE_MAINNET_RPC: ${binance_mainnet_rpc}
-      BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
-      ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
-      ETHEREUM_TESTNET_SEPOLIA_RPC: ${ethereum_testnet_sepolia_rpc}
-      BASE_MAINNET_RPC: ${base_mainnet_rpc}
-      ASTAR_MAINNET_RPC: ${astar_mainnet_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
       VAULT_URL: ${VAULT_URL}
