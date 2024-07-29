@@ -28,8 +28,14 @@ const NotificationBox = ({
 
   const removeItem = useCallback(async () => {
     if (currentUserAddress) {
-      const result = await rFetch(`/api/notifications/${el._id}`, {
-        method: 'DELETE'
+      const result = await rFetch(`/api/notifications`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          ids: [el._id]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       if (result.success) {
@@ -41,12 +47,14 @@ const NotificationBox = ({
 
   const readNotification = useCallback(async () => {
     if (currentUserAddress) {
-      const result = await rFetch(`/api/notifications/${el._id}`, {
+      const result = await rFetch(`/api/notifications`, {
         method: 'PUT',
         body: JSON.stringify({
-          ...el,
-          read: true
-        })
+          ids: [el._id]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       if (result.success) {

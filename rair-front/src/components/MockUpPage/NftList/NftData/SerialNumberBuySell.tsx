@@ -66,15 +66,15 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   const getInfoFromUser = useCallback(async () => {
     // find user
     if (
-      selectedToken &&
-      tokenData?.[selectedToken]?.ownerAddress &&
-      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress) &&
-      tokenData?.[selectedToken]?.ownerAddress !== constants.AddressZero
+      params.tokenId && tokenData &&
+      Object.values(tokenData)[0]?.ownerAddress &&
+      utils.isAddress(Object.values(tokenData)[0]?.ownerAddress) &&
+      Object.values(tokenData)[0]?.ownerAddress !== constants.AddressZero
     ) {
       try {
         const result = await axios
           .get<TUserResponse>(
-            `/api/users/${tokenData?.[selectedToken]?.ownerAddress}`
+            `/api/users/${Object.values(tokenData)[0]?.ownerAddress}`
           )
           .then((res) => res.data);
         if (result.success) {
@@ -84,7 +84,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         setAccountData(null);
       }
     }
-  }, [selectedToken, setAccountData, tokenData]);
+  }, [params.tokenId, setAccountData, tokenData]);
 
   const buyContract = useCallback(async () => {
     if (!contractData || !offerData) {
@@ -179,7 +179,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (
       !diamondMarketplaceInstance ||
       !selectedToken ||
-      !tokenData?.[selectedToken]
+      tokenData && !Object.values(tokenData)[0].uniqueIndexInContract
     ) {
       return;
     }
@@ -195,7 +195,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     setResaleData(undefined);
     const resaleResponse = await rFetch(
-      `/api/resales/open?contract=${params.contract}&blockchain=${params.blockchain}&index=${tokenData[selectedToken].uniqueIndexInContract}`
+      `/api/resales/open?contract=${params.contract}&blockchain=${params.blockchain}&index=${tokenData && Object.values(tokenData)[0].uniqueIndexInContract}`
     );
     if (!resaleResponse.success) {
       return;
@@ -216,7 +216,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     params.contract,
     params.blockchain,
     tokenData,
-    selectedToken
+    selectedToken,
+    params.tokenId
   ]);
 
   useEffect(() => {
@@ -249,7 +250,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     */
     const { isConfirmed } = await reactSwal.fire({
-      imageUrl: tokenData[params.tokenId].metadata.image,
+      imageUrl: Object.values(tokenData)[0].metadata.image,
       imageHeight: '25vh',
       title: 'Purchase token',
       html: <>Currently owned by: {resaleData.seller}</>,
@@ -276,7 +277,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           [
             params.contract, // address erc721,
             currentUserAddress, // address buyer,
-            tokenData?.[selectedToken]?.ownerAddress, // address seller,
+            Object.values(tokenData)[0]?.ownerAddress, // address seller,
             resaleData.tokenIndex, // uint token,
             resaleData.price, // uint tokenPrice,
             import.meta.env.VITE_NODE_ADDRESS, // address nodeAddress,
@@ -330,7 +331,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       if (
         selectedToken &&
         tokenData &&
-        tokenData?.[selectedToken]?.isMinted === true
+        Object.values(tokenData)[0]?.isMinted === true
       ) {
         return (
           <div className="container-sell-button-user">
@@ -341,7 +342,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
                 alt="User Avatar"
               />
               {selectedToken && (
-                <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
+                <NavLink to={`/${Object.values(tokenData)[0]?.ownerAddress}`}>
                   <h5>
                     {(accountData &&
                     accountData.nickName &&
@@ -350,10 +351,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
                         '....' +
                         accountData.nickName.slice(length - 4)
                       : accountData && accountData.nickName) ||
-                      (tokenData?.[selectedToken]?.ownerAddress &&
-                        tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
+                      (Object.values(tokenData)[0]?.ownerAddress &&
+                      Object.values(tokenData)[0]?.ownerAddress.slice(0, 4) +
                           '....' +
-                          tokenData?.[selectedToken]?.ownerAddress.slice(
+                          Object.values(tokenData)[0]?.ownerAddress.slice(
                             length - 4
                           ))}
                   </h5>
@@ -388,7 +389,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
 
     // Blockchain is correct and offer exists
-    if (selectedToken && !tokenData?.[selectedToken]?.isMinted && offerData) {
+    if (tokenData && !Object.values(tokenData)[0]?.isMinted && offerData) {
       const rawPrice = BigNumber.from(offerData?.price ? offerData?.price : 0);
       const price = numberTooBigThreshold.gte(rawPrice)
         ? '0.000+'
@@ -426,7 +427,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         </>
       );
       // Token is minted
-    } else if (selectedToken && tokenData?.[selectedToken]?.isMinted) {
+    } else if (tokenData && Object.values(tokenData)[0]?.isMinted) {
       if (resaleData) {
         const price = numberTooBigThreshold.gte(resaleData.price)
           ? '0.000+'
@@ -455,7 +456,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       }
       // Current user is owner of the token
       if (
-        tokenData[selectedToken].ownerAddress ===
+        Object.values(tokenData)[0].ownerAddress ===
         currentUserAddress?.toLowerCase()
       ) {
         return (
@@ -475,8 +476,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
                 src={accountData?.avatar ? accountData.avatar : defaultImage}
                 alt="User Avatar"
               />
-              {selectedToken && (
-                <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
+              {Object.values(tokenData)[0] && (
+                <NavLink to={`/${Object.values(tokenData)[0]?.ownerAddress}`}>
                   <h5>
                     {(accountData &&
                     accountData.nickName &&
@@ -485,10 +486,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
                         '....' +
                         accountData.nickName.slice(length - 4)
                       : accountData && accountData.nickName) ||
-                      (tokenData?.[selectedToken]?.ownerAddress &&
-                        tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
+                      (Object.values(tokenData)[0]?.ownerAddress &&
+                      Object.values(tokenData)[0]?.ownerAddress.slice(0, 4) +
                           '....' +
-                          tokenData?.[selectedToken]?.ownerAddress.slice(
+                          Object.values(tokenData)[0]?.ownerAddress.slice(
                             length - 4
                           ))}
                   </h5>
@@ -547,8 +548,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       {tokenData &&
         selectedToken &&
         tokenDataForResale &&
-        tokenData?.[selectedToken]?.isMinted &&
-        currentUserAddress === tokenData[selectedToken].ownerAddress && (
+        Object.values(tokenData)[0]?.isMinted &&
+        currentUserAddress === Object.values(tokenData)[0].ownerAddress && (
           <button
             onClick={() => {
               reactSwal.fire({

@@ -11,6 +11,7 @@ import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useConnectUser from '../../../hooks/useConnectUser';
+import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { RairFavicon, RairTokenLogo } from '../../../images';
 import { rFetch } from '../../../utils/rFetch';
@@ -48,9 +49,10 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     (store) => store.userStore
   );
 
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, primaryButtonColor, textColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const { web3TxHandler } = useWeb3Tx();
 
@@ -94,20 +96,22 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   const [flagLoading, setFlagLoading] = useState(false);
   const [currentPageNotification, setCurrentPageNotification] =
     useState<number>(1);
+  const reactSwal = useSwal();
 
   const { logoutUser } = useConnectUser();
 
   const getNotifications = useCallback(
-    async (pageNum: number) => {
+    async (pageNum?: number) => {
       if (messageAlert && currentUserAddress) {
         setFlagLoading(true);
         const result = await rFetch(
-          `/api/notifications${`?pageNum=${Number(pageNum)}`}`
+          `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
         );
         if (result.success) {
           setNotificationArray(result.notifications);
-          setFlagLoading(false);
         }
+
+        setFlagLoading(false);
       }
     },
     [messageAlert, currentUserAddress]
@@ -117,10 +121,11 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     if (currentUserAddress) {
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications`);
-      if (result.success && result.totalCount > 0) {
+      if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
-        setFlagLoading(true);
       }
+
+      setFlagLoading(false);
     }
   }, [currentUserAddress]);
 
@@ -129,6 +134,27 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     const currentPageNumber = currentPage === 0 ? currentPage : currentPage - 1;
     getNotifications(Number(currentPageNumber));
   };
+
+  const deleteAllNotificaiton = useCallback(async () => {
+    if (currentUserAddress) {
+      setFlagLoading(true);
+      const result = await rFetch(`/api/notifications`, {
+        method: 'DELETE',
+        body: JSON.stringify([])
+      });
+
+      if (result.success) {
+        getNotifications();
+        getNotificationsCount();
+        reactSwal.fire({
+          title: 'Success',
+          icon: 'success'
+        });
+        setFlagLoading(false);
+      }
+      setFlagLoading(false);
+    }
+  }, [currentUserAddress]);
 
   useEffect(() => {
     getNotificationsCount();
@@ -171,6 +197,28 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               marginTop: '20px',
               padding: '20px 0'
             }}>
+            <div className="btn-clear-nofitications">
+              <button
+                className="btn-clear-nofitications"
+                onClick={() => deleteAllNotificaiton()}
+                style={{
+                  color: textColor,
+                  background: `${
+                    primaryColor === '#dedede'
+                      ? import.meta.env.VITE_TESTNET === 'true'
+                        ? 'var(--hot-drops)'
+                        : 'linear-gradient(to right, #e882d5, #725bdb)'
+                      : import.meta.env.VITE_TESTNET === 'true'
+                        ? primaryButtonColor ===
+                          'linear-gradient(to right, #e882d5, #725bdb)'
+                          ? 'var(--hot-drops)'
+                          : primaryButtonColor
+                        : primaryButtonColor
+                  }`
+                }}>
+                Clear all
+              </button>
+            </div>
             {flagLoading ? (
               <LoadingComponent />
             ) : notificationArray && notificationArray.length > 0 ? (
@@ -196,7 +244,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               </div>
             )}
           </div>
-          {notificationCount && (
+          {notificationCount > 0 && (
             <PaginationBox
               totalPageForPagination={notificationCount}
               changePage={changePageForVideo}

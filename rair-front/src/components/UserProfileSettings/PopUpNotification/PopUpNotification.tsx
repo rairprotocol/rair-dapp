@@ -7,6 +7,7 @@ import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../../ducks/users/users.types';
+import useSwal from '../../../hooks/useSwal';
 import { BellIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { rFetch } from '../../../utils/rFetch';
@@ -21,6 +22,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
       import.meta.env.VITE_TESTNET === 'true' ? 'HotDrops' : 'Rair.tech';
     const [openModal, setOpenModal] = useState(false);
     const store = useStore();
+    const reactSwal = useSwal();
     const { currentUserAddress } = useSelector<
     RootState,
     ContractsInitialType
@@ -51,6 +53,24 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
           setTotalPageForPagination(result.totalCount);
         }
       }
+    }, [currentUserAddress]);
+
+    const deleteAllNotificaiton = useCallback( async() => {
+      if(currentUserAddress) {
+        const result = await rFetch(`/api/notifications`, {
+          method: "DELETE",
+          body: JSON.stringify([])
+        });
+
+        if(result.success) {
+          getNotifications();
+          getNotificationsCount();
+          reactSwal.fire({
+            title : "Success",
+            icon: 'success'
+          });
+        }
+      }
     }, [currentUserAddress])
 
     useEffect(() => {
@@ -59,6 +79,10 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
         getNotificationsCount();
       }
     }, [openModal]);
+
+    useEffect(() => {
+      getNotificationsCount();
+    }, [getNotificationsCount])
 
     useEffect(() => {
       getNotificationsCountPagitation();
@@ -125,7 +149,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
               }}>
                 <div className="btn-clear-nofitications">
                  <div className="notification-title">Notifications</div>
-                 <button onClick={() => setRealDataNotification([])} style={{
+                 <button onClick={() => deleteAllNotificaiton()} style={{
             color: textColor,
             background: `${
               primaryColor === '#dedede'
@@ -171,7 +195,7 @@ const PopUpNotification = ({getNotifications, realDataNotification, notification
               <div style={{paddingBottom: "15px"}}>
               {
 
-totalPageForPagination && notificationCount > 0 && <PaginationBox
+          notificationCount > 0 && totalPageForPagination && <PaginationBox
             totalPageForPagination={totalPageForPagination}
             primaryColor={primaryColor}
             changePage={changePageForVideo}
