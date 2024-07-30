@@ -105,7 +105,11 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         const sortedNotifications = result.notifications.sort((a, b) => {
           if (!a.read && b.read) return -1;
           if (a.read && !b.read) return 1;
-          return 0;
+
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+
+          return dateB - dateA;
         }) 
         setNotificationArray(sortedNotifications);
       }
