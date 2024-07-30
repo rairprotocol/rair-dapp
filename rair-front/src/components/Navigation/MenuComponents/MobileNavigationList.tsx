@@ -102,7 +102,16 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications${ pageNum ? `?pageNum=${Number(pageNum)}` : ''}`);
       if (result.success) {
-        setNotificationArray(result.notifications);
+        const sortedNotifications = result.notifications.sort((a, b) => {
+          if (!a.read && b.read) return -1;
+          if (a.read && !b.read) return 1;
+
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+
+          return dateB - dateA;
+        }) 
+        setNotificationArray(sortedNotifications);
       }
 
       setFlagLoading(false);
