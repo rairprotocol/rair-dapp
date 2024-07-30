@@ -61,7 +61,7 @@ router.put(
 router.post(
   '/:blockchain',
   requireUserSession,
-  validation(['dbBlockchain']),
+  validation(['dbBlockchains']),
   verifySuperAdmin,
   addBlockchainSetting,
 );

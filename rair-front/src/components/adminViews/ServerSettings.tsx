@@ -118,7 +118,7 @@ const ServerSettings = ({ fullContractData }) => {
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { _id, ...cleanChainData } = settings;
+      const { _id, isNew, ...cleanChainData } = settings;
       Object.keys(cleanChainData).forEach((field) => {
         if (cleanChainData[field] === '') {
           cleanChainData[field] = undefined;
