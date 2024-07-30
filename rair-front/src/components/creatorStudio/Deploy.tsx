@@ -111,7 +111,12 @@ const Factory = () => {
     web3TxHandler
   ]);
 
+  useEffect(() => {
+    setUserBalance(undefined);
+  }, [currentChain]);
+
   const getUserBalance = useCallback(async () => {
+    console.info(1);
     if (mainTokenInstance && userBalance === undefined) {
       const userBalance = await web3TxHandler(mainTokenInstance, 'balanceOf', [
         currentUserAddress
