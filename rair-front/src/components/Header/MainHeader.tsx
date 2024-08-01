@@ -141,13 +141,22 @@ const MainHeader: React.FC<IMainHeader> = ({
   const getNotifications = useCallback(
     async (pageNum?: number) => {
       if (currentUserAddress) {
-        // const result = await rFetch(`/api/notifications${itemsPerPage && pageNum ? `?itemsPerPage=${itemsPerPage}&pageNum=${pageNum}` : ''}`);
         const result = await rFetch(
-          `/api/notifications${`?pageNum=${Number(pageNum)}`}`
+          `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
         );
 
         if (result.success) {
-          setRealDataNotification(result.notifications);
+          const sortedNotifications = result.notifications.sort((a, b) => {
+            if (!a.read && b.read) return -1;
+            if (a.read && !b.read) return 1;
+
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+
+            return dateB - dateA;
+          }) 
+          console.info(result.notifications, 'result.notifications')
+          setRealDataNotification(sortedNotifications);
         }
       }
     },
@@ -157,7 +166,7 @@ const MainHeader: React.FC<IMainHeader> = ({
   const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
-      if (result.success && result.totalCount > 0) {
+      if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
     }

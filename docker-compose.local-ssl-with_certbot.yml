@@ -109,6 +109,8 @@ services:
       BINANCE_MAINNET_MINTER_ADDRESS: ${binance_mainnet_minter_address}
       SEPOLIA_FACTORY_ADDRESS: ${sepolia_factory_addres}
       SEPOLIA_MINTER_ADDRESS: ${sepolia_minter_address}
+      SEPOLIA_DIAMOND_FACTORY_ADDRESS: ${sepolia_diamond_factory_address}
+      SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS: ${sepolia_diamond_marketplace_address}
       MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
       MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
       MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}

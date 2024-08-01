@@ -59,6 +59,7 @@ export type TTokenData = {
 export type TNftItemResponse = {
   success: boolean;
   result: TNftItemResult;
+  tokens?: any;
 };
 
 export type TFavotiteTokenData = {

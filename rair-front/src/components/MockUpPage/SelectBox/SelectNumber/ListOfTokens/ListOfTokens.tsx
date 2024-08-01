@@ -14,6 +14,7 @@ import { IListOfTokensComponent } from '../../selectBox.types';
 import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
 
 import '../../styles.css';
+import { useParams } from 'react-router';
 
 const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   blockchain,
@@ -29,7 +30,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   setIsOpen,
   totalCount
 }) => {
-  const [productTokenNumbers, setProductTokenNumbers] = useState<string[]>([]);
+  const [productTokenNumbers, setProductTokenNumbers] = useState<any>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
   const listOfTokensRef = useRef<HTMLDivElement>(null);
@@ -37,6 +38,8 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const [isOpens, setIsOpens] = useState<boolean>(false);
   const [isBack /*setIsBack*/] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(true);
+
+  const {} = useParams();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -61,7 +64,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
     async (target: HTMLElement) => {
       const indexes = getNumberFromStr(target?.innerText);
       const responseAllProduct = await axios.get<TNftItemResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${indexes[0]}&toToken=${indexes[1]}&limit=${limit}`
+        `/api/nft/network/${blockchain}/${contract}/${product}/numbers?fromToken=${indexes[0]}&toToken=${indexes[1]}`
       );
       const tokenMapping = {};
       if (responseAllProduct.data.success) {
@@ -99,6 +102,16 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
     [listOfTokensRef, isOpens]
   );
 
+    const fetchSerialData = useCallback(async(fromToken?: number, toToken?: number) => {
+      const {data} = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${blockchain}/${contract}/${product}/numbers${fromToken && toToken ? `?fromToken=${fromToken}&toToken=${toToken}` : ''}`
+      );
+
+      if(data.success && data.tokens) {
+        setProductTokenNumbers(data.tokens);
+      }
+    }, [blockchain,contract,product])
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutSideListOfTokens);
     return () =>
@@ -106,30 +119,20 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   }, [handleClickOutSideListOfTokens, isOpen]);
 
   useEffect(() => {
-    let isDestroyed = false;
-    fetch(`/api/nft/network/${blockchain}/${contract}/${product}/`)
-      .then((res) => res.json())
-      .then((response) => {
-        if (!isDestroyed) {
-          setProductTokenNumbers(response.tokens);
-        }
-      });
-    return () => {
-      isDestroyed = true;
-    };
-  }, [blockchain, product, contract, setProductTokenNumbers]);
+    fetchSerialData();
+  }, []);
 
-  const availableRanges = useMemo(
-    () =>
-      productTokenNumbers?.reduce((acc, tokenNumber: string) => {
-        const tokenRange = Math.floor(+tokenNumber / 100) * 100;
-        return {
-          ...acc,
-          [tokenRange]: true
-        };
-      }, {}),
-    [productTokenNumbers]
-  );
+const availableRanges = useMemo(
+  () =>
+  totalCount?.reduce((acc, item) => {
+      const tokenRange = Math.floor(+item.token / 100) * 100;
+      return {
+        ...acc,
+        [tokenRange]: true
+      };
+    }, {}),
+  [totalCount]
+);
 
   const getPaginationToken = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -178,7 +181,11 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
                 <button
                   disabled={availableRanges?.[i] ? false : true}
                   key={i}
-                  onClick={(e) => getPaginationToken(e)}
+                  onClick={(e) => {
+                    console.info(i, i + 99)
+                    fetchSerialData(i, i + 99);
+                    getPaginationToken(e);
+                  }}
                   className={`serial-box serial-numb check-disable ${
                     hotdropsVar === 'true' ? 'hotdrops-bg' : ''
                   }`}>
@@ -196,10 +203,10 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
       </div>
     ) : (
       <>
-        {tokenData !== undefined && (
+        {productTokenNumbers !== undefined && (
           <CurrentTokens
             primaryColor={primaryColor}
-            items={currentTokenData(tokenData)}
+            items={productTokenNumbers}
             isOpen={isOpen}
             isBack={isBack}
             selectedToken={selectedToken}
@@ -208,6 +215,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
             numberRef={numberRef}
             handleIsOpen={handleIsOpen}
             onClickItem={onClickItem}
+            totalCount={productTokenNumbers.filter((el, index) => index <= 99)}
           />
         )}
       </>

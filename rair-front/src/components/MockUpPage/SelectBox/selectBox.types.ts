@@ -10,7 +10,7 @@ export interface IListOfTokensComponent {
   setSelectedToken: (tokenId: string | undefined) => void;
   selectedToken: string | undefined;
   setIsOpen: (isOpen: boolean) => void;
-  totalCount: number | undefined;
+  totalCount: any;
 }
 
 export interface ICurrentTokensComponent {
@@ -24,6 +24,7 @@ export interface ICurrentTokensComponent {
   handleIsOpen: () => void;
   onClickItem: (element: string) => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
+  totalCount?: any;
 }
 
 export type SelectNumberItem = {
@@ -38,7 +39,7 @@ export interface ISelectNumber {
   items: SelectNumberItem[];
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   selectedToken: string | undefined;
-  totalCount: number | undefined;
+  totalCount: any;
   product: string | undefined;
   contract: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
