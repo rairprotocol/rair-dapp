@@ -79,7 +79,10 @@ exports.getFeaturedCollection = async (req, res, next) => {
 
 exports.getServerSettings = async (req, res, next) => {
   try {
-    const settings = await ServerSetting.findOne({}, { 'footerLinks._id': false }).lean();
+    const settings = await ServerSetting.findOne({}, {
+      'footerLinks._id': false,
+      'customValues._id': false,
+    }).lean();
     const blockchainSettings = await Blockchain.find({});
     if (settings.featuredCollection) {
       const collectionData = await Product.findById(settings.featuredCollection).lean();
