@@ -11,7 +11,10 @@ import {
 } from '../../ducks/colors/actions';
 import { HotdropsFavicon, RairFavicon } from '../../images';
 import { rFetch } from '../../utils/rFetch';
-import { FooterLinkType } from '../common/commonTypes/InputSelectTypes.types';
+import {
+  CustomValueType,
+  FooterLinkType
+} from '../common/commonTypes/InputSelectTypes.types';
 
 const useServerSettings = () => {
   const dispatch = useDispatch();
@@ -34,6 +37,7 @@ const useServerSettings = () => {
   const [customFadeButtonColor, setCustomFadeButtonColor] = useState('#1486c5');
   const [superAdmins, setSuperAdmins] = useState<string[]>([]);
   const [footerLinks, setFooterLinks] = useState<FooterLinkType[]>([]);
+  const [customValues, setCustomValues] = useState<CustomValueType[]>([]);
   const [blockchainSettings, setBlockchainSettings] = useState<
     BlockchainSetting[]
   >([]);
@@ -99,9 +103,10 @@ const useServerSettings = () => {
       setSuperAdmins(settings?.superAdmins);
       setBlockchainSettings(blockchainSettings || []);
       setFooterLinks(settings.footerLinks);
+      setCustomValues(settings.customValues);
     }
     setIsLoading(false);
-  }, [dispatch, ]);
+  }, [dispatch]);
 
   useEffect(() => {
     getServerSettings();
@@ -146,6 +151,17 @@ const useServerSettings = () => {
     };
   }, [settings]);
 
+  const getCustomValue = useCallback(
+    (key) => {
+      if (!key) {
+        return;
+      }
+      const data = customValues.find((item) => item.name === key);
+      return data.value;
+    },
+    [customValues]
+  );
+
   return {
     getServerSettings,
     settings,
@@ -176,9 +192,11 @@ const useServerSettings = () => {
     signupMessage,
     setSignupMessage,
     blockchainSettings,
-    isLoading
+    isLoading,
+    customValues,
+    setCustomValues,
+    getCustomValue
   };
 };
-
 
 export default useServerSettings;
