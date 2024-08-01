@@ -791,7 +791,7 @@ const ServerSettings = ({ fullContractData }) => {
                 <div key={index} className="row">
                   <div className="col-12 col-md-5">
                     <InputField
-                      label="Text"
+                      label="Name"
                       customClass="rounded-rair text-center p-1 w-100"
                       getter={customValue.name}
                       setter={modifyCustomValues(index, 'name')}
@@ -800,7 +800,7 @@ const ServerSettings = ({ fullContractData }) => {
                   </div>
                   <div className="col-12 col-md-6">
                     <InputField
-                      label="URL"
+                      label="Value"
                       customClass="rounded-rair text-center p-1 w-100"
                       getter={customValue.value}
                       setter={modifyCustomValues(index, 'value')}

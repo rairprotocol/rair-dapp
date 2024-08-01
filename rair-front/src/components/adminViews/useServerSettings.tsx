@@ -151,6 +151,17 @@ const useServerSettings = () => {
     };
   }, [settings]);
 
+  const getCustomValue = useCallback(
+    (key) => {
+      if (!key) {
+        return;
+      }
+      const data = customValues.find((item) => item.name === key);
+      return data.value;
+    },
+    [customValues]
+  );
+
   return {
     getServerSettings,
     settings,
@@ -183,7 +194,8 @@ const useServerSettings = () => {
     blockchainSettings,
     isLoading,
     customValues,
-    setCustomValues
+    setCustomValues,
+    getCustomValue
   };
 };
 
