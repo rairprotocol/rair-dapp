@@ -1,4 +1,6 @@
 import React from 'react';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
 
 import { ButtonHeart } from './BtnMyFavorite.styled';
@@ -26,7 +28,7 @@ const BtnMyFavorite: React.FC<IBtnMyFavorite> = ({ removeFavotite }) => {
 
   return (
     <ButtonHeart onClick={() => warningBeforeRemove()}>
-      <i className="fas fa-heart like-button"></i>
+      <FontAwesomeIcon icon={faHeart} className="like-button" />
     </ButtonHeart>
   );
 };

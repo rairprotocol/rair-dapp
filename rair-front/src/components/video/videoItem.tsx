@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Provider, useSelector, useStore } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { faLock, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { constants, utils } from 'ethers';
 import { useStateIfMounted } from 'use-state-if-mounted';
@@ -278,8 +280,8 @@ const VideoItem: React.FC<IVideoItem> = ({
               <ModalContentCloseBtn
                 primaryColor={primaryColor}
                 onClick={closeModal}>
-                <i
-                  className="fas fa-times"
+                <FontAwesomeIcon
+                  icon={faTimes}
                   style={{
                     lineHeight: 'inherit',
                     color:
@@ -310,9 +312,10 @@ const VideoItem: React.FC<IVideoItem> = ({
                     <TooltipBox
                       enterDelay={200}
                       title="You Need to Buy This NFT!">
-                      <i
+                      <FontAwesomeIcon
+                        icon={faLock}
                         data-title="You Need to Buy This NFT!"
-                        className="fa fa-lock modal-content-video-lock"
+                        className="modal-content-video-lock"
                       />
                     </TooltipBox>
                   </>

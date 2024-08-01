@@ -1,4 +1,5 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { v4 } from 'uuid';
 
 import TeammateDesc from './TeammateDesc';
@@ -50,7 +51,7 @@ const Teammate: React.FC<ITeammate> = ({
                     target="_blank"
                     href={social.link}
                     rel="noreferrer">
-                    <i className={social.classIcon}></i>
+                    <FontAwesomeIcon icon={social.classIcon} />
                   </a>
                 </span>
               );

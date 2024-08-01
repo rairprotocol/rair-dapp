@@ -7,7 +7,7 @@ const config = require('../../config');
 const gcp = require('../../integrations/gcp')(config);
 const log = require('../../utils/logger')(module);
 const { cleanStorage, textPurify } = require('../../utils/helpers');
-const { User } = require('../../models');
+const { User, ServerSetting } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const eFactory = require('../../utils/entityFactory');
 
@@ -125,6 +125,13 @@ exports.createUser = async (req, res, next) => {
   try {
     let { publicAddress } = req.body;
     publicAddress = publicAddress.toLowerCase();
+
+    if (await User.estimatedDocumentCount() === 0) {
+      await ServerSetting.updateOne({}, { $set: {
+        superAdmins: [publicAddress],
+      } });
+      log.info('First user registered, given super admin access');
+    }
 
     const addUser = await User.create({ publicAddress });
 

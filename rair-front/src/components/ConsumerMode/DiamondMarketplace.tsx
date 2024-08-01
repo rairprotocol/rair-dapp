@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
+import { faGem, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, constants, utils } from 'ethers';
 
 import {
@@ -80,7 +82,7 @@ const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({
             <button
               onClick={() => remove(index)}
               className="col-12 btn btn-danger col-md-1">
-              <i className="fas fa-trash" />
+              <FontAwesomeIcon icon={faTrash} />
             </button>
           </div>
         );
@@ -290,7 +292,7 @@ const DiamondMarketplace = () => {
     <div className="row w-100">
       <div className="col-12 text-center">
         <h1>
-          <i className="fas fa-gem" />
+          <FontAwesomeIcon icon={faGem} />
         </h1>
         <h5> Diamond Marketplace </h5>
         {loadingData

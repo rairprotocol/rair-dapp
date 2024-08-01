@@ -1,5 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
+import {
+  faCheck,
+  faPencilAlt,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { MediaItemContainer } from './MediaItem.styled';
 
@@ -127,7 +133,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                     primaryColor === 'rhyno' ? 'rhyno' : ''
                   } ${modalIsOpen ? 'modal-open' : ''}`}
                   onClick={openModal}>
-                  <i className="fas fa-pencil-alt"></i>
+                  <FontAwesomeIcon icon={faPencilAlt} />
                 </button>
               ) : (
                 <TooltipBox title="Click to change video details.">
@@ -140,7 +146,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                       onClick={() => {
                         openModal();
                       }}>
-                      <i className="fas fa-pencil-alt"></i>
+                      <FontAwesomeIcon icon={faPencilAlt} />
                     </button>
                   </span>
                 </TooltipBox>
@@ -161,7 +167,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                     primaryColor === 'rhyno' ? 'rhyno' : ''
                   }`}
                   type="submit">
-                  <i className="fas fa-check"></i>
+                  <FontAwesomeIcon icon={faCheck} />
                 </button>
                 <button
                   disabled={disabledBtn}
@@ -169,7 +175,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                     primaryColor === 'rhyno' ? 'rhyno' : ''
                   }`}
                   onClick={closeEdit}>
-                  <i className="fas fa-times"></i>
+                  <FontAwesomeIcon icon={faTimes} />
                 </button>
               </div>
             </form>

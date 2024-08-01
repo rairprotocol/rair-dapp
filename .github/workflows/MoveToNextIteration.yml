@@ -1,7 +1,7 @@
 on:
   schedule:
-    # Runs "at 05:00, only on Tuesday" (see https://crontab.guru)
-    - cron: '0 5 * * 2'
+    # Runs "at 15:00, only on Friday" (see https://crontab.guru)
+    - cron: '0 15 * * 5'
 
 jobs:
   move-to-next-iteration:
@@ -12,7 +12,7 @@ jobs:
     - uses: blombard/move-to-next-iteration@master
       with:
         owner: rairprotocol
-        number: 1
+        number: 3
         token: ${{ secrets.PROJECT_PAT }}
         iteration-field: Iteration
         iteration: last

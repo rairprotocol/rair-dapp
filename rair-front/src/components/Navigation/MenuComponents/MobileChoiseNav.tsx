@@ -42,7 +42,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   const getNotificationsCount = useCallback( async () => {
     if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
-      if (result.success && result.totalCount > 0) {
+      if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
     }

@@ -2,6 +2,8 @@ const NodeCache = require('node-cache');
 const { isAddress } = require('ethers');
 const { recoverTypedSignature } = require('@metamask/eth-sig-util');
 const { createHmac, randomUUID } = require('crypto');
+
+const logger = require('../../utils/logger')(module);
 const AppError = require('../../utils/errors/AppError');
 
 const secret = randomUUID();
@@ -53,12 +55,17 @@ const recoverUserFromSignature = async (challenge, signature) => {
     primaryType: 'Challenge',
     message: messageData,
   };
-  const recovered = await recoverTypedSignature({
-    data,
-    signature,
-    version: 'V4',
-  });
-  return recovered;
+  try {
+    const recovered = await recoverTypedSignature({
+      data,
+      signature,
+      version: 'V4',
+    });
+    return recovered;
+  } catch (error) {
+    logger.error(error);
+    return undefined;
+  }
 };
 
 // Validates that a challenge is correct.

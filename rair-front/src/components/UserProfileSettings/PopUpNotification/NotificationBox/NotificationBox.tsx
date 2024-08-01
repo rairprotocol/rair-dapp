@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Provider, useSelector, useStore } from 'react-redux';
+
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-
 import useSwal from '../../../../hooks/useSwal';
 import { CloseIconMobile } from '../../../../images';
 import { SocialMenuMobile } from '../../../../styled-components/SocialLinkIcons/SocialLinkIcons';
@@ -11,51 +11,70 @@ import NotificationPage from '../../NotificationPage/NotificationPage';
 
 import './NotificationBox.css';
 
-const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUserAddress, getNotificationsCount }) => {
-  const { headerLogoMobile } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+const NotificationBox = ({
+  primaryColor,
+  title,
+  el,
+  getNotifications,
+  currentUserAddress,
+  getNotificationsCount
+}) => {
+  const { headerLogoMobile } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   const reactSwal = useSwal();
   const store = useStore();
 
   const removeItem = useCallback(async () => {
-    if(currentUserAddress) {
-      const result = await rFetch(`/api/notifications/${el._id}`, {
-        method: 'DELETE'
+    if (currentUserAddress) {
+      const result = await rFetch(`/api/notifications`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          ids: [el._id]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-  
+
       if (result.success) {
         getNotifications();
         getNotificationsCount();
       }
     }
-  }, [currentUserAddress])
+  }, [currentUserAddress]);
 
-  const readNotification = useCallback(
-    async () => {
-     if(currentUserAddress) {
-      const result = await rFetch(`/api/notifications/${el._id}`, {
+  const readNotification = useCallback(async () => {
+    if (currentUserAddress) {
+      const result = await rFetch(`/api/notifications`, {
         method: 'PUT',
         body: JSON.stringify({
-          ...el,
-          read: true
-        })
+          ids: [el._id]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-  
+
       if (result.success) {
         getNotifications();
         getNotificationsCount();
       }
-     }
-    }, [currentUserAddress])
+    }
+  }, [currentUserAddress]);
 
   const showMoreDetails = () => {
     reactSwal.fire({
-      html: <Provider store={store}>
-        <NotificationPage el={el} readNotification={readNotification} removeItem={removeItem} />
-      </Provider>,
+      html: (
+        <Provider store={store}>
+          <NotificationPage
+            el={el}
+            readNotification={readNotification}
+            removeItem={removeItem}
+          />
+        </Provider>
+      ),
       width: '90vw',
       customClass: {
         popup: `bg-${primaryColor}`
@@ -63,7 +82,7 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUse
       showConfirmButton: false,
       showCloseButton: true
       // cancelButtonText:
-      //     '<i class="fa fa-thumbs-down"></i>',
+      //     '<FontAwesomeIcon icon={faThumbsDown} />',
       // cancelButtonAriaLabel: 'Thumbs down'
     });
   };
@@ -80,12 +99,12 @@ const NotificationBox = ({ primaryColor, title, el, getNotifications, currentUse
         <div className="text-notification">
           <div
             onClick={() => {
-            //   readNotification();
-            showMoreDetails();
-            readNotification();
+              //   readNotification();
+              showMoreDetails();
+              readNotification();
             }}
             className="title-notif">
-            {title && title.length > 35 ? title.substr(0, 35) + "..." : title}
+            {title && title.length > 35 ? title.substr(0, 35) + '...' : title}
           </div>
         </div>
         <div>

@@ -59,6 +59,7 @@ export type TTokenData = {
 export type TNftItemResponse = {
   success: boolean;
   result: TNftItemResult;
+  tokens?: any;
 };
 
 export type TFavotiteTokenData = {
@@ -146,6 +147,7 @@ export type TContract = {
   title: string;
   transactionHash?: string;
   user: string;
+  userData: UserType | null;
   _id: string;
 };
 

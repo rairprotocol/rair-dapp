@@ -1,3 +1,5 @@
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
 
 import {
@@ -52,7 +54,9 @@ export const splashData: TSplashDataType = {
     buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
   },
   button2: {
-    buttonCustomLogo: <i className="fab fa-twitter twitter-logo" />,
+    buttonCustomLogo: (
+      <FontAwesomeIcon icon={faTwitter} className="twitter-logo" />
+    ),
     buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
   },
   button3: {

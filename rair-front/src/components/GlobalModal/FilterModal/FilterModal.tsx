@@ -38,6 +38,7 @@ import Dropdown from '../../Dropdown/Dropdown';
 import { closeModal, openModal } from '../helpers/OnOpenModal';
 
 import './styles.css';
+import useServerSettings from '../../adminViews/useServerSettings';
 export type THomePageFilterModalProps = {
   isMobileDesign?: boolean;
   className?: stirng;
@@ -56,32 +57,9 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
     };
   });
 
-  // const categories = [
-  //   {
-  //     name: 'Music',
-  //     clicked: false,
-  //     optionId: 7,
-  //     categoryId: '62b459f9a64260001c1e205e'
-  //   },
-  //   {
-  //     name: 'Art',
-  //     clicked: false,
-  //     optionId: 8,
-  //     categoryId: '62b459f9a64260001c1e205f'
-  //   },
-  //   {
-  //     name: 'Conference',
-  //     clicked: false,
-  //     optionId: 9,
-  //     categoryId: '62b459f9a64260001c1e2060'
-  //   },
-  //   {
-  //     name: 'Science',
-  //     clicked: false,
-  //     optionId: 10,
-  //     categoryId: '62b459f9a64260001c1e2061'
-  //   }
-  // ];
+  const serverSettings = useServerSettings();
+
+  const [blockchainsArray, setBlockchainsArray] = useState(undefined);
 
   const [categories, setCategories] = useState([]);
   const { globalModalState, globalModaldispatch } =
@@ -162,6 +140,23 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       setIsShow(true);
     }
   }, [selectedBchItems, setFilterText, setIsShow]);
+
+  useEffect(() => {
+    if(serverSettings.blockchainSettings) {
+      const filteredblockchainSettings = serverSettings.blockchainSettings.filter((el) => {
+        if(Object.keys(blockchainData).includes(el.hash)) {
+          return el;
+        }
+      }).map((item) => {
+        const itemBlockchain = blockchains.find(element => element.chainId === item.hash);
+        return {
+          ...itemBlockchain,
+          display: item.sync
+        }
+      })
+      setBlockchainsArray(filteredblockchainSettings);
+    }
+  }, [serverSettings.blockchainSettings]);
 
   useEffect(() => {
     if (selectedCatItems) {
@@ -563,13 +558,13 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
               primaryColor={primaryColor}
             />
           }>
-          <Dropdown
+          {blockchainsArray && <Dropdown
             onDropdownChange={onOptionChange}
-            options={blockchains}
+            options={blockchainsArray}
             selectedOptions={selectedBchItems && selectedBchItems}
             key={Math.random() * 1_000_000}
             isMobileDesign={isMobileDesign && isMobileDesign}
-          />
+          />}
         </AccordionItem>
       </CustomAccordion>
       <div className="filter-modal-btn-container ">

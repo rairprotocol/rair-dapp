@@ -1,5 +1,7 @@
 //@ts-nocheck
 import React from 'react';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { MainSelectNft } from './MainSelectNft';
 import MobileCarouselNfts from './MobileCarouselNfts';
@@ -28,7 +30,8 @@ const ExclusiveNfts = () => {
               href="https://cryptogreyman.com/"
               target={'_blank'}
               rel="noreferrer">
-              <span>View drop page</span> <i className="fas fa-arrow-right"></i>
+              <span>View drop page</span>{' '}
+              <FontAwesomeIcon icon={faArrowRight} />
             </a>
           </div>
         </MainSelectNft>

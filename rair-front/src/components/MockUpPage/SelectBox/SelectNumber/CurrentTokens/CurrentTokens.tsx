@@ -1,11 +1,10 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 
 import { RootState } from '../../../../../ducks';
 import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
 import useServerSettings from '../../../../adminViews/useServerSettings';
-import ArrowDown from '../../../assets/ArrowDown.svg?react';
-import ArrowUp from '../../../assets/ArrowUp.svg?react';
 import { StyledShevronIcon } from '../../../FilteringBlock/FilteringBlockItems/FilteringBlockItems';
 import { ICurrentTokensComponent } from '../../selectBox.types';
 
@@ -19,15 +18,17 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   selectedToken,
   handleIsOpen,
   onClickItem,
-  numberRef
+  numberRef,
+  totalCount
 }) => {
-  const { primaryButtonColor, textColor, iconColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryButtonColor, textColor, iconColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
-  const {customSecondaryButtonColor, customSecondaryColor} = useServerSettings();
+  const { customSecondaryColor } = useServerSettings();
 
-
+  const {tokenId} = useParams();
 
   return (
     <>
@@ -36,17 +37,18 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
           onClick={handleIsOpen}
           className="select-field"
           style={{
-            borderColor:  import.meta.env.VITE_TESTNET === 'true'
-            ? `${
-              primaryColor === '#dedede'
-                  ? 'var(--hot-drops)'
-                  : `color-mix(in srgb, ${customSecondaryColor}, #888888)`
-              }`
-            : `${
-              primaryColor === '#dedede'
-                  ? '#E882D5'
-                  : `color-mix(in srgb, ${customSecondaryColor}, #888888)`
-              }`,
+            borderColor:
+              import.meta.env.VITE_TESTNET === 'true'
+                ? `${
+                    primaryColor === '#dedede'
+                      ? 'var(--hot-drops)'
+                      : `color-mix(in srgb, ${customSecondaryColor}, #888888)`
+                  }`
+                : `${
+                    primaryColor === '#dedede'
+                      ? '#E882D5'
+                      : `color-mix(in srgb, ${customSecondaryColor}, #888888)`
+                  }`,
             backgroundColor: `${
               primaryColor === '#dedede'
                 ? 'var(--rhyno-40)'
@@ -56,19 +58,17 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
           <div className="number-item">{selectedToken}</div>
           {isOpen ? (
             <StyledShevronIcon
-            className="fas fa-chevron-down"
-            rotate="true"
-            primaryColor={primaryColor}
-            textColor={textColor}
-            customSecondaryButtonColor={iconColor}
-          />
+              rotate="true"
+              primaryColor={primaryColor}
+              textColor={textColor}
+              customSecondaryButtonColor={iconColor}
+            />
           ) : (
             <StyledShevronIcon
-                    className="fas fa-chevron-up"
-                    primaryColor={primaryColor}
-                    textColor={textColor}
-                    customSecondaryButtonColor={iconColor}
-                  />
+              primaryColor={primaryColor}
+              textColor={textColor}
+              customSecondaryButtonColor={iconColor}
+            />
           )}
         </div>
         <div
@@ -101,12 +101,13 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
               &#10007;
             </div>
           </div>
-          {items &&
-            items.map((el, index) => {
+          {totalCount && totalCount.length > 0 &&
+            totalCount.map((el,index) => {
               return (
                 <div
+                // className={`select-number-box ${tokenId && Number(tokenId) === el.token ? "selected-box" : ''}`}
                   className={`select-number-box ${
-                    selectedToken === el.token ? 'selected-box' : ''
+                    tokenId === el.token ? 'selected-box' : ''
                   } ${el.sold ? 'sold-token' : ''}`}
                   data-title={` #${el.token}`}
                   style={{
@@ -122,9 +123,10 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                             : primaryButtonColor
                           : primaryButtonColor
                     }`,
-                    color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`
+                    color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`,
+                    fontWeight: "bold"
                   }}
-                  key={el.id + index}
+                  key={index}
                   onClick={() => onClickItem(el.token)}>
                   {el.sold ? 'Sold' : el.token}
                 </div>

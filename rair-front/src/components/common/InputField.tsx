@@ -49,6 +49,7 @@ type TInputFieldProps<T extends any = any> = {
   max?: number | string;
   maxLength?: number;
   id?: string;
+  onClick?: React.MouseEventHandler<HTMLInputElement>;
 };
 
 // eslint-disable-next-line
@@ -67,7 +68,8 @@ const InputField = <T extends any = any>({
   disabled,
   min,
   max,
-  maxLength
+  maxLength,
+  onClick
 }: TInputFieldProps<T>) => {
   const [id] = useState<number | null>(getRandomValues);
 
@@ -98,6 +100,7 @@ const InputField = <T extends any = any>({
         </label>
       )}
       <input
+        onClick={onClick}
         type={type === 'eth' ? 'number' : type}
         id={id?.toString()}
         onChange={(e) => {

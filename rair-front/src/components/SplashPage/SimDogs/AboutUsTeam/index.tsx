@@ -1,3 +1,6 @@
+import { faLinkedinIn, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 import {
   AndreMiripolsky,
   MichaelTerpin,
@@ -21,11 +24,11 @@ export const teamSimDogsArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-twitter',
+        classIcon: faTwitter,
         link: '  https://twitter.com/michaelterpin'
       },
       {
-        classIcon: 'fab fa-linkedin-in',
+        classIcon: faLinkedinIn,
         link: 'https://www.linkedin.com/in/michaelterpin/',
         classLink: ''
       }
@@ -40,11 +43,11 @@ export const teamSimDogsArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fab fa-twitter',
+        classIcon: faTwitter,
         link: 'https://twitter.com/miripolsky'
       },
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://www.miripolsky.com/',
         classLink: 'arrrow-right'
       }
@@ -60,7 +63,7 @@ export const teamSimDogsArray: TTeamArrayItemType[] = [
     ],
     socials: [
       {
-        classIcon: 'fas fa-arrow-right',
+        classIcon: faArrowRight,
         link: 'https://rair.tech',
         classLink: 'arrrow-right'
       }

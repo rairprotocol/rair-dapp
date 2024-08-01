@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, ethers, utils } from 'ethers';
 
 import BatchRow from './BatchRow';
@@ -199,7 +201,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                 color: textColor
               }}
               className="col-2 btn rair-button">
-              Add <i className="fas fa-plus" />
+              Add <FontAwesomeIcon icon={faPlus} />
             </button>
             <div className="col">
               Total:{' '}
@@ -231,7 +233,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                     color: textColor
                   }}
                   className="btn col-12 col-md-3 rair-button">
-                  <i className="fas fa-minus" />
+                  <FontAwesomeIcon icon={faMinus} />
                 </button>
                 <div className="col-12 col-md-6">
                   Page: {batchPage} of {Number((rows.length - 2) / rowsLimit)}
@@ -244,7 +246,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                     color: textColor
                   }}
                   className="btn col-12 col-md-3 rair-button">
-                  <i className="fas fa-plus" />
+                  <FontAwesomeIcon icon={faPlus} />
                 </button>
               </>
             )}

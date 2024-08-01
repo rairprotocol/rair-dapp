@@ -2,6 +2,8 @@
 //unused-component
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
@@ -137,7 +139,7 @@ const MyNFTs = () => {
                     backgroundSize: '100% auto',
                     backgroundRepeat: 'no-repeat'
                   }}>
-                  {!image && <i className="fas fa-image h1" />}
+                  {!image && <FontAwesomeIcon icon={faImage} className="h1" />}
                 </div>
               </div>
             </Link>

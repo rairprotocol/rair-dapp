@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { faChevronLeft, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
@@ -19,6 +21,7 @@ import NotificationBox from '../../UserProfileSettings/PopUpNotification/Notific
 import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
 import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import useSwal from '../../../hooks/useSwal';
 
 interface IMobileNavigationList {
   messageAlert: string | null;
@@ -38,8 +41,6 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   currentUserAddress,
   click
 }) => {
-  const hotDropsVar = import.meta.env.VITE_TESTNET;
-
   const [userBalance, setUserBalance] = useState<string>('');
   const [userRairBalance, setUserRairBalance] = useState<any>(
     BigNumber.from(0)
@@ -48,7 +49,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     (store) => store.userStore
   );
 
-  const { primaryColor } = useSelector<
+  const { primaryColor, primaryButtonColor, textColor } = useSelector<
   RootState,
   ColorStoreType
 >((store) => store.colorStore);
@@ -92,28 +93,41 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   const [notificationCount, setNotificationCount] = useState<number>(0);
   const [flagLoading, setFlagLoading] = useState(false);
   const [currentPageNotification, setCurrentPageNotification] = useState<number>(1);
+  const reactSwal = useSwal();
 
   const { logoutUser } = useConnectUser();
 
-  const getNotifications = useCallback(async (pageNum: number) => {
+  const getNotifications = useCallback(async (pageNum?: number) => {
     if (messageAlert && currentUserAddress) {
       setFlagLoading(true);
-      const result = await rFetch(`/api/notifications${`?pageNum=${Number(pageNum)}`}`);
+      const result = await rFetch(`/api/notifications${ pageNum ? `?pageNum=${Number(pageNum)}` : ''}`);
       if (result.success) {
-        setNotificationArray(result.notifications);
-        setFlagLoading(false);
+        const sortedNotifications = result.notifications.sort((a, b) => {
+          if (!a.read && b.read) return -1;
+          if (a.read && !b.read) return 1;
+
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+
+          return dateB - dateA;
+        }) 
+        setNotificationArray(sortedNotifications);
       }
+
+      setFlagLoading(false);
     }
   }, [messageAlert, currentUserAddress]);
+  
 
   const getNotificationsCount = useCallback( async () => {
     if (currentUserAddress) {
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications`);
-      if (result.success && result.totalCount > 0) {
+      if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
-        setFlagLoading(true);
       }
+
+      setFlagLoading(false);
     }
   }, [currentUserAddress])
 
@@ -122,6 +136,27 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     const currentPageNumber = currentPage === 0 ? currentPage : currentPage - 1;
     getNotifications(Number(currentPageNumber));
   };
+
+  const deleteAllNotificaiton = useCallback( async() => {
+    if(currentUserAddress) {
+      setFlagLoading(true);
+      const result = await rFetch(`/api/notifications`, {
+        method: "DELETE",
+        body: JSON.stringify([])
+      });
+
+      if(result.success) {
+        getNotifications();
+        getNotificationsCount();
+        reactSwal.fire({
+          title : "Success",
+          icon: 'success'
+        });
+        setFlagLoading(false);
+      }
+      setFlagLoading(false);
+    }
+  }, [currentUserAddress])
 
   useEffect(() => {
     getNotificationsCount();
@@ -154,7 +189,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           className="nav-header-box-mobile"
           primaryColor={primaryColor}>
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
-            <i className="fas fa-chevron-left"></i>
+            <FontAwesomeIcon icon={faChevronLeft} />
           </BackBtnMobileNav>
           <div
             style={{
@@ -164,6 +199,23 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               marginTop: '20px',
               padding: '20px 0'
             }}>
+              <div className="btn-clear-nofitications">
+                 <button className="btn-clear-nofitications" onClick={() => deleteAllNotificaiton()} style={{
+            color: textColor,
+            background: `${
+              primaryColor === '#dedede'
+                ? import.meta.env.VITE_TESTNET === 'true'
+                  ? 'var(--hot-drops)'
+                  : 'linear-gradient(to right, #e882d5, #725bdb)'
+                : import.meta.env.VITE_TESTNET === 'true'
+                  ? primaryButtonColor ===
+                    'linear-gradient(to right, #e882d5, #725bdb)'
+                    ? 'var(--hot-drops)'
+                    : primaryButtonColor
+                  : primaryButtonColor
+            }`
+          }}>Clear all</button>
+                </div>
             {flagLoading ? (
               <LoadingComponent />
             ) : notificationArray && notificationArray.length > 0 ? (
@@ -189,7 +241,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               </div>
             )}
           </div>
-          {notificationCount && <PaginationBox
+          {notificationCount > 0 && <PaginationBox
             totalPageForPagination={notificationCount}
             changePage={changePageForVideo}
             currentPage={currentPageNotification}
@@ -202,10 +254,10 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           className="nav-header-box-mobile"
           primaryColor={primaryColor}>
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
-            <i className="fas fa-chevron-left"></i>
+            <FontAwesomeIcon icon={faChevronLeft} />
           </BackBtnMobileNav>
           {/* <li onClick={() => setMessageAlert('profileEdit')}>
-            Personal Profile <i className="fal fa-edit" />
+            Personal Profile <FontAwesomeIcon icon={faLeft} />
           </li> */}
           <li onClick={() => toggleMenu()}>
             <NavLink to={`/${currentUserAddress}`}>View Profile</NavLink>
@@ -337,7 +389,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           </div>
           {currentUserAddress && (
             <li className="logout" onClick={logoutUser}>
-              <i className="fas fa-sign-out-alt"></i>Logout
+              <FontAwesomeIcon icon={faSignOutAlt} />
+              Logout
             </li>
           )}
         </NavFooterBox>
@@ -347,7 +400,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           primaryColor={primaryColor}>
           {currentUserAddress && (
             <li className="logout" onClick={logoutUser}>
-              <i className="fas fa-sign-out-alt"></i>Logout
+              <FontAwesomeIcon icon={faSignOutAlt} />
+              Logout
             </li>
           )}
         </NavFooterBox>
