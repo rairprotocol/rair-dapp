@@ -22,9 +22,10 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
-  const { adminRights, loggedIn } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { adminRights, superAdmin, loggedIn } = useSelector<
+    RootState,
+    TUsersInitialState
+  >((store) => store.userStore);
   const { primaryColor, textColor, iconColor } = useSelector<
     RootState,
     ColorStoreType
@@ -43,7 +44,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
           }}
           className="container-admin-panel">
           {adminPanel &&
-            adminRights === true &&
+            (adminRights || superAdmin) &&
             !creatorViewsDisabled &&
             [
               {
