@@ -6,7 +6,7 @@ const {
   updateUserByUserAddress,
   listUsers,
   exportUsers,
-  yotiVerify
+  yotiVerify,
 } = require('./users.Service');
 const upload = require('../../Multer/Config');
 
@@ -28,13 +28,13 @@ router.get(
 router.post(
   '/verify-age',
   requireUserSession,
-  yotiVerify
+  yotiVerify,
 );
 
 router.post(
   '/',
   validation(['createUser']),
-  createUser
+  createUser,
 );
 
 // Common for the group of routes below validation

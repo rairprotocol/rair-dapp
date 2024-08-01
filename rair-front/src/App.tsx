@@ -92,12 +92,12 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 // import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
+import { rFetch } from './utils/rFetch';
 // views
 import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { rFetch } from './utils/rFetch';
 /* Track a page view */
 // const analytics = getInformationGoogleAnalytics();
 // analytics.page();
@@ -196,7 +196,7 @@ function App() {
     }
   }, [dispatch, logoutUser]);
 
-  const getNotificationsCount = useCallback( async () => {
+  const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
       if (result.success && result.totalCount >= 0) {
@@ -207,7 +207,7 @@ function App() {
 
   useEffect(() => {
     getNotificationsCount();
-  }, [getNotificationsCount])
+  }, [getNotificationsCount]);
 
   // gtag
 
@@ -372,8 +372,6 @@ function App() {
               <MenuNavigation
                 realChainId={realNameChain && realChain}
                 isSplashPage={isSplashPage}
-                adminRights={adminRights}
-                primaryColor={primaryColor}
                 renderBtnConnect={renderBtnConnect}
                 currentUserAddress={currentUserAddress}
                 creatorViewsDisabled={creatorViewsDisabled}

@@ -154,8 +154,8 @@ const MainHeader: React.FC<IMainHeader> = ({
             const dateB = new Date(b.createdAt).getTime();
 
             return dateB - dateA;
-          }) 
-          console.info(result.notifications, 'result.notifications')
+          });
+          // console.info(result.notifications, 'result.notifications');
           setRealDataNotification(sortedNotifications);
         }
       }
@@ -438,7 +438,7 @@ const MainHeader: React.FC<IMainHeader> = ({
           </div>
         )}
         <div className="box-connect-btn">
-          {adminRights && currentUserAddress && (
+          {(adminRights || superAdmin) && currentUserAddress && (
             <TooltipBox title="Admin Panel">
               <div
                 onClick={() => setAdminPanel((prev) => !prev)}
@@ -448,7 +448,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             </TooltipBox>
           )}
           <UserProfileSettings
-            adminAccess={adminRights}
+            adminAccess={adminRights || superAdmin}
             showAlert={showAlert}
             selectedChain={selectedChain}
             setTabIndexItems={setTabIndexItems}

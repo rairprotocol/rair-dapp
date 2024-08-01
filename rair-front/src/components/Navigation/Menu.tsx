@@ -1,6 +1,8 @@
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { constants, ethers, utils } from 'ethers';
 
@@ -38,8 +40,6 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface IMenuNavigation {
   connectUserData: () => void;
@@ -90,14 +90,15 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     ContractsInitialType
   >((state) => state.contractStore);
 
-  const {primaryButtonColor, textColor, iconColor, secondaryColor } =
-  useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const {
+    primaryButtonColor,
+    textColor,
+    iconColor,
+    secondaryColor,
+    primaryColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
-
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
 
   const handleMessageAlert = (pageNav: string) => {
     setMessageAlert(pageNav);
