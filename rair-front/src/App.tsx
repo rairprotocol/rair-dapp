@@ -198,7 +198,7 @@ function App() {
   const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
-      if (result.success && result.totalCount > 0) {
+      if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
     }
@@ -371,8 +371,6 @@ function App() {
               <MenuNavigation
                 realChainId={realNameChain && realChain}
                 isSplashPage={isSplashPage}
-                adminRights={adminRights}
-                primaryColor={primaryColor}
                 renderBtnConnect={renderBtnConnect}
                 currentUserAddress={currentUserAddress}
                 creatorViewsDisabled={creatorViewsDisabled}

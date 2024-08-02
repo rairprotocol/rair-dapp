@@ -91,14 +91,15 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     ContractsInitialType
   >((state) => state.contractStore);
 
-  const { primaryButtonColor, textColor, iconColor, secondaryColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const {
+    primaryButtonColor,
+    textColor,
+    iconColor,
+    secondaryColor,
+    primaryColor
+  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
-
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
 
   const handleMessageAlert = (pageNav: string) => {
     setMessageAlert(pageNav);

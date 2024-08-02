@@ -69,6 +69,18 @@ const ServerSettings = ({ fullContractData }) => {
     serverSettings.setFooterLinks(aux);
   };
 
+  const modifyCustomValues = (index, field) => (value) => {
+    const aux = [...serverSettings.customValues];
+    aux[index][field] = value;
+    serverSettings.setCustomValues(aux);
+  };
+
+  const deleteCustomValues = (index) => {
+    const aux = [...serverSettings.customValues];
+    aux.splice(index, 1);
+    serverSettings.setCustomValues(aux);
+  };
+
   const getCategories = useCallback(async () => {
     const { success, result } = await rFetch('/api/categories');
     if (success) {
@@ -978,7 +990,6 @@ const ServerSettings = ({ fullContractData }) => {
           </button>
           <button
             className="btn btn-success float-end"
-            disabled={!!serverSettings.settings.superAdminsOnVault}
             onClick={() => {
               const aux = serverSettings?.footerLinks
                 ? [...serverSettings.footerLinks]
@@ -1008,6 +1019,66 @@ const ServerSettings = ({ fullContractData }) => {
             }}
             onClick={() => setServerSetting({ legal: serverSettings.legal })}>
             Set
+          </button>
+        </div>
+        <div className="col-12 px-5 my-2">
+          <h3>Server values</h3>
+          {serverSettings.customValues &&
+            serverSettings.customValues.map((customValue, index) => {
+              return (
+                <div key={index} className="row">
+                  <div className="col-12 col-md-5">
+                    <InputField
+                      label="Name"
+                      customClass="rounded-rair text-center p-1 w-100"
+                      getter={customValue.name}
+                      setter={modifyCustomValues(index, 'name')}
+                      type="text"
+                    />
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <InputField
+                      label="Value"
+                      customClass="rounded-rair text-center p-1 w-100"
+                      getter={customValue.value}
+                      setter={modifyCustomValues(index, 'value')}
+                      type="text"
+                    />
+                  </div>
+                  <button
+                    className="btn mt-4 col-12 col-md-1 btn-danger"
+                    onClick={() => {
+                      deleteCustomValues(index);
+                    }}>
+                    Delete
+                  </button>
+                </div>
+              );
+            })}
+          <button
+            className="btn rair-button float-start"
+            style={{
+              background: primaryButtonColor,
+              color: textColor
+            }}
+            onClick={() => {
+              setServerSetting({ customValues: serverSettings.customValues });
+            }}>
+            Set Custom Values
+          </button>
+          <button
+            className="btn btn-success float-end"
+            onClick={() => {
+              const aux = serverSettings?.customValues
+                ? [...serverSettings.customValues]
+                : [];
+              aux.push({
+                name: '',
+                value: ''
+              });
+              serverSettings.setCustomValues(aux);
+            }}>
+            Add
           </button>
         </div>
         <div className="col-12 px-5 my-2">

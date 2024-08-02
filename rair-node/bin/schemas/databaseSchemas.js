@@ -22,6 +22,10 @@ module.exports = {
         })),
         legal: Joi.string(),
         signupMessage: Joi.string(),
+        customValues: Joi.array().items(Joi.object({
+            name: Joi.string(),
+            value: Joi.string(),
+        })),
     }),
     dbContracts: () => ({
         title: Joi.string(),
