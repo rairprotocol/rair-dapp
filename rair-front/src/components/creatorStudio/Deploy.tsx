@@ -326,8 +326,8 @@ const Factory = () => {
               Deploy a classic contract
               <br />
               <b>
-                {deploymentPrice &&
-                  utils.formatEther(deploymentPrice).toString()}{' '}
+                {deploymentPrice?.eq &&
+                  utils.formatEther(deploymentPrice!).toString()}{' '}
                 {tokenSymbol} Tokens
               </b>
               <br />
