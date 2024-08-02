@@ -20,9 +20,7 @@ import InputSelect from '../common/InputSelect';
 const Factory = () => {
   const [contractName, setContractName] = useState<string>('');
 
-  const [deploymentPrice, setDeploymentPrice] = useState<BigNumber>(
-    BigNumber.from(0)
-  );
+  const [deploymentPrice, setDeploymentPrice] = useState<BigNumber>();
   const [deploymentPriceDiamond, setDeploymentPriceDiamond] = useState<
     BigNumber | undefined
   >();
@@ -78,7 +76,7 @@ const Factory = () => {
   }, [getAllowance, allowance]);
 
   const getLegacyDeploymentCost = useCallback(async () => {
-    if (factoryInstance && mainTokenInstance && deploymentPrice.eq(0)) {
+    if (factoryInstance && mainTokenInstance && deploymentPrice === undefined) {
       const value = await web3TxHandler(
         factoryInstance,
         'deploymentCostForERC777',
@@ -94,7 +92,7 @@ const Factory = () => {
     if (
       diamondFactoryInstance &&
       mainTokenInstance &&
-      !deploymentPriceDiamond
+      deploymentPriceDiamond === undefined
     ) {
       const value = await web3TxHandler(
         diamondFactoryInstance,
@@ -113,10 +111,12 @@ const Factory = () => {
 
   useEffect(() => {
     setUserBalance(undefined);
+    setAllowance(undefined);
+    setDeploymentPrice(undefined);
+    setDeploymentPriceDiamond(undefined);
   }, [currentChain]);
 
   const getUserBalance = useCallback(async () => {
-    console.info(1);
     if (mainTokenInstance && userBalance === undefined) {
       const userBalance = await web3TxHandler(mainTokenInstance, 'balanceOf', [
         currentUserAddress
