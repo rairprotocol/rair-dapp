@@ -1,0 +1,18 @@
+.dApp-container button.btn-dapp-cat {
+    border-radius: 15px;
+    background: var(--bubblegum);
+    width: 400px;
+    height: 90px;
+    outline: none;
+    font-size: 36px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.dApp-container {
+    height: 80vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

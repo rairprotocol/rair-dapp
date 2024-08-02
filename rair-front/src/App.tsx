@@ -98,6 +98,9 @@ import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { rFetch } from './utils/rFetch';
+import { HomeCat } from './catDApp/pages';
+import DAppHomeComponent from './components/DAppHomeComponent/DAppHomeComponent';
+import MyApp from './catDApp/pages/_app';
 /* Track a page view */
 // const analytics = getInformationGoogleAnalytics();
 // analytics.page();
@@ -106,7 +109,7 @@ const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const dispatch = useDispatch();
-  const { getServerSettings, settings } = useServerSettings();
+  const { getServerSettings, settings, signupMessage } = useServerSettings();
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
@@ -122,6 +125,7 @@ function App() {
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
   const [isAboutPage, setIsAboutPage] = useState<boolean>(false);
   const { selectedChain, realNameChain, selectedChainId } = detectBlockchain(
     currentChain,
@@ -410,7 +414,10 @@ function App() {
             }`}>
             <div className="col-12 blockchain-switcher" />
             <div className="col-12 mt-3">
-              <SentryRoutes>
+              {signupMessage !== "Welcome" ?
+                  <MyApp />
+                  // <DAppHomeComponent />
+               :  <SentryRoutes>
                 {/*
 										Iterate over the routes in the array
 										Full object structure: 
@@ -498,6 +505,11 @@ function App() {
                   {
                     path: '/nipsey-splash',
                     content: SplashPage
+                  },
+                  {
+                    path: '/cat-app',
+                    content: HomeCat,
+                    exact: true
                   },
                   {
                     path: '/slidelock',
@@ -840,7 +852,7 @@ function App() {
                     />
                   );
                 })}
-              </SentryRoutes>
+              </SentryRoutes>}
             </div>
           </MainBlockApp>
         </div>
