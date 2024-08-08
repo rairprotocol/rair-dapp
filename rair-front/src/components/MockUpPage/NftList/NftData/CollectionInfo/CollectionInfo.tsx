@@ -40,6 +40,28 @@ const EasyMintRow = ({
   const [tokensToMint, setTokensToMint] = useState('1');
   const remainingCopies = token.copies - token.soldCopies;
   const navigate = useNavigate();
+  const [newMintedTokens, setNewMintedTokens] = useState<any>();
+
+  useEffect(() => {
+    if(token && Array.isArray(token.range) && tokenData) {
+      let ranges: number[] = [];
+      for(let i = Number(token.range[0]); i <= Number(token.range[1]); i++) {
+        if(!tokenData[i].isMinted) {
+          ranges.push(i);
+        }
+      }
+
+    const mapsArray = ranges.length > 0 ? ranges.map((el: number) => {
+      return {
+        label: el.toString(), 
+        value: el.toString(), 
+      }
+    }) : [];
+
+    setNewMintedTokens(mapsArray);
+    }
+  }, [token, token.ranges, tokenData])
+
   const params = useParams<TParamsNftItemForCollectionView>();
   return (
     <BlockItemCollection className="block-item-collection">
@@ -73,24 +95,19 @@ const EasyMintRow = ({
           .toString()}{' '}
         {blockchain && chainData[blockchain]?.symbol}
       </div>
-      {remainingCopies > 0 ? (
+      {newMintedTokens && newMintedTokens.length > 0 ? (
         <div className="item-multi-mint">
           <InputSelect
             placeholder="Choose Quantity"
-            options={[...Array(Math.min(remainingCopies, 30))].map(
-              (_, index) => {
-                return {
-                  label: (index + 1).toString(),
-                  value: (index + 1).toString()
-                };
-              }
-            )}
+            options={newMintedTokens}
             getter={tokensToMint}
             setter={setTokensToMint}
           />
         </div>
       ) : (
-        <p>No tokens available.</p>
+        <div style={{
+          fontSize: "14px"
+        }}>No tokens available</div>
       )}
       {mintToken && (
         <div className={`collection-mint-button`}>
