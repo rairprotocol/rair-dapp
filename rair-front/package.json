@@ -30,6 +30,7 @@
     "@metamask/providers": "^14.0.2",
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
+    "@next/font": "^14.2.5",
     "@sentry/browser": "^7.85.0",
     "@sentry/react": "^7.85.0",
     "@types/react-router": "^5.1.20",

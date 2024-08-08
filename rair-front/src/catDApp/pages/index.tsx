@@ -84,8 +84,8 @@ export const HomeCat: NextPage = () => {
 							)}
 						</>
 					)}
-					<Events />
-					<Footer />
+					{/* <Events /> */}
+					{/* <Footer /> */}
 				</div>
 			</EventContext.Provider>
 		</GameContext.Provider>

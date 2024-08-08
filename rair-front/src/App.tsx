@@ -415,7 +415,7 @@ function App() {
             <div className="col-12 blockchain-switcher" />
             <div className="col-12 mt-3">
               {signupMessage !== "Welcome" ?
-                  <MyApp />
+                  <MyApp Component={HomeCat} />
                   // <DAppHomeComponent />
                :  <SentryRoutes>
                 {/*

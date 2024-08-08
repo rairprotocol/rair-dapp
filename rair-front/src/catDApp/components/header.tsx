@@ -21,7 +21,7 @@ const Header: React.FC = () => {
 				color="hsl(277deg 59% 39% / 20%)"
 			/>
 			<div className="max-w-5xl mx-auto flex justify-between items-center ">
-				<div>
+				{/* <div>
 					<Image
 						className="md:hidden"
 						width={48}
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
 						src="/logo.png"
 						alt="thirdweb"
 					/>
-				</div>
+				</div> */}
 
 				<div className="max-w-xs">
 					{address ? (

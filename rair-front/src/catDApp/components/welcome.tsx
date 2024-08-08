@@ -14,24 +14,15 @@ const Welcome: React.FC = () => {
 	return (
 		<div className="flex flex-col items-center w-full space-y-12">
 			<h1 className="font-bold sm:text-6xl text-4xl leading-none text-center tracking-tight">
-				Welcome to&nbsp;
-				<span
-					className="!bg-clip-text text-transparent"
-					style={{
-						background:
-							"linear-gradient(73.59deg, #C339AC 42.64%, #CD4CB5 54%, #E173C7 77.46%)",
-					}}
-				>
-					Cat Attack
-				</span>
+				Welcome to Cat Attack
 			</h1>
 			<div className="mx-auto">
-				<Image
+				{/* <Image
 					src="/cat-attack.png"
 					width={400}
 					height={320}
 					alt="Cat Attack"
-				/>
+				/> */}
 			</div>
 			<div className="max-w-xs">
 				<ConnectButton
@@ -45,6 +36,14 @@ const Welcome: React.FC = () => {
 					chain={CHAIN}
 					connectButton={{
 						label: "Start Playing",
+						style: {
+							background: "linear-gradient(to right, rgb(232, 130, 213), rgb(114, 91, 219))",
+							color: "#fff",
+							width: "300px",
+							height: "60px",
+							fontSize: "18px",
+							marginTop: "20px"
+						}
 					}}
 				/>
 			</div>

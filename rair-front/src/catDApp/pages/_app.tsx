@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-// import { Inter } from "next/font/google";
+// import { Inter } from '@next/font/google';
 import "tailwindcss/tailwind.css";
 import { ThirdwebProvider } from "thirdweb/react";
 
