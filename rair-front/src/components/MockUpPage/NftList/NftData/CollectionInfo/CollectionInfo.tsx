@@ -26,6 +26,7 @@ import { ICollectionInfo } from '../../nftList.types';
 import { ModalContentCloseBtn } from './../../../../MockUpPage/utils/button/ShowMoreItems';
 
 import './CollectionInfo.css';
+import useServerSettings from '../../../../adminViews/useServerSettings';
 
 const EasyMintRow = ({
   token,
@@ -38,6 +39,7 @@ const EasyMintRow = ({
 }) => {
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [tokensToMint, setTokensToMint] = useState('1');
+
   const remainingCopies = token.copies - token.soldCopies;
   const navigate = useNavigate();
   const params = useParams<TParamsNftItemForCollectionView>();
