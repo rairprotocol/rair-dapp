@@ -7,9 +7,9 @@ import { TMinterMarketplaceItemType } from './marketplace.types';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
-import chainData from '../../utils/blockchainData';
+import useWeb3Tx from '../../hooks/useWeb3Tx';
+import useServerSettings from '../adminViews/useServerSettings';
 
 const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
   item,
@@ -18,20 +18,19 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
 }) => {
   const { primaryColor, secondaryColor, textColor, secondaryButtonColor } =
     useSelector<RootState, ColorStoreType>((state) => state.colorStore);
-  const { currentChain } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
   const store = useStore();
   const reactSwal = useSwal();
+  const { correctBlockchain } = useWeb3Tx();
+  const { getBlockchainData } = useServerSettings();
 
-  const onMyChain = chainData[item.blockchain]?.chainId === currentChain;
+  const onMyChain = correctBlockchain(item?.blockchain);
 
   return (
     <div key={index} className={`col-${colWidth ? colWidth : 4} p-2`}>
       <div
         style={{
           border: `solid 1px ${textColor}`,
-          backgroundImage: `url(${chainData[item?.blockchain]?.image})`,
+          backgroundImage: `url(${getBlockchainData(item.blockchain)?.image})`,
           backgroundColor: `var(--${primaryColor}-transparent)`
         }}
         className="w-100 p-3 bg-blockchain">
@@ -46,7 +45,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
           item.soldCopies +
           1}{' '}
         tokens up for sale <br />
-        for {item.price} {chainData[item.blockchain]?.name} wei <br />
+        for {item.price} {getBlockchainData(item.blockchain)?.name} wei <br />
         <small>{/*item.totalCopies*/}</small>
         <br />
         <button
@@ -56,7 +55,9 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
               if (window.ethereum) {
                 await window.ethereum.request({
                   method: 'wallet_switchEthereumChain',
-                  params: [{ chainId: chainData[item.blockchain]?.chainId }]
+                  params: [
+                    { chainId: getBlockchainData(item.blockchain)?.hash }
+                  ]
                 });
               } else {
                 // Code for suresh goes here
@@ -95,7 +96,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
             <>Buy</>
           ) : (
             <>
-              Switch to <b>{chainData[item.blockchain]?.name}</b>
+              Switch to <b>{getBlockchainData(item.blockchain)?.name}</b>
             </>
           )}
         </button>

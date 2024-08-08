@@ -10,8 +10,8 @@ import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
-import blockchainData from '../../../../../utils/blockchainData';
 import { validateInteger } from '../../../../../utils/metamaskUtils';
+import useServerSettings from '../../../../adminViews/useServerSettings';
 import InputField from '../../../../common/InputField';
 import { SvgKeyForModalItem } from '../../../NftList/SvgKeyForModalItem';
 import { IModalItem } from '../../filteringBlock.types';
@@ -29,6 +29,7 @@ const ModalItem: React.FC<IModalItem> = ({
   isCreatedTab
 }) => {
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+  const { getBlockchainData } = useServerSettings();
 
   const [price, setPrice] = useState<number>(0);
   const [isApproved, setIsApproved] = useState<boolean | undefined>(undefined);
@@ -188,7 +189,7 @@ const ModalItem: React.FC<IModalItem> = ({
                   <>
                     {utils.formatEther(price)}{' '}
                     {selectedData?.blockchain &&
-                      blockchainData[selectedData.blockchain]?.symbol}
+                      getBlockchainData(selectedData.blockchain)?.symbol}
                   </>
                 )}
                 <InputField
@@ -209,7 +210,7 @@ const ModalItem: React.FC<IModalItem> = ({
                 Price for this NFT on the marketplace :{' '}
                 {utils.formatEther(Number(selectedData?.offer?.price))}{' '}
                 {selectedData?.blockchain &&
-                  blockchainData[selectedData.blockchain]?.symbol}
+                  getBlockchainData(selectedData.blockchain)?.symbol}
               </span>
             ) : (
               <button
@@ -239,7 +240,7 @@ const ModalItem: React.FC<IModalItem> = ({
                     : 'The marketplace is not available for this blockchain'
                   : `Switch to ${
                       selectedData?.blockchain &&
-                      blockchainData[selectedData?.blockchain]?.name
+                      getBlockchainData(selectedData?.blockchain)?.name
                     }`}
               </button>
             )}

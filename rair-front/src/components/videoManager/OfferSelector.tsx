@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import useSwal from '../../hooks/useSwal';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
+import useServerSettings from '../adminViews/useServerSettings';
 import InputSelect from '../common/InputSelect';
 
 const OfferSelector = ({ fileId }) => {
@@ -16,6 +16,7 @@ const OfferSelector = ({ fileId }) => {
   const [selectedOffers, setSelectedOffers] = useState<string[]>([]);
 
   const reactSwal = useSwal();
+  const { getBlockchainData } = useServerSettings();
 
   const { textColor, secondaryButtonColor } = useSelector<
     RootState,
@@ -33,9 +34,8 @@ const OfferSelector = ({ fileId }) => {
       setContractOptions(
         result
           .map((contract) => ({
-            label: `${contract.title} (${
-              chainData[contract.blockchain].symbol
-            })`,
+            label: `${contract.title} (${getBlockchainData(contract.blockchain)
+              ?.symbol})`,
             value: contract._id
           }))
           .sort((a, b) => {

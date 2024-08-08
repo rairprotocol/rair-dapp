@@ -26,7 +26,6 @@ import useServerSettings from './components/adminViews/useServerSettings';
 import AlertMetamask from './components/AlertMetamask/index';
 import ConsumerMode from './components/consumerMode';
 import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
-import CreatorMode from './components/creatorMode';
 import ContractDetails from './components/creatorStudio/ContractDetails';
 import Contracts from './components/creatorStudio/Contracts';
 import Deploy from './components/creatorStudio/Deploy';
@@ -106,7 +105,8 @@ const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const dispatch = useDispatch();
-  const { getServerSettings, settings } = useServerSettings();
+  const { getServerSettings, settings, blockchainSettings } =
+    useServerSettings();
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
@@ -117,7 +117,6 @@ function App() {
     diamondMarketplaceInstance,
     currentUserAddress,
     minterInstance,
-    factoryInstance,
     programmaticProvider
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -185,7 +184,7 @@ function App() {
   useEffect(() => {
     if (window.ethereum) {
       const foo = async (chainId) => {
-        dispatch(setChainId(chainId));
+        dispatch(setChainId(chainId, blockchainSettings));
       };
       window.ethereum.on('chainChanged', foo);
       window.ethereum.on('accountsChanged', logoutUser);
@@ -194,7 +193,7 @@ function App() {
         window.ethereum.off('accountsChanged', logoutUser);
       };
     }
-  }, [dispatch, logoutUser]);
+  }, [dispatch, logoutUser, blockchainSettings]);
 
   const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
@@ -649,17 +648,6 @@ function App() {
                     path: '/token/:blockchain/:contract/:identifier',
                     content: Token,
                     requirement: loggedIn && !creatorViewsDisabled
-                  },
-
-                  // Classic Factory (Uses the blockchain)
-                  {
-                    path: '/factory',
-                    content: CreatorMode,
-                    requirement:
-                      loggedIn &&
-                      !creatorViewsDisabled &&
-                      adminRights &&
-                      factoryInstance !== undefined
                   },
 
                   // Classic Minter Marketplace (Uses the blockchain)

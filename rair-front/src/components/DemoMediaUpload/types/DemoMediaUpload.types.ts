@@ -49,6 +49,7 @@ export interface IAnalyticsPopUp {
   newUserStatus?: boolean;
   collectionIndex?: string;
   address?: string;
+  rerender: () => void;
 }
 export interface IPopUpChangeVideo {
   modalIsOpen: boolean;

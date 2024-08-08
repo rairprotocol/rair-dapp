@@ -18,8 +18,8 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
+import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 
 const ContractDetails = () => {
@@ -28,6 +28,8 @@ const ContractDetails = () => {
   const [collectionLength, setCollectionLength] = useState<number>(0);
 
   const [creatingCollection, setCreatingCollection] = useState<boolean>(false);
+
+  const { getBlockchainData } = useServerSettings();
 
   const { primaryColor, secondaryColor } = useSelector<
     RootState,
@@ -195,7 +197,7 @@ const ContractDetails = () => {
                 : undefined,
             label:
               data && data.blockchain && !correctBlockchain(data.blockchain)
-                ? `Switch to ${chainData[data.blockchain]?.name}`
+                ? `Switch to ${getBlockchainData(data.blockchain)?.name}`
                 : 'Create collection!',
             disabled:
               creatingCollection ||

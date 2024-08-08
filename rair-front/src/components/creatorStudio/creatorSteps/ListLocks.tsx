@@ -12,9 +12,9 @@ import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
-import chainData from '../../../utils/blockchainData';
 import { validateInteger } from '../../../utils/metamaskUtils';
 import colors from '../../../utils/offerLockColors';
+import useServerSettings from '../../adminViews/useServerSettings';
 import InputField from '../../common/InputField';
 import {
   ILockRow,
@@ -168,6 +168,7 @@ const ListLocks: React.FC<TListLocks> = ({
   stepNumber
 }) => {
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+  const { getBlockchainData } = useServerSettings();
 
   const [offerList, setOfferList] = useState<TListLocksArrayItem[]>([]);
   const [forceRerender, setForceRerender] = useState<boolean>(false);
@@ -273,7 +274,7 @@ const ListLocks: React.FC<TListLocks> = ({
                       index={index}
                       {...item}
                       blockchainSymbol={
-                        chainData[contractData?.blockchain]?.symbol
+                        getBlockchainData(contractData?.blockchain)?.symbol
                       }
                       rerender={() => setForceRerender(!forceRerender)}
                       maxCopies={Number(contractData?.product?.copies) - 1}
@@ -283,25 +284,23 @@ const ListLocks: React.FC<TListLocks> = ({
               </tbody>
             </table>
           )}
-          {chainData && (
-            <FixedBottomNavigation
-              forwardFunctions={[
-                {
-                  action: !onMyChain
-                    ? () =>
-                        web3Switch(
-                          chainData[contractData?.blockchain]
-                            ?.chainId as BlockchainType
-                        )
-                    : gotoNextStep,
-                  label: !onMyChain
-                    ? `Switch to ${chainData[contractData?.blockchain]?.name}`
-                    : `Proceed`,
-                  disabled: false
-                }
-              ]}
-            />
-          )}
+          <FixedBottomNavigation
+            forwardFunctions={[
+              {
+                action: !onMyChain
+                  ? () =>
+                      web3Switch(
+                        getBlockchainData(contractData?.blockchain)?.hash
+                      )
+                  : gotoNextStep,
+                label: !onMyChain
+                  ? `Switch to ${getBlockchainData(contractData?.blockchain)
+                      ?.name}`
+                  : `Proceed`,
+                disabled: false
+              }
+            ]}
+          />
         </>
       ) : (
         'Fetching data...'

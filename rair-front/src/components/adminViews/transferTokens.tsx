@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux';
 import { constants, Contract, utils } from 'ethers';
 
 import {
-  BlockchainInfoType,
+  BlockchainSetting,
   ContractDataType,
   ContractsResponseType
 } from './adminView.types';
-import BlockChainSwitcher from './BlockchainSwitcher';
+import useServerSettings from './useServerSettings';
 
 import { TTokenData } from '../../axios.responseTypes';
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
@@ -16,8 +16,8 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import blockchainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
+import { TChainData } from '../../utils/utils.types';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
@@ -51,11 +51,13 @@ const TransferTokens = () => {
   const [allTokensFilter, setAllTokensFilter] = useState<boolean>(true);
 
   const [contractBlockchain, setContractBlockchain] = useState<
-    BlockchainInfoType | undefined
+    BlockchainSetting & TChainData
   >();
   const [contractInstance, setContractInstance] = useState<
     Contract | undefined
   >();
+
+  const { getBlockchainData } = useServerSettings();
 
   const reactSwal = useSwal();
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
@@ -119,7 +121,7 @@ const TransferTokens = () => {
         title: name,
         contractAddress: instance.address
       });
-      setContractBlockchain(blockchainData[currentChain]);
+      setContractBlockchain(getBlockchainData(currentChain));
       setContractInstance(instance);
     } else {
       return;
@@ -156,7 +158,9 @@ const TransferTokens = () => {
       }
       const [, , selectedBlockchain, contractAddress] =
         selectedContract.split('/');
-      setContractBlockchain(blockchainData[selectedBlockchain]);
+      setContractBlockchain(
+        getBlockchainData(selectedBlockchain as `0x${string}`)
+      );
       if (correctBlockchain(selectedBlockchain as BlockchainType)) {
         const instance = contractCreator?.(
           contractAddress,
@@ -165,7 +169,13 @@ const TransferTokens = () => {
         setContractInstance(instance);
       }
     }
-  }, [manualAddress, selectedContract, correctBlockchain, contractCreator]);
+  }, [
+    manualAddress,
+    selectedContract,
+    getBlockchainData,
+    correctBlockchain,
+    contractCreator
+  ]);
 
   useEffect(() => {
     getContractData();
@@ -365,15 +375,15 @@ const TransferTokens = () => {
               <div className="col-12">
                 {contractBlockchain && (
                   <button
-                    disabled={currentChain === contractBlockchain.chainId}
+                    disabled={currentChain === contractBlockchain.hash}
                     className="btn rair-button"
                     style={{
                       background: secondaryButtonColor,
                       color: textColor
                     }}
-                    onClick={() => web3Switch(contractBlockchain.chainId)}>
+                    onClick={() => web3Switch(contractBlockchain.hash)}>
                     1.-{' '}
-                    {currentChain === contractBlockchain.chainId
+                    {currentChain === contractBlockchain.hash
                       ? 'Connected to'
                       : 'Switch to'}{' '}
                     {contractBlockchain.name}
@@ -393,7 +403,7 @@ const TransferTokens = () => {
                 {contractInstance && (
                   <button
                     disabled={
-                      currentChain !== contractBlockchain?.chainId ||
+                      currentChain !== contractBlockchain?.hash ||
                       traderRole !== false
                     }
                     className="btn rair-button"
@@ -434,7 +444,7 @@ const TransferTokens = () => {
                 {contractInstance && (
                   <button
                     disabled={
-                      currentChain !== contractBlockchain?.chainId ||
+                      currentChain !== contractBlockchain?.hash ||
                       !traderRole ||
                       !utils.isAddress(targetAddress) ||
                       !contractInstance

@@ -1,8 +1,7 @@
 const log = require('../utils/logger')(module);
 const categories = require('./categories');
-const blockchains = require('./blockchains');
 const syncRestrictions = require('./syncRestrictions');
-const { Blockchain, Category, ServerSetting, Contract } = require('../models');
+const { Category, ServerSetting, Contract } = require('../models');
 
 module.exports = async () => {
   try {
@@ -21,20 +20,6 @@ module.exports = async () => {
   } catch (e) {
     log.error(`Error seeding categories: ${e}`);
   }
-
-  try {
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const blockchain of blockchains) {
-      await Blockchain.findOneAndUpdate(
-        blockchain,
-        blockchain,
-        { upsert: true, new: true },
-      );
-    }
-  } catch (e) {
-    log.error(`Error seeding blockchains: ${e}`);
-  }
-  log.info('Blockchains seeded.');
 
   try {
     // eslint-disable-next-line no-restricted-syntax

@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import chainData from '../../../utils/blockchainData';
 import InputField from '../../common/InputField';
 import {
   ICustomizeFees,
@@ -238,18 +237,16 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
           </button>
         </div>
       </div>
-      {chainData && (
-        <FixedBottomNavigation
-          forwardFunctions={[
-            {
-              label: customPayments.length ? 'Set custom fees' : 'Continue',
-              action: customPayments.length ? setCustomFees : gotoNextStep,
-              disabled:
-                sendingData || (customPayments.length ? total !== 90 : false)
-            }
-          ]}
-        />
-      )}
+      <FixedBottomNavigation
+        forwardFunctions={[
+          {
+            label: customPayments.length ? 'Set custom fees' : 'Continue',
+            action: customPayments.length ? setCustomFees : gotoNextStep,
+            disabled:
+              sendingData || (customPayments.length ? total !== 90 : false)
+          }
+        ]}
+      />
     </div>
   );
 };

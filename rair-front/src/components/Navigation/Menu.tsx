@@ -26,8 +26,8 @@ import {
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
+import useServerSettings from '../adminViews/useServerSettings';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
@@ -75,6 +75,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const { userData: userDataInfo } = useSelector<RootState, TUsersInitialState>(
     (state) => state.userStore
   );
+  const { getBlockchainData } = useServerSettings();
   const { connectUserData } = useConnectUser();
   // const [loading, setLoading] = useState<boolean>(false);
   const [userBalance, setUserBalance] = useState<string>('');
@@ -85,7 +86,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     (store) => store.userStore
   );
   const [realDataNotification, setRealDataNotification] = useState([]);
-  const { erc777Instance, currentUserAddress, currentChain } = useSelector<
+  const { mainTokenInstance, currentUserAddress, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
@@ -173,10 +174,10 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   }, [currentUserAddress, setUserData]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && erc777Instance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.provider) {
       setIsLoadingBalance(true);
       const balance =
-        await erc777Instance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = utils.formatEther(balance);
@@ -187,7 +188,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, erc777Instance, userData]);
+  }, [currentUserAddress, mainTokenInstance, userData]);
 
   const onScrollClick = useCallback(() => {
     if (!click) {
@@ -395,9 +396,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                           }
                           alt="logo"
                         />
-                        {currentChain && chainData[currentChain] && (
+                        {currentChain && getBlockchainData(currentChain) && (
                           <img
-                            src={chainData[currentChain]?.image}
+                            src={getBlockchainData(currentChain)?.image}
                             alt="logo"
                           />
                         )}

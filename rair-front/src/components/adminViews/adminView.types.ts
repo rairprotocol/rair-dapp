@@ -29,24 +29,6 @@ export type ContractsResponseType = {
   success: boolean;
 };
 
-export type BlockchainInfoType = {
-  image: string;
-  name: string;
-  chainId: BlockchainType;
-  symbol: string;
-  addChainData: {
-    chainId: string;
-    chainName: string;
-    nativeCurrency?: {
-      name?: string;
-      symbol?: string;
-      decimals?: number;
-    };
-    rpcUrls?: string[];
-    blockExplorerUrls?: string[];
-  };
-};
-
 type ContractInfo = {
   title: string;
   contractAddress: string;
@@ -99,9 +81,24 @@ export type Settings = {
 };
 
 export type BlockchainSetting = {
-  hash: string;
-  display: Boolean;
-  sync: Boolean;
-  name: String;
-  _id: String;
+  hash?: BlockchainType;
+  display?: Boolean;
+  sync?: Boolean;
+  name?: string;
+
+  diamondFactoryAddress?: string;
+  classicFactoryAddress?: string;
+  diamondMarketplaceAddress?: string;
+  licenseExchangeAddress?: string;
+  mainTokenAddress?: string;
+  rpcEndpoint?: string;
+  blockExplorerGateway?: string;
+  numericalId?: number;
+  testnet?: Boolean;
+  symbol?: string;
+
+  _id?: string;
+  isNew?: boolean;
+
+  image?: string;
 };

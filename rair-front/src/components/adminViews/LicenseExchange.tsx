@@ -16,7 +16,7 @@ const LicenseExchange = () => {
   const [userAddress, setUserAddress] = useState('');
   const [signedHash, setSignedhash] = useState('');
 
-  const { licenseExchangeInstance, erc777Instance, currentUserAddress } =
+  const { licenseExchangeInstance, mainTokenInstance, currentUserAddress } =
     useSelector<RootState, ContractsInitialType>(
       (store) => store.contractStore
     );
@@ -63,7 +63,7 @@ const LicenseExchange = () => {
   ]);
 
   const purchaseLicense = useCallback(async () => {
-    if (!licenseExchangeInstance || !erc777Instance) {
+    if (!licenseExchangeInstance || !mainTokenInstance) {
       return;
     }
     const tokenPriceBigNumber = parseUnits(tokenPrice.toString(), 18);
@@ -72,7 +72,7 @@ const LicenseExchange = () => {
       html: `Please wait`,
       showConfirmButton: false
     });
-    const allowance = await web3TxHandler(erc777Instance, 'allowance', [
+    const allowance = await web3TxHandler(mainTokenInstance, 'allowance', [
       currentUserAddress,
       licenseExchangeInstance.address
     ]);
@@ -84,7 +84,7 @@ const LicenseExchange = () => {
         )}`,
         showConfirmButton: false
       });
-      await web3TxHandler(erc777Instance, 'approve', [
+      await web3TxHandler(mainTokenInstance, 'approve', [
         licenseExchangeInstance.address,
         tokenPriceBigNumber
       ]);
@@ -112,19 +112,19 @@ const LicenseExchange = () => {
     tokenPrice,
     signedHash,
     rSwal,
-    erc777Instance,
+    mainTokenInstance,
     currentUserAddress
   ]);
 
   const connectERC20 = useCallback(async () => {
-    if (!licenseExchangeInstance || !erc777Instance) {
+    if (!licenseExchangeInstance || !mainTokenInstance) {
       return;
     }
     await web3TxHandler(licenseExchangeInstance, 'setPurchasePeriod', [180]);
     await web3TxHandler(licenseExchangeInstance, 'updateERC20Address', [
-      erc777Instance.address
+      mainTokenInstance.address
     ]);
-  }, [licenseExchangeInstance, web3TxHandler, erc777Instance]);
+  }, [licenseExchangeInstance, web3TxHandler, mainTokenInstance]);
 
   if (!licenseExchangeInstance) {
     return <>No exchange available</>;

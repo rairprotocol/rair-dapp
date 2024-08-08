@@ -7,8 +7,10 @@ const {
   setServerSetting,
   getFeaturedCollection,
   setBlockchainSetting,
+  addBlockchainSetting,
   setAppLogo,
   getTheme,
+  deleteBlockchainSetting,
 } = require('./settings.Service');
 
 const router = express.Router();
@@ -54,6 +56,21 @@ router.put(
   validation(['dbBlockchains']),
   verifySuperAdmin,
   setBlockchainSetting,
+);
+
+router.post(
+  '/:blockchain',
+  requireUserSession,
+  validation(['dbBlockchains']),
+  verifySuperAdmin,
+  addBlockchainSetting,
+);
+
+router.delete(
+  '/:blockchain',
+  requireUserSession,
+  verifySuperAdmin,
+  deleteBlockchainSetting,
 );
 
 module.exports = router;

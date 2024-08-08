@@ -16,9 +16,9 @@ import {
   uploadVideoStart
 } from '../../../ducks/uploadDemo/action';
 import useSwal from '../../../hooks/useSwal';
-import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
 import sockets from '../../../utils/sockets';
+import useServerSettings from '../../adminViews/useServerSettings';
 import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 import LinearProgressWithLabel from '../LinearProgressWithLabel/LinearProgressWithLabel';
@@ -44,6 +44,8 @@ const ContractDataModal = ({
   const [newProduct, setNewProduct] = useState(product || 'null');
   const [newOffer, setNewOffer] = useState(offer);
   const [newDemoStatus, setNewDemoStatus] = useState(demo);
+
+  const { getBlockchainData } = useServerSettings();
 
   const [contractData, setContractData] = useState<any>({});
 
@@ -84,11 +86,10 @@ const ContractDataModal = ({
         Object.keys(contractMapping)
           .map((contractId) => {
             const data = contractMapping[contractId];
+            const chainData = getBlockchainData(data.blockchain);
             return {
               label: `${data.title} (${
-                data.blockchain in chainData
-                  ? chainData[data.blockchain].symbol
-                  : 'Unknown blockchain'
+                chainData ? chainData.symbol : 'Unknown blockchain'
               })`,
               value: contractId
             };
@@ -101,7 +102,7 @@ const ContractDataModal = ({
           })
       );
     }
-  }, []);
+  }, [getBlockchainData]);
 
   useEffect(() => {
     getContractData();

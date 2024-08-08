@@ -7,8 +7,8 @@ import Swal from 'sweetalert2';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
+import useServerSettings from '../../adminViews/useServerSettings';
 import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 import InputSelect from '../../common/InputSelect';
 import { TChoiceAllOptions } from '../../creatorStudio/creatorStudio.types';
@@ -39,6 +39,8 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
+  const { getBlockchainData } = useServerSettings();
 
   const [contractData, setContractData] = useState({});
   const [contractOptions, setContractOptions] = useState<OptionsType[]>([]);
@@ -268,7 +270,9 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           item.products = productMapping;
           mapping[item._id] = item;
           options.push({
-            label: `${item.title} (${chainData[item.blockchain].symbol} ${
+            label: `${item.title} (${
+              getBlockchainData(item.blockchain).symbol
+            } ${
               item.external ? 'External' : item.diamond ? 'Diamond' : 'Classic'
             })`,
             value: item._id,

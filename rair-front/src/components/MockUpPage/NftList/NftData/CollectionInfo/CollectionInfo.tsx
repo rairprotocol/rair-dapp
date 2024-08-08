@@ -16,13 +16,13 @@ import {
 import { RootState } from '../../../../../ducks';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { defaultHotDrops } from '../../../../../images';
+import useServerSettings from '../../../../adminViews/useServerSettings';
 import InputSelect from '../../../../common/InputSelect';
 import PurchaseTokenButton from '../../../../common/PurchaseToken';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
 import { TParamsNftItemForCollectionView } from '../../../mockupPage.types';
 import { ICollectionInfo } from '../../nftList.types';
 
-import chainData from './../../../../../utils/blockchainData';
 import { ModalContentCloseBtn } from './../../../../MockUpPage/utils/button/ShowMoreItems';
 
 import './CollectionInfo.css';
@@ -41,6 +41,7 @@ const EasyMintRow = ({
   const remainingCopies = token.copies - token.soldCopies;
   const navigate = useNavigate();
   const params = useParams<TParamsNftItemForCollectionView>();
+  const { getBlockchainData } = useServerSettings();
   return (
     <BlockItemCollection className="block-item-collection">
       <div className="item-name">
@@ -62,7 +63,7 @@ const EasyMintRow = ({
       <div className="item-price">
         <img
           alt="Blockchain network"
-          src={blockchain && chainData[blockchain]?.image}
+          src={blockchain && getBlockchainData(blockchain)?.image}
         />
         {utils
           .formatEther(
@@ -71,7 +72,7 @@ const EasyMintRow = ({
               : 0
           )
           .toString()}{' '}
-        {blockchain && chainData[blockchain]?.symbol}
+        {blockchain && getBlockchainData(blockchain)?.symbol}
       </div>
       {remainingCopies > 0 ? (
         <div className="item-multi-mint">

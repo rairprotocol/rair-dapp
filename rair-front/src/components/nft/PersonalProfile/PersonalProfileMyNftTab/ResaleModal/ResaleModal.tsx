@@ -11,13 +11,12 @@ import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.t
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
 import { rFetch } from '../../../../../utils/rFetch';
+import useServerSettings from '../../../../adminViews/useServerSettings';
 import InputField from '../../../../common/InputField';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
 import { ImageLazy } from '../../../../MockUpPage/ImageLazy/ImageLazy';
 import { BuySellButton } from '../../../../MockUpPage/NftList/NftData/BuySellButton';
 import SellButton from '../../../../MockUpPage/NftList/NftData/SellButton';
-
-import chainData from './../../../../../utils/blockchainData';
 
 import './ResaleModal.css';
 
@@ -47,6 +46,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
     RootState,
     ColorStoreType
   >((store) => store.colorStore);
+
+  const { getBlockchainData } = useServerSettings();
 
   const [resaleData, setResaleData] = useState<any>();
   const [resaleOffer, setResaleOffer] = useState<any>(undefined);
@@ -133,8 +134,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
       if (!resaleResponse.success) {
         return;
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      const [resaleData] = resaleResponse?.data;
+      const [resaleData] = resaleResponse.data;
       if (!resaleData) {
         return;
       }
@@ -242,6 +242,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
     fetchRoyalties();
   }, [fetchRoyalties]);
 
+  const chainData = getBlockchainData(item.contract.blockchain);
+
   return (
     <div
       className="container-resale-modal"
@@ -258,16 +260,11 @@ const ResaleModal: React.FC<IResaleModal> = ({
       <div className="resale-modal-blockchain-container">
         <div>{item && item.metadata && item.metadata.name}</div>
         <div className="resale-modal-blockchain-block">
-          {item.contract.blockchain in chainData ? (
+          {chainData && (
             <>
-              <div>{chainData[item.contract.blockchain].symbol}</div>
-              <img
-                src={chainData[item.contract.blockchain].image}
-                alt="blockchain"
-              />
+              <div>{chainData.symbol}</div>
+              <img src={chainData.image} alt="blockchain" />
             </>
-          ) : (
-            ''
           )}
         </div>
       </div>
@@ -369,7 +366,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
               <div className="resale-modal-infotmation-subtitle">
                 <div className="resale-modal-infotmation-subtitle-usd">USD</div>
                 <div>
-                  <div>{chainData[item.contract.blockchain].symbol}</div>
+                  <div>{chainData?.symbol}</div>
                 </div>
               </div>
             </div>

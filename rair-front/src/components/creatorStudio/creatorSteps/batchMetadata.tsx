@@ -5,16 +5,16 @@ import { useParams } from 'react-router-dom';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 import { TTokenData } from '../../../axios.responseTypes';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import useSwal from '../../../hooks/useSwal';
 import imageIcon from '../../../images/imageIcon.svg';
-import blockchainData from '../../../utils/blockchainData';
 import csvParser from '../../../utils/csvParser';
 import { rFetch } from '../../../utils/rFetch';
+import useServerSettings from '../../adminViews/useServerSettings';
 import BlockchainURIManager from '../common/blockchainURIManager';
 import {
   IBatchMetadataParser,
@@ -48,6 +48,9 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   const [metadataExists, setMetadataExists] = useState<boolean>(false);
   const [changeFile, setChangeFile] = useState<boolean>(false);
   const [buttons, setButtons] = useState<any>([]);
+
+  const { getBlockchainData } = useServerSettings();
+  const reactSwal = useSwal();
 
   const onImageDrop = useCallback((acceptedFiles: File[]) => {
     csvParser(acceptedFiles[0], console.info);
@@ -129,7 +132,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         redirect: 'follow'
       });
       if (response?.success) {
-        Swal.fire(
+        reactSwal.fire(
           'Success',
           `Updated ${response.updatedDocuments} metadata entries!`,
           'success'
@@ -137,7 +140,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         setChangeFile(false);
         fetchData();
       } else {
-        Swal.fire('Error', response?.message, 'error');
+        reactSwal.fire('Error', response?.message, 'error');
       }
     };
 
@@ -179,7 +182,8 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
     collectionIndex,
     contractData,
     csvFile,
-    fetchData
+    fetchData,
+    reactSwal
   ]);
 
   useEffect(() => {
@@ -398,7 +402,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         <>
           {!contractData.instance ? (
             <>
-              Connect to {blockchainData[contractData.blockchain]?.name} for
+              Connect to {getBlockchainData(contractData.blockchain)?.name} for
               more options
             </>
           ) : (

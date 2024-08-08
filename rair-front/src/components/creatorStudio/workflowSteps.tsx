@@ -25,7 +25,6 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 
 import BatchMetadata from './creatorSteps/batchMetadata';
@@ -219,10 +218,6 @@ const WorkflowSteps: FC = () => {
     }
   }, [contractData, steps, navigate]);
 
-  const onMyChain =
-    contractData &&
-    chainData[contractData.blockchain]?.chainId === currentChain;
-
   const refreshNFTMetadata = async () => {
     if (!contractData) {
       return;
@@ -409,22 +404,28 @@ const WorkflowSteps: FC = () => {
 
   useEffect(() => {
     // Fix this
-    if (onMyChain) {
+    if (contractData && correctBlockchain(contractData.blockchain)) {
       const createdInstance = contractCreator?.(
         minterInstance?.address,
         minterAbi
       );
       setCorrectMinterInstance(createdInstance);
     }
-  }, [address, onMyChain, contractCreator, minterInstance?.address]);
+  }, [
+    address,
+    correctBlockchain,
+    contractCreator,
+    minterInstance?.address,
+    contractData
+  ]);
 
   useEffect(() => {
     // Fix this
-    if (onMyChain) {
+    if (contractData && correctBlockchain(contractData.blockchain)) {
       const createdInstance = contractCreator?.(address, erc721Abi);
       setTokenInstance(createdInstance);
     }
-  }, [address, onMyChain, contractCreator]);
+  }, [address, contractData, correctBlockchain, contractCreator]);
 
   useEffect(() => {
     fetchData();
@@ -452,7 +453,7 @@ const WorkflowSteps: FC = () => {
     mintingRole,
     traderRole,
     checkMarketRoles,
-    onMyChain,
+    onMyChain: correctBlockchain(contractData?.blockchain as BlockchainType),
     correctMinterInstance,
     tokenInstance,
     simpleMode,

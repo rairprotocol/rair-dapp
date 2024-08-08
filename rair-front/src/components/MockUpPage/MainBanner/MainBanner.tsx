@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
 import { defaultAvatar, hotDropsDefaultBanner } from '../../../images';
-import chainData from '../../../utils/blockchainData';
+import useServerSettings from '../../adminViews/useServerSettings';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 import { changeIPFSLink } from '../NftList/utils/changeIPFSLink';
 
@@ -10,6 +10,7 @@ const MainBanner = ({ mainBannerInfo }) => {
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const navigate = useNavigate();
+  const { getBlockchainData } = useServerSettings();
 
   const goMainCollection = useCallback(() => {
     if (mainBannerInfo) {
@@ -60,10 +61,10 @@ const MainBanner = ({ mainBannerInfo }) => {
           {mainBannerInfo.blockchain && (
             <div className="collection-info-blockchain">
               <img
-                src={chainData[mainBannerInfo.blockchain]?.image}
+                src={getBlockchainData(mainBannerInfo.blockchain)?.image}
                 alt="blockchain"
               />
-              {chainData[mainBannerInfo.blockchain]?.symbol}
+              {getBlockchainData(mainBannerInfo.blockchain)?.symbol}
             </div>
           )}
         </div>

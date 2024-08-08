@@ -17,7 +17,6 @@ import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import { BillTransferIcon, GrandpaWait } from '../../../../images';
-import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
 import useServerSettings from '../../../adminViews/useServerSettings';
@@ -163,7 +162,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     minterInstance
   ]);
 
-  const { settings } = useServerSettings();
+  const { settings, getBlockchainData } = useServerSettings();
 
   useEffect(() => {
     if (offerData) {
@@ -414,7 +413,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             handleClick={buyContract}
             isColorPurple={true}
             title={`Buy ${price} ${
-              blockchain && chainData[blockchain]?.symbol
+              blockchain && getBlockchainData(blockchain)?.symbol
             }`}
           />
           {coingeckoRates && (
@@ -441,7 +440,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               disabled={resaleData.seller === currentUserAddress}
               isColorPurple={false}
               handleClick={resalePurchase}
-              title={`Buy ${price} ${chainData[blockchain]?.symbol}`}
+              title={`Buy ${price} ${getBlockchainData(blockchain)?.symbol}`}
             />
             <small>Resale offer</small>
             {coingeckoRates && (

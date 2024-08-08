@@ -1,5 +1,5 @@
 const { addFile } = require('../../integrations/ipfsService')();
-const { ServerSetting, Product, Contract, User, Blockchain } = require('../../models');
+const { ServerSetting, Product, Contract, User, Blockchain, MintedToken, OfferPool, Offer } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const { ipfsGateways } = require('../../config');
 
@@ -124,13 +124,44 @@ exports.setServerSetting = async (req, res, next) => {
 exports.setBlockchainSetting = async (req, res, next) => {
   try {
     const { blockchain } = req.params;
-    const { display, sync } = req.body;
     if (!blockchain) {
-      return res.json({ success: false, message: 'Invalid blockchain' });
+      return next(new AppError('Invalid Blockchain', 400));
     }
     await Blockchain.findOneAndUpdate({
       hash: blockchain,
-    }, { $set: { display, sync } });
+    }, { $set: req.body });
+    return res.json({ success: true });
+  } catch (error) {
+    return next(new AppError(error));
+  }
+};
+
+exports.addBlockchainSetting = async (req, res, next) => {
+  try {
+    const { blockchain } = req.params;
+    if (!blockchain) {
+      return next(new AppError('Invalid Blockchain', 400));
+    }
+    await Blockchain.create(req.body);
+    return res.json({ success: true });
+  } catch (error) {
+    return next(new AppError(error));
+  }
+};
+
+exports.deleteBlockchainSetting = async (req, res, next) => {
+  try {
+    const { blockchain } = req.params;
+    if (!blockchain) {
+      return next(new AppError('Invalid Blockchain', 400));
+    }
+    await Blockchain.deleteOne({ hash: blockchain });
+    const contracts = (await Contract.find({ blockchain }))
+      .map((contract) => contract._id);
+    MintedToken.deleteMany({ contract: { $in: contracts } });
+    Product.deleteMany({ contract: { $in: contracts } });
+    OfferPool.deleteMany({ contract: { $in: contracts } });
+    Offer.deleteMany({ contract: { $in: contracts } });
     return res.json({ success: true });
   } catch (error) {
     return next(new AppError(error));

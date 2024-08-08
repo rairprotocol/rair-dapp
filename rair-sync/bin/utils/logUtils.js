@@ -59,25 +59,33 @@ const processLog = (event) => {
   return foundEvents;
 };
 
-const getTransactionHistory = async (address, chain, fromBlock = 0) => {
-  // Wait some time between requests
-  // await wasteTime(process.env.TASK_SEPARATION_TIME || 10000);
-
+const getTransactionHistory = async (address, blockchainData, fromBlock = 0) => {
   if (!address) {
     return [];
   }
 
-  const Alchemy = getAlchemy(chain);
-  const latestBlock = await Alchemy.core.getBlockNumber();
+  let provider;
+
+  if (blockchainData.alchemySupport) {
+    provider = getAlchemy(blockchainData.hash).core;
+  } else if (blockchainData.rpcEndpoint) {
+    provider = ethers.getDefaultProvider(blockchainData.rpcEndpoint);
+  } else {
+    return [];
+  }
+  const latestBlock = await provider.getBlockNumber();
 
   // April 2023 update
   // Call the Alchemy SDK and receive all logs emitted in a specified timeframe
   // This result is chronologically ascending, we can iterate through it normally
+
   // September 2023 update, getting logs is limited to either
   //  2k block queries or 10k logs in response, assuming worst case scenario
-  //  events will be queried in 2k blocks. This will affect speed once
-  //  when the contracts are processed for the first time, because they start
+  //  events will be queried in 2k blocks. This will affect speed only once
+  //  when the contracts are processed for the first time, because they all start
   //  from block 0
+
+  // RPC method will work the same
   let listOfTransaction = [];
   const options = {
     fromBlock: Number(fromBlock),
@@ -85,6 +93,7 @@ const getTransactionHistory = async (address, chain, fromBlock = 0) => {
   };
   let speedTier = tiers.length - 1;
   do {
+    await wasteTime(4000);
     fromBlock = options.fromBlock;
     try {
       if (fromBlock + tiers[speedTier] > latestBlock) {
@@ -92,26 +101,30 @@ const getTransactionHistory = async (address, chain, fromBlock = 0) => {
       } else {
         options.toBlock = fromBlock + tiers[speedTier];
       }
-      const getLogsResult = await Alchemy.core.getLogs(options);
+      const getLogsResult = await provider.getLogs(options);
       listOfTransaction = listOfTransaction.concat(getLogsResult);
-      log.info(`[${chain}] Syncing ${address} ${options.fromBlock}/${latestBlock} (${((options.fromBlock / latestBlock) * 100).toFixed(3)}%)`);
+      log.info(`[${blockchainData.hash}] Syncing ${address} ${options.fromBlock}/${latestBlock} (${((options.fromBlock / latestBlock) * 100).toFixed(3)}%)`);
       speedTier += (speedTier === tiers.length - 1) ? 0 : 1;
       options.fromBlock = options.toBlock;
     } catch (error) {
       log.error(`Error querying ${address} with ${tiers[speedTier]} blocks`);
+      // console.error(Object.keys(error), error.reason);
       speedTier = 0;
     }
-  } while ((options.fromBlock + 8000) < latestBlock);
-  log.info(`[${chain}] Found ${listOfTransaction.length} events on ${address}`);
+  } while ((options.fromBlock + tiers[speedTier]) < latestBlock);
+  log.info(`[${blockchainData.hash}] Found ${listOfTransaction.length} events on ${address}`);
   return listOfTransaction.map(processLog);
 };
 
-const getLatestBlock = async (chain) => {
-  const Alchemy = getAlchemy(chain);
-  // The Alchemy SDK will return the latest mined block,
-  //   this is used to validate that the database information is correct
-  const latestBlock = await Alchemy.core.getBlockNumber();
-  return latestBlock;
+const getLatestBlock = async (blockchainData) => {
+  if (blockchainData.alchemySupport) {
+    const Alchemy = getAlchemy(blockchainData.hash);
+    return Alchemy.core.getBlockNumber();
+  } if (blockchainData.rpcEndpoint) {
+    const provider = ethers.getDefaultProvider(blockchainData.rpcEndpoint);
+    return provider.getBlockNumber();
+  }
+  return 0;
 };
 
 module.exports = {

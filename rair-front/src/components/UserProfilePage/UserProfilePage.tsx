@@ -20,7 +20,6 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { UserType } from '../../ducks/users/users.types';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { VideoIcon } from '../../images';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 import LoadingComponent from '../common/LoadingComponent';
@@ -558,7 +557,6 @@ const UserProfilePage: React.FC = () => {
                   <PersonalProfileMyNftTab
                     filteredData={collectedTokens && collectedTokens}
                     defaultImg={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
-                    chainData={chainData}
                     textColor={textColor}
                     getMyNft={getMyNft}
                     totalCount={totalCount}

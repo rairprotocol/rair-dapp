@@ -24,55 +24,6 @@ const {
 } = process.env;
 const { Network } = require('alchemy-sdk');
 
-const binanceTestnetData = {
-  name: 'Binance Testnet',
-  blockchainId: '0x61',
-  testnet: true,
-  rpc: process.env.BINANCE_TESTNET_RPC,
-};
-const binanceMainnetData = {
-  name: 'Binance Mainnet',
-  blockchainId: '0x38',
-  testnet: false,
-  rpc: process.env.BINANCE_MAINNET_RPC,
-};
-const ethereumMainnetData = {
-  name: 'Ethereum Mainnet',
-  blockchainId: '0x1',
-  testnet: false,
-  rpc: process.env.ETHEREUM_MAINNET_RPC,
-};
-const ethereumSepoliaData = {
-  name: 'Ethereum Sepolia',
-  blockchainId: '0xaa36a7',
-  testnet: true,
-  rpc: process.env.ETHEREUM_TESTNET_SEPOLIA_RPC,
-};
-const polygonMainnetData = {
-  name: 'Polygon Mainnet',
-  blockchainId: '0x89',
-  testnet: false,
-  rpc: process.env.MATIC_MAINNET_RPC,
-};
-const polygonTestnetData = {
-  name: 'Polygon Testnet',
-  blockchainId: '0x13881',
-  testnet: true,
-  rpc: process.env.MATIC_TESTNET_RPC,
-};
-const astarMainnetData = {
-  name: 'Astar Mainnet',
-  blockchainId: '0x250',
-  testnet: true,
-  rpc: process.env.ASTAR_MAINNET_RPC,
-};
-const baseMainnetData = {
-  name: 'Base Mainnet',
-  blockchainId: '0x2105',
-  testnet: false,
-  rpc: process.env.BASE_MAINNET_RPC,
-};
-
 module.exports = {
   production: !!(PRODUCTION && PRODUCTION === 'true'),
   port: PORT || 5000,
@@ -87,33 +38,6 @@ module.exports = {
   },
   superAdmin: {
     storageKey: SUPER_ADMIN_VAULT_STORE || null,
-  },
-  blockchain: {
-    networks: {
-      '0x250': astarMainnetData,
-      astar: astarMainnetData,
-
-      '0x13881': polygonTestnetData,
-      mumbai: polygonTestnetData,
-
-      '0x89': polygonMainnetData,
-      matic: polygonMainnetData,
-
-      '0x38': binanceMainnetData,
-      'binance-mainnet': binanceMainnetData,
-
-      '0x61': binanceTestnetData,
-      'binance-testnet': binanceTestnetData,
-
-      '0x1': ethereumMainnetData,
-      ethereum: ethereumMainnetData,
-
-      sepolia: ethereumSepoliaData,
-      '0xaa36a7': ethereumSepoliaData,
-
-      base: baseMainnetData,
-      '0x2105': baseMainnetData,
-    },
   },
   gcp: {
     projectId: GCP_PROJECT_ID,

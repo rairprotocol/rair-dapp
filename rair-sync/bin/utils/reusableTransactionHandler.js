@@ -1,9 +1,12 @@
 const { BigNumber } = require('ethers');
-const { getTransactionHistory, getLatestBlock } = require('./logUtils');
+const { isAddress } = require('ethers/lib/utils');
+const {
+  getTransactionHistory,
+  getLatestBlock,
+} = require('./logUtils');
 const { Transaction, Blockchain } = require('../models');
-const log = require('./logger')(module);
+const logger = require('./logger')(module);
 const { Versioning } = require('../models');
-const { blockchain } = require('../config');
 
 const processLogEvents = async (
   event, // Raw data of the event
@@ -30,7 +33,7 @@ const processLogEvents = async (
     filteredTransaction.caught &&
     filteredTransaction.toAddress.includes(contractAddress)
   ) {
-    log.info(
+    logger.info(
       `Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${contractAddress}`,
     );
   } else if (event && event.operation) {
@@ -58,7 +61,7 @@ const processLogEvents = async (
           { upsert: true },
         );
       } catch (error) {
-        log.error(
+        logger.error(
           `There was an issue saving transaction ${event.transactionHash} for contract ${contractAddress}: ${error}`,
         );
         return undefined;
@@ -84,7 +87,7 @@ const processLogEvents = async (
         returnValues.insertions[event.eventSignature] += 1;
       }
     } catch (err) {
-      log.error(`Error processing transaction ${event?.transactionHash}`);
+      logger.error(`Error processing transaction ${event?.transactionHash}`);
       console.error(event, err);
     }
   }
@@ -99,50 +102,47 @@ exports.processLogEvents = processLogEvents;
 
 exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, done) => {
   try {
+    const { hash } = job.attrs.data;
+    const log = (message) => logger.info(`[${hash}][${taskName}] ${message}`);
     // Log the start of the task
-    log.info(`Agenda action starting: ${taskName}`);
+    log('Starting');
 
     // Extract network hash and task name from the task data
-    const { network } = job.attrs.data;
 
-    const blockchainData = await Blockchain.findOne({ hash: network });
+    const blockchainData = await Blockchain.findOne({ hash });
     if (!blockchainData || blockchainData?.sync.toString() === 'false') {
-      log.info(`[${network}] Skipping ${taskName} events, syncing is disabled.`);
+      log('Skipping sync, syncing is disabled');
       return done();
     }
 
-    // Get network data using the task's blockchain hash
-    // This includes minter address and factory address
-    const networkData = blockchain.networks[network];
-
-    if (contractName && !networkData[contractName]) {
-      log.info(`[${network}] Skipping ${taskName} events, address is not defined.`);
+    if (!isAddress(blockchainData[contractName]) || !blockchainData[contractName]) {
+      log(`Skipping sync, address for ${contractName} is not valid`);
       return done();
     }
 
     // Get last block parsed from the Versioning collection
     let version = await Versioning.findOne({
       name: taskName,
-      network,
+      network: hash,
     });
 
     if (version === null) {
       version = await (new Versioning({
         name: taskName,
-        network,
+        network: hash,
         number: 0,
       })).save();
     }
 
     if (version.running === true) {
-      return done({ reason: `[${network}] Process ${taskName} already running.` });
+      return done({ reason: `[${hash}] Process ${taskName} already running.` });
     }
     version.running = true;
 
-    const latestBlock = await getLatestBlock(network);
+    const latestBlock = await getLatestBlock(blockchainData);
 
     if (latestBlock < version.number) {
-      log.error(`[${network}] ${taskName} ERROR: latest block is ${version.number} but the last mined block is ${latestBlock}, the contract's last synced block will be reset to 0, expect a lot of duplicate transaction messages!`);
+      log(`Error, latest block is ${version.number} but the last mined block is ${latestBlock}, the contract's last synced block will be reset to 0, expect a lot of duplicate transaction messages!`);
       version.number = 0;
     }
 
@@ -157,15 +157,16 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
 
     // Queries the blockchain / alchemy for the latest events
     const processedResult = await getTransactionHistory(
-      networkData[contractName],
-      network,
+      blockchainData[contractName],
+      blockchainData,
       version.number,
     );
+
     // If there are no new events, stop
     if (processedResult.length === 0) {
       version.running = false;
       await version.save();
-      log.info(`[${network}] ${taskName} complete`);
+      log('No new events to process');
       return done();
     }
 
@@ -174,8 +175,8 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
     for await (const [event] of processedResult) {
       const result = await processLogEvents(
         event,
-        network,
-        networkData[contractName],
+        hash,
+        blockchainData[contractName],
         transactionArray,
       );
         // An undefined value means there was nothing to process from that event
@@ -196,9 +197,7 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
     // Log the number of logs processed
     Object.keys(insertions).forEach((sig) => {
       if (insertions[sig] > 0) {
-        log.info(
-          `[${network}] Processed ${insertions[sig]} events of ${sig}`,
-        );
+        log(`Processed ${insertions[sig]} events of ${sig}`);
       }
     });
 
@@ -211,11 +210,11 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
       version.number = BigNumber.from(version.number).add(lastSuccessfullBlock).add(1).toString();
     }
     await version.save();
-    log.info(`[${network}] ${taskName} complete`);
+    log('Complete');
 
     return done();
   } catch (error) {
-    log.error(error);
+    logger.error(error);
     return done(error);
   }
 };

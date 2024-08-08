@@ -11,10 +11,10 @@ import { RootState } from '../../ducks';
 import { getTokenError } from '../../ducks/auth/actions';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import { ContractType } from '../adminViews/adminView.types';
+import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 
 const Contracts = () => {
@@ -22,7 +22,7 @@ const Contracts = () => {
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [contractArray, setContractArray] = useState<TContractsArray[]>();
   const [diamondFilter, setDiamondFilter] = useState<Boolean>(false);
-  const [chainFilter, setChainFilter] = useState<string[]>([]);
+  const [chainFilter, setChainFilter] = useState<BlockchainType[]>([]);
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -33,6 +33,8 @@ const Contracts = () => {
     primaryButtonColor,
     iconColor
   } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+
+  const { blockchainSettings, getBlockchainData } = useServerSettings();
 
   const fetchContracts = useCallback(async () => {
     const response = await rFetch('/api/contracts/factoryList', undefined, {
@@ -86,33 +88,33 @@ const Contracts = () => {
               }`}>
               <FontAwesomeIcon icon={faGem} /> Only Diamonds
             </button>
-            {Object.keys(chainData)
-              .filter((chain) => chainData[chain].disabled !== true)
+            {blockchainSettings
+              .filter((chain) => chain.display !== true && chain.hash)
               .map((chain, index) => {
                 return (
                   <button
                     key={index}
                     onClick={() => {
                       const aux = [...chainFilter];
-                      if (chainFilter.includes(chain)) {
-                        aux.splice(aux.indexOf(chain), 1);
+                      if (chainFilter.includes(chain.hash!)) {
+                        aux.splice(aux.indexOf(chain.hash!), 1);
                       } else {
-                        aux.push(chain);
+                        aux.push(chain.hash!);
                       }
                       setChainFilter(aux);
                     }}
                     className={`col-xs-12 col-md-6 rair-rounded btn btn-${
-                      chainFilter.includes(chain)
+                      chainFilter.includes(chain.hash!)
                         ? 'light'
                         : 'outline-secondary'
                     }`}>
                     <img
-                      alt={chainData[chain]?.name}
-                      src={chainData[chain]?.image}
+                      alt={chain?.name}
+                      src={chain?.image}
                       style={{ maxHeight: '1.5rem', maxWidth: '1.5rem' }}
                       className="me-2"
                     />
-                    <small>{chainData[chain].name}</small>
+                    <small>{chain.name}</small>
                   </button>
                 );
               })}
@@ -143,6 +145,9 @@ const Contracts = () => {
               return true;
             })
             .map((item, index) => {
+              const chainInformation = getBlockchainData(
+                item.blockchain as `0x${string}`
+              );
               return (
                 <NavLink
                   to={`/creator/contract/${item.blockchain}/${item.address}/createCollection`}
@@ -153,10 +158,10 @@ const Contracts = () => {
                   }}
                   className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
                   {item?.blockchain && (
-                    <abbr title={chainData[item.blockchain]?.name}>
+                    <abbr title={chainInformation?.name}>
                       <img
-                        alt={chainData[item.blockchain]?.name}
-                        src={chainData[item.blockchain]?.image}
+                        alt={chainInformation?.name}
+                        src={chainInformation?.image}
                         style={{ maxHeight: '1.5rem', maxWidth: '1.5rem' }}
                         className="me-2"
                       />
@@ -167,7 +172,7 @@ const Contracts = () => {
                       <FontAwesomeIcon icon={faGem} className="me-2" />
                     </abbr>
                   )}
-                  {item?.blockchain && chainData[item.blockchain]?.testnet && (
+                  {item?.blockchain && chainInformation?.testnet && (
                     <abbr title={'Testnet Contract'}>
                       <FontAwesomeIcon icon={faVial} className="me-2" />
                     </abbr>

@@ -17,7 +17,7 @@ import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import blockchainData from '../../utils/blockchainData';
+import useServerSettings from '../adminViews/useServerSettings';
 
 const TokenLayout: React.FC<ITokenLayout> = ({
   item,
@@ -31,6 +31,8 @@ const TokenLayout: React.FC<ITokenLayout> = ({
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  const { getBlockchainData } = useServerSettings();
 
   return (
     <div
@@ -92,7 +94,7 @@ const TokenLayout: React.FC<ITokenLayout> = ({
               className="my-items-blockchain-img"
               src={
                 item.blockchain !== undefined
-                  ? `${blockchainData[item?.blockchain]?.image}`
+                  ? `${getBlockchainData(item?.blockchain)?.image}`
                   : ''
               }
               alt="Blockchain network"
