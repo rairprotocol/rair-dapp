@@ -14,7 +14,6 @@ import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { utils } from 'ethers';
 
-import useServerSettings from '../components/adminViews/useServerSettings';
 import { BreadcrumbsView } from '../components/MockUpPage/NftList/Breadcrumbs/Breadcrumbs';
 import AuthenticityBlock from '../components/MockUpPage/NftList/NftData/AuthenticityBlock/AuthenticityBlock';
 import CollectionInfo from '../components/MockUpPage/NftList/NftData/CollectionInfo/CollectionInfo';
@@ -28,6 +27,7 @@ import { ColorStoreType } from '../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 // import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
 import { setShowSidebarTrue } from '../ducks/metadata/actions';
+import useServerSettings from '../hooks/useServerSettings';
 import useSwal from '../hooks/useSwal';
 import useWeb3Tx from '../hooks/useWeb3Tx';
 import setDocumentTitle from '../utils/setTitle';

@@ -15,10 +15,10 @@ import {
   uploadVideoEnd,
   uploadVideoStart
 } from '../../../ducks/uploadDemo/action';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import { rFetch } from '../../../utils/rFetch';
 import sockets from '../../../utils/sockets';
-import useServerSettings from '../../adminViews/useServerSettings';
 import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 import LinearProgressWithLabel from '../LinearProgressWithLabel/LinearProgressWithLabel';

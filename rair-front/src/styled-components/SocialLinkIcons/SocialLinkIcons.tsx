@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface ISocialBox {
@@ -15,7 +16,9 @@ interface ISocialBox {
   hotdrops?: string;
 }
 
-export const SocialBox = styled.div<ISocialBox>`
+export const SocialBox = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<ISocialBox>`
   width: ${(props) => (props.width ? props.width : '32px')};
   height: ${(props) => (props.height ? props.height : '32px')};
   border-radius: 10.5px;
@@ -118,7 +121,9 @@ export const SocialBox = styled.div<ISocialBox>`
   }
 `;
 
-export const SocialBoxSearch = styled.div<ISocialBox>`
+export const SocialBoxSearch = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<ISocialBox>`
   width: 40px;
   height: 40px;
   border-radius: 10.5px;
@@ -165,7 +170,9 @@ export const SocialBoxSearch = styled.div<ISocialBox>`
   }
 `;
 
-export const UserIconMobile = styled.div<ISocialBox>`
+export const UserIconMobile = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<ISocialBox>`
   width: 40px;
   height: 40px;
   border-radius: 10.5px;
@@ -193,7 +200,9 @@ export const UserIconMobile = styled.div<ISocialBox>`
   }
 `;
 
-export const SocialMenuMobile = styled.div<ISocialBox>`
+export const SocialMenuMobile = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<ISocialBox>`
   cursor: pointer;
   background: ${(props) =>
     props.primaryColor === '#dedede' ? '#fff' : '#424242'};

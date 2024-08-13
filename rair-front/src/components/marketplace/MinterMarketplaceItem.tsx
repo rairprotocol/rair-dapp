@@ -7,9 +7,9 @@ import { TMinterMarketplaceItemType } from './marketplace.types';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import useServerSettings from '../adminViews/useServerSettings';
 
 const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
   item,

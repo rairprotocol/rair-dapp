@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import {
@@ -5,7 +6,9 @@ import {
   IMainBlockAppStyled
 } from './AppContainer.types';
 
-export const AppContainerFluid = styled.div<IAppContainerFluidStyled>`
+export const AppContainerFluid = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IAppContainerFluidStyled>`
   ${(props) => props.backgroundImageEffect};
   background-size: 100vw 100vh;
   min-height: 100vh;
@@ -31,7 +34,9 @@ export const AppContainerFluid = styled.div<IAppContainerFluidStyled>`
   }
 `;
 
-export const MainBlockApp = styled.div<IMainBlockAppStyled>`
+export const MainBlockApp = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMainBlockAppStyled>`
   margin-top: ${(props) =>
     props.showAlert && !props.isSplashPage && props.selectedChain
       ? '65px'

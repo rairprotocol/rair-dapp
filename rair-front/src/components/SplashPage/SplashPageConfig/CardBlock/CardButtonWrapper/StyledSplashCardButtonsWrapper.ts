@@ -1,8 +1,11 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import { TStyledSplashCardButtonsWrapper } from '../../splashConfig.types';
 
-export const StyledSplashCardButtonsWrapper = styled.div<TStyledSplashCardButtonsWrapper>`
+export const StyledSplashCardButtonsWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TStyledSplashCardButtonsWrapper>`
   display: flex;
   flex-direction: ${({ flexDirection }) => flexDirection || 'row'};
   flex-wrap: ${({ flexWrap }) => flexWrap || 'nowrap'};

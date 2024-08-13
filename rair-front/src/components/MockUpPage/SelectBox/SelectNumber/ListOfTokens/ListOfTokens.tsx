@@ -1,20 +1,14 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
-import {
-  TNftItemResponse,
-  TTokenData
-} from '../../../../../axios.responseTypes';
-import { RootState } from '../../../../../ducks';
+import { TNftItemResponse } from '../../../../../axios.responseTypes';
 import { setTokenData } from '../../../../../ducks/nftData/action';
-import { currentTokenData } from '../../../NftList/utils/currentTokenData';
 import { IListOfTokensComponent } from '../../selectBox.types';
 import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
 
 import '../../styles.css';
-import { useParams } from 'react-router';
 
 const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   blockchain,
@@ -34,19 +28,12 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const rootRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
   const listOfTokensRef = useRef<HTMLDivElement>(null);
-  const limit = 100;
   const [isOpens, setIsOpens] = useState<boolean>(false);
   const [isBack /*setIsBack*/] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(true);
 
-  const {} = useParams();
-
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const tokenData = useSelector<
-    RootState,
-    { [index: string]: TTokenData } | undefined
-  >((state) => state.nftDataStore.tokenData);
   const dispatch = useDispatch();
 
   const getNumberFromStr = (str: string) => {
@@ -102,15 +89,22 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
     [listOfTokensRef, isOpens]
   );
 
-    const fetchSerialData = useCallback(async(fromToken?: number, toToken?: number) => {
-      const {data} = await axios.get<TNftItemResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}/numbers${fromToken && toToken ? `?fromToken=${fromToken}&toToken=${toToken}` : ''}`
+  const fetchSerialData = useCallback(
+    async (fromToken?: number, toToken?: number) => {
+      const { data } = await axios.get<TNftItemResponse>(
+        `/api/nft/network/${blockchain}/${contract}/${product}/numbers${
+          fromToken && toToken
+            ? `?fromToken=${fromToken}&toToken=${toToken}`
+            : ''
+        }`
       );
 
-      if(data.success && data.tokens) {
+      if (data.success && data.tokens) {
         setProductTokenNumbers(data.tokens);
       }
-    }, [blockchain,contract,product])
+    },
+    [blockchain, contract, product]
+  );
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutSideListOfTokens);
@@ -122,17 +116,17 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
     fetchSerialData();
   }, []);
 
-const availableRanges = useMemo(
-  () =>
-  totalCount?.reduce((acc, item) => {
-      const tokenRange = Math.floor(+item.token / 100) * 100;
-      return {
-        ...acc,
-        [tokenRange]: true
-      };
-    }, {}),
-  [totalCount]
-);
+  const availableRanges = useMemo(
+    () =>
+      totalCount?.reduce((acc, item) => {
+        const tokenRange = Math.floor(+item.token / 100) * 100;
+        return {
+          ...acc,
+          [tokenRange]: true
+        };
+      }, {}),
+    [totalCount]
+  );
 
   const getPaginationToken = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -182,7 +176,7 @@ const availableRanges = useMemo(
                   disabled={availableRanges?.[i] ? false : true}
                   key={i}
                   onClick={(e) => {
-                    console.info(i, i + 99)
+                    // console.info(i, i + 99);
                     fetchSerialData(i, i + 99);
                     getPaginationToken(e);
                   }}

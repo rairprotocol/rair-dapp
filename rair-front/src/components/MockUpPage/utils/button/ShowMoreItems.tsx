@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import {
@@ -7,7 +8,9 @@ import {
   TShowMoreText
 } from '../../NftList/nftList.types';
 
-export const ShowMoreContainer = styled.div<TShowMoreContainer>`
+export const ShowMoreContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TShowMoreContainer>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   color: ${(props) => props.textColor};
@@ -22,7 +25,9 @@ export const ShowMoreContainer = styled.div<TShowMoreContainer>`
   // }
 `;
 
-export const ShowMoreItem = styled.div<TShowMoreItem>`
+export const ShowMoreItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TShowMoreItem>`
   width: ${(props) => props.width};
   min-height: ${(props) => props.height};
   color: ${(props) => props.textColor};
@@ -56,7 +61,9 @@ export const ShowMoreItem = styled.div<TShowMoreItem>`
   }
 `;
 
-export const ModalContentCloseBtn = styled.div<TModalContentCloseBtnStyled>`
+export const ModalContentCloseBtn = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TModalContentCloseBtnStyled>`
   width: 32px;
   height: 32px;
   border-radius: 11.5px;
@@ -79,7 +86,9 @@ export const ModalContentCloseBtn = styled.div<TModalContentCloseBtnStyled>`
   }
 `;
 
-export const ShowMoreText = styled.span<TShowMoreText>`
+export const ShowMoreText = styled.span.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TShowMoreText>`
   font-family: ${(props) => props.font};
   color: ${(props) => props.fontColor};
   font-size: ${(props) => props.fontSize};

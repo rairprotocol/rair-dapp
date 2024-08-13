@@ -1,10 +1,13 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface INftCollectionProps {
   primaryColor: string;
 }
 
-export const NftCollection = styled.div<INftCollectionProps>`
+export const NftCollection = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<INftCollectionProps>`
   position: relative;
   border-radius: 16px;
   height: '475px';

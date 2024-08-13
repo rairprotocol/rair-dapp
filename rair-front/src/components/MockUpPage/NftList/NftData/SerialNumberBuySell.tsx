@@ -14,12 +14,12 @@ import store, { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { UserType } from '../../../../ducks/users/users.types';
+import useServerSettings from '../../../../hooks/useServerSettings';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import { BillTransferIcon, GrandpaWait } from '../../../../images';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
-import useServerSettings from '../../../adminViews/useServerSettings';
 import ResaleModal from '../../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
@@ -66,7 +66,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   const getInfoFromUser = useCallback(async () => {
     // find user
     if (
-      params.tokenId && tokenData &&
+      params.tokenId &&
+      tokenData &&
       Object.values(tokenData)[0]?.ownerAddress &&
       utils.isAddress(Object.values(tokenData)[0]?.ownerAddress) &&
       Object.values(tokenData)[0]?.ownerAddress !== constants.AddressZero
@@ -179,7 +180,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (
       !diamondMarketplaceInstance ||
       !selectedToken ||
-      tokenData && !Object.values(tokenData)[0].uniqueIndexInContract
+      (tokenData && !Object.values(tokenData)[0].uniqueIndexInContract)
     ) {
       return;
     }
@@ -195,7 +196,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     setResaleData(undefined);
     const resaleResponse = await rFetch(
-      `/api/resales/open?contract=${params.contract}&blockchain=${params.blockchain}&index=${tokenData && Object.values(tokenData)[0].uniqueIndexInContract}`
+      `/api/resales/open?contract=${params.contract}&blockchain=${
+        params.blockchain
+      }&index=${tokenData && Object.values(tokenData)[0].uniqueIndexInContract}`
     );
     if (!resaleResponse.success) {
       return;
@@ -352,7 +355,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
                         accountData.nickName.slice(length - 4)
                       : accountData && accountData.nickName) ||
                       (Object.values(tokenData)[0]?.ownerAddress &&
-                      Object.values(tokenData)[0]?.ownerAddress.slice(0, 4) +
+                        Object.values(tokenData)[0]?.ownerAddress.slice(0, 4) +
                           '....' +
                           Object.values(tokenData)[0]?.ownerAddress.slice(
                             length - 4
@@ -487,7 +490,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
                         accountData.nickName.slice(length - 4)
                       : accountData && accountData.nickName) ||
                       (Object.values(tokenData)[0]?.ownerAddress &&
-                      Object.values(tokenData)[0]?.ownerAddress.slice(0, 4) +
+                        Object.values(tokenData)[0]?.ownerAddress.slice(0, 4) +
                           '....' +
                           Object.values(tokenData)[0]?.ownerAddress.slice(
                             length - 4

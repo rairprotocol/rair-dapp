@@ -87,10 +87,9 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const getAllProduct = useCallback(
     async (fromToken: string, toToken: string, attributes: any) => {
-
       setIsLoading(true);
       let responseAllProduct;
-      if(!window.location.href.includes('/tokens')) {
+      if (!window.location.href.includes('/tokens')) {
         responseAllProduct = await axios.get<TNftItemResponse>(
           `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}${
             attributes ? `&metadataFilters=${JSON.stringify(attributes)}` : ''

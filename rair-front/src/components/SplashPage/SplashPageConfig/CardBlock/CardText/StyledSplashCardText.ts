@@ -1,8 +1,11 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import { TStyledSplashCardText } from '../../splashConfig.types';
 
-export const StyledSplashCardText = styled.div<TStyledSplashCardText>`
+export const StyledSplashCardText = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TStyledSplashCardText>`
   color: ${({ color }) => color};
   font-size: ${({ fontSize }) => fontSize};
   font-weight: ${({ fontWeight }) => fontWeight};

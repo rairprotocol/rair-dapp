@@ -1,10 +1,13 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface IPopUpVideoChangeBox {
   primaryColor: string;
 }
 
-export const PopUpVideoChangeBox = styled.div<IPopUpVideoChangeBox>`
+export const PopUpVideoChangeBox = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IPopUpVideoChangeBox>`
   width: 100%;
 
   label {

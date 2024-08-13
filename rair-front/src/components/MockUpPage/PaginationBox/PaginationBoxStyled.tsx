@@ -1,12 +1,15 @@
+import isValidProp from '@emotion/is-prop-valid';
 import { Pagination } from '@mui/material';
 import styled from 'styled-components';
 
 interface IPaginationBoxStyled {
   primarycolor: string;
-  primaryButtonColor?: any;
+  primaryButtonColor?: string;
 }
 
-export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
+export const PaginationBoxStyled = styled(Pagination).withConfig({
+  shouldForwardProp: (prop) => isValidProp(prop)
+})<IPaginationBoxStyled>`
   ul {
     li {
       button {

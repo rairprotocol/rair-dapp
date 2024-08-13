@@ -22,7 +22,6 @@ import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 import ImportAndTransfer from './components/adminViews/ImportAndTransfer';
 import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
 import LicenseExchange from './components/adminViews/LicenseExchange';
-import useServerSettings from './components/adminViews/useServerSettings';
 import AlertMetamask from './components/AlertMetamask/index';
 import ConsumerMode from './components/consumerMode';
 import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
@@ -83,6 +82,7 @@ import { ContractsInitialType } from './ducks/contracts/contracts.types';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { TUsersInitialState } from './ducks/users/users.types';
 import useConnectUser from './hooks/useConnectUser';
+import useServerSettings from './hooks/useServerSettings';
 import useWeb3Tx from './hooks/useWeb3Tx';
 import {
   AppContainerFluid,

@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface IInquireItems {
@@ -5,7 +6,9 @@ interface IInquireItems {
   background?: any;
 }
 
-export const InquireWrapper = styled.div<IInquireItems>`
+export const InquireWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IInquireItems>`
   padding: 0 0 20px 0;
 
   .inquiries-title {
@@ -22,7 +25,9 @@ export const InquireWrapper = styled.div<IInquireItems>`
   }
 `;
 
-export const InquireContainer = styled.div<IInquireItems>`
+export const InquireContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IInquireItems>`
   max-width: 700px;
   margin: 0 auto;
   background: ${(props) =>
@@ -72,7 +77,9 @@ export const InquireContainer = styled.div<IInquireItems>`
   }
 `;
 
-export const InquireField = styled.div<IInquireItems>`
+export const InquireField = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IInquireItems>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -186,7 +193,9 @@ export const InquireInput = styled.input`
   }
 `;
 
-export const InquireSelect = styled.select<IInquireItems>`
+export const InquireSelect = styled.select.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IInquireItems>`
   width: 462px;
   height: 44px;
   border: 1px solid #4e4d4d;
@@ -216,7 +225,9 @@ export const InquireSelect = styled.select<IInquireItems>`
   }
 `;
 
-export const InquireLabel = styled.label<IInquireItems>`
+export const InquireLabel = styled.label.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IInquireItems>`
   display: flex;
   align-items: center;
 

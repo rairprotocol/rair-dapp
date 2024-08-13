@@ -38,7 +38,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
     for (let i = 0; i < totalPageVideo; i++) {
       pagesArray.push(i + 1);
     }
-  } else if(whatPage && whatPage === 'notifications' && totalPage) {
+  } else if (whatPage && whatPage === 'notifications' && totalPage) {
     for (let i = 0; i < totalPage; i++) {
       pagesArray.push(i + 1);
     }
@@ -60,11 +60,22 @@ const PaginationBox: React.FC<IPaginationBox> = ({
       setTotalPages(getPagesCount(totalPageForPagination, itemsPerPage));
     } else if (totalPageForPagination && whatPage === 'video') {
       setTotalPagesVideo(getPagesCount(totalPageForPagination, itemsPerPage));
+    } else if (
+      totalPageForPagination &&
+      whatPage === 'notifications' &&
+      itemsPerPageNotifications
+    ) {
+      setTotalPages(
+        getPagesCount(totalPageForPagination, itemsPerPageNotifications)
+      );
     }
-    else if(totalPageForPagination && whatPage === 'notifications' && itemsPerPageNotifications){
-        setTotalPages(getPagesCount(totalPageForPagination, itemsPerPageNotifications));
-    }
-  }, [setTotalPages, totalPageForPagination, itemsPerPage, whatPage, itemsPerPageNotifications]);
+  }, [
+    setTotalPages,
+    totalPageForPagination,
+    itemsPerPage,
+    whatPage,
+    itemsPerPageNotifications
+  ]);
 
   if (totalPageForPagination === 0) {
     return null;
@@ -72,51 +83,21 @@ const PaginationBox: React.FC<IPaginationBox> = ({
 
   return (
     <div className={`pagination__wrapper`}>
-      {/* {pagesArray && pagesArray.length > 0 ? (
-                pagesArray.map((p) => (
-                    <div
-                        key={p}
-                        onClick={() => changePage(p)}
-                        className={
-                            currentPage === p
-                                ? "pagination__page pagination__page__current"
-                                : "pagination__page"
-                        }
-                    >
-                        {p}
-                    </div>
-                ))
-            ) : (
-                <h2 className="search-panel-empty-text">No items to display</h2>
-            )} */}
-      {
-        pagesArray &&
-          totalPageForPagination &&
-          totalPageForPagination > 0 &&
-          pagesArray.length > 0 && (
-            <PaginationBoxStyled
-              primarycolor={primaryColor}
-              primaryButtonColor={primaryButtonColor}
-              // className={
-              //   primaryColor === '#dedede'
-              //     ? `pagination-white ${
-              //         hotdropsVar === 'true' ? 'hotdrops-color' : ''
-              //       }`
-              //     : `pagination-black ${
-              //         hotdropsVar === 'true' ? 'hotdrops-color' : ''
-              //       }`
-              // }
-              count={pagesArray.length}
-              page={page}
-              onChange={handlePage}
-              // variant="outlined"
-              // hideNextButton={true}
-              // hidePrevButton={true}
-              shape="rounded"
-            />
-          )
-        // : <h2 className="search-panel-empty-text">No items to display</h2>
-      }
+      {pagesArray &&
+        totalPageForPagination &&
+        totalPageForPagination > 0 &&
+        pagesArray.length > 0 && (
+          <PaginationBoxStyled
+            primarycolor={primaryColor}
+            primaryButtonColor={primaryButtonColor}
+            count={pagesArray.length}
+            page={page}
+            onChange={handlePage}
+            // hideNextButton={true}
+            // hidePrevButton={true}
+            shape="rounded"
+          />
+        )}
     </div>
   );
 };

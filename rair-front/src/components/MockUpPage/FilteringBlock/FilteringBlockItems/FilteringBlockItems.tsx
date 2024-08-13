@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import { ArrowDown, ArrowUp, FilterIconNew, SimpleFilterArrow } from './incons';
@@ -13,15 +14,17 @@ import {
   TStyledShevronIconStyled
 } from '../filteringBlock.types';
 
-export const SelectFiltersItem = styled.div`
-  background-color: ${(props: TSelectFiltersItemStyled) =>
+export const SelectFiltersItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSelectFiltersItemStyled>`
+  background-color: ${(props) =>
     props.primaryColor === '#dedede'
       ? 'var(--rhyno-40)'
       : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
-  color: ${(props: TSelectFiltersItemStyled) =>
+  color: ${(props) =>
     props.filterPopUp ? '#fff' : `var(--${props.textColor})`};
   border: solid 1px
-    ${(props: TSelectFiltersItemStyled) =>
+    ${(props) =>
       props.secondaryColor === '#dedede'
         ? 'var(--rhyno-40)'
         : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
@@ -31,48 +34,57 @@ export const SelectFiltersItem = styled.div`
   }
 `;
 
-export const FiltersTitleIcon = styled.i`
-  color: ${(props: TFiltersTitleIconStyled) =>
-    props.filterPopUp ? '#fff' : '#E882D5'};
+export const FiltersTitleIcon = styled.i.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TFiltersTitleIconStyled>`
+  color: ${(props) => (props.filterPopUp ? '#fff' : '#E882D5')};
 `;
 
-export const SelectFiltersPopUp = styled.div`
+export const SelectFiltersPopUp = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSelectFiltersPopUpStyled>`
   background-color: 
-    ${(props: TSelectFiltersPopUpStyled) =>
+    ${(props) =>
       props.primaryColor === '#dedede' ? 'var(--rhyno)' : props.primaryColor}
   );
   z-index: 100;
 `;
 
-export const SelectSortItem = styled.div`
-  background-color: ${(props: TSelectSortItemStyled) =>
+export const SelectSortItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSelectSortItemStyled>`
+  background-color: ${(props) =>
     props.primaryColor === '#dedede'
       ? 'var(--rhyno-40)'
       : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
-  color: ${(props: TSelectSortItemStyled) => props.textColor};
+  color: ${(props) => props.textColor};
   border: solid 1px
-    ${(props: TSelectSortItemStyled) =>
+    ${(props) =>
       props.secondaryColor === '#dedede'
         ? 'var(--rhyno-40)'
         : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
 `;
 
-export const SortArrowUpIcon = styled.i`
-  color: ${(props: TSortArrowUpIconStyled) =>
-    props.sortItem === 'up' ? '#E882D5' : '#A7A6A6'};
+export const SortArrowUpIcon = styled.i.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSortArrowUpIconStyled>`
+  color: ${(props) => (props.sortItem === 'up' ? '#E882D5' : '#A7A6A6')};
 `;
 
-export const SortArrowDownIcon = styled.i`
-  color: ${(props: TSortArrowUpIconStyled) =>
-    props.sortItem === 'down' ? '#E882D5' : '#A7A6A6'};
+export const SortArrowDownIcon = styled.i.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSortArrowUpIconStyled>`
+  color: ${(props) => (props.sortItem === 'down' ? '#E882D5' : '#A7A6A6')};
 `;
 
-export const SelectSortPopUp = styled.div`
-  background-color: ${(props: TSelectSortPopUpStyled) =>
+export const SelectSortPopUp = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSelectSortPopUpStyled>`
+  background-color: ${(props) =>
     props.primaryColor === '#dedede'
       ? 'var(--rhyno)'
       : `color-mix(in srgb, ${props.primaryColor}, #2d2d2d)`};
-  color: ${(props: TSelectSortPopUpStyled) => props.textColor};
+  color: ${(props) => props.textColor};
   &:after {
     content: '';
     width: 20px;
@@ -89,16 +101,18 @@ export const SelectSortPopUp = styled.div`
   }
 `;
 
-export const ModalContentPicture = styled.div`
+export const ModalContentPicture = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TModalContentPictureStyled>`
   background-image: url(${(props) => props.picture || props.defaultImg});
-  background-color: var(
-    --${(props: TModalContentPictureStyled) => props.primaryColor}-transparent
-  );
+  background-color: var(--${(props) => props.primaryColor}-transparent);
 `;
 
-export const StyledFilterIcon = styled(FilterIconNew)`
+export const StyledFilterIcon = styled(FilterIconNew).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TFiltersTitleIconStyled>`
   path {
-    stroke: ${(props: TFiltersTitleIconStyled) =>
+    stroke: ${(props) =>
       import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.customSecondaryButtonColor === '#1486c5'
@@ -116,9 +130,11 @@ export const StyledFilterIcon = styled(FilterIconNew)`
   margin-right: 8px;
 `;
 
-export const StyledArrowUpIcon = styled(ArrowUp)`
+export const StyledArrowUpIcon = styled(ArrowUp).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSortArrowUpIconStyled>`
   path {
-    stroke: ${(props: TSortArrowUpIconStyled) =>
+    stroke: ${(props) =>
       import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.customSecondaryButtonColor === '#1486c5'
@@ -134,9 +150,11 @@ export const StyledArrowUpIcon = styled(ArrowUp)`
           : '#A7A6A6'};
   }
 `;
-export const StyledArrowDownIcon = styled(ArrowDown)`
+export const StyledArrowDownIcon = styled(ArrowDown).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSortArrowUpIconStyled>`
   path {
-    stroke: ${(props: TSortArrowUpIconStyled) =>
+    stroke: ${(props) =>
       import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.customSecondaryButtonColor === '#1486c5'
@@ -152,9 +170,10 @@ export const StyledArrowDownIcon = styled(ArrowDown)`
   }
 `;
 
-export const StyledShevronIcon = styled(SimpleFilterArrow)`
-  transform: ${(props: TStyledShevronIconStyled) =>
-    props.rotate ? 'rotate(-180deg)' : ''};
+export const StyledShevronIcon = styled(SimpleFilterArrow).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TStyledShevronIconStyled>`
+  transform: ${(props) => (props.rotate ? 'rotate(-180deg)' : '')};
 
   path {
     stroke: ${(props) =>
@@ -172,9 +191,11 @@ export const StyledShevronIcon = styled(SimpleFilterArrow)`
   }
 `;
 
-export const StyledPopupArrowUpIcon = styled(ArrowUp)`
+export const StyledPopupArrowUpIcon = styled(ArrowUp).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSortArrowUpIconStyled>`
   path {
-    stroke: ${(props: TSortArrowUpIconStyled) =>
+    stroke: ${(props) =>
       import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.customSecondaryButtonColor === '#1486c5'
@@ -188,9 +209,11 @@ export const StyledPopupArrowUpIcon = styled(ArrowUp)`
           }`};
   }
 `;
-export const StyledPopupArrowDownIcon = styled(ArrowDown)`
+export const StyledPopupArrowDownIcon = styled(ArrowDown).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TSortArrowUpIconStyled>`
   path {
-    stroke: ${(props: TSortArrowUpIconStyled) =>
+    stroke: ${(props) =>
       import.meta.env.VITE_TESTNET === 'true'
         ? `${
             props.customSecondaryButtonColor === '#1486c5'

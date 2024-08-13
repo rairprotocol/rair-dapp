@@ -1,7 +1,15 @@
-//@ts-nocheck
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
-export const Col = styled.div`
+interface customProps {
+  width: string;
+  direction: string;
+  align: string;
+}
+
+export const Col = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<customProps>`
   width: ${(props) => (props.width ? props.width : '50%')};
   display: flex;
   flex-direction: ${(props) => (props.direction ? props.direction : 'row')};

@@ -1,8 +1,11 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import { TAuthenticityStyled } from '../../nftList.types';
 
-export const TableAuthenticity = styled.div<TAuthenticityStyled>`
+export const TableAuthenticity = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TAuthenticityStyled>`
   background: ${(props) =>
     props.primaryColor === '#dedede'
       ? 'rgb(189, 189, 189)'

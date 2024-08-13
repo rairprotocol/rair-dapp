@@ -1,16 +1,15 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 import { RootState } from '../../../../../ducks';
 import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
-import useServerSettings from '../../../../adminViews/useServerSettings';
+import useServerSettings from '../../../../../hooks/useServerSettings';
 import { StyledShevronIcon } from '../../../FilteringBlock/FilteringBlockItems/FilteringBlockItems';
 import { ICurrentTokensComponent } from '../../selectBox.types';
 
 const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   primaryColor,
-  items,
   isBack,
   isOpen,
   setIsOpen,
@@ -28,7 +27,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
 
   const { customSecondaryColor } = useServerSettings();
 
-  const {tokenId} = useParams();
+  const { tokenId } = useParams();
 
   return (
     <>
@@ -101,11 +100,12 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
               &#10007;
             </div>
           </div>
-          {totalCount && totalCount.length > 0 &&
-            totalCount.map((el,index) => {
+          {totalCount &&
+            totalCount.length > 0 &&
+            totalCount.map((el, index) => {
               return (
                 <div
-                // className={`select-number-box ${tokenId && Number(tokenId) === el.token ? "selected-box" : ''}`}
+                  // className={`select-number-box ${tokenId && Number(tokenId) === el.token ? "selected-box" : ''}`}
                   className={`select-number-box ${
                     tokenId === el.token ? 'selected-box' : ''
                   } ${el.sold ? 'sold-token' : ''}`}
@@ -124,7 +124,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
                           : primaryButtonColor
                     }`,
                     color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`,
-                    fontWeight: "bold"
+                    fontWeight: 'bold'
                   }}
                   key={index}
                   onClick={() => onClickItem(el.token)}>

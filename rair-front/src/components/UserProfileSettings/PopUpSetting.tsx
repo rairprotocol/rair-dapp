@@ -13,8 +13,8 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 // import { TUsersInitialState } from '../../ducks/users/users.types';
 // React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
+import useServerSettings from '../../hooks/useServerSettings';
 import { RairFavicon, RairTokenLogo, VerifiedIcon } from '../../images';
-import useServerSettings from '../adminViews/useServerSettings';
 import LoadingComponent from '../common/LoadingComponent';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 

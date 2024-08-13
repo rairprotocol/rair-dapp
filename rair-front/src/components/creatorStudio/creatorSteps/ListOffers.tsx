@@ -12,10 +12,10 @@ import { erc721Abi } from '../../../contracts';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { validateInteger } from '../../../utils/metamaskUtils';
-import useServerSettings from '../../adminViews/useServerSettings';
 import {
   IListOffers,
   TOfferListItem,

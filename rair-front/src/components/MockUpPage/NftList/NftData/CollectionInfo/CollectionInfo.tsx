@@ -14,9 +14,9 @@ import {
   TTokenData
 } from '../../../../../axios.responseTypes';
 import { RootState } from '../../../../../ducks';
+import useServerSettings from '../../../../../hooks/useServerSettings';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { defaultHotDrops } from '../../../../../images';
-import useServerSettings from '../../../../adminViews/useServerSettings';
 import InputSelect from '../../../../common/InputSelect';
 import PurchaseTokenButton from '../../../../common/PurchaseToken';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';

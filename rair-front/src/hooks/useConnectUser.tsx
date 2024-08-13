@@ -6,11 +6,11 @@ import { MultiOwnerModularAccount } from '@alchemy/aa-accounts';
 import { AccountSigner } from '@alchemy/aa-ethers';
 import axios from 'axios';
 
+import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
 import useWeb3Tx from './useWeb3Tx';
 
 import { TUserResponse } from '../axios.responseTypes';
-import useServerSettings from '../components/adminViews/useServerSettings';
 import { OnboardingButton } from '../components/common/OnboardingButton/OnboardingButton';
 import { RootState } from '../ducks';
 import { getTokenComplete, getTokenStart } from '../ducks/auth/actions';
@@ -125,11 +125,14 @@ const useConnectUser = () => {
       blockchain: currentChain,
       alchemyProvider: provider
     };
-  }, [currentChain, connectWeb3AuthProgrammaticProvider]);
+  }, [currentChain, connectWeb3AuthProgrammaticProvider, getBlockchainData]);
 
   const loginWithMetamask = useCallback(async () => {
     const accounts = await window.ethereum.request({
       method: 'eth_requestAccounts'
+    });
+    const chainId = await window.ethereum.request({
+      method: 'eth_chainId'
     });
     if (!accounts) {
       return { address: undefined, blockchain: undefined };
@@ -137,7 +140,7 @@ const useConnectUser = () => {
     return {
       userAddress: accounts[0],
       signerAddress: accounts[0],
-      blockchain: window.ethereum.chainId?.toLowerCase() as BlockchainType
+      blockchain: chainId.toLowerCase() as BlockchainType
     };
   }, []);
 
@@ -394,14 +397,17 @@ const useConnectUser = () => {
         false
       );
       if (success && user) {
-        if (!window?.ethereum?.selectedAddress) {
+        if (!window?.ethereum._state.initialized) {
           // Metamask isn't connected anymore to the page,
           //  it's unreliable to use the login data in this case
           dispatch(setLoginProcessStatus(false));
           return await logoutUser();
         }
+        const currentChainId = await window.ethereum.request({
+          method: 'eth_chainId'
+        });
         const chains = await refreshBlockchainData();
-        dispatch(setChainId(window.ethereum.chainId, chains));
+        dispatch(setChainId(currentChainId.toLowerCase(), chains));
         dispatch(setLoginType('metamask')); // Because web3 logins end on page reload
         dispatch(setCoingeckoRates(await getCoingeckoRates()));
         dispatch(setUserData(user));

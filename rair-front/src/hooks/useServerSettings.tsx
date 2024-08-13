@@ -1,24 +1,23 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { BlockchainSetting, Settings } from './adminView.types';
-
-import { RootState } from '../../ducks';
+import {
+  BlockchainSetting,
+  Settings
+} from '../components/adminViews/adminView.types';
+import {
+  CustomValueType,
+  FooterLinkType
+} from '../components/common/commonTypes/InputSelectTypes.types';
 import {
   setCustomColors,
   setCustomLogosDark,
   setCustomLogosLight
-} from '../../ducks/colors/actions';
-import { setChainId } from '../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { HotdropsFavicon, RairFavicon } from '../../images';
-import chainData from '../../utils/blockchainData';
-import { rFetch } from '../../utils/rFetch';
-import { TChainData } from '../../utils/utils.types';
-import {
-  CustomValueType,
-  FooterLinkType
-} from '../common/commonTypes/InputSelectTypes.types';
+} from '../ducks/colors/actions';
+import { HotdropsFavicon, RairFavicon } from '../images';
+import chainData from '../utils/blockchainData';
+import { rFetch } from '../utils/rFetch';
+import { TChainData } from '../utils/utils.types';
 
 const useServerSettings = () => {
   const dispatch = useDispatch();
@@ -46,10 +45,6 @@ const useServerSettings = () => {
     BlockchainSetting[]
   >([]);
 
-  const { currentChain } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
-
   const getBlockchainData = useCallback(
     (chainId: `0x${string}`): (BlockchainSetting & TChainData) | undefined => {
       if (!chainId) {
@@ -74,6 +69,7 @@ const useServerSettings = () => {
   const getServerSettings = useCallback(async () => {
     setIsLoading(true);
     const { success, settings } = await rFetch('/api/settings');
+    // eslint-disable-next-line no-console
     if (success && settings) {
       setSettings(settings);
       setNodeAddress(
@@ -139,10 +135,6 @@ const useServerSettings = () => {
     refreshBlockchainData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    getServerSettings();
-  }, [getServerSettings]);
 
   useEffect(() => {
     if (settings.favicon) {

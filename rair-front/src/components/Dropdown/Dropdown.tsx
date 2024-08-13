@@ -1,4 +1,4 @@
-import useServerSettings from '../adminViews/useServerSettings';
+import useServerSettings from '../../hooks/useServerSettings';
 
 import { TDropdownProps } from '.';
 

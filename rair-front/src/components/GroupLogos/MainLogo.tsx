@@ -6,7 +6,7 @@ import { MainLogoContaier } from './MainLogoItems';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import useServerSettings from '../adminViews/useServerSettings';
+import useServerSettings from '../../hooks/useServerSettings';
 
 import LoadingComponent from './../common/LoadingComponent';
 

@@ -23,6 +23,7 @@ import { MobileHeaderBlock } from './MobileHeaderBlock';
 
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import useServerSettings from '../../../hooks/useServerSettings';
 // import { IFilterModal } from '.';
 import {
   GlobalModalContext,
@@ -32,7 +33,6 @@ import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
 import { rFetch } from '../../../utils/rFetch';
 import CustomAccordion from '../../Accordion/Accordion';
 import AccordionItem from '../../Accordion/AccordionItem/AccordionItem';
-import useServerSettings from '../../adminViews/useServerSettings';
 import { TOption } from '../../Dropdown';
 import Dropdown from '../../Dropdown/Dropdown';
 import { closeModal, openModal } from '../helpers/OnOpenModal';

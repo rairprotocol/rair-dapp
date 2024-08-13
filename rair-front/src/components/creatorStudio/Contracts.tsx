@@ -11,10 +11,10 @@ import { RootState } from '../../ducks';
 import { getTokenError } from '../../ducks/auth/actions';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useServerSettings from '../../hooks/useServerSettings';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import { ContractType } from '../adminViews/adminView.types';
-import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 
 const Contracts = () => {

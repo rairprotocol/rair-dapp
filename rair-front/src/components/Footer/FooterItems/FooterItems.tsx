@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 type TFooterMainStyled = {
@@ -8,7 +9,9 @@ type TFooterMainStyled = {
   secondaryColor?: string;
 };
 
-export const FooterMain = styled.footer<TFooterMainStyled>`
+export const FooterMain = styled.footer.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TFooterMainStyled>`
   background: ${(props) =>
     props.primaryColor === '#dedede'
       ? '#fff'
@@ -32,7 +35,9 @@ export const FooterMain = styled.footer<TFooterMainStyled>`
   }
 `;
 
-export const FooterWrapper = styled.div<TFooterMainStyled>`
+export const FooterWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TFooterMainStyled>`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -89,7 +94,9 @@ export const FooterImage = styled.div`
 
 export const FooterBoxJoin = styled.div``;
 
-export const CommunityBlock = styled.div<TFooterMainStyled>`
+export const CommunityBlock = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TFooterMainStyled>`
   .community-text {
     color: ${(props) =>
       props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
@@ -139,7 +146,9 @@ export const NavFooter = styled.nav`
   }
 `;
 
-export const NavFooterBox = styled.ul<TFooterMainStyled>`
+export const NavFooterBox = styled.ul.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TFooterMainStyled>`
   list-type: none;
   padding-left: 5rem;
 
@@ -230,7 +239,9 @@ export const NavFooterBox = styled.ul<TFooterMainStyled>`
 
 export const ListFooter = styled.ul``;
 
-export const FooterTextRairTech = styled.div<TFooterMainStyled>`
+export const FooterTextRairTech = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TFooterMainStyled>`
   padding-top: 25px;
 
   ul {
@@ -260,7 +271,9 @@ export const FooterTextRairTech = styled.div<TFooterMainStyled>`
   }
 `;
 
-export const FooterEmailBlock = styled.div<TFooterMainStyled>`
+export const FooterEmailBlock = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TFooterMainStyled>`
   h4 {
     font-size: 16px;
     line-height: 20px;

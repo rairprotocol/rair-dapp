@@ -12,9 +12,9 @@ import { Alchemy } from 'alchemy-sdk';
 import { Contract, ContractReceipt, ContractTransaction } from 'ethers';
 import { encodeFunctionData } from 'viem';
 
+import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
 
-import useServerSettings from '../components/adminViews/useServerSettings';
 import { RootState } from '../ducks';
 import {
   setChainId,

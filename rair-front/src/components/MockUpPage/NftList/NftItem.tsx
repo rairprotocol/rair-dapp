@@ -16,6 +16,7 @@ import { INftItemComponent } from './nftList.types';
 
 import { TNftItemResponse, TTokenData } from '../../../axios.responseTypes';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { defaultHotDrops } from '../../../images';
 import {
@@ -23,7 +24,6 @@ import {
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
-import useServerSettings from '../../adminViews/useServerSettings';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
 
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png';

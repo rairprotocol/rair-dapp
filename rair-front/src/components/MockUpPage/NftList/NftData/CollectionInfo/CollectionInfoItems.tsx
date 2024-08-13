@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import { TCollectionInfoBody } from '../../nftList.types';
@@ -17,7 +18,9 @@ export const BlockItemCollection = styled.div`
   }
 `;
 
-export const CollectionInfoBody = styled.div<TCollectionInfoBody>`
+export const CollectionInfoBody = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TCollectionInfoBody>`
   width: 100%;
 
   .block-item-collection:nth-child(odd) {

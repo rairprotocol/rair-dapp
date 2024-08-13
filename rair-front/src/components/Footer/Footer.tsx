@@ -7,9 +7,9 @@ import { IFooter } from './footer.types';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import useServerSettings from '../../hooks/useServerSettings';
 import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import useServerSettings from '../adminViews/useServerSettings';
 
 import {
   CommunityBlock,
@@ -30,8 +30,10 @@ const Footer: React.FC<IFooter> = () => {
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { headerLogo, primaryColor, textColor, secondaryColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const { headerLogo, primaryColor, textColor, secondaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const onChangeEmail = (e) => {
     setEmailChimp(e.target.value);
@@ -53,8 +55,7 @@ const Footer: React.FC<IFooter> = () => {
       hotdrops={hotdropsVar}
       primaryColor={primaryColor}
       textColor={textColor}
-      secondaryColor={secondaryColor}
-      >
+      secondaryColor={secondaryColor}>
       <FooterWrapper
         className="footer-wrapper-hotdrops"
         primaryColor={primaryColor}>

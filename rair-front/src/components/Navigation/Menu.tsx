@@ -12,6 +12,7 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
+import useServerSettings from '../../hooks/useServerSettings';
 import {
   BellIcon,
   CloseIconMobile,
@@ -27,7 +28,6 @@ import {
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { rFetch } from '../../utils/rFetch';
-import useServerSettings from '../adminViews/useServerSettings';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';

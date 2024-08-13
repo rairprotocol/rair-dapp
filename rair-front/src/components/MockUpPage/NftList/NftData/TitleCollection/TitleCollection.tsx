@@ -6,10 +6,10 @@ import Popup from 'reactjs-popup';
 
 import { RootState } from '../../../../../ducks';
 import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
+import useServerSettings from '../../../../../hooks/useServerSettings';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { rFetch } from '../../../../../utils/rFetch';
 import { ContractType } from '../../../../adminViews/adminView.types';
-import useServerSettings from '../../../../adminViews/useServerSettings';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
 import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
 import EtherScanCollectionLogo from '../../../assets/EtherScanCollectionLogo.svg?react';

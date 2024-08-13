@@ -1,4 +1,4 @@
-//@ts-nocheck
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 type THomePageModalFilter = {
@@ -36,7 +36,9 @@ type THomePageModalFilter = {
 
 //`color-mix(in srgb, ${props.primaryColor}, #888888)`
 
-export const HomePageModalFilter = styled.div<THomePageModalFilter>`
+export const HomePageModalFilter = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<THomePageModalFilter>`
   @media screen and (min-width: 1100px) {
     &.filter-modal-wrapper.unlockables-tab {
       width: 384px;

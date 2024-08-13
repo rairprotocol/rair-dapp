@@ -12,7 +12,7 @@ import {
 
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import useServerSettings from '../adminViews/useServerSettings';
+import useServerSettings from '../../hooks/useServerSettings';
 
 const BatchRow: React.FC<IBatchRow> = ({ index, deleter, array }) => {
   const [address, setAddress] = useState<string>();

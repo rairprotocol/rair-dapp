@@ -39,18 +39,18 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   );
   const [notificationCount, setNotificationCount] = useState<number>(0);
 
-  const getNotificationsCount = useCallback( async () => {
+  const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
     }
-  }, [currentUserAddress, messageAlert])
+  }, [currentUserAddress, messageAlert]);
 
   useEffect(() => {
     getNotificationsCount();
-  }, [getNotificationsCount])
+  }, [getNotificationsCount]);
 
   return (
     <div className="burder-menu-logo">
@@ -91,15 +91,19 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                   marginLeft={'17px'}>
                   <BellIcon primaryColor={primaryColor} />
                   {notificationCount > 0 && (
-            <div style={{
-              fontSize: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontWeight: "bold",
-              color: '#fff'
-            }} className="red-circle-notifications">{notificationCount  > 9 ? "9+" : notificationCount}</div>
-          )}
+                    <div
+                      style={{
+                        fontSize: '10px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontWeight: 'bold',
+                        color: '#fff'
+                      }}
+                      className="red-circle-notifications">
+                      {notificationCount > 9 ? '9+' : notificationCount}
+                    </div>
+                  )}
                 </SocialBox>
               )}
               <div className="social-media-user-icon">Notifications</div>

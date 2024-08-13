@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import { ICardParagraghWrapperStyled } from '../types/CardParagragh.types';
@@ -8,7 +9,9 @@ export const CardParagraghWrapper = styled.div`
   white-space: normal;
 `;
 
-export const CardParagrashTitle = styled.h2<ICardParagraghWrapperStyled>`
+export const CardParagrashTitle = styled.h2.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<ICardParagraghWrapperStyled>`
   font-family: ${(props) => props.fontFamily && props.fontFamily};
   font-size: 42px;
   text-align: ${(props) => props.fontAlign && props.fontAlign};

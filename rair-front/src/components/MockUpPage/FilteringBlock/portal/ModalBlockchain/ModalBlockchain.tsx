@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import useServerSettings from '../../../../adminViews/useServerSettings';
+import useServerSettings from '../../../../../hooks/useServerSettings';
 import { IModalBlockchain, TBlockchainNames } from '../../filteringBlock.types';
 import Modal from '../../modal';
 

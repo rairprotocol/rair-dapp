@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ethers from 'ethers';
 
-import useServerSettings from './useServerSettings';
-
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import {
@@ -11,6 +9,7 @@ import {
   setProgrammaticProvider
 } from '../../ducks/contracts/actions';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import InputField from '../common/InputField';

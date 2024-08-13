@@ -9,12 +9,12 @@ import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useConnectUser from '../../hooks/useConnectUser';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { GrandpaWait } from '../../images';
 import { getRandomValues } from '../../utils/getRandomValues';
 import { rFetch } from '../../utils/rFetch';
-import useServerSettings from '../adminViews/useServerSettings';
 
 import {
   IAgreementsPropsType,

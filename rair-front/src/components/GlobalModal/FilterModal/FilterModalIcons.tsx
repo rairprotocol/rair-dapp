@@ -1,5 +1,8 @@
-//@ts-nocheck
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
+interface customColor {
+  primaryColor: string;
+}
 export const BlockchainIcon = ({ className }) => (
   <svg
     className={`${className || ''}`}
@@ -124,19 +127,25 @@ export const MobileCloseBtn = ({ className }) => (
   </svg>
 );
 
-export const StyledBlockchainIcon = styled(BlockchainIcon)`
+export const StyledBlockchainIcon = styled(BlockchainIcon).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<customColor>`
   stroke: ${(props) =>
     props.primaryColor.includes('rhyno')
       ? 'var(--rhyno-40)'
       : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
 `;
-export const StyledCategoryIcon = styled(CategoryIcon)`
+export const StyledCategoryIcon = styled(CategoryIcon).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<customColor>`
   stroke: ${(props) =>
     props.primaryColor.includes('rhyno')
       ? 'var(--rhyno-40)'
       : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
 `;
-export const StyledChevronDownIcon = styled(ChevronDownIcon)`
+export const StyledChevronDownIcon = styled(ChevronDownIcon).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<customColor>`
   path {
     stroke: ${(props) =>
       props.primaryColor.includes('rhyno')
@@ -144,7 +153,9 @@ export const StyledChevronDownIcon = styled(ChevronDownIcon)`
         : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
   }
 `;
-export const StyledChevronUPIcon = styled(ChevronUPIcon)`
+export const StyledChevronUPIcon = styled(ChevronUPIcon).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<customColor>`
   path {
     stroke: ${(props) =>
       props.primaryColor.includes('rhyno')
@@ -152,7 +163,9 @@ export const StyledChevronUPIcon = styled(ChevronUPIcon)`
         : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
   }
 `;
-export const StyledCategoryItemIcon = styled(CategoryItemIcon)`
+export const StyledCategoryItemIcon = styled(CategoryItemIcon).withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<customColor>`
   path {
     stroke: ${(props) =>
       props.primaryColor.includes('rhyno')
@@ -160,14 +173,12 @@ export const StyledCategoryItemIcon = styled(CategoryItemIcon)`
         : `color-mix(in srgb, ${props.primaryColor} 20%, #aaaaaa)`};
   }
 `;
-export const StyledClearButton = styled.button`
+export const StyledClearButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<customColor>`
   background-color: var(
     --${(props) => (props.primaryColor.includes('charcoal') ? 'charcoal-80' : 'rhyno')}
   );
   color: ${(props) =>
     props.primaryColor.includes('charcoal') ? 'white' : '#585858'};
 `;
-// export const SelectFiltersPopUp = styled.div`
-//   background-color: var(--${(props) => props.primaryColor});
-//   z-index: 100;
-// `;

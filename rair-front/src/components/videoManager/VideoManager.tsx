@@ -9,9 +9,9 @@ import OfferSelector from './OfferSelector';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import { rFetch } from '../../utils/rFetch';
-import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 import AnalyticsPopUp from '../DemoMediaUpload/UploadedListBox/AnalyticsPopUp/AnalyticsPopUp';
 

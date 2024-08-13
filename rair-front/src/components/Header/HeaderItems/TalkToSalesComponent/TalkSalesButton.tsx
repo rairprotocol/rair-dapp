@@ -1,3 +1,4 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface ITalkSalesButton {
@@ -7,7 +8,9 @@ interface ITalkSalesButton {
   isAboutPage?: boolean;
 }
 
-export const TalkSalesButton = styled.button<ITalkSalesButton>`
+export const TalkSalesButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<ITalkSalesButton>`
   position: absolute;
   top: ${(props) =>
     props.currentUserAddress

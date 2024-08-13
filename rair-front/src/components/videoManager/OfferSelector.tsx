@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import { rFetch } from '../../utils/rFetch';
-import useServerSettings from '../adminViews/useServerSettings';
 import InputSelect from '../common/InputSelect';
 
 const OfferSelector = ({ fileId }) => {

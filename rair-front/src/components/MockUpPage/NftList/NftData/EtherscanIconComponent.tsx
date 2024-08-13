@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import useServerSettings from '../../../adminViews/useServerSettings';
+import useServerSettings from '../../../../hooks/useServerSettings';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 import EtherscanDark from '../../assets/EtherscanDark.svg?react';
 import EtherscanLight from '../../assets/EtherscanLight.svg?react';

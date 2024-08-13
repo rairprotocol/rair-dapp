@@ -10,11 +10,11 @@ import { TTokenData } from '../../../axios.responseTypes';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import imageIcon from '../../../images/imageIcon.svg';
 import csvParser from '../../../utils/csvParser';
 import { rFetch } from '../../../utils/rFetch';
-import useServerSettings from '../../adminViews/useServerSettings';
 import BlockchainURIManager from '../common/blockchainURIManager';
 import {
   IBatchMetadataParser,

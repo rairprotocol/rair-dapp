@@ -17,7 +17,7 @@ import { diamondFactoryAbi } from '../../contracts';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import useServerSettings from '../adminViews/useServerSettings';
+import useServerSettings from '../../hooks/useServerSettings';
 
 const TokenLayout: React.FC<ITokenLayout> = ({
   item,
