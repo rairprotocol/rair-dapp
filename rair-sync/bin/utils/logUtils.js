@@ -9,7 +9,7 @@ const wasteTime = (ms) => new Promise((resolve) => {
   setTimeout(resolve, ms);
 });
 
-const tiers = [2000, 10000, 1000000, 2000000];
+const tiers = [2000, 10000, 100000, 1000000, 2000000];
 
 const processLog = (event) => {
   // Array of found events
