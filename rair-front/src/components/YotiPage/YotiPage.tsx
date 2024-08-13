@@ -69,6 +69,7 @@ const YotiPage = ({ setOpenVideoplayer }) => {
           secure={false}
           returnPreviewImage={true}
           faceCaptureAssetsRootUrl={'/yoti-assets/'}
+          numStableFrames={4}
         />
       ) : (
         <div className="yoti-container">
