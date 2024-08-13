@@ -37,6 +37,7 @@ import rairTechLogoWhite from './rairTechLogoWhite.webp';
 import rarible from './rarible-logo.webp';
 import verifiedIcon from './verify-icon.png';
 import yotiLogo from './yoti-logo.png';
+import coreIdLogo from './coreIdlogo.svg';
 
 // images
 export const bgLogoBlack = blackBg;
@@ -78,6 +79,7 @@ export const DocumentIcon = documentIcon;
 export const AstarLogo = astar;
 export const BaseLogo = baseMainnet;
 export const LoadingDefaultFavicon = loadingFavicon;
+export const CoreIdLogo = coreIdLogo;
 
 export const DiscordIcon = ({ color, primaryColor }) => {
   return (

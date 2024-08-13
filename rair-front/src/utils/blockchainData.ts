@@ -3,7 +3,7 @@ import { Network } from 'alchemy-sdk';
 
 import { TChainData } from './utils.types';
 
-import { AstarLogo, BaseLogo, EthereumLogo, MaticLogo } from '../images';
+import { AstarLogo, BaseLogo, CoreIdLogo, EthereumLogo, MaticLogo } from '../images';
 
 const chainData: TChainData = {
   // '0x38': {
@@ -181,6 +181,25 @@ const chainData: TChainData = {
     },
     viem: base,
     alchemy: Network.BASE_MAINNET,
+    coingecko: 'base',
+    alchemyAppKey: import.meta.env.VITE_BASE_MAINNET_ALCHEMY_KEY,
+    alchemyGasPolicy: import.meta.env.VITE_BASE_MAINNET_GAS_POLICY
+  },
+  '0x45c': {
+    // Core Blockchain Mainnet
+    testnet: false,
+    image: CoreIdLogo,
+    name: 'Core Chain MainNet',
+    chainId: '0x45c',
+    symbol: 'CORE',
+    addChainData: {
+      chainId: '0x45c',
+      chainName: 'Core',
+      rpcUrls: ['https://rpc.coredao.org/'],
+      blockExplorerUrls: ['https://scan.coredao.org']
+    },
+    viem: base,
+    alchemy: Network.CORE_CHAIN_MAINNET,
     coingecko: 'base',
     alchemyAppKey: import.meta.env.VITE_BASE_MAINNET_ALCHEMY_KEY,
     alchemyGasPolicy: import.meta.env.VITE_BASE_MAINNET_GAS_POLICY
