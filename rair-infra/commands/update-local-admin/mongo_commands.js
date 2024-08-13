@@ -7,6 +7,11 @@ db = db.getSiblingDB('admin')
 db.auth("admin","admin")
 db = db.getSiblingDB('rair-db')
 
+//Set SuperAdmin
+db.Blockchain.deleteOne({
+    "hash" : "0x2105"
+})
+
 //Set Blockchain RPC Url
 db.Blockchain.insertOne({
    "hash": "0x2105",
