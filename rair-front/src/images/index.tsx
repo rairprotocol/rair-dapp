@@ -37,7 +37,7 @@ import rairTechLogoWhite from './rairTechLogoWhite.webp';
 import rarible from './rarible-logo.webp';
 import verifiedIcon from './verify-icon.png';
 import yotiLogo from './yoti-logo.png';
-import coreIdLogo from './coreIdlogo.svg';
+import coreIdLogo from './coreIdlogo.avif';
 
 // images
 export const bgLogoBlack = blackBg;
