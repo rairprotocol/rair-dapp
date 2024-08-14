@@ -163,7 +163,13 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     minterInstance
   ]);
 
-  const { settings, getBlockchainData } = useServerSettings();
+  const { settings, getBlockchainData, refreshBlockchainData } =
+    useServerSettings();
+
+  useEffect(() => {
+    refreshBlockchainData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (offerData) {
@@ -219,8 +225,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     params.contract,
     params.blockchain,
     tokenData,
-    selectedToken,
-    params.tokenId
+    selectedToken
   ]);
 
   useEffect(() => {

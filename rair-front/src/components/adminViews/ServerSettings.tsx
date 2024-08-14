@@ -349,10 +349,10 @@ const ServerSettings = ({ fullContractData }) => {
               setter={setFeaturedContract}
               options={Object.keys(fullContractData).map((contract) => {
                 return {
-                  label: `${
-                    fullContractData[contract].title
-                  } (${getBlockchainData[fullContractData[contract].blockchain]
-                    ?.symbol})`,
+                  label: `${fullContractData[contract].title} (${
+                    getBlockchainData[fullContractData[contract].blockchain]
+                      ?.symbol
+                  })`,
                   value: contract
                 };
               })}
