@@ -132,11 +132,6 @@ const useServerSettings = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    refreshBlockchainData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     if (settings.favicon) {
       const changeFavicon = () => {
         const link: HTMLLinkElement =

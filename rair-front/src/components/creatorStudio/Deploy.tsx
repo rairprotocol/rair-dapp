@@ -27,7 +27,7 @@ const Factory = () => {
 
   const [allowance, setAllowance] = useState<BigNumber | undefined>();
 
-  const { blockchainSettings } = useServerSettings();
+  const { blockchainSettings, refreshBlockchainData } = useServerSettings();
 
   const [userBalance, setUserBalance] = useState<BigNumber>();
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
@@ -153,6 +153,11 @@ const Factory = () => {
     },
     [web3Switch]
   );
+
+  useEffect(() => {
+    refreshBlockchainData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const deployClassic = useCallback(async () => {
     if (!mainTokenInstance || !factoryInstance) {
