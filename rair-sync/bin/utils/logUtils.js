@@ -111,7 +111,7 @@ const getTransactionHistory = async (address, blockchainData, fromBlock = 0) => 
       // console.error(Object.keys(error), error.reason);
       speedTier = 0;
     }
-  } while ((options.fromBlock + tiers[speedTier]) < latestBlock);
+  } while (options.toBlock !== undefined);
   log.info(`[${blockchainData.hash}] Found ${listOfTransaction.length} events on ${address}`);
   return listOfTransaction.map(processLog);
 };

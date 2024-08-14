@@ -34,7 +34,7 @@ const getTransaction = async (
     }).save();
 
     log.info(
-      `Querying hash ${transactionHash} on ${network} using Alchemy!`,
+      `Querying hash ${transactionHash} on ${network} using ${blockchainData.alchemySupport ? 'Alchemy' : 'RPC'}!`,
     );
 
     // Default values in case the Moralis SDK query works
@@ -45,16 +45,21 @@ const getTransaction = async (
     const transactionHashLabel = 'transactionHash';
 
     try {
+      let provider;
+      if (blockchainData.alchemySupport) {
+        provider = getAlchemy(blockchainData.hash).core;
+      } else if (blockchainData.rpcEndpoint) {
+        provider = ethers.getDefaultProvider(blockchainData.rpcEndpoint);
+      }
       // Catch any error if the SDK fails
-      const AlchemySDK = getAlchemy(network);
-      transactionReceipt = await AlchemySDK.core.getTransactionReceipt(transactionHash);
+      transactionReceipt = await provider.getTransactionReceipt(transactionHash);
     } catch (err) {
       log.error(err);
     }
 
     if (!transactionReceipt) {
       log.error(
-        `Validation failed for tx ${transactionHash}, couldn't get a response from Alchemy`,
+        `Validation failed for tx ${transactionHash}, couldn't get a response from provider`,
       );
       transactionReceipt = await getProvider(network)
         .getTransactionReceipt(transactionHash);
