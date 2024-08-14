@@ -79,6 +79,11 @@ const ServerSettings = ({ fullContractData }) => {
 
   const reactSwal = useSwal();
 
+  useEffect(() => {
+    refreshBlockchainData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const modifySuperAdminAddress = (index) => (value) => {
     const aux = [...superAdmins];
     aux[index] = value;
