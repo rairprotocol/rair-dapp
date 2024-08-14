@@ -207,7 +207,7 @@ exports.syncEventsFromSingleContract = (taskName, contractName) => async (job, d
     // Otherwise it will keep increasing and could ignore events
     version.running = false;
     if (lastSuccessfullBlock.gt(version.number)) {
-      version.number = BigNumber.from(version.number).add(lastSuccessfullBlock).add(1).toString();
+      version.number = BigNumber.from(lastSuccessfullBlock).add(1).toString();
     }
     await version.save();
     log('Complete');

@@ -25,9 +25,14 @@ module.exports = async (
     contractAddress: deploymentAddress.toLowerCase(),
     lastSyncedBlock: 0,
     external: false,
-  })
-    .save()
-    .catch(handleDuplicateKey);
+  });
+
+  try {
+    await contract.save();
+  } catch (error) {
+    handleDuplicateKey(error);
+    return [];
+  }
 
   redisPublisher.publish('notifications', JSON.stringify({
     type: 'message',
