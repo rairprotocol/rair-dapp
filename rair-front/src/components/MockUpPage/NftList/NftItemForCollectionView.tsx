@@ -142,9 +142,7 @@ const NftItemForCollectionViewComponent: React.FC<
       if (offerPriceUser && offerPriceUser.length > 0) {
         if (offerDataUser) {
           if (offerDataUser.price && offerDataUser.price.length) {
-            const rawPrice = BigNumber.from(
-              String(offerDataUser.price) ? String(offerDataUser.price) : 0
-            );
+            const rawPrice = BigNumber.from(offerDataUser.price || 0);
             const price = rawPrice.lte(100000)
               ? '0.000+'
               : formatEther(rawPrice);
@@ -227,45 +225,23 @@ const NftItemForCollectionViewComponent: React.FC<
           );
 
           if (response.data.success) {
+            const offerInformation = response.data.product.offers?.find(
+              (neededOfferIndex) => {
+                const offerIndex = neededOfferIndex.diamond
+                  ? neededOfferIndex.diamondRangeIndex
+                  : neededOfferIndex.offerIndex;
+                return (
+                  selectedOfferIndexUser.toString() === offerIndex?.toString()
+                );
+              }
+            );
             if (resaleResponse.data.length) {
-              const resaleOfferData = response.data.product.offers?.find(
-                (neededOfferIndex) => {
-                  if (neededOfferIndex && neededOfferIndex.diamond) {
-                    return (
-                      neededOfferIndex.diamondRangeIndex ===
-                      selectedOfferIndexUser
-                    );
-                  } else {
-                    return (
-                      neededOfferIndex.offerIndex === selectedOfferIndexUser
-                    );
-                  }
-                }
-              );
-              const mapItem = [resaleOfferData].map((item) => {
-                return {
-                  ...item,
-                  price: resaleResponse.data.map((p) => {
-                    return p.price.toString();
-                  })
-                };
+              setOfferDataUser({
+                ...offerInformation,
+                price: resaleResponse.data[0].price.toString()
               });
-              setOfferDataUser(mapItem[0]);
             } else {
-              setOfferDataUser(
-                response.data.product.offers?.find((neededOfferIndex) => {
-                  if (neededOfferIndex && neededOfferIndex.diamond) {
-                    return (
-                      neededOfferIndex.diamondRangeIndex ===
-                      selectedOfferIndexUser
-                    );
-                  } else {
-                    return (
-                      neededOfferIndex.offerIndex === selectedOfferIndexUser
-                    );
-                  }
-                })
-              );
+              setOfferDataUser(offerInformation);
             }
 
             if (resaleResponse.success && resaleResponse.data.length) {

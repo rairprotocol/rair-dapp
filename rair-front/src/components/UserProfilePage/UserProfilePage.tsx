@@ -2,11 +2,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import { faHeart, faSearch } from '@fortawesome/free-solid-svg-icons';
+import {
+  faGreaterThan,
+  faHeart,
+  faHouse,
+  faPlus,
+  faSearch
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AddIcon from '@mui/icons-material/Add';
-import HomeIcon from '@mui/icons-material/Home';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Stack } from '@mui/material';
 import { Breadcrumbs, Typography } from '@mui/material';
 import axios from 'axios';
@@ -41,10 +44,8 @@ import UserProfileFavoritesTab from './UserProfileFavorites/UserProfileFavorites
 import './UserProfilePage.css';
 
 const UserProfilePage: React.FC = () => {
-  const { primaryColor, textColor, headerLogo, iconColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, headerLogo, iconColor, primaryButtonColor } =
+    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { userAddress } = useParams();
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -230,14 +231,15 @@ const UserProfilePage: React.FC = () => {
 
   const breadcrumbs = [
     <NavLink key="1" to="/">
-      <HomeIcon
+      <FontAwesomeIcon
+        icon={faHouse}
         style={{
-          borderRadius: '8px',
-          padding: '2px',
-          background: '#19A7F6',
-          color: 'black'
+          borderRadius: '5px',
+          padding: '5px',
+          color: textColor,
+          background: primaryButtonColor,
+          fontSize: 'x-large'
         }}
-        sx={{ fontSize: 'x-large' }}
       />
     </NavLink>,
     <Typography key="3" color={textColor}>
@@ -311,7 +313,9 @@ const UserProfilePage: React.FC = () => {
               spacing={2}>
               <Breadcrumbs
                 color="white"
-                separator={<NavigateNextIcon fontSize="small" />}
+                separator={
+                  <FontAwesomeIcon icon={faGreaterThan} fontSize="x-small" />
+                }
                 aria-label="breadcrumb">
                 {breadcrumbs}
               </Breadcrumbs>
@@ -349,7 +353,7 @@ const UserProfilePage: React.FC = () => {
                     right: '0'
                   }}>
                   <label className={'inputFile'}>
-                    <AddIcon className={'plus'} />
+                    <FontAwesomeIcon icon={faPlus} className="plus" />
                     <input
                       disabled={loadingBg ? true : false}
                       type="file"
