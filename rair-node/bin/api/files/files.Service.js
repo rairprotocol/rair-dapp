@@ -12,7 +12,7 @@ const {
 } = require('../../models');
 const log = require('../../utils/logger')(module);
 const AppError = require('../../utils/errors/AppError');
-const { removePin } = require('../../integrations/ipfsService');
+const { removePin } = require('../../integrations/ipfsService')();
 const { checkFileAccess } = require('../../utils/helpers');
 const config = require('../../config');
 const gcp = require('../../integrations/gcp')(config);
