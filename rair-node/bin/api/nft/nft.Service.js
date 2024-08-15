@@ -26,16 +26,6 @@ const AppError = require('../../utils/errors/AppError');
 const ipfsGateway = config.ipfsGateways[process.env.IPFS_SERVICE];
 
 module.exports = {
-    getUserTokens: async (req, res, next) => {
-        try {
-            const { publicAddress: ownerAddress } = req.user;
-            const result = await MintedToken.find({ ownerAddress });
-
-            res.json({ success: true, result });
-        } catch (e) {
-            next(e);
-        }
-    },
     getUserTokensProfile: async (req, res, next) => {
         try {
             const { userAddress } = req.params;

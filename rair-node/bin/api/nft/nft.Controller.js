@@ -3,7 +3,6 @@ const { validation, isAdmin, requireUserSession, loadUserSession, dataTransform 
 const upload = require('../../Multer/Config');
 const { createTokensViaCSV } = require('../tokens/tokens.Service');
 const {
-    getUserTokens,
     getUserTokensProfile,
     metadataCSVSample,
     pinMetadataToIPFS,
@@ -29,11 +28,6 @@ router.post(
     upload.single('csv'),
     validation(['csvFileUpload'], 'body'),
     createTokensViaCSV,
-);
-router.get(
-    '/',
-    requireUserSession,
-    getUserTokens,
 );
 router.get(
     '/:userAddress',

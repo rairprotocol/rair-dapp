@@ -1,6 +1,8 @@
 @import url('https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-text.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Montserrat:wght@100;200;400;500;700;900&display=swap');
 
+@import './styles/userProfile.css';
+
 :root {
   --bubblegum: #e882d5;
   --bubblegum-hover: #bd6bae;
