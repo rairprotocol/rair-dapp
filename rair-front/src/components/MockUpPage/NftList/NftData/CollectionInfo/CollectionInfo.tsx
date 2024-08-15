@@ -38,6 +38,8 @@ const EasyMintRow = ({
 }) => {
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [tokensToMint, setTokensToMint] = useState('1');
+
+
   const remainingCopies = token.copies - token.soldCopies;
   const navigate = useNavigate();
   const params = useParams<TParamsNftItemForCollectionView>();
@@ -75,8 +77,13 @@ const EasyMintRow = ({
         {blockchain && getBlockchainData(blockchain)?.symbol}
       </div>
       {remainingCopies > 0 ? (
-        <div className="item-multi-mint">
-          <InputSelect
+        <>
+          {
+            token.sponsored ? <div style={{
+              width: "88px"
+            }} className="item-multi-mint">
+        </div> : <div className="item-multi-mint">
+            <InputSelect
             placeholder="Choose Quantity"
             options={[...Array(Math.min(remainingCopies, 30))].map(
               (_, index) => {
@@ -90,8 +97,12 @@ const EasyMintRow = ({
             setter={setTokensToMint}
           />
         </div>
+          }
+        </>
       ) : (
-        <p>No tokens available.</p>
+        <div style={{
+          fontSize: "12px"
+        }}>No tokens available.</div>
       )}
       {mintToken && (
         <div className={`collection-mint-button`}>
