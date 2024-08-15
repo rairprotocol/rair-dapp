@@ -15,7 +15,7 @@ module.exports = (context) => {
     { lockLifetime },
     async (task, done) => {
       try {
-        const chainsToProcess = Blockchain.find({}).lean();
+        const chainsToProcess = Blockchain.find({ sync: true }).lean();
         let startupTime = 0;
         // eslint-disable-next-line no-restricted-syntax
         for await (const chain of chainsToProcess) {

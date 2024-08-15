@@ -9,7 +9,7 @@ const wasteTime = (ms) => new Promise((resolve) => {
   setTimeout(resolve, ms);
 });
 
-const tiers = [2000, 10000, 1000000, 2000000];
+const tiers = [2000, 10000, 100000, 1000000, 2000000];
 
 const processLog = (event) => {
   // Array of found events
@@ -111,7 +111,7 @@ const getTransactionHistory = async (address, blockchainData, fromBlock = 0) => 
       // console.error(Object.keys(error), error.reason);
       speedTier = 0;
     }
-  } while ((options.fromBlock + tiers[speedTier]) < latestBlock);
+  } while (options.toBlock !== undefined);
   log.info(`[${blockchainData.hash}] Found ${listOfTransaction.length} events on ${address}`);
   return listOfTransaction.map(processLog);
 };
