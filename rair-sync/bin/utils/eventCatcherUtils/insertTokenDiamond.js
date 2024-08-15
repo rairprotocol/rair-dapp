@@ -1,13 +1,12 @@
-const {
-  BigNumber,
-} = require('ethers');
-const { SyncRestriction, Product, Offer, MintedToken } = require('../../models');
+const { Product, Offer, MintedToken } = require('../../models');
 const {
   handleDuplicateKey,
   handleMetadataForToken,
   findContractFromAddress,
   log,
 } = require('./eventsCommonUtils');
+
+// Handles the MintedToken event from the Diamond Marketplace
 
 module.exports = async (
   transactionData,
@@ -23,20 +22,6 @@ module.exports = async (
   tokenIndex,
   // buyer, // We don't track ownership from this event anymore
 ) => {
-  // Check if the contract is restricted
-  const restrictedContract = await SyncRestriction.findOne({
-    blockchain: transactionData.network,
-    contractAddress: erc721Address.toLowerCase(),
-    tokens: false,
-  }).distinct('contractAddress');
-
-  if (restrictedContract?.length > 0) {
-    log.error(
-      `[${transactionData.network}] Minted token from ${erc721Address} won't be stored!`,
-    );
-    return undefined;
-  }
-
   // Find the contract data in the DB
   const contract = await findContractFromAddress(
     erc721Address.toLowerCase(),
@@ -44,7 +29,7 @@ module.exports = async (
     transactionData.transactionHash,
   );
 
-  if (!contract) {
+  if (!contract || contract.blockSync) {
     return undefined;
   }
 
@@ -56,6 +41,7 @@ module.exports = async (
   let foundToken = await MintedToken.findOne({
     contract: contract._id,
     token: tokenIndex,
+    offer: rangeIndex,
   });
 
   if (foundToken && offer) {
@@ -74,18 +60,27 @@ module.exports = async (
       contract: contract._id,
       collectionIndexInContract: offer.product,
     });
-    // Decrease the amount of copies in the offer
-    offer.soldCopies = BigNumber.from(offer.soldCopies).add(1).toString();
-    await offer.save().catch(handleDuplicateKey);
-    const allOffersInProduct = await Offer.find({
-      contract: offer.contract,
+
+    // Get the number of minted tokens in the offer
+    const mintedTokens = MintedToken.find({
+      contract: contract._id,
       product: offer.product,
+      isMinted: true,
     });
+    let thisIncluded = false;
+    offer.soldCopies = mintedTokens.reduce((result, token) => {
+      if (token.token === tokenIndex) {
+        thisIncluded = true;
+      }
+      return result + BigInt(token.offer.toString() === offer.diamondRangeIndex.toString());
+    }, 0n);
+    if (!thisIncluded) {
+      offer.soldCopies += 1n;
+    }
+
+    await offer.save().catch(handleDuplicateKey);
     if (product) {
-      // Decrease the amount of copies in the product
-      const totalSoldTokensInProduct = allOffersInProduct
-        .reduce((result, currentOffer) => result + BigInt(currentOffer.soldCopies), 0n);
-      product.soldCopies = totalSoldTokensInProduct.toString();
+      product.soldCopies = mintedTokens.length.toString();
       await product.save().catch(handleDuplicateKey);
     }
   }

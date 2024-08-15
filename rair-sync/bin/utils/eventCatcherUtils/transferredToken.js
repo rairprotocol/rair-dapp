@@ -44,6 +44,7 @@ module.exports = async (
 
   const foundToken = await MintedToken.findOneAndUpdate(filter, update);
 
+  // Token got minted
   if (from === constants.AddressZero) {
     redisPublisher.publish('notifications', JSON.stringify({
       type: 'tokenMint',
