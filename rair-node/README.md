@@ -138,7 +138,6 @@ The benefits of using the Dockerfile are that it uses the latest OFAC list.
         * [x] /:id/unlocks - DELETE - Remove an unlock from a file ([details](readme/current/files/files_unlocks_remove.md))
     * [x] /nft
         * [x] / - POST - Upload CSV file to populate metadata ([details](readme/current/nft/nft_upload_csv.md))
-        * [x] / - GET - Get all tokens owned by the current user ([details](readme/current/nft/nft_get_current.md))
         * [x] /:userAddress - GET - Get tokens owned by a user ([details](readme/current/nft/nft_get_user.md))
         * [x] /csv/sample - GET - Download the sample CSV for metadata population ([details](readme/current/nft/nft_get_csv_sample.md))
         * [x] /pinningMultiple - POST - Pin all NFT metadata to the current IPFS service ([details](readme/current/nft/nft_pin_multiple.md))

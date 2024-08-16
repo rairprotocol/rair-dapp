@@ -69,7 +69,6 @@ import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/U
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
 import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80sclub/wallstreet80sclub';
 import ThankYouPage from './components/ThankYouPage';
-import UserProfile from './components/UserProfile/UserProfile';
 import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 // import setTitle from './utils/setTitle';
@@ -733,10 +732,6 @@ function App() {
                     props: {
                       setIsSplashPage: setIsSplashPage
                     }
-                  },
-                  {
-                    path: '/user-profile',
-                    content: UserProfile
                   },
                   {
                     path: '/:userAddress',
