@@ -75,7 +75,7 @@ module.exports = async (
       return result + BigInt(token.offer.toString() === offer.diamondRangeIndex.toString());
     }, 0n);
     if (!thisIncluded) {
-      offer.soldCopies += 1n;
+      offer.soldCopies = (BigInt(offer.soldCopies) + 1n).toString();
     }
 
     await offer.save().catch(handleDuplicateKey);
