@@ -62,7 +62,7 @@ module.exports = async (
     });
 
     // Get the number of minted tokens in the offer
-    const mintedTokens = MintedToken.find({
+    const mintedTokens = await MintedToken.find({
       contract: contract._id,
       product: offer.product,
       isMinted: true,
