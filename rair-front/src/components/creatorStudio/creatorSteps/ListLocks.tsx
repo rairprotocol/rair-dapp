@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { faKey, faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ethers, utils } from 'ethers';
+import { Contract, formatEther } from 'ethers';
+import { Hex } from 'viem';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { erc721Abi } from '../../../contracts';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useContracts from '../../../hooks/useContracts';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
@@ -37,10 +36,9 @@ const LockRow: React.FC<ILockRow> = ({
   lockedNumber,
   blockchainSymbol
 }) => {
-  const { primaryColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, secondaryColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const [itemName, setItemName] = useState<string>(name);
   const [startingToken, setStartingToken] = useState<string>(starts);
@@ -115,13 +113,11 @@ const LockRow: React.FC<ILockRow> = ({
       <th className="p-1">
         <InputField
           disabled={true}
-          getter={`${utils
-            .formatEther(
-              statePrice === '' || !validateInteger(Number(statePrice))
-                ? 0
-                : statePrice
-            )
-            .toString()} ${blockchainSymbol}`}
+          getter={`${formatEther(
+            statePrice === '' || !validateInteger(Number(statePrice))
+              ? 0
+              : statePrice
+          ).toString()} ${blockchainSymbol}`}
           setter={setStatePrice}
           customClass="form-control rounded-rair"
           customCSS={{
@@ -172,17 +168,15 @@ const ListLocks: React.FC<TListLocks> = ({
 
   const [offerList, setOfferList] = useState<TListLocksArrayItem[]>([]);
   const [forceRerender, setForceRerender] = useState<boolean>(false);
-  const [instance, setInstance] = useState<ethers.Contract | undefined>();
+  const [instance, setInstance] = useState<Contract | undefined>();
   const [onMyChain, setOnMyChain] = useState<boolean>(
-    correctBlockchain(contractData?.blockchain as BlockchainType)
+    correctBlockchain(contractData?.blockchain as Hex)
   );
 
   const reactSwal = useSwal();
 
-  const { contractCreator, programmaticProvider, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { programmaticProvider } = useAppSelector((store) => store.web3);
+  const { contractCreator } = useContracts();
   const { address } = useParams<TParamsListLocks>();
   const locker = async (data: TListLocksArrayItem) => {
     if (!instance) {
@@ -242,10 +236,9 @@ const ListLocks: React.FC<TListLocks> = ({
 
   useEffect(() => {
     setOnMyChain(
-      !!contractData &&
-        correctBlockchain(contractData.blockchain as BlockchainType)
+      !!contractData && correctBlockchain(contractData.blockchain as Hex)
     );
-  }, [contractData, programmaticProvider, currentChain, correctBlockchain]);
+  }, [contractData, programmaticProvider, correctBlockchain]);
 
   return (
     <div className="row px-0 mx-0">
@@ -294,8 +287,9 @@ const ListLocks: React.FC<TListLocks> = ({
                       )
                   : gotoNextStep,
                 label: !onMyChain
-                  ? `Switch to ${getBlockchainData(contractData?.blockchain)
-                      ?.name}`
+                  ? `Switch to ${
+                      getBlockchainData(contractData?.blockchain)?.name
+                    }`
                   : `Proceed`,
                 disabled: false
               }

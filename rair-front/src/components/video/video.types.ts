@@ -1,4 +1,5 @@
 import { TTokenData } from '../../axios.responseTypes';
+import { CatalogVideoItem } from '../../redux/videoSlice';
 
 import { ContractType } from './../adminViews/adminView.types';
 export interface IVideoPlayer {
@@ -21,7 +22,6 @@ export interface IVideoList {
   titleSearch: string;
   responseLabel?: string;
   endpoint?: string;
-  videos?: MediaListResponseType | null;
   handleVideoIsUnlocked?: () => void;
 }
 
@@ -53,7 +53,5 @@ export type MediaListResponseType = {
 };
 
 export interface IVideoItem {
-  mediaList: MediaListResponseType;
-  item: string;
-  handleVideoIsUnlocked?: () => void;
+  item: CatalogVideoItem;
 }

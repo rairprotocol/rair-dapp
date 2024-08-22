@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { FacebookShareButton, TwitterShareButton } from 'react-share';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -10,8 +9,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
-import { RootState } from '../../../../../../ducks';
-import { ColorStoreType } from '../../../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../../../hooks/useReduxHooks';
 import { ISharePopUp } from '../../../../mockupPage.types';
 
 import './SharePopUp.css';
@@ -26,10 +24,9 @@ const SharePopUp: React.FC<ISharePopUp> = ({
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { headerLogo, primaryColor, textColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { headerLogo, primaryColor, textColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const handleClose = () => {
     onClose(selectedValue);

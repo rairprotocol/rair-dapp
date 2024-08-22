@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   faCheck,
   faEye,
@@ -8,11 +7,10 @@ import {
   faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
+import { formatEther } from 'ethers';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useContracts from '../../../hooks/useContracts';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
@@ -34,14 +32,12 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
   enabled
 }) => {
   const item = array[index];
-  const { currentUserAddress, diamondMarketplaceInstance, currentChain } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
-  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { diamondMarketplaceInstance } = useContracts();
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (store) => store.web3
+  );
+  const { textColor, primaryButtonColor, secondaryButtonColor } =
+    useAppSelector((store) => store.colors);
   const [marketValuesChanged, setMarketValuesChanged] =
     useState<boolean>(false);
   const reactSwal = useSwal();
@@ -66,9 +62,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     {
       message: 'Creator address (You)',
       recipient: currentUserAddress,
-      percentage: BigNumber.from(10)
-        .pow(minterDecimals | 3)
-        .mul(95),
+      percentage: BigInt(10) ** BigInt(minterDecimals | 3) * 95,
       canBeContract: false,
       editable: true
     }
@@ -96,7 +90,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
       ].concat(
         array[index].marketData.fees.map((fee: TCustomPayments) => ({
           recipient: fee.recipient,
-          percentage: BigNumber.from(fee.percentage),
+          percentage: BigInt(fee.percentage),
           editable: true,
           canBeContract: false,
           message: 'Data from the marketplace'
@@ -115,7 +109,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     const aux = [...customPayments];
     aux.push({
       recipient: '',
-      percentage: BigNumber.from(0),
+      percentage: BigInt(0),
       canBeContract: false,
       editable: true
     });
@@ -142,8 +136,8 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
           <h5 style={{ display: 'inline' }}>{item.copies}</h5> tokens available
           for{' '}
           <h5 style={{ display: 'inline' }}>
-            {utils.formatEther(item.price)}{' '}
-            {currentChain && getBlockchainData(currentChain)?.symbol}
+            {formatEther(item.price)}{' '}
+            {connectedChain && getBlockchainData(connectedChain)?.symbol}
           </h5>
         </div>
         <div className="col-2 rounded-rair text-end">
@@ -265,13 +259,13 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                         deleter={removePayment}
                         {...{
                           rerender,
-                          minterDecimals: BigNumber.from(minterDecimals | 3),
+                          minterDecimals: BigInt(minterDecimals | 3),
                           marketValuesChanged,
                           setMarketValuesChanged,
                           price: item.price,
                           symbol:
-                            currentChain &&
-                            getBlockchainData(currentChain)?.symbol
+                            connectedChain &&
+                            getBlockchainData(connectedChain)?.symbol
                         }}
                         {...customPaymentItem}
                       />
@@ -284,15 +278,16 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
               <div className="row w-100">
                 <div className="col-12 col-md-10 py-2 text-center">
                   Total:{' '}
-                  {BigNumber.from(total)
-                    .div(Math.pow(10, minterDecimals | 3))
-                    ?.toString()}
+                  {(
+                    BigInt(total) /
+                    BigInt(Math.pow(BigInt(10), minterDecimals | 3))
+                  )?.toString()}
                   %
                 </div>
                 <button
-                  disabled={BigNumber.from(total).gte(
-                    Math.pow(10, minterDecimals | 3) * 100
-                  )}
+                  disabled={
+                    BigInt(total) >= Math.pow(10, minterDecimals | 3) * 100
+                  }
                   onClick={addPayment}
                   style={{
                     background: primaryButtonColor,

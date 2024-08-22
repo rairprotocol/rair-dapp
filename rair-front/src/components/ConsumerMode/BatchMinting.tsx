@@ -1,8 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
+import { formatEther } from 'ethers';
 
 import {
   IBatchMinting,
@@ -10,8 +9,7 @@ import {
   TBatchMintingItem
 } from './consumerMode.types';
 
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 
 const BatchRow: React.FC<IBatchRow> = ({ index, deleter, array }) => {
@@ -71,9 +69,7 @@ const BatchMinting: React.FC<IBatchMinting> = ({
 }) => {
   const [rows, setRows] = useState<TBatchMintingItem[]>([]);
 
-  const { currentChain } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { connectedChain } = useAppSelector((store) => store.web3);
 
   const { getBlockchainData } = useServerSettings();
 
@@ -108,12 +104,10 @@ const BatchMinting: React.FC<IBatchMinting> = ({
       </button>
       <button onClick={addRow} disabled className="col btn btn-white">
         Total:{' '}
-        {utils
-          .formatEther(
-            BigNumber.from(price === '' ? 0 : price).mul(rows.length)
-          )
-          .toString()}{' '}
-        {currentChain && getBlockchainData[currentChain]?.symbol}!
+        {formatEther(
+          BigInt(price === '' ? 0 : price) * BigInt(rows.length)
+        ).toString()}{' '}
+        {connectedChain && getBlockchainData[connectedChain]?.symbol}!
       </button>
       <div
         className="col-12"

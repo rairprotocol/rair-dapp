@@ -13,12 +13,8 @@ export const AppContainerFluid = styled.div.withConfig({
   background-size: 100vw 100vh;
   min-height: 100vh;
   position: relative;
-  background-color: ${(props) =>
-    props.primaryColor === '#dedede'
-      ? '#fafafa'
-      : props.backgroundImage === ''
-        ? '#000'
-        : props.primaryColor};
+  background-color: ${({ isDarkMode, backgroundImage, primaryColor }) =>
+    !isDarkMode ? '#fafafa' : backgroundImage === '' ? '#000' : primaryColor};
   color: ${(props) => props.textColor};
   background-image: url(${(props) => props.backgroundImage});
   background-position: center top;
@@ -38,16 +34,13 @@ export const MainBlockApp = styled.div.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<IMainBlockAppStyled>`
   margin-top: ${(props) =>
-    props.showAlert && !props.isSplashPage && props.selectedChain
-      ? '65px'
-      : '0'};
+    props.showAlert && !props.isSplashPage ? '65px' : '0'};
 
   @media screen and (max-width: 1024px) {
     margin-top: 8vh;
   }
 
   @media screen and (max-width: 845px) {
-    margin-top: ${(props) =>
-      props.showAlert && props.selectedChain ? '120px' : '100px'};
+    margin-top: ${(props) => (props.showAlert ? '120px' : '100px')};
   }
 `;

@@ -1,4 +1,4 @@
-import { utils } from 'ethers';
+import { formatEther } from 'ethers';
 
 import { TGettingPriceReturnType } from '../nftList.types';
 
@@ -14,7 +14,7 @@ export const gettingPrice = (arr: string[]): TGettingPriceReturnType => {
           min = +arr[len];
         }
       }
-      return utils.formatEther(BigInt(min)).toString();
+      return formatEther(BigInt(min)).toString();
     };
 
     const maxPrice = function arrayMax(arr: string[]): string {
@@ -25,7 +25,7 @@ export const gettingPrice = (arr: string[]): TGettingPriceReturnType => {
           max = +arr[len];
         }
       }
-      return utils.formatEther(BigInt(max)).toString();
+      return formatEther(BigInt(max)).toString();
     };
 
     priceArray = {

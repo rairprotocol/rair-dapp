@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { RootState } from '../../ducks';
-import { setInfoSEO } from '../../ducks/seo/actions';
-import { InitialState } from '../../ducks/seo/reducers';
-import { TInfoSeo } from '../../ducks/seo/seo.types';
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
+import { setSEOInfo } from '../../redux/seoSlice';
 import MockUpPage from '../MockUpPage/MockUpPage';
 import MetaTags from '../SeoTags/MetaTags';
 
@@ -14,13 +11,12 @@ const WelcomeHeader = ({
   setTabIndex,
   setIsSplashPage
 }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
 
   useEffect(() => {
-    dispatch(setInfoSEO(InitialState));
-    //eslint-disable-next-line
-  }, []);
+    dispatch(setSEOInfo());
+  }, [dispatch]);
   useEffect(() => {
     setIsSplashPage(false);
   }, [setIsSplashPage]);

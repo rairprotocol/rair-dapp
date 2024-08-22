@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,8 +7,7 @@ import axios from 'axios';
 
 import { TTokenData } from '../../../axios.responseTypes';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import imageIcon from '../../../images/imageIcon.svg';
@@ -190,10 +188,9 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
     fetchData();
   }, [fetchData]);
 
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   useEffect(() => {
     setStepNumber(stepNumber);

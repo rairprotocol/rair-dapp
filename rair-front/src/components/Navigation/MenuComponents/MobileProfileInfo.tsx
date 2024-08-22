@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import MobileEditProfile from './MobileEditProfile';
 
-import { UserType } from '../../../ducks/users/users.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 
 import defaultPictures from './../../UserProfileSettings/images/defaultUserPictures.png';
 import {
@@ -19,15 +19,14 @@ interface IMobileProfileInfo {
   primaryColor: string;
   click: boolean;
   toggleOpenProfile: () => void;
-  userData: UserType | null;
 }
 
 const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
   primaryColor,
   click,
-  toggleOpenProfile,
-  userData
+  toggleOpenProfile
 }) => {
+  const userData = useAppSelector((store) => store.user);
   const [profileData, setProfileData] = useState(userData);
   const [editMode, setEditMode] = useState<boolean>(false);
 

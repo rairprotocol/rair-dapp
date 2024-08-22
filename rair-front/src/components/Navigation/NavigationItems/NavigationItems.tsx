@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 interface IMenuMobileWrapper {
   showAlert?: boolean | undefined | null;
-  selectedChain?: any | null;
   primaryColor?: string;
   editMode?: boolean;
   click?: boolean;
@@ -23,12 +22,7 @@ export const MenuMobileWrapper = styled.div.withConfig({
   width: 100%;
   padding: 0;
   margin-top: ${(props) =>
-    props.realChainId &&
-    props.showAlert &&
-    !props.isSplashPage &&
-    !props.selectedChain
-      ? '50px'
-      : ''};
+    props.realChainId && props.showAlert && !props.isSplashPage ? '50px' : ''};
 `;
 
 export const Nav = styled.nav.withConfig({
@@ -45,8 +39,7 @@ export const Nav = styled.nav.withConfig({
   z-index: 12;
   width: 100%;
   position: ${(props) => (props.editMode ? 'fixed' : 'reletive')};
-  margin-top: ${(props) =>
-    props.showAlert && props.selectedChain ? '50px' : ''};
+  margin-top: ${(props) => (props.showAlert ? '50px' : '')};
 
   @media screen and (max-width: 400px) {
     padding: 22px 20px;

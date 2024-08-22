@@ -1,23 +1,21 @@
-import React from 'react';
-import { Provider, useSelector, useStore } from 'react-redux';
-import { BigNumber } from 'ethers';
+import { FC } from 'react';
+import { Provider, useStore } from 'react-redux';
 
 import BuyTokenModalContent from './BuyTokenModalContent';
 import { TMinterMarketplaceItemType } from './marketplace.types';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 
-const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
+const MinterMarketplaceItem: FC<TMinterMarketplaceItemType> = ({
   item,
   index,
   colWidth
 }) => {
   const { primaryColor, secondaryColor, textColor, secondaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((state) => state.colorStore);
+    useAppSelector((state) => state.colors);
   const store = useStore();
   const reactSwal = useSwal();
   const { correctBlockchain } = useWeb3Tx();
@@ -67,9 +65,8 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
                 html: (
                   <Provider store={store}>
                     <BuyTokenModalContent
-                      minterAddress={item.minterAddress}
                       blockchain={item.blockchain}
-                      price={BigNumber.from(item.price)}
+                      price={BigInt(item.price)}
                       start={item.range[0]}
                       end={item.range[1]}
                       offerName={item.offerName}

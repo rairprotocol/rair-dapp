@@ -1,5 +1,7 @@
+import { Hex } from 'viem';
+
 export interface IListOfTokensComponent {
-  blockchain: BlockchainType | undefined;
+  blockchain?: Hex;
   contract: string | undefined;
   isOpen: boolean;
   handleIsOpen: () => void;
@@ -10,11 +12,9 @@ export interface IListOfTokensComponent {
   setSelectedToken: (tokenId: string | undefined) => void;
   selectedToken: string | undefined;
   setIsOpen: (isOpen: boolean) => void;
-  totalCount: any;
 }
 
 export interface ICurrentTokensComponent {
-  primaryColor: string;
   items: SelectNumberItem[];
   isBack?: boolean;
   isOpen: boolean;
@@ -24,7 +24,7 @@ export interface ICurrentTokensComponent {
   handleIsOpen: () => void;
   onClickItem: (element: string) => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
-  totalCount?: any;
+  totalCount: any;
 }
 
 export type SelectNumberItem = {

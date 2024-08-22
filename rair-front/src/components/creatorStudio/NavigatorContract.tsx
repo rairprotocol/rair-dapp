@@ -1,11 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import { INavigatorContract } from './creatorStudio.types';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 
 const NavigatorContract: React.FC<INavigatorContract> = ({
   children,
@@ -13,10 +11,9 @@ const NavigatorContract: React.FC<INavigatorContract> = ({
   contractName,
   contractBlockchain
 }) => {
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
   return (
     <div className="row px-0 mx-0">
       <div className="col-xl-3 col-lg-1 col-md-1 d-none d-md-inline-block" />

@@ -1,23 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { teamNutArray } from './AboutUsTeam';
 
-import { erc721Abi } from '../../../contracts/index';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { InitialState } from '../../../ducks/seo/reducers';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
-import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { metaMaskIcon } from '../../../images';
-import { rFetch } from '../../../utils/rFetch';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -36,89 +28,26 @@ import { PoweredRair } from '../images/splashPageImages/splashPage';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 
 const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
-  const dispatch = useDispatch();
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const dispatch = useAppDispatch();
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const [, /*percentTokens*/ setPresentTokens] = useState(0);
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const seo = useAppSelector((store) => store.seo);
   const leftTokensNumber = 50;
   const wholeTokens = 50;
-  const { currentUserAddress, minterInstance, contractCreator } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
 
   const reactSwal = useSwal();
-  const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
 
   useEffect(() => {
-    dispatch(setInfoSEO(InitialState));
+    dispatch(setSEOInfo());
     //eslint-disable-next-line
   }, []);
 
   const targetBlockchain = '0x89';
   const nutcrackerAddress =
     '0xF4ca90d4a796f57133c6de47c2261BF237cfF780'.toLowerCase();
-  const mintNutcracker = async () => {
-    if (!currentUserAddress) {
-      connectUserData();
-      return;
-    }
-
-    if (correctBlockchain(targetBlockchain)) {
-      web3Switch(targetBlockchain);
-      return;
-    }
-
-    const { success, products } = await rFetch(
-      `/api/contracts/network/0x89/${nutcrackerAddress}/offers`
-    );
-    if (success && contractCreator && minterInstance) {
-      const instance = contractCreator(nutcrackerAddress, erc721Abi);
-      if (!instance) {
-        return;
-      }
-      const nextToken = await instance.getNextSequentialIndex(0, 0, 50);
-      reactSwal.fire({
-        title: 'Please wait...',
-        html: `Buying Nutcracker #${nextToken.toString()}`,
-        icon: 'info',
-        showConfirmButton: false
-      });
-      const [nutsOffer] = products[0].offers.filter(
-        (item) => item.offerName === 'Nuts'
-      );
-      if (!nutsOffer) {
-        reactSwal.fire('Error', 'An error has ocurred', 'error');
-        return;
-      }
-      if (
-        await web3TxHandler(
-          minterInstance,
-          'buyToken',
-          [
-            products[0].offerPool.marketplaceCatalogIndex,
-            nutsOffer.offerIndex,
-            nextToken,
-            {
-              value: nutsOffer.price
-            }
-          ],
-          {
-            intendedBlockchain: targetBlockchain,
-            failureMessage:
-              'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
-          }
-        )
-      ) {
-        reactSwal.fire('Success', `Bought token #${nextToken}!`, 'success');
-      }
-    }
-  };
 
   useEffect(() => {
-    dispatch(setRealChain('0x89'));
+    dispatch(setRequestedChain(targetBlockchain));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -186,7 +115,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
 
               {false && (
                 <div className="btn-buy-metamask">
-                  <button onClick={mintNutcracker}>
+                  <button disabled onClick={() => {}}>
                     <img
                       className="metamask-logo"
                       src={metaMaskIcon}

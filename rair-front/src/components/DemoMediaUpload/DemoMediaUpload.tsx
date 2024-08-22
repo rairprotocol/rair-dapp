@@ -1,11 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { useSelector } from 'react-redux';
 
 import WorkflowContext from '../../contexts/CreatorWorkflowContext';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import videoIcon from '../../images/videoIcon.svg';
 import { rFetch } from '../../utils/rFetch';
 import LoadingComponent from '../common/LoadingComponent';
@@ -18,12 +15,8 @@ import UploadedListBox from './UploadedListBox/UploadedListBox';
 import './DemoMediaUpload.css';
 
 const MediaUpload: React.FC<IMediaUpload> = () => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const selectCommonInfo = {
     customClass: 'form-control rounded-rair',

@@ -1,16 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber } from 'ethers';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-//import InputSelect from '../../common/InputSelect';
-// import { TTokenData } from '../../../axios.responseTypes';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
-//import { UsersContractsType } from '../../adminViews/adminView.types';
 import { rFetch } from '../../../utils/rFetch';
 import InputField from '../../common/InputField';
 import {
@@ -90,10 +84,9 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
-  const { textColor, primaryButtonColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor, secondaryColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const lastTokenInProduct = contractData?.product?.copies || 0;
   const [blockchainOperationInProgress, setBlockchainOperationInProgress] =
@@ -228,7 +221,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
         await web3TxHandler(
           contractData.instance.setUniqueURIBatch(
             page.map((item) =>
-              BigNumber.from(contractData.product.firstTokenIndex).add(
+              BigInt(contractData.product.firstTokenIndex) + BigInt(
                 item.token
               )
             ),
@@ -602,10 +595,10 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                   contractData.instance,
                   'setUniqueURIBatch',
                   [
-                    uniqueURIArray.map((item) =>
-                      BigNumber.from(contractData.product.firstTokenIndex).add(
-                        item.tokenId
-                      )
+                    uniqueURIArray.map(
+                      (item) =>
+                        BigInt(contractData.product.firstTokenIndex) +
+                        BigInt(item.tokenId)
                     ),
                     uniqueURIArray.map((item) => item.metadataURI)
                   ],

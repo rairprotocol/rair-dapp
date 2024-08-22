@@ -2,6 +2,7 @@ import React from 'react';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { TFileType } from '../../axios.responseTypes';
+import { MediaFile } from '../../types/databaseTypes';
 
 export interface INumberedCircle {
   index: number;
@@ -69,7 +70,7 @@ export type TCarouselDataType = {
 };
 
 export type TSplashPageVideoData = {
-  video: string | null;
+  video?: string;
   videoTitle?: string;
   videoModuleDescription?: string | null;
   videoModuleTitle?: string;
@@ -175,7 +176,6 @@ export type TSplashDataType = {
 
 export interface IAuthorCard {
   splashData: TSplashDataType;
-  connectUserData?: () => Promise<void>;
   toggleCheckList?: () => void;
   whatSplashPage?: TWhatSplashPageType;
   customButtonBlock?: JSX.Element;
@@ -235,7 +235,7 @@ export interface ICountdown {
 }
 
 export interface IVideoPlayerModule {
-  backgroundImage: string;
+  backgroundImage?: string;
   videoData?: TSplashPageVideoData;
   selectVideo?: any /*type of video is unclear yet*/;
 }
@@ -259,7 +259,7 @@ export interface ICarouselListItem {
 }
 
 export interface IShowVideoToLoggedInUsers {
-  backgroundImage: string;
+  backgroundImage?: string;
   video?: string | null;
   videoTitle?: string;
   baseURL?: string;
@@ -480,8 +480,8 @@ export interface IDonationGrid {
 }
 
 export type TUseGetProductsReturn = [
-  TFileType[],
-  TFileType | undefined,
+  MediaFile[],
+  MediaFile | undefined,
   (selectVideo: any) => void
 ];
 

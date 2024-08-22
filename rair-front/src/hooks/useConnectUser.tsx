@@ -1,37 +1,25 @@
-//@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { MultiOwnerModularAccount } from '@alchemy/aa-accounts';
-import { AccountSigner } from '@alchemy/aa-ethers';
+import { Action } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { Hex } from 'viem';
 
+import { useAppDispatch, useAppSelector } from './useReduxHooks';
 import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
 import useWeb3Tx from './useWeb3Tx';
 
 import { TUserResponse } from '../axios.responseTypes';
 import { OnboardingButton } from '../components/common/OnboardingButton/OnboardingButton';
-import { RootState } from '../ducks';
-import { getTokenComplete, getTokenStart } from '../ducks/auth/actions';
-import { ColorStoreType } from '../ducks/colors/colorStore.types';
+import { dataStatuses } from '../redux/commonTypes';
+import { loadCurrentUser } from '../redux/userSlice';
 import {
-  setChainId,
-  setCoingeckoRates,
-  setProgrammaticProvider,
-  setUserAddress
-} from '../ducks/contracts/actions';
-import { ContractsInitialType } from '../ducks/contracts/contracts.types';
-import {
-  getUserComplete,
-  setAdminRights,
-  setLoginProcessStatus,
-  setLogInStatus,
-  setLoginType,
-  setSuperAdmin,
-  setUserData
-} from '../ducks/users/actions';
-import { TUsersInitialState } from '../ducks/users/users.types';
+  connectChainMetamask,
+  setConnectedChain,
+  setExchangeRates,
+  setProgrammaticProvider
+} from '../redux/web3Slice';
+import { User } from '../types/databaseTypes';
 import chainData from '../utils/blockchainData';
 import { rFetch, signWeb3Message } from '../utils/rFetch';
 import sockets from '../utils/sockets';
@@ -63,25 +51,20 @@ const getCoingeckoRates = async () => {
 };
 
 const useConnectUser = () => {
-  const dispatch = useDispatch();
-  const { blockchainSettings, getBlockchainData, refreshBlockchainData } =
-    useServerSettings();
-  const { adminRights, loginProcess, loggedIn } = useSelector<
-    RootState,
-    TUsersInitialState
-  >((store) => store.userStore);
+  const dispatch = useAppDispatch();
+  const { getBlockchainData } = useServerSettings();
+  const { adminRights, loginStatus, isLoggedIn } = useAppSelector(
+    (store) => store.user
+  );
   const [metamaskInstalled, setMetamaskInstalled] = useState(false);
 
-  const { currentUserAddress, programmaticProvider, currentChain } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
+  const { currentUserAddress, programmaticProvider, connectedChain } =
+    useAppSelector((store) => store.web3);
   const { connectWeb3AuthProgrammaticProvider } = useWeb3Tx();
 
-  const { textColor, primaryButtonColor, primaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor, primaryColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -104,10 +87,10 @@ const useConnectUser = () => {
   }, [currentUserAddress]);
 
   const loginWithWeb3Auth = useCallback(async () => {
-    if (!currentChain) {
+    if (!connectedChain) {
       return;
     }
-    const chainInformation = getBlockchainData(currentChain);
+    const chainInformation = getBlockchainData(connectedChain);
     if (
       !chainInformation?.alchemy ||
       !chainInformation?.viem ||
@@ -120,29 +103,26 @@ const useConnectUser = () => {
       await connectWeb3AuthProgrammaticProvider(chainInformation);
 
     return {
-      userAddress: provider.account.account.address,
-      ownerAddress: provider.account.account.publicKey,
-      blockchain: currentChain,
+      userAddress: provider?.account.address,
+      ownerAddress: provider?.account.publicKey,
+      blockchain: connectedChain,
       alchemyProvider: provider
     };
-  }, [currentChain, connectWeb3AuthProgrammaticProvider, getBlockchainData]);
+  }, [connectedChain, connectWeb3AuthProgrammaticProvider, getBlockchainData]);
 
   const loginWithMetamask = useCallback(async () => {
-    const accounts = await window.ethereum.request({
-      method: 'eth_requestAccounts'
-    });
-    const chainId = await window.ethereum.request({
-      method: 'eth_chainId'
-    });
-    if (!accounts) {
+    const { connectedChain, currentUserAddress } = await dispatch(
+      connectChainMetamask()
+    ).unwrap();
+    if (!currentUserAddress) {
       return { address: undefined, blockchain: undefined };
     }
     return {
-      userAddress: accounts[0],
-      signerAddress: accounts[0],
-      blockchain: chainId.toLowerCase() as BlockchainType
+      userAddress: currentUserAddress,
+      signerAddress: currentUserAddress,
+      blockchain: connectedChain
     };
-  }, []);
+  }, [dispatch]);
 
   const loginWithProgrammaticProvider = useCallback(async () => {
     if (!programmaticProvider) {
@@ -151,9 +131,9 @@ const useConnectUser = () => {
     return {
       userAddress: programmaticProvider.address,
       signerAddress: programmaticProvider.address,
-      blockchain: currentChain
+      blockchain: connectedChain
     };
-  }, [currentChain, programmaticProvider]);
+  }, [connectedChain, programmaticProvider]);
 
   const selectMethod = useCallback(
     () =>
@@ -222,18 +202,8 @@ const useConnectUser = () => {
   );
 
   const connectUserData = useCallback(async () => {
-    dispatch(setLoginProcessStatus(true));
-    let loginData:
-      | {
-          userAddress: string | undefined;
-          ownerAddress: string | undefined;
-          blockchain: BlockchainType | undefined;
-          idToken?: string;
-          provider?: string;
-          alchemyProvider?: AccountSigner<MultiOwnerModularAccount>;
-        }
-      | undefined;
-    const dispatchStack = [];
+    let loginData: any;
+    const dispatchStack: Array<Action> = [];
     const loginMethod: string = await selectMethod();
     reactSwal.close();
     try {
@@ -257,23 +227,20 @@ const useConnectUser = () => {
             ),
             icon: 'error'
           });
-          dispatch(setLoginProcessStatus(false));
           return;
       }
     } catch (err) {
       console.error('Login error', err);
-      dispatch(setLoginProcessStatus(false));
       return;
     }
     if (!loginData?.userAddress || loginData?.userAddress === '') {
       reactSwal.fire('Error', 'No user address found', 'error');
-      dispatch(setLoginProcessStatus(false));
       return;
     }
 
-    dispatchStack.push(setCoingeckoRates(await getCoingeckoRates()));
+    dispatchStack.push(setExchangeRates(await getCoingeckoRates()));
 
-    dispatchStack.push(setChainId(loginData.blockchain, blockchainSettings));
+    dispatchStack.push(setConnectedChain(loginData.blockchain));
 
     let firstTimeLogin = false;
 
@@ -296,7 +263,7 @@ const useConnectUser = () => {
             }
           }
         );
-        user = userCreation.data;
+        user = userCreation.data.user;
       }
 
       // Authorize user
@@ -305,7 +272,6 @@ const useConnectUser = () => {
         adminRights === undefined ||
         !currentUserAddress
       ) {
-        dispatchStack.push(getTokenStart());
         let loginResponse;
         switch (loginMethod) {
           case 'programmatic':
@@ -327,7 +293,7 @@ const useConnectUser = () => {
             );
             if (firstTimeLogin) {
               const userData = await loginData.alchemyProvider.userDetails();
-              const availableData = {};
+              const availableData: Partial<User> = {};
               if (userData.email) {
                 availableData.email = userData.email;
                 availableData.nickName = userData.email?.split('@')?.[0];
@@ -345,27 +311,16 @@ const useConnectUser = () => {
             //  provider.accountProvider.signTypedData
             break;
         }
-        if (!userDataResponse.data.success) {
-          dispatch(setAdminRights(false));
-          dispatch(setUserData(undefined));
-        } else if (loginResponse.success) {
-          dispatch(setUserData(user));
-          dispatchStack.push(setUserAddress(loginResponse.user.publicAddress));
-          dispatchStack.push(getUserComplete(loginResponse.user));
-          dispatchStack.push(setAdminRights(loginResponse.user.adminRights));
-          dispatchStack.push(setSuperAdmin(loginResponse.user.superAdmin));
-          dispatchStack.push(setLoginType(loginMethod));
+        dispatch(loadCurrentUser());
+        if (loginResponse.success) {
           dispatchStack.forEach((dispatchItem) => {
             dispatch(dispatchItem);
           });
-          dispatch(setLogInStatus(true));
           sockets.nodeSocket.connect();
         }
       }
-      dispatch(setLoginProcessStatus(false));
     } catch (err) {
       console.error('Error on login', err);
-      dispatch(setLoginProcessStatus(false));
     }
   }, [
     selectMethod,
@@ -376,8 +331,7 @@ const useConnectUser = () => {
     adminRights,
     currentUserAddress,
     programmaticProvider,
-    dispatch,
-    blockchainSettings
+    dispatch
   ]);
 
   useEffect(() => {
@@ -385,39 +339,20 @@ const useConnectUser = () => {
   }, [checkMetamask]);
 
   useEffect(() => {
-    if (loggedIn || loginProcess) {
+    if (isLoggedIn || loginStatus === dataStatuses.Loading) {
       return;
     }
     (async () => {
-      dispatch(setLoginProcessStatus(true));
-      const { success, user } = await rFetch(
-        '/api/auth/me/',
-        undefined,
-        undefined,
-        false
-      );
-      if (success && user) {
-        if (!window?.ethereum._state.initialized) {
-          // Metamask isn't connected anymore to the page,
-          //  it's unreliable to use the login data in this case
-          dispatch(setLoginProcessStatus(false));
-          return await logoutUser();
-        }
-        const currentChainId = await window.ethereum.request({
-          method: 'eth_chainId'
-        });
-        const chains = await refreshBlockchainData();
-        dispatch(setChainId(currentChainId.toLowerCase(), chains));
-        dispatch(setLoginType('metamask')); // Because web3 logins end on page reload
-        dispatch(setCoingeckoRates(await getCoingeckoRates()));
-        dispatch(setUserData(user));
-        dispatch(setUserAddress(user.publicAddress));
-        dispatch(getUserComplete(user));
-        dispatch(setAdminRights(user.adminRights));
-        dispatch(setSuperAdmin(user.superAdmin));
-        dispatch(setLogInStatus(true));
+      const { loginType } = await dispatch(loadCurrentUser()).unwrap();
+      switch (loginType) {
+        case 'metamask':
+          dispatch(connectChainMetamask());
+          dispatch(setExchangeRates(await getCoingeckoRates()));
+          break;
+        default:
+          logoutUser();
+          break;
       }
-      dispatch(setLoginProcessStatus(false));
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -425,22 +360,14 @@ const useConnectUser = () => {
   const logoutUser = useCallback(async () => {
     const { success } = await rFetch('/api/auth/logout');
     if (success) {
-      sockets.nodeSocket.emit('logout', currentUserAddress.toLowerCase());
+      dispatch(loadCurrentUser());
+      sockets.nodeSocket.emit('logout', currentUserAddress?.toLowerCase());
       sockets.nodeSocket.disconnect();
-      dispatch(getTokenComplete(null));
-      dispatch(setUserAddress(undefined));
-      dispatch(setAdminRights(false));
-      dispatch(setLoginType(undefined));
-      dispatch(setLogInStatus(false));
-      dispatch(setUserData(undefined));
       dispatch(setProgrammaticProvider(undefined));
-      dispatch(
-        setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN),
-        blockchainSettings
-      );
+      dispatch(setConnectedChain(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
       navigate('/');
     }
-  }, [dispatch, navigate, currentUserAddress, blockchainSettings]);
+  }, [dispatch, navigate, currentUserAddress]);
 
   return {
     connectUserData,

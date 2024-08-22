@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import {
@@ -13,16 +12,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Stack } from '@mui/material';
 import { Breadcrumbs, Typography } from '@mui/material';
 import axios from 'axios';
-import { constants, utils } from 'ethers';
-import Swal from 'sweetalert2';
+import { isAddress, ZeroAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import { TContract, TUserResponse } from '../../axios.responseTypes';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { UserType } from '../../ducks/users/users.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { VideoIcon } from '../../images';
+import { User } from '../../types/databaseTypes';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 import LoadingComponent from '../common/LoadingComponent';
@@ -45,15 +43,11 @@ import './UserProfilePage.css';
 
 const UserProfilePage: React.FC = () => {
   const { primaryColor, textColor, headerLogo, iconColor, primaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+    useAppSelector((store) => store.colors);
   const { userAddress } = useParams();
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
   const [copyState, setCopyState] = useState(false);
-  const [userData, setUserData] = useState<UserType | null | undefined>(
-    undefined
-  );
+  const [userData, setUserData] = useState<User | null | undefined>(undefined);
   const [, /*tokens*/ setTokens] = useState<TDiamondTokensType[]>([]);
   const [collectedTokens, setCollectedTokens] = useState<
     TDiamondTokensType[] | null
@@ -76,6 +70,7 @@ const UserProfilePage: React.FC = () => {
   );
   const [metadataFilter, setMetadataFilter] = useState<boolean>(false);
 
+  const rSwal = useSwal();
   const { width } = useWindowDimensions();
 
   const handleClose = (value: number) => {
@@ -89,7 +84,7 @@ const UserProfilePage: React.FC = () => {
 
   const getMyNft = useCallback(
     async (number, page) => {
-      if (userAddress && utils.isAddress(userAddress)) {
+      if (userAddress && isAddress(userAddress)) {
         setIsLoading(true);
 
         const response = await rFetch(
@@ -167,11 +162,7 @@ const UserProfilePage: React.FC = () => {
   }, [userAddress]);
 
   const getUserData = useCallback(async () => {
-    if (
-      userAddress &&
-      utils.isAddress(userAddress) &&
-      userAddress !== constants.AddressZero
-    ) {
+    if (userAddress && isAddress(userAddress) && userAddress !== ZeroAddress) {
       const userAddressChanged = userAddress.toLowerCase();
       setTabIndexItems(0);
       setUserData(undefined);
@@ -181,17 +172,18 @@ const UserProfilePage: React.FC = () => {
         if (response.user) {
           setUserData(response.user);
         } else {
-          const defaultUser = {
-            avatar: null,
-            background: null,
+          const defaultUser: User = {
+            avatar: '',
+            background: '',
             creationDate: '2023-04-25T14:54:58.190Z',
             email: '',
-            firstName: null,
-            lastName: null,
+            firstName: '',
+            lastName: '',
             nickName: `@${userAddress}`,
             ageVerified: false,
-            publicAddress: `${userAddress}`,
-            _id: 'none'
+            publicAddress: userAddress as Hex,
+            _id: 'none',
+            blocked: false
           };
           setUserData(defaultUser);
         }
@@ -253,21 +245,28 @@ const UserProfilePage: React.FC = () => {
     </Typography>
   ];
 
-  const photoUpload = useCallback((e) => {
-    e.preventDefault();
-    const reader = new FileReader();
-    const fileF = e.target.files[0];
-    reader.onloadend = () => {
-      if (fileF.type !== 'video/mp4') {
-        setFileUpload(fileF);
-      } else {
-        Swal.fire('Info', `You cannot upload video to background!`, 'warning');
+  const photoUpload = useCallback(
+    (e) => {
+      e.preventDefault();
+      const reader = new FileReader();
+      const fileF = e.target.files[0];
+      reader.onloadend = () => {
+        if (fileF.type !== 'video/mp4') {
+          setFileUpload(fileF);
+        } else {
+          rSwal.fire(
+            'Info',
+            `You cannot upload video to background!`,
+            'warning'
+          );
+        }
+      };
+      if (fileF) {
+        reader.readAsDataURL(fileF);
       }
-    };
-    if (fileF) {
-      reader.readAsDataURL(fileF);
-    }
-  }, []);
+    },
+    [rSwal]
+  );
 
   useEffect(() => {
     editBackground();

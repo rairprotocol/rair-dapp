@@ -80,19 +80,19 @@ export const SortArrowDownIcon = styled.i.withConfig({
 export const SelectSortPopUp = styled.div.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<TSelectSortPopUpStyled>`
-  background-color: ${(props) =>
-    props.primaryColor === '#dedede'
+  background-color: ${({ isDarkMode, primaryColor }) =>
+    isDarkMode
       ? 'var(--rhyno)'
-      : `color-mix(in srgb, ${props.primaryColor}, #2d2d2d)`};
-  color: ${(props) => props.textColor};
+      : `color-mix(in srgb, ${primaryColor}, #2d2d2d)`};
+  color: ${({ textColor }) => textColor};
   &:after {
     content: '';
     width: 20px;
     height: 20px;
-    background-color: ${(props) =>
-      props.primaryColor === '#dedede'
+    background-color: ${({ primaryColor, isDarkMode }) =>
+      isDarkMode
         ? 'var(--rhyno)'
-        : `color-mix(in srgb, ${props.primaryColor}, #2d2d2d)`};
+        : `color-mix(in srgb, ${primaryColor}, #2d2d2d)`};
     position: absolute;
     transform: rotate(45deg);
     bottom: 63px;

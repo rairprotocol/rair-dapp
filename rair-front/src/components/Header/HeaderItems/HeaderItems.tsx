@@ -4,7 +4,6 @@ import styled from 'styled-components';
 interface IHeaderContainerStyled {
   primaryColor: string;
   showAlert?: boolean;
-  selectedChain?: string | null;
   isSplashPage?: boolean;
   hotdrops?: string;
   realChainId?: string | undefined;
@@ -19,12 +18,7 @@ export const HeaderContainer = styled.div.withConfig({
       ? '#fff'
       : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
   margin-top: ${(props) =>
-    props.realChainId &&
-    props.showAlert &&
-    !props.selectedChain &&
-    !props.isSplashPage
-      ? '50px'
-      : ''};
+    props.realChainId && props.showAlert && !props.isSplashPage ? '50px' : ''};
 `;
 
 export const SocialHeaderBox = styled.div.withConfig({

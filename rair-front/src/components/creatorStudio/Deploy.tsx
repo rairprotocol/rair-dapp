@@ -1,35 +1,34 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faGem, faLandmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
-import { stringToHex } from 'viem';
+import { formatEther } from 'ethers';
+import { Hex, stringToHex } from 'viem';
 
 import NavigatorFactory from './NavigatorFactory';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../ducks/users/users.types';
-import useServerSettings from '../../hooks/useServerSettings';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
+import { dataStatuses } from '../../redux/commonTypes';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
+import LoadingComponent from '../common/LoadingComponent';
 
 const Factory = () => {
   const [contractName, setContractName] = useState<string>('');
 
-  const [deploymentPrice, setDeploymentPrice] = useState<BigNumber>();
+  const [deploymentPrice, setDeploymentPrice] = useState<bigint>();
   const [deploymentPriceDiamond, setDeploymentPriceDiamond] = useState<
-    BigNumber | undefined
+    bigint | undefined
   >();
 
-  const [allowance, setAllowance] = useState<BigNumber | undefined>();
+  const [allowance, setAllowance] = useState<bigint | undefined>();
 
-  const { blockchainSettings, refreshBlockchainData } = useServerSettings();
+  const { blockchainSettings } = useAppSelector((store) => store.settings);
+  const { web3Status } = useAppSelector((store) => store.web3);
 
-  const [userBalance, setUserBalance] = useState<BigNumber>();
+  const [userBalance, setUserBalance] = useState<bigint>();
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
 
   const [deploying, setDeploying] = useState<boolean>(false);
@@ -37,27 +36,20 @@ const Factory = () => {
   const { web3TxHandler, web3Switch } = useWeb3Tx();
   const reactSwal = useSwal();
 
-  const {
-    currentUserAddress,
-    factoryInstance,
-    mainTokenInstance,
-    diamondFactoryInstance,
-    currentChain
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (store) => store.web3
   );
+  const { classicFactoryInstance, mainTokenInstance, diamondFactoryInstance } =
+    useContracts();
   const { primaryColor, secondaryColor, primaryButtonColor, textColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
-  const { adminRights } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
-
+    useAppSelector((store) => store.colors);
+  const { adminRights } = useAppSelector((store) => store.user);
   const getAllowance = useCallback(async () => {
     if (mainTokenInstance && diamondFactoryInstance) {
       const allowanceCheck = await web3TxHandler(
         mainTokenInstance,
         'allowance',
-        [currentUserAddress, diamondFactoryInstance.address]
+        [currentUserAddress, await diamondFactoryInstance.getAddress()]
       );
       setAllowance(allowanceCheck);
     }
@@ -76,17 +68,26 @@ const Factory = () => {
   }, [getAllowance, allowance]);
 
   const getLegacyDeploymentCost = useCallback(async () => {
-    if (factoryInstance && mainTokenInstance && deploymentPrice === undefined) {
+    if (
+      classicFactoryInstance &&
+      mainTokenInstance &&
+      deploymentPrice === undefined
+    ) {
       const value = await web3TxHandler(
-        factoryInstance,
+        classicFactoryInstance,
         'deploymentCostForERC777',
-        [mainTokenInstance.address]
+        [mainTokenInstance.getAddress()]
       );
-      if (value?._isBigNumber) {
+      if (value) {
         setDeploymentPrice(value);
       }
     }
-  }, [factoryInstance, mainTokenInstance, deploymentPrice, web3TxHandler]);
+  }, [
+    classicFactoryInstance,
+    mainTokenInstance,
+    deploymentPrice,
+    web3TxHandler
+  ]);
 
   const getDiamondDeploymentCost = useCallback(async () => {
     if (
@@ -98,7 +99,7 @@ const Factory = () => {
         diamondFactoryInstance,
         'getDeploymentCost'
       );
-      if (value?._isBigNumber) {
+      if (value) {
         setDeploymentPriceDiamond(value);
       }
     }
@@ -114,14 +115,14 @@ const Factory = () => {
     setAllowance(undefined);
     setDeploymentPrice(undefined);
     setDeploymentPriceDiamond(undefined);
-  }, [currentChain]);
+  }, [connectedChain]);
 
   const getUserBalance = useCallback(async () => {
     if (mainTokenInstance && userBalance === undefined) {
       const userBalance = await web3TxHandler(mainTokenInstance, 'balanceOf', [
         currentUserAddress
       ]);
-      if (userBalance?._isBigNumber) {
+      if (userBalance) {
         setUserBalance(userBalance);
       }
       const symbolValue = await web3TxHandler(mainTokenInstance, 'symbol');
@@ -142,25 +143,20 @@ const Factory = () => {
   }, [getUserBalance]);
 
   const updateChain = useCallback(
-    async (chainId: BlockchainType) => {
+    async (chainId: Hex) => {
       if (chainId !== undefined) {
         await web3Switch(chainId);
-        setDeploymentPrice(BigNumber.from(0));
-        setDeploymentPriceDiamond(BigNumber.from(0));
+        setDeploymentPrice(BigInt(0));
+        setDeploymentPriceDiamond(BigInt(0));
         setTokenSymbol('');
-        setUserBalance(BigNumber.from(0));
+        setUserBalance(BigInt(0));
       }
     },
     [web3Switch]
   );
 
-  useEffect(() => {
-    refreshBlockchainData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const deployClassic = useCallback(async () => {
-    if (!mainTokenInstance || !factoryInstance) {
+    if (!mainTokenInstance || !classicFactoryInstance) {
       return;
     }
     setDeploying(true);
@@ -171,7 +167,7 @@ const Factory = () => {
       showConfirmButton: false
     });
     const success = await web3TxHandler(mainTokenInstance, 'send', [
-      factoryInstance.address,
+      await classicFactoryInstance.getAddress(),
       deploymentPrice,
       stringToHex(contractName)
     ]);
@@ -189,7 +185,7 @@ const Factory = () => {
     mainTokenInstance,
     contractName,
     deploymentPrice,
-    factoryInstance,
+    classicFactoryInstance,
     reactSwal,
     web3TxHandler
   ]);
@@ -200,22 +196,25 @@ const Factory = () => {
       !diamondFactoryInstance ||
       contractName === '' ||
       !deploymentPriceDiamond ||
-      deploymentPriceDiamond.eq(0)
+      deploymentPriceDiamond === BigInt(0)
     ) {
       return;
     }
     setDeploying(true);
-    if (allowance?.lt(deploymentPriceDiamond)) {
+    if (
+      allowance &&
+      BigInt(allowance) < BigInt(deploymentPriceDiamond?.toString())
+    ) {
       reactSwal.fire({
         title: 'Step 1 of 2',
-        html: `Approve ${utils
-          .formatEther(deploymentPriceDiamond)
-          .toString()} ${tokenSymbol} to be transferred from your wallet`,
+        html: `Approve ${formatEther(
+          deploymentPriceDiamond
+        ).toString()} ${tokenSymbol} to be transferred from your wallet`,
         icon: 'info',
         showConfirmButton: false
       });
       const approveResult = await web3TxHandler(mainTokenInstance, 'approve', [
-        diamondFactoryInstance.address,
+        await diamondFactoryInstance.getAddress(),
         deploymentPriceDiamond
       ]);
       if (!approveResult) {
@@ -255,6 +254,10 @@ const Factory = () => {
     reactSwal
   ]);
 
+  if (web3Status !== dataStatuses.Complete) {
+    return <LoadingComponent />;
+  }
+
   return (
     <div className="row my-5 px-0 mx-0">
       <NavigatorFactory>
@@ -267,7 +270,7 @@ const Factory = () => {
         <hr />
         <span className="text-start">
           <b>Your balance:</b>{' '}
-          {userBalance && utils.formatEther(userBalance).toString()}{' '}
+          {userBalance?.toString() && formatEther(userBalance).toString()}{' '}
           {tokenSymbol} Tokens
         </span>
         <div className="col-12 p-2">
@@ -279,7 +282,7 @@ const Factory = () => {
               .map((chain) => {
                 return { label: chain.name!, value: chain.hash! };
               })}
-            getter={currentChain}
+            getter={connectedChain}
             setter={updateChain}
             placeholder="Please select"
             label="Deploy on"
@@ -309,14 +312,14 @@ const Factory = () => {
           />
         </div>
         <div className="col-12 row p-2">
-          {false && factoryInstance && (
+          {false && classicFactoryInstance && (
             <button
               disabled={
                 contractName === '' ||
-                currentChain === undefined ||
+                connectedChain === undefined ||
                 adminRights === false ||
-                deploymentPrice === BigNumber.from(0) ||
-                userBalance === BigNumber.from(0) ||
+                deploymentPrice === BigInt(0) ||
+                userBalance === BigInt(0) ||
                 deploying ||
                 !mainTokenInstance
               }
@@ -331,8 +334,7 @@ const Factory = () => {
               Deploy a classic contract
               <br />
               <b>
-                {deploymentPrice?.eq &&
-                  utils.formatEther(deploymentPrice!).toString()}{' '}
+                {!!deploymentPrice && formatEther(deploymentPrice!).toString()}{' '}
                 {tokenSymbol} Tokens
               </b>
               <br />
@@ -342,17 +344,17 @@ const Factory = () => {
               </small>
             </button>
           )}
-          {factoryInstance && diamondFactoryInstance && false && (
+          {classicFactoryInstance && diamondFactoryInstance && false && (
             <div className="col-12 col-md-2">or</div>
           )}
           {diamondFactoryInstance && (
             <button
               disabled={
                 contractName === '' ||
-                currentChain === undefined ||
+                connectedChain === undefined ||
                 adminRights === false ||
-                deploymentPrice === BigNumber.from(0) ||
-                userBalance === BigNumber.from(0) ||
+                deploymentPrice === BigInt(0) ||
+                userBalance === BigInt(0) ||
                 deploying ||
                 diamondFactoryInstance === undefined ||
                 !mainTokenInstance
@@ -368,8 +370,8 @@ const Factory = () => {
               Deploy a diamond contract
               <br />
               <b>
-                {deploymentPriceDiamond &&
-                  utils.formatEther(deploymentPriceDiamond).toString()}{' '}
+                {!!deploymentPriceDiamond &&
+                  formatEther(deploymentPriceDiamond).toString()}{' '}
                 {tokenSymbol} Tokens
               </b>
               <br />

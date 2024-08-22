@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 
 import { teamTaxHacksSummit } from './AboutUsTeam';
 import { AccessTextMarkKohler } from './InformationText';
 
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useConnectUser from '../../../hooks/useConnectUser';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
 import {
   blockchain,
   contract,
@@ -44,8 +40,8 @@ import KohlerFavicon from './assets/favicon.ico';
 import './markKohler.css';
 
 const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
 
   const [productsFromOffer, selectVideo, setSelectVideo] =
     useGetProducts(splashData);
@@ -61,9 +57,9 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   /* UTILITIES FOR NFT PURCHASE */
 
   const { connectUserData } = useConnectUser();
-  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { isLoggedIn } = useAppSelector((store) => store.user);
+
+  const rSwal = useSwal();
 
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
@@ -76,7 +72,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
         `/api/nft/network/${blockchain}/${contract}/0/token/${nextToken}`
       );
       if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
-        Swal.fire({
+        rSwal.fire({
           imageUrl: tokenMetadata.result.metadata.image,
           imageHeight: 'auto',
           imageWidth: '65%',
@@ -85,17 +81,13 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           icon: 'success'
         });
       } else {
-        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+        rSwal.fire('Success', `Bought token #${nextToken}`, 'success');
       }
       setHasNFT(undefined);
     };
   }
 
-  const reactSwal = useSwal();
-
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
 
@@ -122,14 +114,14 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
         setMeetingInvite(unlockResponse?.data?.invite?.join_url);
       }
     } catch (requestError) {
-      Swal.fire('NFT Required to unlock this meeting', '', 'info');
+      rSwal.fire('NFT Required to unlock this meeting', '', 'info');
       setHasNFT(false);
     }
   };
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: '#Mark Kohler',
         ogTitle: '#Mark Kohler',
         twitterTitle: '#Mark Kohler',
@@ -164,7 +156,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   }, [carousel_match.matches]);
 
   useEffect(() => {
-    dispatch(setRealChain('0x5'));
+    dispatch(setRequestedChain('0x5'));
     //eslint-disable-next-line
   }, []);
 
@@ -223,14 +215,14 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
                 className="card-button-mark-kohler"
                 buttonImg={splashData.button3?.buttonImg || ''}
                 buttonLabel={
-                  !loggedIn
+                  !isLoggedIn
                     ? splashData.button3?.buttonLabel
                     : hasNFT
                       ? 'Join Zoom'
                       : 'Unlock Meeting'
                 }
                 buttonAction={
-                  loggedIn
+                  isLoggedIn
                     ? hasNFT
                       ? joinZoom
                       : unlockZoom
@@ -461,7 +453,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
             />
             <SplashCardButton
               className="need-help-kohler"
-              buttonAction={handleReactSwal(reactSwal)}
+              buttonAction={handleReactSwal(rSwal)}
               buttonLabel={'Need Help'}
             />
           </SplashVideoTextBlock>

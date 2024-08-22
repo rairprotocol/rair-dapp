@@ -1,17 +1,14 @@
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import { constants, ethers, utils } from 'ethers';
+import { formatEther, isAddress, ZeroAddress } from 'ethers';
 
 import { TUserResponse } from '../../axios.responseTypes';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import {
   BellIcon,
@@ -21,12 +18,14 @@ import {
   RairTokenLogo,
   VerifiedIcon
 } from '../../images';
+import { dataStatuses } from '../../redux/commonTypes';
 import {
   SocialBox,
   SocialBoxSearch,
   SocialMenuMobile,
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { User } from '../../types/databaseTypes';
 import { rFetch } from '../../utils/rFetch';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
 
@@ -42,15 +41,9 @@ import {
 import './Menu.css';
 
 interface IMenuNavigation {
-  connectUserData: () => void;
   renderBtnConnect: boolean;
   currentUserAddress: string | undefined;
-  programmaticProvider:
-    | ethers.Wallet
-    | ethers.providers.JsonRpcSigner
-    | undefined;
   showAlert: boolean | null | undefined;
-  selectedChain: any | undefined;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
   isAboutPage: boolean;
@@ -61,7 +54,6 @@ interface IMenuNavigation {
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
   showAlert,
-  selectedChain,
   setTabIndexItems,
   isSplashPage,
   isAboutPage,
@@ -70,11 +62,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   getNotificationsCount
 }) => {
   const [click, setClick] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserType | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
   const [openProfile, setOpenProfile] = useState<boolean>(false);
-  const { userData: userDataInfo } = useSelector<RootState, TUsersInitialState>(
-    (state) => state.userStore
-  );
   const { getBlockchainData } = useServerSettings();
   const { connectUserData } = useConnectUser();
   // const [loading, setLoading] = useState<boolean>(false);
@@ -82,14 +71,14 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const [activeSearch, setActiveSearch] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [messageAlert, setMessageAlert] = useState<string | null>(null);
-  const { loggedIn, loginProcess } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
+  const { isLoggedIn, loginStatus, ageVerified } = useAppSelector(
+    (store) => store.user
   );
   const [realDataNotification, setRealDataNotification] = useState([]);
-  const { mainTokenInstance, currentUserAddress, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
+  const { mainTokenInstance } = useContracts();
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (state) => state.web3
+  );
 
   const {
     primaryButtonColor,
@@ -97,7 +86,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     iconColor,
     secondaryColor,
     primaryColor
-  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  } = useAppSelector((store) => store.colors);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -110,13 +99,13 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   };
 
   const getNotifications = useCallback(async () => {
-    if (currentUserAddress) {
+    if (currentUserAddress && isLoggedIn) {
       const result = await rFetch(`/api/notifications`);
       if (result.success) {
         setRealDataNotification(result.notifications);
       }
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, isLoggedIn]);
 
   useEffect(() => {
     getNotificationsCount();
@@ -156,8 +145,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     // find user
     if (
       currentUserAddress &&
-      utils.isAddress(currentUserAddress) &&
-      currentUserAddress !== constants.AddressZero
+      isAddress(currentUserAddress) &&
+      currentUserAddress !== ZeroAddress
     ) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${currentUserAddress}`)
@@ -180,7 +169,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
         await mainTokenInstance.provider.getBalance(currentUserAddress);
 
       if (balance) {
-        const result = utils.formatEther(balance);
+        const result = formatEther(balance);
         const final = Number(result.toString())?.toFixed(2)?.toString();
 
         setUserBalance(final);
@@ -213,7 +202,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
       className="col-1 rounded burder-menu"
       showAlert={showAlert}
       secondaryColor={secondaryColor}
-      selectedChain={selectedChain}
       isSplashPage={isSplashPage}
       realChainId={realChainId}>
       <Nav
@@ -234,13 +222,10 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               primaryColor={primaryColor}
               click={click}
               toggleOpenProfile={toggleOpenProfile}
-              userData={userData}
             />
           </Suspense>
         ) : (
           <MobileListMenu
-            secondaryColor={secondaryColor}
-            primaryColor={primaryColor}
             click={click}
             toggleMenu={toggleMenu}
             activeSearch={activeSearch}
@@ -252,7 +237,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
         )}
         <RightSideMenu>
           <div>
-            {!loggedIn ? (
+            {!isLoggedIn ? (
               <div>
                 <div>
                   {isAboutPage ? null : (
@@ -274,7 +259,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         color: textColor
                       }}
                       onClick={() => connectUserData()}>
-                      {loginProcess ? 'Please wait...' : 'Connect'}
+                      {loginStatus === dataStatuses.Loading
+                        ? 'Please wait...'
+                        : 'Connect'}
                     </button>
                   )}
                 </div>
@@ -396,12 +383,13 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                           }
                           alt="logo"
                         />
-                        {currentChain && getBlockchainData(currentChain) && (
-                          <img
-                            src={getBlockchainData(currentChain)?.image}
-                            alt="logo"
-                          />
-                        )}
+                        {connectedChain &&
+                          getBlockchainData(connectedChain) && (
+                            <img
+                              src={getBlockchainData(connectedChain)?.image}
+                              alt="logo"
+                            />
+                          )}
                       </div>
                     </div>
                     <div
@@ -409,7 +397,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                         position: 'relative'
                       }}>
                       <NavLink to={`/${currentUserAddress}`}>
-                        {userDataInfo && userDataInfo.ageVerified && (
+                        {isLoggedIn && ageVerified && (
                           <img
                             style={{
                               position: 'absolute',
@@ -439,7 +427,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
               </div>
             )}
           </div>
-          {!loggedIn && (
+          {!isLoggedIn && (
             <SocialBoxSearch
               primaryColor={primaryColor}
               hotdrops={hotdropsVar}

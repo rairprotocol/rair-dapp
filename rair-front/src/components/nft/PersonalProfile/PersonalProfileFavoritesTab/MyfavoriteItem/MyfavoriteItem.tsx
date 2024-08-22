@@ -1,15 +1,13 @@
-//@ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { constants, utils } from 'ethers';
+import { isAddress, ZeroAddress } from 'ethers';
 
 import { FavoriteItem, UserFavoriteItemInfo } from './MyFavoriteStyledItems';
 
 import { TUserResponse } from '../../../../../axios.responseTypes';
-import { RootState } from '../../../../../ducks';
-import { TUsersInitialState } from '../../../../../ducks/users/users.types';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
+import { User } from '../../../../../types/databaseTypes';
 import { rFetch } from '../../../../../utils/rFetch';
 import { ImageLazy } from '../../../../MockUpPage/ImageLazy/ImageLazy';
 import BtnMyFavorite from '../BtnMyFavorite/BtnMyFavorite';
@@ -22,24 +20,22 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
   removeFavotite,
   userPage = false
 }) => {
-  const [profileData, setprofileData] = useState(null);
-  const { loggedIn, userData } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const [profileData, setprofileData] = useState<User | undefined>(undefined);
+  const { isLoggedIn, publicAddress } = useAppSelector((store) => store.user);
 
   const navigate = useNavigate();
 
   const location = useLocation();
   const currentAddress = location.pathname.split('/').pop();
-  const userPublicAddress = userData ? userData.publicAddress : null;
-  const isCurrentUser = loggedIn && userPublicAddress === currentAddress;
+  const userPublicAddress = publicAddress || undefined;
+  const isCurrentUser = isLoggedIn && userPublicAddress === currentAddress;
 
   const getInfoFromUser = useCallback(async () => {
     // find user
     if (
       item.token.ownerAddress &&
-      utils.isAddress(item.token.ownerAddress) &&
-      item.token.ownerAddress !== constants.AddressZero
+      isAddress(item.token.ownerAddress) &&
+      item.token.ownerAddress !== ZeroAddress
     ) {
       await axios
         .get<TUserResponse>(`/api/users/${item.token.ownerAddress}`)
@@ -101,7 +97,9 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
         />
         <div className="w-100 bg-my-items">
           {isCurrentUser && (
-            <BtnMyFavorite removeFavotite={() => removeFavotite(item._id)} />
+            <BtnMyFavorite
+              removeFavotite={() => removeFavotite && removeFavotite(item._id)}
+            />
           )}
           <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
             <div
@@ -137,7 +135,7 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
                               profileData.nickName.length - 4
                             )
                           : profileData.nickName
-                        : profileData.slice(0, 5) +
+                        : profileData.publicAddress.slice(0, 5) +
                           '...' +
                           profileData.publicAddress.slice(
                             profileData.publicAddress.length - 4
@@ -145,22 +143,6 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
                     </span>
                   )}
                 </UserFavoriteItemInfo>
-                {/* <small className="description">
-                      {item.token.contract.slice(0, 5) +
-                        '....' +
-                        item.token.contract.slice(item.token.contract.length - 4)}
-                    </small> */}
-                <div className="description-small">
-                  {/* <img
-                                  className="my-items-blockchain-img"
-                                  src={
-                                    item.blockchain
-                                      ? `${chainData[item.token.blockchain]?.image}`
-                                      : ''
-                                  }
-                                  alt=""
-                                /> */}
-                </div>
               </div>
             </div>
           </div>

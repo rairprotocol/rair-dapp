@@ -1,17 +1,16 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import { FC } from 'react';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 
-const ErrorFallback: React.FC = () => {
-  const { primaryColor, secondaryColor, textColor, primaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+const ErrorFallback: FC = () => {
+  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
   return (
     <div
       className="not-found-page"
       style={{
-        backgroundColor: secondaryColor,
+        backgroundColor: textColor,
         width: '100vw',
         height: '100vh'
       }}>

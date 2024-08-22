@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { teamCoinAgendaArray } from './AboutUsTeam';
 
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
 import { splashData } from '../../../utils/infoSplashData/coicAgenda2021';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
@@ -34,8 +32,8 @@ import './CoinAgenda2021.css';
 const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
   setIsSplashPage
 }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
 
@@ -43,7 +41,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'CoinAGENDA 2021',
         ogTitle: 'CoinAGENDA 2021',
         twitterTitle: 'CoinAGENDA 2021',
@@ -62,9 +60,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
     //eslint-disable-next-line
   }, []);
 
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   /* UTILITIES FOR VIDEO PLAYER VIEW */
   const [productsFromOffer, selectVideo, setSelectVideo] =
@@ -81,9 +77,8 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
   }, [setIsSplashPage]);
 
   useEffect(() => {
-    dispatch(setRealChain(ukraineglitchChainId));
-    //eslint-disable-next-line
-  }, []);
+    dispatch(setRequestedChain(ukraineglitchChainId));
+  }, [dispatch]);
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);

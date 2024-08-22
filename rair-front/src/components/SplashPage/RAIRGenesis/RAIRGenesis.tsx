@@ -1,16 +1,13 @@
-//@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { teamRAIRBasicArray } from './AboutUsTeam';
 
-import { TNftFilesResponse } from '../../../axios.responseTypes';
-import { RootState } from '../../../ducks';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { setSEOInfo } from '../../../redux/seoSlice';
 import { useSplashData } from '../../../utils/infoSplashData/rairGenesis';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
@@ -49,12 +46,10 @@ const NumberedCircle: React.FC<INumberedCircle> = ({ index, primaryColor }) => {
 const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData
 }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const { splashData } = useSplashData(connectUserData);
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const reactSwal = useSwal();
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
@@ -78,7 +73,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'RAIR Genesis Pass',
         ogTitle: 'RAIR Genesis Pass',
         twitterTitle: 'RAIR Genesis Pass',
@@ -95,8 +90,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
         faviconMobile: NFTNYC_favicon
       })
     );
-    //eslint-disable-next-line
-  }, []);
+  }, [dispatch]);
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
@@ -108,8 +102,8 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   }, []);
 
   /* UTILITIES FOR VIDEO PLAYER VIEW */
-  const [productsFromOffer, setProductsFromOffer] = useState([]);
-  const [selectVideo, setSelectVideo] = useState();
+  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
+  const [selectVideo, setSelectVideo] = useState<TFileType>();
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
@@ -168,7 +162,11 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
           <div>Marketplace &nbsp;</div>
           <div style={{ color: '#ee82d5' }}>Demo</div>
         </h1>
-        <NftDataCommonLink embeddedParams={embeddedParams} />
+        <NftDataCommonLink
+          tokenNumber={Number(tokenId)}
+          setTokenNumber={(value) => setTokenId(value.toString())}
+          embeddedParams={embeddedParams}
+        />
         <h1 className="splashpage-subtitle" style={{ marginTop: '150px' }}>
           {' '}
           <div> Membership </div>
@@ -205,11 +203,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
           {' '}
           About{' '}
         </h1>
-        <TeamMeet
-          primaryColor={primaryColor}
-          arraySplash={'rair-basic-2'}
-          teamArray={teamRAIRBasicArray}
-        />
+        <TeamMeet arraySplash={'rair-basic-2'} teamArray={teamRAIRBasicArray} />
         <NotCommercialTemplate2
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

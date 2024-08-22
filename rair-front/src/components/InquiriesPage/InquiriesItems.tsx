@@ -2,7 +2,7 @@ import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface IInquireItems {
-  primaryColor: string;
+  primaryColor?: string;
   background?: any;
 }
 
@@ -249,7 +249,9 @@ export const InquireLabel = styled.label.withConfig({
   }
 `;
 
-export const InquireButton = styled.button`
+export const InquireButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IInquireItems>`
   width: 162px;
   height: 44px;
   color: #fff;

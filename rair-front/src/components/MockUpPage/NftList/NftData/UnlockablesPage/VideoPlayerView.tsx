@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { playImagesColored } from '../../../../SplashPage/images/greyMan/grayMan';
 import {
@@ -8,8 +10,6 @@ import {
 import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
 
 import cl from './VideoPlayerView.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
 
 const VideoPlayerView: React.FC<IVideoPlayerView> = ({
   productsFromOffer,
@@ -22,8 +22,6 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
 }) => {
   const [openVideoplayer, setOpenVideoplayer] = useState<boolean>(false);
   const [selectedBg, setSelectedBg] = useState<string>();
-
-  const colorRarity = ['#E4476D', 'gold', 'silver'];
 
   return (
     <div
@@ -94,11 +92,7 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                 className={cl.ListOfVideosOneVideo}>
                 <div className={cl.previewWrapper}>
                   <span className={cl.preview}>Preview</span>
-                  <FontAwesomeIcon
-                    style={{ color: `${colorRarity[data.offer[0]]}` }}
-                    icon={faKey}
-                    className={cl.iconKey}
-                  />
+                  <FontAwesomeIcon icon={faKey} className={cl.iconKey} />
                 </div>
                 <div className={cl.play}>
                   <button

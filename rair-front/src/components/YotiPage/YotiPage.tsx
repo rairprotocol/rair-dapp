@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import FaceCapture from '@getyoti/react-face-capture';
 
-import { setUserData } from '../../ducks/users/actions';
 import useSwal from '../../hooks/useSwal';
 import { YotiLogo } from '../../images';
+import { loadCurrentUser } from '../../redux/userSlice';
 import { rFetch } from '../../utils/rFetch';
 
 import './YotiPage.css';
@@ -12,7 +11,6 @@ import './YotiPage.css';
 const YotiPage = ({ setOpenVideoplayer }) => {
   const [yotiVerify, setYotiVerify] = useState(false);
   const reactSwal = useSwal();
-  const dispatch = useDispatch();
 
   const onSuccess = async ({ img }) => {
     const data = await rFetch('/api/users/verify-age', {
@@ -25,36 +23,26 @@ const YotiPage = ({ setOpenVideoplayer }) => {
       }
     });
 
-    if (data.success) {
-      if (data.data.age.age_check === 'pass') {
-        const { success, user: userInfoData } = await rFetch(
-          '/api/auth/me/',
-          undefined,
-          undefined,
-          false
-        );
+    loadCurrentUser();
 
-        if (success) {
-          dispatch(setUserData(userInfoData));
-        }
-        reactSwal
-          .fire({
-            title: 'Age verified!',
-            html: 'Thanks you for verification',
-            icon: 'success'
-          })
-          .then((result) => {
-            if (result.isConfirmed) {
-              setOpenVideoplayer(true);
-            }
-          });
-      } else {
-        reactSwal.fire({
-          title: 'Your age is not verified',
-          html: 'Please try again later',
-          icon: 'error'
+    if (data.success && data.data.age.age_check === 'pass') {
+      reactSwal
+        .fire({
+          title: 'Age verified!',
+          html: 'Thanks you for verification',
+          icon: 'success'
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            setOpenVideoplayer(true);
+          }
         });
-      }
+    } else {
+      reactSwal.fire({
+        title: 'Your age is not verified',
+        html: 'Please try again later',
+        icon: 'error'
+      });
     }
   };
   const onError = (error) => console.error(`Error =, ${error}`);

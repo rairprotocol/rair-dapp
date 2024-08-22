@@ -1,16 +1,14 @@
-import { BackgroundBlendModeType } from '../../ducks/colors/colorStore.types';
-
 export interface IAppContainerFluidStyled {
   backgroundImageEffect: {
-    backgroundBlendMode: BackgroundBlendModeType | undefined;
+    backgroundBlendMode?: string;
   };
   primaryColor?: string;
   backgroundImage: string;
-  textColor: string;
+  textColor?: string;
+  isDarkMode: boolean;
 }
 
 export interface IMainBlockAppStyled {
   showAlert: boolean;
-  selectedChain: string | null | undefined;
   isSplashPage: boolean;
 }

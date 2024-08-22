@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Provider, useDispatch, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 import {
   faCheck,
   faPen,
@@ -9,12 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import {
-  uploadVideoEnd,
-  uploadVideoStart
-} from '../../../ducks/uploadDemo/action';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import { rFetch } from '../../../utils/rFetch';
@@ -56,10 +51,8 @@ const ContractDataModal = ({
   const [contractOptions, setContractOptions] = useState<Options[]>([]);
 
   const reactSwal = useSwal();
-  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor, secondaryButtonColor } =
+    useAppSelector((store) => store.colors);
 
   const getContractData = useCallback(async () => {
     const request = await rFetch('/api/contracts/full?itemsPerPage=5');
@@ -248,10 +241,9 @@ const BasicDataModal = ({
   const [newTitle, setNewTitle] = useState<string>(title);
   const [newDescription, setNewDescription] = useState<string>(description);
   const [newCategory, setNewCategory] = useState(category);
-  const { textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
   const reactSwal = useSwal();
   return (
     <>
@@ -330,22 +322,22 @@ const MediaListBox: React.FC<IMediaListBox> = ({
     textColor,
     primaryButtonColor,
     secondaryButtonColor
-  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  } = useAppSelector((store) => store.colors);
   const store = useStore();
   const reactSwal = useSwal();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { categories } = useAppSelector((store) => store.settings);
 
   const getCategories = useCallback(async () => {
-    const { success, categories } = await rFetch('/api/files/categories');
-    if (success) {
+    if (categories) {
       setCategoryOptions(
         categories.map((item) => {
-          return { label: item.name, value: item._id };
+          return { label: item.name, value: item._id! };
         })
       );
-      setCategory(categories?.at(0)?._id);
+      setCategory(categories[0]._id!);
     }
-  }, []);
+  }, [categories]);
 
   useEffect(() => {
     getCategories();
@@ -367,7 +359,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
           setUploading(false);
           setUploadSuccess(true);
           setTimeout(() => {
-            dispatch(uploadVideoEnd());
             rerender?.();
             deleter(index);
           }, 3000);
@@ -386,7 +377,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
       if (contract === 'null' || product === 'null' || offer === 'null') {
         return;
       }
-      dispatch(uploadVideoStart());
       setUploadSuccess(false);
       const formData = new FormData();
 
@@ -441,7 +431,6 @@ const MediaListBox: React.FC<IMediaListBox> = ({
       contract,
       product,
       offer,
-      dispatch,
       item.file,
       title,
       description,

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 import { TNftItemResponse } from '../../../../../axios.responseTypes';
-import { setTokenData } from '../../../../../ducks/nftData/action';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import { IListOfTokensComponent } from '../../selectBox.types';
 import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
 
@@ -21,9 +21,9 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   primaryColor,
   setSelectedToken,
   selectedToken,
-  setIsOpen,
-  totalCount
+  setIsOpen
 }) => {
+  const { currentCollectionTotal } = useAppSelector((store) => store.tokens);
   const [productTokenNumbers, setProductTokenNumbers] = useState<any>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
@@ -199,7 +199,6 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
       <>
         {productTokenNumbers !== undefined && (
           <CurrentTokens
-            primaryColor={primaryColor}
             items={productTokenNumbers}
             isOpen={isOpen}
             isBack={isBack}

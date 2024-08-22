@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -13,9 +12,8 @@ import FixedBottomNavigation from './FixedBottomNavigation';
 import NavigatorContract from './NavigatorContract';
 
 import { diamond721Abi, erc721Abi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -31,14 +29,11 @@ const ContractDetails = () => {
 
   const { getBlockchainData } = useServerSettings();
 
-  const { primaryColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
-  const { contractCreator, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { primaryColor, secondaryColor } = useAppSelector(
+    (store) => store.colors
+  );
+  const { connectedChain } = useAppSelector((store) => store.web3);
+  const { contractCreator } = useContracts();
   const { address, blockchain } = useParams<TParamsContractDetails>();
 
   const [data, setData] = useState<TContractsNetworkContract | TSetData>();
@@ -73,12 +68,12 @@ const ContractDetails = () => {
         setData({
           title: await instance?.name(),
           contractAddress: address,
-          blockchain: currentChain,
+          blockchain: connectedChain,
           products: Array(productCount)
         });
       }
     }
-  }, [address, blockchain, contractCreator, currentChain]);
+  }, [address, blockchain, contractCreator, connectedChain]);
 
   useEffect(() => {
     getContractData();

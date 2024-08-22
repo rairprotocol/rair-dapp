@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { v1 } from 'uuid';
 
 import { teamVaporVerseArray } from './AboutUsTeam';
 
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
 import { splashData } from '../../../utils/infoSplashData/vapoverseSplashPage';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -60,12 +58,10 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
   connectUserData,
   setIsSplashPage
 }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const carousel_match = window.matchMedia('(min-width: 630px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurchaseList] = useState(true);
@@ -77,7 +73,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'Vaporverse',
         ogTitle: 'Vaporverse',
         twitterTitle: 'Vaporverse',
@@ -111,21 +107,21 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
   // const getAllProduct = useCallback(async () => {
   //   if (loggedIn) {
-  //     if (currentChain === splashData.purchaseButton.requiredBlockchain) {
+  //     if (connectedChain === splashData.purchaseButton.requiredBlockchain) {
   //       setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
   //     } else {
   //       setSoldCopies();
   //     }
   //   }
 
-  // }, [setSoldCopies, loggedIn, currentChain, minterInstance]);
+  // }, [setSoldCopies, loggedIn, connectedChain, minterInstance]);
 
   // useEffect(() => {
   //   getAllProduct()
   // }, [getAllProduct])
 
   useEffect(() => {
-    dispatch(setRealChain(chainId));
+    dispatch(setRequestedChain(chainId));
   }, [dispatch]);
 
   useEffect(() => {

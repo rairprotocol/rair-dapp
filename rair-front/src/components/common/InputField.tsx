@@ -1,9 +1,7 @@
-import { FocusEventHandler, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { formatEther, parseEther } from 'ethers/lib/utils';
+import { CSSProperties, FocusEventHandler, useState } from 'react';
+import { formatEther, parseEther } from 'ethers';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import { getRandomValues } from '../../utils/getRandomValues';
 
 /***
@@ -37,9 +35,9 @@ type TInputFieldProps<T extends any = any> = {
   setter: (value: T) => void;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   setterField?: Array<string | number>;
-  customCSS?: { [key: string]: string };
+  customCSS?: CSSProperties;
   customClass?: string;
-  labelCSS?: { [key: string]: string };
+  labelCSS?: CSSProperties;
   labelClass?: string;
   placeholder?: string;
   type?: string;
@@ -75,9 +73,7 @@ const InputField = <T extends any = any>({
 }: TInputFieldProps<T>) => {
   const [id] = useState<number | null>(getRandomValues);
 
-  const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { textColor, primaryColor } = useAppSelector((store) => store.colors);
 
   const ethValidation = (value) => {
     try {

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { faHeart, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -11,10 +10,7 @@ import Stack from '@mui/material/Stack';
 
 import { IMyItems, TDiamondTokensType } from './nft.types';
 
-import { RootState } from '../../ducks';
-import { getTokenError } from '../../ducks/auth/actions';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { TUsersInitialState } from '../../ducks/users/users.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
@@ -39,17 +35,12 @@ const MyItems: React.FC<IMyItems> = ({
   tabIndexItems
 }) => {
   const { width } = useWindowDimensions();
-  const dispatch = useDispatch();
   const defaultImg = `${
     import.meta.env.VITE_IPFS_GATEWAY
   }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
-  const { userRd } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { isLoggedIn, publicAddress } = useAppSelector((store) => store.user);
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (state) => state.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((state) => state.colors);
   const [tokens, setTokens] = useState<TDiamondTokensType[]>([]);
   const [selectedData, setSelectedData] =
     useState<TDiamondTokensType /*| TMyDiamondItemsToken*/>();
@@ -60,9 +51,9 @@ const MyItems: React.FC<IMyItems> = ({
   // const [tabIndex, setTabIndex] = useState(0);
 
   const getMyNft = useCallback(async () => {
-    if (userRd) {
+    if (isLoggedIn) {
       const response = await rFetch(
-        `/api/nft/${userRd?.publicAddress}?itemsPerPage=${20}&pageNum=${1}`
+        `/api/nft/${publicAddress}?itemsPerPage=${20}&pageNum=${1}`
       );
 
       if (response.success) {
@@ -79,12 +70,8 @@ const MyItems: React.FC<IMyItems> = ({
         }
         setTokens(tokenData);
       }
-
-      if (response.error && response.message) {
-        dispatch(getTokenError(response.error));
-      }
     }
-  }, [dispatch, userRd]);
+  }, [isLoggedIn, publicAddress]);
 
   const openModal = () => {
     setIsOpenBlockchain(true);

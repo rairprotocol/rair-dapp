@@ -1,23 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import { BigNumber, constants, utils } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther, isAddress, ZeroAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import { BuySellButton } from './BuySellButton';
 import SellInputButton from './SellInputButton';
 
 import { TUserResponse } from '../../../../axios.responseTypes';
-import store, { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { UserType } from '../../../../ducks/users/users.types';
+import useContracts from '../../../../hooks/useContracts';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../hooks/useServerSettings';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import { BillTransferIcon, GrandpaWait } from '../../../../images';
+import { store } from '../../../../redux/store';
+import { User } from '../../../../types/databaseTypes';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
 import ResaleModal from '../../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
@@ -33,32 +33,28 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   blockchain,
   product,
   contract,
-  totalCount,
   selectedToken,
   setSelectedToken,
   offerData,
   handleTokenBoughtButton,
   tokenDataForResale
 }) => {
-  const {
-    minterInstance,
-    diamondMarketplaceInstance,
-    currentUserAddress,
-    coingeckoRates
-  } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
+  const { diamondMarketplaceInstance } = useContracts();
+  const { currentUserAddress, exchangeRates } = useAppSelector(
+    (state) => state.web3
+  );
+  const { currentCollectionTotal } = useAppSelector(
+    (state) => state.tokens
   );
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
-  const numberTooBigThreshold = BigNumber.from(10000000000);
+  const numberTooBigThreshold = BigInt(10000000000);
 
-  const [accountData, setAccountData] = useState<UserType | null>(null);
+  const [accountData, setAccountData] = useState<User | null>(null);
   const [contractData, setContractData] = useState<ContractType>();
   const [resaleData, setResaleData] = useState<any>();
   const params = useParams();
@@ -69,8 +65,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       params.tokenId &&
       tokenData &&
       Object.values(tokenData)[0]?.ownerAddress &&
-      utils.isAddress(Object.values(tokenData)[0]?.ownerAddress) &&
-      Object.values(tokenData)[0]?.ownerAddress !== constants.AddressZero
+      isAddress(Object.values(tokenData)[0]?.ownerAddress) &&
+      Object.values(tokenData)[0]?.ownerAddress !== ZeroAddress
     ) {
       try {
         const result = await axios
@@ -91,29 +87,18 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (!contractData || !offerData) {
       return;
     }
-    let marketplaceContract, marketplaceMethod, marketplaceArguments;
-    if (contractData.diamond) {
-      if (!diamondMarketplaceInstance) {
-        return;
-      }
-      marketplaceContract = diamondMarketplaceInstance;
-      marketplaceMethod = 'buyMintingOffer';
-      marketplaceArguments = [
-        offerData.offerIndex, // Offer Index
-        selectedToken // Token Index
-      ];
-    } else {
-      if (!minterInstance) {
-        return;
-      }
-      marketplaceContract = minterInstance;
-      marketplaceMethod = 'buyToken';
-      marketplaceArguments = [
-        offerData?.offerPool, // Catalog Index
-        offerData?.offerIndex, // Range Index
-        selectedToken // Internal Token Index
-      ];
+    if (!contractData.diamond) {
+      return;
     }
+    if (!diamondMarketplaceInstance) {
+      return;
+    }
+    const marketplaceContract = diamondMarketplaceInstance;
+    const marketplaceMethod = 'buyMintingOffer';
+    const marketplaceArguments: any[] = [
+      offerData.offerIndex, // Offer Index
+      selectedToken // Token Index
+    ];
     marketplaceArguments.push({
       value: offerData.price
     });
@@ -136,7 +121,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         marketplaceMethod,
         marketplaceArguments,
         {
-          intendedBlockchain: blockchain as BlockchainType,
+          intendedBlockchain: blockchain as Hex,
           failureMessage:
             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
           callback: handleTokenBoughtButton,
@@ -159,8 +144,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     blockchain,
     handleTokenBoughtButton,
     diamondMarketplaceInstance,
-    selectedToken,
-    minterInstance
+    selectedToken
   ]);
 
   const { settings, getBlockchainData, refreshBlockchainData } =
@@ -237,8 +221,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [getInfoFromUser]);
 
   const resalePurchase = useCallback(async () => {
-    if (!correctBlockchain(blockchain as BlockchainType)) {
-      web3Switch(blockchain as BlockchainType);
+    if (!correctBlockchain(blockchain)) {
+      web3Switch(blockchain);
       return;
     }
     if (!diamondMarketplaceInstance || !tokenData || !params?.tokenId) {
@@ -297,7 +281,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               getResaleData();
               handleTokenBoughtButton();
             },
-            intendedBlockchain: blockchain as BlockchainType
+            intendedBlockchain: blockchain
           }
         ))
       ) {
@@ -389,7 +373,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (currentUserAddress && !correctBlockchain(blockchain)) {
       return (
         <BuySellButton
-          handleClick={() => web3Switch(blockchain)}
+          handleClick={() => {
+            console.info(blockchain);
+            web3Switch(blockchain);
+          }}
           isColorPurple={true}
           title={`Switch network`}
         />
@@ -398,10 +385,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
 
     // Blockchain is correct and offer exists
     if (tokenData && !Object.values(tokenData)[0]?.isMinted && offerData) {
-      const rawPrice = BigNumber.from(offerData?.price ? offerData?.price : 0);
-      const price = numberTooBigThreshold.gte(rawPrice)
-        ? '0.000+'
-        : formatEther(rawPrice);
+      const rawPrice = BigInt(offerData?.price ? offerData?.price : 0);
+      const price =
+        numberTooBigThreshold >= rawPrice ? '0.000+' : formatEther(rawPrice);
 
       const priceForUSD = formatEther(rawPrice);
 
@@ -424,11 +410,11 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               blockchain && getBlockchainData(blockchain)?.symbol
             }`}
           />
-          {coingeckoRates && (
+          {exchangeRates && (
             <div className="text-sell-button-usd-price">
               $
               {(
-                Number(priceForUSD) * Number(coingeckoRates[blockchain])
+                Number(priceForUSD) * Number(exchangeRates[blockchain])
               ).toFixed(2)}
             </div>
           )}
@@ -437,9 +423,10 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       // Token is minted
     } else if (tokenData && Object.values(tokenData)[0]?.isMinted) {
       if (resaleData) {
-        const price = numberTooBigThreshold.gte(resaleData.price)
-          ? '0.000+'
-          : formatEther(resaleData.price);
+        const price =
+          numberTooBigThreshold >= resaleData.price
+            ? '0.000+'
+            : formatEther(resaleData.price);
         const priceForUSD = formatEther(resaleData.price);
 
         return (
@@ -451,11 +438,11 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               title={`Buy ${price} ${getBlockchainData(blockchain)?.symbol}`}
             />
             <small>Resale offer</small>
-            {coingeckoRates && (
+            {exchangeRates && (
               <div className="text-sell-button-usd-price">
                 $
                 {(
-                  Number(priceForUSD) * Number(coingeckoRates[blockchain])
+                  Number(priceForUSD) * Number(exchangeRates[blockchain])
                 ).toFixed(2)}
               </div>
             )}

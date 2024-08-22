@@ -1,7 +1,3 @@
-//@ts-nocheck
-import React from 'react';
-import { useSelector } from 'react-redux';
-
 import {
   InquireButton,
   InquireContainer,
@@ -12,23 +8,21 @@ import {
   InquireWrapper
 } from './InquiriesItems';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 
 const InquiriesPage = () => {
-  const { primaryColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
-
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
-
-  const { userRd } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
+  const { primaryColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
   );
 
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
+
+  const { email, isLoggedIn, nickName } = useAppSelector((store) => store.user);
+
   const onReset = () => {
-    const formEl = document.getElementById('form');
+    const formEl: HTMLFormElement | null = document.getElementById(
+      'form'
+    ) as HTMLFormElement;
     formEl?.reset();
   };
 
@@ -44,9 +38,9 @@ const InquiriesPage = () => {
           encType="multipart/form-data"
           id="form">
           <>
-            {currentUserAddress && userRd ? (
+            {currentUserAddress && isLoggedIn ? (
               <>
-                {userRd && !userRd.email && (
+                {email && (
                   <>
                     <InquireField>
                       <InquireLabel primaryColor={primaryColor}>
@@ -93,7 +87,7 @@ const InquiriesPage = () => {
                   style={{
                     display: 'none'
                   }}
-                  value={userRd.nickName ? userRd.nickName : ''}
+                  value={nickName ? nickName : ''}
                   name="Name_First"
                   placeholder="Type in your First name"
                 />
@@ -101,18 +95,14 @@ const InquiriesPage = () => {
                   style={{
                     display: 'none'
                   }}
-                  value={userRd.email ? userRd.email : ''}
+                  value={email ? email : ''}
                   name="Email"
                   placeholder="Type in your First name"
                 />
                 <InquireField
-                  className={`${
-                    userRd.email ? 'block-user-inquire-message' : ''
-                  }`}>
+                  className={`${email ? 'block-user-inquire-message' : ''}`}>
                   <InquireLabel
-                    className={`${
-                      userRd.email ? 'label-user-inquire-message' : ''
-                    }`}
+                    className={`${email ? 'label-user-inquire-message' : ''}`}
                     primaryColor={primaryColor}>
                     Message
                   </InquireLabel>{' '}
@@ -124,9 +114,7 @@ const InquiriesPage = () => {
                   />
                 </InquireField>
                 <InquireField
-                  className={`${
-                    userRd.email ? 'block-user-inquire-message' : ''
-                  }`}
+                  className={`${email ? 'block-user-inquire-message' : ''}`}
                   primaryColor={primaryColor}>
                   <div className="btn-hidden"></div>
                   <div className="btn-box-inquire">

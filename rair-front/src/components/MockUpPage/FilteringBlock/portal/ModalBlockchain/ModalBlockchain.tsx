@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import useServerSettings from '../../../../../hooks/useServerSettings';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import { IModalBlockchain, TBlockchainNames } from '../../filteringBlock.types';
 import Modal from '../../modal';
 
@@ -15,7 +15,7 @@ const ModalBlockchain: React.FC<IModalBlockchain> = ({
   click,
   setClick
 }) => {
-  const { blockchainSettings } = useServerSettings();
+  const { blockchainSettings } = useAppSelector((store) => store.settings);
   const [arrBlockchains /*setArrBlockchains*/] = useState(
     blockchainSettings.map((chain) => {
       return {

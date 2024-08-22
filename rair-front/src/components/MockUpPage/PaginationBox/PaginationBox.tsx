@@ -1,10 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import { PaginationBoxStyled } from './PaginationBoxStyled';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { IPaginationBox } from '../mockupPage.types';
 
 const PaginationBox: React.FC<IPaginationBox> = ({
@@ -14,14 +12,11 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   whatPage,
   itemsPerPageNotifications
 }) => {
-  const itemsPerPage = useSelector<RootState, number>(
-    (store) => store.nftDataStore.itemsPerPage
-  );
+  const { itemsPerPage } = useAppSelector((store) => store.tokens);
 
-  const { primaryColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const [page, setPage] = useState<number>(currentPage);
   const [totalPage, setTotalPages] = useState<number>();

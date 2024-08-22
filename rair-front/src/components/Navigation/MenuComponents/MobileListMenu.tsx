@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,19 +6,8 @@ import axios from 'axios';
 
 import MobileNavigationList from './MobileNavigationList';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import {
-  getDataAllClear,
-  getDataAllStart
-} from '../../../ducks/search/actions';
-import {
-  TSearchDataProduct,
-  TSearchDataTokens,
-  TSearchDataUser,
-  TSearchInitialState
-} from '../../../ducks/search/search.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
+import { clearResults, startSearch } from '../../../redux/searchbarSlice';
 import { TAxiosCollectionData } from '../../Header/header.types';
 import ImageCustomForSearch from '../../MockUpPage/utils/image/ImageCustomForSearch';
 
@@ -29,44 +17,36 @@ interface IMobileListMenu {
   click: boolean;
   messageAlert: string | null;
   activeSearch: boolean;
-  primaryColor: string;
   setMessageAlert;
   toggleMenu: (otherPage?: string | undefined) => void;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
-  secondaryColor?: string;
 }
 
 const MobileListMenu: React.FC<IMobileListMenu> = ({
-  primaryColor,
   click,
   activeSearch,
   toggleMenu,
   messageAlert,
   setMessageAlert,
   setTabIndexItems,
-  isSplashPage,
-  secondaryColor
+  isSplashPage
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
-  const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
-    (store) => store.allInformationFromSearch
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
+  const { searchResults } = useAppSelector((store) => store.searchbar);
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { iconColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
+  const { iconColor, primaryColor, secondaryColor } = useAppSelector(
+    (store) => store.colors
   );
 
   const [textSearch, setTextSearch] = useState<string>('');
 
   const goToExactlyContract = useCallback(
     async (addressId: string, collectionIndexInContract: string) => {
-      if (dataAll) {
+      if (searchResults) {
         const response = await axios.get<TAxiosCollectionData>(
           `/api/contracts/${addressId}`
         );
@@ -79,15 +59,15 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
           `/collection/${exactlyContractData.blockchain}/${exactlyContractData.contractAddress}/${exactlyContractData.indexInContract}/0`
         );
         setTextSearch('');
-        dispatch(getDataAllClear());
+        dispatch(clearResults());
       }
     },
-    [dataAll, dispatch, navigate]
+    [searchResults, dispatch, navigate]
   );
 
   const goToExactlyToken = useCallback(
     async (addressId: string, token: string) => {
-      if (dataAll) {
+      if (searchResults) {
         const response = await axios.get<TAxiosCollectionData>(
           `/api/contracts/${addressId}`
         );
@@ -101,10 +81,10 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
           `/tokens/${exactlyTokenData.blockchain}/${exactlyTokenData.contractAddress}/0/${token}`
         );
         setTextSearch('');
-        dispatch(getDataAllClear());
+        dispatch(clearResults());
       }
     },
-    [dataAll, dispatch, navigate]
+    [searchResults, dispatch, navigate]
   );
 
   const goToExactlyUser = (userAddress) => {
@@ -146,7 +126,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
 
   useEffect(() => {
     if (textSearch.length > 0) {
-      dispatch(getDataAllStart(textSearch));
+      dispatch(startSearch({ searchTerm: textSearch }));
     }
   }, [dispatch, textSearch]);
 
@@ -209,11 +189,11 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                   <div className="search-holder">
                     {textSearch && (
                       <>
-                        {dataAll && dataAll?.products.length > 0 ? (
+                        {searchResults && searchResults?.products.length > 0 ? (
                           <div className="data-find-wrapper">
                             <h5>Products</h5>
-                            {dataAll?.products.map(
-                              (item: TSearchDataProduct, index: number) => (
+                            {searchResults?.products.map(
+                              (item, index: number) => (
                                 <div
                                   key={Number(index) + Math.random()}
                                   className="data-find">
@@ -243,10 +223,10 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                         ) : (
                           <></>
                         )}
-                        {dataAll && dataAll?.tokens.length > 0 ? (
+                        {searchResults && searchResults?.tokens.length > 0 ? (
                           <div className="data-find-wrapper">
                             <h5>Tokens</h5>
-                            {dataAll?.tokens.map(
+                            {searchResults?.tokens.map(
                               (item: TSearchDataTokens, index: number) => (
                                 <div
                                   key={Number(index) + Math.random()}

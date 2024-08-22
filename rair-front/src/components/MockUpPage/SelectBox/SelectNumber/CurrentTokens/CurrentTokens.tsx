@@ -1,15 +1,12 @@
 import React, { memo } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
-import { RootState } from '../../../../../ducks';
-import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../../hooks/useServerSettings';
 import { StyledShevronIcon } from '../../../FilteringBlock/FilteringBlockItems/FilteringBlockItems';
 import { ICurrentTokensComponent } from '../../selectBox.types';
 
 const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
-  primaryColor,
   isBack,
   isOpen,
   setIsOpen,
@@ -20,10 +17,8 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   numberRef,
   totalCount
 }) => {
-  const { primaryButtonColor, textColor, iconColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, primaryButtonColor, textColor, iconColor } =
+    useAppSelector((store) => store.colors);
 
   const { customSecondaryColor } = useServerSettings();
 

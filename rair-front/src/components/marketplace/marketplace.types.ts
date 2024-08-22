@@ -1,4 +1,5 @@
-import { BigNumber } from 'ethers';
+import { Contract } from 'ethers';
+import { Hex } from 'viem';
 
 export type TBatchRowPropsType = {
   index: number;
@@ -27,7 +28,7 @@ export type TOfferType = {
 };
 
 export type TOfferData = TOfferType & {
-  blockchain: BlockchainType;
+  blockchain: Hex;
   contractAddress: string;
   productIndex: string;
   productName: string;
@@ -42,25 +43,24 @@ export type TMinterMarketplaceItemType = {
 };
 
 export type TBuyTokenModalContentType = {
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   start: string;
   end: string;
-  price: BigNumber;
+  price: bigint;
   offerIndex: string;
   rangeIndex?: string;
   offerName: string;
-  minterAddress: string | undefined;
   diamonds?: boolean;
   buyTokenFunction?: (
     offerIndex: string,
     tokenIndex: string,
-    price: BigNumber
+    price: bigint
   ) => void;
   buyTokenBatchFunction?: (
     offerIndex: string,
     tokens: number[],
     addresses: string[],
-    price: BigNumber
+    price: bigint
   ) => void;
 };
 

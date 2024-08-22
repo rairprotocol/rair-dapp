@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { utils } from 'ethers';
-import { isAddress } from 'ethers/lib/utils';
+import { isAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import { diamondFactoryAbi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import useServerSettings from '../../hooks/useServerSettings';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { validateInteger } from '../../utils/metamaskUtils';
@@ -19,9 +16,9 @@ import InputSelect from '../common/InputSelect';
 const ImportExternalContract = () => {
   const [selectedContract, setSelectedContract] = useState<string>('');
   const [resultData, setResultData] = useState<string>('');
-  const [selectedBlockchain, setSelectedBlockchain] = useState<
-    BlockchainType | 'null'
-  >('null');
+  const [selectedBlockchain, setSelectedBlockchain] = useState<Hex | 'null'>(
+    'null'
+  );
   const [owner, setOwner] = useState<string>('');
   const [sendingData, setSendingData] = useState<boolean>(false);
   const [limit, setLimit] = useState<number>(0);
@@ -30,7 +27,7 @@ const ImportExternalContract = () => {
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
-  const { blockchainSettings } = useServerSettings();
+  const { blockchainSettings } = useAppSelector((store) => store.settings);
 
   useEffect(() => {
     const report = (socketData) => {
@@ -63,13 +60,9 @@ const ImportExternalContract = () => {
       };
     });
 
-  const { contractCreator } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
-  const { primaryButtonColor, secondaryButtonColor, textColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { contractCreator } = useContracts();
+  const { primaryButtonColor, secondaryButtonColor, textColor } =
+    useAppSelector((store) => store.colors);
 
   const callImport = async () => {
     if (!validateInteger(limit)) {
@@ -103,7 +96,7 @@ const ImportExternalContract = () => {
       return;
     }
     if (!correctBlockchain(selectedBlockchain)) {
-      web3Switch(selectedBlockchain as BlockchainType);
+      web3Switch(selectedBlockchain);
       return;
     }
     if (!contractCreator) {
@@ -182,7 +175,7 @@ const ImportExternalContract = () => {
           sendingData ||
           !validateInteger(limit) ||
           selectedBlockchain === 'null' ||
-          !utils.isAddress(selectedContract)
+          !isAddress(selectedContract)
         }
         className="btn rair-button col-12"
         style={{

@@ -2,7 +2,7 @@ import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface IPopUpVideoChangeBox {
-  primaryColor: string;
+  primaryColor?: string;
 }
 
 export const PopUpVideoChangeBox = styled.div.withConfig({

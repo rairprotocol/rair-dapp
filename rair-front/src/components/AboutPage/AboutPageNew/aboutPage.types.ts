@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 export interface IAboutPageNew {
   headerLogoBlack?: string;
   headerLogoWhite?: string;
-  setIsSplashPage: (arg: boolean) => void;
+  setIsSplashPage: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface IMainBlock {
@@ -23,10 +23,6 @@ export interface IStreamsAbout {
 export interface IRoadMap {
   primaryColor: string;
   RairLogo?: string;
-}
-
-export interface ILeftTokenAbout {
-  primaryColor: string;
 }
 
 export interface IRairOffer {

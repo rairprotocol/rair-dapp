@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import {
   faChevronDown,
   faChevronUp,
@@ -7,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { RootState } from '../../../ducks';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { IModalHelp } from '../splashPage.types';
 
 const ModalHelp: React.FC<IModalHelp> = ({
@@ -18,9 +17,7 @@ const ModalHelp: React.FC<IModalHelp> = ({
   backgroundColor,
   templateOverride
 }) => {
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const dappUrl = window.location.host;
   const metamaskAppDeepLink = 'https://metamask.app.link/dapp/' + dappUrl;

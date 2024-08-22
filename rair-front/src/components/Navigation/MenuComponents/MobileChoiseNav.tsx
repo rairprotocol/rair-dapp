@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
-import { RootState } from '../../../ducks';
-import { setColorScheme } from '../../../ducks/colors/actions';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { BellIcon, SunIcon } from '../../../images';
+import { setColorScheme } from '../../../redux/colorSlice';
 import {
   SocialBox,
   UserIconMobile
@@ -29,24 +26,23 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   currentUserAddress,
   handleMessageAlert
 }) => {
-  const { primaryColor, headerLogoMobile } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
-  const dispatch = useDispatch();
-  const { userRd } = useSelector<RootState, TUsersInitialState>(
-    (state) => state.userStore
+  const { primaryColor, headerLogoMobile } = useAppSelector(
+    (store) => store.colors
+  );
+  const dispatch = useAppDispatch();
+  const { nickName, isLoggedIn, avatar } = useAppSelector(
+    (state) => state.user
   );
   const [notificationCount, setNotificationCount] = useState<number>(0);
 
   const getNotificationsCount = useCallback(async () => {
-    if (currentUserAddress) {
+    if (currentUserAddress && isLoggedIn) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
     }
-  }, [currentUserAddress, messageAlert]);
+  }, [currentUserAddress, messageAlert, isLoggedIn]);
 
   useEffect(() => {
     getNotificationsCount();
@@ -61,22 +57,22 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
             <div className="social-media-profile">
               <UserIconMobile
                 onClick={() => handleMessageAlert('profile')}
-                avatar={userRd && userRd.avatar}
+                avatar={avatar}
                 marginRight={'16px'}
                 messageAlert={messageAlert}
                 primaryColor={primaryColor}>
-                {userRd && !userRd.avatar && (
+                {isLoggedIn && !avatar && (
                   <SvgUserIcon width={'22.5px'} height={'22.5px'} />
                 )}
               </UserIconMobile>
               <div>
-                {userRd && (
+                {isLoggedIn && (
                   <>
-                    {userRd.nickName && userRd.nickName.length > 13
-                      ? userRd.nickName.slice(0, 5) +
+                    {nickName && nickName.length > 13
+                      ? nickName.slice(0, 5) +
                         '...' +
-                        userRd.nickName.slice(userRd.nickName.length - 4)
-                      : userRd.nickName}
+                        nickName.slice(nickName.length - 4)
+                      : nickName}
                   </>
                 )}
               </div>
@@ -123,7 +119,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                     )
                   );
                 }}>
-                <SunIcon primaryColor={primaryColor} />
+                <SunIcon />
               </SocialBox>
             </>
           )}

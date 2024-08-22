@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,11 +12,11 @@ import { TitleSingleTokenView } from './TitleSingleTokenView';
 import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
 
 import { TFileType, TNftItemResponse } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../hooks/useReduxHooks';
 import { ExpandImageIcon } from '../../../../images';
 import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
 import { rFetch } from '../../../../utils/rFetch';
@@ -30,6 +29,7 @@ import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
 import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import TitleCollection from './TitleCollection/TitleCollection';
+import { MediaFile } from '../../../../types/databaseTypes';
 
 const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,
@@ -40,8 +40,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   selectedData,
   selectedToken,
   setSelectedToken,
-  // totalCount,
-  textColor,
   offerData,
   offerDataInfo,
   someUsersData,
@@ -50,12 +48,10 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   setTokenNumber,
   getProductsFromOffer
 }) => {
-  const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
-    (state) => state.nftDataStore
-  );
+  const { currentCollection } = useAppSelector((state) => state.tokens);
   const { tokenId } = useParams();
 
-  const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
+  const [selectVideo, setSelectVideo] = useState<MediaFile | undefined>();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const [verticalImage, setVerticalImage] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
@@ -70,17 +66,15 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     setPlaying((prev) => !prev);
   };
 
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const [tokenFullData, setTokenFullData] = useState<any>(undefined);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const getTokenData = useCallback(async () => {
-    if (tokenData && tokenId) {
+    if (currentCollection && tokenId) {
       const response = await rFetch(
-        `/api/tokens/id/${tokenData[0]._id}`,
+        `/api/tokens/id/${currentCollection[0]._id}`,
         undefined,
         undefined,
         undefined
@@ -89,7 +83,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
         setTokenDataForResale(response.tokenData);
       }
     }
-  }, [tokenData, tokenId]);
+  }, [currentCollection, tokenId]);
 
   useEffect(() => {
     getTokenData();
@@ -187,7 +181,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
       });
 
       setTokenFullData(mapping);
-      getProductsFromOffer();
+      getProductsFromOffer && getProductsFromOffer();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain, contract, product, setTokenFullData, tokenId]);
@@ -208,7 +202,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
 
   useEffect(() => {
     setDocumentTitle('Single Token');
-    dispatch(setShowSidebarTrue());
   }, [dispatch]);
 
   useEffect(() => {
@@ -249,7 +242,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   }, [offerDataInfo]);
 
   useEffect(() => {
-    if (selectedToken) {
+    if (selectedToken && setTokenNumber) {
       setTokenNumber(Number(selectedToken));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -402,13 +395,11 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               tokenData={tokenFullData}
               handleClickToken={handleClickToken}
               setSelectedToken={setSelectedToken}
-              totalCount={serialNumberData}
-              blockchain={blockchain as BlockchainType}
+              blockchain={blockchain}
               offerData={offerData}
               product={product}
               contract={contract}
               selectedToken={selectedToken}
-              textColor={textColor}
               handleTokenBoughtButton={fetchTokenFullData}
               tokenDataForResale={tokenDataForResale}
             />
@@ -441,10 +432,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             />
           </div>
           {selectedData?.attributes && selectedData?.attributes?.length > 0 ? (
-            <SingleTokenViewProperties
-              selectedData={selectedData}
-              textColor={textColor}
-            />
+            <SingleTokenViewProperties selectedData={selectedData} />
           ) : (
             <div className="description-text">
               {`This ${

@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { teamNFTNYCArray } from './AboutUsTeam';
 
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
 import { useNFTNYC } from '../../../utils/infoSplashData/nftnyc';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import CustomButton from '../../MockUpPage/utils/button/CustomButton';
@@ -37,17 +35,15 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const { splashData } = useNFTNYC(connectUserData);
   const reactSwal = useSwal();
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'NFTNYC X RAIR',
         ogTitle: 'NFTNYC X RAIR',
         twitterTitle: 'NFTNYC X RAIR',
@@ -83,7 +79,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
   };
 
   useEffect(() => {
-    dispatch(setRealChain(ukraineglitchChainId));
+    dispatch(setRequestedChain(ukraineglitchChainId));
     //eslint-disable-next-line
   }, []);
 

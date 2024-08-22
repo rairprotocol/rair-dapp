@@ -79,21 +79,42 @@ exports.getFeaturedCollection = async (req, res, next) => {
 
 exports.getServerSettings = async (req, res, next) => {
   try {
-    const settings = await ServerSetting.findOne({}, {
-      'footerLinks._id': false,
-      'customValues._id': false,
-    }).lean();
+    const [settings] = await ServerSetting.aggregate(
+      [
+        {
+          $lookup: {
+            from: 'Product',
+            let: {
+              productId: '$featuredCollection',
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ['$$productId', '$_id'],
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: true,
+                  contract: true,
+                },
+              },
+            ],
+            as: 'featuredCollection',
+          },
+        },
+        { $unwind: '$featuredCollection' },
+        {
+          $project: {
+            'footerLinks._id': false,
+            'customValues._id': false,
+          },
+        },
+      ],
+    );
     const blockchainSettings = await Blockchain.find({});
-    if (settings.featuredCollection) {
-      const collectionData = await Product.findById(settings.featuredCollection).lean();
-      if (collectionData) {
-        const contractData = await Contract.findById(collectionData.contract);
-        if (contractData) {
-          collectionData.contract = contractData;
-        }
-        settings.featuredCollection = collectionData;
-      }
-    }
     return res.json({
       success: true,
       settings,
@@ -181,6 +202,7 @@ exports.getTheme = async (req, res, next) => {
       buttonPrimaryColor,
       buttonFadeColor,
       buttonSecondaryColor,
+      iconColor,
     } = await ServerSetting.findOne({}).lean();
     return res.json({
       success: true,
@@ -195,6 +217,7 @@ exports.getTheme = async (req, res, next) => {
         buttonPrimaryColor,
         buttonFadeColor,
         buttonSecondaryColor,
+        iconColor,
       },
     });
   } catch (error) {

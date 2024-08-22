@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
 import { IFooter } from './footer.types';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
-import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../images';
-import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import useSwal from '../../hooks/useSwal';
 
 import {
-  CommunityBlock,
-  CommunityBoxFooter,
-  FooterEmailBlock,
   FooterImage,
   FooterMain,
   FooterTextRairTech,
@@ -30,17 +23,17 @@ const Footer: React.FC<IFooter> = () => {
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { headerLogo, primaryColor, textColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const rSwal = useSwal();
+
+  const { headerLogo, primaryColor, textColor, secondaryColor } =
+    useAppSelector((store) => store.colors);
 
   const onChangeEmail = (e) => {
     setEmailChimp(e.target.value);
   };
 
   const onSubmit = () => {
-    Swal.fire(
+    rSwal.fire(
       'Success',
       `Thank you for sign up! Check to your email ${emailChimp}`,
       'success'

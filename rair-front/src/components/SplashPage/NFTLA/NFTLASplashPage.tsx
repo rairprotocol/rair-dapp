@@ -1,18 +1,16 @@
-//@ts-nocheck
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { teamNFTLAarray } from './AboutUsTeam';
-import { ISplashPageProps } from './splashPage.types';
 
-import { RootState } from '../../../ducks';
-import { setInfoSEO } from '../../../ducks/seo/actions';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { setSEOInfo } from '../../../redux/seoSlice';
 import { splashData } from '../../../utils/infoSplashData/nftla';
 import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
+import { ISplashPageProps } from '../splashPage.types';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
 import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
@@ -39,12 +37,10 @@ import './../SplashPageTemplate/AuthorCard/AuthorCard.css';
 //ReactGA.initialize(TRACKING_ID);
 
 const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   // TODO: Until we have a contract it will be commented
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const reactSwal = useSwal();
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
@@ -56,7 +52,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'Official NFTLA Streaming NFTs',
         ogTitle: 'Official NFTLA Streaming NFTs',
         twitterTitle: 'Official NFTLA Streaming NFTs',

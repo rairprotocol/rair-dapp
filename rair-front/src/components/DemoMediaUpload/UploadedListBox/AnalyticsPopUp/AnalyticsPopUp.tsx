@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import { rFetch } from '../../../../utils/rFetch';
 
@@ -14,14 +12,13 @@ interface IAnalyticsPopUp {
   videoId: string;
 }
 
-const AnalyticsPopUp: React.FC<IAnalyticsPopUp> = ({ videoId }) => {
+const AnalyticsPopUp: FC<IAnalyticsPopUp> = ({ videoId }) => {
   const reactSwal = useSwal();
 
   const [watchCounter, setWatchCounter] = useState<number>(0);
-  const { textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const getCounterVideo = useCallback(async () => {
     if (videoId) {

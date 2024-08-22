@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import {
   faArrowRight,
   faExternalLinkAlt
@@ -10,8 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { TableAuthenticity } from './AuthenticityBlockItems';
 
-import { RootState } from '../../../../../ducks';
-import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import { defaultHotDrops } from '../../../../../images';
 import { IAuthenticityBlock } from '../../nftList.types';
 
@@ -24,9 +22,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
   collectionToken,
   selectedData
 }) => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 

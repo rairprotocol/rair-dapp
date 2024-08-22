@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { utils } from 'ethers';
+import { formatEther } from 'ethers';
+import { Hex } from 'viem';
 
 import { erc721Abi } from '../../../../../contracts';
-import { RootState } from '../../../../../ducks';
-import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
+import useContracts from '../../../../../hooks/useContracts';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../../hooks/useServerSettings';
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
@@ -33,38 +32,29 @@ const ModalItem: React.FC<IModalItem> = ({
 
   const [price, setPrice] = useState<number>(0);
   const [isApproved, setIsApproved] = useState<boolean | undefined>(undefined);
-  const {
-    currentChain,
-    currentUserAddress,
-    contractCreator,
-    diamondMarketplaceInstance
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
+  const { diamondMarketplaceInstance, contractCreator } = useContracts();
+  const { connectedChain, currentUserAddress } = useAppSelector(
+    (store) => store.web3
   );
-  const { textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
   const instance = contractCreator?.(selectedData?.contractAddress, erc721Abi);
   const [onMyChain, setOnMyChain] = useState<boolean>(
-    correctBlockchain(selectedData?.blockchain as BlockchainType)
+    correctBlockchain(selectedData?.blockchain as Hex)
   );
 
   const reactSwal = useSwal();
 
   useEffect(() => {
-    setOnMyChain(currentChain === selectedData?.blockchain);
-  }, [currentChain, selectedData]);
+    setOnMyChain(connectedChain === selectedData?.blockchain);
+  }, [connectedChain, selectedData]);
 
   const onCloseModal = useCallback(() => {
     setIsCreatedTab(false);
     setIsOpenBlockchain(false);
     setPrice(0);
   }, [setIsOpenBlockchain, setIsCreatedTab]);
-
-  useEffect(() => {
-    setOnMyChain(currentChain === selectedData?.blockchain);
-  }, [currentChain, selectedData?.blockchain]);
 
   const createResaleOffer = async () => {
     if (onMyChain && isApproved) {
@@ -104,7 +94,7 @@ const ModalItem: React.FC<IModalItem> = ({
       });
       if (
         await web3TxHandler(instance, 'approve', [
-          diamondMarketplaceInstance?.address,
+          await diamondMarketplaceInstance?.getAddress(),
           selectedData?.uniqueIndexInContract
         ])
       ) {
@@ -123,10 +113,10 @@ const ModalItem: React.FC<IModalItem> = ({
       const approved =
         (await web3TxHandler(instance, 'getApproved', [
           selectedData?.uniqueIndexInContract
-        ])) === diamondMarketplaceInstance.address ||
+        ])) === (await diamondMarketplaceInstance.getAddress()) ||
         (await web3TxHandler(instance, 'isApprovedForAll', [
           currentUserAddress,
-          diamondMarketplaceInstance.address
+          await diamondMarketplaceInstance.getAddress()
         ]));
       setIsApproved(approved);
     }
@@ -187,7 +177,7 @@ const ModalItem: React.FC<IModalItem> = ({
               <div className="border-stimorol rounded-rair">
                 {validateInteger(price) && (
                   <>
-                    {utils.formatEther(price)}{' '}
+                    {formatEther(price)}{' '}
                     {selectedData?.blockchain &&
                       getBlockchainData(selectedData.blockchain)?.symbol}
                   </>
@@ -208,7 +198,7 @@ const ModalItem: React.FC<IModalItem> = ({
             {isCreatedTab ? (
               <span>
                 Price for this NFT on the marketplace :{' '}
-                {utils.formatEther(Number(selectedData?.offer?.price))}{' '}
+                {formatEther(Number(selectedData?.offer?.price))}{' '}
                 {selectedData?.blockchain &&
                   getBlockchainData(selectedData.blockchain)?.symbol}
               </span>
@@ -227,7 +217,7 @@ const ModalItem: React.FC<IModalItem> = ({
                       createResaleOffer();
                     }
                   } else {
-                    web3Switch(selectedData?.blockchain as BlockchainType);
+                    web3Switch(selectedData?.blockchain as Hex);
                   }
                 }}>
                 {onMyChain

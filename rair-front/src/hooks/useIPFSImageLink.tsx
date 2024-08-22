@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-function useIPFSImageLink(initialImageLink: any) {
-  const [ipfsLink, setIpfsLink] = useState<any>('');
+function useIPFSImageLink(initialImageLink: string) {
+  const [ipfsLink, setIpfsLink] = useState<string>('');
   useEffect(() => {
     if (initialImageLink) {
       const linkSplit = initialImageLink?.split('/');

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 import { faGem, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, constants, utils } from 'ethers';
+import { formatEther, ZeroAddress } from 'ethers';
 
 import {
   IBatchTokenSelector,
@@ -12,9 +12,8 @@ import {
 } from './consumerMode.types';
 
 import { diamondFactoryAbi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
@@ -28,10 +27,8 @@ const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({
   const [batchArray, setBatchArray] = useState<TAux[]>([]);
   const [rerender, setRerender] = useState<boolean>(false);
 
-  const { primaryButtonColor, textColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryButtonColor, textColor, secondaryButtonColor } =
+    useAppSelector((store) => store.colors);
 
   const addRecipient = () => {
     if (batchArray.length >= +max) {
@@ -118,10 +115,9 @@ const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({
 const TokenSelector: React.FC<ITokenSelector> = ({ buyCall, max, min }) => {
   const [tokenId, setTokenId] = useState<string>(min);
 
-  const { textColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, secondaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   return (
     <details>
@@ -161,10 +157,8 @@ const DiamondMarketplace = () => {
     useState<boolean>(false);
   const [treasuryAddress, setTreasuryAddress] = useState<string>();
 
-  const { diamondMarketplaceInstance, contractCreator, currentChain } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
+  const { connectedChain } = useAppSelector((store) => store.web3);
+  const { diamondMarketplaceInstance, contractCreator } = useContracts();
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
 
@@ -178,7 +172,7 @@ const DiamondMarketplace = () => {
     textColor,
     secondaryButtonColor,
     primaryButtonColor
-  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  } = useAppSelector((store) => store.colors);
 
   const fetchDiamondData = useCallback(async () => {
     if (!diamondMarketplaceInstance) {
@@ -217,7 +211,7 @@ const DiamondMarketplace = () => {
   const mintTokenCall = async (
     offerIndex: string,
     nextToken: string,
-    price: BigNumber
+    price: bigint
   ) => {
     //setTransactionInProgress(true);
     reactSwal.fire({
@@ -258,7 +252,7 @@ const DiamondMarketplace = () => {
     offerIndex: string,
     tokens: number[],
     addresses: string[],
-    price: BigNumber
+    price: bigint
   ) => {
     if (!diamondMarketplaceInstance) {
       return;
@@ -276,7 +270,7 @@ const DiamondMarketplace = () => {
         tokens,
         addresses,
         {
-          value: price.mul(tokens.length)
+          value: BigInt(price.toString()) * BigInt(tokens.length)
         }
       ])
     ) {
@@ -301,7 +295,7 @@ const DiamondMarketplace = () => {
           ? 'Loading data, please wait...'
           : `${offersArray.length} offers found.`}
       </div>
-      {treasuryAddress === constants.AddressZero && (
+      {treasuryAddress === ZeroAddress && (
         <button
           className="btn rair-button"
           style={{
@@ -350,8 +344,8 @@ const DiamondMarketplace = () => {
             </h5>{' '}
             tokens available for{' '}
             <h5 style={{ display: 'inline' }}>
-              {utils.formatEther(offer.price)}{' '}
-              {currentChain && getBlockchainData(currentChain)?.symbol}
+              {formatEther(offer.price)}{' '}
+              {connectedChain && getBlockchainData(connectedChain)?.symbol}
             </h5>
             <br />
             <h5 className="w-100 text-center px-5">
@@ -422,8 +416,7 @@ const DiamondMarketplace = () => {
                           buyTokenBatchFunction={batchMint}
                           start={offer.startingToken}
                           end={offer.endingToken}
-                          blockchain={currentChain}
-                          minterAddress={diamondMarketplaceInstance?.address}
+                          blockchain={connectedChain}
                           price={offer.price}
                           offerName={offer.name}
                           offerIndex={offer.offerIndex}

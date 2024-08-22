@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import videoIcon from '../../../images/videoIcon.svg';
 import { rFetch } from '../../../utils/rFetch';
 import LoadingComponent from '../../common/LoadingComponent';
@@ -19,14 +16,10 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   contractData,
   stepNumber
 }) => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   const { address, collectionIndex } = useParams();
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
   const [loading, setLoading] = useState<boolean>(false);
 
   const [mediaUploadedList, setMediaUploadedList] = useState<any>([]);

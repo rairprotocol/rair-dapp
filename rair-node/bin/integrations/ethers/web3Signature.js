@@ -170,6 +170,7 @@ module.exports = {
       cache.del(MetaMessage);
       cache.del(`${userAddress}secret`);
       req.metaAuth = { recovered: userAddress };
+      req.web3LoginMethod = 'web3auth';
     } else {
       req.metaAuth = undefined;
     }
@@ -177,6 +178,7 @@ module.exports = {
   },
   validateChallengeV2: async (req, res, next) => {
     req.metaAuth = await validateChallenge(req, 'body');
+    req.web3LoginMethod = 'metamask';
     return next();
   },
 };

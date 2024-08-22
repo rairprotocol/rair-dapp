@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import { ISelectNumber } from '../selectBox.types';
 
 import { CurrentTokens } from './CurrentTokens/CurrentTokens';
@@ -16,13 +14,11 @@ const SelectNumber: React.FC<ISelectNumber> = ({
   handleClickToken,
   selectedToken,
   setSelectedToken,
-  totalCount,
   product,
   contract
 }) => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
+  const { currentCollectionTotal } = useAppSelector((store) => store.tokens);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const numberRef = useRef<HTMLDivElement>(null);
@@ -52,7 +48,7 @@ const SelectNumber: React.FC<ISelectNumber> = ({
     handleIsOpen();
   };
 
-  return totalCount && totalCount.length < 100 ? (
+  return currentCollectionTotal < 100 ? (
     <CurrentTokens
       primaryColor={primaryColor}
       items={items}
@@ -62,7 +58,6 @@ const SelectNumber: React.FC<ISelectNumber> = ({
       numberRef={numberRef}
       handleIsOpen={handleIsOpen}
       onClickItem={onClickItem}
-      totalCount={totalCount}
     />
   ) : (
     <ListOfTokens
@@ -77,7 +72,6 @@ const SelectNumber: React.FC<ISelectNumber> = ({
       setSelectedToken={setSelectedToken}
       selectedToken={selectedToken}
       setIsOpen={setIsOpen}
-      totalCount={totalCount}
     />
   );
 };

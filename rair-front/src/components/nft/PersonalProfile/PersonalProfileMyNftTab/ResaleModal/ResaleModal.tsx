@@ -1,13 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CloseIcon from '@mui/icons-material/Close';
-import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
+import { formatEther, formatUnits, parseEther } from 'ethers';
 
-import { RootState } from '../../../../../ducks';
-import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
+import useContracts from '../../../../../hooks/useContracts';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../../hooks/useServerSettings';
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
@@ -37,15 +35,14 @@ const ResaleModal: React.FC<IResaleModal> = ({
   getMyNft,
   totalNft
 }) => {
-  const { diamondMarketplaceInstance, currentUserAddress, coingeckoRates } =
-    useSelector<RootState, ContractsInitialType>(
-      (state) => state.contractStore
-    );
+  const { currentUserAddress, exchangeRates } = useAppSelector(
+    (state) => state.web3
+  );
+  const { diamondMarketplaceInstance } = useContracts();
 
-  const { primaryColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const { getBlockchainData } = useServerSettings();
 
@@ -384,14 +381,14 @@ const ResaleModal: React.FC<IResaleModal> = ({
                     {' '}
                     $
                     {commissionFee &&
-                    coingeckoRates &&
+                    exchangeRates &&
                     commissionFee.creatorFee &&
                     commissionFee.creatorFee.length > 0
                       ? (
                           ((Number(inputSellValue) *
                             Number(commissionFee.creatorFee)) /
                             100) *
-                          coingeckoRates[item.contract.blockchain]
+                          exchangeRates[item.contract.blockchain]
                         ).toFixed(2)
                       : '0'}
                   </div>
@@ -400,7 +397,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   <div>
                     {inputSellValue.length <= 10 &&
                       commissionFee &&
-                      coingeckoRates && (
+                      exchangeRates && (
                         <div>
                           $
                           {(
@@ -408,7 +405,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                               (Number(commissionFee.nodeFee) +
                                 Number(commissionFee.treasuryFee))) /
                               100) *
-                            coingeckoRates[item.contract.blockchain]
+                            exchangeRates[item.contract.blockchain]
                           ).toFixed(2)}
                         </div>
                       )}
@@ -419,7 +416,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                     $
                     {inputSellValue.length <= 10 &&
                     commissionFee &&
-                    coingeckoRates &&
+                    exchangeRates &&
                     correctBlockchain(item.contract.blockchain)
                       ? (
                           (Number(inputSellValue) -
@@ -430,7 +427,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                                     ? Number(commissionFee.treasuryFee)
                                     : 0)))) /
                               100) *
-                          coingeckoRates[item.contract.blockchain]
+                          exchangeRates[item.contract.blockchain]
                         ).toFixed(2)
                       : '0'}
                   </div>

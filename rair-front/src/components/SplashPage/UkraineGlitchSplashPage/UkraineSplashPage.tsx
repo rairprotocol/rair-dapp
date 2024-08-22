@@ -1,14 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC, useEffect, useState } from 'react';
 
 import { teamUkraineArray } from './AboutUsTeam';
 
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 import { splashData } from '../../../utils/infoSplashData/ukraineSplashPage';
 /* importing images*/
@@ -47,32 +43,23 @@ import './UkraineSplash.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const UkraineSplashPage: React.FC<ISplashPageProps> = ({
+const UkraineSplashPage: FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [soldCopies, setSoldCopies] = useState<number>(0);
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
-  const { currentChain, minterInstance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurshaseList] = useState(true);
   const ukraineglitchChainId = '0x1';
-  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'Слава Україні!',
         ogTitle: 'Слава Україні!',
         twitterTitle: 'Слава Україні!',
@@ -102,31 +89,8 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
 
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
-  const getAllProduct = useCallback(async () => {
-    if (loggedIn && minterInstance && splashData.purchaseButton?.offerIndex) {
-      if (
-        currentChain === splashData.purchaseButton?.requiredBlockchain &&
-        splashData.purchaseButton?.offerIndex
-      ) {
-        setSoldCopies(
-          (
-            await minterInstance.getOfferRangeInfo(
-              ...splashData.purchaseButton.offerIndex
-            )
-          ).tokensAllowed.toString()
-        );
-      } else {
-        setSoldCopies(0);
-      }
-    }
-  }, [setSoldCopies, loggedIn, currentChain, minterInstance]);
-
   useEffect(() => {
-    getAllProduct();
-  }, [getAllProduct]);
-
-  useEffect(() => {
-    dispatch(setRealChain(ukraineglitchChainId));
+    dispatch(setRequestedChain(ukraineglitchChainId));
     //eslint-disable-next-line
   }, []);
 

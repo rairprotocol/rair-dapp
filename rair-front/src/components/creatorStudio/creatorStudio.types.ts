@@ -1,6 +1,7 @@
 import { MouseEvent } from 'react';
 import { ReactNode } from 'react';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
+import { Hex } from 'viem';
 
 import {
   TAttributes,
@@ -15,9 +16,9 @@ import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 export interface IMarketplaceOfferConfig {
   array: TMarketplaceOfferConfigArrayItem[];
   index: number;
-  nodeFee: BigNumber;
+  nodeFee: bigint;
   minterDecimals: number;
-  treasuryFee: BigNumber;
+  treasuryFee: bigint;
   treasuryAddress: string;
   simpleMode: boolean;
   rerender: () => void;
@@ -55,11 +56,11 @@ export interface ICustomFeeRow {
   recipient: string | undefined;
   canBeContract: boolean;
   deleter: (index: number) => void;
-  percentage: BigNumber;
+  percentage: bigint;
   rerender: () => void;
   editable: boolean;
   message?: string;
-  minterDecimals: BigNumber;
+  minterDecimals: bigint;
   disabled?: boolean;
   marketValuesChanged?: boolean;
   setMarketValuesChanged?: (value: boolean) => void;
@@ -89,7 +90,7 @@ export type TParamsBatchMetadata = {
 
 export type TCustomPayments = {
   recipient: string | undefined;
-  percentage: BigNumber;
+  percentage: bigint;
   editable: boolean;
   message?: string;
   canBeContract: boolean;
@@ -189,7 +190,6 @@ export type TWorkflowContextType = {
   mintingRole: boolean | undefined;
   traderRole: boolean | undefined;
   onMyChain: boolean | undefined;
-  correctMinterInstance: ethers.Contract | undefined;
   tokenInstance: ethers.Contract | TContractData | undefined;
   simpleMode: boolean;
   forceRefetch: () => void;
@@ -328,12 +328,7 @@ export type TNextToken = Pick<
 >;
 export type TResaleMarketplace = Pick<
   TWorkflowContextType,
-  | 'contractData'
-  | 'correctMinterInstance'
-  | 'setStepNumber'
-  | 'gotoNextStep'
-  | 'goBack'
-  | 'simpleMode'
+  'contractData' | 'setStepNumber' | 'gotoNextStep' | 'goBack' | 'simpleMode'
 > & {
   stepNumber: number;
 };
@@ -426,7 +421,7 @@ export type TNftMapping = {
 
 export type TParamsContractDetails = {
   address: string;
-  blockchain: BlockchainType;
+  blockchain: Hex;
 };
 
 export type TWorkflowParams = TParamsContractDetails & {
@@ -436,7 +431,7 @@ export type TWorkflowParams = TParamsContractDetails & {
 export type TSetData = {
   title: string;
   contractAddress: string;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   products: TProducts[];
 };
 
@@ -452,7 +447,7 @@ export type IForwardFunctions = {
 };
 
 export type TContractsNetworkContract = {
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   contractAddress: string;
   creationDate: string;
   diamond: boolean;
@@ -496,7 +491,7 @@ export type TProductDataLocal = {
 export type TSetDataUseState = {
   title: string;
   contractAddress: string;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   products: TProductDataLocal[];
 };
 
@@ -508,7 +503,7 @@ export interface INavigatorContract {
   children: ReactNode;
   contractAddress: string;
   contractName: string;
-  contractBlockchain: BlockchainType | undefined;
+  contractBlockchain: Hex | undefined;
   contractProducts?: any;
 }
 
@@ -536,6 +531,6 @@ export type TApiContractsResponseType = {
 export type TContractsArray = {
   address: string;
   name: string;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   diamond: boolean;
 };

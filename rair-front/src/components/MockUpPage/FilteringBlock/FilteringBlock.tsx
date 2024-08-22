@@ -1,10 +1,7 @@
-//@ts-nocheck
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import {
   GlobalModalContext,
@@ -45,16 +42,14 @@ const FilteringBlock = ({
 }: any) => {
   const [filterPopUp, setFilterPopUp] = useState(false);
   const [, /*filterItem*/ setFilterItem] = useState('Filters');
-  const filterRef = useRef();
+  const filterRef = useRef<HTMLDivElement | null>(null);
   const [filterCloseText, setFilterClose] = useState(false);
 
   const [sortPopUp, setSortPopUp] = useState(false);
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement | null>(null);
 
-  const { primaryColor, secondaryColor, textColor, iconColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, secondaryColor, textColor, iconColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
 
   const [isOpenCategories, setIsOpenCategories] = useState(false);
   const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
@@ -90,13 +85,13 @@ const FilteringBlock = ({
   };
 
   const handleClickOutSideFilter = (e) => {
-    if (hotdropsVar !== 'true' && !filterRef.current.contains(e.target)) {
+    if (hotdropsVar !== 'true' && !filterRef?.current?.contains(e.target)) {
       setFilterPopUp(false);
     }
   };
 
   const handleClickOutSideSort = (e) => {
-    if (!sortRef.current.contains(e.target)) {
+    if (!sortRef.current?.contains(e.target)) {
       setSortPopUp(false);
     }
   };
@@ -199,7 +194,7 @@ const FilteringBlock = ({
           <SelectSortPopUp
             className={`select-sort-title-pop-up`}
             primaryColor={primaryColor}
-            secondaryColor={secondaryColor}
+            isDarkMode={isDarkMode}
             textColor={textColor}>
             {
               <div className="sort-popup-home-page">

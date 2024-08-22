@@ -1,4 +1,3 @@
-//@ts-nocheck
 import {
   FC,
   useCallback,
@@ -7,7 +6,6 @@ import {
   useRef,
   useState
 } from 'react';
-import { useSelector } from 'react-redux';
 
 import {
   MobileCloseBtn,
@@ -21,16 +19,14 @@ import {
 import { HomePageModalFilter } from './HomePAgeModal';
 import { MobileHeaderBlock } from './MobileHeaderBlock';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
-// import { IFilterModal } from '.';
 import {
   GlobalModalContext,
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
 import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
-import { rFetch } from '../../../utils/rFetch';
+import { Blockchain } from '../../../types/databaseTypes';
 import CustomAccordion from '../../Accordion/Accordion';
 import AccordionItem from '../../Accordion/AccordionItem/AccordionItem';
 import { TOption } from '../../Dropdown';
@@ -40,13 +36,21 @@ import { closeModal, openModal } from '../helpers/OnOpenModal';
 import './styles.css';
 export type THomePageFilterModalProps = {
   isMobileDesign?: boolean;
-  className?: stirng;
+  className?: string;
 };
+
+interface CategoryOption {
+  name: string;
+  clicked: boolean;
+  optionId: number;
+  categoryId: string;
+}
+
 const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   isMobileDesign,
   className
 }) => {
-  const { blockchainSettings } = useServerSettings();
+  const { blockchainSettings } = useAppSelector((store) => store.settings);
   const blockchains = blockchainSettings.map((chain, index) => {
     return {
       name: chain.name,
@@ -57,9 +61,13 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
     };
   });
 
-  const [blockchainsArray, setBlockchainsArray] = useState(undefined);
+  const [blockchainsArray, setBlockchainsArray] = useState<Array<Blockchain>>(
+    []
+  );
 
-  const [categories, setCategories] = useState([]);
+  const { categories } = useAppSelector((store) => store.settings);
+
+  const [categoryList, setCategoryList] = useState<Array<CategoryOption>>([]);
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
   const [isBlockchainOpen, setIsBlockchainOpen] = useState<boolean>(false);
@@ -73,10 +81,9 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
     Array<TOption | undefined>
   >([]);
 
-  const { textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor, isDarkMode } = useAppSelector(
+    (store) => store.colors
+  );
 
   const {
     primaryColor,
@@ -207,7 +214,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       }
     }
     if (selectedItemDataTitle === 'category') {
-      const selectedOption = categories?.find(
+      const selectedOption = categoryList?.find(
         (option) => option?.optionId === selectedOptionId
       );
       if (
@@ -343,8 +350,9 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   );
 
   const returnOption = useCallback(() => {
-    if (sessionStorage.getItem('CategoryItems')) {
-      const arr = JSON.parse(sessionStorage.getItem('CategoryItems'));
+    const storageData = sessionStorage.getItem('CategoryItems');
+    if (storageData) {
+      const arr = JSON.parse(storageData);
 
       if (arr.length > 0) {
         globalModaldispatch({
@@ -390,8 +398,8 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
         setSelectedCategories(arr);
       }
     }
-    if (sessionStorage.getItem('BlockchainItems')) {
-      const arr = JSON.parse(sessionStorage.getItem('BlockchainItems'));
+    if (storageData) {
+      const arr = JSON.parse(storageData);
       if (arr.length > 0) {
         globalModaldispatch({
           type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
@@ -447,11 +455,13 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       <StyledChevronUPIcon
         className={`shevron-icon ${isMobileDesign ? 'mobile-shevrone' : ''}`}
         primaryColor={primaryColor}
+        isDarkMode={isDarkMode}
       />
     ) : (
       <StyledChevronDownIcon
         className={`shevron-icon ${isMobileDesign ? 'mobile-shevrone' : ''}`}
         primaryColor={primaryColor}
+        isDarkMode={isDarkMode}
       />
     );
   const handleCleanFilter = () => {
@@ -469,20 +479,18 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   };
 
   const getCategories = useCallback(async () => {
-    const res = await rFetch(`/api/files/categories`);
-
-    if (res.success) {
-      const categ = res.categories.map((el, index) => {
+    if (categories) {
+      const categ = categories.map((el, index) => {
         return {
           name: el.name,
           clicked: false,
           optionId: index + 7,
-          categoryId: el._id
+          categoryId: el._id!
         };
       });
-      setCategories(categ);
+      setCategoryList(categ);
     }
-  }, [setCategories]);
+  }, [categories]);
 
   useEffect(() => {
     returnOption();
@@ -516,6 +524,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
           itemImg={
             <StyledCategoryIcon
               primaryColor={primaryColor}
+              isDarkMode={isDarkMode}
               className={`${isMobileDesign ? 'accordion-icon' : ''}`}
             />
           }>
@@ -528,6 +537,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
               selectedOptions={selectedCatItems && selectedCatItems}
               dropdownIMG={
                 <StyledCategoryItemIcon
+                  isDarkMode={isDarkMode}
                   primaryColor={primaryColor}
                   className={`dropdownn-chain-icons ${
                     isMobileDesign ? 'mobile-cat-icon' : ''
@@ -547,6 +557,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
           isStayExpand={isBlockchainExpand}
           itemImg={
             <StyledBlockchainIcon
+              isDarkMode={isDarkMode}
               className={`${isMobileDesign ? 'accordion-icon' : ''}`}
               primaryColor={primaryColor}
             />
@@ -564,6 +575,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       </CustomAccordion>
       <div className="filter-modal-btn-container ">
         <StyledClearButton
+          isDarkMode={isDarkMode}
           disabled={!selectedBchItems && !selectedCatItems}
           primaryColor={primaryColor}
           onClick={handleCleanFilter}

@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { BigNumber } from 'ethers';
+import { useCallback, useEffect, useState } from 'react';
 
 import { TOfferData } from './marketplace.types';
 import MinterMarketplaceItem from './MinterMarketplaceItem';
@@ -18,9 +17,7 @@ const MinterMarketplace = () => {
         contract.products.offers.forEach((offer) => {
           for (const field of Object.keys(offer)) {
             if (offer && offer[field] && offer[field]['$numberDecimal']) {
-              offer[field] = BigNumber.from(
-                offer[field]['$numberDecimal']
-              ).toString();
+              offer[field] = BigInt(offer[field]['$numberDecimal']).toString();
             }
           }
           if (!offer.sold) {

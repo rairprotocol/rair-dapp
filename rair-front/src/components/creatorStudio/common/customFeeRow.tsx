@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
+import { formatEther } from 'ethers';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { validateInteger } from '../../../utils/metamaskUtils';
 import InputField from '../../common/InputField';
 import { ICustomFeeRow } from '../creatorStudio.types';
@@ -27,19 +25,18 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
   setMarketValuesChanged,
   symbol
 }) => {
-  const precisionFactor = BigNumber.from(10).pow(minterDecimals);
+  const precisionFactor = BigInt(10) ** BigInt(minterDecimals);
   const [recipientAddress, setRecipientAddress] = useState<string | undefined>(
     recipient
   );
   const [canBeContractFlag, setCanBeContractFlag] =
     useState<boolean>(!!canBeContract);
-  const [percentageReceived, setPercentageReceived] = useState<BigNumber>(
-    BigNumber.from(percentage)
+  const [percentageReceived, setPercentageReceived] = useState<bigint>(
+    BigInt(percentage)
   );
-  const { secondaryColor, primaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { secondaryColor, primaryColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   useEffect(() => {
     setRecipientAddress(recipient);
@@ -50,8 +47,8 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
   }, [recipient]);
 
   const updatePercentage = (value: number) => {
-    setPercentageReceived(BigNumber.from(!value ? 0 : value));
-    array[index].percentage = BigNumber.from(value);
+    setPercentageReceived(BigInt(!value ? 0 : value));
+    array[index].percentage = BigInt(value);
     if (rerender) {
       rerender();
     }
@@ -82,19 +79,17 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
     }
   };
 
-  const calculatedFee = BigNumber.from(100)
-    .mul(percentageReceived)
-    .div(precisionFactor);
-  const calculatedPrice = BigNumber.from(
+  const calculatedFee =
+    (BigInt(100) * BigInt(percentageReceived)) / BigInt(precisionFactor);
+  const calculatedPrice = BigInt(
     price && validateInteger(+price) ? Number(price) : 0
   );
-  const calculatedRemainder = calculatedFee.eq(0)
-    ? BigNumber.from(1)
-    : calculatedPrice?.mod(calculatedFee);
+  const calculatedRemainder =
+    calculatedFee === BigInt(0) ? BigInt(1) : calculatedPrice % calculatedFee;
   return (
     <tr
       className={`${!editable && 'text-secondary'} ${
-        !calculatedRemainder.eq(0) && 'text-danger'
+        !(calculatedRemainder === BigInt(0)) && 'text-danger'
       }`}>
       <th className="px-2">
         <div className="w-100 border-stimorol rounded-rair">
@@ -133,7 +128,7 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
             labelClass="w-100 text-start"
             customClass="form-control rounded-rair"
             min={0}
-            max={BigNumber.from(100).mul(precisionFactor).toString()}
+            max={(BigInt(100) * precisionFactor).toString()}
             type="number"
             getter={percentageReceived.toString()}
             setter={updatePercentage}
@@ -144,13 +139,10 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
             }}
           />
         </div>
-        {!calculatedFee.eq(0) && (
+        {!(calculatedFee === BigInt(0)) && (
           <small>
-            {percentageReceived.div(precisionFactor).toString()}% (
-            {utils.formatEther(
-              BigNumber.from(calculatedPrice).div(calculatedFee)
-            )}{' '}
-            {symbol})
+            {(percentageReceived / precisionFactor).toString()}% (
+            {formatEther(BigInt(calculatedPrice) / calculatedFee)} {symbol})
           </small>
         )}
       </th>

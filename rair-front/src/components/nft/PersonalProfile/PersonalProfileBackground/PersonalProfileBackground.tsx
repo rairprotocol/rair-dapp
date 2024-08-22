@@ -1,13 +1,10 @@
 import { memo, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { TUserResponse } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 
 import cl from './PersonalProfileBackground.module.css';
 
@@ -15,13 +12,9 @@ const PersonalProfileBackgroundComponent = () => {
   const [backgroundUser, setBackgroundUser] = useState<any | null>();
   const [fileUpload, setFileUpload] = useState<File | null>(null);
   const [loadingBg, setLoadingBg] = useState(false);
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (state) => state.colorStore
-  );
+  const { primaryColor } = useAppSelector((state) => state.colors);
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const editBackground = useCallback(async () => {
     if (currentUserAddress) {

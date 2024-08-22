@@ -1,16 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { faChevronLeft, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'ethers';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useConnectUser from '../../../hooks/useConnectUser';
+import useContracts from '../../../hooks/useContracts';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
@@ -27,7 +23,6 @@ interface IMobileNavigationList {
   messageAlert: string | null;
   setMessageAlert: (arg: string | null) => void;
   primaryColor?: string;
-  currentUserAddress: string | undefined;
   toggleMenu: (otherPage?: string) => void;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
@@ -38,28 +33,20 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   messageAlert,
   setMessageAlert,
   toggleMenu,
-  currentUserAddress,
   click
 }) => {
   const [userBalance, setUserBalance] = useState<string>('');
-  const [userRairBalance, setUserRairBalance] = useState<any>(
-    BigNumber.from(0)
+  const [userRairBalance, setUserRairBalance] = useState<bigint>(BigInt(0));
+  const { primaryColor, primaryButtonColor, textColor } = useAppSelector(
+    (store) => store.colors
   );
-  const { userData } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
-
-  const { primaryColor, primaryButtonColor, textColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
 
   const { web3TxHandler } = useWeb3Tx();
 
-  const { mainTokenInstance, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (store) => store.web3
+  );
+  const { mainTokenInstance } = useContracts();
 
   const { getBlockchainData } = useServerSettings();
 
@@ -69,23 +56,22 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         await mainTokenInstance.provider.getBalance(currentUserAddress);
 
       if (balance) {
-        const result = utils.formatEther(balance);
+        const result = formatEther(balance);
         const final = Number(result.toString())?.toFixed(2)?.toString();
 
         setUserBalance(final);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, mainTokenInstance, userData]);
+  }, [currentUserAddress, mainTokenInstance]);
 
   const getUserRairBalance = useCallback(async () => {
-    if (!mainTokenInstance || userRairBalance?.gt(0)) {
+    if (!mainTokenInstance || userRairBalance > BigInt(0)) {
       return;
     }
     const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
       currentUserAddress
     ]);
-    if (result?._isBigNumber) {
+    if (result) {
       setUserRairBalance(result);
     }
   }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
@@ -161,7 +147,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       }
       setFlagLoading(false);
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, getNotifications, getNotificationsCount, reactSwal]);
 
   useEffect(() => {
     getNotificationsCount();
@@ -319,13 +305,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                     {/* {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance} */}
                   </div>
                   <div>
-                    {currentChain && getBlockchainData(currentChain) && (
+                    {connectedChain && getBlockchainData(connectedChain) && (
                       <img
                         style={{
                           height: '25px',
                           marginLeft: '15px'
                         }}
-                        src={getBlockchainData(currentChain)?.image}
+                        src={getBlockchainData(connectedChain)?.image}
                         alt="logo"
                       />
                     )}

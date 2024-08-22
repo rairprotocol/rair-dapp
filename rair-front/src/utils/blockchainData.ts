@@ -4,6 +4,7 @@ import { Network } from 'alchemy-sdk';
 import { TChainData } from './utils.types';
 
 import { AstarLogo, BaseLogo, EthereumLogo, MaticLogo } from '../images';
+import { Hex } from 'viem';
 
 const chainData: TChainData = {
   // '0x38': {
@@ -190,24 +191,24 @@ const chainData: TChainData = {
 export default chainData;
 
 export const detectBlockchain = (
-  currentChain: BlockchainType | undefined,
-  realChain: BlockchainType | undefined
+  connectedChain: Hex | undefined,
+  realChain: Hex | undefined
 ) => {
   if (
     realChain !== undefined &&
-    currentChain &&
+    connectedChain &&
     chainData &&
-    chainData[currentChain]?.chainId !== realChain
+    chainData[connectedChain]?.chainId !== realChain
   ) {
     return {
-      selectedChain: chainData[currentChain]?.name,
+      selectedChain: chainData[connectedChain]?.name,
       realNameChain: chainData[realChain]?.name,
       selectedChainId: chainData[realChain]?.chainId
     };
   } else {
     return {
-      selectedChain: null,
-      realNameChain: null
+      selectedChain: undefined,
+      realNameChain: undefined
     };
   }
 };

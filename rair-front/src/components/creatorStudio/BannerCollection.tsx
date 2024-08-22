@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Swal from 'sweetalert2';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useSwal from '../../hooks/useSwal';
 import { rFetch } from '../../utils/rFetch';
 import { changeIPFSLink } from '../MockUpPage/NftList/utils/changeIPFSLink';
 
 export const BannerCollection = ({ item, getContractData }) => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
+  const rSwal = useSwal();
 
   const [fileUpload, setFileUpload] = useState<any>();
   const [loadingBg, setLoadingBg] = useState<boolean>(false);
@@ -26,7 +23,7 @@ export const BannerCollection = ({ item, getContractData }) => {
         if (fileF.type !== 'video/mp4') {
           setFileUpload(fileF);
         } else {
-          Swal.fire(
+          rSwal.fire(
             'Info',
             `You cannot upload video to background!`,
             'warning'
@@ -37,7 +34,7 @@ export const BannerCollection = ({ item, getContractData }) => {
         reader.readAsDataURL(fileF);
       }
     },
-    [setFileUpload]
+    [setFileUpload, rSwal]
   );
 
   const editBackground = useCallback(async () => {

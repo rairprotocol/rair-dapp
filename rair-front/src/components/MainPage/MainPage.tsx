@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
+import { Hex } from 'viem';
 
 import { rairAdvisorsTeam, teamMainPage } from './AboutUsTeam';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useConnectUser from '../../hooks/useConnectUser';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useSwal from '../../hooks/useSwal';
 /* image imports */
 import { metaMaskIcon } from '../../images/index';
 import {
@@ -52,7 +50,7 @@ import './MainPage_ConflictingGlobalStyles.css';
 import styles from './MainPage.module.css';
 
 /* GLOBAL VALUES */
-const blockchain: BlockchainType = '0x1';
+const blockchain: Hex = '0x1';
 const contract = '0x571acc173f57c095f1f63b28f823f0f33128a6c4';
 const product = '0';
 const offerIndexInMarketplace = ['0', '221'];
@@ -60,9 +58,7 @@ const iframeLink =
   'https://iframetester.com/?url=https://staging.rair.market/watch/0x48e89cb354a30d4ce0dafac77205792040ef485f/FaR4Z7kLDOZ87Rx1UU6CaLce_bip0X7vnrPjBu2t3APd9s/stream.m3u8';
 
 const MainPage: React.FC<IMainPage> = ({ setIsSplashPage, setIsAboutPage }) => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const { connectUserData } = useConnectUser();
 
@@ -82,9 +78,7 @@ const MainPage: React.FC<IMainPage> = ({ setIsSplashPage, setIsAboutPage }) => {
 
   const executeScroll = (ref) => ref.current.scrollIntoView();
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   /*VIDEO PLAYER VIEW*/
   const [productsFromOffer, selectVideo, setSelectVideo] =
@@ -98,6 +92,8 @@ const MainPage: React.FC<IMainPage> = ({ setIsSplashPage, setIsAboutPage }) => {
   const handlePlayerClick = () => {
     setOpenVideoPlayer(true);
   };
+
+  const rSwal = useSwal();
 
   /*TURN OFF SEARCH BAR */
   useEffect(() => {
@@ -188,7 +184,7 @@ const MainPage: React.FC<IMainPage> = ({ setIsSplashPage, setIsAboutPage }) => {
             presaleMessage: '',
             diamond: true,
             customSuccessAction: (nextToken) =>
-              Swal.fire('Success', `You own token #${nextToken}!`, 'success')
+              rSwal.fire('Success', `You own token #${nextToken}!`, 'success')
           }}
         />
       </div>

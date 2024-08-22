@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
-import { RootState } from '../../../../../ducks';
-import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../../hooks/useServerSettings';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { rFetch } from '../../../../../utils/rFetch';
@@ -36,10 +34,9 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   // toggleMetadataFilter
 }) => {
   const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
-  const { primaryColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const [mintPopUp, setMintPopUp] = useState<boolean>(false);
   const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
@@ -60,7 +57,12 @@ const TitleCollection: React.FC<ITitleCollection> = ({
     setSelectedValue(value);
   };
 
-  const { getBlockchainData } = useServerSettings();
+  const { getBlockchainData, refreshBlockchainData } = useServerSettings();
+
+  useEffect(() => {
+    refreshBlockchainData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -264,7 +266,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               href={`${
                 blockchain &&
                 getBlockchainData(blockchain)?.blockExplorerGateway
-              }address/${contract}`}
+              }/address/${contract}`}
               target="_blank"
               rel="noreferrer">
               <div

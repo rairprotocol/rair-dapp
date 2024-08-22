@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faGem } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
@@ -14,9 +13,8 @@ import {
 
 import { TMetadataType } from '../../axios.responseTypes';
 import { diamondFactoryAbi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 
 const TokenLayout: React.FC<ITokenLayout> = ({
@@ -28,9 +26,7 @@ const TokenLayout: React.FC<ITokenLayout> = ({
     import.meta.env.VITE_IPFS_GATEWAY
   }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`;
 
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const { getBlockchainData } = useServerSettings();
 
@@ -113,10 +109,10 @@ const ItemsForContract: React.FC<IItemsForContract> = ({
 }) => {
   const [tokens, setTokens] = useState<TMyDiamondItemsToken[]>([]);
   const [contractName, setContractName] = useState<string>('');
-  const { contractCreator, currentUserAddress, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { contractCreator } = useContracts();
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (store) => store.web3
+  );
   const getTokens = useCallback(async () => {
     const instance = contractCreator?.(item, diamondFactoryAbi);
     setContractName(await instance?.name());
@@ -142,11 +138,11 @@ const ItemsForContract: React.FC<IItemsForContract> = ({
         metadata,
         contract: item,
         title: metadata ? metadata.name : contractName,
-        blockchain: currentChain
+        blockchain: connectedChain
       });
     }
     setTokens(tokenData);
-  }, [item, contractCreator, contractName, currentUserAddress, currentChain]);
+  }, [item, contractCreator, contractName, currentUserAddress, connectedChain]);
 
   useEffect(() => {
     getTokens();
@@ -170,10 +166,7 @@ const ItemsForContract: React.FC<IItemsForContract> = ({
 const MyDiamondItems: React.FC<IMyDiamondItems> = (props) => {
   const [deploymentAddresses, setDeploymentAddresses] = useState<string[]>([]);
   const [status, setStatus] = useState<string>('Fetching data...');
-  const { diamondMarketplaceInstance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { diamondMarketplaceInstance } = useContracts();
   const fetchDiamondData = useCallback(async () => {
     if (!diamondMarketplaceInstance) {
       return;

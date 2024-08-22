@@ -1,5 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   faArrowAltCircleLeft,
@@ -16,11 +15,10 @@ import {
   IOffersResponseType,
   TProducts
 } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import { setTokenData } from '../../../../ducks/nftData/action';
-import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../hooks/useReduxHooks';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { hotDropsDefaultBanner } from '../../../../images';
 import { rFetch } from '../../../../utils/rFetch';
@@ -49,15 +47,11 @@ import TitleCollection from './TitleCollection/TitleCollection';
 
 import './../../GeneralCollectionStyles.css';
 
-const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
+const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
   embeddedParams,
   selectedData,
-  tokenData,
-  totalCount,
   offerPrice,
   getAllProduct,
-  // showToken,
-  // setShowToken,
   isLoading,
   tokenDataFiltered,
   setTokenDataFiltered,
@@ -68,8 +62,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   showTokensRef,
   tokenNumber
 }) => {
-  const { userRd } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
+  const { isLoggedIn, publicAddress } = useAppSelector((store) => store.user);
+
+  const { currentCollection, currentCollectionTotal } = useAppSelector(
+    (store) => store.tokens
   );
 
   const { width } = useWindowDimensions();
@@ -83,7 +79,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     useState<any>(undefined);
 
   const { primaryColor, textColor, primaryButtonColor, iconColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+    useAppSelector((store) => store.colors);
 
   const toggleMetadataFilter = () => {
     setMetadataFilter((prev) => !prev);
@@ -97,8 +93,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
       : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg';
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const myRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
   const [show, setShow] = useState<boolean>(true);
   const [playing, setPlaying] = useState<null | string>(null);
   const [loadingBg, setLoadingBg] = useState(false);
@@ -123,9 +118,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     });
 
   const filteredData =
-    tokenData &&
-    Object.values(tokenData).length &&
-    Object.values(tokenData)
+    currentCollection &&
+    Object.values(currentCollection).length &&
+    Object.values(currentCollection)
       .filter((item) => {
         return item.metadata.name
           .toLowerCase()
@@ -160,7 +155,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
 
   useEffect(() => {
     setDocumentTitle('Collection');
-    dispatch(setShowSidebarTrue());
   }, [dispatch]);
 
   const goBack = () => {
@@ -231,7 +225,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   );
 
   const editBackground = useCallback(async () => {
-    if (userRd && offerAllData && userRd.publicAddress === offerAllData.owner) {
+    if (isLoggedIn && offerAllData && publicAddress === offerAllData.owner) {
       const formData = new FormData();
       if (fileUpload) {
         setLoadingBg(true);
@@ -252,7 +246,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
         }
       }
     }
-  }, [fileUpload, offerAllData, userRd, getBannerInfo]);
+  }, [fileUpload, offerAllData, isLoggedIn, publicAddress, getBannerInfo]);
 
   const getResetTokens = useCallback(() => {
     getAllProduct(
@@ -273,7 +267,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   useEffect(() => {
     if (!embeddedParams) {
       if (tokenNumber && tokenNumber > 10) {
-        if (tokenData && Object.keys(tokenData).length > 20) {
+        if (currentCollection && Object.keys(currentCollection).length > 20) {
           const element = document.getElementById(
             `collection-view-${tokenNumber}`
           );
@@ -284,10 +278,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokenNumber, tokenData]);
+  }, [tokenNumber, currentCollection]);
 
   useEffect(() => {
-    if (tokenData && Object.keys(tokenData).length > 20) {
+    if (currentCollection && Object.keys(currentCollection).length > 20) {
       window.scroll(0, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -298,7 +292,10 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   }, [getBannerInfo]);
 
   useEffect(() => {
-    if (totalCount && showTokensRef.current <= totalCount) {
+    if (
+      currentCollectionTotal &&
+      showTokensRef.current <= currentCollectionTotal
+    ) {
       const option = {
         root: null,
         rootMargin: '20px',
@@ -307,7 +304,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
       const observer = new IntersectionObserver(loadToken, option);
       if (loader.current) observer.observe(loader.current);
     }
-  }, [loadToken, loader, isLoading, showTokensRef, totalCount]);
+  }, [loadToken, loader, isLoading, showTokensRef, currentCollectionTotal]);
 
   useEffect(() => {
     editBackground();
@@ -326,7 +323,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
     }
   }, [metadataFilter, setSelectedAttributeValues]);
 
-  if (tokenData === undefined || !tokenData) {
+  if (currentCollection === undefined || !currentCollection) {
     return <LoadingComponent />;
   }
 
@@ -362,7 +359,8 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
 
   return (
     <>
-      {Object.keys(tokenData).length > 0 || tokenDataFiltered.length > 0 ? (
+      {Object.keys(currentCollection).length > 0 ||
+      tokenDataFiltered.length > 0 ? (
         <div
           className="wrapper-collection"
           style={{
@@ -391,9 +389,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                 }
               />
             )}
-            {userRd &&
+            {isLoggedIn &&
               offerAllData &&
-              userRd.publicAddress === offerAllData.owner && (
+              publicAddress === offerAllData.owner && (
                 <div
                   className={'blockAddBack'}
                   style={{
@@ -413,7 +411,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               )}
           </div>
           <TitleCollection
-            selectedData={tokenData[0]?.metadata}
+            selectedData={currentCollection[0]?.metadata}
             title={collectionName}
             someUsersData={someUsersData}
             userName={offerAllData?.owner}
@@ -516,7 +514,6 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                   text={'Clean filter'}
                   onClick={() => {
                     setTokenDataFiltered([]);
-                    dispatch(setTokenData(tokenData));
                     setShow(false);
                   }}
                 />
@@ -607,7 +604,9 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
                             }
                             someUsersData={someUsersData}
                             userName={offerAllData?.owner}
-                            tokenDataLength={Object.keys(tokenData).length}
+                            tokenDataLength={
+                              Object.keys(currentCollection).length
+                            }
                             setPlaying={setPlaying}
                             playing={playing}
                             diamond={item.offer.diamond}
@@ -779,28 +778,28 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
           )}
           {tokenDataFiltered.length
             ? null
-            : totalCount &&
-              showTokensRef.current <= totalCount && (
+            : currentCollectionTotal &&
+              showTokensRef.current <= currentCollectionTotal && (
                 <div ref={loader} className="ref"></div>
               )}
           <>
-            {Object.keys(tokenData).length <= 5 && (
+            {Object.keys(currentCollection).length <= 5 && (
               <>
                 <div
                   style={{
                     marginTop: '30px'
                   }}></div>
                 <AuthenticityBlock
-                  collectionToken={tokenData[0]?.authenticityLink}
+                  collectionToken={currentCollection[0]?.authenticityLink}
                   title={true}
-                  tokenData={tokenData}
+                  tokenData={currentCollection}
                 />
               </>
             )}
           </>
         </div>
       ) : (
-        <div className="collection-no-products" ref={myRef}>
+        <div className="collection-no-products">
           {!!embeddedParams || (
             <div
               style={{
@@ -813,7 +812,7 @@ const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
               <FontAwesomeIcon icon={faArrowAltCircleLeft} />
             </div>
           )}
-          <h2>{"Don't have product"}</h2>
+          <h2>{'No tokens found'}</h2>
         </div>
       )}
     </>

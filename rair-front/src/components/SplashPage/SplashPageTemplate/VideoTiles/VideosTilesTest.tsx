@@ -1,12 +1,12 @@
-//@ts-nocheck
 //test page for video tiles
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
-import { setInfoSEO } from '../../../../ducks/seo/actions';
-import { InitialState } from '../../../../ducks/seo/reducers';
-import { TInfoSeo } from '../../../../ducks/seo/seo.types';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../hooks/useReduxHooks';
+import { setSEOInfo } from '../../../../redux/seoSlice';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../../SeoTags/MetaTags';
 import { NYCVideoBackground } from '../../images/NFTNYC/nftnyc';
@@ -63,9 +63,9 @@ const testContract = {
 // ]
 
 const VideoTilesTest = ({ setIsSplashPage }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   /* UTILITIES FOR VIDEO PLAYERS */
   const [productsFromOffer, setProductsFromOffer] = useState([]);
@@ -73,7 +73,7 @@ const VideoTilesTest = ({ setIsSplashPage }) => {
   const [mainVideo, setMainVideo] = useState(productsFromOffer[0]);
 
   const getProductsFromOffer = async () => {
-    const response = await axios.get<TNftFilesResponse>(
+    const response = await axios.get<any>(
       `/api/nft/network/${testContract.requiredBlockchain}/${testContract.contractAddress}/${testContract.offerIndex[0]}/files`
     );
     setProductsFromOffer(response.data.files);
@@ -82,7 +82,7 @@ const VideoTilesTest = ({ setIsSplashPage }) => {
   };
 
   useEffect(() => {
-    dispatch(setInfoSEO(InitialState));
+    dispatch(setSEOInfo());
     //eslint-disable-next-line
   }, []);
 

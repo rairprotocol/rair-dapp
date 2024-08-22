@@ -1,12 +1,9 @@
 import React from 'react';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 
 import { TalkSalesButton } from './TalkSalesButton';
 
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import InquiriesPage from '../../../InquiriesPage/InquiriesPage';
 
@@ -21,17 +18,11 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
   text,
   isAboutPage
 }) => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
-  const { adminRights } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { adminRights } = useAppSelector((store) => store.user);
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const reactSwal = useSwal();
 
@@ -39,23 +30,14 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
 
   const openInquiriesPage = () => {
     reactSwal.fire({
-      title: (
-        <h2 style={{ color: 'var(--bubblegum)' }}>
-          {currentUserAddress ? 'Contact Us' : 'Support'}
-        </h2>
-      ),
+      title: <h2>{currentUserAddress ? 'Contact Us' : 'Support'}</h2>,
       html: (
         <Provider store={store}>
           <InquiriesPage />
         </Provider>
       ),
       showConfirmButton: false,
-      width: '85vw',
-      customClass: {
-        popup: `bg-${
-          primaryColor === '#dedede' ? 'rhyno' : 'charcoal'
-        } rounded-rair`
-      }
+      width: '85vw'
     });
   };
 

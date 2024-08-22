@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Tooltip } from '@mui/material';
 
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import { ISingleTokenViewProperties } from '../../mockupPage.types';
 
 const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
-  selectedData,
-  textColor
+  selectedData
 }) => {
   const [toolTipMobile, setToolTipMobile] = useState<boolean>(false);
+  const { textColor } = useAppSelector((store) => store.colors);
 
   // unused code
   // const randomInteger = (min: number, max: number) => {
@@ -19,18 +20,18 @@ const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
     setToolTipMobile((prev) => !prev);
   };
 
-  const percentToRGB = (percent: string) => {
-    const percentNumber = parseInt(percent);
-    if (percentNumber) {
-      if (percentNumber < 15) {
-        return '#95F619';
-      } else if (15 <= percentNumber && percentNumber < 35) {
-        return '#F6ED19';
-      } else {
-        return '#F63419';
-      }
-    }
-  };
+  // const percentToRGB = (percent: string) => {
+  //   const percentNumber = parseInt(percent);
+  //   if (percentNumber) {
+  //     if (percentNumber < 15) {
+  //       return '#95F619';
+  //     } else if (15 <= percentNumber && percentNumber < 35) {
+  //       return '#F6ED19';
+  //     } else {
+  //       return '#F63419';
+  //     }
+  //   }
+  // };
 
   const toUpper = (string: string) => {
     if (string) {

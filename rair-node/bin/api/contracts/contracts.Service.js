@@ -1,6 +1,5 @@
-const _ = require('lodash');
 const { ObjectId } = require('mongodb');
-const log = require('../../utils/logger');
+const log = require('../../utils/logger')(module);
 const { Contract, Blockchain, File, Product } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const eFactory = require('../../utils/entityFactory');
@@ -216,10 +215,10 @@ module.exports = {
               },
             },
           ],
-          as: 'products',
+          as: 'product',
         },
       };
-      options.push(lookupProduct, { $unwind: '$products' });
+      options.push(lookupProduct, { $unwind: '$product' });
       const lookupUser = {
         $lookup: {
           from: 'User',
@@ -289,12 +288,47 @@ module.exports = {
         });
       }
 
+      const lookupSingleToken = {
+        $lookup: {
+          from: 'MintedToken',
+          let: {
+            contr: '$_id',
+            startingToken: '$product.firstTokenIndex',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $eq: ['$contract', '$$contr'],
+                    },
+                    {
+                      $gte: ['$uniqueIndexInContract', '$$startingToken'],
+                    },
+                  ],
+                },
+              },
+            },
+            { $limit: 1 },
+            { $project: {
+                'metadata.animation_url': 1,
+                'metadata.image_thumbnail': 1,
+                'metadata.image': 1,
+              },
+            },
+          ],
+          as: 'frontToken',
+        },
+      };
+      options.push(lookupSingleToken, { $unwind: '$frontToken' });
+
       options.push(
         {
           $lookup: {
             from: 'Offer',
             let: {
-              prod: '$products.collectionIndexInContract',
+              prod: '$product.collectionIndexInContract',
               contractL: '$_id',
             },
             pipeline: [
@@ -313,16 +347,16 @@ module.exports = {
                 },
               },
             ],
-            as: 'products.offers',
+            as: 'product.offers',
           },
         },
         {
           $match: {
             $or: [
-              { diamond: true, 'products.offers': { $not: { $size: 0 } } },
+              { diamond: true, 'product.offers': { $not: { $size: 0 } } },
               {
                 diamond: { $in: [false, undefined] },
-                'products.offers': { $not: { $size: 0 } },
+                'product.offers': { $not: { $size: 0 } },
               },
             ],
           },
@@ -361,19 +395,27 @@ module.exports = {
         });
       }
 
-      const totalNumber = _.chain(
-        await Contract.aggregate(options).count('contracts'),
-      )
-        .head()
-        .get('contracts', 0)
-        .value();
+      const [result] = await Contract.aggregate([
+        ...options,
+        {
+          $facet: {
+            contracts: [
+              { $sort: { 'product.name': 1 } },
+              { $skip: skip },
+              { $limit: pageSize },
+            ],
+            count: [
+              { $count: 'total' },
+            ],
+          },
+        },
+      ]);
 
-      const contracts = await Contract.aggregate(options)
-        .sort({ 'products.name': 1 })
-        .skip(skip)
-        .limit(pageSize);
-
-      return res.json({ success: true, contracts, totalNumber });
+      return res.json({
+        success: true,
+        contracts: result.contracts,
+        totalNumber: result.count.total,
+      });
     } catch (e) {
       return next(e);
     }
@@ -385,7 +427,6 @@ module.exports = {
         display: { $ne: false },
       });
       const contractQuery = {
-        blockView: false,
         blockchain: foundBlockchain.map((chain) => chain.hash),
       };
       if (!superAdmin) {
@@ -397,11 +438,18 @@ module.exports = {
         title: 1,
         blockchain: 1,
         diamond: 1,
+        blockView: 1,
+        blockSync: 1,
       });
       return res.json({ success: true, contracts });
     } catch (e) {
       return next(e);
     }
+  },
+  getProductList: async (req, res, next) => {
+    const { id } = req.params;
+    const products = await Product.find({ contract: id }, { name: 1, _id: 1 });
+    return res.json({ success: true, products });
   },
   getAllContracts: async (req, res, next) => {
     const {

@@ -1,6 +1,4 @@
-//tools
-import React, { memo, useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC, Fragment, memo, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   faSearch,
@@ -13,15 +11,12 @@ import axios from 'axios';
 import { IMainHeader, TAxiosCollectionData } from './header.types';
 
 import { SvgUserIcon } from '../../components/UserProfileSettings/SettingsIcons/SettingsIcons';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
-import { TUsersInitialState } from '../../ducks/users/users.types';
 import useComponentVisible from '../../hooks/useComponentVisible';
 import useConnectUser from '../../hooks/useConnectUser';
-//images
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
 import { headerLogoBlack, headerLogoWhite } from '../../images';
+import { dataStatuses } from '../../redux/commonTypes';
+import { clearResults, startSearch } from '../../redux/searchbarSlice';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -29,12 +24,6 @@ import MainLogo from '../GroupLogos/MainLogo';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
 import PopUpNotification from '../UserProfileSettings/PopUpNotification/PopUpNotification';
 
-import {
-  TSearchDataProduct,
-  TSearchDataTokens,
-  TSearchDataUser,
-  TSearchInitialState
-} from './../../ducks/search/search.types';
 //imports components
 import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import AdminPanel from './AdminPanel/AdminPanel';
@@ -46,10 +35,9 @@ import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComp
 //styles
 import './Header.css';
 
-const MainHeader: React.FC<IMainHeader> = ({
+const MainHeader: FC<IMainHeader> = ({
   goHome,
   creatorViewsDisabled,
-  selectedChain,
   showAlert,
   isSplashPage,
   setTabIndexItems,
@@ -57,7 +45,7 @@ const MainHeader: React.FC<IMainHeader> = ({
   setTokenNumber,
   realChainId
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { ref, isComponentVisible, setIsComponentVisible } =
@@ -69,19 +57,14 @@ const MainHeader: React.FC<IMainHeader> = ({
     textColor,
     secondaryColor,
     iconColor
-  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  } = useAppSelector((store) => store.colors);
   const { connectUserData } = useConnectUser();
-  const { dataAll, message } = useSelector<RootState, TSearchInitialState>(
-    (store) => store.allInformationFromSearch
+  const { searchResults } = useAppSelector((store) => store.searchbar);
+  const { adminRights, superAdmin, isLoggedIn, loginStatus } = useAppSelector(
+    (store) => store.user
   );
-  const { adminRights, superAdmin, loggedIn, loginProcess } = useSelector<
-    RootState,
-    TUsersInitialState
-  >((store) => store.userStore);
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [realDataNotification, setRealDataNotification] = useState([]);
@@ -92,7 +75,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const goToExactlyContract = useCallback(
     async (addressId: string, collectionIndexInContract: string) => {
-      if (dataAll) {
+      if (searchResults) {
         const response = await axios.get<TAxiosCollectionData>(
           `/api/contracts/${addressId}`
         );
@@ -105,15 +88,15 @@ const MainHeader: React.FC<IMainHeader> = ({
           `/collection/${exactlyContractData.blockchain}/${exactlyContractData.contractAddress}/${exactlyContractData.indexInContract}/0`
         );
         setTextSearch('');
-        dispatch(getDataAllClear());
+        dispatch(clearResults());
       }
     },
-    [dataAll, dispatch, navigate]
+    [searchResults, dispatch, navigate]
   );
 
   const goToExactlyToken = useCallback(
     async (addressId: string, token: string) => {
-      if (dataAll) {
+      if (searchResults) {
         const response = await axios.get<TAxiosCollectionData>(
           `/api/contracts/${addressId}`
         );
@@ -127,10 +110,10 @@ const MainHeader: React.FC<IMainHeader> = ({
           `/tokens/${exactlyTokenData.blockchain}/${exactlyTokenData.contractAddress}/0/${token}`
         );
         setTextSearch('');
-        dispatch(getDataAllClear());
+        dispatch(clearResults());
       }
     },
-    [dataAll, dispatch, navigate]
+    [searchResults, dispatch, navigate]
   );
 
   const goToExactlyUser = (userAddress) => {
@@ -140,7 +123,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const getNotifications = useCallback(
     async (pageNum?: number) => {
-      if (currentUserAddress) {
+      if (currentUserAddress && isLoggedIn) {
         const result = await rFetch(
           `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
         );
@@ -160,17 +143,17 @@ const MainHeader: React.FC<IMainHeader> = ({
         }
       }
     },
-    [currentUserAddress]
+    [currentUserAddress, isLoggedIn]
   );
 
   const getNotificationsCount = useCallback(async () => {
-    if (currentUserAddress) {
+    if (currentUserAddress && isLoggedIn) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, isLoggedIn]);
 
   useEffect(() => {
     getNotificationsCount();
@@ -178,7 +161,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   useEffect(() => {
     getNotifications(0);
-  }, [currentUserAddress]);
+  }, [getNotifications]);
 
   const Highlight = (props) => {
     const { filter, str } = props;
@@ -196,10 +179,10 @@ const MainHeader: React.FC<IMainHeader> = ({
           if (index < array.length - 1) {
             const c = matchValue.shift();
             return (
-              <React.Fragment key={index}>
+              <Fragment key={index}>
                 {s}
                 <span className={'highlight'}>{c}</span>
-              </React.Fragment>
+              </Fragment>
             );
           }
           return s;
@@ -208,17 +191,13 @@ const MainHeader: React.FC<IMainHeader> = ({
     return str;
   };
 
-  const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTextSearch(e.target.value);
-  };
-
   const handleClearText = () => {
     setTextSearch('');
   };
 
   useEffect(() => {
     if (textSearch.length > 0) {
-      dispatch(getDataAllStart(textSearch));
+      dispatch(startSearch({ searchTerm: textSearch }));
     }
   }, [dispatch, textSearch]);
 
@@ -229,7 +208,6 @@ const MainHeader: React.FC<IMainHeader> = ({
       primaryColor={primaryColor}
       showAlert={showAlert}
       isSplashPage={isSplashPage}
-      selectedChain={selectedChain}
       realChainId={realChainId}
       secondaryColor={secondaryColor}
       ref={ref}>
@@ -254,7 +232,7 @@ const MainHeader: React.FC<IMainHeader> = ({
           }}
           type="text"
           placeholder="Search..."
-          setter={handleChangeText}
+          setter={setTextSearch}
           getter={textSearch}
           onClick={() => setIsComponentVisible(true)}
         />
@@ -274,117 +252,107 @@ const MainHeader: React.FC<IMainHeader> = ({
               <div className="search-holder">
                 {textSearch && (
                   <>
-                    {dataAll && dataAll?.products.length > 0 ? (
+                    {searchResults &&
+                    searchResults?.products?.length &&
+                    searchResults?.products?.length > 0 ? (
                       <div className="data-find-wrapper">
                         <h5>Products</h5>
-                        {dataAll?.products.map(
-                          (item: TSearchDataProduct, index: number) => (
-                            <div
-                              key={Number(index) + Math.random()}
-                              className="data-find">
-                              <img
-                                className="data-find-img"
-                                src={item.cover}
-                                alt={item.name}
-                              />
-                              <p
-                                onClick={() => {
-                                  setTokenNumber(undefined);
-                                  goToExactlyContract(
-                                    item.contract,
-                                    item.collectionIndexInContract
-                                  );
-                                }}>
-                                <Highlight
-                                  filter={textSearch}
-                                  str={item.name}
-                                />
-                              </p>
-                            </div>
-                          )
-                        )}
+                        {searchResults?.products.map((item, index) => (
+                          <div
+                            key={Number(index) + Math.random()}
+                            className="data-find">
+                            <img
+                              className="data-find-img"
+                              src={item.cover}
+                              alt={item.name}
+                            />
+                            <p
+                              onClick={() => {
+                                setTokenNumber(undefined);
+                                goToExactlyContract(
+                                  item.contract,
+                                  item.collectionIndexInContract
+                                );
+                              }}>
+                              <Highlight filter={textSearch} str={item.name} />
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     ) : (
                       <></>
                     )}
-                    {dataAll && dataAll?.tokens.length > 0 ? (
+                    {searchResults &&
+                    searchResults?.tokens?.length &&
+                    searchResults?.tokens?.length > 0 ? (
                       <div className="data-find-wrapper">
                         <h5>Tokens</h5>
-                        {dataAll?.tokens.map(
-                          (item: TSearchDataTokens, index: number) => (
-                            <div
-                              key={Number(index) + Math.random()}
-                              className="data-find">
-                              <ImageCustomForSearch item={item} />
-                              <p
-                                onClick={() => {
-                                  setTokenNumber(undefined);
-                                  goToExactlyToken(
-                                    item.contract,
-                                    item.uniqueIndexInContract
-                                  );
-                                }}>
-                                <Highlight
-                                  filter={textSearch}
-                                  str={item.metadata.name}
-                                />
-                              </p>
-                              <div className="desc-wrapper">
-                                <p>
-                                  <Highlight
-                                    filter={textSearch}
-                                    str={item.metadata.description}
-                                  />
-                                </p>
-                              </div>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                    {dataAll && dataAll?.users.length > 0 ? (
-                      <div className="data-find-wrapper">
-                        <h5>Users</h5>
-                        {dataAll?.users.map(
-                          (item: TSearchDataUser, index: number) => (
-                            <div
-                              key={Number(index) + Math.random()}
-                              className="data-find"
-                              onClick={() =>
-                                goToExactlyUser(item.publicAddress)
-                              }>
-                              {item.avatar ? (
-                                <img
-                                  className="data-find-img"
-                                  src={item.avatar}
-                                  alt="user-photo"
-                                />
-                              ) : (
-                                <div className="user-icon-svg-wrapper">
-                                  <SvgUserIcon />
-                                </div>
-                              )}
+                        {searchResults?.tokens?.map((item, index) => (
+                          <div
+                            key={Number(index) + Math.random()}
+                            className="data-find">
+                            <ImageCustomForSearch item={item} />
+                            <p
+                              onClick={() => {
+                                setTokenNumber(undefined);
+                                goToExactlyToken(
+                                  item.contract,
+                                  item.uniqueIndexInContract
+                                );
+                              }}>
+                              <Highlight
+                                filter={textSearch}
+                                str={item.metadata.name}
+                              />
+                            </p>
+                            <div className="desc-wrapper">
                               <p>
                                 <Highlight
                                   filter={textSearch}
-                                  str={item.nickName}
+                                  str={item.metadata.description}
                                 />
                               </p>
                             </div>
-                          )
-                        )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    {searchResults &&
+                    searchResults?.users?.length &&
+                    searchResults?.users?.length > 0 ? (
+                      <div className="data-find-wrapper">
+                        <h5>Users</h5>
+                        {searchResults?.users?.map((item, index) => (
+                          <div
+                            key={Number(index) + Math.random()}
+                            className="data-find"
+                            onClick={() => goToExactlyUser(item.publicAddress)}>
+                            {item.avatar ? (
+                              <img
+                                className="data-find-img"
+                                src={item.avatar}
+                                alt="user-photo"
+                              />
+                            ) : (
+                              <div className="user-icon-svg-wrapper">
+                                <SvgUserIcon />
+                              </div>
+                            )}
+                            <p>
+                              <Highlight
+                                filter={textSearch}
+                                str={item.nickName}
+                              />
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     ) : (
                       <></>
                     )}
                   </>
-                )}
-                {textSearch !== '' && message === 'Nothing can found' ? (
-                  <span className="data-nothing-find">No items found</span>
-                ) : (
-                  <></>
                 )}
               </div>
             </div>
@@ -411,7 +379,7 @@ const MainHeader: React.FC<IMainHeader> = ({
         </i>
       </div>
       <div className="box-header-info">
-        {!loggedIn && (
+        {!isLoggedIn && (
           <div>
             {isAboutPage ? null : (
               <button
@@ -432,7 +400,9 @@ const MainHeader: React.FC<IMainHeader> = ({
                   color: textColor
                 }}
                 onClick={() => connectUserData()}>
-                {loginProcess ? 'Please wait...' : 'Connect'}
+                {loginStatus === dataStatuses.Loading
+                  ? 'Please wait...'
+                  : 'Connect'}
               </button>
             )}
           </div>
@@ -448,16 +418,12 @@ const MainHeader: React.FC<IMainHeader> = ({
             </TooltipBox>
           )}
           <UserProfileSettings
-            adminAccess={adminRights || superAdmin}
             showAlert={showAlert}
-            selectedChain={selectedChain}
             setTabIndexItems={setTabIndexItems}
-            isSplashPage={isSplashPage}
           />
           <div className="social-media">
             {currentUserAddress && (
               <PopUpNotification
-                setRealDataNotification={setRealDataNotification}
                 notificationCount={notificationCount}
                 getNotificationsCount={getNotificationsCount}
                 getNotifications={getNotifications}

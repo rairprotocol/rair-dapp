@@ -1,6 +1,5 @@
-/* eslint-disable no-case-declarations */
 import axios from 'axios';
-import { providers } from 'ethers';
+import { BrowserProvider, JsonRpcProvider, Provider } from 'ethers';
 import Swal from 'sweetalert2';
 
 import {
@@ -8,10 +7,10 @@ import {
   TUserResponse
 } from '../axios.responseTypes';
 
-const signIn = async (provider: providers.StaticJsonRpcProvider) => {
-  let currentUser = provider?.getSigner()._address;
+const signIn = async (provider: Provider) => {
+  let currentUser = await (provider as JsonRpcProvider).getSigner(0);
   if (!provider && window.ethereum) {
-    provider = new providers.Web3Provider(window.ethereum);
+    provider = new BrowserProvider(window.ethereum);
   }
   if (window.ethereum) {
     const accounts = await window.ethereum.request({
@@ -81,6 +80,7 @@ const signWeb3Message = async (
           const parsedResponse = JSON.parse(response);
           ethResponse = await signTypedData(parsedResponse);
         }
+        // eslint-disable-next-line no-case-declarations
         const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
           method: 'POST',
           body: JSON.stringify({
@@ -92,6 +92,7 @@ const signWeb3Message = async (
             'Content-Type': 'application/json'
           }
         });
+        // eslint-disable-next-line no-case-declarations
         const { success, user } = loginResponse;
         if (!success) {
           Swal.fire('Error', `Web3Login failed`, 'error');

@@ -1,10 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import { BillTransferIcon } from '../../../../images';
 import { rFetch } from '../../../../utils/rFetch';
@@ -17,12 +14,8 @@ const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
   const navigate = useNavigate();
   const reactSwal = useSwal();
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { currentUserAddress } = useAppSelector((state) => state.web3);
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
   const { userAddress } = useParams();
 
   const getTokenData = useCallback(async () => {

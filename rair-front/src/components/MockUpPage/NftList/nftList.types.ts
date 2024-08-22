@@ -1,11 +1,13 @@
-import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
-import { UserType } from '../../../ducks/users/users.types';
+import { Dispatch, SetStateAction } from 'react';
+import { Hex } from 'viem';
+
+import { CatalogItem } from '../../../redux/tokenSlice';
+import { MediaFile, Product, User } from '../../../types/databaseTypes';
 import { TOfferType } from '../../marketplace/marketplace.types';
 import { TEmbeddedParams } from '../mockupPage.types';
 
 import {
   TContract,
-  TFileType,
   TMetadataType,
   TProducts,
   TTokenData
@@ -19,24 +21,16 @@ export interface IAuthenticityBlock {
 }
 
 export interface INftItemComponent {
-  blockchain: BlockchainType | undefined;
-  price: string[];
-  pict: string;
-  contractName: string;
-  collectionIndexInContract: string;
-  collectionName: string;
-  ownerCollectionUser: string;
+  item: CatalogItem;
   index: number;
   playing: number | null;
   setPlaying: (arg: null | number) => void;
   className?: string;
-  userData?: UserType;
 }
 
 export type TSortChoice = 'down' | 'up';
 
 export interface INftListComponent {
-  data: TNftDataItem[] | null;
   titleSearch: string;
   sortItem: TSortChoice | undefined;
 }
@@ -61,8 +55,7 @@ export type TAuthenticityStyled = {
 
 export interface INftDataCommonLinkComponent {
   embeddedParams: TEmbeddedParams | undefined;
-  connectUserData: () => void;
-  setTokenNumber: (arg: number | undefined) => void;
+  setTokenNumber: Dispatch<SetStateAction<number | undefined>>;
   tokenNumber: number | undefined;
 }
 
@@ -70,7 +63,7 @@ export type TParamsNftDataCommonLink = {
   contract: string;
   product: string;
   tokenId: string;
-  blockchain: BlockchainType;
+  blockchain: Hex;
 };
 
 export interface IBreadcrumbsComponent {
@@ -79,10 +72,8 @@ export interface IBreadcrumbsComponent {
 
 export interface INftCollectionPageComponent {
   embeddedParams: TEmbeddedParams | undefined;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   selectedData: TMetadataType | undefined;
-  tokenData: { [index: string]: TTokenData } | null | undefined;
-  totalCount: number | undefined;
   offerPrice: string[] | undefined;
   getAllProduct: (
     fromToken: string,
@@ -94,7 +85,7 @@ export interface INftCollectionPageComponent {
   isLoading: boolean;
   tokenDataFiltered: TTokenData[];
   setTokenDataFiltered: (filteredTokens: any[]) => void;
-  someUsersData: UserType | null | undefined;
+  someUsersData: User | null | undefined;
   offerDataCol: TOfferType[] | undefined;
   offerAllData: TProducts | undefined;
   collectionName: string | undefined;
@@ -104,21 +95,18 @@ export interface INftCollectionPageComponent {
 
 export interface INftUnlockablesPage {
   embeddedParams: TEmbeddedParams | undefined;
-  productsFromOffer: TFileType[] | undefined;
-  primaryColor: string;
+  productsFromOffer: MediaFile[] | undefined;
   selectedToken: string | undefined;
-  tokenData: { [index: string]: TTokenData } | null | undefined;
-  someUsersData: UserType | null | undefined;
+  someUsersData: User | null | undefined;
   collectionName: string | undefined;
   setTokenDataFiltered: (filteredData: any) => void;
 }
 
 export interface INftSingleUnlockables {
   embeddedParams: TEmbeddedParams | undefined;
-  productsFromOffer: TFileType[];
+  productsFromOffer: MediaFile[];
   setTokenDataFiltered: (filteredData: any) => void;
-  primaryColor: string;
-  setSelectVideo: (selectedVideo: TFileType) => void;
+  setSelectVideo: (selectedVideo: MediaFile) => void;
   isDiamond: undefined | boolean;
 }
 
@@ -132,20 +120,20 @@ export type TRarityType = TRarity[] | TUnlockRarity[];
 
 export interface INftItemForCollectionViewComponent {
   embeddedParams?: TEmbeddedParams | undefined;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   pict: string | undefined;
   offerPrice: string[] | undefined;
   index: string;
   metadata: TMetadataType;
   offer: string;
   selectedData: TMetadataType | undefined;
-  someUsersData: UserType | null | undefined;
+  someUsersData: User | null | undefined;
   userName: string | undefined;
   tokenDataLength?: number;
 }
 
 export interface ICollectionInfo {
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   offerData: TOfferType[] | undefined;
   openTitle: boolean;
   mintToken?: boolean;
@@ -216,7 +204,7 @@ export interface INftDifferentRarity {
 }
 
 export type TNftSingleUnlockablesSections = {
-  [key: string]: TFileType[];
+  [key: string]: MediaFile[];
 };
 
 export type TSplashPageSetSelectedVideoArgs = {
@@ -226,12 +214,10 @@ export type TSplashPageSetSelectedVideoArgs = {
 };
 
 export interface IVideoPlayerView {
-  productsFromOffer: TFileType[];
+  productsFromOffer: MediaFile[];
   primaryColor?: string;
-  selectVideo: TFileType | undefined;
-  setSelectVideo: (
-    selectedVideo: any /*TFileType | TSplashPageSetSelectedVideoArgs*/
-  ) => void;
+  selectVideo: MediaFile | undefined;
+  setSelectVideo: (selectedVideo: any) => void;
   whatSplashPage?: string;
   someAdditionalData?: TVideoPlayerViewSpecialVideoType[];
   unlockables?: boolean;

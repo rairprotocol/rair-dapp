@@ -1,11 +1,9 @@
 import { CircularProgress } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+
+import { useAppSelector } from '../../hooks/useReduxHooks';
 
 const LoadingComponent = ({ size = 100, classes = 'list-wrapper-empty' }) => {
-  const { iconColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  const { iconColor } = useAppSelector((store) => store.colors);
 
   return (
     <div className={classes}>
@@ -17,8 +15,7 @@ const LoadingComponent = ({ size = 100, classes = 'list-wrapper-empty' }) => {
         />
       ) : (
         <CircularProgress
-          sx={{ color: `${
-            iconColor === '#1486c5' ? '#E882D5' : iconColor}` }}
+          sx={{ color: `${iconColor === '#1486c5' ? '#E882D5' : iconColor}` }}
           size={size}
           thickness={4.6}
         />

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import {
   INftSingleUnlockables,
@@ -17,10 +18,10 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
   embeddedParams,
   productsFromOffer,
   setTokenDataFiltered,
-  primaryColor,
   setSelectVideo,
   isDiamond
 }) => {
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const [sections, setSections] =
     useState<TNftSingleUnlockablesSections | null>(null);
   const [rarity, setRarity] = useState<TRarityType>([

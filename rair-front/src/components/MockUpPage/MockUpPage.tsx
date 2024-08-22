@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import SearchPanel from './SearchPanel';
 
+import { useAppSelector } from '../../hooks/useReduxHooks';
 // import RairFavicon from './assets/rair_favicon.ico';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { setShowSidebarTrue } from '../../ducks/metadata/actions';
 import { rFetch } from '../../utils/rFetch';
 
 import MainBanner from './MainBanner/MainBanner';
@@ -14,10 +11,7 @@ import { IMockUpPage } from './SelectBox/selectBox.types';
 
 const MockUpPage: React.FC<IMockUpPage> = ({ tabIndex, setTabIndex }) => {
   const [mainBannerInfo, setMainBannerInfo] = useState<any>(undefined);
-  const dispatch = useDispatch();
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   const getCollectionBanner = async () => {
     const response = await rFetch(`/api/settings/featured`);
@@ -25,10 +19,6 @@ const MockUpPage: React.FC<IMockUpPage> = ({ tabIndex, setTabIndex }) => {
       setMainBannerInfo(response.data);
     }
   };
-
-  useEffect(() => {
-    dispatch(setShowSidebarTrue());
-  }, [dispatch]);
 
   useEffect(() => {
     getCollectionBanner();

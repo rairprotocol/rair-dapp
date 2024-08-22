@@ -9,12 +9,9 @@ import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
 import { faPause } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
-import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { INftItemComponent } from './nftList.types';
 
-import { TNftItemResponse, TTokenData } from '../../../axios.responseTypes';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
 import useServerSettings from '../../../hooks/useServerSettings';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
@@ -30,50 +27,46 @@ import defaultAvatar from './../../UserProfileSettings/images/defaultUserPicture
 import { gettingPrice } from './utils/gettingPrice';
 
 const NftItemComponent: React.FC<INftItemComponent> = ({
-  blockchain,
-  price,
-  pict,
-  contractName,
-  collectionIndexInContract,
-  collectionName,
-  ownerCollectionUser,
+  item,
   index,
   playing,
   setPlaying,
-  className,
-  userData
+  className
 }) => {
   const navigate = useNavigate();
-  const [metaDataProducts, setMetaDataProducts] = useStateIfMounted<
-    TTokenData | undefined
-  >(undefined);
-  const [isFileUrl, setIsFileUrl] = useState<string>();
-
   const { width } = useWindowDimensions();
   const { getBlockchainData } = useServerSettings();
-  const chainInfo = getBlockchainData(blockchain as `0x${string}`);
 
-  const { maxPrice, minPrice } = gettingPrice(price);
-  const ipfsLink = useIPFSImageLink(metaDataProducts?.metadata?.image);
+  const [minPrice, setMinPrice] = useState<string>('0');
+  const [maxPrice, setMaxPrice] = useState<string>('0');
+  const [isFileUrl, setIsFileUrl] = useState<string>();
+
+  useEffect(() => {
+    const { maxPrice, minPrice } = gettingPrice(
+      item.product.offers.map((offer) => offer.price)
+    );
+    setMinPrice(minPrice);
+    setMaxPrice(maxPrice);
+  }, [item.product.offers]);
+
+  const chainInfo = getBlockchainData(item.blockchain);
+  const ipfsLink = useIPFSImageLink(item.frontToken.metadata.image);
 
   const { globalModalState } =
     useContext<TGlobalModalContext>(GlobalModalContext);
 
   const mobileFont = width > 400 ? '' : { fontSize: '9px' };
+
   const checkUrl = useCallback(() => {
-    if (
-      metaDataProducts &&
-      metaDataProducts.metadata &&
-      metaDataProducts.metadata.animation_url
-    ) {
+    if (item?.frontToken?.metadata?.animation_url) {
       const fileUrl: string | undefined =
-        metaDataProducts.metadata?.animation_url;
+        item?.frontToken?.metadata?.animation_url;
       const parts: string[] | undefined = fileUrl?.split('/').pop()?.split('.');
       const ext: string | undefined =
         parts && parts?.length > 1 ? parts?.pop() : '';
       setIsFileUrl(ext);
     }
-  }, [metaDataProducts, setIsFileUrl]);
+  }, [item?.frontToken?.metadata?.animation_url]);
 
   const handlePlaying = (el?: unknown) => {
     if (el === null) {
@@ -91,125 +84,59 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
     }
   };
 
-  const getProductAsync = useCallback(async () => {
-    const responseProductMetadata = await axios.get<TNftItemResponse>(
-      `/api/nft/network/${blockchain}/${contractName}/${collectionIndexInContract}`
-    );
-    if (responseProductMetadata.data.result.tokens.length > 0) {
-      setMetaDataProducts(responseProductMetadata.data.result?.tokens[0]);
-    }
-  }, [
-    blockchain,
-    contractName,
-    collectionIndexInContract,
-    setMetaDataProducts
-  ]);
-
-  function RedirectToMockUp() {
-    redirection();
-  }
-
-  const redirection = () => {
+  const navigateToCollectionPage = () => {
     navigate(
-      `/collection/${blockchain}/${contractName}/${collectionIndexInContract}/0`
+      `/collection/${item.blockchain}/${item.contractAddress}/${item.product.collectionIndexInContract}/0`
     );
   };
 
-  function checkPrice() {
-    if (maxPrice === minPrice) {
-      const samePrice = maxPrice;
-      if (samePrice.length > 8) {
-        return `${
-          samePrice
-            ? `${Number(samePrice).toFixed(4)}+`
-            : `${Number(samePrice).toFixed(4)}+`
-        } ${blockchain && chainInfo?.symbol}`;
-      } else {
-        return `${samePrice ? samePrice : samePrice} ${
-          blockchain && chainInfo?.symbol
-        }`;
-      }
-    }
-
-    if (maxPrice.length > 8 && minPrice.length < 8) {
-      return (
-        <div className="container-nft-fullPrice">
-          <div className="description description-price description-price-unlockables-page">
-            {`${Number(maxPrice).toFixed(0)}+ – ${minPrice}`}
-          </div>
-          <div className="description description-price description-price-unlockables-page">
-            {`${blockchain && chainInfo?.symbol}`}
-          </div>
+  const checkPrice = useCallback(() => {
+    const symbol = chainInfo?.symbol;
+    const minimumPrice =
+      minPrice.length > 8 ? `${Number(minPrice).toFixed(4)}+` : minPrice;
+    const maximumPrice =
+      maxPrice.length > 8 ? `${Number(maxPrice).toFixed(4)}+` : maxPrice;
+    return (
+      <div className="container-nft-fullPrice">
+        <div className="description description-price description-price-unlockables-page">
+          {minimumPrice}{' '}
+          {maximumPrice !== minimumPrice ? `- ${maximumPrice}` : ''}
         </div>
-      );
-    } else if (maxPrice.length < 8 && minPrice.length > 8) {
-      return (
-        <div className="container-nft-fullPrice">
+        {symbol && (
           <div className="description description-price description-price-unlockables-page">
-            {`${maxPrice} – ${Number(minPrice).toFixed(3)}+`}
+            {symbol}
           </div>
-          <div className="description description-price description-price-unlockables-page">
-            {`${blockchain && chainInfo?.symbol}`}
-          </div>
-        </div>
-      );
-    } else if (maxPrice.length > 8 && minPrice.length > 8) {
-      return (
-        <div className="container-nft-fullPrice">
-          <div className="description description-price description-price-unlockables-page">
-            {`${Number(maxPrice).toFixed(3)}+ – ${Number(minPrice).toFixed(
-              3
-            )}+`}
-          </div>
-          <div className="description description-price description-price-unlockables-page">
-            {`${blockchain && chainInfo?.symbol}`}
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="container-nft-fullPrice">
-          <div className="description description-price description-price-unlockables-page">
-            {`${maxPrice} – ${minPrice}`}
-          </div>
-          <div className="description description-price description-price-unlockables-page">
-            {`${blockchain && chainInfo?.symbol}`}
-          </div>
-        </div>
-      );
-    }
-  }
+        )}
+      </div>
+    );
+  }, [maxPrice, minPrice, chainInfo?.symbol]);
 
   function ifPriseSame() {
     if (minPrice === maxPrice) {
       if (minPrice.length > 5) {
-        return `${minPrice.slice(0, 5)} ${blockchain && chainInfo?.symbol}`;
+        return `${minPrice.slice(0, 5)} ${item.blockchain && chainInfo?.symbol}`;
       }
-      return `${minPrice} ${blockchain && chainInfo?.symbol}`;
+      return `${minPrice} ${item.blockchain && chainInfo?.symbol}`;
     } else if (maxPrice && minPrice) {
       if (minPrice.length > 5) {
         return `${minPrice.slice(0, 5) + '+'} ${
-          blockchain && chainInfo?.symbol
+          item.blockchain && chainInfo?.symbol
         }`;
       }
-      return `${minPrice + '+'} ${blockchain && chainInfo?.symbol}`;
+      return `${minPrice + '+'} ${item.blockchain && chainInfo?.symbol}`;
     }
   }
   useEffect(() => {
     checkUrl();
   }, [checkUrl]);
 
-  useEffect(() => {
-    getProductAsync();
-  }, [getProductAsync]);
-
-  const displayImage = metaDataProducts?.metadata?.image_thumbnail
-    ? metaDataProducts.metadata.image_thumbnail
+  const displayImage = item.frontToken?.metadata?.image_thumbnail
+    ? item.frontToken.metadata.image_thumbnail
     : ipfsLink
       ? ipfsLink
       : import.meta.env.VITE_TESTNET === 'true'
         ? defaultHotDrops
-        : pict;
+        : item.product.cover;
 
   return (
     <>
@@ -226,13 +153,13 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
         <div
           onClick={() => {
             if (
-              !metaDataProducts?.metadata?.animation_url ||
+              !item.frontToken?.metadata?.animation_url ||
               isFileUrl === 'gif' ||
               isFileUrl === 'png' ||
               isFileUrl === 'jpeg' ||
               isFileUrl === 'webp'
             )
-              RedirectToMockUp();
+              navigateToCollectionPage();
           }}
           className="col-12 rounded font-size"
           style={{
@@ -242,7 +169,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             width: '100%',
             cursor: 'pointer'
           }}>
-          {metaDataProducts?.metadata?.animation_url &&
+          {item.frontToken?.metadata?.animation_url &&
             (isFileUrl === 'gif' ||
             isFileUrl === 'png' ||
             isFileUrl === 'jpeg' ||
@@ -269,7 +196,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 </div>
               </div>
             ))}
-          {metaDataProducts?.metadata?.animation_url ? (
+          {item.frontToken?.metadata?.animation_url ? (
             isFileUrl === 'gif' ||
             isFileUrl === 'png' ||
             isFileUrl === 'jpeg' ||
@@ -278,7 +205,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 className="col-12 h-100 w-100 zoom-event"
                 width={'282px'}
                 height={'282px'}
-                alt={collectionName}
+                alt={item.product.name}
                 cover={true}
                 src={displayImage}
               />
@@ -291,9 +218,9 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 {
                   <ReactPlayer
                     onClick={() => toggleVideoPlay()}
-                    alt={collectionName}
+                    alt={item.product.name}
                     url={`${checkIPFSanimation(
-                      metaDataProducts.metadata?.animation_url
+                      item.frontToken.metadata?.animation_url
                     )}`}
                     light={displayImage}
                     style={{
@@ -317,7 +244,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               width={'282px'}
               height={'282px'}
               src={displayImage}
-              alt={collectionName}
+              alt={item.product.name}
               cover={true}
             />
           )}
@@ -338,44 +265,42 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                   flexDirection: 'column',
                   alignItems: 'flex-start'
                 }}>
-                {collectionName.slice(0, 14)}
-                {collectionName.length > 12 ? '...' : ''}
+                {item.product.name.slice(0, 14)}
+                {item.product.name.length > 12 ? '...' : ''}
                 <div className="brief-info-nftItem">
                   <div>
-                    {userData ? (
+                    {item.userData ? (
                       <div className="collection-block-user-creator">
                         <img
                           src={
-                            userData.avatar ? userData.avatar : defaultAvatar
+                            item.userData.avatar
+                              ? item.userData.avatar
+                              : defaultAvatar
                           }
                           alt="User Avatar"
                         />
                         <h5 style={{ wordBreak: 'break-all', ...mobileFont }}>
-                          {userData.nickName
-                            ? userData.nickName.length > 16
-                              ? userData.nickName.slice(0, 5) +
+                          {item.userData.nickName
+                            ? item.userData.nickName.length > 16
+                              ? item.userData.nickName.slice(0, 5) +
                                 '...' +
-                                userData.nickName.slice(
-                                  userData.nickName.length - 4
+                                item.userData.nickName.slice(
+                                  item.userData.nickName.length - 4
                                 )
-                              : userData.nickName
-                            : ownerCollectionUser.slice(0, 5) +
+                              : item.userData.nickName
+                            : item.user.slice(0, 5) +
                               '...' +
-                              ownerCollectionUser.slice(
-                                ownerCollectionUser.length - 4
-                              )}
+                              item.user.slice(item.user.length - 4)}
                         </h5>
                       </div>
                     ) : (
                       <div className="collection-block-user-creator">
                         <img src={defaultAvatar} alt="User Avatar" />
                         <h5 style={{ wordBreak: 'break-all', ...mobileFont }}>
-                          {ownerCollectionUser &&
-                            ownerCollectionUser.slice(0, 5) +
-                              '....' +
-                              ownerCollectionUser.slice(
-                                ownerCollectionUser.length - 4
-                              )}
+                          {item.user &&
+                            item.user.slice(0, 5) +
+                              '...' +
+                              item.user.slice(item.user.length - 4)}
                         </h5>
                       </div>
                     )}
@@ -383,7 +308,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                   <div className="collection-block-price">
                     <img
                       className="blockchain-img"
-                      src={`${blockchain && chainInfo?.image}`}
+                      src={`${item.blockchain && chainInfo?.image}`}
                       alt="Blockchain network"
                     />
                     <span className="description">
@@ -393,10 +318,10 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                 </div>
               </div>
             </div>
-            <div onClick={RedirectToMockUp} className="description-big">
+            <div onClick={navigateToCollectionPage} className="description-big">
               <img
                 className="blockchain-img"
-                src={`${blockchain && chainInfo?.image}`}
+                src={`${item.blockchain && chainInfo?.image}`}
                 alt="Blockchain network"
               />
               <span className="description description-price">

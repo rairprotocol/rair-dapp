@@ -1,10 +1,12 @@
+import { Hex } from 'viem';
+
 import {
   TFileType,
   TMetadataType,
   TProducts,
   TTokenData
 } from '../../axios.responseTypes';
-import { UserType } from '../../ducks/users/users.types';
+import { MediaFile, User } from '../../types/databaseTypes';
 import { TOfferType } from '../marketplace/marketplace.types';
 
 export interface ITitleSingleTokenView {
@@ -14,14 +16,14 @@ export interface ITitleSingleTokenView {
 
 export interface INftItemForCollectionView {
   embeddedParams?: TEmbeddedParams;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   pict: string | undefined;
   offerPrice?: string[] | undefined;
   index: string;
   metadata: TMetadataType;
   offer: string | undefined;
   selectedData?: TMetadataType | undefined;
-  someUsersData?: UserType | null | undefined;
+  someUsersData?: User | null | undefined;
   userName: string | undefined;
   tokenDataLength?: number;
   playing: string | null;
@@ -41,7 +43,7 @@ export interface INftItemForCollectionView {
 }
 
 export type TParamsNftItemForCollectionView = {
-  blockchain: BlockchainType;
+  blockchain: Hex;
   contract: string;
   product: string;
   tokenId: string;
@@ -80,12 +82,12 @@ export interface IEtherscanIconComponent {
   classTitle: string;
   contract: string | undefined;
   selectedToken: string | undefined;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   currentTokenId: string | undefined;
 }
 
 export type TParamsBreadcrumbsComponent = {
-  blockchain: BlockchainType;
+  blockchain: Hex;
   contract: string;
   product: string;
   tokenId: string;
@@ -108,13 +110,11 @@ export interface INftVideoplayer {
 export interface ISerialNumberBuySell {
   tokenData: { [index: string]: TTokenData } | null;
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   product: string | undefined;
   contract: string | undefined;
-  totalCount: number | undefined;
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
-  textColor: string | undefined;
   offerData: TOfferType | undefined;
   handleTokenBoughtButton: () => void;
   tokenDataForResale?: any;
@@ -134,7 +134,6 @@ export interface ISellButton {
 
 export interface ISingleTokenViewProperties {
   selectedData: TMetadataType;
-  textColor: string | undefined;
 }
 
 export interface IBuySellButton {
@@ -145,9 +144,9 @@ export interface IBuySellButton {
 }
 
 export type TUnlockableVideosSingleTokenPage = {
-  productsFromOffer: TFileType[] | undefined;
-  selectVideo: TFileType | undefined;
-  setSelectVideo: (videoFile: TFileType | undefined) => void;
+  productsFromOffer: MediaFile[] | undefined;
+  selectVideo: MediaFile | undefined;
+  setSelectVideo: (videoFile: MediaFile | undefined) => void;
   openVideoplayer: boolean;
   setOpenVideoPlayer: (value: boolean) => void;
   handlePlayerClick: () => void;
@@ -157,9 +156,9 @@ export type TUnlockableVideosSingleTokenPage = {
 export interface ITitleCollection {
   title: string | undefined;
   userName: string | undefined;
-  someUsersData: UserType | undefined | null;
+  someUsersData: User | undefined | null;
   selectedData: TMetadataType | undefined;
-  currentUser?: UserType;
+  currentUser?: User;
   offerDataCol?: TOfferType[] | undefined;
   connectUserData?: any;
   collectionAttributes?: any;
@@ -176,7 +175,7 @@ export interface ICusmonShareButton {
 export type TParamsTitleCollection = {
   tokenId: string;
   contract: string;
-  blockchain: BlockchainType;
+  blockchain: Hex;
   tokens: 'tokens' | 'collection';
 };
 
@@ -187,25 +186,23 @@ export interface ISellInputButton {
 }
 
 export interface INftDataPageMain {
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   contract: string | undefined;
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   product: string | undefined;
-  productsFromOffer: TFileType[] | undefined;
+  productsFromOffer: MediaFile[] | undefined;
   selectedData: TMetadataType | undefined;
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
-  totalCount: number | undefined;
-  textColor: string | undefined;
   offerData?: TOfferType | undefined;
   offerDataInfo: TOfferType[] | undefined;
   offerPrice?: string[];
-  someUsersData: UserType | null | undefined;
+  someUsersData: User | null | undefined;
   ownerInfo?: TProducts | undefined;
   embeddedParams?: TEmbeddedParams | undefined;
   handleTokenBoughtButton: () => void;
-  setTokenNumber: (arg: undefined | number) => void;
-  getProductsFromOffer: () => void;
+  setTokenNumber?: (arg: undefined | number) => void;
+  getProductsFromOffer?: () => void;
 }
 
 export type TOffersIndexesData = {
@@ -218,7 +215,7 @@ export type TOffersIndexesData = {
 };
 
 export type TSwitchEthereumChainArgs = {
-  chainId: BlockchainType;
+  chainId: Hex;
   chainName: string;
 };
 
@@ -234,7 +231,7 @@ export type TModeType = 'collection' | 'tokens' | 'unlockables';
 export type TEmbeddedParams = {
   contract: string;
   product: string;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   mode: TModeType;
   setMode: (mode: TModeType) => void;
   tokenId: string;

@@ -1,16 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
+import { formatEther } from 'ethers';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { validateInteger } from '../../../utils/metamaskUtils';
 import { rFetch } from '../../../utils/rFetch';
-// import colors from '../../../utils/offerLockColors';
 import InputField from '../../common/InputField';
 import { IDiamondOfferRow } from '../creatorStudio.types';
 const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
@@ -34,7 +31,7 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   fetchingData
 }) => {
   const { primaryColor, textColor, primaryButtonColor, secondaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+    useAppSelector((store) => store.colors);
 
   const [itemName, setItemName] = useState(offerName);
   const [startingToken, setStartingToken] = useState<string>(range[0]);
@@ -112,8 +109,9 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
     if (!endingToken || !startingToken) {
       return;
     }
-    const correctCount = BigNumber.from(endingToken).sub(startingToken).add(1);
-    if (!_id && simpleMode && !correctCount.eq(allowedTokenCount)) {
+    const correctCount =
+      BigInt(endingToken) - BigInt(startingToken) + BigInt(1);
+    if (!_id && simpleMode && !(correctCount === BigInt(allowedTokenCount))) {
       updater(
         'tokensAllowed',
         setAllowedTokenCount,
@@ -130,7 +128,7 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
     if (
       !_id &&
       validateInteger(allowedTokenCount) &&
-      correctCount.lt(allowedTokenCount)
+      correctCount < BigInt(allowedTokenCount)
     ) {
       updater(
         'tokensAllowed',
@@ -142,7 +140,7 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
     if (
       !_id &&
       validateInteger(lockedTokenCount) &&
-      correctCount.lt(lockedTokenCount)
+      correctCount < BigInt(lockedTokenCount)
     ) {
       updater(
         'lockedTokens',
@@ -315,10 +313,11 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
                   updater(
                     'tokensAllowed',
                     setAllowedTokenCount,
-                    BigNumber.from(endingToken)
-                      .sub(startingToken)
-                      .add(1)
-                      .toString()
+                    (
+                      BigInt(endingToken) -
+                      BigInt(startingToken) +
+                      BigInt(1)
+                    ).toString()
                   )
                 }
                 className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
@@ -346,10 +345,11 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
                   updater(
                     'lockedTokens',
                     setLockedTokenCount,
-                    BigNumber.from(endingToken)
-                      .sub(startingToken)
-                      .add(1)
-                      .toString()
+                    (
+                      BigInt(endingToken) -
+                      BigInt(startingToken) +
+                      BigInt(1)
+                    ).toString()
                   )
                 }
                 className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
@@ -401,9 +401,9 @@ const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
             </b>{' '}
             tokens for{' '}
             <b>
-              {utils
-                .formatEther(!individualPrice ? 0 : individualPrice.toString())
-                .toString()}{' '}
+              {formatEther(
+                !individualPrice ? 0 : individualPrice.toString()
+              ).toString()}{' '}
               {blockchainSymbol}
             </b>{' '}
             each

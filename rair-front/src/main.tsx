@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 
-import store from './ducks';
-
 import { GlobalModalStateProvider } from './providers/ModalProvider/ModalProvider';
+import { store } from './redux/store';
+
 const sentryIoTraceRate = Number(import.meta.env.VITE_SENTRY_IO_TRACE_RATE);
 import {
   BrowserRouter,
@@ -42,7 +42,7 @@ if (import.meta.env.VITE_SENTRY_ENABLED) {
   });
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
+const root = createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
     <Provider store={store}>

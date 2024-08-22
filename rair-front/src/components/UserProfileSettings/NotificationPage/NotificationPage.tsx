@@ -1,26 +1,21 @@
-//@ts-nocheck
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 
-// import IconRemove from './images/icon-remove.png';
-
-// import { useSelector } from 'react-redux';
 import './NotificationPage.css';
 
-const NotificationPage = ({ el, readNotification, removeItem }) => {
-  const { headerLogoMobile, primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
+const NotificationPage = ({ el, readNotification }) => {
+  const { headerLogoMobile, primaryColor } = useAppSelector(
+    (store) => store.colors
   );
 
   useEffect(() => {
     readNotification();
-  }, [])
+  }, []);
 
   return (
-    <div className={`wrapper-notification ${primaryColor === '#dedede' ? 'rhyno' : ''}`}>
+    <div
+      className={`wrapper-notification ${primaryColor === '#dedede' ? 'rhyno' : ''}`}>
       <div className="notification-from-rair">
         <div className="notification-new">
           <div
@@ -40,9 +35,7 @@ const NotificationPage = ({ el, readNotification, removeItem }) => {
                 <img src={headerLogoMobile} alt="Rair Tech" />
               </div>
               <div className="text-notification">
-                <div className="title-notif">
-                  {el.message}
-                </div>
+                <div className="title-notif">{el.message}</div>
                 <div className="text-notif">{el.title}</div>
               </div>
             </div>

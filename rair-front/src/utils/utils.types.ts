@@ -1,5 +1,6 @@
 import { chains } from '@alchemy/aa-core';
 import { Network } from 'alchemy-sdk';
+import { Hex } from 'viem';
 
 export type TNativeCurrency = {
   name: string;
@@ -8,7 +9,7 @@ export type TNativeCurrency = {
 };
 
 export type TAddChainData = {
-  chainId: BlockchainType;
+  chainId: Hex;
   chainName: string;
   nativeCurrency?: TNativeCurrency;
   rpcUrls: Array<string>;
@@ -18,7 +19,7 @@ export type TChainItemData = {
   testnet?: boolean;
   image: string;
   name: string;
-  chainId: BlockchainType;
+  chainId: Hex;
   symbol: string;
   addChainData: TAddChainData;
   disabled?: boolean;
@@ -29,5 +30,5 @@ export type TChainItemData = {
   alchemyGasPolicy?: string;
 };
 export type TChainData = {
-  [key in BlockchainType]?: TChainItemData;
+  [key in Hex]?: TChainItemData;
 };

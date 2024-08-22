@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import { CloseIconMobile } from '../../../../images';
 import { SocialMenuMobile } from '../../../../styled-components/SocialLinkIcons/SocialLinkIcons';
@@ -12,16 +11,15 @@ import NotificationPage from '../../NotificationPage/NotificationPage';
 import './NotificationBox.css';
 
 const NotificationBox = ({
-  primaryColor,
   title,
   el,
   getNotifications,
-  currentUserAddress,
   getNotificationsCount
 }) => {
-  const { headerLogoMobile } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
+  const { headerLogoMobile, primaryColor } = useAppSelector(
+    (store) => store.colors
   );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const reactSwal = useSwal();
   const store = useStore();
@@ -43,7 +41,7 @@ const NotificationBox = ({
         getNotificationsCount();
       }
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, el._id, getNotifications, getNotificationsCount]);
 
   const readNotification = useCallback(async () => {
     if (currentUserAddress) {
@@ -62,7 +60,7 @@ const NotificationBox = ({
         getNotificationsCount();
       }
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, el._id, getNotifications, getNotificationsCount]);
 
   const showMoreDetails = () => {
     reactSwal.fire({

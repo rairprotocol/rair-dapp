@@ -1,8 +1,4 @@
-import { useSelector } from 'react-redux';
-
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-// import MetamaskFox from '../../assets/MetamaskFox.svg?react';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import { IBuySellButton } from '../../mockupPage.types';
 
 export const BuySellButton: React.FC<IBuySellButton> = ({
@@ -10,10 +6,9 @@ export const BuySellButton: React.FC<IBuySellButton> = ({
   handleClick,
   disabled
 }) => {
-  const { textColor, primaryButtonColor, primaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor, primaryColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   return (
     <button

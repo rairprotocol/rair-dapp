@@ -1,27 +1,26 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import { constants, utils } from 'ethers';
-import { parseEther } from 'ethers/lib/utils';
+import { isAddress, parseEther, ZeroAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import { BuySellButton } from './BuySellButton';
 
 import { TUserResponse } from '../../../../axios.responseTypes';
 import { erc721Abi } from '../../../../contracts';
-import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { UserType } from '../../../../ducks/users/users.types';
+import useContracts from '../../../../hooks/useContracts';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../hooks/useServerSettings';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
+import { User } from '../../../../types/databaseTypes';
 import { rFetch } from '../../../../utils/rFetch';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISellButton } from '../../mockupPage.types';
 
-const SellButton: React.FC<ISellButton> = ({
+const SellButton: FC<ISellButton> = ({
   tokenData,
   selectedToken,
   sellingPrice,
@@ -31,13 +30,11 @@ const SellButton: React.FC<ISellButton> = ({
   item,
   singleTokenPage
 }) => {
-  const { contractCreator, currentUserAddress, diamondMarketplaceInstance } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
+  const { contractCreator, diamondMarketplaceInstance } = useContracts();
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   let { blockchain, contract, tokenId } = useParams();
-  const [accountData, setAccountData] = useState<UserType | null>(null);
+  const [accountData, setAccountData] = useState<User | null>(null);
 
   const xMIN = Number(0.0001);
   const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
@@ -53,8 +50,8 @@ const SellButton: React.FC<ISellButton> = ({
   const { nodeAddress, settings, getBlockchainData } = useServerSettings();
 
   const handleClickSellButton = useCallback(async () => {
-    if (!correctBlockchain(blockchain as BlockchainType)) {
-      web3Switch(blockchain as BlockchainType);
+    if (!correctBlockchain(blockchain)) {
+      web3Switch(blockchain);
       return;
     }
     const tokenInformation =
@@ -63,8 +60,8 @@ const SellButton: React.FC<ISellButton> = ({
       !contractCreator ||
       !sellingPrice ||
       !blockchain ||
-      !getBlockchainData(blockchain as `0x${string}`) ||
-      !correctBlockchain(blockchain as BlockchainType) ||
+      !getBlockchainData(blockchain as Hex) ||
+      !correctBlockchain(blockchain) ||
       !diamondMarketplaceInstance ||
       !tokenInformation
     ) {
@@ -82,7 +79,7 @@ const SellButton: React.FC<ISellButton> = ({
     });
     const isApprovedForAll = await web3TxHandler(instance, 'isApprovedForAll', [
       currentUserAddress,
-      diamondMarketplaceInstance.address
+      await diamondMarketplaceInstance.getAddress()
     ]);
     if (!isApprovedForAll) {
       reactSwal.fire({
@@ -95,7 +92,7 @@ const SellButton: React.FC<ISellButton> = ({
         !(await web3TxHandler(
           instance,
           'setApprovalForAll',
-          [diamondMarketplaceInstance.address, true],
+          [await diamondMarketplaceInstance.getAddress(), true],
           {
             intendedBlockchain: item.contract.blockchain,
             sponsored: tokenInformation.range.sponsored
@@ -112,9 +109,9 @@ const SellButton: React.FC<ISellButton> = ({
     }
     reactSwal.fire({
       title: 'Creating resale offer',
-      html: `Posting NFT #${tokenId} up for sale with price ${sellingPrice} ${getBlockchainData(
-        blockchain as `0x${string}`
-      )?.symbol}`,
+      html: `Posting NFT #${tokenId} up for sale with price ${sellingPrice} ${
+        getBlockchainData(blockchain as `0x${string}`)?.symbol
+      }`,
       icon: 'info',
       showConfirmButton: false
     });
@@ -190,8 +187,8 @@ const SellButton: React.FC<ISellButton> = ({
       !item &&
       selectedToken &&
       tokenData?.[selectedToken]?.ownerAddress &&
-      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress) &&
-      tokenData?.[selectedToken]?.ownerAddress !== constants.AddressZero
+      isAddress(tokenData?.[selectedToken]?.ownerAddress) &&
+      tokenData?.[selectedToken]?.ownerAddress !== ZeroAddress
     ) {
       try {
         const result = await axios
@@ -208,8 +205,8 @@ const SellButton: React.FC<ISellButton> = ({
     } else {
       if (
         item &&
-        utils.isAddress(item.ownerAddress) &&
-        item.ownerAddress !== constants.AddressZero
+        isAddress(item.ownerAddress) &&
+        item.ownerAddress !== ZeroAddress
       ) {
         try {
           const result = await axios
@@ -315,4 +312,4 @@ const SellButton: React.FC<ISellButton> = ({
   return sellButton();
 };
 
-export default React.memo(SellButton);
+export default memo(SellButton);

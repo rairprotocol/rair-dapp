@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { teamImmersiverseArray } from './AboutUsTeam';
 
-import { RootState } from '../../../ducks';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { DocumentIcon, metaMaskIcon } from '../../../images';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { CustomModalStyle } from '../../../types/commonTypes';
 import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -24,7 +23,7 @@ import './../SplashPage.css';
 import './../Greyman/./GreymanSplashPageMobile.css';
 import './../../AboutPage/AboutPageNew/AboutPageNew.css';
 
-const customStyles = {
+const customStyles: CustomModalStyle = {
   overlay: {
     zIndex: '1'
   },
@@ -51,23 +50,19 @@ Modal.setAppElement('#root');
 const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
   setIsSplashPage
 }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const [, /*active*/ setActive] = useState<TSplashPageIsActive>({
     policy: false,
     use: false
   });
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-  const currentUserAddress = useSelector<RootState, string | undefined>(
-    (store) => store.contractStore.currentUserAddress
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: '#ImmersiverseATX',
         ogTitle: '#ImmersiverseATX',
         twitterTitle: '#ImmersiverseATX',
@@ -93,8 +88,12 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
+  let subtitle: Modal;
+
   function afterOpenModal() {
-    return (subtitle.style.color = '#9013FE');
+    if (subtitle?.props?.style?.content) {
+      return (subtitle.props.style.content.color = '#9013FE');
+    }
   }
 
   function closeModal() {
@@ -105,8 +104,6 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
       use: false
     }));
   }
-
-  let subtitle: Modal;
 
   const formHyperlink = () => {
     window.open(

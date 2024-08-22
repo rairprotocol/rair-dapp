@@ -1,8 +1,10 @@
 import { memo, useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { RootState } from '../../../../ducks';
-import { TVideosInitialState } from '../../../../ducks/videos/videosDucks.types';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../hooks/useReduxHooks';
+import { dataStatuses } from '../../../../redux/commonTypes';
 import LoadingComponent from '../../../common/LoadingComponent';
 import VideoItem from '../../../video/videoItem';
 // import cl from './PersonalProfileMyVideoTab.module.css';
@@ -15,11 +17,9 @@ interface IPersonalProfileMyVideoTabComponent {
 const PersonalProfileMyVideoTabComponent: React.FC<
   IPersonalProfileMyVideoTabComponent
 > = ({ titleSearch, publicAddress }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { videos, loading } = useSelector<RootState, TVideosInitialState>(
-    (store) => store.videosStore
-  );
+  const { videos, videoListStatus } = useAppSelector((store) => store.videos);
   const myVideo = {};
 
   const updateVideo = useCallback(
@@ -56,7 +56,7 @@ const PersonalProfileMyVideoTabComponent: React.FC<
     findMyVideo(videos, 'isUnlocked', true);
   }
 
-  if (loading) {
+  if (videoListStatus !== dataStatuses.Complete) {
     return <LoadingComponent />;
   }
   return (

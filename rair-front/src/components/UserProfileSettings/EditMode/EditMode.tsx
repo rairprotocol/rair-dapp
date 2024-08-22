@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Provider, useStore } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
@@ -7,11 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
 import { TUserResponse } from '../../../axios.responseTypes';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { getUserStart } from '../../../ducks/users/actions';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { loadCurrentUser } from '../../../redux/userSlice';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import { SvgUserIcon } from '../SettingsIcons/SettingsIcons';
 import { AgreementsPopUp } from '../TermsOfServicePopUp/TermsOfServicePopUp';
@@ -27,18 +24,14 @@ const EditMode = ({
   setImagePreviewUrl,
   mainName
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const store = useStore();
   const reactSwal = useSwal();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
   const [userName, setUserName] = useState(mainName.replace(/@/g, ''));
   const [emailUser, setEmailUser] = useState(userEmail);
   const [userAvatar, setUserAvatar] = useState(
@@ -73,12 +66,6 @@ const EditMode = ({
               emailUser={emailUser}
               filePhoto={filePhoto}
               currentUserAddress={currentUserAddress}
-              setUserName={setUserName}
-              setMainEmail={setMainEmail}
-              setMainName={setMainName}
-              setUserAvatar={setUserAvatar}
-              setImagePreviewUrl={setImagePreviewUrl}
-              onChangeEditMode={onChangeEditMode}
             />
           </Provider>
         ),
@@ -111,13 +98,12 @@ const EditMode = ({
         const { user, success } = profileUpdateResponse.data;
 
         if (success) {
+          dispatch(loadCurrentUser());
           if (user?.nickName) {
             setUserName(user.nickName.replace(/@/g, ''));
-            dispatch(getUserStart(currentUserAddress));
             setMainName(user.nickName);
           }
           setMainEmail(user?.email);
-          dispatch(getUserStart(currentUserAddress));
           if (user?.avatar) {
             setUserAvatar(user.avatar);
             setImagePreviewUrl(user.avatar);

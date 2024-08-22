@@ -1,8 +1,6 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import { FC, memo } from 'react';
 
-import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../hooks/useServerSettings';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 import EtherscanDark from '../../assets/EtherscanDark.svg?react';
@@ -10,20 +8,15 @@ import EtherscanLight from '../../assets/EtherscanLight.svg?react';
 import { IEtherscanIconComponent } from '../../mockupPage.types';
 import LikeButton from '../LikeButton/LikeButton';
 
-const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
+const EtherscanIconComponent: FC<IEtherscanIconComponent> = ({
   classTitle,
   contract,
   selectedToken,
   blockchain,
   currentTokenId
 }) => {
-  const primaryColor = useSelector<RootState, string>(
-    (state) => state.colorStore.primaryColor
-  );
-
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { isDarkMode } = useAppSelector((store) => store.colors);
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const { getBlockchainData } = useServerSettings();
 
@@ -34,56 +27,35 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
       {blockchain && getBlockchainData(blockchain) && (
         <div className={classTitle}>
           <a
-            href={`${getBlockchainData(blockchain)
-              ?.blockExplorerGateway}token/${contract}?a=${selectedToken}`}
+            href={`${
+              getBlockchainData(blockchain)?.blockExplorerGateway
+            }/token/${contract}?a=${selectedToken}`}
             target="_blank"
             rel="noreferrer">
-            {primaryColor === 'charcoal' ? (
-              <div
-                className={`etherscan-icon-token-dark ${
-                  hotdropsVar === 'true' ? 'hotdrops-border' : ''
-                }`}>
-                <TooltipBox position="top" title="Token Address">
+            <div
+              className={`etherscan-icon-token-${isDarkMode ? 'dark' : 'light'} ${
+                hotdropsVar === 'true' ? 'hotdrops-border' : ''
+              }`}>
+              <TooltipBox position="top" title="Token Address">
+                {isDarkMode ? (
                   <EtherscanDark className="nft-collection-icons-icon" />
-                </TooltipBox>
-              </div>
-            ) : (
-              <div
-                className={`etherscan-icon-token-light ${
-                  hotdropsVar === 'true' ? 'hotdrops-border' : ''
-                }`}>
-                <TooltipBox position="top" title="Token Address">
+                ) : (
                   <EtherscanLight className="nft-collection-icons-icon" />
-                </TooltipBox>
-              </div>
-            )}
+                )}
+              </TooltipBox>
+            </div>
           </a>
           {currentUserAddress && (
-            <>
-              {primaryColor === 'charcoal' ? (
-                <div
-                  className={`etherscan-icon-token-dark ${
-                    hotdropsVar === 'true' ? 'hotdrops-border' : ''
-                  }`}>
-                  <LikeButton
-                    selectedToken={selectedToken}
-                    tokenId={currentTokenId}
-                    likeButtonStyle="nft-collection-icons-icon"
-                  />
-                </div>
-              ) : (
-                <div
-                  className={`etherscan-icon-token-light ${
-                    hotdropsVar === 'true' ? 'hotdrops-border' : ''
-                  }`}>
-                  <LikeButton
-                    selectedToken={selectedToken}
-                    tokenId={currentTokenId}
-                    likeButtonStyle="nft-collection-icons-icon"
-                  />
-                </div>
-              )}
-            </>
+            <div
+              className={`etherscan-icon-token-${isDarkMode ? 'dark' : 'light'} ${
+                hotdropsVar === 'true' ? 'hotdrops-border' : ''
+              }`}>
+              <LikeButton
+                selectedToken={selectedToken}
+                tokenId={currentTokenId}
+                likeButtonStyle="nft-collection-icons-icon"
+              />
+            </div>
           )}
         </div>
       )}
@@ -91,4 +63,4 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
   );
 };
 
-export default React.memo(EtherscanIconComponent);
+export default memo(EtherscanIconComponent);

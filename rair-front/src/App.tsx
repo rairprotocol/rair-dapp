@@ -1,21 +1,11 @@
-//@ts-nocheck
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 // React Redux types
 import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 
-import { RootState } from './ducks';
-// import * as ethers from 'ethers';
-// import * as colorTypes from './ducks/colors/types';
 // logos for About Page
-import {
-  headerLogoBlack,
-  headerLogoWhite,
-  HotdropsFavicon,
-  RairFavicon
-} from './images';
+import { headerLogoBlack, headerLogoWhite } from './images';
 
 //import CSVParser from './components/metadata/csvParser';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
@@ -23,7 +13,6 @@ import ImportAndTransfer from './components/adminViews/ImportAndTransfer';
 import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
 import LicenseExchange from './components/adminViews/LicenseExchange';
 import AlertMetamask from './components/AlertMetamask/index';
-import ConsumerMode from './components/consumerMode';
 import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
 import ContractDetails from './components/creatorStudio/ContractDetails';
 import Contracts from './components/creatorStudio/Contracts';
@@ -49,6 +38,7 @@ import Token from './components/nft/Token';
 import NotFound from './components/NotFound/NotFound';
 import ResalePage from './components/ResalePage/ResalePage';
 import MetaTags from './components/SeoTags/MetaTags';
+import ServerSettings from './components/ServerSettings';
 import CoinAgenda2021SplashPage from './components/SplashPage/CoinAgenda2021/CoinAgenda2021';
 import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
@@ -71,18 +61,14 @@ import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80scl
 import ThankYouPage from './components/ThankYouPage';
 import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-// import setTitle from './utils/setTitle';
-import FileUpload from './components/video/videoUpload/videoUpload';
 import VideoManager from './components/videoManager/VideoManager';
 import YotiPage from './components/YotiPage/YotiPage';
-import { ColorStoreType } from './ducks/colors/colorStore.types';
-import { setChainId } from './ducks/contracts/actions';
-import { ContractsInitialType } from './ducks/contracts/contracts.types';
-import { getCurrentPageEnd } from './ducks/pages/actions';
-import { TUsersInitialState } from './ducks/users/users.types';
 import useConnectUser from './hooks/useConnectUser';
-import useServerSettings from './hooks/useServerSettings';
+import useContracts from './hooks/useContracts';
+import { useAppDispatch, useAppSelector } from './hooks/useReduxHooks';
 import useWeb3Tx from './hooks/useWeb3Tx';
+import { loadCategories, loadSettings } from './redux/settingsSlice';
+import { setConnectedChain } from './redux/web3Slice';
 import {
   AppContainerFluid,
   MainBlockApp
@@ -103,29 +89,22 @@ import './App.css';
 const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
 function App() {
-  const dispatch = useDispatch();
-  const { getServerSettings, settings, blockchainSettings } =
-    useServerSettings();
+  const dispatch = useAppDispatch();
+  const { blockchainSettings } = useAppSelector((store) => store.settings);
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
   const [isIframePage, setIsIframePage] = useState<boolean>(false);
   const {
-    currentChain,
-    realChain,
-    diamondMarketplaceInstance,
+    connectedChain,
+    requestedChain,
     currentUserAddress,
-    minterInstance,
     programmaticProvider
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  } = useAppSelector((store) => store.web3);
+  const { diamondMarketplaceInstance } = useContracts();
   const [isAboutPage, setIsAboutPage] = useState<boolean>(false);
-  const { selectedChain, realNameChain, selectedChainId } = detectBlockchain(
-    currentChain,
-    realChain
-  );
-  const seo = useSelector<RootState>((store) => store.seoStore);
+  const { realNameChain } = detectBlockchain(connectedChain, requestedChain);
+  const seo = useAppSelector((store) => store.seo);
   const carousel_match = window.matchMedia('(min-width: 1025px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [tabIndex, setTabIndex] = useState(0);
@@ -135,24 +114,29 @@ function App() {
   const [notificationCount, setNotificationCount] = useState<number>(0);
 
   // Redux
-  const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
-  const { adminRights, loggedIn } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const {
+    primaryColor,
+    textColor,
+    backgroundImage,
+    backgroundImageEffect,
+    isDarkMode
+  } = useAppSelector((store) => store.colors);
+  const { adminRights, isLoggedIn } = useAppSelector((store) => store.user);
 
   const { correctBlockchain } = useWeb3Tx();
 
-  const { connectUserData, logoutUser } = useConnectUser();
+  const { logoutUser } = useConnectUser();
 
   const { pathname } = useLocation();
 
   const showAlertHandler = useCallback(() => {
     setShowAlert(
-      (pathname !== '/' || isSplashPage) &&
+      !!(
+        (pathname !== '/' || isSplashPage) &&
         currentUserAddress &&
         realNameChain &&
-        !correctBlockchain(realChain)
+        !correctBlockchain(requestedChain)
+      )
     );
   }, [
     pathname,
@@ -160,14 +144,13 @@ function App() {
     currentUserAddress,
     realNameChain,
     correctBlockchain,
-    realChain
+    requestedChain
   ]);
 
   useEffect(() => showAlertHandler(), [showAlertHandler]);
 
   const goHome = () => {
     navigate('/');
-    dispatch(getCurrentPageEnd());
     sessionStorage.removeItem('CategoryItems');
     sessionStorage.removeItem('BlockchainItems');
   };
@@ -183,7 +166,7 @@ function App() {
   useEffect(() => {
     if (window.ethereum) {
       const foo = async (chainId) => {
-        dispatch(setChainId(chainId, blockchainSettings));
+        dispatch(setConnectedChain(chainId));
       };
       window.ethereum.on('chainChanged', foo);
       window.ethereum.on('accountsChanged', logoutUser);
@@ -195,13 +178,13 @@ function App() {
   }, [dispatch, logoutUser, blockchainSettings]);
 
   const getNotificationsCount = useCallback(async () => {
-    if (currentUserAddress) {
+    if (isLoggedIn && currentUserAddress) {
       const result = await rFetch(`/api/notifications?onlyUnread=true`);
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
     }
-  }, [currentUserAddress]);
+  }, [isLoggedIn, currentUserAddress]);
 
   useEffect(() => {
     getNotificationsCount();
@@ -210,10 +193,10 @@ function App() {
   // gtag
 
   useEffect(() => {
-    gtag('event', 'page_view', {
+    gtag(/*'event', 'page_view', {
       page_title: window.location.pathname,
       page_location: window.location.href
-    });
+    }*/);
   }, []);
 
   useEffect(() => {
@@ -231,17 +214,18 @@ function App() {
   }, [carousel_match.matches]);
 
   useEffect(() => {
-    if (primaryColor === 'charcoal') {
+    if (isDarkMode) {
       (function () {
         let angle = 0;
         const p = document.querySelector('p');
-        if (p) {
+        if (p?.textContent) {
           const text = p.textContent.split('');
-          /* eslint-disable  */
+          // eslint-disable-next-line no-var
           var len = text.length;
+          // eslint-disable-next-line no-var
           var phaseJump = 360 / len;
+          // eslint-disable-next-line no-var
           var spans;
-          /* eslint-enable  */
           p.innerHTML = text
             .map(function (char) {
               return '<span>' + char + '</span>';
@@ -261,7 +245,7 @@ function App() {
         })();
       })();
     }
-  }, [primaryColor]);
+  }, [isDarkMode]);
 
   const hotDropsVar = import.meta.env.VITE_TESTNET;
 
@@ -275,68 +259,20 @@ function App() {
   const creatorViewsDisabled =
     import.meta.env.VITE_DISABLE_CREATOR_VIEWS === 'true';
 
-  const loadLogos = useCallback(async () => {
-    getServerSettings();
-  }, [getServerSettings]);
-
   useEffect(() => {
-    loadLogos();
+    dispatch(loadSettings());
+    dispatch(loadCategories());
   }, []);
-
-  useEffect(() => {
-    if (settings.favicon) {
-      const changeFavicon = () => {
-        const link =
-          document.querySelector("link[rel*='icon']") ||
-          document.createElement('link');
-        link.type = 'image/x-icon';
-        link.rel = 'icon';
-        link.href = settings.favicon; // Set the href to your favicon
-        document.getElementsByTagName('head')[0].appendChild(link);
-      };
-
-      changeFavicon(); // Call the function to change the favicon when the component mounts
-    } else {
-      const changeFavicon = () => {
-        const link =
-          document.querySelector("link[rel*='icon']") ||
-          document.createElement('link');
-        link.type = 'image/x-icon';
-        link.rel = 'icon';
-        link.href =
-          import.meta.env.VITE_TESTNET === 'true'
-            ? HotdropsFavicon
-            : RairFavicon; // Set the href to your favicon
-        document.getElementsByTagName('head')[0].appendChild(link);
-      };
-
-      changeFavicon(); // Call the function to change the favicon when the component mounts
-    }
-
-    // Optionally, you can remove the old favicon when the component unmounts
-    return () => {
-      const link = document.querySelector("link[rel*='icon']");
-      if (link) {
-        link.parentNode.removeChild(link);
-      }
-    };
-  }, [settings]);
 
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
       <MetaTags seoMetaTags={seo} />
-      {showAlert === true && (
-        <AlertMetamask
-          selectedChain={selectedChain}
-          selectedChainId={selectedChainId}
-          realNameChain={realNameChain}
-          setShowAlert={setShowAlert}
-        />
-      )}
+      {showAlert === true && <AlertMetamask setShowAlert={setShowAlert} />}
       <AppContainerFluid
         id="App"
-        className={`App p-0 container-fluid ${primaryColor}`}
+        className={`App p-0 container-fluid`}
         backgroundImageEffect={backgroundImageEffect}
+        isDarkMode={isDarkMode}
         textColor={textColor}
         primaryColor={primaryColor}
         backgroundImage={hotDropsVar === 'true' ? '' : backgroundImage}>
@@ -358,9 +294,8 @@ function App() {
               renderBtnConnect={renderBtnConnect}
               creatorViewsDisabled={creatorViewsDisabled}
               showAlert={showAlert}
-              selectedChain={correctBlockchain(realChain)}
               isSplashPage={isSplashPage}
-              realChainId={realNameChain && realChain}
+              realChainId={realNameChain && requestedChain}
               setTabIndexItems={setTabIndexItems}
               isAboutPage={isAboutPage}
               setTokenNumber={setTokenNumber}
@@ -368,14 +303,11 @@ function App() {
           ) : (
             !isIframePage && (
               <MenuNavigation
-                realChainId={realNameChain && realChain}
+                realChainId={realNameChain && requestedChain}
                 isSplashPage={isSplashPage}
                 renderBtnConnect={renderBtnConnect}
                 currentUserAddress={currentUserAddress}
-                creatorViewsDisabled={creatorViewsDisabled}
-                programmaticProvider={programmaticProvider}
                 showAlert={showAlert}
-                selectedChain={correctBlockchain(realChain)}
                 setTabIndexItems={setTabIndexItems}
                 isAboutPage={isAboutPage}
                 notificationCount={notificationCount}
@@ -398,12 +330,7 @@ function App() {
           {/*
 							Main body, the header, router and footer are here
 						*/}
-          <MainBlockApp
-            isSplashPage={isSplashPage}
-            showAlert={showAlert}
-            selectedChain={`${
-              correctBlockchain(selectedChain) === true ? '' : true
-            }`}>
+          <MainBlockApp isSplashPage={isSplashPage} showAlert={showAlert}>
             <div className="col-12 blockchain-switcher" />
             <div className="col-12 mt-3">
               <SentryRoutes>
@@ -424,11 +351,6 @@ function App() {
 												required: false,
 												default: undefined
 											},
-											exact: {
-												type: Boolean,
-												required: false,
-												default: true
-											}
 										}
 									*/}
 
@@ -531,18 +453,8 @@ function App() {
                   return (
                     <Route
                       key={index}
-                      exact
                       path={isHome ? '/' : item.path}
-                      element={
-                        <item.content
-                          {...{
-                            connectUserData,
-                            setIsSplashPage,
-                            isSplashPage,
-                            setIsAboutPage
-                          }}
-                        />
-                      }
+                      element={<item.content {...item.props} />}
                     />
                   );
                 })}
@@ -566,8 +478,8 @@ function App() {
                     content: DemoMediaUpload,
                     requirement:
                       hotDropsVar === 'true'
-                        ? loggedIn && adminRights
-                        : loggedIn
+                        ? isLoggedIn && adminRights
+                        : isLoggedIn
                   },
                   {
                     path: '/user/videos',
@@ -577,86 +489,74 @@ function App() {
                   // Server Settings view
                   {
                     path: '/admin/settings',
-                    content: FileUpload,
+                    content: ServerSettings,
                     requirement:
-                      loggedIn && !creatorViewsDisabled && adminRights
+                      isLoggedIn && !creatorViewsDisabled && adminRights
                   },
                   // License UI
                   {
                     path: '/license',
                     content: LicenseExchange,
-                    requirement: loggedIn && !creatorViewsDisabled
+                    requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   // Token transfers
                   {
                     path: '/admin/transferNFTs',
                     content: ImportAndTransfer,
-                    constraint: loggedIn && !creatorViewsDisabled
+                    constraint: isLoggedIn && !creatorViewsDisabled
                   },
                   // Resale offers page
                   {
                     path: '/resale-offers',
                     content: ResalePage,
                     requirement:
-                      loggedIn && adminRights && !creatorViewsDisabled,
-                    exact: true
+                      isLoggedIn && adminRights && !creatorViewsDisabled
                   },
                   // Creator UI - New Views based on Figma
                   {
                     path: '/creator/deploy',
                     content: Deploy,
                     requirement:
-                      loggedIn && adminRights && !creatorViewsDisabled
+                      isLoggedIn && adminRights && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contracts',
                     content: Contracts,
-                    requirement: loggedIn && !creatorViewsDisabled
+                    requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/createCollection',
                     content: ContractDetails,
-                    requirement: loggedIn && !creatorViewsDisabled
+                    requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/listCollections',
                     content: ListCollections,
-                    requirement: loggedIn && !creatorViewsDisabled
+                    requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/*', // NEW: Wildcard allows WorkflowSteps to have routes within
                     content: WorkflowSteps,
-                    requirement: loggedIn && !creatorViewsDisabled,
-                    exact: false
+                    requirement: isLoggedIn && !creatorViewsDisabled
                   },
 
                   // Old Creator UI (Using the Database)
                   {
                     path: '/on-sale',
                     content: MinterMarketplace,
-                    requirement: loggedIn && !creatorViewsDisabled
+                    requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/rair/:contract/:product',
                     content: RairProduct,
-                    requirement: loggedIn && !creatorViewsDisabled
+                    requirement: isLoggedIn && !creatorViewsDisabled
                   },
 
                   // Old Token Viewer (Using the database)
                   {
                     path: '/token/:blockchain/:contract/:identifier',
                     content: Token,
-                    requirement: loggedIn && !creatorViewsDisabled
-                  },
-
-                  // Classic Minter Marketplace (Uses the blockchain)
-                  {
-                    path: '/minter',
-                    content: ConsumerMode,
-                    requirement:
-                      loggedIn &&
-                      !creatorViewsDisabled &&
-                      minterInstance !== undefined
+                    requirement: isLoggedIn && !creatorViewsDisabled
                   },
 
                   // Diamond Marketplace (Uses the blockchain)
@@ -664,14 +564,14 @@ function App() {
                     path: '/diamondMinter',
                     content: DiamondMarketplace,
                     requirement:
-                      loggedIn &&
+                      isLoggedIn &&
                       !creatorViewsDisabled &&
                       diamondMarketplaceInstance !== undefined
                   },
                   {
                     path: '/importExternalContracts',
                     content: ImportExternalContracts,
-                    constraint: loggedIn && !creatorViewsDisabled
+                    constraint: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/about-page',
@@ -695,7 +595,7 @@ function App() {
                   {
                     path: '/profile/my-items',
                     content: MyItems,
-                    requirement: loggedIn,
+                    requirement: isLoggedIn,
                     props: {
                       goHome,
                       setIsSplashPage,
@@ -799,13 +699,11 @@ function App() {
                   },
                   {
                     path: '*',
-                    content: NotFound,
-                    exact: false
+                    content: NotFound
                   },
                   {
                     path: '/404',
-                    content: NotFound,
-                    exact: false
+                    content: NotFound
                   }
                 ].map((item, index) => {
                   // If the requirements for the route aren't met, it won't return anything
@@ -815,7 +713,6 @@ function App() {
                   return (
                     <Route
                       key={index}
-                      exact={item.exact !== undefined ? item.exact : true}
                       path={item.path}
                       element={<item.content {...item.props} />}
                     />

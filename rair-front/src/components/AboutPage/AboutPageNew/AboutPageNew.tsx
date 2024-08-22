@@ -1,17 +1,14 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
 import { IAboutPageNew } from './aboutPage.types';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { InitialState } from '../../../ducks/seo/reducers';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import useConnectUser from '../../../hooks/useConnectUser';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
+import useSwal from '../../../hooks/useSwal';
 import { metaMaskIcon, RairLogoBlue } from '../../../images';
+import { setSEOInfo } from '../../../redux/seoSlice';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { rairAdvisorsTeam, teamAboutRair } from '../../MainPage/AboutUsTeam';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -32,17 +29,15 @@ import './AboutPageNew.css';
 const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const seo = useAppSelector((store) => store.seo);
+  const { primaryColor } = useAppSelector((store) => store.colors);
+  const rSwal = useSwal();
 
   const connectUserData = useConnectUser();
 
   useEffect(() => {
-    dispatch(setInfoSEO(InitialState));
-    //eslint-disable-next-line
-  }, []);
+    dispatch(setSEOInfo());
+  }, [dispatch]);
 
   const termsText =
     'I understand this a test NFT designed to unlock RAIR streams';
@@ -77,7 +72,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
         presaleMessage: termsText,
         diamond: true,
         customSuccessAction: (nextToken) =>
-          Swal.fire('Success', `You own token #${nextToken}!`, 'success')
+          rSwal.fire('Success', `You own token #${nextToken}!`, 'success')
       }}
     />
   );

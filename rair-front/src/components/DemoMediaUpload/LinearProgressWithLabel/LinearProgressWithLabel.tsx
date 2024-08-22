@@ -1,16 +1,12 @@
-import { useSelector } from 'react-redux';
 import { Box, LinearProgress, LinearProgressProps } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 
 const LinearProgressWithLabel = (
   props: LinearProgressProps & { value: number }
 ) => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
