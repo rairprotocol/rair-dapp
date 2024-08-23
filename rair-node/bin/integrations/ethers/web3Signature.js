@@ -71,6 +71,9 @@ const recoverUserFromSignature = async (challenge, signature) => {
 // Validates that a challenge is correct.
 async function checkChallenge(challenge, sig) {
   const recovered = await recoverUserFromSignature(challenge, sig);
+  if (!recovered) {
+    return false;
+  }
   const storedChallenge = cache.get(recovered.toLowerCase());
   if (storedChallenge === challenge) {
     cache.del(recovered);
