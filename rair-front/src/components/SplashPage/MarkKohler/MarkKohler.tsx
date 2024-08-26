@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { teamTaxHacksSummit } from './AboutUsTeam';
 import { AccessTextMarkKohler } from './InformationText';
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import {
   blockchain,
   contract,
@@ -18,7 +19,6 @@ import { rFetch } from '../../../utils/rFetch';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ISplashPageProps } from '../splashPage.types';
 import SplashPageCardWrapper from '../SplashPageConfig/CardBlock/CardBlockWrapper/SplashPageCardWrapper';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import SplashCardButtonsWrapper from '../SplashPageConfig/CardBlock/CardButtonWrapper/SplashCardButtonsWrapper';
@@ -39,7 +39,7 @@ import KohlerFavicon from './assets/favicon.ico';
 
 import './markKohler.css';
 
-const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
+const MarkKohler: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
 
@@ -87,7 +87,6 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     };
   }
 
-  const { primaryColor } = useAppSelector((store) => store.colors);
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
 
@@ -464,7 +463,6 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
             openVideoplayer={openVideoplayer}
             setOpenVideoPlayer={setOpenVideoPlayer}
             handlePlayerClick={handlePlayerClick}
-            primaryColor={primaryColor}
           />
         </SplashVideoWrapper>
         {/* )} */}
@@ -475,10 +473,7 @@ const MarkKohler: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           classNameGap={true}
         />
         <div className="gap-for-aboutus" />
-        <NotCommercialTemplate
-          primaryColor={primaryColor}
-          NFTName={'#taxhackNFT'}
-        />
+        <NotCommercialTemplate NFTName={'#taxhackNFT'} />
       </div>
     </div>
   );

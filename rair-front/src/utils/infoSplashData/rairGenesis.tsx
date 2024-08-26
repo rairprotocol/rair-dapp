@@ -1,4 +1,5 @@
 import { Hex } from 'viem';
+
 import { Genesis_TV } from '../../components/SplashPage/images/rairGenesis/rairGenesis';
 import { useAppSelector } from '../../hooks/useReduxHooks';
 import { metaMaskIcon } from '../../images';
@@ -26,7 +27,7 @@ export const useSplashData = (connectUserData) => {
     },
     purchaseButton: {
       requiredBlockchain: '0x38' as Hex,
-      contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f'
+      contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f' as Hex
     },
     /*  this block needs to be changed */
     buttonLabel: 'Connect Wallet',

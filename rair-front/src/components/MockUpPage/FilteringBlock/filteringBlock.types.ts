@@ -140,7 +140,6 @@ export interface IModalItem {
   setIsCreatedTab: (value: boolean) => void;
   selectedData: TDiamondTokensType | undefined;
   defaultImg: string;
-  primaryColor: string;
   isCreatedTab: boolean;
 }
 

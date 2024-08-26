@@ -48,7 +48,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
       reactSwal.fire({
         html: (
           <Provider store={store}>
-            <YotiPage setOpenVideoplayer={setOpenVideoPlayer} />
+            <YotiPage setOpenVideoPlayer={setOpenVideoPlayer} />
           </Provider>
         ),
         showConfirmButton: false,

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { teamRAIRBasicArray } from './AboutUsTeam';
@@ -17,7 +17,7 @@ import MetaTags from '../../SeoTags/MetaTags';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import { Genesis_TV, GenesisMember } from '../images/rairGenesis/rairGenesis';
 import NotCommercialTemplate2 from '../NotCommercial-2/NotCommercialTemplate-2';
-import { INumberedCircle, ISplashPageProps } from '../splashPage.types';
+import { INumberedCircle } from '../splashPage.types';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
 import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
@@ -46,12 +46,11 @@ const NumberedCircle: React.FC<INumberedCircle> = ({ index }) => {
   );
 };
 
-const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = () => {
+const RAIRGenesisSplashPage: FC = () => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const { connectUserData } = useConnectUser();
   const { splashData } = useSplashData(connectUserData);
-  const { primaryColor } = useAppSelector((store) => store.colors);
   const reactSwal = useSwal();
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();

@@ -218,9 +218,9 @@ export type TParamsListLocks = {
   address: string;
 };
 export interface IMediaUpload {
-  setStepNumber: Function;
-  contractData: TContractData | undefined;
-  stepNumber: number;
+  setStepNumber?: Function;
+  contractData?: TContractData | TDiamondContractData | undefined;
+  stepNumber?: number;
 }
 
 export type TSteps = {

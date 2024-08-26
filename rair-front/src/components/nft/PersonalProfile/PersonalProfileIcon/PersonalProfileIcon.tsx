@@ -21,30 +21,33 @@ import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 import cl from './PersonalProfileIcon.module.css';
 
 interface IPersonalProfileIconComponent {
-  userData: any;
   isPage?: boolean;
   setEditModeUpper?: (arg: boolean) => void;
 }
 
 const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
-  userData,
   isPage,
   setEditModeUpper
 }) => {
   const dispatch = useAppDispatch();
   const [editMode, setEditMode] = useState(false);
-  const { nickName, email, avatar, isLoggedIn, publicAddress } = useAppSelector(
-    (state) => state.user
-  );
+  const { ageVerified, nickName, email, avatar, isLoggedIn, publicAddress } =
+    useAppSelector((state) => state.user);
   const { userAddress } = useParams();
   const rSwal = useSwal();
 
+  useEffect(() => {
+    if (publicAddress) {
+      setUserName(publicAddress);
+    }
+  }, [publicAddress]);
+
   const [copyState, setCopyState] = useState(false);
 
-  const [userName, setUserName] = useState(userData.publicAddress);
+  const [userName, setUserName] = useState<string>('');
   const [userNameNew, setUserNameNew] = useState(userName);
 
-  const [emailUser, setEmailUser] = useState(userData.email);
+  const [emailUser, setEmailUser] = useState(email);
   const [emailUserNew, setEmailUserNew] = useState(emailUser);
 
   const [isPhotoUpdate, setIsPhotoUpdate] = useState(false);
@@ -66,8 +69,8 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
     setEmailUserNew(email);
     setEmailUser(email);
 
-    setUserName(nickName ? nickName.replace(/@/g, '') : publicAddress);
-    setUserNameNew(nickName ? nickName.replace(/@/g, '') : publicAddress);
+    setUserName(nickName ? nickName.replace(/@/g, '') : publicAddress || '');
+    setUserNameNew(nickName ? nickName.replace(/@/g, '') : publicAddress || '');
 
     if (avatar) {
       setOriginalPhotoValue(avatar);
@@ -77,12 +80,12 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
   }, [email, nickName, publicAddress, avatar, setEditModeUpper]);
 
   const checkInputForSame = (
-    userName: string,
-    userNameNew: string,
-    emailUser: string,
-    emailUserNew: string,
-    filePhoto: string | object,
-    userAvatar: string
+    userName: string | undefined,
+    userNameNew: string | undefined,
+    emailUser: string | undefined,
+    emailUserNew: string | undefined,
+    filePhoto: string | object | undefined,
+    userAvatar: string | undefined
   ) => {
     if (
       userName &&
@@ -132,7 +135,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
       if (userName !== userNameNew) {
         formData.append('nickName', userName);
       }
-      if (emailUser !== emailUserNew) {
+      if (emailUser && emailUser !== emailUserNew) {
         formData.append('email', emailUser);
       }
       if (originalPhotoValue && originalPhotoValue !== newPhotoValue) {
@@ -192,7 +195,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
 
   useEffect(() => {
     if (isLoggedIn) {
-      setUserName(nickName && nickName.replace(/@/g, ''));
+      setUserName((nickName && nickName.replace(/@/g, '')) || '');
       setEmailUser(email && email);
       if (avatar) {
         setOriginalPhotoValue(avatar);
@@ -246,7 +249,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
               alt="User Avatar"
               src={originalPhotoValue}
             />
-            {userData && userData.ageVerified && (
+            {isLoggedIn && ageVerified && (
               <img className={cl.verifiedIcon} src={VerifiedIcon} />
             )}
           </div>

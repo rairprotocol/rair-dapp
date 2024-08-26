@@ -30,8 +30,6 @@ export interface IMyDiamondItems {
 }
 
 export interface IMyItems {
-  userData: object;
-  goHome: () => void;
   setIsSplashPage: (arg: boolean) => void;
   setTabIndexItems: (arg: number) => void;
   tabIndexItems: number;

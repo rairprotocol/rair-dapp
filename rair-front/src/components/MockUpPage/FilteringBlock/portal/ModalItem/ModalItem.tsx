@@ -24,7 +24,6 @@ const ModalItem: React.FC<IModalItem> = ({
   setIsCreatedTab,
   selectedData,
   defaultImg,
-  primaryColor,
   isCreatedTab
 }) => {
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
@@ -36,7 +35,7 @@ const ModalItem: React.FC<IModalItem> = ({
   const { connectedChain, currentUserAddress } = useAppSelector(
     (store) => store.web3
   );
-  const { textColor, primaryButtonColor } = useAppSelector(
+  const { textColor, primaryButtonColor, primaryColor } = useAppSelector(
     (store) => store.colors
   );
   const instance = contractCreator?.(selectedData?.contractAddress, erc721Abi);
@@ -154,7 +153,7 @@ const ModalItem: React.FC<IModalItem> = ({
               backgroundImage: `url(${
                 selectedData?.metadata?.image || defaultImg
               })`,
-              backgroundColor: `var(--${primaryColor}-transparent)`
+              backgroundColor: primaryColor
             }}></div>
           <div className="modal-number-tokenContent">
             <span className="modal-item-title">

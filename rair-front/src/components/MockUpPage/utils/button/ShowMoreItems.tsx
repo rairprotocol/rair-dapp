@@ -72,11 +72,9 @@ export const ModalContentCloseBtn = styled.div.withConfig({
   justify-content: center;
   transition: all 0.2s ease;
   cursor: pointer;
-  background: ${(props) =>
-    props.primaryColor === 'rhyno' ? '#FFFFFF' : '#4E4D4D'};
+  background: ${({ isDarkMode }) => (isDarkMode ? '#FFFFFF' : '#4E4D4D')};
   &:hover {
-    background: ${(props) =>
-      props.primaryColor === 'rhyno' ? '#4E4D4D' : '#FFFFFF'};
+    background: ${({ isDarkMode }) => (isDarkMode ? '#4E4D4D' : '#FFFFFF')};
   }
   i {
     color: #e882d5;

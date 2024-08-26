@@ -28,7 +28,7 @@ export interface IPurchaseTokenButtonProps {
   customButtonTextClassName?: string;
   customWrapperClassName?: string;
   img?: string;
-  contractAddress?: string;
+  contractAddress?: Hex;
   requiredBlockchain?: Hex | undefined;
   offerIndex?: string[] | undefined;
   buttonLabel?: string;

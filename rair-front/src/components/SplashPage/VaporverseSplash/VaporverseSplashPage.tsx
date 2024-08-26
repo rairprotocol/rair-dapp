@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { v1 } from 'uuid';
 
 import { teamVaporVerseArray } from './AboutUsTeam';
@@ -7,6 +7,7 @@ import useConnectUser from '../../../hooks/useConnectUser';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import { splashData } from '../../../utils/infoSplashData/vapoverseSplashPage';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -25,7 +26,7 @@ import {
 } from '../images/vaporverse/vaporverse';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
-import { IInfoBlock, IVaporverseSplashPage } from '../splashPage.types';
+import { IInfoBlock } from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
@@ -55,9 +56,7 @@ const InfoBlock: React.FC<IInfoBlock> = ({
   );
 };
 
-const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
-  setIsSplashPage
-}) => {
+const VaporverseSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);

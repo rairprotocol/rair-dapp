@@ -1,5 +1,5 @@
 //test page for video tiles
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import axios from 'axios';
 
 import {
@@ -7,6 +7,7 @@ import {
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../../redux/seoSlice';
+import { SplashPageProps } from '../../../../types/commonTypes';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import MetaTags from '../../../SeoTags/MetaTags';
 import { NYCVideoBackground } from '../../images/NFTNYC/nftnyc';
@@ -62,7 +63,7 @@ const testContract = {
 //     }
 // ]
 
-const VideoTilesTest = ({ setIsSplashPage }) => {
+const VideoTilesTest: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const { primaryColor } = useAppSelector((store) => store.colors);

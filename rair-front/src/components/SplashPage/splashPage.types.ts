@@ -2,15 +2,10 @@ import React from 'react';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Hex } from 'viem';
 
-import { MediaFile } from '../../types/databaseTypes';
 import { CatalogVideoItem } from '../../redux/videoSlice';
 
 export interface INumberedCircle {
   index: number;
-}
-
-export interface ISplashPageProps {
-  setIsSplashPage?: (isSplashPage: boolean) => void;
 }
 
 export type TSplashPageIsActive = {
@@ -100,9 +95,9 @@ export type TParamsMarketplaceDemo = {
 };
 
 export type TPurchaseButtonType = {
-  contractAddress?: string;
+  contractAddress?: Hex;
   buttonLabel?: string;
-  requiredBlockchain: Hex | undefined;
+  requiredBlockchain?: Hex;
   buttonComponent?: React.ElementType;
   presaleMessage?: string;
   customWrapperClassName?: string;
@@ -385,7 +380,6 @@ export interface INipseyRelease {
 }
 
 export interface INotCommercialTemplate {
-  isDarkMode: boolean;
   NFTName: string | undefined;
 }
 
@@ -407,10 +401,6 @@ export interface IInfoBlock {
   style?: React.CSSProperties;
   subclass?: string;
   children?: JSX.Element;
-}
-
-export interface IVaporverseSplashPage {
-  setIsSplashPage: (isSplashPage: boolean) => void;
 }
 
 export interface INFTImages {

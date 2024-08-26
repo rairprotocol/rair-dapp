@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import FaceCapture from '@getyoti/react-face-capture';
 
 import useSwal from '../../hooks/useSwal';
@@ -8,7 +8,11 @@ import { rFetch } from '../../utils/rFetch';
 
 import './YotiPage.css';
 
-const YotiPage = ({ setOpenVideoplayer }) => {
+interface YotiPage {
+  setOpenVideoPlayer?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const YotiPage: FC<YotiPage> = ({ setOpenVideoPlayer }) => {
   const [yotiVerify, setYotiVerify] = useState(false);
   const reactSwal = useSwal();
 
@@ -33,8 +37,8 @@ const YotiPage = ({ setOpenVideoplayer }) => {
           icon: 'success'
         })
         .then((result) => {
-          if (result.isConfirmed) {
-            setOpenVideoplayer(true);
+          if (result.isConfirmed && setOpenVideoPlayer) {
+            setOpenVideoPlayer(true);
           }
         });
     } else {

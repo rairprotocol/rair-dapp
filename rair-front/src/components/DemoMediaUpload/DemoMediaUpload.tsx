@@ -4,6 +4,7 @@ import Dropzone from 'react-dropzone';
 import WorkflowContext from '../../contexts/CreatorWorkflowContext';
 import { useAppSelector } from '../../hooks/useReduxHooks';
 import videoIcon from '../../images/videoIcon.svg';
+import { MediaFile } from '../../types/databaseTypes';
 import { rFetch } from '../../utils/rFetch';
 import LoadingComponent from '../common/LoadingComponent';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -13,7 +14,6 @@ import MediaListBox from './MediaListBox/MediaListBox';
 import UploadedListBox from './UploadedListBox/UploadedListBox';
 
 import './DemoMediaUpload.css';
-import { MediaFile } from '../../types/databaseTypes';
 
 const MediaUpload: React.FC<IMediaUpload> = () => {
   const { primaryColor, textColor } = useAppSelector((store) => store.colors);

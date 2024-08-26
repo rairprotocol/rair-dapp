@@ -43,9 +43,8 @@ const VideoItem: React.FC<IVideoItem> = ({ item }) => {
     useStateIfMounted<TVideoItemContractData | null>(null);
   const { width } = useWindowDimensions();
 
-  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
-    (store) => store.colors
-  );
+  const { primaryColor, textColor, primaryButtonColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
 
   const customStyles: CustomModalStyle = {
     overlay: {
@@ -113,7 +112,7 @@ const VideoItem: React.FC<IVideoItem> = ({ item }) => {
       reactSwal.fire({
         html: (
           <Provider store={store}>
-            <YotiPage setOpenVideoplayer={setOpenVideoplayer} />
+            <YotiPage setOpenVideoPlayer={setOpenVideoplayer} />
           </Provider>
         ),
         showConfirmButton: false,
@@ -263,7 +262,7 @@ const VideoItem: React.FC<IVideoItem> = ({ item }) => {
             contentLabel="Video Modal">
             <div className="modal-content-close-btn-wrapper">
               <ModalContentCloseBtn
-                primaryColor={primaryColor}
+                isDarkMode={isDarkMode}
                 onClick={closeModal}>
                 <FontAwesomeIcon
                   icon={faTimes}

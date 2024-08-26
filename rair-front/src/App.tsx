@@ -3,8 +3,6 @@ import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 
-import { headerLogoBlack, headerLogoWhite } from './images';
-
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 import ImportAndTransfer from './components/adminViews/ImportAndTransfer';
 import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
@@ -359,86 +357,82 @@ function App() {
                 {[
                   {
                     path: '/simdogs-splash',
-                    content: SimDogsSplashPage
+                    content: <SimDogsSplashPage />
                   },
                   {
                     path: '/markkohler-splash',
-                    content: MarkKohler,
-                    props: { setIsSplashPage }
+                    content: <MarkKohler {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/genesis-splash',
-                    content: RAIRGenesisSplashPage
+                    content: <RAIRGenesisSplashPage />
                   },
                   {
                     path: '/wallstreet80sclub',
-                    content: Wallstreet80sClubSplashPage
+                    content: <Wallstreet80sClubSplashPage />
                   },
                   {
                     path: '/coinagenda2021',
-                    content: CoinAgenda2021SplashPage
+                    content: <CoinAgenda2021SplashPage />
                   },
                   {
                     path: '/immersiverse-splash',
-                    content: ImmersiVerseSplashPage
+                    content: <ImmersiVerseSplashPage />
                   },
                   {
                     path: '/nftnyc-splash',
-                    content: NFTNYCSplashPage
+                    content: <NFTNYCSplashPage />
                   },
                   {
                     path: '/video-tiles-test',
-                    content: VideoTilesTest
+                    content: <VideoTilesTest {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/nftla-splash',
-                    content: NFTLASplashPage
+                    content: <NFTLASplashPage />
                   },
                   {
                     path: '/ukraineglitch',
-                    content: UkraineSplashPage
+                    content: <UkraineSplashPage />
                   },
                   {
                     path: '/vaporverse-splash',
-                    content: VaporverseSplashPage,
-                    props: {
-                      setIsSplashPage
-                    }
+                    content: <VaporverseSplashPage {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/greyman-splash',
-                    content: GreymanSplashPage
+                    content: <GreymanSplashPage />
                   },
                   {
                     path: '/nutcrackers-splash',
-                    content: Nutcrackers
+                    content: <Nutcrackers {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/nipsey-splash',
-                    content: SplashPage
+                    content: <SplashPage />
                   },
                   {
                     path: '/slidelock',
-                    content: SlideLock
+                    content: <SlideLock />
                   },
                   {
                     path: '/yoti-page',
-                    content: YotiPage
+                    content: <YotiPage />
                   },
                   {
                     path: '/about-page',
-                    content: AboutPageNew,
-                    props: {
-                      setIsSplashPage: setIsSplashPage
-                    }
+                    content: <AboutPageNew {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/main-page',
-                    content: MainPage,
-                    props: {
-                      setIsSplashPage: setIsSplashPage,
-                      setIsAboutPage: setIsAboutPage
-                    }
+                    content: (
+                      <MainPage
+                        {...{
+                          setIsSplashPage,
+                          setIsAboutPage
+                        }}
+                      />
+                    )
                   }
                 ].map((item, index) => {
                   // If the path is set as the Home Page, render it as the default path (/)
@@ -452,7 +446,7 @@ function App() {
                     <Route
                       key={index}
                       path={isHome ? '/' : item.path}
-                      element={<item.content {...item.props} />}
+                      element={item.content}
                     />
                   );
                 })}
@@ -463,17 +457,20 @@ function App() {
                     */
                   {
                     path: '/',
-                    content: WelcomeHeader,
-                    requirement: import.meta.env.VITE_HOME_PAGE === '/',
-                    props: {
-                      setIsSplashPage,
-                      tabIndex: tabIndex,
-                      setTabIndex: setTabIndex
-                    }
+                    content: (
+                      <WelcomeHeader
+                        {...{
+                          setIsSplashPage,
+                          tabIndex: tabIndex,
+                          setTabIndex: setTabIndex
+                        }}
+                      />
+                    ),
+                    requirement: import.meta.env.VITE_HOME_PAGE === '/'
                   },
                   {
                     path: '/demo/upload',
-                    content: DemoMediaUpload,
+                    content: <DemoMediaUpload />,
                     requirement:
                       hotDropsVar === 'true'
                         ? isLoggedIn && adminRights
@@ -481,86 +478,86 @@ function App() {
                   },
                   {
                     path: '/user/videos',
-                    content: VideoManager
+                    content: <VideoManager />
                   },
 
                   // Server Settings view
                   {
                     path: '/admin/settings',
-                    content: ServerSettings,
+                    content: <ServerSettings />,
                     requirement:
                       isLoggedIn && !creatorViewsDisabled && adminRights
                   },
                   // License UI
                   {
                     path: '/license',
-                    content: LicenseExchange,
+                    content: <LicenseExchange />,
                     requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   // Token transfers
                   {
                     path: '/admin/transferNFTs',
-                    content: ImportAndTransfer,
+                    content: <ImportAndTransfer />,
                     constraint: isLoggedIn && !creatorViewsDisabled
                   },
                   // Resale offers page
                   {
                     path: '/resale-offers',
-                    content: ResalePage,
+                    content: <ResalePage />,
                     requirement:
                       isLoggedIn && adminRights && !creatorViewsDisabled
                   },
                   // Creator UI - New Views based on Figma
                   {
                     path: '/creator/deploy',
-                    content: Deploy,
+                    content: <Deploy />,
                     requirement:
                       isLoggedIn && adminRights && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contracts',
-                    content: Contracts,
+                    content: <Contracts />,
                     requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/createCollection',
-                    content: ContractDetails,
+                    content: <ContractDetails />,
                     requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/listCollections',
-                    content: ListCollections,
+                    content: <ListCollections />,
                     requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/*', // NEW: Wildcard allows WorkflowSteps to have routes within
-                    content: WorkflowSteps,
+                    content: <WorkflowSteps />,
                     requirement: isLoggedIn && !creatorViewsDisabled
                   },
 
                   // Old Creator UI (Using the Database)
                   {
                     path: '/on-sale',
-                    content: MinterMarketplace,
+                    content: <MinterMarketplace />,
                     requirement: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/rair/:contract/:product',
-                    content: RairProduct,
+                    content: <RairProduct />,
                     requirement: isLoggedIn && !creatorViewsDisabled
                   },
 
                   // Old Token Viewer (Using the database)
                   {
                     path: '/token/:blockchain/:contract/:identifier',
-                    content: Token,
+                    content: <Token />,
                     requirement: isLoggedIn && !creatorViewsDisabled
                   },
 
                   // Diamond Marketplace (Uses the blockchain)
                   {
                     path: '/diamondMinter',
-                    content: DiamondMarketplace,
+                    content: <DiamondMarketplace />,
                     requirement:
                       isLoggedIn &&
                       !creatorViewsDisabled &&
@@ -568,140 +565,151 @@ function App() {
                   },
                   {
                     path: '/importExternalContracts',
-                    content: ImportExternalContracts,
+                    content: <ImportExternalContracts />,
                     constraint: isLoggedIn && !creatorViewsDisabled
                   },
                   {
                     path: '/about-page',
-                    content: AboutPageNew,
-                    props: {
-                      headerLogoWhite: headerLogoWhite,
-                      headerLogoBlack: headerLogoBlack,
-                      setIsSplashPage: setIsSplashPage
-                    }
+                    content: (
+                      <AboutPageNew
+                        {...{
+                          setIsSplashPage
+                        }}
+                      />
+                    )
                   },
 
                   // Public Facing Routes
                   {
                     path: '/all',
-                    content: MockUpPage,
-                    props: {
-                      tabIndex: tabIndex,
-                      setTabIndex: setTabIndex
-                    }
+                    content: (
+                      <MockUpPage
+                        {...{
+                          tabIndex: tabIndex,
+                          setTabIndex: setTabIndex
+                        }}
+                      />
+                    )
                   },
                   {
                     path: '/profile/my-items',
-                    content: MyItems,
-                    requirement: isLoggedIn,
-                    props: {
-                      goHome,
-                      setIsSplashPage,
-                      setTabIndexItems,
-                      tabIndexItems
-                    }
+                    content: (
+                      <MyItems
+                        {...{
+                          setIsSplashPage,
+                          setTabIndexItems,
+                          tabIndexItems
+                        }}
+                      />
+                    ),
+                    requirement: isLoggedIn
                   },
                   {
                     path: '/:userAddress',
-                    content: UserProfilePage
+                    content: <UserProfilePage />
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',
-                    content: NftDataExternalLink
+                    content: <NftDataExternalLink />
                   },
                   {
                     path: '/coming-soon',
-                    content: ComingSoon
+                    content: <ComingSoon />
                   },
                   {
                     path: '/coming-soon-nutcrackers',
-                    content: ComingSoonNut
+                    content: <ComingSoonNut />
                   },
                   {
                     path: '/privacy',
-                    content: PrivacyPolicy,
-                    props: {
-                      setIsSplashPage: setIsSplashPage
-                    }
+                    content: <PrivacyPolicy {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/terms-use',
-                    content: TermsUse,
-                    props: {
-                      setIsSplashPage: setIsSplashPage
-                    }
+                    content: <TermsUse {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/:userAddress',
-                    content: UserProfilePage
+                    content: <UserProfilePage />
                   },
                   {
                     path: '/thankyou',
-                    content: ThankYouPage
+                    content: <ThankYouPage />
                   },
                   {
                     path: '/inquiries',
-                    content: InquiriesPage
+                    content: <InquiriesPage />
                   },
 
                   //3 Tab Marketplace?
                   {
                     path: '/tokens/:blockchain/:contract/:product/:tokenId',
-                    content: NftDataCommonLink,
-                    props: {
-                      setTokenNumber,
-                      tokenNumber
-                    },
+                    content: (
+                      <NftDataCommonLink
+                        {...{
+                          setTokenNumber,
+                          tokenNumber
+                        }}
+                      />
+                    ),
                     requirement:
                       import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
                   },
                   {
                     path: '/collection/:blockchain/:contract/:product/:tokenId',
-                    content: NftDataCommonLink,
-                    props: {
-                      setTokenNumber,
-                      tokenNumber
-                    },
+                    content: (
+                      <NftDataCommonLink
+                        {...{
+                          setTokenNumber,
+                          tokenNumber
+                        }}
+                      />
+                    ),
                     requirement:
                       import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
                   },
                   {
                     path: '/unlockables/:blockchain/:contract/:product/:tokenId',
-                    content: NftDataCommonLink,
-                    props: {
-                      setTokenNumber,
-                      tokenNumber
-                    },
+                    content: (
+                      <NftDataCommonLink
+                        {...{
+                          setTokenNumber,
+                          tokenNumber
+                        }}
+                      />
+                    ),
                     requirement:
                       import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
                   },
 
                   {
                     path: '/notifications',
-                    content: NotificationPage
+                    content: <NotificationPage />
                   },
                   // Video Player
                   {
                     path: '/watch/:contract/:videoId/:mainManifest',
-                    content: IframePage,
-                    props: {
-                      setIsIframePage,
-                      renderBtnConnect,
-                      programmaticProvider
-                    }
+                    content: (
+                      <IframePage
+                        {...{
+                          setIsIframePage,
+                          renderBtnConnect,
+                          programmaticProvider
+                        }}
+                      />
+                    )
                   },
                   {
                     path: '/test-iframe/:contract/:videoId/:mainManifest',
-                    content: TestIframe,
-                    props: { setIsIframePage }
+                    content: <TestIframe {...{ setIsIframePage }} />
                   },
                   {
                     path: '*',
-                    content: NotFound
+                    content: <NotFound />
                   },
                   {
                     path: '/404',
-                    content: NotFound
+                    content: <NotFound />
                   }
                 ].map((item, index) => {
                   // If the requirements for the route aren't met, it won't return anything
@@ -712,7 +720,7 @@ function App() {
                     <Route
                       key={index}
                       path={item.path}
-                      element={<item.content {...item.props} />}
+                      element={item.content}
                     />
                   );
                 })}

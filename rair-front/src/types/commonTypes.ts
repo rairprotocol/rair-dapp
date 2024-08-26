@@ -18,3 +18,7 @@ export interface SelectOption {
   value: string;
   disabled?: boolean;
 }
+
+export interface SplashPageProps {
+  setIsSplashPage: React.Dispatch<React.SetStateAction<boolean>>;
+}

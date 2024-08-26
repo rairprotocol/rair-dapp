@@ -1,11 +1,5 @@
 import { ReactNode } from 'react';
 
-export interface IAboutPageNew {
-  headerLogoBlack?: string;
-  headerLogoWhite?: string;
-  setIsSplashPage: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 export interface IMainBlock {
   Metamask: string;
   termsText: string;

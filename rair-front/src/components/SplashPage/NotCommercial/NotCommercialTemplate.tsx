@@ -1,13 +1,12 @@
-import React from 'react';
+import { FC } from 'react';
 
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { INotCommercialTemplate } from '../splashPage.types';
 
 import './NotCommercial.css';
 
-const NotCommercialTemplate: React.FC<INotCommercialTemplate> = ({
-  isDarkMode,
-  NFTName
-}) => {
+const NotCommercialTemplate: FC<INotCommercialTemplate> = ({ NFTName }) => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <div
       className="container-commercial"

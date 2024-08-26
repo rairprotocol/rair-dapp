@@ -54,7 +54,7 @@ export type TAuthenticityStyled = {
 };
 
 export interface INftDataCommonLinkComponent {
-  embeddedParams: TEmbeddedParams | undefined;
+  embeddedParams?: TEmbeddedParams;
   setTokenNumber: Dispatch<SetStateAction<number | undefined>>;
   tokenNumber: number | undefined;
 }
@@ -193,7 +193,7 @@ export type TShowMoreText = {
 };
 
 export type TModalContentCloseBtnStyled = {
-  primaryColor: string;
+  isDarkMode: boolean;
 };
 
 export interface INftDifferentRarity {

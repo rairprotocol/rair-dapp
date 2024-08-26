@@ -381,10 +381,11 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             }
 
             if (
-              (await contractInstance?.provider.getBalance(
+              contractInstance?.runner?.provider?.getBalance &&
+              (await contractInstance?.runner?.provider?.getBalance(
                 currentUserAddress
               )) <
-              BigInt(price) * BigInt(amountOfTokensToPurchase)
+                BigInt(price) * BigInt(amountOfTokensToPurchase)
             ) {
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);

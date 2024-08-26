@@ -1,7 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Hex } from 'viem';
 
 import { teamNutArray } from './AboutUsTeam';
 
@@ -10,6 +11,7 @@ import useSwal from '../../../hooks/useSwal';
 import { metaMaskIcon } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -27,7 +29,7 @@ import { PoweredRair } from '../images/splashPageImages/splashPage';
 // import photoNut from '../images/block-nuts-photos.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 
-const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
+const Nutcrackers: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const { primaryColor } = useAppSelector((store) => store.colors);
   const [, /*percentTokens*/ setPresentTokens] = useState(0);
@@ -42,9 +44,8 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
     //eslint-disable-next-line
   }, []);
 
-  const targetBlockchain = '0x89';
-  const nutcrackerAddress =
-    '0xF4ca90d4a796f57133c6de47c2261BF237cfF780'.toLowerCase();
+  const targetBlockchain: Hex = '0x89';
+  const nutcrackerAddress: Hex = '0xF4ca90d4a796f57133c6de47c2261BF237cfF780';
 
   useEffect(() => {
     dispatch(setRequestedChain(targetBlockchain));
@@ -101,7 +102,6 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
                   diamond: false,
                   requiredBlockchain: '0x89',
                   offerIndex: ['1', '0'],
-                  connectUserData,
                   buttonLabel: 'Mint with Matic',
                   customSuccessAction: (nextToken) => {
                     reactSwal.fire(

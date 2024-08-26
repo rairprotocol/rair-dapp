@@ -6,7 +6,7 @@ import {
   TTokenData
 } from '../../axios.responseTypes';
 import { CatalogVideoItem } from '../../redux/videoSlice';
-import { MediaFile, User } from '../../types/databaseTypes';
+import { User } from '../../types/databaseTypes';
 import { TOfferType } from '../marketplace/marketplace.types';
 
 export interface ITitleSingleTokenView {
@@ -148,7 +148,7 @@ export type TUnlockableVideosSingleTokenPage = {
   selectVideo: CatalogVideoItem | undefined;
   setSelectVideo: (videoFile: CatalogVideoItem | undefined) => void;
   openVideoplayer: boolean;
-  setOpenVideoPlayer: (value: boolean) => void;
+  setOpenVideoPlayer: React.Dispatch<React.SetStateAction<boolean>>;
   handlePlayerClick: () => void;
 };
 

@@ -29,7 +29,6 @@ import { PersonalProfileMyVideoTab } from './PersonalProfile/PersonalProfileMyVi
 import './MyItems.css';
 
 const MyItems: React.FC<IMyItems> = ({
-  userData,
   setIsSplashPage,
   setTabIndexItems,
   tabIndexItems
@@ -141,7 +140,7 @@ const MyItems: React.FC<IMyItems> = ({
       </div>
       <PersonalProfileBackground />
       <div className="my-items-header-wrapper">
-        <PersonalProfileIcon userData={userData} />
+        <PersonalProfileIcon />
         {/* <div onClick={() => navigate(-1)} className="my-items-title-wrapper">
           <FontAwesomeIcon icon={faArrowLeft} />
           <h1 className="my-items-title">My Items</h1>
@@ -282,7 +281,6 @@ const MyItems: React.FC<IMyItems> = ({
           setIsOpenBlockchain={setIsOpenBlockchain}
           isOpenBlockchain={isOpenBlockchain}
           selectedData={selectedData}
-          primaryColor={primaryColor}
           defaultImg={defaultImg}
           isCreatedTab={isCreatedTab}
           setIsCreatedTab={setIsCreatedTab}

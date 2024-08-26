@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-
-import { IAboutPageNew } from './aboutPage.types';
+import { Hex } from 'viem';
 
 import useConnectUser from '../../../hooks/useConnectUser';
 import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { metaMaskIcon, RairLogoBlue } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { rairAdvisorsTeam, teamAboutRair } from '../../MainPage/AboutUsTeam';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -26,7 +26,7 @@ import StreamsAbout from './StreamsAbout/StreamsAbout';
 
 import './AboutPageNew.css';
 
-const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
+const AboutPageNew: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const seo = useAppSelector((store) => store.seo);
@@ -54,9 +54,8 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
     setIsSplashPage(true);
   }, [setIsSplashPage]);
 
-  const switchToNetwork = '0x38';
-  const aboutPageAddress =
-    '0xb6163454da87e9f3fd63683c5d476f7d067f75a2'.toLowerCase();
+  const switchToNetwork: Hex = '0x38';
+  const aboutPageAddress: Hex = '0xb6163454da87e9f3fd63683c5d476f7d067f75a2';
   const offerIndexInMarketplace = '1';
 
   const purchaseButton = (

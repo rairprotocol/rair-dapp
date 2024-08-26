@@ -1,16 +1,26 @@
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 
 import { useAppSelector } from '../../../hooks/useReduxHooks';
 
 import './NotificationPage.css';
 
-const NotificationPage = ({ el, readNotification }) => {
+interface NotificationPageProps {
+  el?: any;
+  readNotification?: any;
+}
+
+const NotificationPage: FC<NotificationPageProps> = ({
+  el,
+  readNotification
+}) => {
   const { headerLogoMobile, primaryColor } = useAppSelector(
     (store) => store.colors
   );
 
   useEffect(() => {
-    readNotification();
+    if (readNotification) {
+      readNotification();
+    }
   }, []);
 
   return (
@@ -34,10 +44,12 @@ const NotificationPage = ({ el, readNotification }) => {
               <div className="notification-img">
                 <img src={headerLogoMobile} alt="Rair Tech" />
               </div>
-              <div className="text-notification">
-                <div className="title-notif">{el.message}</div>
-                <div className="text-notif">{el.title}</div>
-              </div>
+              {el && (
+                <div className="text-notification">
+                  <div className="title-notif">{el.message}</div>
+                  <div className="text-notif">{el.title}</div>
+                </div>
+              )}
             </div>
             <div className="notification-right">
               {/* <div
