@@ -1,5 +1,7 @@
+import { Hex } from "viem";
+
 export type TUseGetProductsGeneralArguments = {
-  blockchain: BlockchainType;
+  blockchain: Hex;
   contract: string;
   product: string;
   currentUserAddress: string | undefined;

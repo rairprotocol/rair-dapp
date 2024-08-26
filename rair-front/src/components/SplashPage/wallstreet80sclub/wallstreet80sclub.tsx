@@ -37,7 +37,6 @@ import './wallstreet80sclub.css';
 //ReactGA.initialize(TRACKING_ID);
 
 const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
-  connectUserData,
   setIsSplashPage
 }) => {
   const dispatch = useAppDispatch();
@@ -55,7 +54,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
 
-  const { primaryColor } = useAppSelector((store) => store.colors);
+  const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
 
   useEffect(() => {
     dispatch(
@@ -120,11 +119,10 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-        <AuthorCard {...{ splashData, connectUserData }} />
+        <AuthorCard {...{ splashData }} />
         <TokenLeftTemplate
           counterData={splashData.counterData}
           soldCopies={soldCopies}
-          primaryColor={primaryColor}
           counterOverride={true}
           nftTitle="NFTs Left"
         />
@@ -159,7 +157,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
           teamArray={teamWallstreetArray}
         />
         <NotCommercialTemplate
-          primaryColor={primaryColor}
+          isDarkMode={isDarkMode}
           NFTName={splashData.LicenseName}
         />
       </div>

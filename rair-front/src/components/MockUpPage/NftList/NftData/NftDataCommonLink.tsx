@@ -21,6 +21,7 @@ import {
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
 import { loadCollection } from '../../../../redux/tokenSlice';
+import { CatalogVideoItem } from '../../../../redux/videoSlice';
 import { setRequestedChain } from '../../../../redux/web3Slice';
 import { MediaFile, User } from '../../../../types/databaseTypes';
 import { TOfferType } from '../../../marketplace/marketplace.types';
@@ -44,7 +45,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const [offerDataInfo, setOfferDataInfo] = useState<TOfferType[]>();
   const [ownerInfo, setOwnerInfo] = useState<TProducts>();
   const [productsFromOffer, setProductsFromOffer] = useState<
-    MediaFile[] | undefined
+    CatalogVideoItem[] | undefined
   >(undefined);
   const [showToken, setShowToken] = useState<number>(15);
   const [isLoading, setIsLoading] = useState<boolean>(false);

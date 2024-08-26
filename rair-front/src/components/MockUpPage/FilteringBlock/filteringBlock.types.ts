@@ -29,7 +29,7 @@ export interface IArrowUp {
 }
 
 export type TSelectFiltersItemStyled = {
-  primaryColor: string;
+  primaryColor?: string;
   filterPopUp: boolean;
   textColor?: string;
   secondaryColor?: string;
@@ -38,32 +38,33 @@ export type TSelectFiltersItemStyled = {
 export type TFiltersTitleIconStyled = {
   filterPopUp: boolean;
   className?: string;
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
   customSecondaryButtonColor?: string;
 };
 
 export type TSelectFiltersPopUpStyled = {
-  primaryColor: string;
+  primaryColor?: string;
 };
 
 export type TSelectSortItemStyled = {
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
   sortPopUp: boolean;
-  secondaryColor: string;
+  secondaryColor?: string;
+  isDarkMode?: boolean;
 };
 
 export type TSortArrowUpIconStyled = {
   sortItem?: TSortChoice;
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
   customSecondaryButtonColor?: any;
 };
 
 export type TSelectSortPopUpStyled = {
   isDarkMode?: boolean;
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
 };
 
@@ -75,7 +76,7 @@ export type TModalContentPictureStyled = {
 
 export type TStyledShevronIconStyled = {
   rotate?: string;
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
   customSecondaryButtonColor?: string;
 };

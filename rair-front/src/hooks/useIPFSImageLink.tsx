@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-function useIPFSImageLink(initialImageLink: string) {
+function useIPFSImageLink(initialImageLink: string | undefined) {
   const [ipfsLink, setIpfsLink] = useState<string>('');
   useEffect(() => {
     if (initialImageLink) {

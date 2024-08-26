@@ -9,7 +9,8 @@ import { rFetch } from '../../../utils/rFetch';
 import LoadingComponent from '../../common/LoadingComponent';
 import MediaListBox from '../../DemoMediaUpload/MediaListBox/MediaListBox';
 import UploadedListBox from '../../DemoMediaUpload/UploadedListBox/UploadedListBox';
-import { IMediaUpload, TMediaType } from '../creatorStudio.types';
+import { IMediaUpload } from '../creatorStudio.types';
+import { MediaFile } from '../../../types/databaseTypes';
 
 const MediaUpload: React.FC<IMediaUpload> = ({
   setStepNumber,
@@ -23,7 +24,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const [mediaUploadedList, setMediaUploadedList] = useState<any>([]);
-  const [mediaList, setMediaList] = useState<TMediaType[]>([]);
+  const [mediaList, setMediaList] = useState<MediaFile[]>([]);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
 
   const selectCommonInfo = {
@@ -38,7 +39,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   };
 
   const onMediaDrop = (media) => {
-    let aux: TMediaType[] = [...mediaList];
+    let aux: MediaFile[] = [...mediaList];
     aux = aux.concat(
       media.map((item: File) => {
         return {

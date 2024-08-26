@@ -1,16 +1,15 @@
 import React from 'react';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Hex } from 'viem';
 
-import { TFileType } from '../../axios.responseTypes';
 import { MediaFile } from '../../types/databaseTypes';
+import { CatalogVideoItem } from '../../redux/videoSlice';
 
 export interface INumberedCircle {
   index: number;
-  primaryColor: string;
 }
 
 export interface ISplashPageProps {
-  connectUserData: () => Promise<void>;
   setIsSplashPage?: (isSplashPage: boolean) => void;
 }
 
@@ -95,7 +94,7 @@ export type TExclusiveNFtType = {
 };
 
 export type TParamsMarketplaceDemo = {
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   contract: string;
   product: string;
 };
@@ -103,7 +102,7 @@ export type TParamsMarketplaceDemo = {
 export type TPurchaseButtonType = {
   contractAddress?: string;
   buttonLabel?: string;
-  requiredBlockchain: BlockchainType | undefined;
+  requiredBlockchain: Hex | undefined;
   buttonComponent?: React.ElementType;
   presaleMessage?: string;
   customWrapperClassName?: string;
@@ -386,7 +385,7 @@ export interface INipseyRelease {
 }
 
 export interface INotCommercialTemplate {
-  primaryColor: string;
+  isDarkMode: boolean;
   NFTName: string | undefined;
 }
 
@@ -411,7 +410,6 @@ export interface IInfoBlock {
 }
 
 export interface IVaporverseSplashPage {
-  connectUserData: () => Promise<void>;
   setIsSplashPage: (isSplashPage: boolean) => void;
 }
 
@@ -429,7 +427,6 @@ export interface INFTImages {
 }
 
 export interface ITokenLeftTemplate {
-  primaryColor: string;
   soldCopies: number;
   counterData?: TCounterData;
   ipftButton?: any; //type is unclear
@@ -439,7 +436,7 @@ export interface ITokenLeftTemplate {
 
 export type TMainContractType = {
   contractAddress: string;
-  requiredBlockchain: BlockchainType | undefined;
+  requiredBlockchain: Hex;
   offerIndex: string[];
 };
 
@@ -480,13 +477,12 @@ export interface IDonationGrid {
 }
 
 export type TUseGetProductsReturn = [
-  MediaFile[],
-  MediaFile | undefined,
+  CatalogVideoItem[],
+  CatalogVideoItem | undefined,
   (selectVideo: any) => void
 ];
 
 export interface INotCommercialTemplate2 {
-  primaryColor: string;
   NFTName: string;
 }
 

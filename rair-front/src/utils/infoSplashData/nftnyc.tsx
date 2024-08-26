@@ -44,7 +44,7 @@ export const useNFTNYC = (connectUserData) => {
       titleColor: 'rgb(3, 91, 188)'
     },
     videoData: {
-      video: null,
+      video: undefined,
       videoTitle: '',
       videoModuleDescription:
         'NFT owners can learn more about the project by signing with metamask to unlock an encrypted stream ',

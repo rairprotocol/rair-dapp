@@ -1,13 +1,10 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-// React Redux types
 import { ErrorBoundary, withSentryReactRouterV6Routing } from '@sentry/react';
 
-// logos for About Page
 import { headerLogoBlack, headerLogoWhite } from './images';
 
-//import CSVParser from './components/metadata/csvParser';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 import ImportAndTransfer from './components/adminViews/ImportAndTransfer';
 import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
@@ -403,7 +400,10 @@ function App() {
                   },
                   {
                     path: '/vaporverse-splash',
-                    content: VaporverseSplashPage
+                    content: VaporverseSplashPage,
+                    props: {
+                      setIsSplashPage
+                    }
                   },
                   {
                     path: '/greyman-splash',
@@ -429,8 +429,6 @@ function App() {
                     path: '/about-page',
                     content: AboutPageNew,
                     props: {
-                      headerLogoWhite: headerLogoWhite,
-                      headerLogoBlack: headerLogoBlack,
                       setIsSplashPage: setIsSplashPage
                     }
                   },
@@ -447,7 +445,7 @@ function App() {
                   const isHome = item.path === import.meta.env.VITE_HOME_PAGE;
 
                   if (import.meta.env.VITE_HOME_PAGE !== '/' && !isHome) {
-                    return <Fragment key={Math.random() + index}></Fragment>;
+                    return <Fragment key={index} />;
                   }
 
                   return (

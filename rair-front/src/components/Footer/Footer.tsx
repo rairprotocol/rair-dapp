@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { IFooter } from './footer.types';
 
 import { useAppSelector } from '../../hooks/useReduxHooks';
-import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 
 import {
@@ -16,16 +15,16 @@ import {
   NavFooterBox
 } from './FooterItems/FooterItems';
 
-const Footer: React.FC<IFooter> = () => {
+const Footer: FC<IFooter> = () => {
   const [emailChimp, setEmailChimp] = useState<string>('');
 
-  const { footerLinks, legal } = useServerSettings();
+  const { footerLinks, legal } = useAppSelector((store) => store.settings);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const rSwal = useSwal();
 
-  const { headerLogo, primaryColor, textColor, secondaryColor } =
+  const { headerLogo, primaryColor, textColor, secondaryColor, isDarkMode } =
     useAppSelector((store) => store.colors);
 
   const onChangeEmail = (e) => {
@@ -46,6 +45,7 @@ const Footer: React.FC<IFooter> = () => {
   return (
     <FooterMain
       hotdrops={hotdropsVar}
+      isDarkMode={isDarkMode}
       primaryColor={primaryColor}
       textColor={textColor}
       secondaryColor={secondaryColor}>

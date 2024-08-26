@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 
-import { TFileType, TNftFilesResponse } from '../../../../axios.responseTypes';
+import { TNftFilesResponse } from '../../../../axios.responseTypes';
 import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import { IStreamsAbout } from '../aboutPage.types';
+import { MediaFile } from '../../../../types/databaseTypes';
 
 const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
   const whatSplashPage = 'about-page';
-  const [allVideos, setAllVideos] = useState<TFileType[]>([]);
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [allVideos, setAllVideos] = useState<MediaFile[]>([]);
+  const [selectVideo, setSelectVideo] = useState<MediaFile>();
   const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
 
   const getAllVideos = useCallback(async () => {

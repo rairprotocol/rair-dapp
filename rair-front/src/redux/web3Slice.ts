@@ -1,6 +1,8 @@
+import { SmartContractAccount } from '@alchemy/aa-core';
+import { AccountSigner } from '@alchemy/aa-ethers';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { BrowserProvider, Provider } from 'ethers';
+import { BrowserProvider } from 'ethers';
 import { Hex } from 'viem';
 
 import { dataStatuses } from './commonTypes';
@@ -15,7 +17,7 @@ export interface ContractsState extends ChainData {
   web3Status: dataStatuses;
   connectedChain?: Hex;
   currentUserAddress?: Hex;
-  programmaticProvider?: Provider;
+  programmaticProvider?: AccountSigner<SmartContractAccount>;
   requestedChain?: Hex;
   exchangeRates?: any;
 }

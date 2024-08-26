@@ -42,6 +42,9 @@ const useContracts = () => {
     }
     switch (loginType) {
       case 'metamask':
+        if (!window.ethereum.isConnected()) {
+          return;
+        }
         const provider = new BrowserProvider(window.ethereum);
         const signer = await provider.getSigner(0);
         setSigner(signer);

@@ -36,8 +36,8 @@ const BlockChainSwitcher = () => {
         timeout: 1000000
       };
       const provider = new JsonRpcProvider(rpcEndpoint, networkData);
-      const currentWallet = await new Wallet(UNSAFE_PrivateKey, provider);
-      await dispatch(setProgrammaticProvider(currentWallet));
+      const currentWallet = new Wallet(UNSAFE_PrivateKey, provider);
+      dispatch(setProgrammaticProvider(currentWallet));
       dispatch(setConnectedChain(chainId));
     } catch (err) {
       const error = err as Error;

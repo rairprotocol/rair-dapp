@@ -29,7 +29,7 @@ export interface IPurchaseTokenButtonProps {
   customWrapperClassName?: string;
   img?: string;
   contractAddress?: string;
-  requiredBlockchain?: BlockchainType | undefined;
+  requiredBlockchain?: Hex | undefined;
   offerIndex?: string[] | undefined;
   buttonLabel?: string;
   presaleMessage?: string | React.ReactNode;

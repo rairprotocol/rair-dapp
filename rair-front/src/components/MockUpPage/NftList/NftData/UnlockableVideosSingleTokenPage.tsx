@@ -18,8 +18,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
   setSelectVideo,
   openVideoplayer,
   setOpenVideoPlayer,
-  handlePlayerClick,
-  primaryColor
+  handlePlayerClick
 }) => {
   const videosListBlock = useRef<HTMLDivElement>(null);
   const [selectedItem, setSelectedItem] = useState<
@@ -32,6 +31,8 @@ const UnlockableVideosSingleTokenPage: React.FC<
   const { ageVerified } = useAppSelector((store) => store.user);
 
   const [formatedVideoObj, setFormatedVideoObj] = useState(undefined);
+
+  const { isDarkMode, primaryColor } = useAppSelector((store) => store.colors);
   const reactSwal = useSwal();
 
   function renameKeys(obj, newKeys) {
@@ -107,7 +108,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
     <div className="unlockable-videos-wrapper" ref={videosListBlock}>
       {productsFromOffer && productsFromOffer.length && openVideoplayer ? (
         <div className={'video-player-style'}>
-          {selectVideo && formatedVideoObj && (
+          {selectVideo && formatedVideoObj && selectVideo?._id && (
             <NftVideoplayer
               selectVideo={formatedVideoObj[selectVideo._id]}
               setSelectVideo={setSelectVideo}
@@ -139,7 +140,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
       )}
       <div className={'unlockables-videos-list'}>
         {productsFromOffer?.length &&
-          productsFromOffer.map((data: MediaFile, index) => {
+          productsFromOffer.map((data, index) => {
             return (
               <div
                 className={
@@ -196,28 +197,23 @@ const UnlockableVideosSingleTokenPage: React.FC<
                   <div
                     className={'single-list-video-info'}
                     style={{
-                      backgroundColor:
-                        primaryColor === 'rhyno'
-                          ? '#f8f8f8'
-                          : `color-mix(in srgb, ${primaryColor}, #888888)`
+                      backgroundColor: !isDarkMode
+                        ? '#f8f8f8'
+                        : `color-mix(in srgb, ${primaryColor}, #888888)`
                     }}>
                     <div
                       className="single-list-video-info-title"
                       style={{
-                        color:
-                          primaryColor === 'rhyno'
-                            ? 'var(--charcoal)'
-                            : '#FFFFFF'
+                        color: !isDarkMode ? 'var(--charcoal)' : '#FFFFFF'
                       }}>
                       {data.title}
                     </div>
                     <div
                       className="single-list-video-info-duration"
                       style={{
-                        color:
-                          primaryColor === 'rhyno'
-                            ? 'var(--charcoal-60)'
-                            : 'var(--charcoal-40)'
+                        color: !isDarkMode
+                          ? 'var(--charcoal-60)'
+                          : 'var(--charcoal-40)'
                       }}>
                       {data.duration}
                     </div>

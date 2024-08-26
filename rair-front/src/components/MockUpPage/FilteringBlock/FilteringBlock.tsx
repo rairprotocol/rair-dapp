@@ -144,6 +144,7 @@ const FilteringBlock = ({
             import.meta.env.VITE_TESTNET === 'true' ? 'hotdrops-hover' : ''
           }`}
           primaryColor={primaryColor}
+          isDarkMode={isDarkMode}
           textColor={textColor}
           secondaryColor={secondaryColor}
           sortPopUp={sortPopUp}>

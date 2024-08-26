@@ -13,6 +13,7 @@ import {
 } from '../../axios.responseTypes';
 import { ContractType } from '../adminViews/adminView.types';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
+import { MediaFile } from '../../types/databaseTypes';
 export interface IMarketplaceOfferConfig {
   array: TMarketplaceOfferConfigArrayItem[];
   index: number;
@@ -235,20 +236,6 @@ export type TSteps = {
   description: string;
 };
 
-export type TMediaType = {
-  id(contractAddress: string, id: any): void;
-  category: string;
-  contractAddress: string;
-  description: string;
-  file: File;
-  offer: string;
-  preview: string;
-  productIndex: string;
-  storage: string;
-  title: string;
-  demo: boolean;
-};
-
 export type TChoiceAllOptions = {
   contract: string;
   product: string;
@@ -261,12 +248,12 @@ export type TCategories = {
 };
 
 export interface IMediaUploadRow {
-  item: TMediaType;
+  item: MediaFile;
   offerList: OptionsType[];
   deleter: () => void;
   rerender: () => void;
   index: number;
-  array: TMediaType[];
+  array: MediaFile[];
   categoriesArray: OptionsType[];
 }
 
@@ -420,7 +407,7 @@ export type TNftMapping = {
 };
 
 export type TParamsContractDetails = {
-  address: string;
+  address: Hex;
   blockchain: Hex;
 };
 
@@ -448,7 +435,7 @@ export type IForwardFunctions = {
 
 export type TContractsNetworkContract = {
   blockchain: Hex | undefined;
-  contractAddress: string;
+  contractAddress: Hex;
   creationDate: string;
   diamond: boolean;
   external: boolean;

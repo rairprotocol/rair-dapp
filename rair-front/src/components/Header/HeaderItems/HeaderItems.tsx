@@ -2,7 +2,7 @@ import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface IHeaderContainerStyled {
-  primaryColor: string;
+  isDarkMode: boolean;
   showAlert?: boolean;
   isSplashPage?: boolean;
   hotdrops?: string;
@@ -13,8 +13,8 @@ interface IHeaderContainerStyled {
 export const HeaderContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<IHeaderContainerStyled>`
-  background: ${(props) =>
-    props.primaryColor === '#dedede'
+  background: ${({ isDarkMode, secondaryColor }) =>
+    !isDarkMode
       ? '#fff'
       : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
   margin-top: ${(props) =>
@@ -24,7 +24,6 @@ export const HeaderContainer = styled.div.withConfig({
 export const SocialHeaderBox = styled.div.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<IHeaderContainerStyled>`
-  border: 1px solid
-    ${(props) => (props.primaryColor === 'rhyno' ? '#9867D9' : '#fff')};
-  background: ${(props) => (props.primaryColor === 'rhyno' ? '#b2b2b2' : '')};
+  border: 1px solid ${({ isDarkMode }) => (!isDarkMode ? '#9867D9' : '#fff')};
+  background: ${({ isDarkMode }) => (!isDarkMode ? '#b2b2b2' : '')};
 `;

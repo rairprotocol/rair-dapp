@@ -56,7 +56,8 @@ const MainHeader: FC<IMainHeader> = ({
     primaryButtonColor,
     textColor,
     secondaryColor,
-    iconColor
+    iconColor,
+    isDarkMode
   } = useAppSelector((store) => store.colors);
   const { connectUserData } = useConnectUser();
   const { searchResults } = useAppSelector((store) => store.searchbar);
@@ -205,7 +206,7 @@ const MainHeader: FC<IMainHeader> = ({
     <HeaderContainer
       hotdrops={hotdropsVar}
       className="col-12 header-master"
-      primaryColor={primaryColor}
+      isDarkMode={isDarkMode}
       showAlert={showAlert}
       isSplashPage={isSplashPage}
       realChainId={realChainId}

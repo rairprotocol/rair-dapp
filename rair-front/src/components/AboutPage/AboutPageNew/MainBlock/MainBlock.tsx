@@ -37,7 +37,6 @@ Modal.setAppElement('#root');
 
 const MainBlock: React.FC<IMainBlock> = ({
   Metamask,
-  primaryColor,
   termsText,
   purchaseButton
 }) => {
@@ -51,6 +50,7 @@ const MainBlock: React.FC<IMainBlock> = ({
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const { connectUserData } = useConnectUser();
+  const { isDarkMode } = useAppSelector((store) => store.colors);
 
   const targetBlockchain = '0x38';
   const aboutPageAddress: Hex = '0xb6163454da87e9f3fd63683c5d476f7d067f75a2';
@@ -161,15 +161,12 @@ const MainBlock: React.FC<IMainBlock> = ({
   return (
     <div className="information-author">
       <div className="home-about-desc">
-        <h2 className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
+        <h2 className={!isDarkMode ? 'rhyno' : ''}>
           Encrypted,
           <br />
           Streaming NFTs
         </h2>
-        <div
-          className={`autor-about-text ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
-          }`}>
+        <div className={`autor-about-text ${!isDarkMode ? 'rhyno' : ''}`}>
           Our platform makes it possible to attach digital goods
           <br />
           {"to an NFT using encrypted streaming - making today's"}

@@ -53,10 +53,10 @@ export const SelectFiltersPopUp = styled.div.withConfig({
 export const SelectSortItem = styled.div.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<TSelectSortItemStyled>`
-  background-color: ${(props) =>
-    props.primaryColor === '#dedede'
+  background-color: ${({ isDarkMode, primaryColor }) =>
+    !isDarkMode
       ? 'var(--rhyno-40)'
-      : `color-mix(in srgb, ${props.primaryColor}, #888888)`};
+      : `color-mix(in srgb, ${primaryColor}, #888888)`};
   color: ${(props) => props.textColor};
   border: solid 1px
     ${(props) =>

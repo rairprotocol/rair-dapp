@@ -27,7 +27,6 @@ import VideoList from '../video/videoList';
 import FilteringBlock from './FilteringBlock/FilteringBlock';
 import {
   TBlockchainNames,
-  TOnClickCategories,
   TSortChoice
 } from './FilteringBlock/filteringBlock.types';
 import { NftList } from './NftList/NftList';
@@ -43,11 +42,10 @@ const SearchPanel: FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   const [click, setClick] = useState(null);
   const [isShowCategories, setIsShowCategories] = useState<boolean>(false);
   const [filterText, setFilterText] = useState<Array<TBlockchainNames>>([]);
-  const [filterCategoriesText, setFilterCategoriesText] =
-    useState<TOnClickCategories | null>();
-  const [categoryClick, setCategoryClick] = useState<TOnClickCategories | null>(
-    null
-  );
+  const [filterCategoriesText, setFilterCategoriesText] = useState<
+    string | null
+  >();
+  const [categoryClick, setCategoryClick] = useState<string | null>(null);
   const [blockchainClick, setBlockchainClick] =
     useState<TBlockchainNames | null>(null);
   const [currentPageForVideo, setCurrentPageForVideo] = useState<number>(1);

@@ -41,7 +41,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
 
   const [contractData, setContractData] = useState({});
   const [contractOptions, setContractOptions] = useState<OptionsType[]>([]);
-  const [productOptions, setProductOptions] = useState();
+  const [productOptions, setProductOptions] = useState<Array<OptionsType>>([]);
   const [offersOptions, setOffersOptions] = useState<OptionsType[]>();
   const [choiceAllOptions, setChoiceAllOptions] =
     useState<TChoiceAllOptions | null>(null);

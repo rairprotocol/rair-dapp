@@ -17,7 +17,7 @@ export const useSplashData = (connectUserData) => {
     videoPlayerParams: {
       contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
       product: '0',
-      blockchain: '0x5'
+      blockchain: '0x5' as Hex
     },
     marketplaceDemoParams: {
       contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
@@ -25,7 +25,7 @@ export const useSplashData = (connectUserData) => {
       blockchain: '0x5' as Hex
     },
     purchaseButton: {
-      requiredBlockchain: '0x38',
+      requiredBlockchain: '0x38' as Hex,
       contractAddress: '0x03041d4fd727eae0337529e11287f6b499d48a4f'
     },
     /*  this block needs to be changed */

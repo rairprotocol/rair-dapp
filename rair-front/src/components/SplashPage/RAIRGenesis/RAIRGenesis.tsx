@@ -3,11 +3,13 @@ import axios from 'axios';
 
 import { teamRAIRBasicArray } from './AboutUsTeam';
 
-import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
+import { TNftFilesResponse } from '../../../axios.responseTypes';
+import useConnectUser from '../../../hooks/useConnectUser';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
+import { CatalogVideoItem } from '../../../redux/videoSlice';
 import { useSplashData } from '../../../utils/infoSplashData/rairGenesis';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
@@ -33,21 +35,21 @@ import './RAIRGenesis.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const NumberedCircle: React.FC<INumberedCircle> = ({ index, primaryColor }) => {
+const NumberedCircle: React.FC<INumberedCircle> = ({ index }) => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <div
       className="numbered-circle"
-      style={{ color: `${primaryColor === 'rhyno' ? '#000000' : '#FFFFFF'}` }}>
+      style={{ color: `${isDarkMode ? '#000000' : '#FFFFFF'}` }}>
       {index}
     </div>
   );
 };
 
-const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
-  connectUserData
-}) => {
+const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = () => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
+  const { connectUserData } = useConnectUser();
   const { splashData } = useSplashData(connectUserData);
   const { primaryColor } = useAppSelector((store) => store.colors);
   const reactSwal = useSwal();
@@ -102,8 +104,10 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   }, []);
 
   /* UTILITIES FOR VIDEO PLAYER VIEW */
-  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [productsFromOffer, setProductsFromOffer] = useState<
+    CatalogVideoItem[]
+  >([]);
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
@@ -133,7 +137,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-        <AuthorCard {...{ splashData, connectUserData, whatSplashPage }} />
+        <AuthorCard {...{ splashData, whatSplashPage }} />
         <div style={{ height: '32px' }} />
         <SplashVideoWrapper>
           <SplashVideoTextBlock>
@@ -154,7 +158,6 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
             openVideoplayer={openVideoplayer}
             setOpenVideoPlayer={setOpenVideoPlayer}
             handlePlayerClick={handlePlayerClick}
-            primaryColor={primaryColor}
           />
         </SplashVideoWrapper>
 
@@ -164,7 +167,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
         </h1>
         <NftDataCommonLink
           tokenNumber={Number(tokenId)}
-          setTokenNumber={(value) => setTokenId(value.toString())}
+          setTokenNumber={(value) => value && setTokenId(value.toString())}
           embeddedParams={embeddedParams}
         />
         <h1 className="splashpage-subtitle" style={{ marginTop: '150px' }}>
@@ -180,7 +183,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
               'Embeddable player'
             ].map((row, i) => (
               <div key={i} className="membership-block-text-row">
-                <NumberedCircle index={i} primaryColor={primaryColor} />
+                <NumberedCircle index={i} />
                 <div>&nbsp;</div>
                 <p style={{ width: '70%' }}>{row}</p>
               </div>
@@ -204,10 +207,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
           About{' '}
         </h1>
         <TeamMeet arraySplash={'rair-basic-2'} teamArray={teamRAIRBasicArray} />
-        <NotCommercialTemplate2
-          primaryColor={primaryColor}
-          NFTName={splashData.NFTName}
-        />
+        <NotCommercialTemplate2 NFTName={splashData.NFTName} />
       </div>
     </div>
   );

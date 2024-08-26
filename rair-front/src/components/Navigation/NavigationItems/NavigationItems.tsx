@@ -12,6 +12,7 @@ interface IMenuMobileWrapper {
   hotdrops?: string;
   realChainId?: string | undefined;
   secondaryColor?: string;
+  isDarkMode?: boolean;
 }
 
 export const MenuMobileWrapper = styled.div.withConfig({
@@ -86,10 +87,8 @@ export const TitleEditProfile = styled.h4`
 export const List = styled.ul.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<IMenuMobileWrapper>`
-  background: ${(props) =>
-    props.primaryColor === '#dedede'
-      ? '#fff'
-      : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
+  background: ${({ isDarkMode, secondaryColor }) =>
+    !isDarkMode ? '#fff' : `color-mix(in srgb, ${secondaryColor}, #888888)`};
   overflow: ${(props) => props.click && 'hidden'};
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;

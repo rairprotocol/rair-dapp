@@ -60,7 +60,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
     //eslint-disable-next-line
   }, []);
 
-  const { primaryColor } = useAppSelector((store) => store.colors);
+  const { isDarkMode } = useAppSelector((store) => store.colors);
 
   /* UTILITIES FOR VIDEO PLAYER VIEW */
   const [productsFromOffer, selectVideo, setSelectVideo] =
@@ -117,7 +117,6 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
             openVideoplayer={openVideoplayer}
             setOpenVideoPlayer={setOpenVideoPlayer}
             handlePlayerClick={handlePlayerClick}
-            primaryColor={primaryColor}
           />
         </SplashVideoWrapper>
         <div className="coinagenda-button-container">
@@ -126,7 +125,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
         </div>
         <TeamMeet arraySplash={'coinagenda'} teamArray={teamCoinAgendaArray} />
         <NotCommercialTemplate
-          primaryColor={primaryColor}
+          isDarkMode={isDarkMode}
           NFTName={splashData.NFTName}
         />
       </div>

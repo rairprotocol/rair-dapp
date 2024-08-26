@@ -22,7 +22,6 @@ import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
 interface IMobileNavigationList {
   messageAlert: string | null;
   setMessageAlert: (arg: string | null) => void;
-  primaryColor?: string;
   toggleMenu: (otherPage?: string) => void;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;

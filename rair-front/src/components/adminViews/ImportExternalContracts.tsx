@@ -102,7 +102,13 @@ const ImportExternalContract = () => {
     if (!contractCreator) {
       return;
     }
-    const instance = await contractCreator(selectedContract, diamondFactoryAbi);
+    if (!isAddress(selectedContract)) {
+      return;
+    }
+    const instance = await contractCreator(
+      selectedContract as Hex,
+      diamondFactoryAbi
+    );
     if (instance) {
       const owner = await web3TxHandler(instance, 'owner', [], {
         intendedBlockchain: selectedBlockchain,

@@ -84,14 +84,13 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
         <div className="home-about--page">
           <MainBlock
             RairLogo={RairLogoBlue}
-            primaryColor={primaryColor}
             Metamask={metaMaskIcon}
             termsText={termsText}
             purchaseButton={purchaseButton}
           />
-          <LeftTokenAbout primaryColor={primaryColor} />
+          <LeftTokenAbout />
           <PlatformAbout />
-          <RairOffer primaryColor={primaryColor} />
+          <RairOffer />
           <ExclusiveNfts />
           <StreamsAbout
             Metamask={metaMaskIcon}
@@ -99,7 +98,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
             purchaseButton={purchaseButton}
           />
           {/* <Tokenomics Metamask={Metamask} /> */}
-          <RoadMap primaryColor={primaryColor} RairLogo={RairLogoBlue} />
+          <RoadMap />
           <CompareAbout />
           <div className="about-page--team">
             <TeamMeet

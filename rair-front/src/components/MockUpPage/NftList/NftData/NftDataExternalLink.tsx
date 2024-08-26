@@ -7,12 +7,9 @@ import { Hex } from 'viem';
 import NftDataPageMain from './NftDataPageMain';
 
 import {
-  TContract,
-  TFileType,
   TMetadataType,
   // TNFTDataExternalLinkContractProduct,
   TNftFilesResponse,
-  TNftItemResponse,
   // TTokenData,
   TUserResponse
 } from '../../../../axios.responseTypes';
@@ -22,7 +19,8 @@ import {
 } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import { loadCollection } from '../../../../redux/tokenSlice';
-import { MediaFile, User } from '../../../../types/databaseTypes';
+import { CatalogVideoItem } from '../../../../redux/videoSlice';
+import { User } from '../../../../types/databaseTypes';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 // import { TNftExternalLinkType } from '../nftList.types';
 
@@ -34,16 +32,16 @@ const NftDataExternalLink = () => {
   const { contractId, product, token } = params;
 
   const { currentUserAddress } = useAppSelector((store) => store.web3);
-  const { textColor } = useAppSelector((store) => store.colors);
 
   const [dataForUser, setDataForUser] = useState<Hex | undefined>();
   const [offer, setOffer] = useState<TOfferType[]>([]);
   const [offerPrice, setOfferPrice] = useState<string[]>();
-  const [totalCount, setTotalCount] = useState<number>();
   const [selectedData, setSelectedData] = useState<TMetadataType>();
   const [selectedToken, setSelectedToken] = useState<string>();
   const [neededBlockchain, setNeededBlockchain] = useState<Hex | undefined>();
-  const [productsFromOffer, setProductsFromOffer] = useState<MediaFile[]>([]);
+  const [productsFromOffer, setProductsFromOffer] = useState<
+    CatalogVideoItem[]
+  >([]);
   const [someUsersData, setSomeUsersData] = useState<User | null>(null);
   const [typeOfContract, setTypeOfContract] = useState();
   const [neededContract, setNeededContract] = useState();
@@ -53,7 +51,6 @@ const NftDataExternalLink = () => {
   const [lastToken, setLastToken] = useState<number>(0);
   const [showToken, setShowToken] = useState<number>(15);
 
-  const [dataFromListTokens, setDataFromListTokens] = useState();
   const [ifClassicContract, setIfClassicContract] = useState();
 
   const rSwal = useSwal();
@@ -141,23 +138,6 @@ const NftDataExternalLink = () => {
     [neededBlockchain, contractOfProduct, neededProduct, dispatch]
   );
 
-  const getListTokensData = useCallback(async () => {
-    if (neededContract) {
-      try {
-        const response = await axios.get(
-          `/api/tokens/?contract=${neededContract}`
-        );
-        const { success, tokens } = response.data;
-        if (success) {
-          setDataFromListTokens(tokens);
-        }
-      } catch (err) {
-        const error = err as AxiosError;
-        rSwal.fire('Error', `${error.message}`, 'error');
-      }
-    } else return null;
-  }, [neededContract, rSwal]);
-
   const getProductsFromOffer = useCallback(async () => {
     if (neededBlockchain && contractOfProduct) {
       const response = await axios.get<TNftFilesResponse>(
@@ -230,10 +210,6 @@ const NftDataExternalLink = () => {
   useEffect(() => {
     getListOfTokens();
   }, [getListOfTokens]);
-
-  useEffect(() => {
-    getListTokensData();
-  }, [getListTokensData]);
 
   useEffect(() => {
     getInfoFromUser();

@@ -166,7 +166,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     if (currentUserAddress && mainTokenInstance?.provider) {
       setIsLoadingBalance(true);
       const balance =
-        await mainTokenInstance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.runner?.provider?.getBalance(
+          currentUserAddress
+        );
 
       if (balance) {
         const result = formatEther(balance);
@@ -219,7 +221,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
         {openProfile ? (
           <Suspense fallback={<h1>Loading profile...</h1>}>
             <MobileProfileInfo
-              primaryColor={primaryColor}
               click={click}
               toggleOpenProfile={toggleOpenProfile}
             />

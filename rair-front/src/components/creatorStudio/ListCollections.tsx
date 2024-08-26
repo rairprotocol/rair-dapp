@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import { faArrowRight, faGem } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { isAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import { BannerCollection } from './BannerCollection';
 import {
@@ -60,9 +62,9 @@ const ListCollections = () => {
     }
     if (response2.contract) {
       setData(response2.contract);
-    } else {
+    } else if (isAddress(address) && contractCreator) {
       // Try diamonds
-      const instance = contractCreator?.(address, diamondFactoryAbi);
+      const instance = contractCreator(address as Hex, diamondFactoryAbi);
       if (!instance) {
         return;
       }

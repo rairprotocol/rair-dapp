@@ -5,13 +5,15 @@ import { TSplashDataType, TUseGetProductsReturn } from './splashPage.types';
 
 import { TNftFilesResponse } from '../../axios.responseTypes';
 import { useAppSelector } from '../../hooks/useReduxHooks';
-import { MediaFile } from '../../types/databaseTypes';
+import { CatalogVideoItem } from '../../redux/videoSlice';
 
 export const useGetProducts = (
   splashData: TSplashDataType
 ): TUseGetProductsReturn => {
-  const [productsFromOffer, setProductsFromOffer] = useState<MediaFile[]>([]);
-  const [selectVideo, setSelectVideo] = useState<MediaFile>();
+  const [productsFromOffer, setProductsFromOffer] = useState<
+    CatalogVideoItem[]
+  >([]);
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
 
   const { currentUserAddress } = useAppSelector((store) => store.web3);
 

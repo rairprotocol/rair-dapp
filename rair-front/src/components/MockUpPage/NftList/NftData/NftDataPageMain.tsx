@@ -11,13 +11,14 @@ import SingleTokenViewProperties from './SingleTokenViewProperties';
 import { TitleSingleTokenView } from './TitleSingleTokenView';
 import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
 
-import { TFileType, TNftItemResponse } from '../../../../axios.responseTypes';
+import { TNftItemResponse } from '../../../../axios.responseTypes';
 import useIPFSImageLink from '../../../../hooks/useIPFSImageLink';
 import {
   useAppDispatch,
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
 import { ExpandImageIcon } from '../../../../images';
+import { CatalogVideoItem } from '../../../../redux/videoSlice';
 import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
@@ -29,7 +30,6 @@ import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
 import { changeIPFSLink } from '../utils/changeIPFSLink';
 
 import TitleCollection from './TitleCollection/TitleCollection';
-import { MediaFile } from '../../../../types/databaseTypes';
 
 const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,
@@ -51,7 +51,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const { currentCollection } = useAppSelector((state) => state.tokens);
   const { tokenId } = useParams();
 
-  const [selectVideo, setSelectVideo] = useState<MediaFile | undefined>();
+  const [selectVideo, setSelectVideo] = useState<
+    CatalogVideoItem | undefined
+  >();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const [verticalImage, setVerticalImage] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
@@ -66,7 +68,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     setPlaying((prev) => !prev);
   };
 
-  const { primaryColor } = useAppSelector((store) => store.colors);
+  const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
 
   const [tokenFullData, setTokenFullData] = useState<any>(undefined);
   const dispatch = useAppDispatch();
@@ -405,10 +407,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             />
           )}
           <div className="properties-title">
-            <TitleSingleTokenView
-              title="Description"
-              primaryColor={primaryColor}
-            />
+            <TitleSingleTokenView title="Description" isDarkMode={isDarkMode} />
           </div>
           <div
             className="description-text"
@@ -426,10 +425,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             )}
           </div>
           <div className="properties-title">
-            <TitleSingleTokenView
-              title="Properties"
-              primaryColor={primaryColor}
-            />
+            <TitleSingleTokenView title="Properties" isDarkMode={isDarkMode} />
           </div>
           {selectedData?.attributes && selectedData?.attributes?.length > 0 ? (
             <SingleTokenViewProperties selectedData={selectedData} />
@@ -444,7 +440,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
         <div className="this-nft-unlocks">
           <TitleSingleTokenView
             title={`This ${hotdropsVar ? 'collectible' : 'NFT'} unlocks`}
-            primaryColor={primaryColor}
+            isDarkMode={isDarkMode}
           />
         </div>
         {productsFromOffer && productsFromOffer.length > 0 ? (
@@ -465,7 +461,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 openVideoplayer={openVideoplayer}
                 setOpenVideoPlayer={setOpenVideoPlayer}
                 handlePlayerClick={handlePlayerClick}
-                primaryColor={primaryColor}
               />
             </div>
           </>

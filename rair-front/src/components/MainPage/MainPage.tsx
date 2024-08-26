@@ -413,7 +413,6 @@ const MainPage: React.FC<IMainPage> = ({ setIsSplashPage, setIsAboutPage }) => {
                 openVideoplayer={openVideoplayer}
                 setOpenVideoPlayer={setOpenVideoPlayer}
                 handlePlayerClick={handlePlayerClick}
-                primaryColor={primaryColor}
               />
             </div>
           </div>

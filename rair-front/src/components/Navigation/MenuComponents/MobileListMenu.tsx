@@ -8,6 +8,7 @@ import MobileNavigationList from './MobileNavigationList';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { clearResults, startSearch } from '../../../redux/searchbarSlice';
+import { MintedToken, User } from '../../../types/databaseTypes';
 import { TAxiosCollectionData } from '../../Header/header.types';
 import ImageCustomForSearch from '../../MockUpPage/utils/image/ImageCustomForSearch';
 
@@ -189,7 +190,8 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                   <div className="search-holder">
                     {textSearch && (
                       <>
-                        {searchResults && searchResults?.products.length > 0 ? (
+                        {searchResults?.products?.length &&
+                        searchResults.products.length > 0 ? (
                           <div className="data-find-wrapper">
                             <h5>Products</h5>
                             {searchResults?.products.map(
@@ -223,11 +225,12 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                         ) : (
                           <></>
                         )}
-                        {searchResults && searchResults?.tokens.length > 0 ? (
+                        {searchResults?.tokens?.length &&
+                        searchResults.tokens.length > 0 ? (
                           <div className="data-find-wrapper">
                             <h5>Tokens</h5>
                             {searchResults?.tokens.map(
-                              (item: TSearchDataTokens, index: number) => (
+                              (item: MintedToken, index: number) => (
                                 <div
                                   key={Number(index) + Math.random()}
                                   className="data-find">
@@ -261,11 +264,12 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                         ) : (
                           <></>
                         )}
-                        {dataAll && dataAll?.users.length > 0 ? (
+                        {searchResults?.users?.length &&
+                        searchResults.users.length > 0 ? (
                           <div className="data-find-wrapper">
                             <h5>Users</h5>
-                            {dataAll?.users.map(
-                              (item: TSearchDataUser, index: number) => (
+                            {searchResults?.users.map(
+                              (item: User, index: number) => (
                                 <div
                                   key={Number(index) + Math.random()}
                                   className="data-find"
@@ -299,7 +303,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                         )}
                       </>
                     )}
-                    {textSearch !== '' && message === 'Nothing can found' ? (
+                    {textSearch !== '' ? (
                       <span className="data-nothing-find">No items found</span>
                     ) : (
                       <></>
@@ -315,9 +319,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
             click={click}
             messageAlert={messageAlert}
             setMessageAlert={setMessageAlert}
-            primaryColor={primaryColor}
             toggleMenu={toggleMenu}
-            currentUserAddress={currentUserAddress}
             setTabIndexItems={setTabIndexItems}
             isSplashPage={isSplashPage}
           />

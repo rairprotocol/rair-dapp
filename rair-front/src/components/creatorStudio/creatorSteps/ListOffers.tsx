@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Contract } from 'ethers';
+import { Contract, isAddress } from 'ethers';
 import { Hex } from 'viem';
 
 import OfferRow from './OfferRow';
@@ -109,8 +109,8 @@ const ListOffers: React.FC<IListOffers> = ({
   };
 
   useEffect(() => {
-    if (onMyChain) {
-      const createdInstance = contractCreator?.(address, erc721Abi);
+    if (onMyChain && isAddress(address) && contractCreator) {
+      const createdInstance = contractCreator(address as Hex, erc721Abi);
       setInstance(createdInstance);
     }
   }, [address, onMyChain, contractCreator]);

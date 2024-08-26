@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
 import {
   SendUserOperationResult,
+  SmartContractAccount,
   UserOperationOverrides
 } from '@alchemy/aa-core';
 import { EthersProviderAdapter } from '@alchemy/aa-ethers';
@@ -14,6 +15,7 @@ import { useAppDispatch, useAppSelector } from './useReduxHooks';
 import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
 
+import { setConnectedChain, setProgrammaticProvider } from '../redux/web3Slice';
 import { rFetch } from '../utils/rFetch';
 import { TChainItemData } from '../utils/utils.types';
 
@@ -203,19 +205,12 @@ const useWeb3Tx = () => {
       if (!currentUserAddress || !programmaticProvider) {
         return;
       }
-      const methodFound = Object.keys(contract.interface.functions).find(
-        (item) => item.includes(`${method}(`)
-      );
-      if (
-        methodFound &&
-        contract.interface.functions[methodFound].stateMutability === 'view'
-      ) {
+      const methodFound = contract.getFunction(method);
+      const fragment = methodFound.getFragment();
+      if (fragment.stateMutability === 'view') {
         // If the method is a view function, query the info directly through Ethers
         return await contract[method](...args);
       }
-      const fragment = contract.interface.fragments.find((fragment) => {
-        return fragment.name === method;
-      });
       let transactionValue: bigint = BigInt(0);
       if (args.at(-1).value) {
         transactionValue = BigInt(args.pop().value);
@@ -304,7 +299,7 @@ const useWeb3Tx = () => {
         }
       });
 
-      const a = await createModularAccountAlchemyClient({
+      const modularAccountClient = await createModularAccountAlchemyClient({
         apiKey: chainData.alchemyAppKey,
         chain: chainData.viem!,
         signer: web3AuthSigner,
@@ -315,20 +310,20 @@ const useWeb3Tx = () => {
           : undefined
       });
 
-      const provider = alchemyProvider.connectToAccount(a);
+      const provider = alchemyProvider.connectToAccount(modularAccountClient);
 
       dispatch(setProgrammaticProvider(provider));
-      dispatch(setChainId(chainData.addChainData.chainId, blockchainSettings));
+      dispatch(setConnectedChain(chainData.addChainData.chainId));
       provider.signTypedData = web3AuthSigner.signTypedData;
       provider.userDetails = web3AuthSigner.getAuthDetails;
 
       return provider;
     },
-    [dispatch, blockchainSettings]
+    [dispatch]
   );
 
   const metamaskSwitch = useCallback(
-    async (chainId: BlockchainType) => {
+    async (chainId: Hex) => {
       try {
         console.info(4, getBlockchainData(chainId), blockchainSettings);
         await window.ethereum.request({

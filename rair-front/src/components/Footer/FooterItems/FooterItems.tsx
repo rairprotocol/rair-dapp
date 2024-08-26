@@ -2,7 +2,8 @@ import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 type TFooterMainStyled = {
-  primaryColor: string;
+  primaryColor?: string;
+  isDarkMode?: boolean;
   messageAlert?: string;
   hotdrops?: string;
   textColor?: any;
@@ -12,18 +13,16 @@ type TFooterMainStyled = {
 export const FooterMain = styled.footer.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<TFooterMainStyled>`
-  background: ${(props) =>
-    props.primaryColor === '#dedede'
-      ? '#fff'
-      : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
+  background: ${({ isDarkMode, secondaryColor }) =>
+    !isDarkMode ? '#fff' : `color-mix(in srgb, ${secondaryColor}, #888888)`};
   padding: 40px 120px 25px 120px;
   color: ${(props) => props.textColor};
 
   border-top: 1px solid
-    ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
+    ${({ isDarkMode }) => (!isDarkMode ? '#E5E5E5' : '#595959')};
 
   a {
-    color: ${(props) => props.textColor};
+    color: ${({ textColor }) => textColor};
   }
 
   @media screen and (max-width: 1024px) {

@@ -2,7 +2,8 @@ import { Hex } from 'viem';
 
 import { TOfferType } from './components/marketplace/marketplace.types';
 import { MediaListResponseType } from './components/video/video.types';
-import { MediaFile, User } from './types/databaseTypes';
+import { CatalogVideoItem } from './redux/videoSlice';
+import { User } from './types/databaseTypes';
 
 export type BackendResponse = {
   success: boolean;
@@ -92,7 +93,7 @@ export type TFileKeyType = {
 
 export type TNftFilesResponse = {
   success: boolean;
-  files: MediaFile[];
+  files: CatalogVideoItem[];
 };
 
 export type IOffersResponseType = {

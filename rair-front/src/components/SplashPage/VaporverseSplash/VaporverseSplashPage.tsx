@@ -3,6 +3,7 @@ import { v1 } from 'uuid';
 
 import { teamVaporVerseArray } from './AboutUsTeam';
 
+import useConnectUser from '../../../hooks/useConnectUser';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
@@ -55,13 +56,13 @@ const InfoBlock: React.FC<IInfoBlock> = ({
 };
 
 const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
-  connectUserData,
   setIsSplashPage
 }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
-  const { primaryColor } = useAppSelector((store) => store.colors);
+  const { isDarkMode } = useAppSelector((store) => store.colors);
+  const { connectUserData } = useConnectUser();
   const carousel_match = window.matchMedia('(min-width: 630px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurchaseList] = useState(true);
@@ -278,7 +279,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
           teamArray={teamVaporVerseArray}
         />
         <NotCommercialTemplate
-          primaryColor={primaryColor}
+          isDarkMode={isDarkMode}
           NFTName={splashData.NFTName}
         />
       </div>

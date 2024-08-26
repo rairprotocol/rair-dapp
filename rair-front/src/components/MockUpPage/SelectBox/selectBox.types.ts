@@ -35,7 +35,7 @@ export type SelectNumberItem = {
 };
 
 export interface ISelectNumber {
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   items: SelectNumberItem[];
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   selectedToken: string | undefined;

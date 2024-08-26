@@ -1,17 +1,17 @@
 import { Hex } from 'viem';
 
 import {
-  TFileType,
   TMetadataType,
   TProducts,
   TTokenData
 } from '../../axios.responseTypes';
+import { CatalogVideoItem } from '../../redux/videoSlice';
 import { MediaFile, User } from '../../types/databaseTypes';
 import { TOfferType } from '../marketplace/marketplace.types';
 
 export interface ITitleSingleTokenView {
   title: string;
-  primaryColor: string;
+  isDarkMode: boolean;
 }
 
 export interface INftItemForCollectionView {
@@ -102,9 +102,9 @@ export interface ISharePopUp {
 }
 
 export interface INftVideoplayer {
-  selectVideo: TFileType | undefined;
+  selectVideo: CatalogVideoItem | undefined;
   main?: boolean;
-  setSelectVideo?: (selectVideo: TFileType | undefined) => void;
+  setSelectVideo?: (selectVideo: CatalogVideoItem | undefined) => void;
 }
 
 export interface ISerialNumberBuySell {
@@ -144,13 +144,12 @@ export interface IBuySellButton {
 }
 
 export type TUnlockableVideosSingleTokenPage = {
-  productsFromOffer: MediaFile[] | undefined;
-  selectVideo: MediaFile | undefined;
-  setSelectVideo: (videoFile: MediaFile | undefined) => void;
+  productsFromOffer: CatalogVideoItem[] | undefined;
+  selectVideo: CatalogVideoItem | undefined;
+  setSelectVideo: (videoFile: CatalogVideoItem | undefined) => void;
   openVideoplayer: boolean;
   setOpenVideoPlayer: (value: boolean) => void;
   handlePlayerClick: () => void;
-  primaryColor: string;
 };
 
 export interface ITitleCollection {
@@ -190,7 +189,7 @@ export interface INftDataPageMain {
   contract: string | undefined;
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   product: string | undefined;
-  productsFromOffer: MediaFile[] | undefined;
+  productsFromOffer: CatalogVideoItem[] | undefined;
   selectedData: TMetadataType | undefined;
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
@@ -220,8 +219,6 @@ export type TSwitchEthereumChainArgs = {
 };
 
 export interface ISearchPanel {
-  primaryColor: string;
-  textColor: string | undefined;
   tabIndex: number;
   setTabIndex: (index: number) => void;
 }

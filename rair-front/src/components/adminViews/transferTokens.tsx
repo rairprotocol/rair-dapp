@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Contract, isAddress, ZeroAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import { ContractDataType, ContractsResponseType } from './adminView.types';
 
 import { TTokenData } from '../../axios.responseTypes';
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
+import useContracts from '../../hooks/useContracts';
 import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
@@ -13,7 +15,6 @@ import { rFetch } from '../../utils/rFetch';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
-import useContracts from '../../hooks/useContracts';
 
 const TransferTokens = () => {
   const { connectedChain, currentUserAddress } = useAppSelector(
@@ -84,10 +85,11 @@ const TransferTokens = () => {
   const connectAddressManual = async () => {
     if (connectedChain === undefined) return;
     if (selectedContract === '') return;
+    if (!isAddress(selectedContract)) return;
     let instance;
     try {
       instance = contractCreator?.(
-        selectedContract,
+        selectedContract as Hex,
         manualDiamond ? diamondFactoryAbi : erc721Abi
       );
     } catch (err) {
@@ -150,9 +152,12 @@ const TransferTokens = () => {
       setContractBlockchain(
         getBlockchainData(selectedBlockchain as `0x${string}`)
       );
-      if (correctBlockchain(selectedBlockchain)) {
+      if (
+        correctBlockchain(selectedBlockchain as Hex) &&
+        isAddress(contractAddress)
+      ) {
         const instance = contractCreator?.(
-          contractAddress,
+          contractAddress as Hex,
           response1.contract.diamond ? diamondFactoryAbi : erc721Abi
         );
         setContractInstance(instance);

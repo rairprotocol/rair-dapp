@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { isAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import {
   TContractsNetworkContract,
@@ -57,9 +59,9 @@ const ContractDetails = () => {
       }
       setData(dataRequest.contract);
       setIsDiamond(dataRequest.contract.diamond);
-    } else if (contractCreator) {
+    } else if (contractCreator && isAddress(address)) {
       // Try diamonds
-      const instance = contractCreator(address, diamond721Abi);
+      const instance = contractCreator(address as Hex, diamond721Abi);
       if (instance) {
         const productCount = Number(
           (await instance.getProductCount()).toString()
@@ -156,9 +158,9 @@ const ContractDetails = () => {
                     }
                     if (!correctBlockchain(data.blockchain)) {
                       web3Switch(data.blockchain);
-                    } else {
+                    } else if (isAddress(data?.contractAddress)) {
                       const instance = await contractCreator?.(
-                        data?.contractAddress,
+                        data.contractAddress as Hex,
                         isDiamond ? diamond721Abi : erc721Abi
                       );
                       if (!instance) {

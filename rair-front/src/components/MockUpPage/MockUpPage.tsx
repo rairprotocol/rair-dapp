@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import SearchPanel from './SearchPanel';
 
-import { useAppSelector } from '../../hooks/useReduxHooks';
 // import RairFavicon from './assets/rair_favicon.ico';
 import { rFetch } from '../../utils/rFetch';
 
@@ -11,7 +10,6 @@ import { IMockUpPage } from './SelectBox/selectBox.types';
 
 const MockUpPage: React.FC<IMockUpPage> = ({ tabIndex, setTabIndex }) => {
   const [mainBannerInfo, setMainBannerInfo] = useState<any>(undefined);
-  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   const getCollectionBanner = async () => {
     const response = await rFetch(`/api/settings/featured`);
@@ -31,12 +29,7 @@ const MockUpPage: React.FC<IMockUpPage> = ({ tabIndex, setTabIndex }) => {
   return (
     <div className={'mock-up-page-wrapper'}>
       <MainBanner mainBannerInfo={mainBannerInfo} />
-      <SearchPanel
-        tabIndex={tabIndex}
-        setTabIndex={setTabIndex}
-        primaryColor={primaryColor}
-        textColor={textColor}
-      />
+      <SearchPanel tabIndex={tabIndex} setTabIndex={setTabIndex} />
     </div>
   );
 };

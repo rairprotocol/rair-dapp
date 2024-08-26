@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Action } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Hex } from 'viem';
 
 import { useAppDispatch, useAppSelector } from './useReduxHooks';
 import useServerSettings from './useServerSettings';
@@ -129,8 +128,8 @@ const useConnectUser = () => {
       return { address: undefined, blockchain: undefined };
     }
     return {
-      userAddress: programmaticProvider.address,
-      signerAddress: programmaticProvider.address,
+      userAddress: await programmaticProvider.getAddress(),
+      signerAddress: await programmaticProvider.getAddress(),
       blockchain: connectedChain
     };
   }, [connectedChain, programmaticProvider]);
@@ -338,25 +337,6 @@ const useConnectUser = () => {
     checkMetamask();
   }, [checkMetamask]);
 
-  useEffect(() => {
-    if (isLoggedIn || loginStatus === dataStatuses.Loading) {
-      return;
-    }
-    (async () => {
-      const { loginType } = await dispatch(loadCurrentUser()).unwrap();
-      switch (loginType) {
-        case 'metamask':
-          dispatch(connectChainMetamask());
-          dispatch(setExchangeRates(await getCoingeckoRates()));
-          break;
-        default:
-          logoutUser();
-          break;
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const logoutUser = useCallback(async () => {
     const { success } = await rFetch('/api/auth/logout');
     if (success) {
@@ -368,6 +348,24 @@ const useConnectUser = () => {
       navigate('/');
     }
   }, [dispatch, navigate, currentUserAddress]);
+
+  useEffect(() => {
+    if (isLoggedIn || loginStatus === dataStatuses.Loading) {
+      return;
+    }
+    (async () => {
+      const userData = await dispatch(loadCurrentUser()).unwrap();
+      switch (userData?.loginType) {
+        case 'metamask':
+          dispatch(connectChainMetamask());
+          dispatch(setExchangeRates(await getCoingeckoRates()));
+          break;
+        default:
+          logoutUser();
+          break;
+      }
+    })();
+  }, []);
 
   return {
     connectUserData,

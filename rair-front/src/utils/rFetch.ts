@@ -30,7 +30,7 @@ const signIn = async (provider: Provider) => {
   if (!success) {
     return;
   }
-  const loginResponse = await signWeb3Message(currentUser);
+  const loginResponse = await signWeb3Message(currentUser.address);
   return loginResponse?.success;
 };
 

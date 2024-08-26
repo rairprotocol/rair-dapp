@@ -8,7 +8,6 @@ import { ITokenLeftTemplate } from '../splashPage.types';
 import './TokenLeftTemplate.css';
 
 const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
-  primaryColor,
   soldCopies,
   counterData,
   ipftButton,
@@ -26,6 +25,8 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
     royaltiesNft,
     nftCount
   } = counterData || {};
+
+  const { isDarkMode } = useAppSelector((store) => store.colors);
 
   const [percentTokens, setPersentTokens] = useState<number>(0);
   const [fontSize, setFontSize] = useState<string>('');
@@ -75,7 +76,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
               className="progress-tokens"
               style={{
                 background: `${
-                  primaryColor === 'rhyno'
+                  !isDarkMode
                     ? 'rgba(34, 32, 33, 0.4)'
                     : 'rgba(34, 32, 33, 0.6)'
                 }`
@@ -143,7 +144,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
                           className="property"
                           style={{
                             background: `${
-                              primaryColor === 'rhyno' ? '#cccccc' : 'none'
+                              !isDarkMode ? '#cccccc' : 'none'
                             }`
                           }}>
                           <span
@@ -217,7 +218,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
                 <p
                   key={index}
                   style={{
-                    color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
+                    color: `${!isDarkMode ? '#000' : '#fff'}`
                   }}>
                   {item}
                 </p>
