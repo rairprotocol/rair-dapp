@@ -15,7 +15,7 @@ import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
-import chainData from '../../../utils/blockchainData';
+import useServerSettings from '../../adminViews/useServerSettings';
 import CustomFeeRow from '../common/customFeeRow';
 import {
   IMarketplaceOfferConfig,
@@ -46,6 +46,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     useState<boolean>(false);
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
+  const { getBlockchainData } = useServerSettings();
 
   const [customPayments, setCustomPayments] = useState<TCustomPayments[]>([
     {
@@ -142,7 +143,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
           for{' '}
           <h5 style={{ display: 'inline' }}>
             {utils.formatEther(item.price)}{' '}
-            {currentChain && chainData[currentChain]?.symbol}
+            {currentChain && getBlockchainData(currentChain)?.symbol}
           </h5>
         </div>
         <div className="col-2 rounded-rair text-end">
@@ -269,7 +270,8 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                           setMarketValuesChanged,
                           price: item.price,
                           symbol:
-                            currentChain && chainData[currentChain]?.symbol
+                            currentChain &&
+                            getBlockchainData(currentChain)?.symbol
                         }}
                         {...customPaymentItem}
                       />

@@ -1,4 +1,4 @@
-FROM node:lts as build
+FROM node:lts AS build
 
 #version management
 COPY VERSION /

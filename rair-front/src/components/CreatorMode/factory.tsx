@@ -22,10 +22,10 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
   const [tokenDecimals, setTokenDecimals] = useState<number | undefined>();
   const [refetchingFlag, setRefetchingFlag] = useState<boolean>(false);
 
-  const { erc777Instance, factoryInstance, currentUserAddress } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
+  const { mainTokenInstance, factoryInstance, currentUserAddress } =
+    useSelector<RootState, ContractsInitialType>(
+      (state) => state.contractStore
+    );
   const { textColor, secondaryButtonColor } = useSelector<
     RootState,
     ColorStoreType
@@ -44,16 +44,21 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
         await factoryInstance?.ownerToContracts(currentUserAddress, i)
       );
     }
-    setClientTokens(await erc777Instance?.balanceOf(currentUserAddress));
+    setClientTokens(await mainTokenInstance?.balanceOf(currentUserAddress));
     setTokensOwned(tokenCount);
     setDeployedTokens(tokens);
     setTokensRequired(
-      await factoryInstance?.deploymentCostForERC777(erc777Instance?.address)
+      await factoryInstance?.deploymentCostForERC777(mainTokenInstance?.address)
     );
     setRefetchingFlag(false);
-    setTokenSymbol(await erc777Instance?.symbol());
-    setTokenDecimals(await erc777Instance?.decimals());
-  }, [currentUserAddress, factoryInstance, erc777Instance, setDeployedTokens]);
+    setTokenSymbol(await mainTokenInstance?.symbol());
+    setTokenDecimals(await mainTokenInstance?.decimals());
+  }, [
+    currentUserAddress,
+    factoryInstance,
+    mainTokenInstance,
+    setDeployedTokens
+  ]);
 
   useEffect(() => {
     if (currentUserAddress) {
@@ -90,7 +95,7 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
           <button
             disabled={erc721Name === '' || clientTokens?.lt(tokensRequired)}
             onClick={async () => {
-              if (!erc777Instance) {
+              if (!mainTokenInstance) {
                 return;
               }
               reactSwal.fire({
@@ -100,7 +105,7 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
                 showConfirmButton: false
               });
               if (
-                await web3TxHandler(erc777Instance, 'send', [
+                await web3TxHandler(mainTokenInstance, 'send', [
                   factoryInstance?.address,
                   tokensRequired,
                   stringToHex(erc721Name)
@@ -137,7 +142,7 @@ const FactoryManager: React.FC<IFactoryManager> = ({ setDeployedTokens }) => {
                   });
                   if (
                     await web3TxHandler(factoryInstance, 'add777Token', [
-                      erc777Instance?.address,
+                      mainTokenInstance?.address,
                       '10000000000000000000'
                     ])
                   ) {

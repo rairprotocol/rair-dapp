@@ -1,5 +1,6 @@
 import { BaseProvider } from '@metamask/providers';
 import { Maybe } from '@metamask/providers/dist/utils';
+import { Hex } from 'viem';
 
 declare module '@metamask/providers/dist/BaseProvider' {
   interface RequestArguments {
@@ -21,16 +22,5 @@ declare global {
   //  KlaytnBaobab = '0x3e9'
   //  'Ropsten (Ethereum)' = '0x3'
   //  Sepolia = 0xaa36a7
-  type BlockchainType =
-    | '0x38'
-    | '0x61'
-    | '0x13881'
-    | '0x1'
-    | '0x5'
-    | '0x89'
-    | '0x3e9'
-    | '0x3'
-    | '0x250'
-    | '0xaa36a7'
-    | '0x2105';
+  type BlockchainType = Hex;
 }

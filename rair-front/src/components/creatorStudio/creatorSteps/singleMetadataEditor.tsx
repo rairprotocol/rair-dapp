@@ -21,8 +21,8 @@ import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import BinanceDiamond from '../../../images/binance-diamond.svg';
-import chainData from '../../../utils/blockchainData';
 import { rFetch } from '../../../utils/rFetch';
+import useServerSettings from '../../adminViews/useServerSettings';
 import InputField from '../../common/InputField';
 import {
   TNftMapping,
@@ -65,6 +65,8 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     ColorStoreType
   >((store) => store.colorStore);
   const { address, collectionIndex } = useParams<TParamsBatchMetadata>();
+
+  const { getBlockchainData } = useServerSettings();
 
   const networkId = contractData?.blockchain;
   const contractAddress = contractData?.contractAddress;
@@ -388,32 +390,31 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
           </Dropzone>
         </div>
       </div>
-      {chainData && (
-        <FixedBottomNavigation
-          forwardFunctions={[
-            {
-              action: !onMyChain
-                ? () => web3Switch(contractData?.blockchain as BlockchainType)
-                : pinMetadata,
-              label: !onMyChain
-                ? chainData && contractData?.blockchain
-                  ? `Switch to ${chainData[contractData?.blockchain]?.name}`
-                  : ''
-                : 'Pin to IPFS',
-              disabled: false
-            },
-            {
-              action: updateMetadata,
-              label: 'Save changes',
-              disabled: false
-            },
-            {
-              action: gotoNextStep,
-              label: 'Continue'
-            }
-          ]}
-        />
-      )}
+      <FixedBottomNavigation
+        forwardFunctions={[
+          {
+            action: !onMyChain
+              ? () => web3Switch(contractData?.blockchain as BlockchainType)
+              : pinMetadata,
+            label: !onMyChain
+              ? contractData?.blockchain
+                ? `Switch to ${getBlockchainData(contractData?.blockchain)
+                    ?.name}`
+                : ''
+              : 'Pin to IPFS',
+            disabled: false
+          },
+          {
+            action: updateMetadata,
+            label: 'Save changes',
+            disabled: false
+          },
+          {
+            action: gotoNextStep,
+            label: 'Continue'
+          }
+        ]}
+      />
       {!simpleMode && contractData?.diamond && contractData.instance && (
         <>
           <div className="col-12">

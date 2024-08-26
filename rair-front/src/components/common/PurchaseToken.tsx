@@ -12,9 +12,9 @@ import useConnectUser from '../../hooks/useConnectUser';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { GrandpaWait } from '../../images';
-import blockchainData from '../../utils/blockchainData';
 import { getRandomValues } from '../../utils/getRandomValues';
 import { rFetch } from '../../utils/rFetch';
+import useServerSettings from '../adminViews/useServerSettings';
 
 import {
   IAgreementsPropsType,
@@ -114,6 +114,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 
   const reactSwal = useSwal();
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
+  const { getBlockchainData } = useServerSettings();
 
   const {
     currentUserAddress,
@@ -293,6 +294,9 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             color: textColor
           }}
           onClick={async () => {
+            if (!requiredBlockchain) {
+              return;
+            }
             setBuyingToken(true);
             if (setPurchaseStatus) {
               setPurchaseStatus(true);
@@ -308,8 +312,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             }
 
             // If the currentChain is different from the contract's chain, switch
-            if (!correctBlockchain(requiredBlockchain as BlockchainType)) {
-              await web3Switch(requiredBlockchain as BlockchainType);
+            if (!correctBlockchain(requiredBlockchain)) {
+              await web3Switch(requiredBlockchain);
               setBuyingToken(false);
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
@@ -415,7 +419,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
           {currentUserAddress
             ? !correctBlockchain(requiredBlockchain as BlockchainType)
               ? `Switch to ${
-                  requiredBlockchain && blockchainData[requiredBlockchain]?.name
+                  requiredBlockchain &&
+                  getBlockchainData(requiredBlockchain)?.name
                 }`
               : buttonMessage || 'Purchase'
             : 'Connect your wallet!'}

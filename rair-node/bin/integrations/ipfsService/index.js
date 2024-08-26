@@ -1,4 +1,3 @@
-const nativeIpfsService = require('./ipfs');
 const pinataService = require('./pinata');
 const filebaseService = require('./filebase');
 
@@ -8,8 +7,6 @@ module.exports = () => {
       return filebaseService;
     case 'pinata':
       return pinataService;
-    case 'ipfs':
-      return nativeIpfsService;
     default:
       return pinataService;
   }

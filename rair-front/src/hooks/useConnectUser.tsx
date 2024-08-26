@@ -10,6 +10,7 @@ import useSwal from './useSwal';
 import useWeb3Tx from './useWeb3Tx';
 
 import { TUserResponse } from '../axios.responseTypes';
+import useServerSettings from '../components/adminViews/useServerSettings';
 import { OnboardingButton } from '../components/common/OnboardingButton/OnboardingButton';
 import { RootState } from '../ducks';
 import { getTokenComplete, getTokenStart } from '../ducks/auth/actions';
@@ -63,6 +64,8 @@ const getCoingeckoRates = async () => {
 
 const useConnectUser = () => {
   const dispatch = useDispatch();
+  const { blockchainSettings, getBlockchainData, refreshBlockchainData } =
+    useServerSettings();
   const { adminRights, loginProcess, loggedIn } = useSelector<
     RootState,
     TUsersInitialState
@@ -104,7 +107,7 @@ const useConnectUser = () => {
     if (!currentChain) {
       return;
     }
-    const chainInformation = chainData[currentChain];
+    const chainInformation = getBlockchainData(currentChain);
     if (
       !chainInformation?.alchemy ||
       !chainInformation?.viem ||
@@ -267,7 +270,7 @@ const useConnectUser = () => {
 
     dispatchStack.push(setCoingeckoRates(await getCoingeckoRates()));
 
-    dispatchStack.push(setChainId(loginData.blockchain));
+    dispatchStack.push(setChainId(loginData.blockchain, blockchainSettings));
 
     let firstTimeLogin = false;
 
@@ -279,7 +282,6 @@ const useConnectUser = () => {
       let user = userDataResponse.data.user;
       if (!userDataResponse.data.success || !user) {
         // If the user doesn't exist, send a request to register him using a TEMP adminNFT
-        // console.info('Address is not registered!');
         firstTimeLogin = true;
         const userCreation = await axios.post<TUserResponse>(
           '/api/users',
@@ -371,7 +373,8 @@ const useConnectUser = () => {
     adminRights,
     currentUserAddress,
     programmaticProvider,
-    dispatch
+    dispatch,
+    blockchainSettings
   ]);
 
   useEffect(() => {
@@ -397,7 +400,8 @@ const useConnectUser = () => {
           dispatch(setLoginProcessStatus(false));
           return await logoutUser();
         }
-        dispatch(setChainId(window.ethereum.chainId?.toLowerCase()));
+        const chains = await refreshBlockchainData();
+        dispatch(setChainId(window.ethereum.chainId, chains));
         dispatch(setLoginType('metamask')); // Because web3 logins end on page reload
         dispatch(setCoingeckoRates(await getCoingeckoRates()));
         dispatch(setUserData(user));
@@ -424,10 +428,13 @@ const useConnectUser = () => {
       dispatch(setLogInStatus(false));
       dispatch(setUserData(undefined));
       dispatch(setProgrammaticProvider(undefined));
-      dispatch(setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
+      dispatch(
+        setChainId(import.meta.env.VITE_DEFAULT_BLOCKCHAIN),
+        blockchainSettings
+      );
       navigate('/');
     }
-  }, [dispatch, navigate, currentUserAddress]);
+  }, [dispatch, navigate, currentUserAddress, blockchainSettings]);
 
   return {
     connectUserData,

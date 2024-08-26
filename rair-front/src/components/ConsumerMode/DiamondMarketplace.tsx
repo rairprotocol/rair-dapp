@@ -17,7 +17,7 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import blockchainData from '../../utils/blockchainData';
+import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 import BuyTokenModalContent from '../marketplace/BuyTokenModalContent';
 
@@ -169,6 +169,8 @@ const DiamondMarketplace = () => {
   const { web3TxHandler } = useWeb3Tx();
 
   const store = useStore();
+
+  const { getBlockchainData } = useServerSettings();
 
   const {
     primaryColor,
@@ -349,7 +351,7 @@ const DiamondMarketplace = () => {
             tokens available for{' '}
             <h5 style={{ display: 'inline' }}>
               {utils.formatEther(offer.price)}{' '}
-              {currentChain && blockchainData[currentChain]?.symbol}
+              {currentChain && getBlockchainData(currentChain)?.symbol}
             </h5>
             <br />
             <h5 className="w-100 text-center px-5">

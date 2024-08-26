@@ -26,7 +26,6 @@ import useServerSettings from './components/adminViews/useServerSettings';
 import AlertMetamask from './components/AlertMetamask/index';
 import ConsumerMode from './components/consumerMode';
 import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
-import CreatorMode from './components/creatorMode';
 import ContractDetails from './components/creatorStudio/ContractDetails';
 import Contracts from './components/creatorStudio/Contracts';
 import Deploy from './components/creatorStudio/Deploy';
@@ -71,7 +70,6 @@ import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/U
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
 import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80sclub/wallstreet80sclub';
 import ThankYouPage from './components/ThankYouPage';
-import UserProfile from './components/UserProfile/UserProfile';
 import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 // import setTitle from './utils/setTitle';
@@ -106,7 +104,8 @@ const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const dispatch = useDispatch();
-  const { getServerSettings, settings } = useServerSettings();
+  const { getServerSettings, settings, blockchainSettings } =
+    useServerSettings();
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
@@ -117,7 +116,6 @@ function App() {
     diamondMarketplaceInstance,
     currentUserAddress,
     minterInstance,
-    factoryInstance,
     programmaticProvider
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -185,7 +183,7 @@ function App() {
   useEffect(() => {
     if (window.ethereum) {
       const foo = async (chainId) => {
-        dispatch(setChainId(chainId));
+        dispatch(setChainId(chainId, blockchainSettings));
       };
       window.ethereum.on('chainChanged', foo);
       window.ethereum.on('accountsChanged', logoutUser);
@@ -194,7 +192,7 @@ function App() {
         window.ethereum.off('accountsChanged', logoutUser);
       };
     }
-  }, [dispatch, logoutUser]);
+  }, [dispatch, logoutUser, blockchainSettings]);
 
   const getNotificationsCount = useCallback(async () => {
     if (currentUserAddress) {
@@ -651,17 +649,6 @@ function App() {
                     requirement: loggedIn && !creatorViewsDisabled
                   },
 
-                  // Classic Factory (Uses the blockchain)
-                  {
-                    path: '/factory',
-                    content: CreatorMode,
-                    requirement:
-                      loggedIn &&
-                      !creatorViewsDisabled &&
-                      adminRights &&
-                      factoryInstance !== undefined
-                  },
-
                   // Classic Minter Marketplace (Uses the blockchain)
                   {
                     path: '/minter',
@@ -745,10 +732,6 @@ function App() {
                     props: {
                       setIsSplashPage: setIsSplashPage
                     }
-                  },
-                  {
-                    path: '/user-profile',
-                    content: UserProfile
                   },
                   {
                     path: '/:userAddress',

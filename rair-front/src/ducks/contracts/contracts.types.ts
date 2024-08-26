@@ -29,15 +29,12 @@ type AbiSingleType = {
 export type AbiType = AbiSingleType[];
 
 export type ContractsInitialType = {
-  minterInstance: ethers.Contract | undefined;
-  resaleInstance: ethers.Contract | undefined;
   factoryInstance: ethers.Contract | undefined;
-  erc777Instance: ethers.Contract | undefined;
-  licenseExchangeInstance: ethers.Contract | undefined;
+  minterInstance: ethers.Contract | undefined;
+  mainTokenInstance: ethers.Contract | undefined;
   diamondFactoryInstance: ethers.Contract | undefined;
   diamondMarketplaceInstance: ethers.Contract | undefined;
-  tokenPurchaserInstance: ethers.Contract | undefined;
-  creditHandlerInstance: ethers.Contract | undefined;
+  licenseExchangeInstance: ethers.Contract | undefined;
   currentChain: BlockchainType | undefined;
   currentUserAddress: string | undefined;
   programmaticProvider: AccountSigner<MultiOwnerModularAccount> | undefined;

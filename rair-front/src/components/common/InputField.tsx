@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FocusEventHandler, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
@@ -35,6 +35,7 @@ import { getRandomValues } from '../../utils/getRandomValues';
 type TInputFieldProps<T extends any = any> = {
   getter?: HTMLInputElement['value'] | number;
   setter: (value: T) => void;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
   setterField?: Array<string | number>;
   customCSS?: { [key: string]: string };
   customClass?: string;
@@ -56,6 +57,7 @@ type TInputFieldProps<T extends any = any> = {
 const InputField = <T extends any = any>({
   getter,
   setter,
+  onBlur,
   setterField = ['value'],
   customCSS,
   customClass,
@@ -100,6 +102,7 @@ const InputField = <T extends any = any>({
         </label>
       )}
       <input
+        onBlur={onBlur}
         onClick={onClick}
         type={type === 'eth' ? 'number' : type}
         id={id?.toString()}

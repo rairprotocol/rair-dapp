@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber, utils } from 'ethers';
@@ -9,7 +10,9 @@ import {
   TBatchMintingItem
 } from './consumerMode.types';
 
-import blockchainData from '../../utils/blockchainData';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useServerSettings from '../adminViews/useServerSettings';
 
 const BatchRow: React.FC<IBatchRow> = ({ index, deleter, array }) => {
   const [address, setAddress] = useState<string>();
@@ -68,6 +71,12 @@ const BatchMinting: React.FC<IBatchMinting> = ({
 }) => {
   const [rows, setRows] = useState<TBatchMintingItem[]>([]);
 
+  const { currentChain } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+
+  const { getBlockchainData } = useServerSettings();
+
   const addRow = () => {
     if (rows.length > Number(end) - Number(start)) {
       return;
@@ -104,9 +113,7 @@ const BatchMinting: React.FC<IBatchMinting> = ({
             BigNumber.from(price === '' ? 0 : price).mul(rows.length)
           )
           .toString()}{' '}
-        {window.ethereum.chainId &&
-          blockchainData[window.ethereum.chainId]?.symbol}
-        !
+        {currentChain && getBlockchainData[currentChain]?.symbol}!
       </button>
       <div
         className="col-12"

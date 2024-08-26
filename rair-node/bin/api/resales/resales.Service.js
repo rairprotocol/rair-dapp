@@ -1,17 +1,9 @@
 const { getBytes, isAddress } = require('ethers');
-const { ResaleTokenOffer, Contract, MintedToken, ServerSetting } = require('../../models');
+const { ResaleTokenOffer, Contract, MintedToken, ServerSetting, Blockchain } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const log = require('../../utils/logger')(module);
 const { diamondMarketplaceAbi } = require('../../integrations/smartContracts');
 const { getInstance, getContractRunner } = require('../../integrations/ethers/contractInstances');
-
-const addressMapping = {
-    '0xaa36a7': process.env.SEPOLIA_DIAMOND_MARKETPLACE_ADDRESS,
-    '0x13881': process.env.MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS,
-    '0x89': process.env.MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS,
-    '0x250': process.env.ASTAR_DIAMOND_MARKETPLACE_ADDRESS,
-    '0x2105': process.env.BASE_DIAMOND_MARKETPLACE_ADDRESS,
-};
 
 exports.openResales = async (req, res, next) => {
     try {
@@ -135,13 +127,17 @@ exports.generatePurchaseRequest = async (req, res, next) => {
             buyer: undefined, // Makes sure the offer hasn't been purchased
         }).populate('tokenContract');
 
+        const blockchainData = await Blockchain.findOne({
+            hash: foundOffer.tokenContract.blockchain,
+        });
+
         if (!foundOffer?.tokenContract?.blockchain) {
           return next(new AppError('No resale offer found'));
         }
         if (!process.env.WITHDRAWER_PRIVATE_KEY) {
           return next(new AppError('Cannot process resales at the moment'));
         }
-        const marketAddress = addressMapping[foundOffer.tokenContract.blockchain];
+        const marketAddress = blockchainData.diamondMarketplaceAddress;
         if (!isAddress(marketAddress)) {
             return next(new AppError('Cannot process resales at the moment!'));
         }

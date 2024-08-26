@@ -1,15 +1,21 @@
 import * as types from './types';
 
+import { BlockchainSetting } from '../../components/adminViews/adminView.types';
+
 const setCoingeckoRates = (rates: { [key: string]: number }) =>
   ({
     type: types.SET_COINGECKO_RATE,
     rates
   }) as const;
 
-const setChainId = (currentChain: BlockchainType | undefined) =>
+const setChainId = (
+  currentChain: BlockchainType | undefined,
+  blockchainSettings?: BlockchainSetting[]
+) =>
   ({
     type: types.SET_CHAIN_ID,
-    currentChain
+    currentChain,
+    blockchainSettings
   }) as const;
 
 const setUserAddress = (currentUserAddress: string | undefined) =>

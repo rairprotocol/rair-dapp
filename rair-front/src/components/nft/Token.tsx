@@ -2,6 +2,8 @@
 //unused-component
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import * as ethers from 'ethers';
 import Swal from 'sweetalert2';
@@ -12,8 +14,6 @@ import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import MinterMarketplaceItem from '../marketplace/MinterMarketplaceItem';
 import VideoList from '../video/videoList';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
 const erc721Abi = ERC721Token.default.abi;
 
 const Token = () => {

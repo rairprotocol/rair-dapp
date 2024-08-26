@@ -9,10 +9,9 @@ import DiamondOfferRow from './diamondOfferRow';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
-import chainData from '../../../utils/blockchainData';
+import useServerSettings from '../../adminViews/useServerSettings';
 import {
   TAddDiamondOffer,
   TListOffers,
@@ -35,16 +34,12 @@ const ListOffers: React.FC<TListOffers> = ({
     TMarketplaceOfferConfigArrayItem[]
   >([]);
   const [forceRerender, setForceRerender] = useState<boolean>(false);
-  const [onMyChain, setOnMyChain] = useState<boolean>();
   const [invalidItems, setInvalidItems] = useState<boolean>(true);
 
   const reactSwal = useSwal();
-  const { web3TxHandler } = useWeb3Tx();
+  const { web3TxHandler, correctBlockchain } = useWeb3Tx();
+  const { getBlockchainData } = useServerSettings();
 
-  const { programmaticProvider, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
   const { primaryColor, textColor, primaryButtonColor, secondaryColor } =
     useSelector<RootState, ColorStoreType>((store) => store.colorStore);
   const { collectionIndex } = useParams<TParamsDiamondListOffers>();
@@ -132,13 +127,6 @@ const ListOffers: React.FC<TListOffers> = ({
     }
   };
 
-  useEffect(() => {
-    setOnMyChain(
-      contractData &&
-        chainData[contractData?.blockchain]?.chainId === currentChain
-    );
-  }, [contractData, programmaticProvider, currentChain]);
-
   return (
     <div className="row px-0 mx-0">
       {contractData ? (
@@ -154,7 +142,7 @@ const ListOffers: React.FC<TListOffers> = ({
                     index={index}
                     {...item}
                     blockchainSymbol={
-                      chainData[contractData?.blockchain]?.symbol
+                      getBlockchainData(contractData?.blockchain)?.symbol
                     }
                     instance={contractData.instance}
                     rerender={rerender}
@@ -209,36 +197,35 @@ const ListOffers: React.FC<TListOffers> = ({
                 contractData?.product?.soldCopies}
             </abbr>
           </div>
-          {chainData && (
-            <FixedBottomNavigation
-              forwardFunctions={[
-                {
-                  action: !onMyChain
-                    ? switchBlockchain
-                    : offerList[0]?._id
-                      ? offerList.filter((item) => !item._id).length === 0
-                        ? gotoNextStep
-                        : createOffers
-                      : createOffers,
-                  label: !onMyChain
-                    ? `Switch to ${chainData[contractData?.blockchain]?.name}`
-                    : offerList[0]?._id
-                      ? offerList.filter((item) => !item._id).length === 0
-                        ? 'Continue'
-                        : 'Append Ranges'
-                      : 'Create Ranges',
-                  disabled:
-                    onMyChain &&
-                    (!contractData.diamond ||
-                      offerList.length === 0 ||
-                      (Number(offerList.at(-1)?.range[1]) >
-                        Number(contractData.product.copies) - 1 &&
-                        offerList.at(-1)?._id === undefined) ||
-                      invalidItems)
-                }
-              ]}
-            />
-          )}
+          <FixedBottomNavigation
+            forwardFunctions={[
+              {
+                action: !correctBlockchain(contractData.blockchain)
+                  ? switchBlockchain
+                  : offerList[0]?._id
+                    ? offerList.filter((item) => !item._id).length === 0
+                      ? gotoNextStep
+                      : createOffers
+                    : createOffers,
+                label: !correctBlockchain(contractData.blockchain)
+                  ? `Switch to ${getBlockchainData(contractData?.blockchain)
+                      ?.name}`
+                  : offerList[0]?._id
+                    ? offerList.filter((item) => !item._id).length === 0
+                      ? 'Continue'
+                      : 'Append Ranges'
+                    : 'Create Ranges',
+                disabled:
+                  correctBlockchain(contractData.blockchain) &&
+                  (!contractData.diamond ||
+                    offerList.length === 0 ||
+                    (Number(offerList.at(-1)?.range[1]) >
+                      Number(contractData.product.copies) - 1 &&
+                      offerList.at(-1)?._id === undefined) ||
+                    invalidItems)
+              }
+            ]}
+          />
         </>
       ) : (
         'Fetching data...'

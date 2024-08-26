@@ -18,7 +18,7 @@ import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import blockchainData from '../../utils/blockchainData';
+import useServerSettings from '../adminViews/useServerSettings';
 
 const Range: React.FC<IRange> = ({
   tokenInstance,
@@ -41,6 +41,7 @@ const Range: React.FC<IRange> = ({
 
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
+  const { getBlockchainData } = useServerSettings();
 
   const refreshData = useCallback(async () => {
     const data = await minterInstance?.getOfferRangeInfo(
@@ -53,15 +54,12 @@ const Range: React.FC<IRange> = ({
     setEnd(data.tokenEnd.toString());
     setAllowed(data.tokensAllowed.toString());
     try {
-      setNext(
-        (
-          await tokenInstance?.getNextSequentialIndex(
-            productIndex,
-            data.tokenStart,
-            data.tokenEnd
-          )
-        ).toString()
+      const nextToken = await tokenInstance?.getNextSequentialIndex(
+        productIndex,
+        data.tokenStart,
+        data.tokenEnd
       );
+      setNext(nextToken?.toString());
     } catch (e) {
       console.error(e);
     }
@@ -148,7 +146,7 @@ const Range: React.FC<IRange> = ({
         className="btn btn-success py-0">
         Buy token #{next} for{' '}
         {utils.formatEther(price === '' ? 0 : price)?.toString()}{' '}
-        {currentChain && blockchainData[currentChain]?.symbol}!
+        {currentChain && getBlockchainData(currentChain)?.symbol}!
       </button>
       <button
         onClick={() => {
@@ -207,7 +205,7 @@ const Range: React.FC<IRange> = ({
                 className="btn py-0 btn-warning">
                 Buy token #{specificIndex} for{' '}
                 {utils.formatEther(price === '' ? 0 : price).toString()}{' '}
-                {currentChain && blockchainData[currentChain]?.symbol}!
+                {currentChain && getBlockchainData(currentChain)?.symbol}!
               </button>
             </details>
           </small>
@@ -236,13 +234,16 @@ const ERC721Manager: React.FC<IERC721ManagerConsumer> = ({
   >((state) => state.contractStore);
 
   const refreshData = useCallback(async () => {
+    if (!offerInfo.instance) {
+      return;
+    }
     setRefetchingFlag(true);
     const balances: TBalanceInfo[] = [];
     const tokensOwned = (
-      await offerInfo.instance?.balanceOf(currentUserAddress)
+      await offerInfo.instance.balanceOf(currentUserAddress)
     ).toString();
     setProductName(
-      (await offerInfo.instance?.getProduct(offerInfo.productIndex)).productName
+      (await offerInfo.instance.getProduct(offerInfo.productIndex)).productName
     );
     setContractName(await offerInfo.instance?.name());
     const ranges: TRangeInfo[] = [];
@@ -270,19 +271,19 @@ const ERC721Manager: React.FC<IERC721ManagerConsumer> = ({
         }).keys()
       ]) {
         const token = (
-          await offerInfo.instance?.tokenOfOwnerByIndex(
+          await offerInfo.instance.tokenOfOwnerByIndex(
             currentUserAddress,
             index
           )
         ).toString();
         if (
-          (await offerInfo.instance?.tokenToProduct(token)).toString() ===
+          (await offerInfo.instance.tokenToProduct(token)).toString() ===
           offerInfo.productIndex
         ) {
           balances.push({
             token,
             internalIndex: (
-              await offerInfo.instance?.tokenToProductIndex(token)
+              await offerInfo.instance.tokenToProductIndex(token)
             ).toString()
           });
         }

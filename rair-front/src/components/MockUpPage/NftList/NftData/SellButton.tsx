@@ -15,7 +15,6 @@ import { ContractsInitialType } from '../../../../ducks/contracts/contracts.type
 import { UserType } from '../../../../ducks/users/users.types';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
-import chainData from '../../../../utils/blockchainData';
 import { rFetch } from '../../../../utils/rFetch';
 import useServerSettings from '../../../adminViews/useServerSettings';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
@@ -51,7 +50,7 @@ const SellButton: React.FC<ISellButton> = ({
 
   const reactSwal = useSwal();
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
-  const { nodeAddress, settings } = useServerSettings();
+  const { nodeAddress, settings, getBlockchainData } = useServerSettings();
 
   const handleClickSellButton = useCallback(async () => {
     if (!correctBlockchain(blockchain as BlockchainType)) {
@@ -64,7 +63,7 @@ const SellButton: React.FC<ISellButton> = ({
       !contractCreator ||
       !sellingPrice ||
       !blockchain ||
-      !chainData[blockchain] ||
+      !getBlockchainData(blockchain as `0x${string}`) ||
       !correctBlockchain(blockchain as BlockchainType) ||
       !diamondMarketplaceInstance ||
       !tokenInformation
@@ -113,7 +112,9 @@ const SellButton: React.FC<ISellButton> = ({
     }
     reactSwal.fire({
       title: 'Creating resale offer',
-      html: `Posting NFT #${tokenId} up for sale with price ${sellingPrice} ${chainData[blockchain]?.symbol}`,
+      html: `Posting NFT #${tokenId} up for sale with price ${sellingPrice} ${getBlockchainData(
+        blockchain as `0x${string}`
+      )?.symbol}`,
       icon: 'info',
       showConfirmButton: false
     });
@@ -175,7 +176,8 @@ const SellButton: React.FC<ISellButton> = ({
     tokenData,
     selectedToken,
     nodeAddress,
-    settings
+    settings,
+    getBlockchainData
   ]);
 
   const openInputField = useCallback(() => {

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import chainData from '../../../../utils/blockchainData';
+import useServerSettings from '../../../adminViews/useServerSettings';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 import EtherscanDark from '../../assets/EtherscanDark.svg?react';
 import EtherscanLight from '../../assets/EtherscanLight.svg?react';
@@ -25,14 +25,17 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
     (store) => store.contractStore
   );
 
+  const { getBlockchainData } = useServerSettings();
+
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   return (
     <>
-      {blockchain && chainData[blockchain] && (
+      {blockchain && getBlockchainData(blockchain) && (
         <div className={classTitle}>
           <a
-            href={`${chainData[blockchain]?.addChainData.blockExplorerUrls?.[0]}token/${contract}?a=${selectedToken}`}
+            href={`${getBlockchainData(blockchain)
+              ?.blockExplorerGateway}token/${contract}?a=${selectedToken}`}
             target="_blank"
             rel="noreferrer">
             {primaryColor === 'charcoal' ? (

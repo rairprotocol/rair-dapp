@@ -22,6 +22,10 @@ module.exports = {
         })),
         legal: Joi.string(),
         signupMessage: Joi.string(),
+        customValues: Joi.array().items(Joi.object({
+            name: Joi.string(),
+            value: Joi.string(),
+        })),
     }),
     dbContracts: () => ({
         title: Joi.string(),
@@ -116,8 +120,21 @@ module.exports = {
         hidden: Joi.boolean(),
     }),
     dbBlockchains: () => ({
+        hash: Joi.string(),
+        name: Joi.string(),
         display: Joi.boolean(),
         sync: Joi.boolean(),
+        diamondFactoryAddress: ethAddress,
+        classicFactoryAddress: ethAddress,
+        diamondMarketplaceAddress: ethAddress,
+        mainTokenAddress: ethAddress,
+        rpcEndpoint: Joi.string(),
+        blockExplorerGateway: Joi.string(),
+        numericalId: Joi.number(),
+        testnet: Joi.boolean(),
+        symbol: Joi.string(),
+        licenseExchangeAddress: ethAddress,
+        alchemySupport: Joi.boolean().required(),
     }),
     dbNotifications: () => ({
         user: ethAddress,

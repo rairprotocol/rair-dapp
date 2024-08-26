@@ -10,6 +10,11 @@ export type FooterLinkType = {
   url: string;
 };
 
+export type CustomValueType = {
+  name: string;
+  value: string;
+};
+
 export interface InputSelectProps<T = any> {
   getter: string | undefined;
   setter: (targetValue: T) => void;

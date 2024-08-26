@@ -1,4 +1,4 @@
-import chainData from '../../utils/blockchainData';
+import useServerSettings from '../adminViews/useServerSettings';
 
 import { TDropdownProps } from '.';
 
@@ -10,6 +10,8 @@ const Dropdown = ({
   selectedOptions,
   isMobileDesign
 }: TDropdownProps) => {
+  const { getBlockchainData } = useServerSettings();
+
   return (
     <div className="dropdown-wrapper">
       <ul className="dropdown-options">
@@ -18,7 +20,7 @@ const Dropdown = ({
           const isChecked = !!selectedOptions?.find(
             (selectedOption) => selectedOption?.optionId === option.optionId
           );
-          if(option?.display !== false) {
+          if (option?.display !== false) {
             return (
               <li
                 key={idx + Math.random() * 1_000_000}
@@ -34,7 +36,9 @@ const Dropdown = ({
                         isMobileDesign ? 'mobile-chain-icons' : ''
                       }`}
                       src={`${
-                        option?.chainId && chainData[option?.chainId]?.image
+                        option?.chainId &&
+                        getBlockchainData(option?.chainId as `0x${string}`)
+                          ?.image
                       }`}
                       alt="blockchain-img"
                       key={idx + Math.random() * 1_000_000}
@@ -54,7 +58,9 @@ const Dropdown = ({
                     className={`dropdown-option-checkbox ${
                       isMobileDesign ? 'mobile-checkbox' : ''
                     }`}
-                    data-title={`${option?.chainId ? 'blockchain' : 'category'}`}
+                    data-title={`${
+                      option?.chainId ? 'blockchain' : 'category'
+                    }`}
                     type="checkbox"
                     value={option.optionId}
                     onChange={onDropdownChange}

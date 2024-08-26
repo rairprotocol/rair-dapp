@@ -89,7 +89,7 @@ export interface IErc777Data {
 
 export interface IFactoryManager {
   instance?: ethers.Contract | undefined;
-  erc777Instance?: ethers.Contract | undefined;
+  mainTokenInstance?: ethers.Contract | undefined;
   account?: any;
   setDeployedTokens: (tokens: string[]) => void;
 }

@@ -1,7 +1,11 @@
 const { BigNumber } = require('ethers');
 const log = require('../utils/logger')(module);
 const { AgendaTaskEnum } = require('../enums/agenda-task');
-const { wasteTime, getTransactionHistory, getLatestBlock } = require('../utils/logUtils');
+const {
+  wasteTime,
+  getTransactionHistory,
+  getLatestBlock,
+} = require('../utils/logUtils');
 const { Contract, Versioning, Blockchain } = require('../models');
 const { processLogEvents } = require('../utils/reusableTransactionHandler');
 
@@ -22,15 +26,15 @@ module.exports = (context) => {
         log.info(`Agenda action starting: ${taskName}`);
 
         // Extract network hash and task name from the task data
-        const { network } = task.attrs.data;
-        const blockchainData = await Blockchain.findOne({ hash: network });
+        const { hash } = task.attrs.data;
+        const blockchainData = await Blockchain.findOne({ hash });
         if (!blockchainData || blockchainData?.sync.toString() === 'false') {
-          log.info(`[${network}] Skipping ${taskName} events, syncing is disabled.`);
+          log.info(`[${hash}] Skipping ${taskName} events, syncing is disabled.`);
           return done();
         }
         // Find all non-diamond contracts from this blockchain
         const contractsToQuery = await Contract.find({
-          blockchain: network,
+          blockchain: hash,
           diamond: false,
           external: { $ne: true },
           blockSync: false, // only actual change to allow new sync restrction
@@ -38,7 +42,7 @@ module.exports = (context) => {
 
         if (contractsToQuery.length === 0) {
           log.info(
-            `Skipping contract events for ${network}, no contracts to query.`,
+            `Skipping contract events for ${hash}, no contracts to query.`,
           );
           return done();
         }
@@ -46,13 +50,13 @@ module.exports = (context) => {
         // Get last block parsed from the Versioning collection
         let version = await Versioning.findOne({
           name: taskName,
-          network,
+          hash,
         });
 
         if (version === null) {
           version = await new Versioning({
             name: taskName,
-            network,
+            hash,
             number: 0,
             running: false,
           }).save();
@@ -60,7 +64,7 @@ module.exports = (context) => {
 
         if (version.running) {
           return done({
-            reason: `A ${taskName} process for network ${network} is already running!`,
+            reason: `A ${taskName} process for network ${hash} is already running!`,
           });
         }
         version.running = true;
@@ -86,7 +90,7 @@ module.exports = (context) => {
         let transactionArray = [];
 
         // Keep track of the latest block number processed
-        const latestBlock = await getLatestBlock(network);
+        const latestBlock = await getLatestBlock(blockchainData);
 
         const insertions = {};
 
@@ -101,7 +105,7 @@ module.exports = (context) => {
 
             if (contract.diamond) {
               // Ignore diamond contracts
-              log.info(`[${network}] Ignoring diamonds for now`);
+              log.info(`[${hash}] Ignoring diamonds, only classic contracts in this task`);
               // eslint-disable-next-line no-continue
               continue;
             }
@@ -110,7 +114,7 @@ module.exports = (context) => {
               contract.lastSyncedBlock = 0;
             }
             if (latestBlock < contract.lastSyncedBlock) {
-              log.error(`ERROR: Contract ${contract.contractAddress}'s latest block is ${contract.lastSyncedBlock} but the last mined block from ${network} is ${latestBlock}, the contract's last synced block will be reset to 0, expect a lot of duplicate transaction messages!`);
+              log.error(`ERROR: Contract ${contract.contractAddress}'s latest block is ${contract.lastSyncedBlock} but the last mined block from ${hash} is ${latestBlock}, the contract's last synced block will be reset to 0, expect a lot of duplicate transaction messages!`);
               contract.lastSyncedBlock = 0;
             }
 
@@ -118,7 +122,7 @@ module.exports = (context) => {
 
             const processedResult = await getTransactionHistory(
               contract.contractAddress,
-              network,
+              blockchainData,
               contract.lastSyncedBlock,
             );
 
@@ -127,7 +131,7 @@ module.exports = (context) => {
             for await (const [event] of processedResult) {
               const result = await processLogEvents(
                 event,
-                network,
+                hash,
                 contract.contractAddress,
                 transactionArray,
               );
@@ -163,7 +167,7 @@ module.exports = (context) => {
             }
           } catch (err) {
             log.error(
-              `Found error getting [${network}] - ${contract} events => ${err}`,
+              `Found error getting [${hash}] - ${contract} events => ${err}`,
             );
             break;
           }
@@ -172,7 +176,7 @@ module.exports = (context) => {
         Object.keys(insertions).forEach((sig) => {
           if (insertions[sig] > 0) {
             log.info(
-              `[${network}] Processed ${insertions[sig]} events of ${sig}`,
+              `[${hash}] Processed ${insertions[sig]} events of ${sig}`,
             );
           }
         });
@@ -180,7 +184,7 @@ module.exports = (context) => {
         version.running = false;
         await version.save();
 
-        log.info(`[${network}], ${taskName} complete`);
+        log.info(`[${hash}], ${taskName} complete`);
 
         return done();
       } catch (e) {

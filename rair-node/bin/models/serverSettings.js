@@ -42,6 +42,14 @@ const ServerSetting = new Schema({
   // Favicon
   favicon: { type: String, required: false },
   signupMessage: { type: String, required: false, default: 'Welcome' },
+  customValues: {
+    type: [{
+      name: { type: String, required: true },
+      value: { type: String, required: true },
+    }],
+    required: false,
+    default: [],
+  },
 }, { versionKey: false, timestamps: false });
 
 module.exports = ServerSetting;

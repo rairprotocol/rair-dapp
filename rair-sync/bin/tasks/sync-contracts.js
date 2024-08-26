@@ -24,7 +24,7 @@ module.exports = (context) => {
   context.agenda.define(
     AgendaTaskEnum.SyncContracts,
     { lockLifetime },
-    syncEventsFromSingleContract(AgendaTaskEnum.SyncContracts, 'factoryAddress'),
+    syncEventsFromSingleContract(AgendaTaskEnum.SyncContracts, 'classicFactoryAddress'),
   );
   context.agenda.define(
     AgendaTaskEnum.SyncDiamondContracts,
@@ -35,11 +35,6 @@ module.exports = (context) => {
     AgendaTaskEnum.SyncDiamondMarketplaceEvents,
     { lockLifetime },
     syncEventsFromSingleContract(AgendaTaskEnum.SyncDiamondMarketplaceEvents, 'diamondMarketplaceAddress'),
-  );
-  context.agenda.define(
-    AgendaTaskEnum.SyncClassicMarketplaceEvents,
-    { lockLifetime },
-    syncEventsFromSingleContract(AgendaTaskEnum.SyncClassicMarketplaceEvents, 'minterAddress'),
   );
   context.agenda.define(
     'system remove processed tasks',

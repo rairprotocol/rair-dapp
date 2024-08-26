@@ -14,6 +14,7 @@ import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { utils } from 'ethers';
 
+import useServerSettings from '../components/adminViews/useServerSettings';
 import { BreadcrumbsView } from '../components/MockUpPage/NftList/Breadcrumbs/Breadcrumbs';
 import AuthenticityBlock from '../components/MockUpPage/NftList/NftData/AuthenticityBlock/AuthenticityBlock';
 import CollectionInfo from '../components/MockUpPage/NftList/NftData/CollectionInfo/CollectionInfo';
@@ -29,7 +30,6 @@ import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import { setShowSidebarTrue } from '../ducks/metadata/actions';
 import useSwal from '../hooks/useSwal';
 import useWeb3Tx from '../hooks/useWeb3Tx';
-import chainData from '../utils/blockchainData';
 import setDocumentTitle from '../utils/setTitle';
 
 const NftDataPageMain = ({
@@ -56,6 +56,7 @@ const NftDataPageMain = ({
   const { minterInstance } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
   );
+  const { getBlockchainData } = useServerSettings();
   const { primaryColor, textColor, primaryButtonColor } = useSelector<
     RootState,
     ColorStoreType
@@ -260,7 +261,7 @@ const NftDataPageMain = ({
         {utils
           .formatEther(price !== Infinity && price !== undefined ? price : 0)
           .toString()}{' '}
-        {chainData[blockchain]?.symbol}
+        {getBlockchainData(blockchain)?.symbol}
       </button>
     );
   }
@@ -465,15 +466,14 @@ const NftDataPageMain = ({
                   style={{ width: '24px', transform: 'scale(1.2)' }}
                   src={`${
                     data
-                      ? chainData[data?.contract.blockchain]?.image
-                      : chainData[blockchain]?.image
+                      ? getBlockchainData(data?.contract.blockchain)?.image
+                      : getBlockchainData(blockchain)?.image
                   }`}
                   alt="Blockchain network"
                 />
                 <span
                   style={{
                     paddingLeft: '9px',
-                    // marginRight: "3rem",
                     fontSize: '13px'
                   }}>
                   {offerPrice && `${checkPrice()}`}
@@ -483,8 +483,8 @@ const NftDataPageMain = ({
                     color: '#E882D5'
                   }}>
                   {data
-                    ? chainData[data?.contract.blockchain]?.symbol
-                    : chainData[blockchain]?.symbol}
+                    ? getBlockchainData(data?.contract.blockchain)?.symbol
+                    : getBlockchainData(blockchain)?.symbol}
                 </span>
               </div>
             </div>
