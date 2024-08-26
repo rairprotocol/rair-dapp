@@ -5,8 +5,11 @@ import { Hex } from 'viem';
 
 import { dataStatuses } from './commonTypes';
 
-import { ApiCallResponse, PaginatedApiCall } from '../types/commonTypes';
-import { MediaFile, Offer } from '../types/databaseTypes';
+import {
+  ApiCallResponse,
+  CatalogVideoItem,
+  PaginatedApiCall
+} from '../types/commonTypes';
 
 interface VideoQueryResponse extends ApiCallResponse {
   list: Array<CatalogVideoItem>;
@@ -18,11 +21,6 @@ interface VideoQueryParams extends Partial<PaginatedApiCall> {
   category?: Array<string>;
   publicAddress?: Hex;
   mediaTitle?: string;
-}
-
-export interface CatalogVideoItem extends MediaFile {
-  isUnlocked: boolean;
-  unlockData: { offers: Array<Offer> };
 }
 
 interface VideoState {

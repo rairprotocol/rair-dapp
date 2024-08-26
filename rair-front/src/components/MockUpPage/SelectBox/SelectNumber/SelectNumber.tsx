@@ -15,9 +15,9 @@ const SelectNumber: React.FC<ISelectNumber> = ({
   selectedToken,
   setSelectedToken,
   product,
-  contract
+  contract,
+  serialNumberData
 }) => {
-  const { primaryColor } = useAppSelector((store) => store.colors);
   const { currentCollectionTotal } = useAppSelector((store) => store.tokens);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -50,7 +50,6 @@ const SelectNumber: React.FC<ISelectNumber> = ({
 
   return currentCollectionTotal < 100 ? (
     <CurrentTokens
-      primaryColor={primaryColor}
       items={items}
       isOpen={isOpen}
       selectedToken={selectedToken}
@@ -68,7 +67,7 @@ const SelectNumber: React.FC<ISelectNumber> = ({
       numberRef={numberRef}
       onClickItem={onClickItem}
       product={product}
-      primaryColor={primaryColor}
+      serialNumberData={serialNumberData}
       setSelectedToken={setSelectedToken}
       selectedToken={selectedToken}
       setIsOpen={setIsOpen}

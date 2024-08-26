@@ -1,5 +1,5 @@
 import { TTokenData } from '../../axios.responseTypes';
-import { CatalogVideoItem } from '../../redux/videoSlice';
+import { CatalogVideoItem } from '../../types/commonTypes';
 
 import { ContractType } from './../adminViews/adminView.types';
 export interface IVideoPlayer {

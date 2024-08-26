@@ -1,10 +1,13 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 import { TNftItemResponse } from '../../../../../axios.responseTypes';
-import { useAppSelector } from '../../../../../hooks/useReduxHooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../hooks/useReduxHooks';
+import { loadCollection } from '../../../../../redux/tokenSlice';
 import { IListOfTokensComponent } from '../../selectBox.types';
 import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
 
@@ -18,12 +21,13 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   numberRef,
   onClickItem,
   product,
-  primaryColor,
   setSelectedToken,
   selectedToken,
-  setIsOpen
+  setIsOpen,
+  serialNumberData
 }) => {
-  const { currentCollectionTotal } = useAppSelector((store) => store.tokens);
+  const { currentCollection } = useAppSelector((store) => store.tokens);
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   const [productTokenNumbers, setProductTokenNumbers] = useState<any>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
@@ -34,7 +38,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const getNumberFromStr = (str: string) => {
     const newStr = str.replace(' -', '');
@@ -50,15 +54,16 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   const getPaginationData = useCallback(
     async (target: HTMLElement) => {
       const indexes = getNumberFromStr(target?.innerText);
-      const responseAllProduct = await axios.get<TNftItemResponse>(
-        `/api/nft/network/${blockchain}/${contract}/${product}/numbers?fromToken=${indexes[0]}&toToken=${indexes[1]}`
-      );
-      const tokenMapping = {};
-      if (responseAllProduct.data.success) {
-        responseAllProduct.data.result.tokens.forEach((item) => {
-          tokenMapping[item.token] = item;
-        });
-        dispatch(setTokenData(tokenMapping));
+      if (blockchain && contract && product) {
+        dispatch(
+          loadCollection({
+            blockchain,
+            contract,
+            product,
+            fromToken: indexes[0],
+            toToken: indexes[1]
+          })
+        );
       }
       setSelectedToken(selectedToken);
       onClickItem(selectedToken);
@@ -118,14 +123,14 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
 
   const availableRanges = useMemo(
     () =>
-      totalCount?.reduce((acc, item) => {
+      serialNumberData?.reduce((acc, item) => {
         const tokenRange = Math.floor(+item.token / 100) * 100;
         return {
           ...acc,
           [tokenRange]: true
         };
       }, {}),
-    [totalCount]
+    [serialNumberData]
   );
 
   const getPaginationToken = useCallback(
@@ -137,7 +142,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   );
 
   const ranges = useMemo(() => {
-    if (totalCount) {
+    if (serialNumberData) {
       const number = 999;
       const rangesCount = Math.floor(number / 100) + 1;
       return Array(rangesCount)
@@ -145,7 +150,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
         .map((_, idx) => idx * 100);
     }
     return [];
-  }, [totalCount]);
+  }, [serialNumberData]);
 
   return !open ? (
     !isOpens ? (
@@ -163,9 +168,7 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
           <div className="select-box--arrow"></div>
           <div
             style={{
-              background: `${
-                primaryColor === 'rhyno' ? 'var(--rhyno)' : '#383637'
-              }`
+              background: `${!isDarkMode ? 'var(--rhyno)' : '#383637'}`
             }}
             id="rred"
             className={'select-box--items list-of-tokens'}

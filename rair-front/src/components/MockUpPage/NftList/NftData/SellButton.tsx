@@ -47,11 +47,14 @@ const SellButton: FC<ISellButton> = ({
 
   const reactSwal = useSwal();
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
-  const { nodeAddress, settings, getBlockchainData } = useServerSettings();
+  const { getBlockchainData } = useServerSettings();
+  const { nodeAddress, databaseResales } = useAppSelector(
+    (store) => store.settings
+  );
 
   const handleClickSellButton = useCallback(async () => {
-    if (!correctBlockchain(blockchain)) {
-      web3Switch(blockchain);
+    if (!correctBlockchain(blockchain as Hex)) {
+      web3Switch(blockchain as Hex);
       return;
     }
     const tokenInformation =
@@ -61,13 +64,13 @@ const SellButton: FC<ISellButton> = ({
       !sellingPrice ||
       !blockchain ||
       !getBlockchainData(blockchain as Hex) ||
-      !correctBlockchain(blockchain) ||
+      !correctBlockchain(blockchain as Hex) ||
       !diamondMarketplaceInstance ||
       !tokenInformation
     ) {
       return;
     }
-    const instance = contractCreator(contract, erc721Abi);
+    const instance = contractCreator(contract as Hex, erc721Abi);
     if (!instance) {
       return;
     }
@@ -116,7 +119,7 @@ const SellButton: FC<ISellButton> = ({
       showConfirmButton: false
     });
     let response;
-    if (settings.databaseResales) {
+    if (databaseResales) {
       response = await rFetch(`/api/resales/create`, {
         method: 'POST',
         body: JSON.stringify({
@@ -173,8 +176,8 @@ const SellButton: FC<ISellButton> = ({
     tokenData,
     selectedToken,
     nodeAddress,
-    settings,
-    getBlockchainData
+    getBlockchainData,
+    databaseResales
   ]);
 
   const openInputField = useCallback(() => {

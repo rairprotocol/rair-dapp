@@ -37,17 +37,15 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   setSelectedToken,
   offerData,
   handleTokenBoughtButton,
-  tokenDataForResale
+  tokenDataForResale,
+  serialNumberData
 }) => {
   const { diamondMarketplaceInstance } = useContracts();
   const { currentUserAddress, exchangeRates } = useAppSelector(
     (state) => state.web3
   );
-  const { currentCollectionTotal } = useAppSelector(
-    (state) => state.tokens
-  );
-
   const { primaryColor, textColor } = useAppSelector((store) => store.colors);
+  const { databaseResales } = useAppSelector((store) => store.settings);
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
@@ -147,13 +145,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     selectedToken
   ]);
 
-  const { settings, getBlockchainData, refreshBlockchainData } =
-    useServerSettings();
-
-  useEffect(() => {
-    refreshBlockchainData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { getBlockchainData } = useServerSettings();
 
   useEffect(() => {
     if (offerData) {
@@ -257,7 +249,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       icon: 'info',
       showConfirmButton: false
     });
-    if (settings.databaseResales) {
+    if (databaseResales) {
       const { success, hash } = await rFetch(
         `/api/resales/purchase/${resaleData._id}`
       );
@@ -311,7 +303,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     tokenData,
     getResaleData,
     correctBlockchain,
-    settings.databaseResales
+    databaseResales
   ]);
 
   const checkAllSteps = useCallback(() => {
@@ -529,7 +521,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               blockchain={blockchain}
               product={product}
               contract={contract}
-              totalCount={totalCount}
+              serialNumberData={serialNumberData}
               handleClickToken={handleClickToken}
               selectedToken={selectedToken}
               setSelectedToken={setSelectedToken}

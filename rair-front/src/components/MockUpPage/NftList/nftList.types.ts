@@ -2,7 +2,8 @@ import { Dispatch, SetStateAction } from 'react';
 import { Hex } from 'viem';
 
 import { CatalogItem } from '../../../redux/tokenSlice';
-import { MediaFile, Product, User } from '../../../types/databaseTypes';
+import { CatalogVideoItem } from '../../../types/commonTypes';
+import { MediaFile, User } from '../../../types/databaseTypes';
 import { TOfferType } from '../../marketplace/marketplace.types';
 import { TEmbeddedParams } from '../mockupPage.types';
 
@@ -95,7 +96,7 @@ export interface INftCollectionPageComponent {
 
 export interface INftUnlockablesPage {
   embeddedParams: TEmbeddedParams | undefined;
-  productsFromOffer: MediaFile[] | undefined;
+  productsFromOffer: CatalogVideoItem[] | undefined;
   selectedToken: string | undefined;
   someUsersData: User | null | undefined;
   collectionName: string | undefined;
@@ -104,7 +105,7 @@ export interface INftUnlockablesPage {
 
 export interface INftSingleUnlockables {
   embeddedParams: TEmbeddedParams | undefined;
-  productsFromOffer: MediaFile[];
+  productsFromOffer: CatalogVideoItem[];
   setTokenDataFiltered: (filteredData: any) => void;
   setSelectVideo: (selectedVideo: MediaFile) => void;
   isDiamond: undefined | boolean;
@@ -204,7 +205,7 @@ export interface INftDifferentRarity {
 }
 
 export type TNftSingleUnlockablesSections = {
-  [key: string]: MediaFile[];
+  [key: string]: CatalogVideoItem[];
 };
 
 export type TSplashPageSetSelectedVideoArgs = {

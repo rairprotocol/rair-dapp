@@ -19,7 +19,7 @@ import {
 } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import { loadCollection } from '../../../../redux/tokenSlice';
-import { CatalogVideoItem } from '../../../../redux/videoSlice';
+import { CatalogVideoItem } from '../../../../types/commonTypes';
 import { User } from '../../../../types/databaseTypes';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 // import { TNftExternalLinkType } from '../nftList.types';

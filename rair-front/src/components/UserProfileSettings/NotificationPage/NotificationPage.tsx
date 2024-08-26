@@ -6,7 +6,7 @@ import './NotificationPage.css';
 
 interface NotificationPageProps {
   el?: any;
-  readNotification?: any;
+  readNotification?: () => void;
 }
 
 const NotificationPage: FC<NotificationPageProps> = ({

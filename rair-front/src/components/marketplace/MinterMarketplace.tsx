@@ -5,6 +5,7 @@ import MinterMarketplaceItem from './MinterMarketplaceItem';
 
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
+import LoadingComponent from '../common/LoadingComponent';
 
 const MinterMarketplace = () => {
   const [offerData, setOfferData] = useState<TOfferData[]>([]);
@@ -14,7 +15,7 @@ const MinterMarketplace = () => {
     if (aux.success) {
       const offerArray: TOfferData[] = [];
       aux.contracts.forEach((contract) => {
-        contract.products.offers.forEach((offer) => {
+        contract.product.offers.forEach((offer) => {
           for (const field of Object.keys(offer)) {
             if (offer && offer[field] && offer[field]['$numberDecimal']) {
               offer[field] = BigInt(offer[field]['$numberDecimal']).toString();
@@ -24,9 +25,9 @@ const MinterMarketplace = () => {
             offerArray.push({
               blockchain: contract.blockchain,
               contractAddress: contract.contractAddress,
-              productIndex: contract.products.collectionIndexInContract,
-              productName: contract.products.name,
-              totalCopies: contract.products.copies,
+              productIndex: contract.product.collectionIndexInContract,
+              productName: contract.product.name,
+              totalCopies: contract.product.copies,
               minterAddress: contract?.offerPool?.minterAddress,
               ...offer
             });
@@ -41,9 +42,15 @@ const MinterMarketplace = () => {
     fetchData();
   }, [fetchData]);
 
+  console.info(offerData);
+
   useEffect(() => {
     setDocumentTitle('Minter Marketplace');
   }, []);
+
+  if (offerData.length === 0) {
+    return <LoadingComponent />;
+  }
 
   return (
     <div className="row px-0 mx-0 w-100">

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -19,7 +19,7 @@ import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
-import { CustomModalStyle } from '../../../types/commonTypes';
+import { CustomModalStyle, SplashPageProps } from '../../../types/commonTypes';
 import MetaTags from '../../SeoTags/MetaTags';
 import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
 import { LogoAuthor } from '../images/commingSoon/commingSoonImages';
@@ -41,7 +41,7 @@ import {
 } from '../images/splashPageImages/splashPage';
 import NipseyRelease from '../NipseyRelease/NipseyRelease';
 import RoadMap from '../Roadmap/RoadMap';
-import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
+import { TSplashPageIsActive } from '../splashPage.types';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import { Countdown } from '../Timer/CountDown';
 /* importing Components*/
@@ -72,7 +72,7 @@ const customStyles: CustomModalStyle = {
   }
 };
 
-const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
+const SplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [dataNipsey, setDataNipsey] = useState<number>();
@@ -208,8 +208,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
                       fontWeight: 'bold',
                       paddingTop: '3rem',
                       cursor: 'default'
-                    }}
-                    ref={(_subtitle) => (subtitle = _subtitle)}>
+                    }}>
                     Terms of Service
                   </h2>
                   <div className="modal-content-wrapper">
@@ -299,7 +298,6 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
         <TokenLeft
           soldCopies={dataNipsey}
           copies={copies}
-          primaryColor={primaryColor}
           DiscordIcon={discrodIconNoBorder}
         />
         <div className="special-offer">
@@ -339,10 +337,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
             </div>
           </div>
         </div>
-        <UnlockVideos
-          primaryColor={primaryColor}
-          unlockableVideo={UnlockableVideo}
-        />
+        <UnlockVideos unlockableVideo={UnlockableVideo} />
         <ExclusiveNft
           Nft_1={Nft_1}
           Nft_2={Nft_2}

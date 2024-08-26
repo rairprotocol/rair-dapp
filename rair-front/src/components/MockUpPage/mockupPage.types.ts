@@ -5,7 +5,7 @@ import {
   TProducts,
   TTokenData
 } from '../../axios.responseTypes';
-import { CatalogVideoItem } from '../../redux/videoSlice';
+import { CatalogVideoItem } from '../../types/commonTypes';
 import { User } from '../../types/databaseTypes';
 import { TOfferType } from '../marketplace/marketplace.types';
 
@@ -97,8 +97,6 @@ export interface ISharePopUp {
   onClose: (value: number) => void;
   selectedValue: number;
   open: boolean;
-  primaryColor: string;
-  selectedData?: TMetadataType | undefined;
 }
 
 export interface INftVideoplayer {
@@ -112,12 +110,13 @@ export interface ISerialNumberBuySell {
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   blockchain: Hex | undefined;
   product: string | undefined;
-  contract: string | undefined;
+  contract: Hex | undefined;
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
   offerData: TOfferType | undefined;
   handleTokenBoughtButton: () => void;
   tokenDataForResale?: any;
+  serialNumberData: number;
 }
 export interface ISellButton {
   currentUser?: string | undefined;
@@ -166,7 +165,6 @@ export interface ITitleCollection {
 export interface ICusmonShareButton {
   title: string;
   handleClick: () => void;
-  primaryColor: string;
   isCollectionPathExist?: boolean;
   moreUnlockablesClassName?: string;
 }
@@ -186,7 +184,7 @@ export interface ISellInputButton {
 
 export interface INftDataPageMain {
   blockchain: Hex | undefined;
-  contract: string | undefined;
+  contract: Hex | undefined;
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   product: string | undefined;
   productsFromOffer: CatalogVideoItem[] | undefined;

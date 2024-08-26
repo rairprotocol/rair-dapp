@@ -21,8 +21,8 @@ import {
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
 import { loadCollection } from '../../../../redux/tokenSlice';
-import { CatalogVideoItem } from '../../../../redux/videoSlice';
 import { setRequestedChain } from '../../../../redux/web3Slice';
+import { CatalogVideoItem } from '../../../../types/commonTypes';
 import { MediaFile, User } from '../../../../types/databaseTypes';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 import {

@@ -1,3 +1,5 @@
+import { MediaFile, Offer } from './databaseTypes';
+
 export interface ApiCallResponse {
   success: boolean;
   message?: string;
@@ -21,4 +23,22 @@ export interface SelectOption {
 
 export interface SplashPageProps {
   setIsSplashPage: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface UploadMediaFile {
+  offer: string;
+  category: string;
+  title: string;
+  file: File;
+  description: string;
+  preview: string;
+  contractAddress: string;
+  productIndex: string;
+  storage: string;
+  demo: boolean;
+}
+
+export interface CatalogVideoItem extends MediaFile {
+  isUnlocked: boolean;
+  unlockData: { offers: Array<Offer> };
 }

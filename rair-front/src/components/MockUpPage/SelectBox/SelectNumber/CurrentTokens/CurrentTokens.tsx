@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { useParams } from 'react-router';
 
 import { useAppSelector } from '../../../../../hooks/useReduxHooks';
-import useServerSettings from '../../../../../hooks/useServerSettings';
 import { StyledShevronIcon } from '../../../FilteringBlock/FilteringBlockItems/FilteringBlockItems';
 import { ICurrentTokensComponent } from '../../selectBox.types';
 
@@ -20,7 +19,9 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   const { primaryColor, primaryButtonColor, textColor, iconColor } =
     useAppSelector((store) => store.colors);
 
-  const { customSecondaryColor } = useServerSettings();
+  const { secondaryColor, isDarkMode } = useAppSelector(
+    (store) => store.colors
+  );
 
   const { tokenId } = useParams();
 
@@ -31,18 +32,14 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
           onClick={handleIsOpen}
           className="select-field"
           style={{
-            borderColor:
-              import.meta.env.VITE_TESTNET === 'true'
-                ? `${
-                    primaryColor === '#dedede'
-                      ? 'var(--hot-drops)'
-                      : `color-mix(in srgb, ${customSecondaryColor}, #888888)`
-                  }`
-                : `${
-                    primaryColor === '#dedede'
-                      ? '#E882D5'
-                      : `color-mix(in srgb, ${customSecondaryColor}, #888888)`
-                  }`,
+            borderColor: `${
+              !isDarkMode
+                ? import.meta.env.VITE_TESTNET === 'true'
+                  ? 'var(--hot-drops)'
+                  : '#E882D5'
+                : `color-mix(in srgb, ${secondaryColor}, #888888)`
+            }`,
+
             backgroundColor: `${
               primaryColor === '#dedede'
                 ? 'var(--rhyno-40)'

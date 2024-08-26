@@ -163,7 +163,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   }, [currentUserAddress, setUserData]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && mainTokenInstance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.runner?.provider) {
       setIsLoadingBalance(true);
       const balance =
         await mainTokenInstance.runner?.provider?.getBalance(

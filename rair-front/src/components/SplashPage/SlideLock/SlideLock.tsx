@@ -4,6 +4,7 @@ import { teamSlideLockArray } from './AboutUsTeam';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../redux/seoSlice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import { splashData } from '../../../utils/infoSplashData/slideLock';
 import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
@@ -16,7 +17,6 @@ import {
   videoBackground
 } from '../images/slideLock/slideLock';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ISplashPageProps } from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
 import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
@@ -41,13 +41,9 @@ import './SlideLock.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const SlideLock: FC<ISplashPageProps> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
+const SlideLock: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const [soldCopies, setSoldCopies] = useState<number>(0);
-  const { primaryColor } = useAppSelector((store) => store.colors);
   const seo = useAppSelector((store) => store.seo);
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
@@ -79,7 +75,7 @@ const SlideLock: FC<ISplashPageProps> = ({
     <div className="wrapper-splash-page slidelock">
       <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
-        <AuthorCard {...{ splashData, connectUserData }} />
+        <AuthorCard {...{ splashData }} />
         {/* <NFTCounterTemplate 
           primaryColor={"rhyno"} 
           leftTokensNumber={0} 
@@ -89,7 +85,6 @@ const SlideLock: FC<ISplashPageProps> = ({
         <TokenLeftTemplate
           counterData={splashData.counterData}
           soldCopies={soldCopies}
-          primaryColor={primaryColor}
           nftTitle={splashData.counterData?.nftTitle}
         />
         <div style={{ height: '108px' }} />
@@ -115,10 +110,7 @@ const SlideLock: FC<ISplashPageProps> = ({
           colorHeadSecond={'#57B69C'}
           teamArray={teamSlideLockArray}
         />
-        <NotCommercialTemplate
-          primaryColor={primaryColor}
-          NFTName={splashData.NFTName}
-        />
+        <NotCommercialTemplate NFTName={splashData.NFTName} />
       </div>
     </div>
   );

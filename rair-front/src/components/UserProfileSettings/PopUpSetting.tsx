@@ -87,10 +87,12 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
   }, [avatar, email, isLoggedIn, nickName]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && mainTokenInstance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.runner?.provider) {
       setIsLoadingBalance(true);
       const balance =
-        await mainTokenInstance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance?.runner?.provider?.getBalance(
+          currentUserAddress
+        );
 
       if (balance) {
         const result = formatEther(balance);

@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import NftSingleUnlockables from './NftSingleUnlockables';
 
-import { TFileType } from '../../../../axios.responseTypes';
 import {
   useAppDispatch,
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
+import { MediaFile } from '../../../../types/databaseTypes';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
 import CustomButton from '../../utils/button/CustomButton';
@@ -24,7 +24,7 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   collectionName,
   setTokenDataFiltered
 }) => {
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [selectVideo, setSelectVideo] = useState<MediaFile>();
   const [isDiamond, setIsDiamond] = useState<undefined | boolean>(undefined);
 
   const myRef = useRef<HTMLDivElement>(null);

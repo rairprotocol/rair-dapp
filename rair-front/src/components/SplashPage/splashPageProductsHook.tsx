@@ -5,7 +5,7 @@ import { TSplashDataType, TUseGetProductsReturn } from './splashPage.types';
 
 import { TNftFilesResponse } from '../../axios.responseTypes';
 import { useAppSelector } from '../../hooks/useReduxHooks';
-import { CatalogVideoItem } from '../../redux/videoSlice';
+import { CatalogVideoItem } from '../../types/commonTypes';
 
 export const useGetProducts = (
   splashData: TSplashDataType

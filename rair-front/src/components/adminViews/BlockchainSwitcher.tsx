@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { JsonRpcProvider, Wallet } from 'ethers';
 
-import { useAppSelector } from '../../hooks/useReduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import {
@@ -19,7 +18,7 @@ const BlockChainSwitcher = () => {
   const { web3Switch } = useWeb3Tx();
 
   const { connectedChain } = useAppSelector((state) => state.web3);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const reactSwal = useSwal();
 
   const connectProgrammatically = async ({

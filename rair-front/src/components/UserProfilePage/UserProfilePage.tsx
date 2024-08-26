@@ -298,7 +298,6 @@ const UserProfilePage: React.FC = () => {
     <div className={`${width > 1025 ? 'container' : 'wrapper-user-page'}`}>
       <div>
         <SharePopUp
-          primaryColor={primaryColor}
           selectedValue={selectedValue}
           open={open}
           onClose={handleClose}
@@ -368,10 +367,7 @@ const UserProfilePage: React.FC = () => {
             }`}>
             {currentUserAddress === userAddress ? (
               <>
-                <PersonalProfileIcon
-                  userData={userData}
-                  setEditModeUpper={setEditMode}
-                />
+                <PersonalProfileIcon setEditModeUpper={setEditMode} />
               </>
             ) : (
               <div className="personal-profile-box">
@@ -423,11 +419,7 @@ const UserProfilePage: React.FC = () => {
               </div>
             )}
             {!editMode && (
-              <CustomShareButton
-                title="Share"
-                handleClick={handleClickOpen}
-                primaryColor={primaryColor}
-              />
+              <CustomShareButton title="Share" handleClick={handleClickOpen} />
             )}
           </div>
           <div className="tabs-section">

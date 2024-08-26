@@ -9,7 +9,7 @@ import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { CatalogVideoItem } from '../../../redux/videoSlice';
+import { CatalogVideoItem } from '../../../types/commonTypes';
 import { useSplashData } from '../../../utils/infoSplashData/rairGenesis';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';

@@ -31,9 +31,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   getMediaList,
   setUploadSuccess
 }) => {
-  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
-    (store) => store.colors
-  );
+  const { primaryColor, textColor, primaryButtonColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
   const rSwal = useSwal();
 
   const [openVideoplayer, setOpenVideoplayer] = useState<boolean>(false);
@@ -234,7 +233,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               <div className="modal-content-close-btn-wrapper">
                 <ModalContentCloseBtn
                   onClick={closeModal}
-                  primaryColor={primaryColor}>
+                  isDarkMode={isDarkMode}>
                   <FontAwesomeIcon
                     icon={faTimes}
                     style={{ lineHeight: 'inherit' }}

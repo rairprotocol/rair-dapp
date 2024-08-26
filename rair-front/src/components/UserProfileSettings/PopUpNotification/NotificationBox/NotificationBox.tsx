@@ -66,11 +66,7 @@ const NotificationBox = ({
     reactSwal.fire({
       html: (
         <Provider store={store}>
-          <NotificationPage
-            el={el}
-            readNotification={readNotification}
-            removeItem={removeItem}
-          />
+          <NotificationPage el={el} readNotification={readNotification} />
         </Provider>
       ),
       width: '90vw',

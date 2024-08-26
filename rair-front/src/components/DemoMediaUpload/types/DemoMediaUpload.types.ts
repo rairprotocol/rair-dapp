@@ -1,10 +1,11 @@
+import { UploadMediaFile } from '../../../types/commonTypes';
 import { MediaFile } from '../../../types/databaseTypes';
 
 export interface IMediaItemChange {
   item: MediaFile;
-  setMediaList: (arg: MediaFile[]) => void;
+  setMediaList: (arg: UploadMediaFile[]) => void;
   index: number;
-  mediaList: MediaFile[];
+  mediaList: UploadMediaFile[];
   uploadSuccess: null | boolean;
   textFlag?: boolean;
   mediaId?: string;
@@ -18,7 +19,7 @@ export interface IMediaItemChange {
 
 export interface IMediaListBox {
   index: number;
-  item: MediaFile;
+  item: UploadMediaFile;
   newUserStatus: boolean;
   selectCommonInfo: any;
   deleter: (index: number) => void;
@@ -28,7 +29,7 @@ export interface IMediaListBox {
 export interface IUploadedListBox {
   fileData: any;
   index: number;
-  setMediaList: (arg: MediaFile[]) => void;
+  setMediaList: (arg: UploadMediaFile[]) => void;
   mediaList: MediaFile[];
   uploadSuccess: boolean | null;
   getMediaList: () => void;
@@ -57,7 +58,7 @@ export interface IPopUpChangeVideo {
   item: any;
   setUploadSuccess: (arg: boolean | null) => void;
   beforeUpload: boolean | undefined;
-  setMediaList: (arg: MediaFile[]) => void;
-  mediaList: MediaFile[];
+  setMediaList: (arg: UploadMediaFile[]) => void;
+  mediaList: UploadMediaFile[];
   index: number;
 }

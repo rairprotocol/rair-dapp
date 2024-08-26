@@ -4,13 +4,14 @@ import axios from 'axios';
 import { teamSimDogsArray } from './AboutUsTeam';
 import { BackStorySimDogs } from './InformationText';
 
-import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
+import { TNftFilesResponse } from '../../../axios.responseTypes';
 import useConnectUser from '../../../hooks/useConnectUser';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
+import { CatalogVideoItem, SplashPageProps } from '../../../types/commonTypes';
 import {
   donationGridData,
   splashData
@@ -18,7 +19,7 @@ import {
 import MetaTags from '../../SeoTags/MetaTags';
 import { SimDogs0 } from '../images/simDogs/simDogs';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ICustomButtonBlock, ISplashPageProps } from '../splashPage.types';
+import { ICustomButtonBlock } from '../splashPage.types';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import CardParagraphText from '../SplashPageConfig/CardParagraphText/CardParagraphText';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
@@ -45,14 +46,16 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
+const SimDogsSplashPage: React.FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const reactSwal = useSwal();
   /* UTILITIES FOR NFT PURCHASE */
   /* UTILITIES FOR VIDEO PLAYER VIEW */
-  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [productsFromOffer, setProductsFromOffer] = useState<
+    CatalogVideoItem[]
+  >([]);
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
 
@@ -167,7 +170,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
               openVideoplayer={openVideoplayer}
               setOpenVideoPlayer={setOpenVideoPlayer}
               handlePlayerClick={handlePlayerClick}
-              primaryColor={primaryColor}
             />
           </SplashVideoWrapper>
         )}
@@ -184,7 +186,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           arraySplash={'sim-dogs'}
           teamArray={teamSimDogsArray}
         />
-        <NotCommercialTemplate primaryColor={primaryColor} NFTName={'NFT'} />
+        <NotCommercialTemplate NFTName={'NFT'} />
       </div>
     </div>
   );

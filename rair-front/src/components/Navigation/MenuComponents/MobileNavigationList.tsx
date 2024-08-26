@@ -50,9 +50,9 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   const { getBlockchainData } = useServerSettings();
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && mainTokenInstance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.runner?.provider) {
       const balance =
-        await mainTokenInstance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.runner.provider.getBalance(currentUserAddress);
 
       if (balance) {
         const result = formatEther(balance);
@@ -218,11 +218,9 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                 return (
                   <NotificationBox
                     getNotifications={getNotifications}
-                    currentUserAddress={currentUserAddress}
                     el={el}
                     key={el._id}
                     title={el.message}
-                    primaryColor={primaryColor}
                     getNotificationsCount={getNotificationsCount}
                   />
                 );

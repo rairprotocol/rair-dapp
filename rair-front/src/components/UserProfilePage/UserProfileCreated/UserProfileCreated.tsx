@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { NftItem } from './../../MockUpPage/NftList/NftItem';
 
@@ -19,26 +19,12 @@ const UserProfileCreated = ({ contractData, titleSearch }) => {
             if (contractData.cover !== 'none') {
               return (
                 <NftItem
+                  item={contractData}
                   className="nft-item-collection grid-item"
                   key={index}
-                  pict={
-                    contractData.cover
-                      ? contractData.cover
-                      : `${
-                          import.meta.env.VITE_IPFS_GATEWAY
-                        }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`
-                  }
-                  contractName={contractData.contract}
-                  price={contractData.offerData.map((p) => String(p.price))}
-                  blockchain={contractData.blockchain}
-                  collectionName={contractData.name}
-                  ownerCollectionUser={contractData.user}
                   index={index}
                   playing={playing}
                   setPlaying={setPlaying}
-                  collectionIndexInContract={
-                    contractData.collectionIndexInContract
-                  }
                 />
               );
             } else {

@@ -2,7 +2,7 @@ import { Hex } from 'viem';
 
 import { TOfferType } from './components/marketplace/marketplace.types';
 import { MediaListResponseType } from './components/video/video.types';
-import { CatalogVideoItem } from './redux/videoSlice';
+import { CatalogVideoItem } from './types/commonTypes';
 import { User } from './types/databaseTypes';
 
 export type BackendResponse = {

@@ -18,7 +18,7 @@ import {
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
 import { ExpandImageIcon } from '../../../../images';
-import { CatalogVideoItem } from '../../../../redux/videoSlice';
+import { CatalogVideoItem } from '../../../../types/commonTypes';
 import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
@@ -395,6 +395,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
           ) : (
             <SerialNumberBuySell
               tokenData={tokenFullData}
+              serialNumberData={serialNumberData}
               handleClickToken={handleClickToken}
               setSelectedToken={setSelectedToken}
               blockchain={blockchain}

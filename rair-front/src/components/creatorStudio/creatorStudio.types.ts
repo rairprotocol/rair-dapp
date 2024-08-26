@@ -11,9 +11,9 @@ import {
   TProducts,
   TTokenData
 } from '../../axios.responseTypes';
+import { MediaFile } from '../../types/databaseTypes';
 import { ContractType } from '../adminViews/adminView.types';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
-import { MediaFile } from '../../types/databaseTypes';
 export interface IMarketplaceOfferConfig {
   array: TMarketplaceOfferConfigArrayItem[];
   index: number;
@@ -165,7 +165,7 @@ export type TWorkflowProduct = TProducts & {
 
 export type TContractData = Omit<TContract, 'product' | 'offerPool'> & {
   instance: ethers.Contract;
-  nfts: TNftItemResult;
+  nfts: TTokenData[];
   product: TWorkflowProduct;
 };
 
@@ -210,7 +210,7 @@ export type TListOffersProductType = Omit<TProducts, 'offers'> & {
 export type TDiamondContractData = Omit<TContract, 'product' | 'offerPool'> &
   TMetadataExtra & {
     instance: ethers.Contract;
-    nfts: TNftItemResult;
+    nfts: TTokenData[];
     product: TListOffersProductType;
   };
 

@@ -1,10 +1,9 @@
 import { FC, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Hex } from 'viem';
 
 import useConnectUser from '../../../hooks/useConnectUser';
-import { useAppSelector } from '../../../hooks/useReduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { metaMaskIcon, RairLogoBlue } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
@@ -28,7 +27,7 @@ import './AboutPageNew.css';
 
 const AboutPageNew: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const { pathname } = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const { primaryColor } = useAppSelector((store) => store.colors);
   const rSwal = useSwal();

@@ -413,7 +413,7 @@ function App() {
                   },
                   {
                     path: '/slidelock',
-                    content: <SlideLock />
+                    content: <SlideLock {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/yoti-page',

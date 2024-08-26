@@ -221,14 +221,14 @@ const WorkflowSteps: FC = () => {
   };
 
   const getNFTMetadata = async (blockchain, address, collectionIndex) => {
-    const { success, result } = await rFetch(
+    const { success, tokens } = await rFetch(
       `/api/nft/network/${blockchain}/${address.toLowerCase()}/${collectionIndex}`,
       undefined,
       undefined,
       false
     );
     if (success) {
-      return result;
+      return tokens;
     }
   };
 

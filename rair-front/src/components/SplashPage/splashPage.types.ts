@@ -2,7 +2,7 @@ import React from 'react';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Hex } from 'viem';
 
-import { CatalogVideoItem } from '../../redux/videoSlice';
+import { CatalogVideoItem } from '../../types/commonTypes';
 
 export interface INumberedCircle {
   index: number;
@@ -338,7 +338,6 @@ export interface INotCommercialGeneric {
 }
 
 export interface ITokenLeft {
-  primaryColor: string;
   DiscordIcon: string;
   copies?: number;
   soldCopies?: number;
@@ -346,7 +345,6 @@ export interface ITokenLeft {
 
 export interface IUnlockVideos {
   unlockableVideo: string;
-  primaryColor: string;
 }
 
 export type TVideoArrType = {
@@ -360,7 +358,6 @@ export interface IUnlockVideoItem {
   nameVideo: string;
   timeVideo: string;
   unlockableVideo: string;
-  primaryColor: string;
 }
 
 export interface IExclusiveNft {
@@ -425,7 +422,7 @@ export interface ITokenLeftTemplate {
 }
 
 export type TMainContractType = {
-  contractAddress: string;
+  contractAddress: Hex;
   requiredBlockchain: Hex;
   offerIndex: string[];
 };

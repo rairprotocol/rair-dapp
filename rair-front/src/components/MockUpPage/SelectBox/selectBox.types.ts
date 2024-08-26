@@ -2,16 +2,16 @@ import { Hex } from 'viem';
 
 export interface IListOfTokensComponent {
   blockchain?: Hex;
-  contract: string | undefined;
+  contract: Hex | undefined;
   isOpen: boolean;
   handleIsOpen: () => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
   onClickItem: (element: string | undefined) => void;
   product: string | undefined;
-  primaryColor: string;
   setSelectedToken: (tokenId: string | undefined) => void;
   selectedToken: string | undefined;
   setIsOpen: (isOpen: boolean) => void;
+  serialNumberData: any;
 }
 
 export interface ICurrentTokensComponent {
@@ -24,7 +24,7 @@ export interface ICurrentTokensComponent {
   handleIsOpen: () => void;
   onClickItem: (element: string) => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
-  totalCount: any;
+  totalCount?: any;
 }
 
 export type SelectNumberItem = {
@@ -39,9 +39,9 @@ export interface ISelectNumber {
   items: SelectNumberItem[];
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   selectedToken: string | undefined;
-  totalCount: any;
+  serialNumberData: any;
   product: string | undefined;
-  contract: string | undefined;
+  contract: Hex | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
 }
 export interface IMockUpPage {
