@@ -14,9 +14,7 @@ export const HeaderContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<IHeaderContainerStyled>`
   background: ${({ isDarkMode, secondaryColor }) =>
-    !isDarkMode
-      ? '#fff'
-      : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
+    !isDarkMode ? '#fff' : `color-mix(in srgb, ${secondaryColor}, #888888)`};
   margin-top: ${(props) =>
     props.realChainId && props.showAlert && !props.isSplashPage ? '50px' : ''};
 `;
