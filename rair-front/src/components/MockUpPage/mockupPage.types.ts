@@ -155,7 +155,6 @@ export interface ITitleCollection {
   title: string | undefined;
   userName: string | undefined;
   someUsersData: User | undefined | null;
-  selectedData: TMetadataType | undefined;
   currentUser?: User;
   offerDataCol?: TOfferType[] | undefined;
   connectUserData?: any;
@@ -224,7 +223,7 @@ export interface ISearchPanel {
 export type TModeType = 'collection' | 'tokens' | 'unlockables';
 
 export type TEmbeddedParams = {
-  contract: string;
+  contract: Hex;
   product: string;
   blockchain: Hex | undefined;
   mode: TModeType;

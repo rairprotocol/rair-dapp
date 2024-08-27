@@ -60,7 +60,6 @@ const VaporverseSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
-  const { isDarkMode } = useAppSelector((store) => store.colors);
   const { connectUserData } = useConnectUser();
   const carousel_match = window.matchMedia('(min-width: 630px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
@@ -277,10 +276,7 @@ const VaporverseSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
           titleHeadFirst={'mak0r'}
           teamArray={teamVaporVerseArray}
         />
-        <NotCommercialTemplate
-          isDarkMode={isDarkMode}
-          NFTName={splashData.NFTName}
-        />
+        <NotCommercialTemplate NFTName={splashData.NFTName} />
       </div>
     </div>
   );

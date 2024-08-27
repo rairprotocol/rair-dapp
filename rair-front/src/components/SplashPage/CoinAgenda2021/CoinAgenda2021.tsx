@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { teamCoinAgendaArray } from './AboutUsTeam';
 
@@ -7,10 +7,10 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import { splashData } from '../../../utils/infoSplashData/coicAgenda2021';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ISplashPageProps } from '../splashPage.types';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
 import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
@@ -29,9 +29,7 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './CoinAgenda2021.css';
 
-const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
-  setIsSplashPage
-}) => {
+const CoinAgenda2021SplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
@@ -124,10 +122,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
           <AuthorCardButton buttonData={splashData.button2} />
         </div>
         <TeamMeet arraySplash={'coinagenda'} teamArray={teamCoinAgendaArray} />
-        <NotCommercialTemplate
-          isDarkMode={isDarkMode}
-          NFTName={splashData.NFTName}
-        />
+        <NotCommercialTemplate NFTName={splashData.NFTName} />
       </div>
     </div>
   );

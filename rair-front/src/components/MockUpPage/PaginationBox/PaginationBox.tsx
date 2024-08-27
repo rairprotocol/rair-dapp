@@ -14,7 +14,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
 }) => {
   const { itemsPerPage } = useAppSelector((store) => store.tokens);
 
-  const { primaryColor, primaryButtonColor } = useAppSelector(
+  const { isDarkMode, primaryButtonColor } = useAppSelector(
     (store) => store.colors
   );
 
@@ -83,7 +83,7 @@ const PaginationBox: React.FC<IPaginationBox> = ({
         totalPageForPagination > 0 &&
         pagesArray.length > 0 && (
           <PaginationBoxStyled
-            primarycolor={primaryColor}
+            isDarkMode={isDarkMode}
             primaryButtonColor={primaryButtonColor}
             count={pagesArray.length}
             page={page}

@@ -48,7 +48,7 @@ export type TMintOffer = {
   2: bigint;
   3: TPercentageRecipient[];
   4: boolean;
-  erc721Address: string;
+  erc721Address: Hex;
   fees: TPercentageRecipient[];
   nodeAddress: string;
   rangeIndex: bigint;

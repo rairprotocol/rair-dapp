@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import WorkflowContext from '../../contexts/CreatorWorkflowContext';
 import { useAppSelector } from '../../hooks/useReduxHooks';
 import videoIcon from '../../images/videoIcon.svg';
-import { MediaFile } from '../../types/databaseTypes';
+import { UploadMediaFile } from '../../types/commonTypes';
 import { rFetch } from '../../utils/rFetch';
 import LoadingComponent from '../common/LoadingComponent';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -30,7 +30,7 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
     }
   };
 
-  const [mediaList, setMediaList] = useState<MediaFile[]>([]);
+  const [mediaList, setMediaList] = useState<UploadMediaFile[]>([]);
   const [mediaUploadedList, setMediaUploadedList] = useState<any>([]);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
   const [newUserStatus, setNewUserStatus] = useState(false);
@@ -86,7 +86,7 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
   }, [currentUserAddress]);
 
   const onMediaDrop = (media) => {
-    let aux: MediaFile[] = [...mediaList];
+    let aux = [...mediaList];
     aux = aux.concat(
       media.map((item: File) => {
         return {

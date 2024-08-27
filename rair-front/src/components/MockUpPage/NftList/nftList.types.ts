@@ -51,7 +51,8 @@ export type TVideoPlayerViewSpecialVideoType = {
 };
 
 export type TAuthenticityStyled = {
-  primaryColor: string;
+  primaryColor?: string;
+  isDarkMode?: boolean;
 };
 
 export interface INftDataCommonLinkComponent {
@@ -61,7 +62,7 @@ export interface INftDataCommonLinkComponent {
 }
 
 export type TParamsNftDataCommonLink = {
-  contract: string;
+  contract: Hex;
   product: string;
   tokenId: string;
   blockchain: Hex;
@@ -107,7 +108,7 @@ export interface INftSingleUnlockables {
   embeddedParams: TEmbeddedParams | undefined;
   productsFromOffer: CatalogVideoItem[];
   setTokenDataFiltered: (filteredData: any) => void;
-  setSelectVideo: (selectedVideo: MediaFile) => void;
+  setSelectVideo: (selectedVideo: CatalogVideoItem) => void;
   isDiamond: undefined | boolean;
 }
 
@@ -145,7 +146,7 @@ export interface ICollectionInfo {
 }
 
 export type TCollectionInfoBody = {
-  primaryColor: string;
+  isDarkMode?: boolean;
 };
 
 export interface ICustomButton {
@@ -215,9 +216,9 @@ export type TSplashPageSetSelectedVideoArgs = {
 };
 
 export interface IVideoPlayerView {
-  productsFromOffer: MediaFile[];
+  productsFromOffer: CatalogVideoItem[];
   primaryColor?: string;
-  selectVideo: MediaFile | undefined;
+  selectVideo: CatalogVideoItem | undefined;
   setSelectVideo: (selectedVideo: any) => void;
   whatSplashPage?: string;
   someAdditionalData?: TVideoPlayerViewSpecialVideoType[];

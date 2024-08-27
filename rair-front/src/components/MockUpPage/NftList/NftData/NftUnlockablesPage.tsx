@@ -6,6 +6,7 @@ import {
   useAppDispatch,
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
+import { CatalogVideoItem } from '../../../../types/commonTypes';
 import { MediaFile } from '../../../../types/databaseTypes';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
@@ -24,7 +25,7 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   collectionName,
   setTokenDataFiltered
 }) => {
-  const [selectVideo, setSelectVideo] = useState<MediaFile>();
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
   const [isDiamond, setIsDiamond] = useState<undefined | boolean>(undefined);
 
   const myRef = useRef<HTMLDivElement>(null);
@@ -67,9 +68,6 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
       <BreadcrumbsView embeddedParams={embeddedParams} />
       {currentCollection && selectedToken && (
         <TitleCollection
-          selectedData={
-            currentCollection && currentCollection[selectedToken]?.metadata
-          }
           title={collectionName}
           someUsersData={someUsersData}
           userName={currentCollection[selectedToken]?.ownerAddress}

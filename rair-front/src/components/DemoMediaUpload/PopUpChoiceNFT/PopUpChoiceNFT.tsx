@@ -180,9 +180,9 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
       const newArray = [...mediaList];
       newArray[index] = {
         ...newArray[index],
-        contractAddress: undefined,
-        productIndex: undefined,
-        offer: undefined
+        contractAddress: 'null',
+        productIndex: 'null',
+        offer: 'null'
       };
       setMediaList(newArray);
       setChoiceAllOptions(null);
@@ -290,7 +290,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
         setContract(options[0].value);
       }
     }
-  }, [address, currentUserAddress]);
+  }, [address, currentUserAddress, getBlockchainData]);
 
   const getOffers = useCallback(async () => {
     const arrOfferOption =

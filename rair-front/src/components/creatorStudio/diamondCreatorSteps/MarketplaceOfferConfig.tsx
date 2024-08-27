@@ -62,7 +62,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
     {
       message: 'Creator address (You)',
       recipient: currentUserAddress,
-      percentage: BigInt(10) ** BigInt(minterDecimals | 3) * 95,
+      percentage: BigInt(10) ** BigInt(minterDecimals | 3) * BigInt(95),
       canBeContract: false,
       editable: true
     }
@@ -280,7 +280,7 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                   Total:{' '}
                   {(
                     BigInt(total) /
-                    BigInt(Math.pow(BigInt(10), minterDecimals | 3))
+                    BigInt(BigInt(10) ** BigInt(minterDecimals | 3))
                   )?.toString()}
                   %
                 </div>

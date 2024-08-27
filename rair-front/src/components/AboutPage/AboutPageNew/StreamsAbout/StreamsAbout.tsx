@@ -3,14 +3,14 @@ import axios from 'axios';
 
 import { TNftFilesResponse } from '../../../../axios.responseTypes';
 import { useAppSelector } from '../../../../hooks/useReduxHooks';
+import { CatalogVideoItem } from '../../../../types/commonTypes';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import { IStreamsAbout } from '../aboutPage.types';
-import { MediaFile } from '../../../../types/databaseTypes';
 
 const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
   const whatSplashPage = 'about-page';
-  const [allVideos, setAllVideos] = useState<MediaFile[]>([]);
-  const [selectVideo, setSelectVideo] = useState<MediaFile>();
+  const [allVideos, setAllVideos] = useState<CatalogVideoItem[]>([]);
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
   const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
 
   const getAllVideos = useCallback(async () => {

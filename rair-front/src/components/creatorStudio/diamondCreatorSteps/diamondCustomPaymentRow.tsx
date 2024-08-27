@@ -107,7 +107,7 @@ const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
             }}
           />
         </div>
-        {!calculatedFee.eq(0) && (
+        {calculatedFee !== BigInt(0) && (
           <small>
             {(percentageReceived / minterDecimals ** BigInt(10)).toString()}% (
             {formatEther(BigInt(calculatedPrice) / calculatedFee)} {symbol})

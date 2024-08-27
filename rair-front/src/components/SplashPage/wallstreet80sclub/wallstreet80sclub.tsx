@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { teamWallstreetArray } from './AboutUsTeam';
 
@@ -6,6 +6,7 @@ import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import {
   blockchain,
   splashData
@@ -14,7 +15,6 @@ import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/Vi
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
-import { ISplashPageProps } from '../splashPage.types';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
@@ -36,7 +36,7 @@ import './wallstreet80sclub.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
+const Wallstreet80sClubSplashPage: FC<SplashPageProps> = ({
   setIsSplashPage
 }) => {
   const dispatch = useAppDispatch();
@@ -54,7 +54,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
 
-  const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   useEffect(() => {
     dispatch(
@@ -156,10 +156,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
           titleHeadFirst="Founding Members"
           teamArray={teamWallstreetArray}
         />
-        <NotCommercialTemplate
-          isDarkMode={isDarkMode}
-          NFTName={splashData.LicenseName}
-        />
+        <NotCommercialTemplate NFTName={splashData.LicenseName} />
       </div>
     </div>
   );

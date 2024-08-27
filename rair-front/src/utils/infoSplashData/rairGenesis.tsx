@@ -16,12 +16,12 @@ export const useSplashData = (connectUserData) => {
       ? { paddingTop: '3vw' }
       : undefined,
     videoPlayerParams: {
-      contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
+      contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73' as Hex,
       product: '0',
       blockchain: '0x5' as Hex
     },
     marketplaceDemoParams: {
-      contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
+      contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73' as Hex,
       product: '0',
       blockchain: '0x5' as Hex
     },

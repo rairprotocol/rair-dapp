@@ -194,7 +194,7 @@ export type TWorkflowContextType = {
   tokenInstance: ethers.Contract | TContractData | undefined;
   simpleMode: boolean;
   forceRefetch: () => void;
-  refreshNFTMetadata: () => Promise<TNftItemResult | undefined>;
+  refreshNFTMetadata: () => Promise<TTokenData[] | undefined>;
   fetchingData: boolean;
 };
 
@@ -215,7 +215,7 @@ export type TDiamondContractData = Omit<TContract, 'product' | 'offerPool'> &
   };
 
 export type TParamsListLocks = {
-  address: string;
+  address: Hex;
 };
 export interface IMediaUpload {
   setStepNumber?: Function;

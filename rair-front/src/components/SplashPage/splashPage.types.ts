@@ -262,12 +262,7 @@ export interface IShowVideoToLoggedInUsers {
   selectVideo: any /*type of video is unclear yet*/;
 }
 
-export interface INotCommercial {
-  primaryColor: string;
-}
-
 export interface ITokenLeftGreyman {
-  primaryColor: string;
   soldCopies?: string;
   copies?: string;
 }
@@ -331,10 +326,6 @@ export interface ITeammateDesc {
   desc: string[];
   primaryColor?: string;
   arraySplash?: TArraySplashType;
-}
-
-export interface INotCommercialGeneric {
-  primaryColor: string;
 }
 
 export interface ITokenLeft {

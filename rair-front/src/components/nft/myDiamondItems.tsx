@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { faGem } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import { Hex } from 'viem';
 
 import {
   IItemsForContract,
@@ -164,7 +165,7 @@ const ItemsForContract: React.FC<IItemsForContract> = ({
 };
 
 const MyDiamondItems: React.FC<IMyDiamondItems> = (props) => {
-  const [deploymentAddresses, setDeploymentAddresses] = useState<string[]>([]);
+  const [deploymentAddresses, setDeploymentAddresses] = useState<Hex[]>([]);
   const [status, setStatus] = useState<string>('Fetching data...');
   const { diamondMarketplaceInstance } = useContracts();
   const fetchDiamondData = useCallback(async () => {
@@ -175,7 +176,7 @@ const MyDiamondItems: React.FC<IMyDiamondItems> = (props) => {
       (await diamondMarketplaceInstance.getTotalOfferCount()).toString()
     );
     setStatus(`Found ${offerCount} addresses...`);
-    const deployments: string[] = [];
+    const deployments: Hex[] = [];
     for (let i = 0; i < offerCount; i++) {
       setStatus(`Querying address ${i + 1} of ${offerCount}...`);
       const singleOfferData: TSingleOfferData =

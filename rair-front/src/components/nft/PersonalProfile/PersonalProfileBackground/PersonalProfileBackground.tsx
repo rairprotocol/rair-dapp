@@ -12,7 +12,6 @@ const PersonalProfileBackgroundComponent = () => {
   const [backgroundUser, setBackgroundUser] = useState<any | null>();
   const [fileUpload, setFileUpload] = useState<File | null>(null);
   const [loadingBg, setLoadingBg] = useState(false);
-  const { primaryColor } = useAppSelector((state) => state.colors);
 
   const { currentUserAddress } = useAppSelector((store) => store.web3);
 
@@ -91,8 +90,7 @@ const PersonalProfileBackgroundComponent = () => {
       style={{
         backgroundImage:
           backgroundUser && !loadingBg ? `url(${backgroundUser})` : ''
-      }}
-      className={cl[primaryColor]}>
+      }}>
       {loadingBg && (
         <div className={cl.loadingProfile}>
           <div className="loader-wrapper">
@@ -100,7 +98,7 @@ const PersonalProfileBackgroundComponent = () => {
           </div>
         </div>
       )}
-      <div className={cl['blockAddBack' + primaryColor]}>
+      <div>
         <label className={cl.inputFile}>
           <AddIcon className={cl.plus} />
           <input

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
 import { teamImmersiverseArray } from './AboutUsTeam';
@@ -6,14 +6,14 @@ import { teamImmersiverseArray } from './AboutUsTeam';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { DocumentIcon, metaMaskIcon } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { CustomModalStyle } from '../../../types/commonTypes';
+import { CustomModalStyle, SplashPageProps } from '../../../types/commonTypes';
 import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
 import AuthorBlock from '../AuthorBlock/AuthorBlock';
 import { SXSW1, SXSW2, SXSW3 } from '../images/SxSw/sxSw';
 import NotCommercialGeneric from '../NotCommercial/NotCommercialGeneric';
-import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
+import { TSplashPageIsActive } from '../splashPage.types';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 
 import favion_Immersil from './../images/favicons/ImmersiverseATX.ico';
@@ -47,16 +47,13 @@ const customStyles: CustomModalStyle = {
 
 Modal.setAppElement('#root');
 
-const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
-  setIsSplashPage
-}) => {
+const ImmersiVerseSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const [, /*active*/ setActive] = useState<TSplashPageIsActive>({
     policy: false,
     use: false
   });
-  const { primaryColor } = useAppSelector((store) => store.colors);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const { currentUserAddress } = useAppSelector((store) => store.web3);
 
@@ -165,8 +162,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
                       fontWeight: 'bold',
                       paddingTop: '3rem',
                       cursor: 'default'
-                    }}
-                    ref={(_subtitle) => (subtitle = _subtitle)}>
+                    }}>
                     Terms of Service
                   </h2>
                   <div className="modal-content-wrapper">
@@ -301,7 +297,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
           arraySplash={'immersiverse'}
           titleHeadFirst={'About'}
         />
-        <NotCommercialGeneric primaryColor={primaryColor} />
+        <NotCommercialGeneric />
       </div>
     </div>
   );

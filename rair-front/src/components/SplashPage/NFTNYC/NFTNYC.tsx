@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { teamNFTNYCArray } from './AboutUsTeam';
 
+import useConnectUser from '../../../hooks/useConnectUser';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import { useNFTNYC } from '../../../utils/infoSplashData/nftnyc';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import CustomButton from '../../MockUpPage/utils/button/CustomButton';
@@ -14,7 +16,6 @@ import MetaTags from '../../SeoTags/MetaTags';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import { NFTNYC_TITLE, warning0 } from '../images/NFTNYC/nftnyc';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ISplashPageProps } from '../splashPage.types';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
 import UnlockableVideosWrapper from '../SplashPageConfig/VideoBlock/UnlockableVideosWrapper/UnlockableVideosWrapper';
@@ -31,13 +32,11 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './NFTNYC.css';
 
-const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
+const NFTNYCSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const { primaryColor } = useAppSelector((store) => store.colors);
+  const { connectUserData } = useConnectUser();
   const { splashData } = useNFTNYC(connectUserData);
   const reactSwal = useSwal();
 
@@ -173,7 +172,6 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
             openVideoplayer={openVideoplayer}
             setOpenVideoPlayer={setOpenVideoPlayer}
             handlePlayerClick={handlePlayerClick}
-            primaryColor={primaryColor}
           />
         </SplashVideoWrapper>
         {/* <VideoPlayerModule
@@ -191,10 +189,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
           titleHeadFirst={'About'}
           teamArray={teamNFTNYCArray}
         />
-        <NotCommercialTemplate
-          primaryColor={primaryColor}
-          NFTName={splashData.NFTName}
-        />
+        <NotCommercialTemplate NFTName={splashData.NFTName} />
       </div>
     </div>
   );

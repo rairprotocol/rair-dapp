@@ -411,7 +411,6 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
               )}
           </div>
           <TitleCollection
-            selectedData={currentCollection[0]?.metadata}
             title={collectionName}
             someUsersData={someUsersData}
             userName={offerAllData?.owner}

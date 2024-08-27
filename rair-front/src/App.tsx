@@ -357,7 +357,7 @@ function App() {
                 {[
                   {
                     path: '/simdogs-splash',
-                    content: <SimDogsSplashPage />
+                    content: <SimDogsSplashPage {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/markkohler-splash',
@@ -369,19 +369,23 @@ function App() {
                   },
                   {
                     path: '/wallstreet80sclub',
-                    content: <Wallstreet80sClubSplashPage />
+                    content: (
+                      <Wallstreet80sClubSplashPage {...{ setIsSplashPage }} />
+                    )
                   },
                   {
                     path: '/coinagenda2021',
-                    content: <CoinAgenda2021SplashPage />
+                    content: (
+                      <CoinAgenda2021SplashPage {...{ setIsSplashPage }} />
+                    )
                   },
                   {
                     path: '/immersiverse-splash',
-                    content: <ImmersiVerseSplashPage />
+                    content: <ImmersiVerseSplashPage {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/nftnyc-splash',
-                    content: <NFTNYCSplashPage />
+                    content: <NFTNYCSplashPage {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/video-tiles-test',
@@ -389,11 +393,11 @@ function App() {
                   },
                   {
                     path: '/nftla-splash',
-                    content: <NFTLASplashPage />
+                    content: <NFTLASplashPage {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/ukraineglitch',
-                    content: <UkraineSplashPage />
+                    content: <UkraineSplashPage {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/vaporverse-splash',
@@ -401,7 +405,7 @@ function App() {
                   },
                   {
                     path: '/greyman-splash',
-                    content: <GreymanSplashPage />
+                    content: <GreymanSplashPage {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/nutcrackers-splash',
@@ -409,7 +413,7 @@ function App() {
                   },
                   {
                     path: '/nipsey-splash',
-                    content: <SplashPage />
+                    content: <SplashPage {...{ setIsSplashPage }} />
                   },
                   {
                     path: '/slidelock',

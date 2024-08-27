@@ -1,4 +1,4 @@
-import { FieldErrors } from 'react-hook-form';
+import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
@@ -7,7 +7,7 @@ interface IMenuMobileWrapper {
   primaryColor?: string;
   editMode?: boolean;
   click?: boolean;
-  errors?: FieldErrors | undefined;
+  errors?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   isSplashPage?: boolean;
   hotdrops?: string;
   realChainId?: string | undefined;

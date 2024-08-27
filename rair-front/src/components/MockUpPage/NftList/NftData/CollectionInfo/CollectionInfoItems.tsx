@@ -24,8 +24,8 @@ export const CollectionInfoBody = styled.div.withConfig({
   width: 100%;
 
   .block-item-collection:nth-child(odd) {
-    background: ${(props) =>
-      props.primaryColor === 'rhyno' ? 'rgb(248, 248, 248)' : '#2D2B2C'};
+    background: ${({ isDarkMode }) =>
+      !isDarkMode ? 'rgb(248, 248, 248)' : '#2D2B2C'};
   }
 
   @media screen and (max-width: 1024px) {

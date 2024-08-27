@@ -156,7 +156,7 @@ const CollectionInfo: FC<ICollectionInfo> = ({
   setPurchaseStatus,
   closeModal
 }) => {
-  const { primaryColor } = useAppSelector((store) => store.colors);
+  const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
   const params = useParams<TParamsNftItemForCollectionView>();
   const [tokenData, setTokenData] = useState<TTokenData[] | null>(null);
   const { width } = useWindowDimensions();
@@ -211,7 +211,7 @@ const CollectionInfo: FC<ICollectionInfo> = ({
           </div>
         )}
         <CollectionInfoBody
-          primaryColor={primaryColor}
+          isDarkMode={isDarkMode}
           className={`collection-info-body ${mintToken ? 'mint' : ''}`}>
           {closeModal && (
             <div
@@ -219,7 +219,7 @@ const CollectionInfo: FC<ICollectionInfo> = ({
                 position: 'fixed'
               }}>
               <ModalContentCloseBtn
-                primaryColor={primaryColor}
+                isDarkMode={isDarkMode}
                 onClick={closeModal}>
                 <FontAwesomeIcon
                   icon={faTimes}

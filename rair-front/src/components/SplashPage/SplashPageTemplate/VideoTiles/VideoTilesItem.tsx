@@ -5,13 +5,14 @@ import { Provider, useStore } from 'react-redux';
 import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import { metaMaskIcon } from '../../../../images';
+import { CustomModalStyle } from '../../../../types/commonTypes';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
 
 import '../VideoPlayer/VideoPlayer.css';
 
-const customStylesForVideo = {
+const customStylesForVideo: CustomModalStyle = {
   overlay: {
     zIndex: '5'
   },

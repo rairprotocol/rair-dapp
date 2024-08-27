@@ -135,9 +135,9 @@ const MyfavoriteItem: React.FC<IMyfavoriteItem> = ({
                               profileData.nickName.length - 4
                             )
                           : profileData.nickName
-                        : profileData.publicAddress.slice(0, 5) +
+                        : profileData?.publicAddress?.slice(0, 5) +
                           '...' +
-                          profileData.publicAddress.slice(
+                          profileData?.publicAddress?.slice(
                             profileData.publicAddress.length - 4
                           )}
                     </span>

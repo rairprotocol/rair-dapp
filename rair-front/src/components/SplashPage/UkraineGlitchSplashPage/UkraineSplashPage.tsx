@@ -5,6 +5,7 @@ import { teamUkraineArray } from './AboutUsTeam';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 import { splashData } from '../../../utils/infoSplashData/ukraineSplashPage';
 /* importing images*/
@@ -18,7 +19,6 @@ import {
   videoBackground
 } from '../images/UkraineGlitch/urkaineGlitch';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ISplashPageProps } from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
@@ -43,15 +43,11 @@ import './UkraineSplash.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const UkraineSplashPage: FC<ISplashPageProps> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
+const UkraineSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [soldCopies, setSoldCopies] = useState<number>(0);
-  const { primaryColor } = useAppSelector((store) => store.colors);
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurshaseList] = useState(true);
@@ -112,7 +108,7 @@ const UkraineSplashPage: FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-        <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
+        <AuthorCard {...{ splashData, toggleCheckList }} />
         {/* <PurchaseChecklist
           toggleCheckList={toggleCheckList}
           openCheckList={openCheckList}
@@ -123,7 +119,6 @@ const UkraineSplashPage: FC<ISplashPageProps> = ({
         <TokenLeftTemplate
           counterData={splashData.counterData}
           soldCopies={soldCopies}
-          primaryColor={primaryColor}
           nftTitle="NFTs Left"
         />
         <NFTImages
@@ -154,10 +149,7 @@ const UkraineSplashPage: FC<ISplashPageProps> = ({
           colorHeadSecond={'#035BBC'}
           teamArray={teamUkraineArray}
         />
-        <NotCommercialTemplate
-          primaryColor={primaryColor}
-          NFTName={splashData.NFTName}
-        />
+        <NotCommercialTemplate NFTName={splashData.NFTName} />
       </div>
     </div>
   );

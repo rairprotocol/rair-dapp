@@ -28,10 +28,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   title,
   userName,
   someUsersData,
-  selectedData,
   offerDataCol
-  // collectionAttributes,
-  // toggleMetadataFilter
 }) => {
   const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
   const { primaryColor, primaryButtonColor } = useAppSelector(
@@ -57,12 +54,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
     setSelectedValue(value);
   };
 
-  const { getBlockchainData, refreshBlockchainData } = useServerSettings();
-
-  useEffect(() => {
-    refreshBlockchainData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { getBlockchainData } = useServerSettings();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -285,15 +277,12 @@ const TitleCollection: React.FC<ITitleCollection> = ({
             <CustomShareButton
               title="Share"
               handleClick={handleClickOpen}
-              primaryColor={primaryColor}
               isCollectionPathExist={isCollectionPathExist}
             />
             <SharePopUp
-              primaryColor={primaryColor}
               selectedValue={selectedValue}
               open={open}
               onClose={handleClose}
-              selectedData={selectedData}
             />
           </div>
         </div>

@@ -127,8 +127,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
       return;
     }
     const aux = [...uniqueURIArray];
-    let nextToken: TNextToken =
-      contractData?.nfts.tokens[uniqueURIArray.length];
+    let nextToken: TNextToken = contractData?.nfts[uniqueURIArray.length];
     if (!nextToken) {
       nextToken = {
         uniqueIndexInContract:

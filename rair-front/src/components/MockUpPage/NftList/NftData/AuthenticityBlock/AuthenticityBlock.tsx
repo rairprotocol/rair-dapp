@@ -22,7 +22,9 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
   collectionToken,
   selectedData
 }) => {
-  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
+  const { primaryColor, textColor, isDarkMode } = useAppSelector(
+    (store) => store.colors
+  );
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
@@ -69,6 +71,7 @@ const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
       {title && <div className="authenticity-title">Authenticity</div>}
       <TableAuthenticity
         primaryColor={primaryColor}
+        isDarkMode={isDarkMode}
         className="table-authenticity">
         <div className="table-authenticity-title">Action</div>
         {tokenData && (

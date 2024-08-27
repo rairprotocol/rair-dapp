@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc --target ES2020 && vite build",
     "preview": "vite preview",
     "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",

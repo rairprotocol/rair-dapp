@@ -6,6 +6,7 @@ import VideoPlayerBySignature from './VideoPlayerBySignature ';
 
 import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
+import { CustomModalStyle } from '../../../../types/commonTypes';
 import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import { playImagesColored } from '../../images/greyMan/grayMan';
@@ -13,7 +14,7 @@ import { IShowVideoToLoggedInUsers } from '../../splashPage.types';
 
 import './VideoPlayer.css';
 
-const customStylesForVideo = {
+const customStylesForVideo: CustomModalStyle = {
   overlay: {
     zIndex: '5'
   },

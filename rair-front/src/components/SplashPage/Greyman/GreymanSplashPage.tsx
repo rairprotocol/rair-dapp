@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 //Google Analytics
 import ReactGA from 'react-ga';
 import Modal from 'react-modal';
@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { teamGreymanArray } from './AboutUsTeam';
 
 import { diamondFactoryAbi } from '../../../contracts/index';
+import useConnectUser from '../../../hooks/useConnectUser';
 import useContracts from '../../../hooks/useContracts';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
@@ -16,7 +17,7 @@ import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { metaMaskIcon } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
 import { setRequestedChain } from '../../../redux/web3Slice';
-import { CustomModalStyle } from '../../../types/commonTypes';
+import { CustomModalStyle, SplashPageProps } from '../../../types/commonTypes';
 import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
@@ -31,7 +32,7 @@ import {
 import NotCommercial from '../NotCommercial/NotCommercial';
 import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
-import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
+import { TSplashPageIsActive } from '../splashPage.types';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import { Timeline } from '../Timeline/Timeline';
@@ -95,10 +96,7 @@ const customStylesForVideo: CustomModalStyle = {
 };
 Modal.setAppElement('#root');
 
-const GreymanSplashPage: React.FC<ISplashPageProps> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
+const GreymanSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const dispatch = useAppDispatch();
   const seo = useAppSelector((store) => store.seo);
   const [timerLeft, setTimerLeft] = useState<number>();
@@ -114,6 +112,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
     policy: false,
     use: false
   });
+  const { connectUserData } = useConnectUser();
   const GraymanSplashPageTESTNET = '0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6';
   const GreymanChainId = '0x89';
   const offerIndexInMarketplace = '2';
@@ -614,11 +613,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
           </div>
         </AuthorBlock>
         {timerLeft === 0 && (
-          <TokenLeftGreyman
-            primaryColor={primaryColor}
-            soldCopies={soldCopies}
-            copies={copies}
-          />
+          <TokenLeftGreyman soldCopies={soldCopies} copies={copies} />
         )}
         <div className="about-metadata-wrapper">
           {timerLeft === 0 && (
@@ -900,7 +895,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
               classNameHeadSpan={'text-gradient'}
               teamArray={teamGreymanArray}
             />
-            <NotCommercial primaryColor={primaryColor} />
+            <NotCommercial />
           </>
         )}
       </div>

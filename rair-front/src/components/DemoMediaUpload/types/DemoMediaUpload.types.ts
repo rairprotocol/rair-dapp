@@ -30,7 +30,7 @@ export interface IUploadedListBox {
   fileData: any;
   index: number;
   setMediaList: (arg: UploadMediaFile[]) => void;
-  mediaList: MediaFile[];
+  mediaList: UploadMediaFile[];
   uploadSuccess: boolean | null;
   getMediaList: () => void;
   setUploadSuccess: (arg: boolean | null) => void;
@@ -40,8 +40,8 @@ export interface IUploadedListBox {
 }
 export interface IAnalyticsPopUp {
   index: number;
-  setMediaList: (arg: MediaFile[]) => void;
-  mediaList: MediaFile[];
+  setMediaList: (arg: UploadMediaFile[]) => void;
+  mediaList: UploadMediaFile[];
   setUploadSuccess: (arg: boolean | null) => void;
   titleOfContract?: any | undefined;
   selectCommonInfo?: any;

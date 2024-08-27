@@ -270,7 +270,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
       </div>
       <div>
         <TitleCollection
-          selectedData={selectedData}
           title={selectedData?.name}
           someUsersData={someUsersData}
           userName={ownerInfo?.owner}

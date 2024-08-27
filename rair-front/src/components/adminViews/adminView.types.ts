@@ -41,7 +41,7 @@ export type ContractType = {
   _id: string;
   title: string;
   blockchain: Hex;
-  contractAddress: string;
+  contractAddress: Hex;
   external?: boolean;
 };
 
