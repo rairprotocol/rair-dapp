@@ -376,7 +376,7 @@ module.exports = {
           blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
         },
       });
-      if (foundBlockchain.length === 0 && blockchain.length >= 1) {
+      if (foundBlockchain.length === 0 && blockchainArr.length >= 1) {
         return next(new AppError('Invalid blockchain.', 404));
       }
 
