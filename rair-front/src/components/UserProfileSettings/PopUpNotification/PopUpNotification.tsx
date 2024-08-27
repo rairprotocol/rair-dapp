@@ -27,7 +27,7 @@ const PopUpNotification = ({
     const { primaryColor, primaryButtonColor, textColor } = useAppSelector(
       (store) => store.colors
     );
-    const { email } = useAppSelector((store) => store.user);
+    const { email, isLoggedIn } = useAppSelector((store) => store.user);
 
     const changePageForVideo = (currentPage: number) => {
       setCurrentPageNotification(currentPage);
@@ -37,13 +37,13 @@ const PopUpNotification = ({
     };
 
     const getNotificationsCountPagitation = useCallback(async () => {
-      if (currentUserAddress) {
+      if (currentUserAddress && isLoggedIn) {
         const result = await rFetch(`/api/notifications`);
         if (result.success && result.totalCount > 0) {
           setTotalPageForPagination(result.totalCount);
         }
       }
-    }, [currentUserAddress]);
+    }, [currentUserAddress, isLoggedIn]);
 
     const deleteAllNotificaiton = useCallback(async () => {
       if (currentUserAddress) {

@@ -1,6 +1,8 @@
+import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import axios from 'axios';
-import { BrowserProvider, JsonRpcProvider, Provider } from 'ethers';
+import { BrowserProvider, Provider } from 'ethers';
 import Swal from 'sweetalert2';
+import { Hex } from 'viem';
 
 import {
   TAuthGetChallengeResponse,
@@ -8,157 +10,110 @@ import {
 } from '../axios.responseTypes';
 
 const signIn = async (provider: Provider) => {
-  let currentUser = await (provider as JsonRpcProvider).getSigner(0);
+  //let currentUser = await (provider as JsonRpcProvider).getSigner(0);
   if (!provider && window.ethereum) {
     provider = new BrowserProvider(window.ethereum);
   }
-  if (window.ethereum) {
-    const accounts = await window.ethereum.request({
-      method: 'eth_requestAccounts'
-    });
-    currentUser = accounts && accounts[0];
-  }
-  if (!currentUser) {
-    console.error('No address');
-    return;
-  }
-  const responseData = await axios.get<TUserResponse>(
-    `/api/users/${currentUser}`
-  );
+  const responseData = await axios.get<TUserResponse>(`/api/users/me`);
 
   const { success } = responseData.data;
+  return false;
+  //const loginResponse = await signWeb3Message(currentUser.address);
+  //return loginResponse?.success;
+};
+
+const getChallenge = async (userAddress: Hex, ownerAddress?: Hex) => {
+  const responseData = await axios.post<TAuthGetChallengeResponse>(
+    `/api/auth/get_challenge/`,
+    {
+      userAddress,
+      intent: 'login',
+      ownerAddress: ownerAddress || userAddress
+    }
+  );
+  const { response } = responseData.data;
+  return response;
+};
+
+const respondChallenge = async (challenge, signedChallenge) => {
+  const loginResponse = await rFetch('/api/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({
+      MetaMessage: JSON.parse(challenge).message.challenge,
+      MetaSignature: signedChallenge
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  const { success, user } = loginResponse;
+
   if (!success) {
+    Swal.fire('Error', `Login failed`, 'error');
     return;
   }
-  const loginResponse = await signWeb3Message(currentUser.address);
-  return loginResponse?.success;
+  return { success, user };
 };
 
-const signWeb3Message = async (
-  userAddress?: string,
-  method: 'programmatic' | 'metamask' | 'web3auth' = 'metamask',
-  signTypedData?: any,
-  ownerAddress?: string
-) => {
-  try {
-    const responseData = await axios.post<TAuthGetChallengeResponse>(
-      `/api/auth/get_challenge/`,
-      {
-        userAddress,
-        intent: 'login',
-        ownerAddress
-      }
-    );
-    const { response } = responseData.data;
-
-    // Prepare signed message response
-    let ethResponse;
-
-    switch (method) {
-      case 'programmatic':
-        if (signTypedData) {
-          const parsedResponse = JSON.parse(response);
-          ethResponse = await signTypedData(
-            parsedResponse.domain,
-            parsedResponse.types,
-            parsedResponse.message
-          );
-        }
-        break;
-      case 'metamask':
-        if (window.ethereum) {
-          const ethRequest = {
-            method: 'eth_signTypedData_v4',
-            params: [userAddress, response],
-            from: userAddress
-          };
-          ethResponse = await window?.ethereum?.request(ethRequest);
-        }
-        break;
-      case 'web3auth':
-        if (signTypedData) {
-          const parsedResponse = JSON.parse(response);
-          ethResponse = await signTypedData(parsedResponse);
-        }
-        // eslint-disable-next-line no-case-declarations
-        const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
-          method: 'POST',
-          body: JSON.stringify({
-            MetaMessage: JSON.parse(response).message.challenge,
-            MetaSignature: ethResponse,
-            userAddress
-          }),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        // eslint-disable-next-line no-case-declarations
-        const { success, user } = loginResponse;
-        if (!success) {
-          Swal.fire('Error', `Web3Login failed`, 'error');
-          return;
-        }
-        return { success, user };
-      default:
-        await Swal.fire('Error', "Can't sign messages", 'error');
-        return;
+const signWeb3MessageMetamask = async (userAddress: Hex) => {
+  const challenge = await getChallenge(userAddress);
+  if (window.ethereum) {
+    const ethRequest = {
+      method: 'eth_signTypedData_v4',
+      params: [userAddress, challenge],
+      from: userAddress
+    };
+    const signedChallenge = await window?.ethereum?.request(ethRequest);
+    if (signedChallenge) {
+      return await respondChallenge(challenge, signedChallenge);
     }
-
-    if (ethResponse) {
-      const loginResponse = await rFetch('/api/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({
-          MetaMessage: JSON.parse(response).message.challenge,
-          MetaSignature: ethResponse
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const { success, user } = loginResponse;
-
-      if (!success) {
-        Swal.fire('Error', `Login failed`, 'error');
-        return;
-      }
-      return { success, user };
-    }
-  } catch (e) {
-    console.error(e);
-    return { success: false };
   }
 };
 
-// Custom hook for taking jwt token from redux
-// const useRfetch = () => {
-//  const { token } = useSelector(store => store.accessStore);
-//  return async (route, options, retryOptions = undefined) => {
-//      const request = await fetch(route, {
-//          headers: {
-//              ...options?.headers
-//          },
-//          ...options
-//      });
-//      try {
-//          let parsing = await request.json()
-//          if (!parsing.success) {
-//              if (['jwt malformed', 'jwt expired'].includes(parsing.message) && (window.ethereum || retryOptions?.provider)) {
-//                  localStorage.removeItem('token');
-//                  let retry = await signIn(retryOptions?.provider);
-//                  if (retry) {
-//                      return rFetch(route, options);
-//                  }
-//              }
-//              Swal.fire('Error', parsing?.message, 'error');
-//          }
-//          return parsing;
-//      } catch (err) {
-//          console.error(request, err);
-//      }
-//      return request;
-//  }
-// }
+const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
+  const web3AuthSigner = new Web3AuthSigner({
+    clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+    chainConfig: {
+      chainNamespace: 'eip155'
+    }
+  });
+
+  await web3AuthSigner.authenticate({
+    init: async () => {
+      await web3AuthSigner.inner.initModal();
+    },
+    connect: async () => {
+      await web3AuthSigner.inner.connect();
+    }
+  });
+
+  const challenge = await getChallenge(
+    userAddress,
+    await web3AuthSigner.getAddress()
+  );
+
+  const parsedResponse = JSON.parse(challenge);
+  const signedChallenge = await web3AuthSigner.signTypedData(parsedResponse);
+  const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
+    method: 'POST',
+    body: JSON.stringify({
+      MetaMessage: parsedResponse.message.challenge,
+      MetaSignature: signedChallenge,
+      userAddress
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  // eslint-disable-next-line no-case-declarations
+  const { success, user } = loginResponse;
+  if (!success) {
+    Swal.fire('Error', `Web3Login failed`, 'error');
+    return;
+  }
+  return { success, user };
+};
 
 const rFetch = async (
   route: string,
@@ -201,4 +156,4 @@ const rFetch = async (
   return request;
 };
 
-export { /* useRfetch */ rFetch, signIn, signWeb3Message };
+export { rFetch, signIn, signWeb3MessageMetamask, signWeb3MessageWeb3Auth };

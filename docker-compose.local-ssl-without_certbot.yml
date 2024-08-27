@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   rair-node:
     container_name: 'rair-node'

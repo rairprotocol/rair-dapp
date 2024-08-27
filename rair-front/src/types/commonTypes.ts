@@ -1,4 +1,6 @@
-import { MediaFile, Offer } from './databaseTypes';
+import { Blockchain, MediaFile, Offer } from './databaseTypes';
+
+import { TChainItemData } from '../utils/utils.types';
 
 export interface ApiCallResponse {
   success: boolean;
@@ -42,3 +44,5 @@ export interface CatalogVideoItem extends MediaFile {
   isUnlocked: boolean;
   unlockData: { offers: Array<Offer> };
 }
+
+export interface CombinedBlockchainData extends Blockchain, TChainItemData {}

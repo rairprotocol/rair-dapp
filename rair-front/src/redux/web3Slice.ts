@@ -1,5 +1,8 @@
+import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
 import { SmartContractAccount } from '@alchemy/aa-core';
 import { AccountSigner } from '@alchemy/aa-ethers';
+import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
+import { Maybe } from '@metamask/providers/dist/utils';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { BrowserProvider } from 'ethers';
@@ -7,6 +10,7 @@ import { Hex } from 'viem';
 
 import { dataStatuses } from './commonTypes';
 
+import { CombinedBlockchainData } from '../types/commonTypes';
 import { metamaskEventListeners } from '../utils/metamaskUtils';
 
 interface ChainData {
@@ -33,6 +37,50 @@ const initialState: ContractsState = {
   exchangeRates: undefined
 };
 
+export const connectChainWeb3Auth = createAsyncThunk(
+  'web3/connectChainWeb3Auth',
+  async (chainData: CombinedBlockchainData) => {
+    const web3AuthSigner = new Web3AuthSigner({
+      clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+      chainConfig: {
+        chainNamespace: 'eip155',
+        chainId: chainData.chainId,
+        rpcTarget: chainData.addChainData.rpcUrls[0],
+        displayName: chainData.name,
+        blockExplorer: chainData.addChainData.blockExplorerUrls[0],
+        ticker: chainData.symbol,
+        tickerName: chainData.name
+      },
+      web3AuthNetwork: chainData.testnet
+        ? 'sapphire_devnet'
+        : 'sapphire_mainnet'
+    });
+    await web3AuthSigner.authenticate({
+      init: async () => {
+        await web3AuthSigner.inner.initModal();
+      },
+      connect: async () => {
+        await web3AuthSigner.inner.connect();
+      }
+    });
+    const modularAccount = await createModularAccountAlchemyClient({
+      apiKey: chainData.alchemyAppKey,
+      chain: chainData.viem!,
+      signer: web3AuthSigner,
+      gasManagerConfig: chainData.alchemyGasPolicy
+        ? {
+            policyId: chainData.alchemyGasPolicy
+          }
+        : undefined
+    });
+    return {
+      connectedChain: chainData.hash,
+      currentUserAddress: modularAccount.account.address,
+      userDetails: await web3AuthSigner.getAuthDetails()
+    };
+  }
+);
+
 export const connectChainMetamask = createAsyncThunk(
   'web3/connectChainMetamask',
   async () => {
@@ -45,17 +93,17 @@ export const connectChainMetamask = createAsyncThunk(
     }
     const provider = new BrowserProvider(window.ethereum);
     metamaskEventListeners(provider);
-    const accounts = await window.ethereum.request<Array<Hex>>({
+    const accounts: Maybe<Hex[]> = await window.ethereum.request({
       method: 'eth_requestAccounts'
     });
-    const connectedChain =
-      (await window.ethereum.request<Hex>({
+    const connectedChain: Maybe<Hex> =
+      (await window.ethereum.request({
         method: 'eth_chainId'
       })) || undefined;
     const currentUserAddress = accounts?.at(0);
     return {
       currentUserAddress,
-      connectedChain
+      connectedChain: connectedChain as Hex
     };
   }
 );
@@ -86,11 +134,13 @@ export const web3Slice = createSlice({
         state.web3Status = dataStatuses.Loading;
       })
       .addCase(connectChainMetamask.fulfilled, (state, action) => {
-        return {
-          ...state,
-          web3Status: dataStatuses.Complete,
-          ...action.payload
-        };
+        state.web3Status = dataStatuses.Complete;
+        if (action.payload.connectedChain) {
+          state.connectedChain = action.payload.connectedChain;
+        }
+        if (action.payload.currentUserAddress) {
+          state.currentUserAddress = action.payload.currentUserAddress;
+        }
       })
       .addCase(connectChainMetamask.rejected, (state) => {
         state.web3Status = dataStatuses.Failed;

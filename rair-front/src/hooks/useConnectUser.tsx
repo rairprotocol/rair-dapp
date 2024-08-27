@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Action } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { Hex } from 'viem';
 
 import { useAppDispatch, useAppSelector } from './useReduxHooks';
 import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
-import useWeb3Tx from './useWeb3Tx';
 
 import { TUserResponse } from '../axios.responseTypes';
 import { OnboardingButton } from '../components/common/OnboardingButton/OnboardingButton';
@@ -14,13 +14,19 @@ import { dataStatuses } from '../redux/commonTypes';
 import { loadCurrentUser } from '../redux/userSlice';
 import {
   connectChainMetamask,
+  connectChainWeb3Auth,
   setConnectedChain,
   setExchangeRates,
   setProgrammaticProvider
 } from '../redux/web3Slice';
+import { CombinedBlockchainData } from '../types/commonTypes';
 import { User } from '../types/databaseTypes';
 import chainData from '../utils/blockchainData';
-import { rFetch, signWeb3Message } from '../utils/rFetch';
+import {
+  rFetch,
+  signWeb3MessageMetamask,
+  signWeb3MessageWeb3Auth
+} from '../utils/rFetch';
 import sockets from '../utils/sockets';
 
 const getCoingeckoRates = async () => {
@@ -59,7 +65,6 @@ const useConnectUser = () => {
 
   const { currentUserAddress, programmaticProvider, connectedChain } =
     useAppSelector((store) => store.web3);
-  const { connectWeb3AuthProgrammaticProvider } = useWeb3Tx();
 
   const { textColor, primaryButtonColor, primaryColor } = useAppSelector(
     (store) => store.colors
@@ -86,50 +91,47 @@ const useConnectUser = () => {
   }, [currentUserAddress]);
 
   const loginWithWeb3Auth = useCallback(async () => {
-    if (!connectedChain) {
-      return;
-    }
-    const chainInformation = getBlockchainData(connectedChain);
+    const defaultChain: Hex = import.meta.env.VITE_DEFAULT_BLOCKCHAIN;
+    const chainInformation = getBlockchainData(defaultChain);
     if (
+      !chainInformation?.hash ||
       !chainInformation?.alchemy ||
       !chainInformation?.viem ||
       !chainInformation?.alchemyAppKey
     ) {
-      return;
+      return {};
     }
 
-    const provider =
-      await connectWeb3AuthProgrammaticProvider(chainInformation);
+    const { connectedChain, currentUserAddress, userDetails } = await dispatch(
+      connectChainWeb3Auth(chainInformation as CombinedBlockchainData)
+    ).unwrap();
 
     return {
-      userAddress: provider?.account.address,
-      ownerAddress: provider?.account.publicKey,
+      userAddress: currentUserAddress,
       blockchain: connectedChain,
-      alchemyProvider: provider
+      userDetails
     };
-  }, [connectedChain, connectWeb3AuthProgrammaticProvider, getBlockchainData]);
+  }, [getBlockchainData, dispatch]);
 
   const loginWithMetamask = useCallback(async () => {
     const { connectedChain, currentUserAddress } = await dispatch(
       connectChainMetamask()
     ).unwrap();
     if (!currentUserAddress) {
-      return { address: undefined, blockchain: undefined };
+      return {};
     }
     return {
       userAddress: currentUserAddress,
-      signerAddress: currentUserAddress,
       blockchain: connectedChain
     };
   }, [dispatch]);
 
   const loginWithProgrammaticProvider = useCallback(async () => {
     if (!programmaticProvider) {
-      return { address: undefined, blockchain: undefined };
+      return {};
     }
     return {
-      userAddress: await programmaticProvider.getAddress(),
-      signerAddress: await programmaticProvider.getAddress(),
+      userAddress: (await programmaticProvider.getAddress()) as Hex,
       blockchain: connectedChain
     };
   }, [connectedChain, programmaticProvider]);
@@ -201,7 +203,11 @@ const useConnectUser = () => {
   );
 
   const connectUserData = useCallback(async () => {
-    let loginData: any;
+    let loginData: {
+      userAddress?: Hex;
+      blockchain?: Hex;
+      userDetails?: any;
+    };
     const dispatchStack: Array<Action> = [];
     const loginMethod: string = await selectMethod();
     reactSwal.close();
@@ -232,13 +238,12 @@ const useConnectUser = () => {
       console.error('Login error', err);
       return;
     }
-    if (!loginData?.userAddress || loginData?.userAddress === '') {
+    if (!loginData?.userAddress) {
       reactSwal.fire('Error', 'No user address found', 'error');
       return;
     }
 
     dispatchStack.push(setExchangeRates(await getCoingeckoRates()));
-
     dispatchStack.push(setConnectedChain(loginData.blockchain));
 
     let firstTimeLogin = false;
@@ -272,26 +277,22 @@ const useConnectUser = () => {
         !currentUserAddress
       ) {
         let loginResponse;
+        console.info(1, loginMethod);
         switch (loginMethod) {
           case 'programmatic':
-            loginResponse = await signWeb3Message(
-              loginData.userAddress,
-              'programmatic',
-              programmaticProvider?._signTypedData
-            );
+            console.error('Programmatic support not available');
             break;
           case 'metamask':
-            loginResponse = await signWeb3Message(loginData.userAddress);
+            loginResponse = await signWeb3MessageMetamask(
+              loginData.userAddress
+            );
             break;
           case 'web3auth':
-            loginResponse = await signWeb3Message(
-              loginData.userAddress,
-              'web3auth',
-              loginData.alchemyProvider.signTypedData,
-              loginData.ownerAddress
+            loginResponse = await signWeb3MessageWeb3Auth(
+              loginData.userAddress
             );
             if (firstTimeLogin) {
-              const userData = await loginData.alchemyProvider.userDetails();
+              const userData = await loginData.userDetails;
               const availableData: Partial<User> = {};
               if (userData.email) {
                 availableData.email = userData.email;
@@ -329,7 +330,6 @@ const useConnectUser = () => {
     reactSwal,
     adminRights,
     currentUserAddress,
-    programmaticProvider,
     dispatch
   ]);
 

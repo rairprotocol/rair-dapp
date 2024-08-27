@@ -20,7 +20,6 @@ export type TChainItemData = {
   image: string;
   name: string;
   chainId: Hex;
-  symbol: string;
   addChainData: TAddChainData;
   disabled?: boolean;
   viem?: chains.Chain;
