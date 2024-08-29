@@ -197,33 +197,42 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     getInfoFromUser();
   }, [getInfoFromUser]);
 
-  const handleClickToken = async (tokenId: string | undefined) => {
-    if (embeddedParams && tokenId) {
-      embeddedParams.setTokenId(tokenId);
-    } else {
-      navigate(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
-    }
+  const handleClickToken = useCallback(
+    async (tokenId: string | undefined) => {
+      if (embeddedParams && tokenId) {
+        embeddedParams.setTokenId(tokenId);
+      } else {
+        navigate(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
+      }
 
-    if (
-      currentCollection &&
-      tokenId &&
-      Object.keys(currentCollection).length >= Number(tokenId)
-    ) {
-      setSelectedData(
+      if (
         currentCollection &&
-          currentCollection[tokenId] &&
-          currentCollection[tokenId].metadata
-      );
-    }
+        tokenId &&
+        Object.keys(currentCollection).length >= Number(tokenId)
+      ) {
+        setSelectedData(
+          currentCollection &&
+            currentCollection[tokenId] &&
+            currentCollection[tokenId].metadata
+        );
+      }
 
-    setSelectedToken(tokenId);
-  };
+      setSelectedToken(tokenId);
+    },
+    [blockchain, contract, currentCollection, embeddedParams, navigate, product]
+  );
 
   useEffect(() => {
     if (blockchain) {
       dispatch(setRequestedChain(blockchain));
     }
   }, [blockchain, dispatch]);
+
+  useEffect(() => {
+    if (tokenId) {
+      setSelectedToken(tokenId);
+    }
+  }, [tokenId]);
 
   useEffect(() => {
     let tokenStart = BigInt(0);

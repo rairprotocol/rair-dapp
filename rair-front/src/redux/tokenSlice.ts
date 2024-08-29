@@ -5,7 +5,11 @@ import { Hex } from 'viem';
 
 import { dataStatuses } from './commonTypes';
 
-import { ApiCallResponse, PaginatedApiCall } from '../types/commonTypes';
+import {
+  SingleContractResponse,
+  SingleTokenResponse
+} from '../types/apiResponseTypes';
+import { PaginatedApiCall } from '../types/commonTypes';
 import {
   Contract,
   MintedToken,
@@ -17,10 +21,6 @@ import {
 
 interface ProductAndOffers extends Product {
   offers: Array<Offer>;
-}
-
-interface SingleContractResponse extends ApiCallResponse {
-  contract?: Contract;
 }
 
 export interface CatalogItem extends Contract {
@@ -152,6 +152,19 @@ export const loadCollectionMetadata = createAsyncThunk(
   }
 );
 
+export const reloadTokenData = createAsyncThunk(
+  'tokens/reloadTokenData',
+  async ({ tokenId }: { tokenId?: string }) => {
+    if (!tokenId) {
+      return;
+    }
+    const response = await axios.get<SingleTokenResponse>(
+      `/api/tokens/id/${tokenId}`
+    );
+    return response.data.tokenData;
+  }
+);
+
 export const loadCollection = createAsyncThunk(
   'tokens/loadCollection',
   async (
@@ -254,7 +267,21 @@ export const tokenSlice = createSlice({
       )
       .addCase(loadCollectionMetadata.rejected, (state) => {
         state.currentCollectionMetadataStatus = dataStatuses.Failed;
-      });
+      })
+      .addCase(
+        reloadTokenData.fulfilled,
+        (state, action: PayloadAction<CollectionTokens | undefined>) => {
+          if (
+            action.payload &&
+            state.currentCollection[action.payload.uniqueIndexInContract] &&
+            state.currentCollection[action.payload.uniqueIndexInContract]
+              ._id === action.payload._id
+          ) {
+            state.currentCollection[action.payload.uniqueIndexInContract] =
+              action.payload;
+          }
+        }
+      );
   }
 });
 

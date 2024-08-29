@@ -20,7 +20,6 @@ import { ExpandImageIcon } from '../../../../images';
 import { tokenNumbersResponse } from '../../../../types/apiResponseTypes';
 import { CatalogVideoItem } from '../../../../types/commonTypes';
 import { checkIPFSanimation } from '../../../../utils/checkIPFSanimation';
-import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
 import PlayCircle from '../../assets/PlayCircle.svg?react';
@@ -60,7 +59,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const hotdropsVar = import.meta.env.VITE_TESTNET === 'true';
   const [serialNumberData, setSerialNumberData] = useState<any>([]);
   const [playing, setPlaying] = useState<boolean>(false);
-  const [, setTokenDataForResale] = useState<any>(undefined);
   const [, /*offersIndexesData*/ setOffersIndexesData] =
     useState<TOffersIndexesData[]>();
   const handlePlaying = () => {
@@ -70,24 +68,6 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
 
   const dispatch = useAppDispatch();
-
-  const getTokenData = useCallback(async () => {
-    if (currentCollection && tokenId) {
-      const response = await rFetch(
-        `/api/tokens/id/${currentCollection[tokenId]._id}`,
-        undefined,
-        undefined,
-        undefined
-      );
-      if (response.success) {
-        setTokenDataForResale(response.tokenData);
-      }
-    }
-  }, [currentCollection, tokenId]);
-
-  useEffect(() => {
-    getTokenData();
-  }, [getTokenData]);
 
   useEffect(() => {
     if (productsFromOffer) {

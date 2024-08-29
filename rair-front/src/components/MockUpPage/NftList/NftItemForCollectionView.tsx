@@ -168,7 +168,7 @@ const NftItemForCollectionViewComponent: React.FC<
     }
   }, [item, contract]);
 
-  const redirectionUserPage = useCallback(() => {
+  const redirectionFromUserPage = useCallback(() => {
     const tokenContract =
       contract ||
       item?.contract?.contractAddress ||
@@ -198,64 +198,55 @@ const NftItemForCollectionViewComponent: React.FC<
   }, [item, resaleFlag]);
 
   const getParticularOffer = useCallback(async () => {
-    if (resaleFlag) {
-      const responseToken = await rFetch(
-        `/api/tokens/id/${item._id}`,
-        undefined,
-        undefined,
-        undefined
-      );
+    if (resaleFlag && tokenInfo) {
+      try {
+        const response = await axios.get<IOffersResponseType>(
+          `/api/nft/network/${tokenInfo.contract.blockchain}/${tokenInfo.contract.contractAddress}/${tokenInfo.product.collectionIndexInContract}/offers`
+        );
+        const resaleResponse = await rFetch(
+          `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
+        );
 
-      if (responseToken.success) {
-        try {
-          const response = await axios.get<IOffersResponseType>(
-            `/api/nft/network/${responseToken.tokenData.contract.blockchain}/${responseToken.tokenData.contract.contractAddress}/${responseToken.tokenData.product.collectionIndexInContract}/offers`
-          );
-          const resaleResponse = await rFetch(
-            `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
-          );
-
-          if (response.data.success) {
-            const offerInformation = response.data.product.offers?.find(
-              (neededOfferIndex) => {
-                const offerIndex = neededOfferIndex.diamond
-                  ? neededOfferIndex.diamondRangeIndex
-                  : neededOfferIndex.offerIndex;
-                return (
-                  selectedOfferIndexUser.toString() === offerIndex?.toString()
-                );
-              }
-            );
-            if (resaleResponse.data.length) {
-              setOfferDataUser({
-                ...offerInformation,
-                price: resaleResponse.data[0].price.toString()
-              });
-            } else {
-              setOfferDataUser(offerInformation);
-            }
-
-            if (resaleResponse.success && resaleResponse.data.length) {
-              setOfferPriceUser(
-                resaleResponse.data.map((p) => {
-                  return p.price.toString();
-                })
-              );
-            } else {
-              setOfferPriceUser(
-                response.data.product.offers?.map((p) => {
-                  return p.price.toString();
-                })
+        if (response.data.success) {
+          const offerInformation = response.data.product.offers?.find(
+            (neededOfferIndex) => {
+              const offerIndex = neededOfferIndex.diamond
+                ? neededOfferIndex.diamondRangeIndex
+                : neededOfferIndex.offerIndex;
+              return (
+                selectedOfferIndexUser.toString() === offerIndex?.toString()
               );
             }
+          );
+          if (resaleResponse.data.length) {
+            setOfferDataUser({
+              ...offerInformation,
+              price: resaleResponse.data[0].price.toString()
+            });
+          } else {
+            setOfferDataUser(offerInformation);
           }
-        } catch (err) {
-          const error = err as AxiosError;
-          console.error(error?.message);
+
+          if (resaleResponse.success && resaleResponse.data.length) {
+            setOfferPriceUser(
+              resaleResponse.data.map((p) => {
+                return p.price.toString();
+              })
+            );
+          } else {
+            setOfferPriceUser(
+              response.data.product.offers?.map((p) => {
+                return p.price.toString();
+              })
+            );
+          }
         }
+      } catch (err) {
+        const error = err as AxiosError;
+        console.error(error?.message);
       }
     }
-  }, [item, resaleFlag, selectedOfferIndexUser]);
+  }, [item, resaleFlag, selectedOfferIndexUser, tokenInfo]);
 
   useEffect(() => {
     initialTokenData();
@@ -544,7 +535,7 @@ const NftItemForCollectionViewComponent: React.FC<
               <div
                 onClick={() => {
                   if (item) {
-                    redirectionUserPage();
+                    redirectionFromUserPage();
                   } else {
                     RedirectToMockUp();
                   }

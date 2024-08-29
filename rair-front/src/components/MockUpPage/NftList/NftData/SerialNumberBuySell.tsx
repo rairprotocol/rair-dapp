@@ -9,12 +9,16 @@ import { BuySellButton } from './BuySellButton';
 import SellInputButton from './SellInputButton';
 
 import useContracts from '../../../../hooks/useContracts';
-import { useAppSelector } from '../../../../hooks/useReduxHooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../hooks/useServerSettings';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import { BillTransferIcon, GrandpaWait } from '../../../../images';
 import { store } from '../../../../redux/store';
+import { reloadTokenData } from '../../../../redux/tokenSlice';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
 import ResaleModal from '../../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
@@ -40,6 +44,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   const { databaseResales } = useAppSelector((store) => store.settings);
   const { currentCollection } = useAppSelector((store) => store.tokens);
 
+  const dispatch = useAppDispatch();
+
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
@@ -50,13 +56,13 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   const params = useParams();
 
   const buyContract = useCallback(async () => {
-    if (!contractData || !offerData) {
-      return;
-    }
-    if (!contractData.diamond) {
-      return;
-    }
-    if (!diamondMarketplaceInstance) {
+    if (
+      !contractData ||
+      !offerData ||
+      !contractData.diamond ||
+      !diamondMarketplaceInstance ||
+      !selectedToken
+    ) {
       return;
     }
     const marketplaceContract = diamondMarketplaceInstance;
@@ -91,7 +97,11 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           failureMessage:
             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
           callback: () => {
-            /*  // Dispatch  */
+            dispatch(
+              reloadTokenData({
+                tokenId: currentCollection?.[selectedToken]?._id
+              })
+            );
           },
           sponsored: offerData.sponsored
         }
@@ -106,11 +116,13 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [
     contractData,
     offerData,
+    diamondMarketplaceInstance,
+    selectedToken,
     reactSwal,
     web3TxHandler,
     blockchain,
-    diamondMarketplaceInstance,
-    selectedToken
+    dispatch,
+    currentCollection
   ]);
 
   const { getBlockchainData } = useServerSettings();
@@ -236,7 +248,11 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           {
             callback: () => {
               getResaleData();
-              // dispatch(loadCollection());
+              dispatch(
+                reloadTokenData({
+                  tokenId: currentCollection?.[selectedToken]?._id
+                })
+              );
             },
             intendedBlockchain: blockchain
           }
@@ -255,19 +271,25 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       reactSwal.fire('Success', 'Token purchased', 'success');
     }
   }, [
-    web3Switch,
-    diamondMarketplaceInstance,
-    reactSwal,
-    resaleData,
-    web3TxHandler,
-    blockchain,
-    params,
-    currentUserAddress,
-    selectedToken,
-    currentCollection,
-    getResaleData,
     correctBlockchain,
-    databaseResales
+    blockchain,
+    diamondMarketplaceInstance,
+    currentCollection,
+    params?.tokenId,
+    params.contract,
+    reactSwal,
+    resaleData.seller,
+    resaleData.blockchainOfferId,
+    resaleData.price,
+    resaleData._id,
+    resaleData.tokenIndex,
+    selectedToken,
+    databaseResales,
+    web3TxHandler,
+    web3Switch,
+    currentUserAddress,
+    getResaleData,
+    dispatch
   ]);
 
   const checkAllSteps = useCallback(() => {

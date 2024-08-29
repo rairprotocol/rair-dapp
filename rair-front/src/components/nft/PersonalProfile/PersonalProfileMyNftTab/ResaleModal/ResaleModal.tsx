@@ -5,11 +5,17 @@ import CloseIcon from '@mui/icons-material/Close';
 import { formatEther, formatUnits, parseEther } from 'ethers';
 
 import useContracts from '../../../../../hooks/useContracts';
-import { useAppSelector } from '../../../../../hooks/useReduxHooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../../hooks/useServerSettings';
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
-import { CollectionTokens } from '../../../../../redux/tokenSlice';
+import {
+  CollectionTokens,
+  reloadTokenData
+} from '../../../../../redux/tokenSlice';
 import { rFetch } from '../../../../../utils/rFetch';
 import InputField from '../../../../common/InputField';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
@@ -43,6 +49,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
   );
 
   const { getBlockchainData } = useServerSettings();
+  const dispatch = useAppDispatch();
 
   const [resaleData, setResaleData] = useState<any>();
   const [resaleOffer, setResaleOffer] = useState<any>(undefined);
@@ -167,7 +174,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
         icon: 'success'
       });
       getResaleData();
-      // Dispatch
+      dispatch(reloadTokenData({ tokenId: item._id }));
 
       if (!singleTokenPage && totalNft) {
         getMyNft && getMyNft(Number(totalNft), 1);
@@ -193,7 +200,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
             'Your resale offer has been deleted.',
             'success'
           );
-          /// dispatch()
+          dispatch(reloadTokenData({ tokenId: item._id }));
           removeResaleOffer(tokenId);
           if (!singleTokenPage && totalNft) {
             getMyNft && getMyNft(Number(totalNft), 1);
