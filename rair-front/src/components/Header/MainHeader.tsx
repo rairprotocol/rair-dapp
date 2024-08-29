@@ -139,7 +139,6 @@ const MainHeader: FC<IMainHeader> = ({
 
             return dateB - dateA;
           });
-          // console.info(result.notifications, 'result.notifications');
           setRealDataNotification(sortedNotifications);
         }
       }

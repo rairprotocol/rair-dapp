@@ -140,7 +140,6 @@ const GreymanSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
         faviconMobile: GreymanFavicon
       })
     );
-    //eslint-disable-next-line
   }, []);
 
   const { contractCreator, diamondMarketplaceInstance } = useContracts();
@@ -154,8 +153,7 @@ const GreymanSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
 
   useEffect(() => {
     dispatch(setRequestedChain(GreymanChainId));
-    //eslint-disable-next-line
-  }, []);
+  }, [dispatch]);
 
   const openModal = useCallback(() => {
     setIsOpen(true);

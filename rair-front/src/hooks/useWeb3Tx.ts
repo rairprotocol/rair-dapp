@@ -141,7 +141,7 @@ const useWeb3Tx = () => {
       try {
         paramsValidation = await contract[method](...args);
       } catch (errorMessage) {
-        console.info('paramsValidation error', method);
+        console.error('paramsValidation error', method);
         return handleWeb3Error(errorMessage, options?.failureMessage);
       }
       if (paramsValidation?.wait) {
@@ -268,7 +268,6 @@ const useWeb3Tx = () => {
   const metamaskSwitch = useCallback(
     async (chainId: Hex) => {
       try {
-        console.info(4, getBlockchainData(chainId), blockchainSettings);
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: chainId && getBlockchainData(chainId)?.hash }]

@@ -42,8 +42,6 @@ const MinterMarketplace = () => {
     fetchData();
   }, [fetchData]);
 
-  console.info(offerData);
-
   useEffect(() => {
     setDocumentTitle('Minter Marketplace');
   }, []);

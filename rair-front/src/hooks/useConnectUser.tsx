@@ -284,7 +284,6 @@ const useConnectUser = () => {
         !currentUserAddress
       ) {
         let loginResponse;
-        console.info(1, loginMethod);
         switch (loginMethod) {
           case 'programmatic':
             console.error('Programmatic support not available');

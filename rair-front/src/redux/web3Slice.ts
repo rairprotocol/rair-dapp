@@ -92,8 +92,6 @@ export const connectChainMetamask = createAsyncThunk(
         connectedChain: undefined
       };
     }
-    // eslint-disable-next-line no-console
-    console.trace('aaa');
     const provider = new BrowserProvider(window.ethereum);
     metamaskEventListeners(provider);
     const accounts: Maybe<Hex[]> = await window.ethereum.request({
@@ -104,8 +102,6 @@ export const connectChainMetamask = createAsyncThunk(
         method: 'eth_chainId'
       })) || undefined;
     const currentUserAddress = accounts?.at(0);
-    // eslint-disable-next-line no-console
-    console.trace(`metamask ${connectedChain}`);
     return {
       currentUserAddress,
       connectedChain: connectedChain as Hex

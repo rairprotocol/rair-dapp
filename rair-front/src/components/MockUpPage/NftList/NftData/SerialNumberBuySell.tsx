@@ -366,7 +366,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       return (
         <BuySellButton
           handleClick={() => {
-            console.info(blockchain);
             web3Switch(blockchain);
           }}
           isColorPurple={true}

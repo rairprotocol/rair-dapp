@@ -30,7 +30,7 @@ const PersonalProfileMyCreatedComponent = ({
       setLoad(false);
       setMyContracts(response.data.contracts);
     } else {
-      console.info(response?.message);
+      console.error(response?.message);
     }
   }, []);
 

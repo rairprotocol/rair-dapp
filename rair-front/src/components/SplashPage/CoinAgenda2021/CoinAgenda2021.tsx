@@ -55,10 +55,7 @@ const CoinAgenda2021SplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
         faviconMobile: favicon_CoinAgenda21
       })
     );
-    //eslint-disable-next-line
   }, []);
-
-  const { isDarkMode } = useAppSelector((store) => store.colors);
 
   /* UTILITIES FOR VIDEO PLAYER VIEW */
   const [productsFromOffer, selectVideo, setSelectVideo] =

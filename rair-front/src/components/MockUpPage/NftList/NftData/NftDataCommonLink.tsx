@@ -94,8 +94,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     [product, contract, tokenId, blockchain, dispatch]
   );
 
-  console.info(currentCollection);
-
   useEffect(() => {
     if (tokenId && currentCollection[tokenId]) {
       setSelectedData(currentCollection[tokenId]?.metadata);
