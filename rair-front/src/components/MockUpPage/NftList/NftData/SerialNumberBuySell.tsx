@@ -278,11 +278,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     params?.tokenId,
     params.contract,
     reactSwal,
-    resaleData.seller,
-    resaleData.blockchainOfferId,
-    resaleData.price,
-    resaleData._id,
-    resaleData.tokenIndex,
+    resaleData,
     selectedToken,
     databaseResales,
     web3TxHandler,
@@ -297,13 +293,15 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       return <></>;
     }
 
+    console.info(selectedToken);
+
     if (!currentUserAddress) {
       if (
         selectedToken &&
         currentCollection &&
         Object.values(currentCollection)[0]?.isMinted === true
       ) {
-        const ownerData = currentCollection[0].ownerData;
+        const ownerData = currentCollection[0]?.ownerData;
         return (
           <div className="container-sell-button-user">
             Owned by{' '}
