@@ -39,7 +39,7 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const { getBlockchainData } = useServerSettings();
 
-  const { primaryColor, textColor, iconColor } = useAppSelector(
+  const { primaryColor, textColor, iconColor, isDarkMode } = useAppSelector(
     (store) => store.colors
   );
 
@@ -57,7 +57,12 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
   const { web3TxHandler } = useWeb3Tx();
 
   const getUserRairBalance = useCallback(async () => {
-    if (!mainTokenInstance || userRairBalance) {
+    if (
+      !userBalanceTrigger ||
+      !currentUserAddress ||
+      !mainTokenInstance ||
+      userRairBalance
+    ) {
       return;
     }
     const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
@@ -66,7 +71,13 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
     if (result) {
       setUserRairBalance(result);
     }
-  }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
+  }, [
+    userBalanceTrigger,
+    currentUserAddress,
+    mainTokenInstance,
+    userRairBalance,
+    web3TxHandler
+  ]);
 
   useEffect(() => {
     getUserRairBalance();
@@ -157,28 +168,22 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
   return (
     <>
       <button
-        className={`button profile-btn ${
-          primaryColor === '#dedede' ? 'rhyno' : ''
-        }`}
+        className={`button profile-btn ${!isDarkMode ? 'rhyno' : ''}`}
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'flex-start'
         }}>
         <div
-          className={`profile-buy-button ${
-            primaryColor === '#dedede' ? 'rhyno' : ''
-          }`}></div>
+          className={`profile-buy-button ${!isDarkMode ? 'rhyno' : ''}`}></div>
         <div
           onClick={() => setUserBalanceTrigger((prev) => !prev)}
-          className={`profile-user-balance ${
-            primaryColor === '#dedede' ? 'rhyno' : ''
-          }`}>
+          className={`profile-user-balance ${!isDarkMode ? 'rhyno' : ''}`}>
           <img
             style={{
               marginRight: '5px'
             }}
-            src={primaryColor === '#dedede' ? RairFavicon : RairTokenLogo}
+            src={!isDarkMode ? RairFavicon : RairTokenLogo}
             alt="logo"
           />
           {getBlockchainData(connectedChain) && (
