@@ -1,3 +1,4 @@
+//@ts-nocheck
 /* eslint-disable no-case-declarations */
 import { useCallback, useEffect, useState } from 'react';
 import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
