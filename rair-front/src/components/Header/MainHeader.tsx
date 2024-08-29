@@ -14,7 +14,6 @@ import { SvgUserIcon } from '../../components/UserProfileSettings/SettingsIcons/
 import useComponentVisible from '../../hooks/useComponentVisible';
 import useConnectUser from '../../hooks/useConnectUser';
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
-import { headerLogoBlack, headerLogoWhite } from '../../images';
 import { dataStatuses } from '../../redux/commonTypes';
 import { clearResults, startSearch } from '../../redux/searchbarSlice';
 import { rFetch } from '../../utils/rFetch';
@@ -52,7 +51,6 @@ const MainHeader: FC<IMainHeader> = ({
     useComponentVisible(true);
   const {
     primaryColor,
-    headerLogo,
     primaryButtonColor,
     textColor,
     secondaryColor,
@@ -212,13 +210,7 @@ const MainHeader: FC<IMainHeader> = ({
       secondaryColor={secondaryColor}
       ref={ref}>
       <div>
-        <MainLogo
-          goHome={goHome}
-          headerLogoWhite={headerLogoWhite}
-          headerLogoBlack={headerLogoBlack}
-          headerLogo={headerLogo}
-          primaryColor={primaryColor}
-        />
+        <MainLogo goHome={goHome} />
       </div>
       <div
         className={`main-search ${isSplashPage ? 'hidden' : ''} ${

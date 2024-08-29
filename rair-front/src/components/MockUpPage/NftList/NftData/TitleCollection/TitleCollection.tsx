@@ -268,7 +268,9 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                     : ''
                 }`}>
                 <TooltipBox title="Link to Contract Review">
-                  <EtherScanCollectionLogo className="etherscan-collection-icon" />
+                  <div>
+                    <EtherScanCollectionLogo className="etherscan-collection-icon" />
+                  </div>
                 </TooltipBox>
               </div>
             </a>

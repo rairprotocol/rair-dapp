@@ -71,7 +71,7 @@ const NftItemForCollectionViewComponent: React.FC<
   const { currentUserAddress, exchangeRates } = useAppSelector(
     (state) => state.web3
   );
-  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const { userAddress, contract, product } = useParams();
 
@@ -313,7 +313,6 @@ const NftItemForCollectionViewComponent: React.FC<
                     html: (
                       <Provider store={store}>
                         <ResaleModal
-                          textColor={textColor}
                           item={item}
                           getMyNft={getMyNft}
                           totalNft={totalNft}

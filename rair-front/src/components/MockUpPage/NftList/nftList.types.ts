@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Hex } from 'viem';
 
-import { CatalogItem } from '../../../redux/tokenSlice';
+import { CatalogItem, CollectionTokens } from '../../../redux/tokenSlice';
 import { CatalogVideoItem } from '../../../types/commonTypes';
-import { MediaFile, User } from '../../../types/databaseTypes';
+import { TokenMetadata, User } from '../../../types/databaseTypes';
 import { TOfferType } from '../../marketplace/marketplace.types';
 import { TEmbeddedParams } from '../mockupPage.types';
 
@@ -14,7 +14,7 @@ import {
   TTokenData
 } from './../../../axios.responseTypes';
 export interface IAuthenticityBlock {
-  tokenData: { [index: string]: TTokenData };
+  tokenData: { [index: string]: CollectionTokens };
   title: boolean;
   collectionToken: string;
   selectedToken?: string | undefined;
@@ -75,7 +75,7 @@ export interface IBreadcrumbsComponent {
 export interface INftCollectionPageComponent {
   embeddedParams: TEmbeddedParams | undefined;
   blockchain: Hex | undefined;
-  selectedData: TMetadataType | undefined;
+  selectedData?: TokenMetadata;
   offerPrice: string[] | undefined;
   getAllProduct: (
     fromToken: string,

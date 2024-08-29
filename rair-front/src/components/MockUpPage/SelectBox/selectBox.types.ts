@@ -1,15 +1,10 @@
-import { Hex } from 'viem';
+import { tokenNumberData } from '../../../types/commonTypes';
 
 export interface IListOfTokensComponent {
-  blockchain?: Hex;
-  contract: Hex | undefined;
   isOpen: boolean;
   handleIsOpen: () => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
   onClickItem: (element: string | undefined) => void;
-  product: string | undefined;
-  setSelectedToken: (tokenId: string | undefined) => void;
-  selectedToken: string | undefined;
   setIsOpen: (isOpen: boolean) => void;
   serialNumberData: any;
 }
@@ -33,16 +28,10 @@ export type SelectNumberItem = {
   token: string;
   value: string;
 };
-
 export interface ISelectNumber {
-  blockchain: Hex | undefined;
-  items: SelectNumberItem[];
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
-  selectedToken: string | undefined;
-  serialNumberData: any;
-  product: string | undefined;
-  contract: Hex | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
+  serialNumberData: Array<tokenNumberData>;
 }
 export interface IMockUpPage {
   tabIndex: number;

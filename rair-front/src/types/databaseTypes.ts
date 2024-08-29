@@ -112,6 +112,7 @@ export interface MetadataAttribute {
   display_type?: string;
   trait_type?: string;
   value?: string;
+  percentage?: string;
 }
 
 export interface TokenMetadata {
@@ -146,7 +147,7 @@ export interface MintedToken extends MongoDocument {
 }
 
 export interface Offer extends MongoDocument {
-  offerIndex?: { type: String };
+  offerIndex?: string;
   contract: string;
   product: string;
   offerPool?: string;

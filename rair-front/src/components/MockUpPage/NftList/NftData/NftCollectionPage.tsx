@@ -580,12 +580,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
                         return (
                           <NftItemForCollectionView
                             id={`collection-view-${index}`}
-                            key={`${
-                              item._id +
-                              '-' +
-                              item.uniqueIndexInContract +
-                              index
-                            }`}
+                            key={index}
                             pict={offerAllData?.cover}
                             metadata={item.metadata}
                             offerPrice={offerPrice}

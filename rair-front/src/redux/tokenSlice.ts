@@ -5,10 +5,10 @@ import { Hex } from 'viem';
 
 import { dataStatuses } from './commonTypes';
 
-import { TTokenData } from '../axios.responseTypes';
-import { PaginatedApiCall } from '../types/commonTypes';
+import { ApiCallResponse, PaginatedApiCall } from '../types/commonTypes';
 import {
   Contract,
+  MintedToken,
   Offer,
   Product,
   TokenMetadata,
@@ -17,6 +17,10 @@ import {
 
 interface ProductAndOffers extends Product {
   offers: Array<Offer>;
+}
+
+interface SingleContractResponse extends ApiCallResponse {
+  contract?: Contract;
 }
 
 export interface CatalogItem extends Contract {
@@ -39,7 +43,7 @@ interface GetCatalogResponse {
 }
 
 interface GetCollectionResponse {
-  tokens: Array<TTokenData>;
+  tokens: Array<CollectionTokens>;
   success: boolean;
   totalNumber: number;
 }
@@ -59,24 +63,37 @@ interface CollectionQuery {
   attributes?: { [name: string]: string };
 }
 
+export interface CollectionTokens extends Omit<MintedToken, 'offer'> {
+  ownerData?: User;
+  offer: Offer;
+}
+
 export interface TokensState {
   catalogStatus: dataStatuses;
   catalogTotal: number;
   catalog: Array<CatalogItem>;
   currentCollectionStatus: dataStatuses;
   currentCollectionTotal: number;
-  currentCollection: { [index: string]: TTokenData };
+  currentCollection: { [index: string]: CollectionTokens };
+  currentCollectionMetadata?: Contract;
+  currentCollectionMetadataStatus: dataStatuses;
   itemsPerPage: number;
   currentPage: number;
 }
 
 const initialState: TokensState = {
+  // Front page catalog data
   catalogStatus: dataStatuses.Uninitialized,
   catalogTotal: 0,
   catalog: [],
+  // Collection tokens data
   currentCollectionStatus: dataStatuses.Uninitialized,
   currentCollectionTotal: 0,
   currentCollection: {},
+  // Collection contract data
+  currentCollectionMetadataStatus: dataStatuses.Uninitialized,
+  currentCollectionMetadata: undefined,
+  // Catalog search params
   itemsPerPage: 20,
   currentPage: 1
 };
@@ -122,16 +139,32 @@ export const loadFrontPageCatalog = createAsyncThunk(
   }
 );
 
+export const loadCollectionMetadata = createAsyncThunk(
+  'tokens/loadCollectionMetadata',
+  async ({ contractId }: { contractId?: string }) => {
+    if (!contractId) {
+      return;
+    }
+    const contractData = await axios.get<SingleContractResponse>(
+      `/api/contracts/${contractId}`
+    );
+    return contractData.data.contract;
+  }
+);
+
 export const loadCollection = createAsyncThunk(
   'tokens/loadCollection',
-  async ({
-    blockchain,
-    contract,
-    product,
-    fromToken,
-    toToken,
-    attributes
-  }: CollectionQuery) => {
+  async (
+    {
+      blockchain,
+      contract,
+      product,
+      fromToken,
+      toToken,
+      attributes
+    }: CollectionQuery,
+    { dispatch }
+  ) => {
     const queryParams = new URLSearchParams({
       fromToken: fromToken,
       toToken: toToken
@@ -142,6 +175,12 @@ export const loadCollection = createAsyncThunk(
     const response = await axios.get<GetCollectionResponse>(
       `/api/nft/network/${blockchain}/${contract}/${product}?${queryParams.toString()}`
     );
+    dispatch(
+      loadCollectionMetadata({
+        contractId: response.data.tokens.at(0)?.contract
+      })
+    );
+
     return response.data;
 
     /*
@@ -189,20 +228,32 @@ export const tokenSlice = createSlice({
       .addCase(
         loadCollection.fulfilled,
         (state, action: PayloadAction<GetCollectionResponse>) => {
-          const tokenMapping: { [index: string]: TTokenData } = {};
+          const tokenMapping: { [index: string]: CollectionTokens } = {};
           action.payload.tokens.forEach((token) => {
             tokenMapping[token.uniqueIndexInContract.toString()] = token;
           });
-          return {
-            ...state,
-            currentCollectionStatus: dataStatuses.Complete,
-            currentCollectionTotal: action.payload.totalNumber,
-            currentCollection: tokenMapping
-          };
+          state.currentCollectionStatus = dataStatuses.Complete;
+          state.currentCollectionTotal = action.payload.totalNumber;
+          state.currentCollection = tokenMapping;
         }
       )
       .addCase(loadCollection.rejected, (state) => {
         state.currentCollectionStatus = dataStatuses.Failed;
+      })
+      .addCase(loadCollectionMetadata.pending, (state) => {
+        state.currentCollectionMetadataStatus = dataStatuses.Loading;
+      })
+      .addCase(
+        loadCollectionMetadata.fulfilled,
+        (state, action: PayloadAction<Contract | undefined>) => {
+          state.currentCollectionMetadataStatus = dataStatuses.Complete;
+          if (action.payload) {
+            state.currentCollectionMetadata = action.payload;
+          }
+        }
+      )
+      .addCase(loadCollectionMetadata.rejected, (state) => {
+        state.currentCollectionMetadataStatus = dataStatuses.Failed;
       });
   }
 });

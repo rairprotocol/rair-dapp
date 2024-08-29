@@ -14,7 +14,7 @@ const MainLogo: FC<IMainLogo> = ({ goHome }) => {
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   if (dataStatus !== dataStatuses.Complete) {
-    return <LoadingComponent size={25} />;
+    return <LoadingComponent classes="logo-hotdrops-image" size={25} />;
   }
 
   return (

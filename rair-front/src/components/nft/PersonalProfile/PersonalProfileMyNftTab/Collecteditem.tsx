@@ -55,7 +55,7 @@ const Collecteditem = ({ item, profile, defaultImg, index, chainData }) => {
         <button
           onClick={() => {
             reactSwal.fire({
-              html: <ResaleModal textColor={textColor} item={item} />,
+              html: <ResaleModal item={item} />,
               showConfirmButton: false,
               showCloseButton: true,
               customClass: `resale-pop-up-custom ${

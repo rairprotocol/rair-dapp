@@ -45,4 +45,9 @@ export interface CatalogVideoItem extends MediaFile {
   unlockData: { offers: Array<Offer> };
 }
 
+export interface tokenNumberData {
+  token: string;
+  sold: boolean;
+}
+
 export interface CombinedBlockchainData extends Blockchain, TChainItemData {}

@@ -1,27 +1,23 @@
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
-import { isAddress, parseEther, ZeroAddress } from 'ethers';
+import { parseEther } from 'ethers';
 import { Hex } from 'viem';
 
 import { BuySellButton } from './BuySellButton';
 
-import { TUserResponse } from '../../../../axios.responseTypes';
 import { erc721Abi } from '../../../../contracts';
 import useContracts from '../../../../hooks/useContracts';
 import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../hooks/useServerSettings';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
-import { User } from '../../../../types/databaseTypes';
 import { rFetch } from '../../../../utils/rFetch';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISellButton } from '../../mockupPage.types';
 
 const SellButton: FC<ISellButton> = ({
-  tokenData,
   selectedToken,
   sellingPrice,
   isInputPriceExist,
@@ -32,9 +28,9 @@ const SellButton: FC<ISellButton> = ({
 }) => {
   const { contractCreator, diamondMarketplaceInstance } = useContracts();
   const { currentUserAddress } = useAppSelector((store) => store.web3);
+  const { currentCollection } = useAppSelector((store) => store.tokens);
 
   let { blockchain, contract, tokenId } = useParams();
-  const [accountData, setAccountData] = useState<User | null>(null);
 
   const xMIN = Number(0.0001);
   const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
@@ -58,7 +54,7 @@ const SellButton: FC<ISellButton> = ({
       return;
     }
     const tokenInformation =
-      item || (selectedToken && tokenData?.[selectedToken]);
+      item || (selectedToken && currentCollection?.[selectedToken]);
     if (
       !contractCreator ||
       !sellingPrice ||
@@ -173,7 +169,7 @@ const SellButton: FC<ISellButton> = ({
     web3TxHandler,
     refreshResaleData,
     item,
-    tokenData,
+    currentCollection,
     selectedToken,
     nodeAddress,
     getBlockchainData,
@@ -184,56 +180,11 @@ const SellButton: FC<ISellButton> = ({
     setIsInputPriceExist(true);
   }, [setIsInputPriceExist]);
 
-  const getInfoFromUser = useCallback(async () => {
-    // find user
-    if (
-      !item &&
-      selectedToken &&
-      tokenData?.[selectedToken]?.ownerAddress &&
-      isAddress(tokenData?.[selectedToken]?.ownerAddress) &&
-      tokenData?.[selectedToken]?.ownerAddress !== ZeroAddress
-    ) {
-      try {
-        const result = await axios
-          .get<TUserResponse>(
-            `/api/users/${tokenData?.[selectedToken]?.ownerAddress}`
-          )
-          .then((res) => res.data);
-        if (result.success) {
-          setAccountData(result.user);
-        }
-      } catch (e) {
-        setAccountData(null);
-      }
-    } else {
-      if (
-        item &&
-        isAddress(item.ownerAddress) &&
-        item.ownerAddress !== ZeroAddress
-      ) {
-        try {
-          const result = await axios
-            .get<TUserResponse>(`/api/users/${item.ownerAddress}`)
-            .then((res) => res.data);
-          if (result.success) {
-            setAccountData(result.user);
-          }
-        } catch (e) {
-          setAccountData(null);
-        }
-      }
-    }
-  }, [selectedToken, setAccountData, tokenData, item]);
-
-  useEffect(() => {
-    getInfoFromUser();
-  }, [getInfoFromUser]);
-
   const sellButton = useCallback(() => {
     if (
       selectedToken &&
-      currentUserAddress === tokenData?.[selectedToken]?.ownerAddress &&
-      tokenData?.[selectedToken]?.isMinted
+      currentUserAddress === currentCollection?.[selectedToken]?.ownerAddress &&
+      currentCollection?.[selectedToken]?.isMinted
     ) {
       return (
         <BuySellButton
@@ -266,31 +217,36 @@ const SellButton: FC<ISellButton> = ({
             }
           />
         );
-      } else {
+      } else if (selectedToken) {
+        const ownerData = currentCollection?.[selectedToken].ownerData;
         return (
           <div className="container-sell-button-user">
             Owned by{' '}
             <div className="block-user-creator">
               <ImageLazy
-                src={accountData?.avatar ? accountData.avatar : defaultImage}
+                src={ownerData?.avatar ? ownerData.avatar : defaultImage}
                 alt="User Avatar"
               />
               {selectedToken && (
-                <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
+                <NavLink
+                  to={`/${currentCollection?.[selectedToken]?.ownerAddress}`}>
                   <h5>
-                    {(accountData &&
-                    accountData.nickName &&
-                    accountData.nickName.length > 20
-                      ? accountData.nickName.slice(0, 5) +
-                        '....' +
-                        accountData.nickName.slice(length - 4)
-                      : accountData && accountData.nickName) ||
-                      (tokenData?.[selectedToken]?.ownerAddress &&
-                        tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
-                          '....' +
-                          tokenData?.[selectedToken]?.ownerAddress.slice(
-                            length - 4
-                          ))}
+                    {(ownerData &&
+                    ownerData.nickName &&
+                    ownerData.nickName.length > 20
+                      ? ownerData.nickName.slice(0, 5) +
+                        '...' +
+                        ownerData.nickName.slice(length - 4)
+                      : ownerData && ownerData.nickName) ||
+                      (currentCollection?.[selectedToken]?.ownerAddress &&
+                        currentCollection?.[selectedToken]?.ownerAddress.slice(
+                          0,
+                          4
+                        ) +
+                          '...' +
+                          currentCollection?.[
+                            selectedToken
+                          ]?.ownerAddress.slice(length - 4))}
                   </h5>
                 </NavLink>
               )}
@@ -307,9 +263,8 @@ const SellButton: FC<ISellButton> = ({
     openInputField,
     sellingPrice,
     selectedToken,
-    tokenData,
-    isInputPriceExist,
-    accountData
+    currentCollection,
+    isInputPriceExist
   ]);
 
   return sellButton();

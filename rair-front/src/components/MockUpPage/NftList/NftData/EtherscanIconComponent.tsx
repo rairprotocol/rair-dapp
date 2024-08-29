@@ -37,11 +37,13 @@ const EtherscanIconComponent: FC<IEtherscanIconComponent> = ({
                 hotdropsVar === 'true' ? 'hotdrops-border' : ''
               }`}>
               <TooltipBox position="top" title="Token Address">
-                {isDarkMode ? (
-                  <EtherscanDark className="nft-collection-icons-icon" />
-                ) : (
-                  <EtherscanLight className="nft-collection-icons-icon" />
-                )}
+                <div>
+                  {isDarkMode ? (
+                    <EtherscanDark className="nft-collection-icons-icon" />
+                  ) : (
+                    <EtherscanLight className="nft-collection-icons-icon" />
+                  )}
+                </div>
               </TooltipBox>
             </div>
           </a>

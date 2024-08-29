@@ -9,6 +9,7 @@ import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import useServerSettings from '../../../../../hooks/useServerSettings';
 import useSwal from '../../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../../hooks/useWeb3Tx';
+import { CollectionTokens } from '../../../../../redux/tokenSlice';
 import { rFetch } from '../../../../../utils/rFetch';
 import InputField from '../../../../common/InputField';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
@@ -19,28 +20,25 @@ import SellButton from '../../../../MockUpPage/NftList/NftData/SellButton';
 import './ResaleModal.css';
 
 interface IResaleModal {
-  item: any;
-  textColor: any;
+  item: CollectionTokens;
   singleTokenPage?: boolean;
-  reloadFunction?: () => void;
   getMyNft?: (num: number, page: number) => void;
   totalNft?: any;
 }
 
 const ResaleModal: React.FC<IResaleModal> = ({
   item,
-  textColor,
   singleTokenPage,
-  reloadFunction,
   getMyNft,
   totalNft
 }) => {
+  const { currentCollectionMetadata } = useAppSelector((store) => store.tokens);
   const { currentUserAddress, exchangeRates } = useAppSelector(
     (state) => state.web3
   );
   const { diamondMarketplaceInstance } = useContracts();
 
-  const { primaryColor, primaryButtonColor } = useAppSelector(
+  const { primaryColor, primaryButtonColor, textColor } = useAppSelector(
     (store) => store.colors
   );
 
@@ -54,7 +52,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
   const reactSwal = useSwal();
 
   const xMIN = Number(0.0001);
-  const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
+  const yMAX = currentCollectionMetadata?.blockchain === '0x1' ? 10 : 10000.0;
 
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
 
@@ -70,7 +68,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
     if (
       diamondMarketplaceInstance &&
       item &&
-      correctBlockchain(item.contract.blockchain)
+      correctBlockchain(currentCollectionMetadata?.blockchain)
     ) {
       const nodeFee = await web3TxHandler(
         diamondMarketplaceInstance,
@@ -84,7 +82,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
       const result = await web3TxHandler(
         diamondMarketplaceInstance,
         'getRoyalties',
-        [item.contract.contractAddress]
+        [currentCollectionMetadata?.blockchain]
       );
 
       const calculationNodeFee = formatUnits(nodeFee.nodeFee, nodeFee.decimals);
@@ -114,19 +112,9 @@ const ResaleModal: React.FC<IResaleModal> = ({
       if (!diamondMarketplaceInstance) {
         return;
       }
-      const contractResponse = await rFetch(
-        `/api/contracts?contractAddress=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}`
-      );
-      if (!contractResponse.success) {
-        return;
-      }
-      const contractData = contractResponse?.result?.at(0);
-      if (!contractData) {
-        return;
-      }
       setResaleData(undefined);
       const resaleResponse = await rFetch(
-        `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
+        `/api/resales/open?contract=${currentCollectionMetadata?.contractAddress}&blockchain=${currentCollectionMetadata?.blockchain}&index=${item.uniqueIndexInContract}`
       );
       if (!resaleResponse.success) {
         return;
@@ -179,7 +167,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
         icon: 'success'
       });
       getResaleData();
-      reloadFunction && reloadFunction();
+      // Dispatch
 
       if (!singleTokenPage && totalNft) {
         getMyNft && getMyNft(Number(totalNft), 1);
@@ -205,7 +193,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
             'Your resale offer has been deleted.',
             'success'
           );
-          reloadFunction && reloadFunction();
+          /// dispatch()
           removeResaleOffer(tokenId);
           if (!singleTokenPage && totalNft) {
             getMyNft && getMyNft(Number(totalNft), 1);
@@ -220,7 +208,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
   const getResalesInfo = useCallback(async () => {
     if (item) {
       const resaleResponse = await rFetch(
-        `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
+        `/api/resales/open?contract=${currentCollectionMetadata?.contractAddress}&blockchain=${currentCollectionMetadata?.blockchain}&index=${item.uniqueIndexInContract}`
       );
       if (resaleResponse.success) {
         setResaleOffer(resaleResponse.data);
@@ -229,7 +217,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
         }
       }
     }
-  }, [item]);
+  }, [currentCollectionMetadata, item]);
 
   useEffect(() => {
     getResalesInfo();
@@ -239,7 +227,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
     fetchRoyalties();
   }, [fetchRoyalties]);
 
-  const chainData = getBlockchainData(item.contract.blockchain);
+  const chainData = getBlockchainData(currentCollectionMetadata?.blockchain);
 
   return (
     <div
@@ -265,10 +253,12 @@ const ResaleModal: React.FC<IResaleModal> = ({
           )}
         </div>
       </div>
-      {!correctBlockchain(item.contract.blockchain) ? (
+      {!correctBlockchain(currentCollectionMetadata?.blockchain) ? (
         <div className="resale-switch-network-btn">
           <BuySellButton
-            handleClick={() => web3Switch(item.contract.blockchain)}
+            handleClick={() =>
+              web3Switch(currentCollectionMetadata?.blockchain)
+            }
             isColorPurple={true}
             title={`Switch network`}
           />
@@ -342,7 +332,6 @@ const ResaleModal: React.FC<IResaleModal> = ({
             ) : (
               <SellButton
                 currentUser={currentUserAddress}
-                // tokenData={[item]}
                 item={item}
                 sellingPrice={inputSellValue}
                 isInputPriceExist={isInputPriceExist}
@@ -350,7 +339,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                 setInputSellValue={setInputSellValue}
                 refreshResaleData={() => {
                   getResaleData();
-                  reloadFunction && reloadFunction();
+                  //dispatch();
                 }}
                 singleTokenPage={true}
               />
@@ -375,64 +364,68 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   <div>Total:</div>
                 </div>
               </div>
-              <div>
-                <div className="resale-modal-information-box">
-                  <div>
-                    {' '}
-                    $
-                    {commissionFee &&
-                    exchangeRates &&
-                    commissionFee.creatorFee &&
-                    commissionFee.creatorFee.length > 0
-                      ? (
-                          ((Number(inputSellValue) *
-                            Number(commissionFee.creatorFee)) /
-                            100) *
-                          exchangeRates[item.contract.blockchain]
-                        ).toFixed(2)
-                      : '0'}
-                  </div>
-                </div>
-                <div className="resale-modal-information-box">
-                  <div>
-                    {inputSellValue.length <= 10 &&
-                      commissionFee &&
-                      exchangeRates && (
-                        <div>
-                          $
-                          {(
+              {currentCollectionMetadata?.blockchain && (
+                <div>
+                  <div className="resale-modal-information-box">
+                    <div>
+                      {' '}
+                      $
+                      {commissionFee &&
+                      exchangeRates &&
+                      commissionFee.creatorFee &&
+                      commissionFee.creatorFee.length > 0
+                        ? (
                             ((Number(inputSellValue) *
-                              (Number(commissionFee.nodeFee) +
-                                Number(commissionFee.treasuryFee))) /
+                              Number(commissionFee.creatorFee)) /
                               100) *
-                            exchangeRates[item.contract.blockchain]
-                          ).toFixed(2)}
-                        </div>
-                      )}
+                            exchangeRates[currentCollectionMetadata?.blockchain]
+                          ).toFixed(2)
+                        : '0'}
+                    </div>
                   </div>
-                </div>
-                <div className="resale-modal-information-box">
-                  <div>
-                    $
-                    {inputSellValue.length <= 10 &&
-                    commissionFee &&
-                    exchangeRates &&
-                    correctBlockchain(item.contract.blockchain)
-                      ? (
-                          (Number(inputSellValue) -
-                            (Number(inputSellValue) *
-                              (Number(commissionFee.creatorFee) +
+                  <div className="resale-modal-information-box">
+                    <div>
+                      {inputSellValue.length <= 10 &&
+                        commissionFee &&
+                        exchangeRates && (
+                          <div>
+                            $
+                            {(
+                              ((Number(inputSellValue) *
                                 (Number(commissionFee.nodeFee) +
-                                  (commissionFee.treasuryFee
-                                    ? Number(commissionFee.treasuryFee)
-                                    : 0)))) /
-                              100) *
-                          exchangeRates[item.contract.blockchain]
-                        ).toFixed(2)
-                      : '0'}
+                                  Number(commissionFee.treasuryFee))) /
+                                100) *
+                              exchangeRates[
+                                currentCollectionMetadata?.blockchain
+                              ]
+                            ).toFixed(2)}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                  <div className="resale-modal-information-box">
+                    <div>
+                      $
+                      {inputSellValue.length <= 10 &&
+                      commissionFee &&
+                      exchangeRates &&
+                      correctBlockchain(currentCollectionMetadata?.blockchain)
+                        ? (
+                            (Number(inputSellValue) -
+                              (Number(inputSellValue) *
+                                (Number(commissionFee.creatorFee) +
+                                  (Number(commissionFee.nodeFee) +
+                                    (commissionFee.treasuryFee
+                                      ? Number(commissionFee.treasuryFee)
+                                      : 0)))) /
+                                100) *
+                            exchangeRates[currentCollectionMetadata?.blockchain]
+                          ).toFixed(2)
+                        : '0'}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               <div>
                 <div className="resale-modal-information-box">
                   <div>
@@ -464,7 +457,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   <div>
                     {inputSellValue.length <= 10 &&
                     commissionFee &&
-                    correctBlockchain(item.contract.blockchain)
+                    correctBlockchain(currentCollectionMetadata?.blockchain)
                       ? (
                           Number(inputSellValue) -
                           (Number(inputSellValue) *

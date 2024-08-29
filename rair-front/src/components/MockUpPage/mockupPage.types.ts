@@ -1,12 +1,9 @@
 import { Hex } from 'viem';
 
-import {
-  TMetadataType,
-  TProducts,
-  TTokenData
-} from '../../axios.responseTypes';
-import { CatalogVideoItem } from '../../types/commonTypes';
-import { User } from '../../types/databaseTypes';
+import { TMetadataType, TProducts } from '../../axios.responseTypes';
+import { CollectionTokens } from '../../redux/tokenSlice';
+import { CatalogVideoItem, tokenNumberData } from '../../types/commonTypes';
+import { TokenMetadata, User } from '../../types/databaseTypes';
 import { TOfferType } from '../marketplace/marketplace.types';
 
 export interface ITitleSingleTokenView {
@@ -20,9 +17,9 @@ export interface INftItemForCollectionView {
   pict: string | undefined;
   offerPrice?: string[] | undefined;
   index: string;
-  metadata: TMetadataType;
+  metadata: TokenMetadata;
   offer: string | undefined;
-  selectedData?: TMetadataType | undefined;
+  selectedData?: TokenMetadata | undefined;
   someUsersData?: User | null | undefined;
   userName: string | undefined;
   tokenDataLength?: number;
@@ -106,21 +103,16 @@ export interface INftVideoplayer {
 }
 
 export interface ISerialNumberBuySell {
-  tokenData: { [index: string]: TTokenData } | null;
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   blockchain: Hex | undefined;
-  product: string | undefined;
-  contract: Hex | undefined;
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
   offerData: TOfferType | undefined;
-  handleTokenBoughtButton: () => void;
-  tokenDataForResale?: any;
-  serialNumberData: number;
+  tokenDataForResale?: CollectionTokens;
+  serialNumberData: Array<tokenNumberData>;
 }
 export interface ISellButton {
   currentUser?: string | undefined;
-  tokenData?: { [index: string]: TTokenData } | null;
   selectedToken?: string | undefined;
   sellingPrice?: string;
   isInputPriceExist: boolean;
@@ -132,7 +124,7 @@ export interface ISellButton {
 }
 
 export interface ISingleTokenViewProperties {
-  selectedData: TMetadataType;
+  selectedData: TokenMetadata;
 }
 
 export interface IBuySellButton {
@@ -176,7 +168,6 @@ export type TParamsTitleCollection = {
 };
 
 export interface ISellInputButton {
-  tokenData: { [index: string]: TTokenData } | null;
   selectedToken: string | undefined;
   refreshResaleData: () => void;
 }
@@ -187,7 +178,7 @@ export interface INftDataPageMain {
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
   product: string | undefined;
   productsFromOffer: CatalogVideoItem[] | undefined;
-  selectedData: TMetadataType | undefined;
+  selectedData?: TokenMetadata;
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
   offerData?: TOfferType | undefined;

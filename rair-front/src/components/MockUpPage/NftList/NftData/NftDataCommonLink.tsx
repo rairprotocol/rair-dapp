@@ -10,7 +10,6 @@ import NftUnlockablesPage from './NftUnlockablesPage';
 
 import {
   IOffersResponseType,
-  TMetadataType,
   TNftFilesResponse,
   TProducts,
   TTokenData,
@@ -23,7 +22,11 @@ import {
 import { loadCollection } from '../../../../redux/tokenSlice';
 import { setRequestedChain } from '../../../../redux/web3Slice';
 import { CatalogVideoItem } from '../../../../types/commonTypes';
-import { MediaFile, User } from '../../../../types/databaseTypes';
+import {
+  MediaFile,
+  TokenMetadata,
+  User
+} from '../../../../types/databaseTypes';
 import { TOfferType } from '../../../marketplace/marketplace.types';
 import {
   INftDataCommonLinkComponent,
@@ -37,7 +40,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 }) => {
   const [collectionName, setCollectionName] = useState<string>();
   const [tokenDataFiltered, setTokenDataFiltered] = useState<TTokenData[]>([]);
-  const [selectedData, setSelectedData] = useState<TMetadataType>();
+  const [selectedData, setSelectedData] = useState<TokenMetadata>();
   const [selectedOfferIndex, setSelectedOfferIndex] = useState<string>();
   const [selectedToken, setSelectedToken] = useState<string>();
   const [offerPrice, setOfferPrice] = useState<string[] | undefined>([]);
@@ -78,6 +81,10 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
       const tokensFlag = window.location.href.includes('/tokens') && tokenId;
 
+      if (tokensFlag && currentCollection[tokenId]) {
+        return;
+      }
+
       dispatch(
         loadCollection({
           blockchain: blockchain as Hex,
@@ -91,11 +98,11 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
       setIsLoading(false);
     },
-    [product, contract, tokenId, blockchain, dispatch]
+    [product, tokenId, currentCollection, dispatch, blockchain, contract]
   );
 
   useEffect(() => {
-    if (tokenId && currentCollection[tokenId]) {
+    if (tokenId && currentCollection[tokenId]?.metadata) {
       setSelectedData(currentCollection[tokenId]?.metadata);
     }
   }, [tokenId, currentCollection]);
@@ -126,10 +133,8 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
           currentCollection &&
             currentCollection[tokenId]?.offer?.diamondRangeIndex
         );
-      } else {
-        setSelectedOfferIndex(
-          currentCollection && currentCollection[tokenId]?.offer?.offerIndex
-        );
+      } else if (currentCollection) {
+        setSelectedOfferIndex(currentCollection[tokenId]?.offer?.offerIndex);
       }
     }
   }, [currentCollection, tokenId]);

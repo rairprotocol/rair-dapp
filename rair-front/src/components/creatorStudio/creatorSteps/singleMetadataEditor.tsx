@@ -18,7 +18,6 @@ import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
-import BinanceDiamond from '../../../images/binance-diamond.svg';
 import { rFetch } from '../../../utils/rFetch';
 import InputField from '../../common/InputField';
 import LoadingComponent from '../../common/LoadingComponent';
@@ -46,7 +45,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     BigInt(contractData?.product?.firstTokenIndex || 0).toString()
   );
   const [nftTitle, setNFTTitle] = useState<string>('');
-  const [nftImage, setNFTImage] = useState<string>(BinanceDiamond);
+  const [nftImage, setNFTImage] = useState<string>('');
   const [nftDescription, setNFTDescription] = useState<string>('');
   const [forceRerender, setForceRerender] = useState<boolean>(false);
   const [propertiesArray, setPropertiesArray] = useState<TAttributes[]>([]);
@@ -54,12 +53,9 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     correctBlockchain(contractData?.blockchain as Hex)
   );
   const [files, setFiles] = useState<File>();
-  const { programmaticProvider, connectedChain } = useAppSelector(
-    (store) => store.web3
-  );
-  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
-    (store) => store.colors
-  );
+  const { programmaticProvider } = useAppSelector((store) => store.web3);
+  const { primaryColor, secondaryButtonColor, textColor, primaryButtonColor } =
+    useAppSelector((store) => store.colors);
   const { address, collectionIndex } = useParams<TParamsBatchMetadata>();
 
   const { getBlockchainData } = useServerSettings();
@@ -118,7 +114,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
       setNFTDescription(tokenData?.metadata?.description);
       setPropertiesArray(tokenData?.metadata?.attributes);
     } else {
-      setNFTImage(BinanceDiamond);
+      setNFTImage('');
       setNFTTitle('');
       setNFTDescription('');
       setPropertiesArray([]);
@@ -255,33 +251,35 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
             />
           </div>
         </div>
-        <div className="border-stimorol col-12 col-md-6 rounded-rair mb-3">
-          <button
-            className={`btn btn-${primaryColor} rounded-rair w-100 form-control`}
-            style={{ color: textColor }}
-            onClick={() => {
-              setNFTID(
-                BigInt(contractData?.product?.firstTokenIndex).toString()
-              );
-            }}>
-            First
-          </button>
-        </div>
-        <div className="border-stimorol col-12 col-md-6 rounded-rair mb-3">
-          <button
-            className={`btn btn-${primaryColor} rounded-rair w-100 form-control`}
-            style={{ color: textColor }}
-            onClick={() => {
-              setNFTID(
-                (
-                  BigInt(contractData?.product?.firstTokenIndex) +
-                  BigInt(contractData?.product?.copies) -
-                  BigInt(1)
-                ).toString()
-              );
-            }}>
-            Last
-          </button>
+        <div className="row">
+          <div className="col-12 col-md-6 rounded-rair mb-3">
+            <button
+              className="btn rair-button rounded-rair w-100 form-control"
+              style={{ color: textColor, background: secondaryButtonColor }}
+              onClick={() => {
+                setNFTID(
+                  BigInt(contractData?.product?.firstTokenIndex).toString()
+                );
+              }}>
+              First
+            </button>
+          </div>
+          <div className="col-12 col-md-6 rounded-rair mb-3">
+            <button
+              className="btn rair-button rounded-rair w-100 form-control"
+              style={{ color: textColor, background: primaryButtonColor }}
+              onClick={() => {
+                setNFTID(
+                  (
+                    BigInt(contractData?.product?.firstTokenIndex) +
+                    BigInt(contractData?.product?.copies) -
+                    BigInt(1)
+                  ).toString()
+                );
+              }}>
+              Last
+            </button>
+          </div>
         </div>
         <br />
         Image
@@ -311,6 +309,10 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
             value={nftDescription}
             onChange={(e) => setNFTDescription(e.target.value)}
             className={`rounded-rair w-100 form-control`}
+            style={{
+              background: primaryColor,
+              color: textColor
+            }}
             rows={3}
           />
         </div>
