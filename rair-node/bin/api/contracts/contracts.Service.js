@@ -185,14 +185,13 @@ module.exports = {
       const {
         pageNum = '1',
         itemsPerPage = '20',
-        blockchain = '',
+        blockchain = [],
         category = [],
         hidden = false,
         contractTitle = '',
       } = req.query;
       const pageSize = parseInt(itemsPerPage, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
-      const blockchainArr = blockchain === '' ? [] : blockchain.split(',');
 
       const options = [];
 
@@ -366,8 +365,8 @@ module.exports = {
       const blockchainFilter = {
         display: { $ne: false },
       };
-      if (blockchainArr?.length >= 1) {
-        blockchainFilter.hash = [...blockchainArr];
+      if (blockchain?.length >= 1) {
+        blockchainFilter.hash = { $in: [...blockchain] };
       }
       const foundBlockchain = await Blockchain.find(blockchainFilter);
 
@@ -376,8 +375,8 @@ module.exports = {
           blockchain: { $in: foundBlockchain.map((chain) => chain.hash) },
         },
       });
-      if (foundBlockchain.length === 0 && blockchainArr.length >= 1) {
-        return next(new AppError('Invalid blockchain.', 404));
+      if (foundBlockchain.length === 0 && blockchain.length >= 1) {
+        return next(new AppError('Invalid blockchain filter.', 404));
       }
 
       if (!hidden) {

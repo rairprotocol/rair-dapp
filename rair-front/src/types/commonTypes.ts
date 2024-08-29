@@ -8,8 +8,8 @@ export interface ApiCallResponse {
 }
 
 export interface PaginatedApiCall {
-  itemsPerPage: number;
-  pageNum: number;
+  itemsPerPage?: number;
+  pageNum?: number;
 }
 
 export interface CustomModalStyle {

@@ -198,7 +198,7 @@ export const StyledClearButton = styled.button.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<customColor>`
   background-color: var(
-    --${({ isDarkMode }) => (isDarkMode ? 'charcoal-80' : 'rhyno')}
+    --${({ isDarkMode }) => (!isDarkMode ? 'charcoal-80' : 'rhyno')}
   );
   color: ${({ isDarkMode }) => (!isDarkMode ? 'white' : '#585858')};
 `;

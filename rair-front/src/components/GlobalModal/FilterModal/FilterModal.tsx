@@ -6,6 +6,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { Hex } from 'viem';
 
 import {
   MobileCloseBtn,
@@ -19,14 +20,14 @@ import {
 import { HomePageModalFilter } from './HomePAgeModal';
 import { MobileHeaderBlock } from './MobileHeaderBlock';
 
-import { useAppSelector } from '../../../hooks/useReduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
 import {
   GlobalModalContext,
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
 import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
-import { Blockchain } from '../../../types/databaseTypes';
+import { loadFrontPageCatalog } from '../../../redux/tokenSlice';
 import CustomAccordion from '../../Accordion/Accordion';
 import AccordionItem from '../../Accordion/AccordionItem/AccordionItem';
 import { TOption } from '../../Dropdown';
@@ -39,65 +40,38 @@ export type THomePageFilterModalProps = {
   className?: string;
 };
 
-interface CategoryOption {
-  name: string;
-  clicked: boolean;
-  optionId: number;
-  categoryId: string;
-}
-
 const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   isMobileDesign,
   className
 }) => {
-  const { blockchainSettings } = useAppSelector((store) => store.settings);
-  const blockchains = blockchainSettings.map((chain, index) => {
-    return {
-      name: chain.name,
-      chainId: chain.hash,
-      clicked: false,
-      dropDownImg: true,
-      optionId: index + 1
-    };
-  });
+  const { blockchainSettings, categories } = useAppSelector(
+    (store) => store.settings
+  );
+  const { textColor, primaryButtonColor, isDarkMode, primaryColor } =
+    useAppSelector((store) => store.colors);
+  const { getBlockchainData } = useServerSettings();
 
-  const [blockchainsArray, setBlockchainsArray] = useState<Array<Blockchain>>(
+  const [selectedBlockchains, setSelectedBlockchains] = useState<Array<Hex>>(
+    []
+  );
+  const [blockchainOptions, setBlockchainOptions] = useState<Array<TOption>>(
+    []
+  );
+  const [categoryOptions, setCategoryOptions] = useState<Array<TOption>>([]);
+  const [selectedCategories, setSelectedCategories] = useState<Array<string>>(
     []
   );
 
-  const { categories } = useAppSelector((store) => store.settings);
+  const dispatch = useAppDispatch();
 
-  const [categoryList, setCategoryList] = useState<Array<CategoryOption>>([]);
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
   const [isBlockchainOpen, setIsBlockchainOpen] = useState<boolean>(false);
   const isBlockchainStayExpand = useRef<boolean>(false);
-  const [selectedBlockchainItems, setSelectedBlockchainItems] = useState<
-    Array<TOption | undefined>
-  >([]);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const isCategoryStayExpand = useRef<boolean>(false);
-  const [selectedCategoriesItems, setSelectedCategories] = useState<
-    Array<TOption | undefined>
-  >([]);
 
-  const { textColor, primaryButtonColor, isDarkMode } = useAppSelector(
-    (store) => store.colors
-  );
-
-  const {
-    primaryColor,
-    setBlockchain,
-    setCategory,
-    isBlockchainExpand,
-    isCategoryExpand,
-    selectedBchItems,
-    selectedCatItems,
-    isOpen,
-    clearFilter,
-    setFilterText,
-    setIsShow
-  } = globalModalState;
+  const { isBlockchainExpand, isCategoryExpand, isOpen } = globalModalState;
 
   const setIsBChOpen = () => {
     if (isBlockchainExpand) {
@@ -135,125 +109,64 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       payload: { isCategoryExpand: isCategoryStayExpand.current }
     });
   };
-  useEffect(() => {
-    if (selectedBchItems) {
-      setSelectedBlockchainItems(selectedBchItems);
-      const selectedFiltersItemsText = selectedBchItems.map(
-        (selectedBchItem) => selectedBchItem.name
-      );
-      setFilterText(selectedFiltersItemsText);
-      setIsShow(true);
-    }
-  }, [selectedBchItems, setFilterText, setIsShow]);
 
   useEffect(() => {
     if (blockchainSettings) {
-      const filteredblockchainSettings = blockchainSettings.map((item) => {
-        return {
-          ...item,
-          display: item.sync
-        };
-      });
-      setBlockchainsArray(filteredblockchainSettings);
+      const filteredblockchainSettings: Array<TOption> = blockchainSettings.map(
+        (chain) => {
+          const chainData = getBlockchainData(chain.hash);
+          return {
+            optionId: chain.hash,
+            display: chain.display,
+            dropDownImg: chainData?.image,
+            name: chain.name
+          };
+        }
+      );
+      setBlockchainOptions(filteredblockchainSettings);
     }
-  }, [blockchainSettings]);
+  }, [blockchainSettings, getBlockchainData]);
 
   useEffect(() => {
-    if (selectedCatItems) {
-      setSelectedCategories(selectedCatItems);
-      /*const selectedFiltersItemsText = selectedCatItems.map(
-        (selectedCatItem) => selectedCatItem.name
-      );*/
-      // setFilterText(selectedFiltersItemsText);
-      setIsShow(true);
+    if (categories) {
+      const options = categories.map((category) => {
+        return {
+          name: category.name,
+          optionId: category._id!
+        };
+      });
+      setCategoryOptions(options);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCatItems]);
+  }, [categories]);
 
-  const onOptionChange = (ev: React.SyntheticEvent<HTMLInputElement>) => {
-    const target = ev.target as HTMLInputElement;
-    const selectedItemDataTitle = target.getAttribute('data-title');
-    const selectedOptionId = Number(target?.value);
-    if (selectedItemDataTitle === 'blockchain') {
-      const selectedOption = blockchains?.find(
-        (option) => option?.optionId === selectedOptionId
-      );
-      if (
-        selectedBchItems?.filter(
-          (selectedBchItem) => selectedBchItem?.optionId === selectedOptionId
-        ).length
-      ) {
-        const selectedBchItems = selectedBlockchainItems?.filter(
-          (selectedItem) => selectedItem?.optionId !== selectedOptionId
-        );
-        globalModaldispatch({
-          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-          payload: { selectedBchItems }
-        });
-        return setSelectedBlockchainItems(selectedBchItems);
+  const checkBlockchain = useCallback(
+    (value: string) => {
+      const aux = [...selectedBlockchains];
+      const index = aux.findIndex((chain) => chain === value);
+      if (index === -1) {
+        aux.push(value as Hex);
       } else {
-        if (selectedBchItems) {
-          setSelectedBlockchainItems([...selectedBchItems, selectedOption]);
-          globalModaldispatch({
-            type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-            payload: {
-              selectedBchItems: [...selectedBchItems, selectedOption]
-            }
-          });
-          return;
-        }
-        setSelectedBlockchainItems((prevBchArray) => {
-          return [...prevBchArray, selectedOption];
-        });
-        globalModaldispatch({
-          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-          payload: {
-            selectedBchItems: [...selectedBlockchainItems, selectedOption]
-          }
-        });
+        aux.splice(index, 1);
       }
-    }
-    if (selectedItemDataTitle === 'category') {
-      const selectedOption = categoryList?.find(
-        (option) => option?.optionId === selectedOptionId
-      );
-      if (
-        selectedCatItems?.filter(
-          (selectedCatItem) => selectedCatItem?.optionId === selectedOptionId
-        ).length
-      ) {
-        const selectedCatItems = selectedCategoriesItems?.filter(
-          (selectedItem) => selectedItem?.optionId !== selectedOptionId
-        );
-        globalModaldispatch({
-          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-          payload: { selectedCatItems }
-        });
-        return setSelectedCategories(selectedCatItems);
+      setSelectedBlockchains(aux);
+    },
+    [selectedBlockchains]
+  );
+
+  const checkCategory = useCallback(
+    (value: string) => {
+      const aux = [...selectedCategories];
+      const index = aux.findIndex((category) => category === value);
+      if (index === -1) {
+        aux.push(value as Hex);
       } else {
-        // let catArray;
-        if (selectedCatItems) {
-          setSelectedCategories([...selectedCatItems, selectedOption]);
-          globalModaldispatch({
-            type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-            payload: {
-              selectedCatItems: [...selectedCatItems, selectedOption]
-            }
-          });
-          return;
-        }
-        setSelectedCategories((prevArray) => {
-          return [...prevArray, selectedOption];
-        });
-        globalModaldispatch({
-          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-          payload: {
-            selectedCatItems: [...selectedCategoriesItems, selectedOption]
-          }
-        });
+        aux.splice(index, 1);
       }
-    }
-  };
+      setSelectedCategories(aux);
+    },
+    [selectedCategories]
+  );
+
   const onScrollChange = useCallback(() => {
     if (isMobileDesign && isOpen) {
       document.body.style.overflow = 'hidden';
@@ -261,6 +174,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       document.body.style.overflow = 'unset';
     }
   }, [isMobileDesign, isOpen]);
+
   const onCloseBtn = useCallback(() => {
     if (isMobileDesign) {
       globalModaldispatch({
@@ -271,169 +185,45 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       document.body.style.overflow = 'unset';
     }
   }, [globalModaldispatch, onScrollChange, isMobileDesign]);
-  const onFilterApply = useCallback(
-    (
-      selectedBch: [TOption | undefined],
-      selectedCategories: [TOption | undefined] | undefined = undefined
-    ) => {
-      if (selectedBch) {
-        sessionStorage.setItem('BlockchainItems', JSON.stringify(selectedBch));
-        let allSelectedChains = '';
-        selectedBch.forEach((selectedBchItem, idx) => {
-          if (selectedBch.length > 1 && selectedBchItem?.chainId) {
-            if (selectedBch.length - 1 === idx) {
-              allSelectedChains = allSelectedChains.concat(
-                selectedBchItem?.chainId
-              );
-              return;
-            }
-            allSelectedChains = allSelectedChains.concat(
-              selectedBchItem?.chainId,
-              ','
-            );
-            return;
-          }
-          if (selectedBchItem?.chainId) {
-            allSelectedChains = allSelectedChains.concat(
-              selectedBchItem?.chainId
-            );
-            return;
-          }
-        });
-        setBlockchain(allSelectedChains);
+
+  const applyFilters = useCallback(
+    (selectedBlockchains: Array<Hex>, selectedCategories: Array<string>) => {
+      if (selectedBlockchains) {
+        sessionStorage.setItem(
+          'BlockchainItems',
+          JSON.stringify(selectedBlockchains)
+        );
       }
       if (selectedCategories) {
         sessionStorage.setItem(
           'CategoryItems',
           JSON.stringify(selectedCategories)
         );
-        let allSelectedCategories = '';
-        selectedCategories.forEach((selectedCategItem, idx) => {
-          if (selectedCategories.length > 1 && selectedCategItem?.categoryId) {
-            if (selectedCategories.length - 1 === idx) {
-              allSelectedCategories = allSelectedCategories.concat(
-                selectedCategItem?.categoryId
-              );
-              return;
-            }
-            allSelectedCategories = allSelectedCategories.concat(
-              selectedCategItem?.categoryId,
-              ','
-            );
-            return;
-          }
-          if (selectedCategItem?.categoryId) {
-            allSelectedCategories = allSelectedCategories.concat(
-              selectedCategItem?.categoryId
-            );
-            return;
-          }
-        });
-
-        const catArray = allSelectedCategories
-          .split(',')
-          .map((el) => {
-            return `&category[]=${el}`;
-          })
-          .join('');
-        if (catArray === '&category[]=') {
-          setCategory(undefined);
-        } else {
-          setCategory(catArray);
-        }
       }
+      dispatch(
+        loadFrontPageCatalog({
+          categories: selectedCategories,
+          blockchains: selectedBlockchains
+        })
+      );
       onCloseBtn();
       closeModal();
-      // setCategories(selectedCategories[0]);
     },
-    [onCloseBtn, setBlockchain, setCategory]
+    [dispatch, onCloseBtn]
   );
 
-  const returnOption = useCallback(() => {
-    const storageData = sessionStorage.getItem('CategoryItems');
-    if (storageData) {
-      const arr = JSON.parse(storageData);
-
-      if (arr.length > 0) {
-        globalModaldispatch({
-          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-          payload: {
-            selectedCatItems: arr
-          }
-        });
-        let allSelectedCategories = '';
-        arr.forEach((selectedCategItem, idx) => {
-          if (arr.length > 1 && selectedCategItem?.categoryId) {
-            if (arr.length - 1 === idx) {
-              allSelectedCategories = allSelectedCategories.concat(
-                selectedCategItem?.categoryId
-              );
-              return;
-            }
-            allSelectedCategories = allSelectedCategories.concat(
-              selectedCategItem?.categoryId,
-              ','
-            );
-            return;
-          }
-          if (selectedCategItem?.categoryId) {
-            allSelectedCategories = allSelectedCategories.concat(
-              selectedCategItem?.categoryId
-            );
-            return;
-          }
-        });
-
-        const catArray = allSelectedCategories
-          .split(',')
-          .map((el) => {
-            return `&category[]=${el}`;
-          })
-          .join('');
-        if (catArray === '&category[]=') {
-          setCategory(undefined);
-        } else {
-          setCategory(catArray);
-        }
-        setSelectedCategories(arr);
-      }
+  const loadStoredFilters = useCallback(() => {
+    const storedCategories = sessionStorage.getItem('CategoryItems');
+    const storedBlockchains = sessionStorage.getItem('BlockchainItems');
+    if (storedCategories) {
+      const parsedCategories = JSON.parse(storedCategories);
+      setSelectedCategories(parsedCategories);
     }
-    if (storageData) {
-      const arr = JSON.parse(storageData);
-      if (arr.length > 0) {
-        globalModaldispatch({
-          type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-          payload: {
-            selectedBchItems: arr
-          }
-        });
-        setSelectedBlockchainItems(arr);
-        let allSelectedChains = '';
-        arr.forEach((selectedBchItem, idx) => {
-          if (arr.length > 1 && selectedBchItem?.chainId) {
-            if (arr.length - 1 === idx) {
-              allSelectedChains = allSelectedChains.concat(
-                selectedBchItem?.chainId
-              );
-              return;
-            }
-            allSelectedChains = allSelectedChains.concat(
-              selectedBchItem?.chainId,
-              ','
-            );
-            return;
-          }
-          if (selectedBchItem?.chainId) {
-            allSelectedChains = allSelectedChains.concat(
-              selectedBchItem?.chainId
-            );
-            return;
-          }
-        });
-        setBlockchain(allSelectedChains);
-      }
+    if (storedBlockchains) {
+      const parsedBlockchains = JSON.parse(storedBlockchains);
+      setSelectedBlockchains(parsedBlockchains);
     }
-  }, [globalModaldispatch, setBlockchain, setCategory]);
+  }, []);
 
   useEffect(() => {
     if (isOpen && isMobileDesign) {
@@ -447,9 +237,10 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
   useEffect(() => {
     globalModaldispatch({
       type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-      payload: { onFilterApply }
+      payload: { applyFilters }
     });
-  }, [globalModaldispatch, onFilterApply]);
+  }, [globalModaldispatch, applyFilters]);
+
   const AccordionItemBtn = (isItemOpen) =>
     isItemOpen ? (
       <StyledChevronUPIcon
@@ -464,41 +255,19 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
         isDarkMode={isDarkMode}
       />
     );
-  const handleCleanFilter = () => {
-    clearFilter();
+
+  const clearAllFilters = useCallback(() => {
+    setSelectedBlockchains([]);
     setSelectedCategories([]);
     sessionStorage.removeItem('CategoryItems');
     sessionStorage.removeItem('BlockchainItems');
-    globalModaldispatch({
-      type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
-      payload: {
-        selectedBchItems: [],
-        selectedCatItems: []
-      }
-    });
-  };
-
-  const getCategories = useCallback(async () => {
-    if (categories) {
-      const categ = categories.map((el, index) => {
-        return {
-          name: el.name,
-          clicked: false,
-          optionId: index + 7,
-          categoryId: el._id!
-        };
-      });
-      setCategoryList(categ);
-    }
-  }, [categories]);
+    dispatch(loadFrontPageCatalog({}));
+  }, [dispatch]);
 
   useEffect(() => {
-    returnOption();
-  }, [returnOption]);
+    loadStoredFilters();
+  }, [loadStoredFilters]);
 
-  useEffect(() => {
-    getCategories();
-  }, [getCategories]);
   return (
     <HomePageModalFilter
       id="home-page-modal-filter"
@@ -531,10 +300,9 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
           {categories && (
             <Dropdown
               isMobileDesign={isMobileDesign && isMobileDesign}
-              onDropdownChange={onOptionChange}
-              options={categories}
-              key={Math.random() * 1_000_000}
-              selectedOptions={selectedCatItems && selectedCatItems}
+              onDropdownChange={checkCategory}
+              options={categoryOptions}
+              selectedOptions={selectedCategories}
               dropdownIMG={
                 <StyledCategoryItemIcon
                   isDarkMode={isDarkMode}
@@ -562,13 +330,12 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
               primaryColor={primaryColor}
             />
           }>
-          {blockchainsArray && (
+          {blockchainOptions && (
             <Dropdown
-              onDropdownChange={onOptionChange}
-              options={blockchainsArray}
-              selectedOptions={selectedBchItems && selectedBchItems}
-              key={Math.random() * 1_000_000}
-              isMobileDesign={isMobileDesign && isMobileDesign}
+              onDropdownChange={checkBlockchain}
+              options={blockchainOptions}
+              selectedOptions={selectedBlockchains}
+              isMobileDesign={isMobileDesign}
             />
           )}
         </AccordionItem>
@@ -576,35 +343,30 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
       <div className="filter-modal-btn-container ">
         <StyledClearButton
           isDarkMode={isDarkMode}
-          disabled={!selectedBchItems && !selectedCatItems}
+          disabled={!selectedBlockchains.length && !selectedCategories.length}
           primaryColor={primaryColor}
-          onClick={handleCleanFilter}
+          onClick={clearAllFilters}
           className={`modal-filtering-button clear-btn ${
             isMobileDesign ? 'mobile-filter-clear-btn' : ''
           }`}>
           Clear all
         </StyledClearButton>
         <button
-          disabled={!selectedBchItems && !selectedCatItems}
+          disabled={!selectedBlockchains.length && !selectedCategories.length}
           className={`modal-filtering-button apply-btn ${
             isMobileDesign ? 'mobile-filter-apply-btn' : ''
           }`}
           style={{
             color: textColor,
             background: `${
-              primaryColor === '#dedede'
-                ? import.meta.env.VITE_TESTNET === 'true'
-                  ? 'var(--hot-drops)'
-                  : 'linear-gradient(to right, #e882d5, #725bdb)'
+              !isDarkMode
+                ? 'linear-gradient(to right, #e882d5, #725bdb)'
                 : import.meta.env.VITE_TESTNET === 'true'
-                  ? primaryButtonColor ===
-                    'linear-gradient(to right, #e882d5, #725bdb)'
-                    ? 'var(--hot-drops)'
-                    : primaryButtonColor
+                  ? 'var(--hot-drops)'
                   : primaryButtonColor
             }`
           }}
-          onClick={() => onFilterApply(selectedBchItems, selectedCatItems)}>
+          onClick={() => applyFilters(selectedBlockchains, selectedCategories)}>
           Apply
         </button>
       </div>

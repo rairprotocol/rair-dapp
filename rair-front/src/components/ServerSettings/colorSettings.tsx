@@ -59,7 +59,6 @@ const ColorSettings = () => {
   } = useAppSelector((store) => store.settings);
 
   useEffect(() => {
-    console.info({ darkModePrimary });
     if (darkModePrimary) {
       setCustomPrimaryColor(darkModePrimary);
     }

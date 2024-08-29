@@ -1,9 +1,15 @@
 /* eslint-disable no-case-declarations */
 import { useCallback, useEffect, useState } from 'react';
+import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
+import { SmartContractAccount } from '@alchemy/aa-core';
+import { AccountSigner, EthersProviderAdapter } from '@alchemy/aa-ethers';
+import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
+import { Alchemy } from 'alchemy-sdk';
 import { BrowserProvider, Contract, isAddress, JsonRpcSigner } from 'ethers';
 import { Hex } from 'viem';
 
 import { useAppSelector } from './useReduxHooks';
+import useServerSettings from './useServerSettings';
 
 import {
   ContractABI,
@@ -15,11 +21,13 @@ import {
 } from '../contracts';
 
 const useContracts = () => {
-  const { blockchainSettings } = useAppSelector((store) => store.settings);
+  const { getBlockchainData } = useServerSettings();
   const { loginType, isLoggedIn } = useAppSelector((store) => store.user);
   const { connectedChain } = useAppSelector((store) => store.web3);
 
-  const [signer, setSigner] = useState<JsonRpcSigner>();
+  const [signer, setSigner] = useState<
+    JsonRpcSigner | AccountSigner<SmartContractAccount>
+  >();
   const [diamondFactoryInstance, setDiamondFactoryInstance] = useState<
     Contract | undefined
   >();
@@ -36,6 +44,64 @@ const useContracts = () => {
     Contract | undefined
   >();
 
+  const createWeb3AuthSigner = useCallback(async () => {
+    const chainData = getBlockchainData(connectedChain);
+
+    if (!chainData) {
+      return;
+    }
+
+    const web3AuthSigner = new Web3AuthSigner({
+      clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+      chainConfig: {
+        chainNamespace: 'eip155',
+        chainId: chainData.chainId,
+        rpcTarget: chainData.addChainData.rpcUrls[0],
+        displayName: chainData.name,
+        blockExplorer: chainData.addChainData.blockExplorerUrls[0],
+        ticker: chainData.symbol,
+        tickerName: chainData.name
+      },
+      web3AuthNetwork: chainData.testnet
+        ? 'sapphire_devnet'
+        : 'sapphire_mainnet'
+    });
+
+    await web3AuthSigner.authenticate({
+      init: async () => {
+        await web3AuthSigner.inner.initModal();
+      },
+      connect: async () => {
+        await web3AuthSigner.inner.connect();
+      }
+    });
+
+    const modularAccount = await createModularAccountAlchemyClient({
+      apiKey: chainData.alchemyAppKey,
+      chain: chainData.viem!,
+      signer: web3AuthSigner,
+      gasManagerConfig: chainData.alchemyGasPolicy
+        ? {
+            policyId: chainData.alchemyGasPolicy
+          }
+        : undefined
+    });
+
+    const alchemy = new Alchemy({
+      apiKey: chainData.alchemyAppKey,
+      network: chainData?.alchemy,
+      maxRetries: 10
+    });
+
+    const ethersProvider = await alchemy.config.getProvider();
+    const provider =
+      EthersProviderAdapter.fromEthersProvider(ethersProvider).connectToAccount(
+        modularAccount
+      );
+
+    return provider;
+  }, [connectedChain, getBlockchainData]);
+
   const refreshSigner = useCallback(async () => {
     if (!isLoggedIn) {
       return;
@@ -45,12 +111,15 @@ const useContracts = () => {
         if (!window.ethereum.isConnected()) {
           return;
         }
-        const provider = new BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner(0);
+        const metamaskProvider = new BrowserProvider(window.ethereum);
+        const signer = await metamaskProvider.getSigner(0);
         setSigner(signer);
         break;
+      case 'web3auth':
+        setSigner(await createWeb3AuthSigner());
+        break;
     }
-  }, [loginType, isLoggedIn]);
+  }, [loginType, isLoggedIn, createWeb3AuthSigner]);
 
   useEffect(() => {
     refreshSigner();
@@ -69,9 +138,7 @@ const useContracts = () => {
     if (!signer) {
       return;
     }
-    const chainData = blockchainSettings.find(
-      (chain) => chain.hash === connectedChain
-    );
+    const chainData = getBlockchainData(connectedChain);
     if (
       chainData?.diamondFactoryAddress &&
       isAddress(chainData?.diamondFactoryAddress)
@@ -83,7 +150,10 @@ const useContracts = () => {
           signer
         )
       );
+    } else {
+      setDiamondFactoryInstance(undefined);
     }
+
     if (
       chainData?.diamondMarketplaceAddress &&
       isAddress(chainData?.diamondMarketplaceAddress)
@@ -95,11 +165,16 @@ const useContracts = () => {
           signer
         )
       );
+    } else {
+      setDiamondMarketplaceInstance(undefined);
     }
+
     if (chainData?.mainTokenAddress && isAddress(chainData?.mainTokenAddress)) {
       setMainTokenInstance(
         new Contract(chainData?.mainTokenAddress, erc777Abi, signer)
       );
+    } else {
+      setMainTokenInstance(undefined);
     }
     if (
       chainData?.classicFactoryAddress &&
@@ -108,6 +183,8 @@ const useContracts = () => {
       setClassicFactoryInstance(
         new Contract(chainData?.classicFactoryAddress, factoryAbi, signer)
       );
+    } else {
+      setClassicFactoryInstance(undefined);
     }
     if (
       chainData?.licenseExchangeAddress &&
@@ -120,8 +197,10 @@ const useContracts = () => {
           signer
         )
       );
+    } else {
+      setLicenseExchangeInstance(undefined);
     }
-  }, [blockchainSettings, connectedChain, signer]);
+  }, [getBlockchainData, connectedChain, signer]);
 
   return {
     diamondFactoryInstance,

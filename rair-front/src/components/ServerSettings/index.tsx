@@ -8,6 +8,7 @@ import ContractManager from './contractManager';
 import CustomValues from './customValues';
 import FeaturedBanner from './featuredBanner';
 import FooterSettings from './footerSettings';
+import SuperAdminSettings from './superAdmins';
 import TextSettings from './TextSettings';
 
 import { useAppDispatch } from '../../hooks/useReduxHooks';
@@ -54,6 +55,7 @@ const ServerSettings = () => {
       <BooleanSettings />
       <FeaturedBanner {...{ contractList }} />
       <BlockchainSettings />
+      <SuperAdminSettings />
       <ColorSettings />
       <CategorySettings />
       <FooterSettings />

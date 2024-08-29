@@ -35,6 +35,7 @@ interface GetCatalogResponse {
   success: boolean;
   totalNumber: number;
   pageNumber: number;
+  itemsPerPage: number;
 }
 
 interface GetCollectionResponse {
@@ -44,8 +45,8 @@ interface GetCollectionResponse {
 }
 
 interface CatalogQuery extends PaginatedApiCall {
-  blockchain?: Hex;
-  category?: string;
+  blockchains?: Array<Hex>;
+  categories?: Array<string>;
   contractTitle?: string;
 }
 
@@ -82,22 +83,30 @@ const initialState: TokensState = {
 
 export const loadFrontPageCatalog = createAsyncThunk(
   'tokens/loadCatalog',
-  async ({
-    itemsPerPage,
-    pageNum,
-    blockchain,
-    category,
-    contractTitle
-  }: CatalogQuery) => {
+  async (
+    {
+      itemsPerPage,
+      pageNum,
+      blockchains,
+      categories,
+      contractTitle
+    }: CatalogQuery,
+    { getState }
+  ) => {
+    const { tokens } = getState() as { tokens: TokensState };
     const queryParams = new URLSearchParams({
-      itemsPerPage: itemsPerPage.toString(),
-      pageNum: pageNum.toString()
+      itemsPerPage: (itemsPerPage || tokens.itemsPerPage).toString(),
+      pageNum: (pageNum || tokens.currentPage).toString()
     });
-    if (blockchain) {
-      queryParams.append('blockchain', blockchain);
+    if (blockchains) {
+      blockchains.forEach((chain) => {
+        queryParams.append('blockchain[]', chain);
+      });
     }
-    if (category) {
-      queryParams.append('category', category);
+    if (categories) {
+      categories.forEach((category) => {
+        queryParams.append('category[]', category);
+      });
     }
     if (contractTitle) {
       queryParams.append('contractTitle', contractTitle);
@@ -105,7 +114,11 @@ export const loadFrontPageCatalog = createAsyncThunk(
     const response = await axios.get<GetCatalogResponse>(
       `/api/contracts/full?${queryParams.toString()}`
     );
-    return { ...response.data, pageNumber: pageNum };
+    return {
+      ...response.data,
+      pageNumber: pageNum || tokens.currentPage,
+      itemsPerPage: itemsPerPage || tokens.itemsPerPage
+    };
   }
 );
 
@@ -159,12 +172,11 @@ export const tokenSlice = createSlice({
       .addCase(
         loadFrontPageCatalog.fulfilled,
         (state, action: PayloadAction<GetCatalogResponse>) => {
-          return {
-            ...state,
-            catalogStatus: dataStatuses.Complete,
-            catalogTotal: action.payload.totalNumber,
-            catalog: action.payload.contracts
-          };
+          state.catalogStatus = dataStatuses.Complete;
+          state.catalogTotal = action.payload.totalNumber;
+          state.catalog = action.payload.contracts;
+          state.itemsPerPage = action.payload.itemsPerPage;
+          state.currentPage = action.payload.pageNumber;
         }
       )
       .addCase(loadFrontPageCatalog.rejected, (state) => {

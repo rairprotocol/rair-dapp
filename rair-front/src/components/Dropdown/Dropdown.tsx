@@ -1,5 +1,3 @@
-import useServerSettings from '../../hooks/useServerSettings';
-
 import { TDropdownProps } from '.';
 
 import './styles.css';
@@ -10,24 +8,17 @@ const Dropdown = ({
   selectedOptions,
   isMobileDesign
 }: TDropdownProps) => {
-  const { getBlockchainData } = useServerSettings();
-
   return (
     <div className="dropdown-wrapper">
       <ul className="dropdown-options">
-        {options?.map((option, idx) => {
+        {options?.map((option, index) => {
           // logic for multiple select
-          const isChecked = !!selectedOptions?.find(
-            (selectedOption) => selectedOption?.optionId === option.optionId
-          );
+          const isChecked = selectedOptions.includes(option.optionId);
           if (option?.display !== false) {
             return (
-              <li
-                key={idx + Math.random() * 1_000_000}
-                className={`dropdown-option`}>
+              <li key={index} className={`dropdown-option`}>
                 {option?.dropDownImg && (
                   <div
-                    key={idx + Math.random() * 1_000_000}
                     className={`dropdownn-chain-icons ${
                       isMobileDesign ? 'mobile-chain-icons' : ''
                     }`}>
@@ -35,26 +26,20 @@ const Dropdown = ({
                       className={`dropdownn-chain-icons ${
                         isMobileDesign ? 'mobile-chain-icons' : ''
                       }`}
-                      src={`${
-                        option?.chainId &&
-                        getBlockchainData(option?.chainId as `0x${string}`)
-                          ?.image
-                      }`}
+                      src={option.dropDownImg}
                       alt="blockchain-img"
-                      key={idx + Math.random() * 1_000_000}
                     />
                   </div>
                 )}
                 {dropdownIMG}
-                <div
-                  className="dropdown-option-wrapper"
-                  key={idx + Math.random() * 1_000_000}>
-                  <span
-                    key={idx + Math.random() * 1_000_000}
+                <div className="dropdown-option-wrapper">
+                  <label
+                    htmlFor={`${option.name}${option.optionId}`}
                     className="dropdown-option-text">
                     {option.name}
-                  </span>
+                  </label>
                   <input
+                    id={`${option.name}${option.optionId}`}
                     className={`dropdown-option-checkbox ${
                       isMobileDesign ? 'mobile-checkbox' : ''
                     }`}
@@ -62,8 +47,9 @@ const Dropdown = ({
                       option?.chainId ? 'blockchain' : 'category'
                     }`}
                     type="checkbox"
-                    value={option.optionId}
-                    onChange={onDropdownChange}
+                    onChange={() => {
+                      onDropdownChange(option.optionId);
+                    }}
                     checked={isChecked}
                   />
                 </div>

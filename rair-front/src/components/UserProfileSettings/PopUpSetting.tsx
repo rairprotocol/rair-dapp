@@ -95,7 +95,7 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
         );
 
       if (balance) {
-        const result = formatEther(balance);
+        const result = formatEther(balance.toString());
         const final = Number(result.toString())?.toFixed(2)?.toString();
 
         setUserBalance(final);

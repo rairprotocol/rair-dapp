@@ -102,6 +102,13 @@ const useConnectUser = () => {
       return {};
     }
 
+    reactSwal.fire({
+      title: 'Connecting',
+      html: 'Please wait',
+      icon: 'info',
+      showConfirmButton: false
+    });
+
     const { connectedChain, currentUserAddress, userDetails } = await dispatch(
       connectChainWeb3Auth(chainInformation as CombinedBlockchainData)
     ).unwrap();
@@ -111,7 +118,7 @@ const useConnectUser = () => {
       blockchain: connectedChain,
       userDetails
     };
-  }, [getBlockchainData, dispatch]);
+  }, [getBlockchainData, reactSwal, dispatch]);
 
   const loginWithMetamask = useCallback(async () => {
     const { connectedChain, currentUserAddress } = await dispatch(
@@ -291,6 +298,7 @@ const useConnectUser = () => {
             loginResponse = await signWeb3MessageWeb3Auth(
               loginData.userAddress
             );
+            reactSwal.close();
             if (firstTimeLogin) {
               const userData = await loginData.userDetails;
               const availableData: Partial<User> = {};
@@ -349,22 +357,27 @@ const useConnectUser = () => {
     }
   }, [dispatch, navigate, currentUserAddress]);
 
-  useEffect(() => {
-    if (isLoggedIn || loginStatus === dataStatuses.Loading) {
+  const checkLoginOnStart = useCallback(async () => {
+    if (isLoggedIn || loginStatus !== dataStatuses.Uninitialized) {
       return;
     }
-    (async () => {
-      const userData = await dispatch(loadCurrentUser()).unwrap();
-      switch (userData?.loginType) {
-        case 'metamask':
-          dispatch(connectChainMetamask());
-          dispatch(setExchangeRates(await getCoingeckoRates()));
-          break;
-        default:
-          logoutUser();
-          break;
-      }
-    })();
+    const userData = await dispatch(loadCurrentUser()).unwrap();
+    switch (userData?.loginType) {
+      case 'metamask':
+        if (window.ethereum.selectedAddress !== userData.publicAddress) {
+          return await logoutUser();
+        }
+        dispatch(setExchangeRates(await getCoingeckoRates()));
+        dispatch(connectChainMetamask());
+        break;
+      default:
+        logoutUser();
+        break;
+    }
+  }, [dispatch, isLoggedIn, loginStatus, logoutUser]);
+
+  useEffect(() => {
+    checkLoginOnStart();
   }, []);
 
   return {

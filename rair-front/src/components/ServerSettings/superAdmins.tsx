@@ -20,7 +20,7 @@ const SuperAdminSettings = () => {
 
   useEffect(() => {
     if (superAdmins) {
-      setSuperAdminsCopy(superAdmins);
+      setSuperAdminsCopy(JSON.parse(JSON.stringify(superAdmins)));
     }
   }, [superAdmins]);
 
@@ -40,8 +40,8 @@ const SuperAdminSettings = () => {
     <div className="col-12 text-end col-md-6 px-5 my-2">
       <h3>Super admins:</h3>
       {superAdminsOnVault ? 'Currently using Vault' : ''}
-      {superAdmins &&
-        superAdmins.map((user, index) => {
+      {superAdminsCopy &&
+        superAdminsCopy.map((user, index) => {
           return (
             <div key={index} className="row">
               <InputField
@@ -91,8 +91,7 @@ const SuperAdminSettings = () => {
         onClick={() => {
           modifySuperAdminAddress(superAdminsCopy.length)('');
         }}>
-        {' '}
-        Add{' '}
+        Add
       </button>
     </div>
   );
