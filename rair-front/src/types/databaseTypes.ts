@@ -200,3 +200,12 @@ export interface ServerSettings extends MongoDocument {
   signupMessage?: string;
   customValues?: Array<CustomValue>;
 }
+
+export interface ResaleData extends MongoDocument {
+  tokenContract: string;
+  tokenIndex: string;
+  price: string;
+  buyer?: Hex;
+  seller: Hex;
+  blockchainOfferId?: string;
+}

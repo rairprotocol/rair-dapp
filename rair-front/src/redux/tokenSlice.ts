@@ -15,6 +15,7 @@ import {
   MintedToken,
   Offer,
   Product,
+  ResaleData,
   TokenMetadata,
   User
 } from '../types/databaseTypes';
@@ -66,6 +67,7 @@ interface CollectionQuery {
 export interface CollectionTokens extends Omit<MintedToken, 'offer'> {
   ownerData?: User;
   offer: Offer;
+  resaleData?: ResaleData;
 }
 
 export interface TokensState {
