@@ -4,7 +4,6 @@ const {
   MintedToken,
   Unlock,
   Offer,
-  Category,
   User,
   Blockchain,
   Contract,

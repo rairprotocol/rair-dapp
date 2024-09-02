@@ -105,7 +105,12 @@ exports.getServerSettings = async (req, res, next) => {
             as: 'featuredCollection',
           },
         },
-        { $unwind: '$featuredCollection' },
+        {
+          $unwind: {
+            path: '$featuredCollection',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
         {
           $project: {
             'footerLinks._id': false,
