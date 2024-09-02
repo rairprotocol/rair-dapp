@@ -152,7 +152,7 @@ module.exports = {
       return res.json({
         success: true,
         list: unlockCheck,
-        totalNumber: result.count[0].total,
+        totalNumber: result?.count?.[0]?.total || 0,
       });
     } catch (e) {
       log.error(e);
