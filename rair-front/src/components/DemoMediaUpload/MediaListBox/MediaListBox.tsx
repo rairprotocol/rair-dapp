@@ -67,11 +67,11 @@ const ContractDataModal = ({
       const contractMapping = {};
       contracts.forEach((contract) => {
         if (!contractMapping[contract._id]) {
-          contract.productArray = [contract.products];
-          delete contract.products;
+          contract.productArray = [contract.product];
+          delete contract.product;
           contractMapping[contract._id] = contract;
         } else {
-          contractMapping[contract._id]?.productArray.push(contract.products);
+          contractMapping[contract._id]?.productArray.push(contract.product);
         }
       });
       setContractData(contractMapping);
