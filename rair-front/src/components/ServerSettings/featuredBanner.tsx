@@ -3,12 +3,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import { rFetch } from '../../utils/rFetch';
+import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputSelect from '../common/InputSelect';
 
 const FeaturedBanner = ({ contractList }) => {
   const [selectedContract, setSelectedContract] = useState<string>('null');
   const [selectedProduct, setSelectedProduct] = useState<string>('null');
-  const [productOptions, setProductOptions] = useState([]);
+  const [productOptions, setProductOptions] = useState<Array<OptionsType>>([]);
   const { primaryButtonColor, textColor } = useAppSelector(
     (store) => store.colors
   );
@@ -21,11 +22,8 @@ const FeaturedBanner = ({ contractList }) => {
       return;
     }
     setSelectedContract(featuredCollection.contract);
-    if (productOptions.length === 0) {
-      return;
-    }
     setSelectedProduct(featuredCollection._id!);
-  }, [featuredCollection, productOptions]);
+  }, [featuredCollection]);
 
   const getProductData = useCallback(async () => {
     if (selectedContract === 'null') {
