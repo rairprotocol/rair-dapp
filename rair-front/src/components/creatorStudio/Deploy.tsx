@@ -122,7 +122,7 @@ const Factory = () => {
       const userBalance = await web3TxHandler(mainTokenInstance, 'balanceOf', [
         currentUserAddress
       ]);
-      if (userBalance) {
+      if (userBalance !== undefined) {
         setUserBalance(userBalance);
       }
       const symbolValue = await web3TxHandler(mainTokenInstance, 'symbol');
@@ -201,10 +201,7 @@ const Factory = () => {
       return;
     }
     setDeploying(true);
-    if (
-      allowance &&
-      BigInt(allowance) < BigInt(deploymentPriceDiamond?.toString())
-    ) {
+    if (allowance !== undefined && allowance < deploymentPriceDiamond) {
       reactSwal.fire({
         title: 'Step 1 of 2',
         html: `Approve ${formatEther(
@@ -270,7 +267,8 @@ const Factory = () => {
         <hr />
         <span className="text-start">
           <b>Your balance:</b>{' '}
-          {userBalance?.toString() && formatEther(userBalance).toString()}{' '}
+          {typeof userBalance === 'bigint' &&
+            formatEther(userBalance).toString()}{' '}
           {tokenSymbol} Tokens
         </span>
         <div className="col-12 p-2">

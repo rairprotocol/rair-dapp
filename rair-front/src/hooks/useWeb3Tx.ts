@@ -136,7 +136,7 @@ const useWeb3Tx = () => {
       const web3Function = contract.getFunction(method);
       if (!web3Function) {
         console.error(`Error no method called ${method} found`);
-        return false;
+        return undefined;
       }
       try {
         paramsValidation = await contract[method](...args);
@@ -323,7 +323,7 @@ const useWeb3Tx = () => {
     ) => {
       if (!currentUserAddress) {
         console.error(`Login required for Web3 call ${method}`);
-        return;
+        return undefined;
       }
       switch (loginType) {
         case 'metamask':
@@ -332,6 +332,7 @@ const useWeb3Tx = () => {
           return web3AuthCall(contract, method, args, options);
         default:
           reactSwal.fire('Error', 'Please login', 'error');
+          return undefined;
       }
     },
     [
