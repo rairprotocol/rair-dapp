@@ -122,7 +122,7 @@ if (!Object.keys(colorThemes).includes(localStorage.colorScheme)) {
 
 const initialState: ColorState = {
   isDarkMode: localStorage.colorScheme === 'dark',
-  ...colorThemes[localStorage.colorScheme],
+  ...colorThemes[localStorage.colorScheme || 'dark'],
   ...buttons
 };
 
@@ -143,15 +143,18 @@ export const colorSlice = createSlice({
         buttonSecondaryColor,
         iconColor
       } = action.payload;
-      colorThemes.dark = {
-        ...colorThemes.dark,
-        ...{
-          primaryColor: darkModePrimary,
-          secondaryColor: darkModeSecondary,
-          textColor: darkModeText,
-          iconColor
-        }
-      };
+      if (darkModePrimary) {
+        colorThemes.dark.primaryColor = darkModePrimary;
+      }
+      if (darkModeSecondary) {
+        colorThemes.dark.secondaryColor = darkModeSecondary;
+      }
+      if (darkModeText) {
+        colorThemes.dark.textColor = darkModeText;
+      }
+      if (iconColor) {
+        colorThemes.dark.iconColor = iconColor;
+      }
       if (buttonPrimaryColor) {
         buttons.primaryButtonColor = buttonPrimaryColor;
         if (buttonFadeColor) {
