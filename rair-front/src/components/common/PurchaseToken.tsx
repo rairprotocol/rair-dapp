@@ -82,7 +82,7 @@ const findNextToken = async (
     return await contractInstance?.getNextSequentialIndex(product, start, end);
   } else {
     const array: string[] = [];
-    for (let i = BigInt(start); i < BigInt(end); i = i + BigInt(1)) {
+    for (let i = BigInt(start); i <= BigInt(end); i = i + BigInt(1)) {
       i = await contractInstance?.getNextSequentialIndex(product, i, end);
       array.push(i.toString());
       if (BigInt(array.length) === BigInt(amountOfTokensToPurchase)) {
