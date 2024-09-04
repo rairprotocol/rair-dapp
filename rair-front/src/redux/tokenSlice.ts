@@ -187,6 +187,7 @@ export const loadCollection = createAsyncThunk(
     if (attributes) {
       queryParams.append('metadataFilters', JSON.stringify(attributes));
     }
+    dispatch(clearCollectionData());
     const response = await axios.get<GetCollectionResponse>(
       `/api/nft/network/${blockchain}/${contract}/${product}?${queryParams.toString()}`
     );
@@ -216,7 +217,15 @@ export const loadCollection = createAsyncThunk(
 export const tokenSlice = createSlice({
   name: 'tokens',
   initialState,
-  reducers: {},
+  reducers: {
+    clearCollectionData: (state) => {
+      state.currentCollectionStatus = dataStatuses.Uninitialized;
+      state.currentCollectionTotal = 0;
+      state.currentCollection = {};
+      state.currentCollectionMetadataStatus = dataStatuses.Uninitialized;
+      state.currentCollectionMetadata = undefined;
+    }
+  },
   extraReducers: (builder) => {
     builder
       // Front page catalog
@@ -287,5 +296,5 @@ export const tokenSlice = createSlice({
   }
 });
 
-//export const { updateSetting } = settingsSlice.actions;
+export const { clearCollectionData } = tokenSlice.actions;
 export default tokenSlice.reducer;

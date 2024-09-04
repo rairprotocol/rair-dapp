@@ -187,7 +187,6 @@ export interface INftDataPageMain {
   someUsersData: User | null | undefined;
   ownerInfo?: TProducts | undefined;
   embeddedParams?: TEmbeddedParams | undefined;
-  handleTokenBoughtButton: () => void;
   setTokenNumber?: (arg: undefined | number) => void;
   getProductsFromOffer?: () => void;
 }
