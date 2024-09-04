@@ -178,8 +178,6 @@ const NftDataExternalLink = () => {
     currentUserAddress
   ]);
 
-  const handleTokenBoughtButton = () => {};
-
   const handleClickToken = async (token: string | undefined) => {
     navigate(
       `/tokens/${neededBlockchain}/${contractOfProduct}/${product}/${token}`
@@ -233,7 +231,6 @@ const NftDataExternalLink = () => {
       setSelectedToken={setSelectedToken}
       productsFromOffer={productsFromOffer}
       product={product}
-      handleTokenBoughtButton={handleTokenBoughtButton}
     />
   );
 };
