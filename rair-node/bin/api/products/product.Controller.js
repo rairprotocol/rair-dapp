@@ -17,12 +17,6 @@ router.get(
     productService.getProductsByUser,
 );
 
-router.get(
-    '/:id',
-    validation(['dbId'], 'params'),
-    productService.getProductById,
-);
-
 router.post(
     '/:id',
     upload.single('banner'),

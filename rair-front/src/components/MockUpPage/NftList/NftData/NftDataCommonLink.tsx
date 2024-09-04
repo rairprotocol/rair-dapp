@@ -19,6 +19,7 @@ import {
   useAppDispatch,
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
+import { dataStatuses } from '../../../../redux/commonTypes';
 import { loadCollection } from '../../../../redux/tokenSlice';
 import { setRequestedChain } from '../../../../redux/web3Slice';
 import { CatalogVideoItem } from '../../../../types/commonTypes';
@@ -54,12 +55,13 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [someUsersData, setSomeUsersData] = useState<User | null>();
   const [dataForUser, setDataForUser] = useState<TProducts>();
-  const [tokenBought, setTokenBought] = useState<boolean>(false);
   const showTokensRef = useRef<number>(20);
 
   const dispatch = useAppDispatch();
   const { currentUserAddress } = useAppSelector((store) => store.web3);
-  const { currentCollection } = useAppSelector((state) => state.tokens);
+  const { currentCollection, currentCollectionStatus } = useAppSelector(
+    (state) => state.tokens
+  );
 
   const navigate = useNavigate();
   const params = useParams<TParamsNftDataCommonLink>();
@@ -75,7 +77,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const getAllProduct = useCallback(
     async (fromToken: string, toToken: string, attributes: any) => {
-      if (!product) {
+      if (!product || currentCollectionStatus === dataStatuses.Loading) {
         return;
       }
 
@@ -98,7 +100,15 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
       setIsLoading(false);
     },
-    [product, tokenId, currentCollection, dispatch, blockchain, contract]
+    [
+      product,
+      tokenId,
+      currentCollection,
+      dispatch,
+      blockchain,
+      contract,
+      currentCollectionStatus
+    ]
   );
 
   useEffect(() => {
@@ -189,10 +199,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     }
   }, [neededUserAddress]);
 
-  const handleTokenBoughtButton = useCallback(() => {
-    setTokenBought((prev) => !prev);
-  }, [setTokenBought]);
-
   useEffect(() => {
     getInfoFromUser();
   }, [getInfoFromUser]);
@@ -250,14 +256,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       }
     }
     getAllProduct(tokenStart.toString(), tokenEnd.toString(), undefined);
-  }, [
-    getAllProduct,
-    showTokensRef,
-    tokenId,
-    tokenNumber,
-    setTokenNumber,
-    tokenBought
-  ]);
+  }, []);
 
   useEffect(() => {
     getParticularOffer();
@@ -338,7 +337,6 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         product={product}
         ownerInfo={ownerInfo}
         offerDataInfo={offerDataInfo}
-        handleTokenBoughtButton={handleTokenBoughtButton}
         setTokenNumber={setTokenNumber}
         getProductsFromOffer={getProductsFromOffer}
       />

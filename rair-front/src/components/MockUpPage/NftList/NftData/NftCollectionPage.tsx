@@ -9,7 +9,6 @@ import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
 import axios, { AxiosError } from 'axios';
-import Swal from 'sweetalert2';
 
 import {
   IOffersResponseType,
@@ -19,8 +18,11 @@ import {
   useAppDispatch,
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
+import useSwal from '../../../../hooks/useSwal';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { hotDropsDefaultBanner } from '../../../../images';
+import { dataStatuses } from '../../../../redux/commonTypes';
+import { loadNextCollectionPage } from '../../../../redux/tokenSlice';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
 import InputField from '../../../common/InputField';
@@ -64,11 +66,11 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
 }) => {
   const { isLoggedIn, publicAddress } = useAppSelector((store) => store.user);
 
-  const { currentCollection, currentCollectionTotal } = useAppSelector(
-    (store) => store.tokens
-  );
+  const { currentCollection, currentCollectionTotal, currentCollectionStatus } =
+    useAppSelector((store) => store.tokens);
 
   const { width } = useWindowDimensions();
+  const rSwal = useSwal();
   const isMobileDesign = width < 820;
 
   const params = useParams<TParamsNftDataCommonLink>();
@@ -147,10 +149,11 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
       const target = entries[0];
       if (target.isIntersecting) {
         showTokensRef.current = showTokensRef.current + 20;
-        getAllProduct('0', showTokensRef.current.toString(), undefined);
+        dispatch(loadNextCollectionPage());
+        //getAllProduct('0', showTokensRef.current.toString(), undefined);
       }
     },
-    [getAllProduct, showTokensRef]
+    [dispatch, showTokensRef]
   );
 
   useEffect(() => {
@@ -210,7 +213,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
         if (fileF.type !== 'video/mp4') {
           setFileUpload(fileF);
         } else {
-          Swal.fire(
+          rSwal.fire(
             'Info',
             `You cannot upload video to background!`,
             'warning'
@@ -221,7 +224,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
         reader.readAsDataURL(fileF);
       }
     },
-    [setFileUpload]
+    [setFileUpload, rSwal]
   );
 
   const editBackground = useCallback(async () => {
@@ -357,459 +360,441 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     }
   };
 
-  return (
-    <>
-      {Object.keys(currentCollection).length > 0 ||
-      tokenDataFiltered.length > 0 ? (
-        <div
-          className="wrapper-collection"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignContent: 'flex-start',
-            justifyContent: 'center',
-            marginBottom: '66px'
-          }}>
-          <BreadcrumbsView />
-          <div className={`collection-background`}>
-            {loadingBg ? (
-              <div className="loadingProfile">
-                <div className="loader-wrapper">
-                  <div className="load" />
-                </div>
-              </div>
-            ) : (
-              <ImageLazy
-                className="picture-banner"
-                alt="Collection Banner"
-                src={
-                  bannerInfo && bannerInfo?.bannerImage
-                    ? `${changeIPFSLink(bannerInfo?.bannerImage)}`
-                    : defaultCollectionBanner
-                }
-              />
-            )}
-            {isLoggedIn &&
-              offerAllData &&
-              publicAddress === offerAllData.owner && (
-                <div
-                  className={'blockAddBack'}
-                  style={{
-                    position: 'absolute',
-                    top: '0',
-                    right: '0'
-                  }}>
-                  <label className={'inputFile'}>
-                    <AddIcon className={'plus'} />
-                    <input
-                      disabled={loadingBg ? true : false}
-                      type="file"
-                      onChange={photoUpload}
-                    />
-                  </label>
-                </div>
-              )}
-          </div>
-          <TitleCollection
-            title={collectionName}
-            someUsersData={someUsersData}
-            userName={offerAllData?.owner}
-            offerDataCol={offerDataCol}
-            toggleMetadataFilter={toggleMetadataFilter}
-          />
-          <div className="container-search">
-            <InputField
-              getter={titleSearch}
-              setter={setTitleSearch}
-              placeholder={'Search tokens'}
-              customCSS={{
-                background:
-                  primaryColor === '#dedede'
-                    ? `var(--rhyno-40)`
-                    : `color-mix(in srgb, ${primaryColor} 50%, #aaaaaa)`,
-                color: `var(--${textColor})`,
-                borderTopLeftRadius: '0',
-                border: `${
-                  primaryColor === '#dedede'
-                    ? 'solid 1px var(--rhyno)'
-                    : `solid 1px color-mix(in srgb, ${primaryColor}, #888888)`
-                } `,
-                paddingLeft: '2rem'
-              }}
-              customClass="form-control input-styled border-top-radius-tablet search-mobile"
-            />
-            <div className="nft-form-control-icon">
-              <i className="fas-custom">
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  size="lg"
-                  style={{
-                    color:
-                      import.meta.env.VITE_TESTNET === 'true'
-                        ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                        : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
-                  }}
-                  aria-hidden="true"
-                />
-              </i>
-              {isMobileDesign ? (
-                <FilteringBlock
-                  click={metadataFilter}
-                  setIsClick={setMetadataFilter}
-                  isFilterShow={true}
-                  textColor={textColor}
-                  primaryColor={primaryColor}
-                  metadataFilter={metadataFilter}
-                  setMetadataFilter={toggleMetadataFilter}
-                  // categoryClick={categoryClick}
-                  // setCategoryClick={setCategoryClick}
-                  // blockchainClick={blockchainClick}
-                  // setBlockchainClick={setBlockchainClick}
-                  sortItem={sortItem}
-                  // setBlockchain={setBlockchain}
-                  // setCategory={setCategory}
-                  setSortItem={setSortItem}
-                  setIsShow={setMetadataFilter}
-                  colletionPage={true}
-                  // setIsShowCategories={setIsShowCategories}
-                  // setFilterText={setFilterText}
-                  // setFilterCategoriesText={setFilterCategoriesText}
-                />
-              ) : (
-                <FilteringBlock
-                  click={metadataFilter}
-                  setIsClick={setMetadataFilter}
-                  isFilterShow={true}
-                  textColor={textColor}
-                  primaryColor={primaryColor}
-                  metadataFilter={metadataFilter}
-                  setMetadataFilter={toggleMetadataFilter}
-                  colletionPage={true}
-                  // categoryClick={categoryClick}
-                  // setCategoryClick={setCategoryClick}
-                  // blockchainClick={blockchainClick}
-                  // setBlockchainClick={setBlockchainClick}
-                  sortItem={sortItem}
-                  // setBlockchain={setBlockchain}
-                  // setCategory={setCategory}
-                  setSortItem={setSortItem}
-                  setIsShow={setMetadataFilter}
-                  // setIsShowCategories={setIsShowCategories}
-                  // setFilterText={setFilterText}
-                  // setFilterCategoriesText={setFilterCategoriesText}
-                />
-              )}
-            </div>
-          </div>
-          <ClearMetadataBox
-            filteredDataAttributes={filteredDataAttributes}
-            setSelectedAttributeValues={setSelectedAttributeValues}
-            getResetTokens={getResetTokens}
-          />
-          {tokenDataFiltered.length > 0 ? (
-            <div className="filter__btn__wrapper">
-              {show ? (
-                <CustomButton
-                  text={'Clean filter'}
-                  onClick={() => {
-                    setTokenDataFiltered([]);
-                    setShow(false);
-                  }}
-                />
-              ) : null}
-            </div>
-          ) : null}
+  if (currentCollectionStatus !== dataStatuses.Complete) {
+    return <LoadingComponent />;
+  }
+
+  if (currentCollectionTotal === 0) {
+    return (
+      <div className="collection-no-products">
+        {!!embeddedParams || (
           <div
             style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center'
+              cursor: 'pointer',
+              color: textColor,
+              fontSize: '2rem'
+            }}
+            onClick={() => goBack()}
+            className="arrow-back">
+            <FontAwesomeIcon icon={faArrowAltCircleLeft} />
+          </div>
+        )}
+        <h2>No tokens found</h2>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="wrapper-collection"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignContent: 'flex-start',
+        justifyContent: 'center',
+        marginBottom: '66px'
+      }}>
+      <BreadcrumbsView />
+      <div className={`collection-background`}>
+        {loadingBg ? (
+          <div className="loadingProfile">
+            <div className="loader-wrapper">
+              <div className="load" />
+            </div>
+          </div>
+        ) : (
+          <ImageLazy
+            className="picture-banner"
+            alt="Collection Banner"
+            src={
+              bannerInfo && bannerInfo?.bannerImage
+                ? `${changeIPFSLink(bannerInfo?.bannerImage)}`
+                : defaultCollectionBanner
+            }
+          />
+        )}
+        {isLoggedIn && offerAllData && publicAddress === offerAllData.owner && (
+          <div
+            className={'blockAddBack'}
+            style={{
+              position: 'absolute',
+              top: '0',
+              right: '0'
             }}>
-            {/* <div className={'list-button-wrapper'}> */}
-            <div
-              className={`list-button-wrapper-grid-template ${
+            <label className={'inputFile'}>
+              <AddIcon className={'plus'} />
+              <input
+                disabled={loadingBg ? true : false}
+                type="file"
+                onChange={photoUpload}
+              />
+            </label>
+          </div>
+        )}
+      </div>
+      <TitleCollection
+        title={collectionName}
+        someUsersData={someUsersData}
+        userName={offerAllData?.owner}
+        offerDataCol={offerDataCol}
+        toggleMetadataFilter={toggleMetadataFilter}
+      />
+      <div className="container-search">
+        <InputField
+          getter={titleSearch}
+          setter={setTitleSearch}
+          placeholder={'Search tokens'}
+          customCSS={{
+            background:
+              primaryColor === '#dedede'
+                ? `var(--rhyno-40)`
+                : `color-mix(in srgb, ${primaryColor} 50%, #aaaaaa)`,
+            color: `var(--${textColor})`,
+            borderTopLeftRadius: '0',
+            border: `${
+              primaryColor === '#dedede'
+                ? 'solid 1px var(--rhyno)'
+                : `solid 1px color-mix(in srgb, ${primaryColor}, #888888)`
+            } `,
+            paddingLeft: '2rem'
+          }}
+          customClass="form-control input-styled border-top-radius-tablet search-mobile"
+        />
+        <div className="nft-form-control-icon">
+          <i className="fas-custom">
+            <FontAwesomeIcon
+              icon={faSearch}
+              size="lg"
+              style={{
+                color:
+                  import.meta.env.VITE_TESTNET === 'true'
+                    ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                    : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+              }}
+              aria-hidden="true"
+            />
+          </i>
+          {isMobileDesign ? (
+            <FilteringBlock
+              click={metadataFilter}
+              setIsClick={setMetadataFilter}
+              isFilterShow={true}
+              textColor={textColor}
+              primaryColor={primaryColor}
+              metadataFilter={metadataFilter}
+              setMetadataFilter={toggleMetadataFilter}
+              // categoryClick={categoryClick}
+              // setCategoryClick={setCategoryClick}
+              // blockchainClick={blockchainClick}
+              // setBlockchainClick={setBlockchainClick}
+              sortItem={sortItem}
+              // setBlockchain={setBlockchain}
+              // setCategory={setCategory}
+              setSortItem={setSortItem}
+              setIsShow={setMetadataFilter}
+              colletionPage={true}
+              // setIsShowCategories={setIsShowCategories}
+              // setFilterText={setFilterText}
+              // setFilterCategoriesText={setFilterCategoriesText}
+            />
+          ) : (
+            <FilteringBlock
+              click={metadataFilter}
+              setIsClick={setMetadataFilter}
+              isFilterShow={true}
+              textColor={textColor}
+              primaryColor={primaryColor}
+              metadataFilter={metadataFilter}
+              setMetadataFilter={toggleMetadataFilter}
+              colletionPage={true}
+              // categoryClick={categoryClick}
+              // setCategoryClick={setCategoryClick}
+              // blockchainClick={blockchainClick}
+              // setBlockchainClick={setBlockchainClick}
+              sortItem={sortItem}
+              // setBlockchain={setBlockchain}
+              // setCategory={setCategory}
+              setSortItem={setSortItem}
+              setIsShow={setMetadataFilter}
+              // setIsShowCategories={setIsShowCategories}
+              // setFilterText={setFilterText}
+              // setFilterCategoriesText={setFilterCategoriesText}
+            />
+          )}
+        </div>
+      </div>
+      <ClearMetadataBox
+        filteredDataAttributes={filteredDataAttributes}
+        setSelectedAttributeValues={setSelectedAttributeValues}
+        getResetTokens={getResetTokens}
+      />
+      {tokenDataFiltered.length > 0 ? (
+        <div className="filter__btn__wrapper">
+          {show ? (
+            <CustomButton
+              text={'Clean filter'}
+              onClick={() => {
+                setTokenDataFiltered([]);
+                setShow(false);
+              }}
+            />
+          ) : null}
+        </div>
+      ) : null}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center'
+        }}>
+        <div
+          className={`list-button-wrapper-grid-template ${
+            metadataFilter && 'with-modal'
+          }`}>
+          {tokenDataFiltered.length > 0
+            ? tokenDataFiltered.map((token, index) => {
+                if (
+                  token.metadata.image &&
+                  token.metadata.image !== 'undefined'
+                ) {
+                  return (
+                    <NftItemForCollectionView
+                      id={`collection-view-${index}`}
+                      key={index}
+                      pict={offerAllData?.cover}
+                      metadata={token.metadata}
+                      offerPrice={offerPrice}
+                      blockchain={blockchain}
+                      selectedData={selectedData}
+                      index={token.token}
+                      indexId={index.toString()}
+                      offerData={offerDataCol}
+                      item={token}
+                      offer={
+                        token.offer.diamond
+                          ? token.offer.diamondRangeIndex
+                          : token.offer.offerIndex
+                      }
+                      someUsersData={someUsersData}
+                      userName={offerAllData?.owner}
+                      setPlaying={setPlaying}
+                      playing={playing}
+                      diamond={token.offer.diamond}
+                      resalePrice={token?.resaleData?.price}
+                    />
+                  );
+                } else {
+                  return null;
+                }
+              })
+            : filteredData && filteredData.length > 0
+              ? filteredData.map((item, index) => {
+                  if (
+                    item.metadata.image &&
+                    item.metadata.image !== 'undefined'
+                  ) {
+                    return (
+                      <NftItemForCollectionView
+                        id={`collection-view-${index}`}
+                        key={index}
+                        pict={offerAllData?.cover}
+                        metadata={item.metadata}
+                        offerPrice={offerPrice}
+                        blockchain={blockchain}
+                        selectedData={selectedData}
+                        index={String(index)}
+                        offerData={offerDataCol}
+                        item={item}
+                        indexId={index.toString()}
+                        offerItemData={item.offer}
+                        offer={
+                          item.offer.diamond
+                            ? item.offer.diamondRangeIndex
+                            : item.offer.offerIndex
+                        }
+                        someUsersData={someUsersData}
+                        userName={offerAllData?.owner}
+                        tokenDataLength={Object.keys(currentCollection).length}
+                        setPlaying={setPlaying}
+                        playing={playing}
+                        diamond={item.offer.diamond}
+                        resalePrice={item?.resaleData?.price}
+                      />
+                    );
+                  } else {
+                    return null;
+                  }
+                })
+              : Array.from(new Array(10)).map((item, index) => {
+                  return (
+                    <Skeleton
+                      key={index}
+                      className={'skeloton-product'}
+                      variant="rectangular"
+                      width={283}
+                      height={280}
+                      style={{ borderRadius: 20 }}
+                    />
+                  );
+                })}
+        </div>
+        {metadataFilter && (
+          <div id="filter-modal-parent">
+            <HomePageModalFilter
+              isMobileDesign={isMobileDesign}
+              primaryColor={primaryColor}
+              id="home-page-modal-filter"
+              className={`filter-modal-wrapper ${
                 metadataFilter && 'with-modal'
               }`}>
-              {tokenDataFiltered.length > 0
-                ? tokenDataFiltered.map((token, index) => {
-                    if (
-                      token.metadata.image &&
-                      token.metadata.image !== 'undefined'
-                    ) {
-                      return (
-                        <NftItemForCollectionView
-                          id={`collection-view-${index}`}
-                          key={`${
-                            token._id +
-                            '-' +
-                            token.uniqueIndexInContract +
-                            index
-                          }`}
-                          pict={offerAllData?.cover}
-                          metadata={token.metadata}
-                          offerPrice={offerPrice}
-                          blockchain={blockchain}
-                          selectedData={selectedData}
-                          index={token.token}
-                          indexId={index.toString()}
-                          offerData={offerDataCol}
-                          item={token}
-                          offer={
-                            token.offer.diamond
-                              ? token.offer.diamondRangeIndex
-                              : token.offer.offerIndex
-                          }
-                          someUsersData={someUsersData}
-                          userName={offerAllData?.owner}
-                          setPlaying={setPlaying}
-                          playing={playing}
-                          diamond={token.offer.diamond}
-                          resalePrice={token?.resaleData?.price}
-                        />
-                      );
-                    } else {
-                      return null;
-                    }
-                  })
-                : filteredData && filteredData.length > 0
-                  ? filteredData.map((item, index) => {
-                      if (
-                        item.metadata.image &&
-                        item.metadata.image !== 'undefined'
-                      ) {
-                        return (
-                          <NftItemForCollectionView
-                            id={`collection-view-${index}`}
-                            key={index}
-                            pict={offerAllData?.cover}
-                            metadata={item.metadata}
-                            offerPrice={offerPrice}
-                            blockchain={blockchain}
-                            selectedData={selectedData}
-                            index={String(index)}
-                            offerData={offerDataCol}
-                            item={item}
-                            indexId={index.toString()}
-                            offerItemData={item.offer}
-                            offer={
-                              item.offer.diamond
-                                ? item.offer.diamondRangeIndex
-                                : item.offer.offerIndex
-                            }
-                            someUsersData={someUsersData}
-                            userName={offerAllData?.owner}
-                            tokenDataLength={
-                              Object.keys(currentCollection).length
-                            }
-                            setPlaying={setPlaying}
-                            playing={playing}
-                            diamond={item.offer.diamond}
-                            resalePrice={item?.resaleData?.price}
-                          />
-                        );
-                      } else {
-                        return null;
-                      }
-                    })
-                  : Array.from(new Array(10)).map((item, index) => {
-                      return (
-                        <Skeleton
-                          key={index}
-                          className={'skeloton-product'}
-                          variant="rectangular"
-                          width={283}
-                          height={280}
-                          style={{ borderRadius: 20 }}
-                        />
-                      );
-                    })}
-            </div>
-            {metadataFilter && (
-              <div id="filter-modal-parent">
-                <HomePageModalFilter
-                  isMobileDesign={isMobileDesign}
-                  primaryColor={primaryColor}
-                  id="home-page-modal-filter"
-                  className={`filter-modal-wrapper ${
-                    metadataFilter && 'with-modal'
-                  }`}>
-                  {isMobileDesign && (
-                    <MobileHeaderBlock className="mobile-close-btn-container">
-                      <span className="filter-header">Filters</span>
-                      <button
-                        className="mobile-close-btn"
-                        onClick={toggleMetadataFilter}>
-                        <MobileCloseBtn className="" />
-                      </button>
-                    </MobileHeaderBlock>
-                  )}
-                  <h6
-                    style={{
-                      textTransform: 'uppercase'
-                    }}>
-                    Traits ({newAttr.length})
-                  </h6>
-                  <div className="filter-metadata-collection-container">
-                    {newAttr &&
-                      newAttr.map((item, index) => {
-                        return (
-                          <FilterMetadataTokens
-                            setSelectedAttributeValues={
-                              setSelectedAttributeValues
-                            }
-                            selectedAttributeValues={selectedAttributeValues}
-                            key={index}
-                            selectedData={item}
-                            index={index}
-                            textColor={textColor}
-                          />
-                        );
-                      })}
-                  </div>
-                  <div
-                    style={{
-                      width: '100%'
-                    }}>
-                    <input
-                      value={titleSearchAttributes}
-                      onChange={(e) => setTitleSearchAttributes(e.target.value)}
-                      style={{
-                        border: '1px solid #666666',
-                        width: '100%',
-                        borderRadius: '12px',
-                        padding: '5px 10px',
-                        background: 'none',
-                        outline: 'none',
-                        color: 'white'
-                      }}
-                      placeholder="Search..."
-                    />
-                  </div>
-                  <MetadataAttributesProperties
-                    filteredDataAttributes={filteredDataAttributes}
-                    setSelectedAttributeValues={setSelectedAttributeValues}
-                  />
-                  {primaryColor && (
-                    <div
-                      className="filter-modal-btn-container"
-                      style={{
-                        marginTop: '10px'
-                      }}>
-                      <button
-                        onClick={() => {
-                          getAllProduct(
-                            '0',
-                            showTokensRef.current.toString(),
-                            undefined
-                          );
-                          setSelectedAttributeValues(undefined);
-                          if (isMobileDesign) {
-                            setMetadataFilter(false);
-                          }
-                        }}
-                        className={`modal-filtering-button clear-btn`}>
-                        Clear all
-                      </button>
-                      <button
-                        style={{
-                          color: textColor,
-                          background: `${
-                            primaryColor === '#dedede'
-                              ? import.meta.env.VITE_TESTNET === 'true'
-                                ? 'var(--hot-drops)'
-                                : 'linear-gradient(to right, #e882d5, #725bdb)'
-                              : import.meta.env.VITE_TESTNET === 'true'
-                                ? primaryButtonColor ===
-                                  'linear-gradient(to right, #e882d5, #725bdb)'
-                                  ? 'var(--hot-drops)'
-                                  : primaryButtonColor
-                                : primaryButtonColor
-                          }`
-                        }}
-                        className={`modal-filtering-button apply-btn`}
-                        disabled={
-                          !selectedAttributeValuesFunction(
-                            selectedAttributeValues
-                          )
-                        }
-                        onClick={() => {
-                          getAllProduct(
-                            '0',
-                            showTokensRef.current.toString(),
-                            selectedAttributeValues &&
-                              selectedAttributeValues.length &&
-                              selectedAttributeValues?.reduce((acc, item) => {
-                                const { name, values } = item;
-                                const newValue = values.filter(
-                                  (el) => el.active
-                                );
-
-                                acc[name] = newValue.map((el) => el.value);
-                                return acc;
-                              }, {})
-                          );
-                          if (isMobileDesign) {
-                            setMetadataFilter(false);
-                          }
-                        }}>
-                        Apply
-                      </button>
-                    </div>
-                  )}
-                </HomePageModalFilter>
-              </div>
-            )}
-          </div>
-          {isLoading && (
-            <div className="progress-token">
-              <CircularProgress
-                style={{
-                  width: '70px',
-                  height: '70px'
-                }}
-              />
-            </div>
-          )}
-          {tokenDataFiltered.length
-            ? null
-            : currentCollectionTotal &&
-              showTokensRef.current <= currentCollectionTotal && (
-                <div ref={loader} className="ref"></div>
+              {isMobileDesign && (
+                <MobileHeaderBlock className="mobile-close-btn-container">
+                  <span className="filter-header">Filters</span>
+                  <button
+                    className="mobile-close-btn"
+                    onClick={toggleMetadataFilter}>
+                    <MobileCloseBtn className="" />
+                  </button>
+                </MobileHeaderBlock>
               )}
-          <>
-            {Object.keys(currentCollection).length <= 5 && (
-              <>
-                <div
+              <h6
+                style={{
+                  textTransform: 'uppercase'
+                }}>
+                Traits ({newAttr.length})
+              </h6>
+              <div className="filter-metadata-collection-container">
+                {newAttr &&
+                  newAttr.map((item, index) => {
+                    return (
+                      <FilterMetadataTokens
+                        setSelectedAttributeValues={setSelectedAttributeValues}
+                        selectedAttributeValues={selectedAttributeValues}
+                        key={index}
+                        selectedData={item}
+                        index={index}
+                        textColor={textColor}
+                      />
+                    );
+                  })}
+              </div>
+              <div
+                style={{
+                  width: '100%'
+                }}>
+                <input
+                  value={titleSearchAttributes}
+                  onChange={(e) => setTitleSearchAttributes(e.target.value)}
                   style={{
-                    marginTop: '30px'
-                  }}></div>
-                <AuthenticityBlock
-                  collectionToken={currentCollection[0]?.authenticityLink}
-                  title={true}
-                  tokenData={currentCollection}
+                    border: '1px solid #666666',
+                    width: '100%',
+                    borderRadius: '12px',
+                    padding: '5px 10px',
+                    background: 'none',
+                    outline: 'none',
+                    color: 'white'
+                  }}
+                  placeholder="Search..."
                 />
-              </>
-            )}
-          </>
-        </div>
-      ) : (
-        <div className="collection-no-products">
-          {!!embeddedParams || (
-            <div
-              style={{
-                cursor: 'pointer',
-                color: textColor,
-                fontSize: '2rem'
-              }}
-              onClick={() => goBack()}
-              className="arrow-back">
-              <FontAwesomeIcon icon={faArrowAltCircleLeft} />
-            </div>
-          )}
-          <h2>{'No tokens found'}</h2>
+              </div>
+              <MetadataAttributesProperties
+                filteredDataAttributes={filteredDataAttributes}
+                setSelectedAttributeValues={setSelectedAttributeValues}
+              />
+              {primaryColor && (
+                <div
+                  className="filter-modal-btn-container"
+                  style={{
+                    marginTop: '10px'
+                  }}>
+                  <button
+                    onClick={() => {
+                      getAllProduct(
+                        '0',
+                        showTokensRef.current.toString(),
+                        undefined
+                      );
+                      setSelectedAttributeValues(undefined);
+                      if (isMobileDesign) {
+                        setMetadataFilter(false);
+                      }
+                    }}
+                    className={`modal-filtering-button clear-btn`}>
+                    Clear all
+                  </button>
+                  <button
+                    style={{
+                      color: textColor,
+                      background: `${
+                        primaryColor === '#dedede'
+                          ? import.meta.env.VITE_TESTNET === 'true'
+                            ? 'var(--hot-drops)'
+                            : 'linear-gradient(to right, #e882d5, #725bdb)'
+                          : import.meta.env.VITE_TESTNET === 'true'
+                            ? primaryButtonColor ===
+                              'linear-gradient(to right, #e882d5, #725bdb)'
+                              ? 'var(--hot-drops)'
+                              : primaryButtonColor
+                            : primaryButtonColor
+                      }`
+                    }}
+                    className={`modal-filtering-button apply-btn`}
+                    disabled={
+                      !selectedAttributeValuesFunction(selectedAttributeValues)
+                    }
+                    onClick={() => {
+                      getAllProduct(
+                        '0',
+                        showTokensRef.current.toString(),
+                        selectedAttributeValues &&
+                          selectedAttributeValues.length &&
+                          selectedAttributeValues?.reduce((acc, item) => {
+                            const { name, values } = item;
+                            const newValue = values.filter((el) => el.active);
+
+                            acc[name] = newValue.map((el) => el.value);
+                            return acc;
+                          }, {})
+                      );
+                      if (isMobileDesign) {
+                        setMetadataFilter(false);
+                      }
+                    }}>
+                    Apply
+                  </button>
+                </div>
+              )}
+            </HomePageModalFilter>
+          </div>
+        )}
+      </div>
+      {isLoading && (
+        <div className="progress-token">
+          <CircularProgress
+            style={{
+              width: '70px',
+              height: '70px'
+            }}
+          />
         </div>
       )}
-    </>
+      <div ref={loader} className="ref"></div>
+      <>
+        {Object.keys(currentCollection).length <= 5 && (
+          <>
+            <div
+              style={{
+                marginTop: '30px'
+              }}></div>
+            <AuthenticityBlock
+              collectionToken={currentCollection[0]?.authenticityLink}
+              title={true}
+              tokenData={currentCollection}
+            />
+          </>
+        )}
+      </>
+    </div>
   );
 };
 
