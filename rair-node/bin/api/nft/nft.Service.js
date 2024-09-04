@@ -696,7 +696,7 @@ module.exports = {
 
             const tokens = attributesCounter(result.tokens);
 
-            return res.json({ success: true, totalCount: result?.count?.total || 0, tokens });
+            return res.json({ success: true, totalCount: result?.count?.[0]?.total || 0, tokens });
         } catch (err) {
             return next(err);
         }

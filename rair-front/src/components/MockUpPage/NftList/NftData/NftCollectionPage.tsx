@@ -9,7 +9,6 @@ import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
 import axios, { AxiosError } from 'axios';
-import Swal from 'sweetalert2';
 
 import {
   IOffersResponseType,
@@ -19,9 +18,11 @@ import {
   useAppDispatch,
   useAppSelector
 } from '../../../../hooks/useReduxHooks';
+import useSwal from '../../../../hooks/useSwal';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { hotDropsDefaultBanner } from '../../../../images';
 import { dataStatuses } from '../../../../redux/commonTypes';
+import { loadNextCollectionPage } from '../../../../redux/tokenSlice';
 import { rFetch } from '../../../../utils/rFetch';
 import setDocumentTitle from '../../../../utils/setTitle';
 import InputField from '../../../common/InputField';
@@ -69,6 +70,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     useAppSelector((store) => store.tokens);
 
   const { width } = useWindowDimensions();
+  const rSwal = useSwal();
   const isMobileDesign = width < 820;
 
   const params = useParams<TParamsNftDataCommonLink>();
@@ -147,10 +149,11 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
       const target = entries[0];
       if (target.isIntersecting) {
         showTokensRef.current = showTokensRef.current + 20;
-        getAllProduct('0', showTokensRef.current.toString(), undefined);
+        dispatch(loadNextCollectionPage());
+        //getAllProduct('0', showTokensRef.current.toString(), undefined);
       }
     },
-    [getAllProduct, showTokensRef]
+    [dispatch, showTokensRef]
   );
 
   useEffect(() => {
@@ -210,7 +213,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
         if (fileF.type !== 'video/mp4') {
           setFileUpload(fileF);
         } else {
-          Swal.fire(
+          rSwal.fire(
             'Info',
             `You cannot upload video to background!`,
             'warning'
@@ -221,7 +224,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
         reader.readAsDataURL(fileF);
       }
     },
-    [setFileUpload]
+    [setFileUpload, rSwal]
   );
 
   const editBackground = useCallback(async () => {
@@ -775,12 +778,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
           />
         </div>
       )}
-      {tokenDataFiltered.length
-        ? null
-        : currentCollectionTotal &&
-          showTokensRef.current <= currentCollectionTotal && (
-            <div ref={loader} className="ref"></div>
-          )}
+      <div ref={loader} className="ref"></div>
       <>
         {Object.keys(currentCollection).length <= 5 && (
           <>

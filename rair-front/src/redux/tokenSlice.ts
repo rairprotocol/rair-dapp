@@ -46,7 +46,7 @@ interface GetCatalogResponse {
 interface GetCollectionResponse {
   tokens: Array<CollectionTokens>;
   success: boolean;
-  totalNumber: number;
+  totalCount: number;
 }
 
 interface CatalogQuery extends PaginatedApiCall {
@@ -81,6 +81,7 @@ export interface TokensState {
   currentCollectionMetadataStatus: dataStatuses;
   itemsPerPage: number;
   currentPage: number;
+  currentCollectionParams?: CollectionQuery;
 }
 
 const initialState: TokensState = {
@@ -92,6 +93,7 @@ const initialState: TokensState = {
   currentCollectionStatus: dataStatuses.Uninitialized,
   currentCollectionTotal: 0,
   currentCollection: {},
+  currentCollectionParams: undefined,
   // Collection contract data
   currentCollectionMetadataStatus: dataStatuses.Uninitialized,
   currentCollectionMetadata: undefined,
@@ -188,6 +190,16 @@ export const loadCollection = createAsyncThunk(
       queryParams.append('metadataFilters', JSON.stringify(attributes));
     }
     dispatch(clearCollectionData());
+    dispatch(
+      setCollectionSearchParams({
+        blockchain,
+        contract,
+        product,
+        fromToken,
+        toToken,
+        attributes
+      })
+    );
     const response = await axios.get<GetCollectionResponse>(
       `/api/nft/network/${blockchain}/${contract}/${product}?${queryParams.toString()}`
     );
@@ -214,16 +226,57 @@ export const loadCollection = createAsyncThunk(
   }
 );
 
+export const loadNextCollectionPage = createAsyncThunk(
+  'tokens/loadNextCollectionPage',
+  async (_, { getState, dispatch }) => {
+    const { tokens } = getState() as { tokens: TokensState };
+    if (!tokens.currentCollectionParams) {
+      return;
+    }
+    const { blockchain, contract, product, fromToken, toToken, attributes } =
+      tokens.currentCollectionParams;
+    const startingToken = BigInt(toToken) + BigInt(1);
+    const queryParams = new URLSearchParams({
+      fromToken: startingToken.toString(),
+      toToken: (startingToken + BigInt(20)).toString()
+    });
+    if (attributes) {
+      queryParams.append('metadataFilters', JSON.stringify(attributes));
+    }
+    const response = await axios.get<GetCollectionResponse>(
+      `/api/nft/network/${blockchain}/${contract}/${product}?${queryParams.toString()}`
+    );
+    if (response.data.success) {
+      dispatch(
+        setCollectionSearchParams({
+          blockchain,
+          contract,
+          product,
+          fromToken,
+          toToken: (startingToken + BigInt(20)).toString(),
+          attributes
+        })
+      );
+    }
+
+    return response.data;
+  }
+);
+
 export const tokenSlice = createSlice({
   name: 'tokens',
   initialState,
   reducers: {
+    setCollectionSearchParams: (state, action) => {
+      state.currentCollectionParams = action.payload;
+    },
     clearCollectionData: (state) => {
       state.currentCollectionStatus = dataStatuses.Uninitialized;
       state.currentCollectionTotal = 0;
       state.currentCollection = {};
       state.currentCollectionMetadataStatus = dataStatuses.Uninitialized;
       state.currentCollectionMetadata = undefined;
+      state.currentCollectionParams = undefined;
     }
   },
   extraReducers: (builder) => {
@@ -257,8 +310,19 @@ export const tokenSlice = createSlice({
             tokenMapping[token.uniqueIndexInContract.toString()] = token;
           });
           state.currentCollectionStatus = dataStatuses.Complete;
-          state.currentCollectionTotal = action.payload.totalNumber;
+          state.currentCollectionTotal = action.payload.totalCount;
           state.currentCollection = tokenMapping;
+        }
+      )
+      .addCase(
+        loadNextCollectionPage.fulfilled,
+        (state, action: PayloadAction<GetCollectionResponse | undefined>) => {
+          if (action?.payload?.tokens) {
+            action.payload.tokens.forEach((token) => {
+              state.currentCollection[token.uniqueIndexInContract.toString()] =
+                token;
+            });
+          }
         }
       )
       .addCase(loadCollection.rejected, (state) => {
@@ -296,5 +360,6 @@ export const tokenSlice = createSlice({
   }
 });
 
-export const { clearCollectionData } = tokenSlice.actions;
+export const { clearCollectionData, setCollectionSearchParams } =
+  tokenSlice.actions;
 export default tokenSlice.reducer;
