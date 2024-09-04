@@ -1,0 +1,31 @@
+VITE_NODE_ADDRESS=0x3fD4268B03cce553f180E77dfC14fde00271F9B7
+VITE_DIAMONDS_ENABLED=true
+VITE_LOG_WEB3=false
+VITE_HOME_PAGE=/
+VITE_DISABLE_CREATOR_VIEWS=false
+VITE_3_TAB_MARKETPLACE_DISABLED=false
+VITE_TEST_CONTRACTS=true
+DANGEROUSLY_DISABLE_HOST_CHECK=true
+VITE_GOOGLE_ANALYTICS=t
+VITE_GA_NAME=t
+
+// Optional
+// Please go to web3auth to get your free API key
+// VITE_WEB3AUTH_CLIENT_ID=<API-KEY>
+
+#upload_progress_host
+VITE_UPLOAD_PROGRESS_HOST=http://localhost:5000
+
+VITE_NODE_SOCKET_URI=:5000
+
+VITE_TESTNET=false
+
+VITE_HTML_META_TITLE=RAIR Collectible Marketplace
+VITE_HTML_META_FAVICON_URI=./favicons/loading-favicon.svg
+VITE_HTML_META_IMAGE_URL=https://proofof.s3.filebase.com/rairmarket.webp
+VITE_HTML_META_AUTHOR=RAIR Collectible Marketplace
+VITE_HTML_META_DESCRIPTION=We help IP owners make their content collectible through private label marketplaces. Mint, stream, sell digital assets.
+VITE_IPFS_GATEWAY=http://rair.myfilebase.com/ipfs/
+
+VITE_DEFAULT_BLOCKCHAIN=0x2105
+VITE_WEB3AUTH_CLIENT_ID=BEfl04Slm6zUDrpxC-r5qgO6cjW2mlXc82z0rvTiNL-JdYTxYQHl7YzyNy4Ja4jq8fUDhysW1hwRDqLM6tYK3-4
