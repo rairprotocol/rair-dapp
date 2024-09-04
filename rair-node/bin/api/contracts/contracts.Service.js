@@ -413,7 +413,7 @@ module.exports = {
       return res.json({
         success: true,
         contracts: result.contracts,
-        totalNumber: result.count[0].total,
+        totalNumber: result?.count?.[0]?.total || 0,
       });
     } catch (e) {
       return next(e);
