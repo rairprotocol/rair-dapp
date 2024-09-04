@@ -1,11 +1,9 @@
 const { ObjectId } = require('mongodb');
-const _ = require('lodash');
 const {
   File,
   MintedToken,
   Unlock,
   Offer,
-  Category,
   User,
   Blockchain,
   Contract,
@@ -132,28 +130,29 @@ module.exports = {
         },
       ];
 
-      let data = (await File.aggregate([
+      const [result] = await File.aggregate([
         ...pipeline,
-        { $skip: skip },
-        { $limit: pageSize },
-      ]));
-
-      const [countResult] = await File.aggregate([...pipeline, { $count: 'totalCount' }]);
-
-      const { totalCount } = countResult || 0;
+        {
+          $facet: {
+            list: [
+              { $skip: skip },
+              { $limit: pageSize },
+            ],
+            count: [
+              { $count: 'total' },
+            ],
+          },
+        },
+      ]);
 
       // verify the user have needed tokens for unlock the files
-      data = await checkFileAccess(data, req.user);
+      const unlockCheck = await checkFileAccess(result.list, req.user);
 
-      const list = _.chain(data)
-        .reduce((result, value) => {
-        // eslint-disable-next-line no-param-reassign
-          result[value._id] = value;
-          return result;
-        }, {})
-        .value();
-
-      return res.json({ success: true, list, totalNumber: totalCount });
+      return res.json({
+        success: true,
+        list: unlockCheck,
+        totalNumber: result?.count?.[0]?.total || 0,
+      });
     } catch (e) {
       log.error(e);
       return next(e.message);
@@ -226,14 +225,6 @@ module.exports = {
       return res.json({ success: true });
     } catch (err) {
       return next(err);
-    }
-  },
-  listCategories: async (req, res, next) => {
-    try {
-        const categories = await Category.find();
-        res.json({ success: true, categories });
-    } catch (e) {
-        next(e);
     }
   },
   getFile: async (req, res, next) => {

@@ -1,16 +1,11 @@
-import { useSelector } from 'react-redux';
-
 import { NFTNYC_TITLE } from '../../components/SplashPage/images/NFTNYC/nftnyc';
 import { TSplashDataType } from '../../components/SplashPage/splashPage.types';
 import { hyperlink } from '../../components/SplashPage/SplashPageConfig/utils/hyperLink';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import { metaMaskIcon } from '../../images';
 
 export const useNFTNYC = (connectUserData) => {
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
   const splashData: TSplashDataType = {
     NFTName: 'NFT',
     title: 'NFTNYC X RAIR',
@@ -49,7 +44,7 @@ export const useNFTNYC = (connectUserData) => {
       titleColor: 'rgb(3, 91, 188)'
     },
     videoData: {
-      video: null,
+      video: undefined,
       videoTitle: '',
       videoModuleDescription:
         'NFT owners can learn more about the project by signing with metamask to unlock an encrypted stream ',

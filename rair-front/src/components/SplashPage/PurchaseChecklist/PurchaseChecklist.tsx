@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   faChevronDown,
   faChevronUp,
@@ -7,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { RootState } from '../../../ducks';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { IPurchaseChecklist } from '../splashPage.types';
 
 const PurchaseChecklist: React.FC<IPurchaseChecklist> = ({
@@ -16,9 +15,7 @@ const PurchaseChecklist: React.FC<IPurchaseChecklist> = ({
   nameSplash,
   backgroundColor
 }) => {
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const [purchaseList, setPurshaseList] = useState(true);
 

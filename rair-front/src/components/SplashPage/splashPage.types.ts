@@ -1,16 +1,11 @@
 import React from 'react';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Hex } from 'viem';
 
-import { TFileType } from '../../axios.responseTypes';
+import { CatalogVideoItem } from '../../types/commonTypes';
 
 export interface INumberedCircle {
   index: number;
-  primaryColor: string;
-}
-
-export interface ISplashPageProps {
-  connectUserData: () => Promise<void>;
-  setIsSplashPage?: (isSplashPage: boolean) => void;
 }
 
 export type TSplashPageIsActive = {
@@ -69,7 +64,7 @@ export type TCarouselDataType = {
 };
 
 export type TSplashPageVideoData = {
-  video: string | null;
+  video?: string;
   videoTitle?: string;
   videoModuleDescription?: string | null;
   videoModuleTitle?: string;
@@ -94,15 +89,15 @@ export type TExclusiveNFtType = {
 };
 
 export type TParamsMarketplaceDemo = {
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   contract: string;
   product: string;
 };
 
 export type TPurchaseButtonType = {
-  contractAddress?: string;
+  contractAddress?: Hex;
   buttonLabel?: string;
-  requiredBlockchain: BlockchainType | undefined;
+  requiredBlockchain?: Hex;
   buttonComponent?: React.ElementType;
   presaleMessage?: string;
   customWrapperClassName?: string;
@@ -175,7 +170,6 @@ export type TSplashDataType = {
 
 export interface IAuthorCard {
   splashData: TSplashDataType;
-  connectUserData?: () => Promise<void>;
   toggleCheckList?: () => void;
   whatSplashPage?: TWhatSplashPageType;
   customButtonBlock?: JSX.Element;
@@ -235,7 +229,7 @@ export interface ICountdown {
 }
 
 export interface IVideoPlayerModule {
-  backgroundImage: string;
+  backgroundImage?: string;
   videoData?: TSplashPageVideoData;
   selectVideo?: any /*type of video is unclear yet*/;
 }
@@ -259,7 +253,7 @@ export interface ICarouselListItem {
 }
 
 export interface IShowVideoToLoggedInUsers {
-  backgroundImage: string;
+  backgroundImage?: string;
   video?: string | null;
   videoTitle?: string;
   baseURL?: string;
@@ -268,12 +262,7 @@ export interface IShowVideoToLoggedInUsers {
   selectVideo: any /*type of video is unclear yet*/;
 }
 
-export interface INotCommercial {
-  primaryColor: string;
-}
-
 export interface ITokenLeftGreyman {
-  primaryColor: string;
   soldCopies?: string;
   copies?: string;
 }
@@ -339,12 +328,7 @@ export interface ITeammateDesc {
   arraySplash?: TArraySplashType;
 }
 
-export interface INotCommercialGeneric {
-  primaryColor: string;
-}
-
 export interface ITokenLeft {
-  primaryColor: string;
   DiscordIcon: string;
   copies?: number;
   soldCopies?: number;
@@ -352,7 +336,6 @@ export interface ITokenLeft {
 
 export interface IUnlockVideos {
   unlockableVideo: string;
-  primaryColor: string;
 }
 
 export type TVideoArrType = {
@@ -366,7 +349,6 @@ export interface IUnlockVideoItem {
   nameVideo: string;
   timeVideo: string;
   unlockableVideo: string;
-  primaryColor: string;
 }
 
 export interface IExclusiveNft {
@@ -386,7 +368,6 @@ export interface INipseyRelease {
 }
 
 export interface INotCommercialTemplate {
-  primaryColor: string;
   NFTName: string | undefined;
 }
 
@@ -410,11 +391,6 @@ export interface IInfoBlock {
   children?: JSX.Element;
 }
 
-export interface IVaporverseSplashPage {
-  connectUserData: () => Promise<void>;
-  setIsSplashPage: (isSplashPage: boolean) => void;
-}
-
 export interface INFTImages {
   Nft_1: string;
   Nft_2: string;
@@ -429,7 +405,6 @@ export interface INFTImages {
 }
 
 export interface ITokenLeftTemplate {
-  primaryColor: string;
   soldCopies: number;
   counterData?: TCounterData;
   ipftButton?: any; //type is unclear
@@ -438,8 +413,8 @@ export interface ITokenLeftTemplate {
 }
 
 export type TMainContractType = {
-  contractAddress: string;
-  requiredBlockchain: BlockchainType | undefined;
+  contractAddress: Hex;
+  requiredBlockchain: Hex;
   offerIndex: string[];
 };
 
@@ -480,13 +455,12 @@ export interface IDonationGrid {
 }
 
 export type TUseGetProductsReturn = [
-  TFileType[],
-  TFileType | undefined,
+  CatalogVideoItem[],
+  CatalogVideoItem | undefined,
   (selectVideo: any) => void
 ];
 
 export interface INotCommercialTemplate2 {
-  primaryColor: string;
   NFTName: string;
 }
 

@@ -207,7 +207,7 @@ exports.updateUserByUserAddress = async (req, res, next) => {
       { publicAddress },
       fieldsForUpdate,
       { new: true, projection: { nonce: 0 } },
-    );
+    ).lean();
 
     req.session.userData = {
       ...req.session.userData,

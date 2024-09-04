@@ -1,20 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-import { TFileType, TNftFilesResponse } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { TNftFilesResponse } from '../../../../axios.responseTypes';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
+import { CatalogVideoItem } from '../../../../types/commonTypes';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import { IStreamsAbout } from '../aboutPage.types';
 
 const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
   const whatSplashPage = 'about-page';
-  const [allVideos, setAllVideos] = useState<TFileType[]>([]);
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const [allVideos, setAllVideos] = useState<CatalogVideoItem[]>([]);
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
+  const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
 
   const getAllVideos = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
@@ -36,14 +33,8 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
             Test our <span className="text-gradient">streams</span>
           </h3>
         </div>
-        <div
-          className={`community-description ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
-          }`}>
-          <div
-            className={`community-text ${
-              primaryColor === 'rhyno' ? 'rhyno' : ''
-            }`}>
+        <div className={`community-description ${!isDarkMode ? 'rhyno' : ''}`}>
+          <div className={`community-text ${!isDarkMode ? 'rhyno' : ''}`}>
             <p>
               You’ll need <span>Metamask</span> and a watch token to play our
               encrypted streams. To stream the videos below you’ll need to mint

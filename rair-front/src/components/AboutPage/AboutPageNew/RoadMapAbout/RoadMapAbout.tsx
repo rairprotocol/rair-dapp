@@ -1,8 +1,9 @@
-import React from 'react';
+import { FC } from 'react';
 
-import { IRoadMap } from '../aboutPage.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 
-const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
+const RoadMap: FC = () => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <div className="about-roadmap">
       <div className="about-road-title">2022 Roadmap</div>
@@ -16,10 +17,7 @@ const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
               <div className="progress-box">Q2</div>
               <div className="progress-box">Q3</div>
             </div>
-            <div
-              className={`progress-title ${
-                primaryColor === 'rhyno' ? 'rhyno' : ''
-              }`}>
+            <div className={`progress-title ${!isDarkMode ? 'rhyno' : ''}`}>
               Curation Alpha
               <span></span>
             </div>
@@ -39,10 +37,7 @@ const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
               <div className="progress-box">Q3</div>
               <div className="progress-box">Q4</div>
             </div>
-            <div
-              className={`progress-title ${
-                primaryColor === 'rhyno' ? 'rhyno' : ''
-              }`}>
+            <div className={`progress-title ${!isDarkMode ? 'rhyno' : ''}`}>
               Private Beta
               <span></span>
             </div>
@@ -62,10 +57,7 @@ const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
               <div className="progress-box">Q4</div>
               <div className="progress-box">Q5</div>
             </div>
-            <div
-              className={`progress-title ${
-                primaryColor === 'rhyno' ? 'rhyno' : ''
-              }`}>
+            <div className={`progress-title ${!isDarkMode ? 'rhyno' : ''}`}>
               Public Release
               <span></span>
             </div>
@@ -88,10 +80,7 @@ const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
                 <div className="progress-box">Q2</div>
                 <div className="progress-box">Q3</div>
               </div>
-              <div
-                className={`progress-title ${
-                  primaryColor === 'rhyno' ? 'rhyno' : ''
-                }`}>
+              <div className={`progress-title ${!isDarkMode ? 'rhyno' : ''}`}>
                 Curation Alpha
                 <span></span>
               </div>
@@ -111,10 +100,7 @@ const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
                 <div className="progress-box">Q4</div>
                 <div className="progress-box">Q5</div>
               </div>
-              <div
-                className={`progress-title ${
-                  primaryColor === 'rhyno' ? 'rhyno' : ''
-                }`}>
+              <div className={`progress-title ${!isDarkMode ? 'rhyno' : ''}`}>
                 Public Release
                 <span></span>
               </div>
@@ -126,10 +112,7 @@ const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
             </div>
           </div>
         </div>
-        <div
-          className={`block-devide-box ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
-          }`}>
+        <div className={`block-devide-box ${!isDarkMode ? 'rhyno' : ''}`}>
           <div className="squere"></div>
           <div className="squere"></div>
           <div className="squere"></div>
@@ -144,10 +127,7 @@ const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
                 <div className="progress-box">Q3</div>
                 <div className="progress-box">Q4</div>
               </div>
-              <div
-                className={`progress-title ${
-                  primaryColor === 'rhyno' ? 'rhyno' : ''
-                }`}>
+              <div className={`progress-title ${!isDarkMode ? 'rhyno' : ''}`}>
                 Private Beta
                 <span></span>
               </div>

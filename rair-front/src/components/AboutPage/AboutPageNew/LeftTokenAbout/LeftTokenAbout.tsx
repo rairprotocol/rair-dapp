@@ -1,9 +1,10 @@
-import React from 'react';
+import { FC } from 'react';
 
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import { discrodIconNoBorder } from '../../../../images';
-import { ILeftTokenAbout } from '../aboutPage.types';
 
-const LeftTokenAbout: React.FC<ILeftTokenAbout> = ({ primaryColor }) => {
+const LeftTokenAbout: FC = () => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <div className="left-tokens about-page">
       <div className="block-left-tokens"></div>
@@ -14,24 +15,24 @@ const LeftTokenAbout: React.FC<ILeftTokenAbout> = ({ primaryColor }) => {
           </h3>
         </div>
         <div className="tokens-description">
-          <p className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
+          <p className={!isDarkMode ? 'rhyno' : ''}>
             RAIRtech has developed a new way to control content on the
             blockchain called DDRM or distributed digital rights management.
           </p>
           <ul>
             <li>
-              <p className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
+              <p className={!isDarkMode ? 'rhyno' : ''}>
                 Allows for encrypted streaming of videos, music, images and data
               </p>
             </li>
             <li>
-              <p className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
+              <p className={!isDarkMode ? 'rhyno' : ''}>
                 Only the owner of the NFT can stream the content this makes
                 digital goods work like real goods
               </p>
             </li>
             <li>
-              <p className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
+              <p className={!isDarkMode ? 'rhyno' : ''}>
                 Feature complete platform: minting, streaming, royalties &
                 metadata
               </p>

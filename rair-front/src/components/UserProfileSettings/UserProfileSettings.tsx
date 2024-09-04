@@ -1,35 +1,17 @@
-//@ts-nocheck
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
 import PopUpSettings from './PopUpSetting';
 
-// React Redux types
-import { setColorScheme } from '../../ducks/colors/actions';
-import { getUserStart } from '../../ducks/users/actions';
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
 import { SunIcon } from '../../images';
+import { setColorScheme } from '../../redux/colorSlice';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 
 import './UserProfileSettings.css';
 
-const UserProfileSettings = ({
-  adminAccess,
-  showAlert,
-  selectedChain,
-  setTabIndexItems,
-  isSplashPage
-}) => {
-  const dispatch = useDispatch();
-  const { loggedIn } = useSelector((store) => store.userStore);
-  const { primaryColor } = useSelector((store) => store.colorStore);
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
-
-  useEffect(() => {
-    if (currentUserAddress) {
-      dispatch(getUserStart(currentUserAddress));
-    }
-  }, [currentUserAddress, dispatch]);
+const UserProfileSettings = ({ showAlert, setTabIndexItems }) => {
+  const dispatch = useAppDispatch();
+  const { isLoggedIn } = useAppSelector((store) => store.user);
+  const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
 
   return (
     <div
@@ -49,16 +31,12 @@ const UserProfileSettings = ({
             primaryColor={primaryColor}
             marginRight={'17px'}
             onClick={() => {
-              dispatch(
-                setColorScheme(
-                  primaryColor === '#dedede' ? 'charcoal' : 'rhyno'
-                )
-              );
+              dispatch(setColorScheme(isDarkMode ? 'light' : 'dark'));
             }}>
-            <SunIcon primaryColor={primaryColor} color={'#fff'} />
+            <SunIcon />
           </SocialBox>
         </TooltipBox>
-        {loggedIn && (
+        {isLoggedIn && (
           <div
             style={{
               marginRight: '12px',
@@ -68,12 +46,8 @@ const UserProfileSettings = ({
             }}
             className="user-block">
             <PopUpSettings
-              primaryColor={primaryColor}
-              adminAccess={adminAccess}
               showAlert={showAlert}
-              selectedChain={selectedChain}
               setTabIndexItems={setTabIndexItems}
-              isSplashPage={isSplashPage}
             />
           </div>
         )}

@@ -5,16 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { INotCommercialTemplate2 } from '../splashPage.types';
 
 import './NotCommercial-2.css';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 
 const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
-  primaryColor,
   NFTName
 }) => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <div
       className="container-commercial-2"
       style={{
-        background: `${primaryColor === 'rhyno' ? '#aeaeae' : '#151415'}`
+        background: `${isDarkMode ? '#aeaeae' : '#151415'}`
       }}>
       <div className="title-non-commercial">
         Your {NFTName} is released under Attribution-NonCommercial 4.0
@@ -22,13 +23,13 @@ const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
       <div className="non-commercial-content">
         <p
           style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
+            color: `${isDarkMode ? '#000' : '#FFFFFF'}`
           }}>
           You are free to:
         </p>
         <p
           style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
+            color: `${isDarkMode ? '#000' : '#FFFFFF'}`
           }}>
           <FontAwesomeIcon
             icon={faDiamond}
@@ -39,7 +40,7 @@ const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
         </p>
         <p
           style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
+            color: `${isDarkMode ? '#000' : '#FFFFFF'}`
           }}>
           <FontAwesomeIcon
             icon={faDiamond}
@@ -49,20 +50,20 @@ const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
         </p>
         <p
           style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
+            color: `${isDarkMode ? '#000' : '#FFFFFF'}`
           }}>
           The licensor cannot revoke these freedoms as long as you follow the
           license terms.
         </p>
         <p
           style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
+            color: `${isDarkMode ? '#000' : '#FFFFFF'}`
           }}>
           Under the following terms:
         </p>
         <p
           style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
+            color: `${isDarkMode ? '#000' : '#FFFFFF'}`
           }}>
           <FontAwesomeIcon
             icon={faDiamond}
@@ -76,7 +77,7 @@ const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
 
         <p
           style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#FFFFFF'}`
+            color: `${isDarkMode ? '#000' : '#FFFFFF'}`
           }}>
           {/* className="non-commercial-par-under"> */}
           <FontAwesomeIcon

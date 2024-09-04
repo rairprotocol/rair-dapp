@@ -112,7 +112,7 @@ export const splashData: TSplashDataType = {
     }
   ],
   videoData: {
-    video: null,
+    video: undefined,
     videoTitle: 'Watch the Transformation',
     videoModuleDescription: 'Flag owners sign in with metamask to watch',
     videoModuleTitle: 'For Supporters Only',

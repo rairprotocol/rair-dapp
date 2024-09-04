@@ -1,9 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 
 import Teammate from './Teammate';
 
-import { RootState } from '../../../ducks';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { ITeamMeetComponentCommon } from '../splashPage.types';
 
 const TeamMeetComponentCommon: React.FC<ITeamMeetComponentCommon> = ({
@@ -11,9 +10,7 @@ const TeamMeetComponentCommon: React.FC<ITeamMeetComponentCommon> = ({
   className,
   arraySplash
 }) => {
-  const primaryColor = useSelector<RootState, string>(
-    (state) => state.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((state) => state.colors);
   return (
     <div className={!className ? 'splash-team-greyman' : ''}>
       {teamArray &&

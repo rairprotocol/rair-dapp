@@ -1,17 +1,13 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { Hex } from 'viem';
 
-import { IAboutPageNew } from './aboutPage.types';
-
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { InitialState } from '../../../ducks/seo/reducers';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
 import useConnectUser from '../../../hooks/useConnectUser';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
+import useSwal from '../../../hooks/useSwal';
 import { metaMaskIcon, RairLogoBlue } from '../../../images';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { rairAdvisorsTeam, teamAboutRair } from '../../MainPage/AboutUsTeam';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -29,20 +25,18 @@ import StreamsAbout from './StreamsAbout/StreamsAbout';
 
 import './AboutPageNew.css';
 
-const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
+const AboutPageNew: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const { pathname } = useLocation();
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
+  const { primaryColor } = useAppSelector((store) => store.colors);
+  const rSwal = useSwal();
 
   const connectUserData = useConnectUser();
 
   useEffect(() => {
-    dispatch(setInfoSEO(InitialState));
-    //eslint-disable-next-line
-  }, []);
+    dispatch(setSEOInfo());
+  }, [dispatch]);
 
   const termsText =
     'I understand this a test NFT designed to unlock RAIR streams';
@@ -59,9 +53,8 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
     setIsSplashPage(true);
   }, [setIsSplashPage]);
 
-  const switchToNetwork = '0x38';
-  const aboutPageAddress =
-    '0xb6163454da87e9f3fd63683c5d476f7d067f75a2'.toLowerCase();
+  const switchToNetwork: Hex = '0x38';
+  const aboutPageAddress: Hex = '0xb6163454da87e9f3fd63683c5d476f7d067f75a2';
   const offerIndexInMarketplace = '1';
 
   const purchaseButton = (
@@ -77,7 +70,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
         presaleMessage: termsText,
         diamond: true,
         customSuccessAction: (nextToken) =>
-          Swal.fire('Success', `You own token #${nextToken}!`, 'success')
+          rSwal.fire('Success', `You own token #${nextToken}!`, 'success')
       }}
     />
   );
@@ -89,14 +82,13 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
         <div className="home-about--page">
           <MainBlock
             RairLogo={RairLogoBlue}
-            primaryColor={primaryColor}
             Metamask={metaMaskIcon}
             termsText={termsText}
             purchaseButton={purchaseButton}
           />
-          <LeftTokenAbout primaryColor={primaryColor} />
+          <LeftTokenAbout />
           <PlatformAbout />
-          <RairOffer primaryColor={primaryColor} />
+          <RairOffer />
           <ExclusiveNfts />
           <StreamsAbout
             Metamask={metaMaskIcon}
@@ -104,7 +96,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({ setIsSplashPage }) => {
             purchaseButton={purchaseButton}
           />
           {/* <Tokenomics Metamask={Metamask} /> */}
-          <RoadMap primaryColor={primaryColor} RairLogo={RairLogoBlue} />
+          <RoadMap />
           <CompareAbout />
           <div className="about-page--team">
             <TeamMeet

@@ -1,18 +1,17 @@
-import { useState /*useCallback, useEffect*/ } from 'react';
+import { useState } from 'react';
 import Modal from 'react-modal';
-import { useSelector } from 'react-redux';
+import { Hex } from 'viem';
 
 import { diamondFactoryAbi } from '../../../../contracts/index';
-import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import useConnectUser from '../../../../hooks/useConnectUser';
+import useContracts from '../../../../hooks/useContracts';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
-// import { rFetch } from "../../../../utils/rFetch";
-// import { erc721Abi } from "../../../../contracts";
+import { CustomModalStyle } from '../../../../types/commonTypes';
 import { IMainBlock } from '../aboutPage.types';
 
-const customStyles = {
+const customStyles: CustomModalStyle = {
   overlay: {
     zIndex: '1'
   },
@@ -38,26 +37,23 @@ Modal.setAppElement('#root');
 
 const MainBlock: React.FC<IMainBlock> = ({
   Metamask,
-  primaryColor,
   termsText,
   purchaseButton
 }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
-  const { diamondMarketplaceInstance, contractCreator, currentUserAddress } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
+  const { diamondMarketplaceInstance, contractCreator } = useContracts();
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
   const { connectUserData } = useConnectUser();
+  const { isDarkMode } = useAppSelector((store) => store.colors);
 
   const targetBlockchain = '0x38';
-  const aboutPageAddress =
-    '0xb6163454da87e9f3fd63683c5d476f7d067f75a2'.toLowerCase();
+  const aboutPageAddress: Hex = '0xb6163454da87e9f3fd63683c5d476f7d067f75a2';
   const offerIndexInMarketplace = 1;
 
   let subtitle;
@@ -165,15 +161,12 @@ const MainBlock: React.FC<IMainBlock> = ({
   return (
     <div className="information-author">
       <div className="home-about-desc">
-        <h2 className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
+        <h2 className={!isDarkMode ? 'rhyno' : ''}>
           Encrypted,
           <br />
           Streaming NFTs
         </h2>
-        <div
-          className={`autor-about-text ${
-            primaryColor === 'rhyno' ? 'rhyno' : ''
-          }`}>
+        <div className={`autor-about-text ${!isDarkMode ? 'rhyno' : ''}`}>
           Our platform makes it possible to attach digital goods
           <br />
           {"to an NFT using encrypted streaming - making today's"}

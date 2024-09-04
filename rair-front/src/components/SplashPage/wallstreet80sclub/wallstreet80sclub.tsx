@@ -1,15 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC, useEffect, useState } from 'react';
 
 import { teamWallstreetArray } from './AboutUsTeam';
 
 import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import {
   blockchain,
   splashData
@@ -18,7 +15,6 @@ import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/Vi
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
-import { ISplashPageProps } from '../splashPage.types';
 import { useGetProducts } from '../splashPageProductsHook';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ListExlusiveProduct from '../SplashPageTemplate/ListExlusiveProduct/ListExlusiveProduct';
@@ -40,12 +36,11 @@ import './wallstreet80sclub.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
-  connectUserData,
+const Wallstreet80sClubSplashPage: FC<SplashPageProps> = ({
   setIsSplashPage
 }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   /* UTILITIES FOR VIDEO PLAYER VIEW (placed this functionality into custom hook for reusability)*/
   const [productsFromOffer, selectVideo, setSelectVideo] =
     useGetProducts(splashData);
@@ -54,26 +49,16 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
 
-  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
-
   /* UTILITIES FOR NFT PURCHASE */
-  const [soldCopies, setSoldCopies] = useState<number>(0);
-  const { currentChain, minterInstance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const [soldCopies] = useState<number>(0);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
 
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: '#wallstreet80sclub',
         ogTitle: '#wallstreet80sclub',
         twitterTitle: '#wallstreet80sclub',
@@ -108,7 +93,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   }, [carousel_match.matches]);
 
   useEffect(() => {
-    dispatch(setRealChain(blockchain));
+    dispatch(setRequestedChain(blockchain));
     //eslint-disable-next-line
   }, []);
 
@@ -118,25 +103,6 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
   const toggleCheckList = () => {
     setOpenCheckList((prev) => !prev);
   };
-  const getAllProduct = useCallback(async () => {
-    if (loggedIn && minterInstance && splashData.purchaseButton?.offerIndex) {
-      if (currentChain === splashData.purchaseButton?.requiredBlockchain) {
-        setSoldCopies(
-          (
-            await minterInstance.getOfferRangeInfo(
-              ...(splashData.purchaseButton.offerIndex || [])
-            )
-          ).tokensAllowed.toString()
-        );
-      } else {
-        setSoldCopies(0);
-      }
-    }
-  }, [setSoldCopies, loggedIn, currentChain, minterInstance]);
-
-  useEffect(() => {
-    getAllProduct();
-  }, [getAllProduct]);
 
   return (
     <div className="wrapper-splash-page wallstreet80sclub">
@@ -153,11 +119,10 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-        <AuthorCard {...{ splashData, connectUserData }} />
+        <AuthorCard {...{ splashData }} />
         <TokenLeftTemplate
           counterData={splashData.counterData}
           soldCopies={soldCopies}
-          primaryColor={primaryColor}
           counterOverride={true}
           nftTitle="NFTs Left"
         />
@@ -191,10 +156,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
           titleHeadFirst="Founding Members"
           teamArray={teamWallstreetArray}
         />
-        <NotCommercialTemplate
-          primaryColor={primaryColor}
-          NFTName={splashData.LicenseName}
-        />
+        <NotCommercialTemplate NFTName={splashData.LicenseName} />
       </div>
     </div>
   );

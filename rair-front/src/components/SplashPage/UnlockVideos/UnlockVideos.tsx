@@ -55,10 +55,7 @@ const videoArr: TVideoArrType[] = [
   }
 ];
 
-const UnlockVideos: React.FC<IUnlockVideos> = ({
-  unlockableVideo,
-  primaryColor
-}) => {
+const UnlockVideos: React.FC<IUnlockVideos> = ({ unlockableVideo }) => {
   return (
     <div className="unlockble-video">
       <div className="title-gets">
@@ -74,7 +71,6 @@ const UnlockVideos: React.FC<IUnlockVideos> = ({
               unlockableVideo={unlockableVideo}
               nameVideo={video.unlockVideoName}
               timeVideo={video.timeVideo}
-              primaryColor={primaryColor}
             />
           );
         })}

@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useReducer } from 'react';
-import { useSelector } from 'react-redux';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 
 import { TAxiosFavoriteData } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 import { ILikeButton } from '../../mockupPage.types';
 
@@ -35,9 +33,7 @@ const LikeButton: React.FC<ILikeButton> = ({
     favoritesReducer,
     initialFavoritesState
   );
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const addFavorite = async (tokenBody: string | undefined) => {
     const token = {

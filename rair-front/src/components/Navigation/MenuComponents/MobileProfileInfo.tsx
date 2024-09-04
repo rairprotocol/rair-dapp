@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import MobileEditProfile from './MobileEditProfile';
 
-import { UserType } from '../../../ducks/users/users.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 
 import defaultPictures from './../../UserProfileSettings/images/defaultUserPictures.png';
 import {
@@ -16,20 +16,18 @@ import {
 } from './../NavigationItems/NavigationItems';
 
 interface IMobileProfileInfo {
-  primaryColor: string;
   click: boolean;
   toggleOpenProfile: () => void;
-  userData: UserType | null;
 }
 
 const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
-  primaryColor,
   click,
-  toggleOpenProfile,
-  userData
+  toggleOpenProfile
 }) => {
+  const userData = useAppSelector((store) => store.user);
   const [profileData, setProfileData] = useState(userData);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const { isDarkMode } = useAppSelector((store) => store.colors);
 
   const toggleEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
@@ -55,7 +53,7 @@ const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
 
   if (!userData) {
     return (
-      <List primaryColor={primaryColor} click={click}>
+      <List isDarkMode={isDarkMode} click={click}>
         <ListProfileItem>
           <ListProfileLoading>
             <ProfileButtonBack onClick={toggleOpenProfile}>
@@ -71,7 +69,7 @@ const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
   }
 
   return (
-    <List primaryColor={primaryColor} click={click}>
+    <List isDarkMode={isDarkMode} click={click}>
       {editMode ? (
         <MobileEditProfile />
       ) : (

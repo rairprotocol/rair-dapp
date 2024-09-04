@@ -1,9 +1,12 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import { defaultHotDrops, RairBackground } from '../../../../images';
 import { ILazyImageItem } from '../types/imageLazy.types';
 
-export const Image = styled.img<ILazyImageItem>`
+export const Image = styled.img.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<ILazyImageItem>`
   &.col-12.h-100.w-100 {
     display: block;
     height: ${(props) => props.height && props.height};

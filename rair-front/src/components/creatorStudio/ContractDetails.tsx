@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { isAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import {
   TContractsNetworkContract,
@@ -13,13 +14,12 @@ import FixedBottomNavigation from './FixedBottomNavigation';
 import NavigatorContract from './NavigatorContract';
 
 import { diamond721Abi, erc721Abi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { rFetch } from '../../utils/rFetch';
-import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 
 const ContractDetails = () => {
@@ -31,14 +31,11 @@ const ContractDetails = () => {
 
   const { getBlockchainData } = useServerSettings();
 
-  const { primaryColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
-  const { contractCreator, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { primaryColor, secondaryColor } = useAppSelector(
+    (store) => store.colors
+  );
+  const { connectedChain } = useAppSelector((store) => store.web3);
+  const { contractCreator } = useContracts();
   const { address, blockchain } = useParams<TParamsContractDetails>();
 
   const [data, setData] = useState<TContractsNetworkContract | TSetData>();
@@ -62,9 +59,9 @@ const ContractDetails = () => {
       }
       setData(dataRequest.contract);
       setIsDiamond(dataRequest.contract.diamond);
-    } else if (contractCreator) {
+    } else if (contractCreator && isAddress(address)) {
       // Try diamonds
-      const instance = contractCreator(address, diamond721Abi);
+      const instance = contractCreator(address as Hex, diamond721Abi);
       if (instance) {
         const productCount = Number(
           (await instance.getProductCount()).toString()
@@ -73,12 +70,12 @@ const ContractDetails = () => {
         setData({
           title: await instance?.name(),
           contractAddress: address,
-          blockchain: currentChain,
+          blockchain: connectedChain,
           products: Array(productCount)
         });
       }
     }
-  }, [address, blockchain, contractCreator, currentChain]);
+  }, [address, blockchain, contractCreator, connectedChain]);
 
   useEffect(() => {
     getContractData();
@@ -161,9 +158,9 @@ const ContractDetails = () => {
                     }
                     if (!correctBlockchain(data.blockchain)) {
                       web3Switch(data.blockchain);
-                    } else {
+                    } else if (isAddress(data?.contractAddress)) {
                       const instance = await contractCreator?.(
-                        data?.contractAddress,
+                        data.contractAddress as Hex,
                         isDiamond ? diamond721Abi : erc721Abi
                       );
                       if (!instance) {

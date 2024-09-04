@@ -1,14 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ILayout } from './layout.types';
 
-import { RootState } from '../../ducks';
-import { TUsersInitialState } from '../../ducks/users/users.types';
 import useConnectUser from '../../hooks/useConnectUser';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import { metaMaskIcon } from '../../images';
 import { headerLogoBlackMobile } from '../../images';
 
@@ -21,9 +19,7 @@ const Layout: React.FC<ILayout> = ({
   children
 }) => {
   const { connectUserData } = useConnectUser();
-  const { userData } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { isLoggedIn } = useAppSelector((store) => store.user);
   const items = [
     { name: <FontAwesomeIcon icon={faSearch} />, route: '/search' },
     { name: <FontAwesomeIcon icon={faUser} />, route: '/user' },
@@ -64,7 +60,7 @@ const Layout: React.FC<ILayout> = ({
             alt="Rair Tech Logo"
           />
         </div>
-        {!userData && account ? (
+        {!isLoggedIn && account ? (
           <button className="btn btn-light" onClick={() => connectUserData()}>
             Connect <img src={metaMaskIcon} alt="Metamask Logo" />
           </button>

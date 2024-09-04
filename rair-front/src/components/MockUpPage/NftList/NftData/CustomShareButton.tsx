@@ -1,15 +1,16 @@
-import React from 'react';
+import { FC } from 'react';
 
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { ICusmonShareButton } from '../../mockupPage.types';
 
-const CustomShareButton: React.FC<ICusmonShareButton> = ({
+const CustomShareButton: FC<ICusmonShareButton> = ({
   title,
   handleClick,
-  primaryColor,
   moreUnlockablesClassName
 }) => {
   const { width } = useWindowDimensions();
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <button
       onClick={handleClick}
@@ -17,10 +18,8 @@ const CustomShareButton: React.FC<ICusmonShareButton> = ({
         moreUnlockablesClassName ? moreUnlockablesClassName : ''
       } ${import.meta.env.VITE_TESTNET === 'true' ? 'hotdrops-border' : ''}`}
       style={{
-        background: `${
-          primaryColor === '#dedede' ? '#F5F5F5' : 'var(--charcoal)'
-        }`,
-        color: `${primaryColor === 'rhyno' ? 'var(--charcoal)' : '#FFFFFF'}`,
+        background: `${!isDarkMode ? '#F5F5F5' : 'var(--charcoal)'}`,
+        color: `${!isDarkMode ? 'var(--charcoal)' : '#FFFFFF'}`,
         minWidth: `${width >= 500 ? '161px' : '124px'}`
       }}>
       {title}

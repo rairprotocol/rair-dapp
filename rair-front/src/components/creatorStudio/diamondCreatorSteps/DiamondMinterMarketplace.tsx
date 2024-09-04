@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { BigNumber } from 'ethers';
 
 import MarketplaceOfferConfig from './MarketplaceOfferConfig';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { RootState } from '../../../ducks';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import useContracts from '../../../hooks/useContracts';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import {
@@ -26,18 +23,15 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
   //handleMinterRole,
   forceRefetch
 }) => {
-  const { diamondMarketplaceInstance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { diamondMarketplaceInstance } = useContracts();
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
 
   const [offerData, setOfferData] = useState<
     TMarketplaceOfferConfigArrayItem[]
   >([]);
-  const [nodeFee, setNodeFee] = useState<BigNumber>(BigNumber.from(0));
-  const [treasuryFee, setTreasuryFee] = useState<BigNumber>(BigNumber.from(0));
+  const [nodeFee, setNodeFee] = useState<bigint>(BigInt(0));
+  const [treasuryFee, setTreasuryFee] = useState<bigint>(BigInt(0));
   const [treasuryAddress, setTreasuryAddress] = useState<string | undefined>(
     undefined
   );
@@ -67,7 +61,7 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
     if (!diamondMarketplaceInstance) {
       return;
     }
-    if (nodeFee.eq(0) && minterDecimals === 0) {
+    if (nodeFee === BigInt(0) && minterDecimals === 0) {
       const nodeFeeData = await web3TxHandler(
         diamondMarketplaceInstance,
         'getNodeFee'
@@ -77,7 +71,7 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
         setMinterDecimals(nodeFeeData.decimals);
       }
     }
-    if (treasuryFee.eq(0)) {
+    if (treasuryFee === BigInt(0)) {
       const treasuryFeeData = await web3TxHandler(
         diamondMarketplaceInstance,
         'getTreasuryFee'
@@ -125,8 +119,8 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
       await web3TxHandler(diamondMarketplaceInstance, 'addMintingOfferBatch', [
         contractData?.contractAddress,
         filteredOffers?.map((item) => item.diamondRangeIndex),
-        filteredOffers?.map(
-          (item) => item.customSplits?.filter((split) => split.editable)
+        filteredOffers?.map((item) =>
+          item.customSplits?.filter((split) => split.editable)
         ),
         filteredOffers?.map((item) => item.marketData.visible),
         import.meta.env.VITE_NODE_ADDRESS
@@ -158,7 +152,7 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
       MINTERHash &&
       (await web3TxHandler(contractData.instance, 'grantRole', [
         MINTERHash,
-        diamondMarketplaceInstance?.address
+        await diamondMarketplaceInstance?.getAddress()
       ]))
     ) {
       reactSwal.fire({

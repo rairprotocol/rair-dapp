@@ -1,28 +1,23 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, memo, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
-import { constants, utils } from 'ethers';
-import { parseEther } from 'ethers/lib/utils';
+import { parseEther } from 'ethers';
+import { Hex } from 'viem';
 
 import { BuySellButton } from './BuySellButton';
 
-import { TUserResponse } from '../../../../axios.responseTypes';
 import { erc721Abi } from '../../../../contracts';
-import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { UserType } from '../../../../ducks/users/users.types';
+import useContracts from '../../../../hooks/useContracts';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
+import useServerSettings from '../../../../hooks/useServerSettings';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import { rFetch } from '../../../../utils/rFetch';
-import useServerSettings from '../../../adminViews/useServerSettings';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISellButton } from '../../mockupPage.types';
 
-const SellButton: React.FC<ISellButton> = ({
-  tokenData,
+const SellButton: FC<ISellButton> = ({
   selectedToken,
   sellingPrice,
   isInputPriceExist,
@@ -31,13 +26,11 @@ const SellButton: React.FC<ISellButton> = ({
   item,
   singleTokenPage
 }) => {
-  const { contractCreator, currentUserAddress, diamondMarketplaceInstance } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
+  const { contractCreator, diamondMarketplaceInstance } = useContracts();
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
+  const { currentCollection } = useAppSelector((store) => store.tokens);
 
   let { blockchain, contract, tokenId } = useParams();
-  const [accountData, setAccountData] = useState<UserType | null>(null);
 
   const xMIN = Number(0.0001);
   const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
@@ -50,27 +43,30 @@ const SellButton: React.FC<ISellButton> = ({
 
   const reactSwal = useSwal();
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
-  const { nodeAddress, settings, getBlockchainData } = useServerSettings();
+  const { getBlockchainData } = useServerSettings();
+  const { nodeAddress, databaseResales } = useAppSelector(
+    (store) => store.settings
+  );
 
   const handleClickSellButton = useCallback(async () => {
-    if (!correctBlockchain(blockchain as BlockchainType)) {
-      web3Switch(blockchain as BlockchainType);
+    if (!correctBlockchain(blockchain as Hex)) {
+      web3Switch(blockchain as Hex);
       return;
     }
     const tokenInformation =
-      item || (selectedToken && tokenData?.[selectedToken]);
+      item || (selectedToken && currentCollection?.[selectedToken]);
     if (
       !contractCreator ||
       !sellingPrice ||
       !blockchain ||
-      !getBlockchainData(blockchain as `0x${string}`) ||
-      !correctBlockchain(blockchain as BlockchainType) ||
+      !getBlockchainData(blockchain as Hex) ||
+      !correctBlockchain(blockchain as Hex) ||
       !diamondMarketplaceInstance ||
       !tokenInformation
     ) {
       return;
     }
-    const instance = contractCreator(contract, erc721Abi);
+    const instance = contractCreator(contract as Hex, erc721Abi);
     if (!instance) {
       return;
     }
@@ -82,7 +78,7 @@ const SellButton: React.FC<ISellButton> = ({
     });
     const isApprovedForAll = await web3TxHandler(instance, 'isApprovedForAll', [
       currentUserAddress,
-      diamondMarketplaceInstance.address
+      await diamondMarketplaceInstance.getAddress()
     ]);
     if (!isApprovedForAll) {
       reactSwal.fire({
@@ -95,7 +91,7 @@ const SellButton: React.FC<ISellButton> = ({
         !(await web3TxHandler(
           instance,
           'setApprovalForAll',
-          [diamondMarketplaceInstance.address, true],
+          [await diamondMarketplaceInstance.getAddress(), true],
           {
             intendedBlockchain: item.contract.blockchain,
             sponsored: tokenInformation.range.sponsored
@@ -112,14 +108,14 @@ const SellButton: React.FC<ISellButton> = ({
     }
     reactSwal.fire({
       title: 'Creating resale offer',
-      html: `Posting NFT #${tokenId} up for sale with price ${sellingPrice} ${getBlockchainData(
-        blockchain as `0x${string}`
-      )?.symbol}`,
+      html: `Posting NFT #${tokenId} up for sale with price ${sellingPrice} ${
+        getBlockchainData(blockchain as `0x${string}`)?.symbol
+      }`,
       icon: 'info',
       showConfirmButton: false
     });
     let response;
-    if (settings.databaseResales) {
+    if (databaseResales) {
       response = await rFetch(`/api/resales/create`, {
         method: 'POST',
         body: JSON.stringify({
@@ -173,67 +169,22 @@ const SellButton: React.FC<ISellButton> = ({
     web3TxHandler,
     refreshResaleData,
     item,
-    tokenData,
+    currentCollection,
     selectedToken,
     nodeAddress,
-    settings,
-    getBlockchainData
+    getBlockchainData,
+    databaseResales
   ]);
 
   const openInputField = useCallback(() => {
     setIsInputPriceExist(true);
   }, [setIsInputPriceExist]);
 
-  const getInfoFromUser = useCallback(async () => {
-    // find user
-    if (
-      !item &&
-      selectedToken &&
-      tokenData?.[selectedToken]?.ownerAddress &&
-      utils.isAddress(tokenData?.[selectedToken]?.ownerAddress) &&
-      tokenData?.[selectedToken]?.ownerAddress !== constants.AddressZero
-    ) {
-      try {
-        const result = await axios
-          .get<TUserResponse>(
-            `/api/users/${tokenData?.[selectedToken]?.ownerAddress}`
-          )
-          .then((res) => res.data);
-        if (result.success) {
-          setAccountData(result.user);
-        }
-      } catch (e) {
-        setAccountData(null);
-      }
-    } else {
-      if (
-        item &&
-        utils.isAddress(item.ownerAddress) &&
-        item.ownerAddress !== constants.AddressZero
-      ) {
-        try {
-          const result = await axios
-            .get<TUserResponse>(`/api/users/${item.ownerAddress}`)
-            .then((res) => res.data);
-          if (result.success) {
-            setAccountData(result.user);
-          }
-        } catch (e) {
-          setAccountData(null);
-        }
-      }
-    }
-  }, [selectedToken, setAccountData, tokenData, item]);
-
-  useEffect(() => {
-    getInfoFromUser();
-  }, [getInfoFromUser]);
-
   const sellButton = useCallback(() => {
     if (
       selectedToken &&
-      currentUserAddress === tokenData?.[selectedToken]?.ownerAddress &&
-      tokenData?.[selectedToken]?.isMinted
+      currentUserAddress === currentCollection?.[selectedToken]?.ownerAddress &&
+      currentCollection?.[selectedToken]?.isMinted
     ) {
       return (
         <BuySellButton
@@ -266,31 +217,36 @@ const SellButton: React.FC<ISellButton> = ({
             }
           />
         );
-      } else {
+      } else if (selectedToken) {
+        const ownerData = currentCollection?.[selectedToken].ownerData;
         return (
           <div className="container-sell-button-user">
             Owned by{' '}
             <div className="block-user-creator">
               <ImageLazy
-                src={accountData?.avatar ? accountData.avatar : defaultImage}
+                src={ownerData?.avatar ? ownerData.avatar : defaultImage}
                 alt="User Avatar"
               />
               {selectedToken && (
-                <NavLink to={`/${tokenData?.[selectedToken]?.ownerAddress}`}>
+                <NavLink
+                  to={`/${currentCollection?.[selectedToken]?.ownerAddress}`}>
                   <h5>
-                    {(accountData &&
-                    accountData.nickName &&
-                    accountData.nickName.length > 20
-                      ? accountData.nickName.slice(0, 5) +
-                        '....' +
-                        accountData.nickName.slice(length - 4)
-                      : accountData && accountData.nickName) ||
-                      (tokenData?.[selectedToken]?.ownerAddress &&
-                        tokenData?.[selectedToken]?.ownerAddress.slice(0, 4) +
-                          '....' +
-                          tokenData?.[selectedToken]?.ownerAddress.slice(
-                            length - 4
-                          ))}
+                    {(ownerData &&
+                    ownerData.nickName &&
+                    ownerData.nickName.length > 20
+                      ? ownerData.nickName.slice(0, 5) +
+                        '...' +
+                        ownerData.nickName.slice(length - 4)
+                      : ownerData && ownerData.nickName) ||
+                      (currentCollection?.[selectedToken]?.ownerAddress &&
+                        currentCollection?.[selectedToken]?.ownerAddress.slice(
+                          0,
+                          4
+                        ) +
+                          '...' +
+                          currentCollection?.[
+                            selectedToken
+                          ]?.ownerAddress.slice(length - 4))}
                   </h5>
                 </NavLink>
               )}
@@ -307,12 +263,11 @@ const SellButton: React.FC<ISellButton> = ({
     openInputField,
     sellingPrice,
     selectedToken,
-    tokenData,
-    isInputPriceExist,
-    accountData
+    currentCollection,
+    isInputPriceExist
   ]);
 
   return sellButton();
 };
 
-export default React.memo(SellButton);
+export default memo(SellButton);

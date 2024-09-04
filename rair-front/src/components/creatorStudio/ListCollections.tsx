@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { faArrowRight, faGem } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { isAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import { BannerCollection } from './BannerCollection';
 import {
@@ -19,26 +20,19 @@ import NavigatorContract from './NavigatorContract';
 
 import { TProducts } from '../../axios.responseTypes';
 import { diamondFactoryAbi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import { rFetch } from '../../utils/rFetch';
 
 const ListCollections = () => {
-  const { primaryColor, iconColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
-  const { contractCreator, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { primaryColor, iconColor } = useAppSelector((store) => store.colors);
+  const { connectedChain } = useAppSelector((store) => store.web3);
+  const { contractCreator } = useContracts();
   const { address, blockchain } = useParams<TParamsContractDetails>();
 
   const [data, setData] = useState<
     TContractsNetworkContract | TSetDataUseState
   >();
-
-  const navigate = useNavigate();
 
   const getContractData = useCallback(async () => {
     if (!address) {
@@ -68,28 +62,31 @@ const ListCollections = () => {
     }
     if (response2.contract) {
       setData(response2.contract);
-    } else {
+    } else if (isAddress(address) && contractCreator) {
       // Try diamonds
-      const instance = contractCreator?.(address, diamondFactoryAbi);
+      const instance = contractCreator(address as Hex, diamondFactoryAbi);
+      if (!instance) {
+        return;
+      }
       const productCount = Number(
-        (await instance?.getProductCount()).toString()
+        (await instance.getProductCount()).toString()
       );
       const productData: TProductDataLocal[] = [];
       for (let i = 0; i < productCount; i++) {
         productData.push({
           collectionIndexInContract: i,
-          name: (await instance?.getProductInfo(i)).name,
+          name: (await instance.getProductInfo(i)).name,
           diamond: true
         });
       }
       setData({
         title: await instance?.name(),
         contractAddress: address,
-        blockchain: currentChain,
+        blockchain: connectedChain,
         products: productData
       });
     }
-  }, [address, blockchain, contractCreator, currentChain]);
+  }, [address, blockchain, contractCreator, connectedChain]);
 
   useEffect(() => {
     getContractData();

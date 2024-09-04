@@ -1,55 +1,42 @@
-//@ts-nocheck
-import { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
+/* eslint-disable no-case-declarations */
+import { useCallback } from 'react';
 import {
   SendUserOperationResult,
   UserOperationOverrides
 } from '@alchemy/aa-core';
-import { EthersProviderAdapter } from '@alchemy/aa-ethers';
-import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
-import { Alchemy } from 'alchemy-sdk';
-import { Contract, ContractReceipt, ContractTransaction } from 'ethers';
-import { encodeFunctionData } from 'viem';
+import { Contract, ContractTransactionResponse } from 'ethers';
+import { encodeFunctionData, Hex } from 'viem';
 
+import { useAppDispatch, useAppSelector } from './useReduxHooks';
+import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
 
-import useServerSettings from '../components/adminViews/useServerSettings';
-import { RootState } from '../ducks';
-import {
-  setChainId,
-  setProgrammaticProvider
-} from '../ducks/contracts/actions';
-import { ContractsInitialType } from '../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../ducks/users/users.types';
+import { connectChainWeb3Auth } from '../redux/web3Slice';
+import { CombinedBlockchainData } from '../types/commonTypes';
 import { rFetch } from '../utils/rFetch';
-import { TChainItemData } from '../utils/utils.types';
 
 const confirmationsRequired = 2;
 
 type web3Options = {
   failureMessage?: string;
   callback?: () => void;
-  intendedBlockchain: BlockchainType;
+  intendedBlockchain?: Hex;
   sponsored?: Boolean;
 };
 
 const useWeb3Tx = () => {
-  const dispatch = useDispatch();
-  const { blockchainSettings, getBlockchainData } = useServerSettings();
+  const dispatch = useAppDispatch();
+  const { blockchainSettings } = useAppSelector((store) => store.settings);
+  const { getBlockchainData } = useServerSettings();
 
-  const { currentChain, currentUserAddress, programmaticProvider } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
-  const { loginType } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { connectedChain, currentUserAddress, programmaticProvider } =
+    useAppSelector((store) => store.web3);
+  const { loginType } = useAppSelector((store) => store.user);
   const reactSwal = useSwal();
   const handleReceipt = useCallback(
     async (transactionHash: string, callback?: (() => void) | undefined) => {
       try {
-        await rFetch(`/api/transaction/${currentChain}/${transactionHash}`, {
+        await rFetch(`/api/transaction/${connectedChain}/${transactionHash}`, {
           method: 'POST'
         });
         callback && callback();
@@ -57,7 +44,7 @@ const useWeb3Tx = () => {
         console.error(error);
       }
     },
-    [currentChain]
+    [connectedChain]
   );
 
   const handleWeb3Error = useCallback(
@@ -145,39 +132,35 @@ const useWeb3Tx = () => {
         callback?: () => void;
       }
     ) => {
-      let paramsValidation: ContractTransaction;
-      if (
-        (await contract.provider.getNetwork()).chainId !== Number(currentChain)
-      ) {
-        return;
-      }
-      if (!contract[method]) {
-        console.error(`Error calling function ${method}, no method found`);
-        return false;
+      let paramsValidation: ContractTransactionResponse;
+      const web3Function = contract.getFunction(method);
+      if (!web3Function) {
+        console.error(`Error no method called ${method} found`);
+        return undefined;
       }
       try {
         paramsValidation = await contract[method](...args);
       } catch (errorMessage) {
+        console.error('paramsValidation error', method);
         return handleWeb3Error(errorMessage, options?.failureMessage);
       }
       if (paramsValidation?.wait) {
-        let transactionReceipt: ContractReceipt;
         try {
-          transactionReceipt = await paramsValidation.wait(
+          const transactionReceipt = await paramsValidation.wait(
             confirmationsRequired
           );
+          if (transactionReceipt && transactionReceipt.blockNumber) {
+            handleReceipt(transactionReceipt.hash, options?.callback);
+          }
+          return transactionReceipt?.hash;
         } catch (errorMessage) {
           console.error(`Error calling ${method}`);
           return handleWeb3Error(errorMessage, options?.failureMessage);
         }
-        if (transactionReceipt && transactionReceipt.blockNumber) {
-          handleReceipt(transactionReceipt.transactionHash, options?.callback);
-        }
-        return transactionReceipt.transactionHash;
       }
       return paramsValidation;
     },
-    [handleReceipt, handleWeb3Error, currentChain]
+    [handleReceipt, handleWeb3Error]
   );
 
   const verifyAAUserOperation = useCallback(
@@ -218,19 +201,12 @@ const useWeb3Tx = () => {
       if (!currentUserAddress || !programmaticProvider) {
         return;
       }
-      const methodFound = Object.keys(contract.interface.functions).find(
-        (item) => item.includes(`${method}(`)
-      );
-      if (
-        methodFound &&
-        contract.interface.functions[methodFound].stateMutability === 'view'
-      ) {
+      const methodFound = contract.getFunction(method);
+      const fragment = methodFound.getFragment();
+      if (fragment.stateMutability === 'view') {
         // If the method is a view function, query the info directly through Ethers
         return await contract[method](...args);
       }
-      const fragment = contract.interface.fragments.find((fragment) => {
-        return fragment.name === method;
-      });
       let transactionValue: bigint = BigInt(0);
       if (args.at(-1).value) {
         transactionValue = BigInt(args.pop().value);
@@ -248,7 +224,7 @@ const useWeb3Tx = () => {
           programmaticProvider.account as any
         ).checkGasSponsorshipEligibility({
           uo: {
-            target: contract.address as `0x${string}`,
+            target: await contract.getAddress(),
             data: uoCallData,
             value: transactionValue
           }
@@ -261,7 +237,7 @@ const useWeb3Tx = () => {
       const userOperation = await (programmaticProvider.account as any)
         .sendUserOperation({
           uo: {
-            target: contract.address as `0x${string}`,
+            target: await contract.getAddress(),
             data: uoCallData,
             value: transactionValue
           },
@@ -280,70 +256,17 @@ const useWeb3Tx = () => {
   );
 
   const connectWeb3AuthProgrammaticProvider = useCallback(
-    async (chainData?: TChainItemData) => {
+    async (chainData?: CombinedBlockchainData) => {
       if (!chainData) {
         return;
       }
-      const alchemy = new Alchemy({
-        apiKey: chainData.alchemyAppKey,
-        network: chainData?.alchemy,
-        maxRetries: 10
-      });
-      const ethersProvider = await alchemy.config.getProvider();
-
-      const alchemyProvider =
-        EthersProviderAdapter.fromEthersProvider(ethersProvider);
-
-      const web3AuthSigner = new Web3AuthSigner({
-        clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
-        chainConfig: {
-          chainNamespace: 'eip155',
-          chainId: chainData.chainId,
-          rpcTarget: chainData.addChainData.rpcUrls[0],
-          displayName: chainData.name,
-          blockExplorer: chainData.addChainData.blockExplorerUrls[0],
-          ticker: chainData.symbol,
-          tickerName: chainData.name
-        },
-        web3AuthNetwork: chainData.testnet
-          ? 'sapphire_devnet'
-          : 'sapphire_mainnet'
-      });
-
-      await web3AuthSigner.authenticate({
-        init: async () => {
-          await web3AuthSigner.inner.initModal();
-        },
-        connect: async () => {
-          await web3AuthSigner.inner.connect();
-        }
-      });
-
-      const a = await createModularAccountAlchemyClient({
-        apiKey: chainData.alchemyAppKey,
-        chain: chainData.viem!,
-        signer: web3AuthSigner,
-        gasManagerConfig: chainData.alchemyGasPolicy
-          ? {
-              policyId: chainData.alchemyGasPolicy
-            }
-          : undefined
-      });
-
-      const provider = alchemyProvider.connectToAccount(a);
-
-      dispatch(setProgrammaticProvider(provider));
-      dispatch(setChainId(chainData.addChainData.chainId, blockchainSettings));
-      provider.signTypedData = web3AuthSigner.signTypedData;
-      provider.userDetails = web3AuthSigner.getAuthDetails;
-
-      return provider;
+      dispatch(connectChainWeb3Auth(chainData));
     },
-    [dispatch, blockchainSettings]
+    [dispatch]
   );
 
   const metamaskSwitch = useCallback(
-    async (chainId: BlockchainType) => {
+    async (chainId: Hex) => {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
@@ -365,7 +288,7 @@ const useWeb3Tx = () => {
         }
       }
     },
-    [getBlockchainData]
+    [getBlockchainData, blockchainSettings]
   );
 
   const web3TxSignMessage = useCallback(
@@ -395,12 +318,12 @@ const useWeb3Tx = () => {
       method: string,
       args: any[] = [],
       options: web3Options = {
-        intendedBlockchain: currentChain as BlockchainType
+        intendedBlockchain: connectedChain
       }
     ) => {
       if (!currentUserAddress) {
         console.error(`Login required for Web3 call ${method}`);
-        return;
+        return undefined;
       }
       switch (loginType) {
         case 'metamask':
@@ -409,10 +332,11 @@ const useWeb3Tx = () => {
           return web3AuthCall(contract, method, args, options);
         default:
           reactSwal.fire('Error', 'Please login', 'error');
+          return undefined;
       }
     },
     [
-      currentChain,
+      connectedChain,
       currentUserAddress,
       loginType,
       metamaskCall,
@@ -422,7 +346,7 @@ const useWeb3Tx = () => {
   );
 
   const web3Switch = useCallback(
-    async (chainId: BlockchainType | undefined) => {
+    async (chainId: Hex | undefined) => {
       if (!chainId) {
         reactSwal.fire('Unsupported blockchain');
         return;
@@ -438,15 +362,21 @@ const useWeb3Tx = () => {
         case 'metamask':
           return await metamaskSwitch(chainId);
         case 'web3auth':
-          if (!getBlockchainData(chainId)?.alchemyAppKey) {
+          const chainData = getBlockchainData(chainId);
+          if (!chainData) {
+            return;
+          }
+          if (!chainData?.alchemyAppKey) {
             reactSwal.fire(
               'Sorry!',
-              `${getBlockchainData(chainId).name} is not supported currently`,
+              `${chainData?.name} is not supported currently`,
               'info'
             );
             return;
           }
-          await connectWeb3AuthProgrammaticProvider(getBlockchainData(chainId));
+          await connectWeb3AuthProgrammaticProvider(
+            chainData as CombinedBlockchainData
+          );
       }
     },
     [
@@ -460,18 +390,17 @@ const useWeb3Tx = () => {
   );
 
   const correctBlockchain = useCallback(
-    (chainId: BlockchainType) => {
-      return chainId === currentChain;
+    (chainId?: Hex) => {
+      return chainId === connectedChain;
     },
-    [currentChain]
+    [connectedChain]
   );
 
   return {
     correctBlockchain,
     web3Switch,
     web3TxHandler,
-    web3TxSignMessage,
-    connectWeb3AuthProgrammaticProvider
+    web3TxSignMessage
   };
 };
 

@@ -1,8 +1,11 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 import { TStyledSplashPageCardWrapper } from '../../splashConfig.types';
 
-export const StyledSplashPageCardWrapper = styled.div<TStyledSplashPageCardWrapper>`
+export const StyledSplashPageCardWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<TStyledSplashPageCardWrapper>`
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -1,20 +1,15 @@
+import { tokenNumberData } from '../../../types/commonTypes';
+
 export interface IListOfTokensComponent {
-  blockchain: BlockchainType | undefined;
-  contract: string | undefined;
   isOpen: boolean;
   handleIsOpen: () => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
   onClickItem: (element: string | undefined) => void;
-  product: string | undefined;
-  primaryColor: string;
-  setSelectedToken: (tokenId: string | undefined) => void;
-  selectedToken: string | undefined;
   setIsOpen: (isOpen: boolean) => void;
-  totalCount: any;
+  serialNumberData: any;
 }
 
 export interface ICurrentTokensComponent {
-  primaryColor: string;
   items: SelectNumberItem[];
   isBack?: boolean;
   isOpen: boolean;
@@ -33,16 +28,10 @@ export type SelectNumberItem = {
   token: string;
   value: string;
 };
-
 export interface ISelectNumber {
-  blockchain: BlockchainType | undefined;
-  items: SelectNumberItem[];
   handleClickToken: (tokenId: string | undefined) => Promise<void>;
-  selectedToken: string | undefined;
-  totalCount: any;
-  product: string | undefined;
-  contract: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
+  serialNumberData: Array<tokenNumberData>;
 }
 export interface IMockUpPage {
   tabIndex: number;

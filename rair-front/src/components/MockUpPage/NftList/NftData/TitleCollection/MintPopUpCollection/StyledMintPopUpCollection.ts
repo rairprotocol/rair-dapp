@@ -1,10 +1,13 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface IMintPopUpCollectionContainer {
   primaryColor: string;
 }
 
-export const MintPopUpCollectionContainer = styled.div<IMintPopUpCollectionContainer>`
+export const MintPopUpCollectionContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMintPopUpCollectionContainer>`
   border-radius: 12px;
   height: auto;
   border: 1px solid

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { StyledUnlockableVideosWrapper } from './StyledVideoComponents';
 
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import UnlockableVideosSingleTokenPage from '../../../../MockUpPage/NftList/NftData/UnlockableVideosSingleTokenPage';
 import { TUnlockableVideosWrapper } from '../../splashConfig.types';
 
@@ -11,11 +12,11 @@ const UnlockableVideosWrapper: React.FC<TUnlockableVideosWrapper> = ({
   setSelectVideo,
   handlePlayerClick,
   openVideoplayer,
-  setOpenVideoPlayer,
-  primaryColor
+  setOpenVideoPlayer
 }) => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
-    <StyledUnlockableVideosWrapper primaryColor={primaryColor}>
+    <StyledUnlockableVideosWrapper isDarkMode={isDarkMode}>
       <UnlockableVideosSingleTokenPage
         selectVideo={selectVideo}
         setSelectVideo={setSelectVideo}
@@ -23,7 +24,6 @@ const UnlockableVideosWrapper: React.FC<TUnlockableVideosWrapper> = ({
         openVideoplayer={openVideoplayer}
         setOpenVideoPlayer={setOpenVideoPlayer}
         handlePlayerClick={handlePlayerClick}
-        primaryColor={primaryColor}
       />
     </StyledUnlockableVideosWrapper>
   );

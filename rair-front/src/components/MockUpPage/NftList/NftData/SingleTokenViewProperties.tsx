@@ -1,54 +1,56 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { Tooltip } from '@mui/material';
 
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import { ISingleTokenViewProperties } from '../../mockupPage.types';
 
-const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
-  selectedData,
-  textColor
+const SingleTokenViewProperties: FC<ISingleTokenViewProperties> = ({
+  selectedData
 }) => {
   const [toolTipMobile, setToolTipMobile] = useState<boolean>(false);
-
-  // unused code
-  // const randomInteger = (min: number, max: number) => {
-  //   const rand = min + Math.random() * (max + 1 - min);
-  //   return Math.floor(rand);
-  // };
+  const { textColor } = useAppSelector((store) => store.colors);
 
   const toggleToolTipMobile = () => {
     setToolTipMobile((prev) => !prev);
   };
 
-  const percentToRGB = (percent: string) => {
-    const percentNumber = parseInt(percent);
-    if (percentNumber) {
-      if (percentNumber < 15) {
-        return '#95F619';
-      } else if (15 <= percentNumber && percentNumber < 35) {
-        return '#F6ED19';
-      } else {
-        return '#F63419';
-      }
-    }
-  };
+  // const percentToRGB = (percent: string) => {
+  //   const percentNumber = parseInt(percent);
+  //   if (percentNumber) {
+  //     if (percentNumber < 15) {
+  //       return '#95F619';
+  //     } else if (15 <= percentNumber && percentNumber < 35) {
+  //       return '#F6ED19';
+  //     } else {
+  //       return '#F63419';
+  //     }
+  //   }
+  // };
 
-  const toUpper = (string: string) => {
+  const toUpper = (string?: string) => {
     if (string) {
       return string[0].toUpperCase() + string.slice(1);
     }
+    return '';
   };
+
+  if (!selectedData.attributes) {
+    return <></>;
+  }
 
   return (
     <div className="properties-data">
-      {Object.keys(selectedData).length &&
-        selectedData.attributes &&
-        selectedData?.attributes.length > 0 &&
-        selectedData?.attributes.map((item, index) => {
-          if (
-            item.trait_type === 'External URL' ||
-            item.trait_type === 'external_url'
-          ) {
-            return null;
+      {selectedData.attributes
+        .filter((item) => {
+          return (
+            !item.trait_type ||
+            !item.value ||
+            !['External URL', 'external_url'].includes(item.trait_type)
+          );
+        })
+        .map((item, index) => {
+          if (!item.trait_type || !item.value) {
+            return;
           }
           if (
             item.trait_type === 'image' ||
@@ -90,11 +92,11 @@ const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
               }}>
               <div
                 className="property-title"
-                title={toUpper(item?.trait_type.toString().toLowerCase())}>
-                {`${item?.trait_type.toUpperCase()} `}
+                title={toUpper(item.trait_type.toString().toLowerCase())}>
+                {item.trait_type.toUpperCase()}
               </div>
               <div className="custom-offer-percents">
-                {item?.value.length > 12 ? (
+                {item?.value?.length > 12 ? (
                   item.value && (
                     <Tooltip
                       onClose={toggleToolTipMobile}
@@ -114,8 +116,8 @@ const SingleTokenViewProperties: React.FC<ISingleTokenViewProperties> = ({
                 ) : (
                   <div
                     className="text-bold"
-                    title={toUpper(item?.value.toString().toLowerCase())}>
-                    {`${toUpper(item?.value.toString().toLowerCase())}`}
+                    title={toUpper(item?.value?.toString()?.toLowerCase())}>
+                    {toUpper(item?.value?.toString()?.toLowerCase())}
                   </div>
                 )}
                 <div className="custom-offer-percents-percent">

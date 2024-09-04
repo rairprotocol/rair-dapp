@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import { utils } from 'ethers';
-import Swal from 'sweetalert2';
+import { formatEther } from 'ethers';
 
 import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
 
@@ -13,10 +11,11 @@ import {
   TNftItemResponse,
   TTokenData
 } from '../../../../../axios.responseTypes';
-import { RootState } from '../../../../../ducks';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
+import useServerSettings from '../../../../../hooks/useServerSettings';
+import useSwal from '../../../../../hooks/useSwal';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { defaultHotDrops } from '../../../../../images';
-import useServerSettings from '../../../../adminViews/useServerSettings';
 import InputSelect from '../../../../common/InputSelect';
 import PurchaseTokenButton from '../../../../common/PurchaseToken';
 import { ImageLazy } from '../../../ImageLazy/ImageLazy';
@@ -36,9 +35,9 @@ const EasyMintRow = ({
   setPurchaseStatus,
   mintToken
 }) => {
+  const rSwal = useSwal();
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const [tokensToMint, setTokensToMint] = useState('1');
-
 
   const remainingCopies = token.copies - token.soldCopies;
   const navigate = useNavigate();
@@ -67,42 +66,46 @@ const EasyMintRow = ({
           alt="Blockchain network"
           src={blockchain && getBlockchainData(blockchain)?.image}
         />
-        {utils
-          .formatEther(
-            +token.price !== Infinity && token.price !== undefined
-              ? token.price.toString()
-              : 0
-          )
-          .toString()}{' '}
+        {formatEther(
+          +token.price !== Infinity && token.price !== undefined
+            ? token.price.toString()
+            : 0
+        ).toString()}{' '}
         {blockchain && getBlockchainData(blockchain)?.symbol}
       </div>
       {remainingCopies > 0 ? (
         <>
-          {
-            token.sponsored ? <div style={{
-              width: "88px"
-            }} className="item-multi-mint">
-        </div> : <div className="item-multi-mint">
-            <InputSelect
-            placeholder="Choose Quantity"
-            options={[...Array(Math.min(remainingCopies, 30))].map(
-              (_, index) => {
-                return {
-                  label: (index + 1).toString(),
-                  value: (index + 1).toString()
-                };
-              }
-            )}
-            getter={tokensToMint}
-            setter={setTokensToMint}
-          />
-        </div>
-          }
+          {token.sponsored ? (
+            <div
+              style={{
+                width: '88px'
+              }}
+              className="item-multi-mint"></div>
+          ) : (
+            <div className="item-multi-mint">
+              <InputSelect
+                placeholder="Choose Quantity"
+                options={[...Array(Math.min(remainingCopies, 30))].map(
+                  (_, index) => {
+                    return {
+                      label: (index + 1).toString(),
+                      value: (index + 1).toString()
+                    };
+                  }
+                )}
+                getter={tokensToMint}
+                setter={setTokensToMint}
+              />
+            </div>
+          )}
         </>
       ) : (
-        <div style={{
-          fontSize: "12px"
-        }}>No tokens available.</div>
+        <div
+          style={{
+            fontSize: '12px'
+          }}>
+          No tokens available.
+        </div>
       )}
       {mintToken && (
         <div className={`collection-mint-button`}>
@@ -122,17 +125,19 @@ const EasyMintRow = ({
               diamond={token.diamond}
               setPurchaseStatus={setPurchaseStatus}
               customSuccessAction={(purchasedTokens) => {
-                Swal.fire(
-                  'Success',
-                  `Token${tokensToMint !== '1' ? 's' : ''} purchased!`,
-                  'success'
-                ).then((result) => {
-                  if (result.isConfirmed || result.isDismissed) {
-                    navigate(
-                      `/tokens/${blockchain}/${params.contract}/${params.product}/${purchasedTokens}`
-                    );
-                  }
-                });
+                rSwal
+                  .fire(
+                    'Success',
+                    `Token${tokensToMint !== '1' ? 's' : ''} purchased!`,
+                    'success'
+                  )
+                  .then((result) => {
+                    if (result.isConfirmed || result.isDismissed) {
+                      navigate(
+                        `/tokens/${blockchain}/${params.contract}/${params.product}/${purchasedTokens}`
+                      );
+                    }
+                  });
               }}
             />
           )}
@@ -142,7 +147,7 @@ const EasyMintRow = ({
   );
 };
 
-const CollectionInfo: React.FC<ICollectionInfo> = ({
+const CollectionInfo: FC<ICollectionInfo> = ({
   blockchain,
   offerData,
   openTitle,
@@ -151,9 +156,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
   setPurchaseStatus,
   closeModal
 }) => {
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor, isDarkMode } = useAppSelector((store) => store.colors);
   const params = useParams<TParamsNftItemForCollectionView>();
   const [tokenData, setTokenData] = useState<TTokenData[] | null>(null);
   const { width } = useWindowDimensions();
@@ -208,7 +211,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
           </div>
         )}
         <CollectionInfoBody
-          primaryColor={primaryColor}
+          isDarkMode={isDarkMode}
           className={`collection-info-body ${mintToken ? 'mint' : ''}`}>
           {closeModal && (
             <div
@@ -216,7 +219,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                 position: 'fixed'
               }}>
               <ModalContentCloseBtn
-                primaryColor={primaryColor}
+                isDarkMode={isDarkMode}
                 onClick={closeModal}>
                 <FontAwesomeIcon
                   icon={faTimes}

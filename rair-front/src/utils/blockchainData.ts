@@ -1,5 +1,6 @@
 import { base, mainnet, polygon, sepolia } from '@alchemy/aa-core';
 import { Network } from 'alchemy-sdk';
+import { Hex } from 'viem';
 
 import { TChainData } from './utils.types';
 
@@ -54,7 +55,6 @@ const chainData: TChainData = {
     image: AstarLogo,
     name: 'Astar Mainnet',
     chainId: '0x250',
-    symbol: 'ASTR',
     addChainData: {
       chainId: '0x250',
       chainName: 'Astar Mainnet',
@@ -76,7 +76,6 @@ const chainData: TChainData = {
     image: MaticLogo,
     name: 'Matic(Polygon) Mainnet',
     chainId: '0x89',
-    symbol: 'MATIC',
     addChainData: {
       chainId: '0x89',
       chainName: 'Matic(Polygon) Mainnet',
@@ -119,7 +118,6 @@ const chainData: TChainData = {
     image: EthereumLogo,
     name: 'Ethereum Mainnet',
     chainId: '0x1',
-    symbol: 'ETH',
     addChainData: {
       chainId: '0x1',
       chainName: 'Mainnet (Ethereum)',
@@ -137,7 +135,6 @@ const chainData: TChainData = {
     image: EthereumLogo,
     name: 'Ethereum Sepolia',
     chainId: '0xaa36a7',
-    symbol: 'Sepolia ETH',
     addChainData: {
       chainId: '0xaa36a7',
       chainName: 'Sepolia (Ethereum)',
@@ -172,7 +169,6 @@ const chainData: TChainData = {
     image: BaseLogo,
     name: 'Base Mainnet',
     chainId: '0x2105',
-    symbol: 'bETH',
     addChainData: {
       chainId: '0x2105',
       chainName: 'Base',
@@ -190,24 +186,24 @@ const chainData: TChainData = {
 export default chainData;
 
 export const detectBlockchain = (
-  currentChain: BlockchainType | undefined,
-  realChain: BlockchainType | undefined
+  connectedChain: Hex | undefined,
+  realChain: Hex | undefined
 ) => {
   if (
     realChain !== undefined &&
-    currentChain &&
+    connectedChain &&
     chainData &&
-    chainData[currentChain]?.chainId !== realChain
+    chainData[connectedChain]?.chainId !== realChain
   ) {
     return {
-      selectedChain: chainData[currentChain]?.name,
+      selectedChain: chainData[connectedChain]?.name,
       realNameChain: chainData[realChain]?.name,
       selectedChainId: chainData[realChain]?.chainId
     };
   } else {
     return {
-      selectedChain: null,
-      realNameChain: null
+      selectedChain: undefined,
+      realNameChain: undefined
     };
   }
 };

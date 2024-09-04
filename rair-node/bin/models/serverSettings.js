@@ -15,7 +15,7 @@ const ServerSetting = new Schema({
   superAdmins: [{ type: String, required: false }],
   superAdminsOnVault: { type: Boolean, default: false },
   databaseResales: { type: Boolean, default: false },
-  // Light mode and dark mode colors for background
+  // Dark mode colors
   darkModePrimary: { type: String, required: false },
   darkModeSecondary: { type: String, required: false },
   darkModeText: { type: String, required: false },
@@ -29,6 +29,8 @@ const ServerSetting = new Schema({
   buttonPrimaryColor: { type: String, required: false },
   buttonFadeColor: { type: String, required: false },
   buttonSecondaryColor: { type: String, required: false },
+  // Icon color
+  iconColor: { type: String, required: false },
   // Custom footer
   footerLinks: {
     type: [{

@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 import { ITokenLeft } from '../splashPage.types';
 
-const TokenLeft: React.FC<ITokenLeft> = ({
-  primaryColor,
-  DiscordIcon,
-  copies,
-  soldCopies
-}) => {
+const TokenLeft: FC<ITokenLeft> = ({ DiscordIcon, copies, soldCopies }) => {
   const [percentTokens, setPersentTokens] = useState<number>(0);
+
+  const { isDarkMode } = useAppSelector((store) => store.colors);
 
   const leftTokensNumber = Number(copies) - Number(soldCopies);
   const wholeTokens = Number(copies);
@@ -38,11 +36,7 @@ const TokenLeft: React.FC<ITokenLeft> = ({
         <div
           className="progress-tokens"
           style={{
-            background: `${
-              primaryColor === 'rhyno'
-                ? 'rgba(34, 32, 33, 0.4)'
-                : 'rgba(34, 32, 33, 0.6)'
-            }`
+            background: `rgba(34, 32, 33, 0.${!isDarkMode ? '4' : '6'})`
           }}>
           <div className="title-progress-left">NFTs remaining</div>
           <Box className="box-progress" sx={{ position: 'relative' }}>
@@ -100,7 +94,7 @@ const TokenLeft: React.FC<ITokenLeft> = ({
         <div className="tokens-description">
           <p
             style={{
-              color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
+              color: `${!isDarkMode ? '#000' : '#A7A6A6'}`
             }}>
             October 2013, Los Angeles, CA. Nipsey unveils the Crenshaw EP with a
             groundbreaking release strategy: Sell 1000 copies for $100 each.
@@ -108,14 +102,14 @@ const TokenLeft: React.FC<ITokenLeft> = ({
 
           <p
             style={{
-              color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
+              color: `${!isDarkMode ? '#000' : '#A7A6A6'}`
             }}>
             Within 24 hours, all 1000 copies are spoken for.
           </p>
 
           <p
             style={{
-              color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
+              color: `${!isDarkMode ? '#000' : '#A7A6A6'}`
             }}>
             In collaboration with award-winning producer Mr. Lee, the Asghedom
             estate, Southwest Digital Distribution, and RAIR Technologies , the

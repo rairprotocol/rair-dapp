@@ -1,15 +1,11 @@
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-import { RootState } from '../ducks';
-import { ColorStoreType } from '../ducks/colors/colorStore.types';
+import { useAppSelector } from './useReduxHooks';
 
 const useSwal = () => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const reactSwal = useCallback(

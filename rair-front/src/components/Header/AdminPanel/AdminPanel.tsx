@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import {
@@ -11,25 +10,18 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
+import useContracts from '../../../hooks/useContracts';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 
 const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
-  const { diamondMarketplaceInstance } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
-  const { adminRights, superAdmin, loggedIn } = useSelector<
-    RootState,
-    TUsersInitialState
-  >((store) => store.userStore);
-  const { primaryColor, textColor, iconColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { diamondMarketplaceInstance } = useContracts();
+  const { adminRights, superAdmin, isLoggedIn } = useAppSelector(
+    (store) => store.user
+  );
+  const { primaryColor, textColor, iconColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   return (
     <>
@@ -73,7 +65,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   </TooltipBox>
                 ),
                 route: '/admin/settings',
-                disabled: !loggedIn
+                disabled: !isLoggedIn
               },
               {
                 name: (
@@ -101,7 +93,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   </TooltipBox>
                 ),
                 route: '/license',
-                disabled: !loggedIn
+                disabled: !isLoggedIn
               },
               {
                 name: (
@@ -130,7 +122,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   </TooltipBox>
                 ),
                 route: '/admin/transferNFTs',
-                disabled: !loggedIn
+                disabled: !isLoggedIn
               },
               {
                 name: (
@@ -157,7 +149,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   </TooltipBox>
                 ),
                 route: '/user/videos',
-                disabled: !loggedIn
+                disabled: !isLoggedIn
               },
               {
                 name: (
@@ -211,7 +203,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   </TooltipBox>
                 ),
                 route: '/on-sale',
-                disabled: !loggedIn
+                disabled: !isLoggedIn
               }
             ].map((item, index) => {
               if (!item.disabled) {

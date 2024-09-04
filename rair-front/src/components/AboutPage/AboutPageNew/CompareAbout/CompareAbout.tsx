@@ -6,6 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 // imports image logos
 import {
   Curios,
@@ -22,6 +23,7 @@ import CompareMobileSelect from './CompareMobileSelect/CompareMobileSelect';
 
 const CompareAbout = () => {
   const [categories, setCategories] = useState<number>(10);
+  const { iconColor } = useAppSelector((store) => store.colors);
 
   const handleChange = (event) => {
     setCategories(event.target.value);
@@ -82,6 +84,7 @@ const CompareAbout = () => {
                     <FontAwesomeIcon
                       icon={faCheck}
                       className="fas_custom_main"
+                      style={{ color: iconColor }}
                     />
                   </div>
                 </th>

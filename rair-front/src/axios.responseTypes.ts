@@ -1,6 +1,9 @@
+import { Hex } from 'viem';
+
 import { TOfferType } from './components/marketplace/marketplace.types';
 import { MediaListResponseType } from './components/video/video.types';
-import { UserType } from './ducks/users/users.types';
+import { CatalogVideoItem } from './types/commonTypes';
+import { User } from './types/databaseTypes';
 
 export type BackendResponse = {
   success: boolean;
@@ -9,7 +12,7 @@ export type BackendResponse = {
 
 export type TUserResponse = {
   success: boolean;
-  user: UserType | null;
+  user: User;
   message: string;
 };
 
@@ -88,32 +91,9 @@ export type TFileKeyType = {
   };
 };
 
-export type TFileType = {
-  animatedThumbnail: string;
-  ageRestricted?: boolean;
-  author: string;
-  uploader: string;
-  category: string;
-  contract: string;
-  creationDate: string;
-  demo: boolean;
-  description: string;
-  duration: string;
-  encryptionType: string;
-  extension: string;
-  isUnlocked: boolean;
-  mainManifest: string;
-  offer: string[];
-  product: string;
-  staticThumbnail: string;
-  title: string;
-  type: string;
-  _id: string;
-};
-
 export type TNftFilesResponse = {
   success: boolean;
-  files: TFileType[];
+  files: CatalogVideoItem[];
 };
 
 export type IOffersResponseType = {
@@ -134,7 +114,7 @@ export type TGetFullContracts = {
 };
 
 export type TContract = {
-  blockchain: BlockchainType;
+  blockchain: Hex;
   contractAddress: string;
   creationDate: string;
   diamond: boolean;
@@ -147,7 +127,7 @@ export type TContract = {
   title: string;
   transactionHash?: string;
   user: string;
-  userData: UserType | null;
+  userData: User;
   _id: string;
 };
 
