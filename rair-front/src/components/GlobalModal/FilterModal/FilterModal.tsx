@@ -28,6 +28,7 @@ import {
 } from '../../../providers/ModalProvider';
 import { GLOBAL_MODAL_ACTIONS } from '../../../providers/ModalProvider/actions';
 import { loadFrontPageCatalog } from '../../../redux/tokenSlice';
+import { loadVideoList } from '../../../redux/videoSlice';
 import CustomAccordion from '../../Accordion/Accordion';
 import AccordionItem from '../../Accordion/AccordionItem/AccordionItem';
 import { TOption } from '../../Dropdown';
@@ -206,6 +207,12 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
           blockchains: selectedBlockchains
         })
       );
+      dispatch(
+        loadVideoList({
+          blockchain: selectedBlockchains,
+          category: selectedCategories
+        })
+      );
       onCloseBtn();
       closeModal();
     },
@@ -262,6 +269,7 @@ const HomePageFilterModal: FC<THomePageFilterModalProps> = ({
     sessionStorage.removeItem('CategoryItems');
     sessionStorage.removeItem('BlockchainItems');
     dispatch(loadFrontPageCatalog({}));
+    dispatch(loadVideoList({}));
   }, [dispatch]);
 
   useEffect(() => {

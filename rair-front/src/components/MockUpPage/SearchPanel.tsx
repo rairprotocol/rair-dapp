@@ -33,7 +33,7 @@ import { NftList } from './NftList/NftList';
 import PaginationBox from './PaginationBox/PaginationBox';
 
 const SearchPanel: FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
-  const [videoUnlocked, setVideoUnlocked] = useState<boolean>(false);
+  const [, setVideoUnlocked] = useState<boolean>(false);
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [sortItem, setSortItem] = useState<TSortChoice | undefined>();
   const [blockchain, setBlockchain] = useState<Hex | undefined>();
@@ -61,7 +61,6 @@ const SearchPanel: FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
     primaryButtonColor,
     iconColor
   } = useAppSelector((store) => store.colors);
-  const { isLoggedIn } = useAppSelector((store) => store.user);
 
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
@@ -158,8 +157,7 @@ const SearchPanel: FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
     (params) => {
       dispatch(loadVideoList(params));
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dispatch, videoUnlocked, isLoggedIn]
+    [dispatch]
   );
 
   const globalParams = useMemo(
