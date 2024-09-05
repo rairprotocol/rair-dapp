@@ -328,7 +328,7 @@ const VideoItem: React.FC<IVideoItem> = ({ item }) => {
                     </div>
                   </>
                 )}
-                {openVideoplayer || item.staticThumbnail ? null : (
+                {!openVideoplayer && !!item.staticThumbnail && (
                   <img
                     alt="Video thumbnail"
                     src={`${item.staticThumbnail}`}
