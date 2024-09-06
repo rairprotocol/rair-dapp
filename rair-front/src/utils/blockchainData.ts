@@ -92,12 +92,6 @@ const chainData: TChainData = {
   //   name: 'Ethereum Goerli',
   //   chainId: '0x5',
   //   symbol: 'Goerli ETH',
-  //   addChainData: {
-  //     chainId: '0x5',
-  //     chainName: 'Goerli (Ethereum)',
-  //     rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com'],
-  //     blockExplorerUrls: ['https://sepolia.etherscan.io/']
-  //   },
   //   viem: mainnet,
   //   alchemy: Network.ETH_SEPOLIA,
   //   coingecko: undefined
