@@ -17,7 +17,7 @@ interface VideoQueryResponse extends ApiCallResponse {
 }
 
 interface VideoQueryParams extends Partial<PaginatedApiCall> {
-  blockchain?: Hex;
+  blockchain?: Array<Hex>;
   category?: Array<string>;
   publicAddress?: Hex;
   mediaTitle?: string;
@@ -43,11 +43,15 @@ export const loadVideoList = createAsyncThunk(
       const value = searchParams[paramName];
       if (value) {
         if (Array.isArray(value)) {
+          if (!value.length) {
+            return;
+          }
           value.forEach((internalValue) => {
             queryParams.append(`${paramName}[]`, internalValue);
           });
+        } else {
+          queryParams.append(paramName, value.toString());
         }
-        queryParams.append(paramName, value.toString());
       }
     });
     const response = await axios.get<VideoQueryResponse>(
