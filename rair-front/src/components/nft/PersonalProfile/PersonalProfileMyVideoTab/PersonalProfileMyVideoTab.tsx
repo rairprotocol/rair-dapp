@@ -28,7 +28,7 @@ const PersonalProfileMyVideoTabComponent: FC<
   useEffect(() => {
     dispatch(
       loadVideoList({
-        publicAddress: publicAddress ? publicAddress : undefined
+        userAddress: publicAddress ? publicAddress : undefined
       })
     );
   }, [dispatch, publicAddress]);

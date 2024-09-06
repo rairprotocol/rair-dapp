@@ -19,7 +19,7 @@ interface VideoQueryResponse extends ApiCallResponse {
 interface VideoQueryParams extends Partial<PaginatedApiCall> {
   blockchain?: Array<Hex>;
   category?: Array<string>;
-  publicAddress?: Hex;
+  userAddress?: Hex;
   mediaTitle?: string;
 }
 
