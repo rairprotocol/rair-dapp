@@ -195,7 +195,7 @@ const BlockchainSettings = () => {
                 setting: 'symbol'
               },
               {
-                label: 'Block Explorere URL',
+                label: 'Block Explorer URL',
                 type: 'text',
                 setting: 'blockExplorerGateway'
               },
@@ -265,7 +265,7 @@ const BlockchainSettings = () => {
               onClick={() => {
                 setBlockchainSetting(chain.hash, chain.isNew ? 'POST' : 'PUT');
               }}>
-              {chain.isNew ? 'Add Blockchain' : 'Update Settings'}
+              {chain.isNew ? 'Save Blockchain Data' : 'Update Settings'}
             </button>
             <button
               className="btn small btn-danger"

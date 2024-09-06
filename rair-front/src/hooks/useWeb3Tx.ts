@@ -26,7 +26,6 @@ type web3Options = {
 
 const useWeb3Tx = () => {
   const dispatch = useAppDispatch();
-  const { blockchainSettings } = useAppSelector((store) => store.settings);
   const { getBlockchainData } = useServerSettings();
 
   const { connectedChain, currentUserAddress, programmaticProvider } =
@@ -267,10 +266,14 @@ const useWeb3Tx = () => {
 
   const metamaskSwitch = useCallback(
     async (chainId: Hex) => {
+      const chainData = getBlockchainData(chainId);
+      if (!chainData) {
+        return;
+      }
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: chainId && getBlockchainData(chainId)?.hash }]
+          params: [{ chainId: chainData.hash }]
         });
       } catch (switchError: any) {
         // This error code indicates that the chain has not been added to MetaMask.
@@ -278,7 +281,19 @@ const useWeb3Tx = () => {
           try {
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
-              params: [chainId && getBlockchainData(chainId)?.addChainData]
+              params: [
+                {
+                  chainId: chainData.hash,
+                  chainName: chainData.name,
+                  nativeCurrency: {
+                    name: chainData.name,
+                    symbol: chainData.symbol,
+                    decimals: 18
+                  },
+                  rpcUrls: [chainData.rpcEndpoint],
+                  blockExplorerUrls: [chainData.blockExplorerGateway]
+                }
+              ]
             });
           } catch (addError) {
             console.error(addError);
@@ -288,7 +303,7 @@ const useWeb3Tx = () => {
         }
       }
     },
-    [getBlockchainData, blockchainSettings]
+    [getBlockchainData]
   );
 
   const web3TxSignMessage = useCallback(

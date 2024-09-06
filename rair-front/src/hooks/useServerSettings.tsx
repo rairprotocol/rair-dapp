@@ -20,7 +20,7 @@ const useServerSettings = () => {
 
   const getBlockchainData = useCallback(
     (chainId?: Hex) => {
-      if (!chainId || !chainData[chainId]) {
+      if (!chainId) {
         return;
       }
       return {
