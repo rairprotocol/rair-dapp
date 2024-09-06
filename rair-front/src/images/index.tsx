@@ -35,6 +35,7 @@ import rairTechLogoBlue from './rairLogo_blue.webp';
 import rairTechLogoBlack from './rairTechLogoBlack.webp';
 import rairTechLogoWhite from './rairTechLogoWhite.webp';
 import rarible from './rarible-logo.webp';
+import soniumLogo from './sonium_logo.svg';
 import verifiedIcon from './verify-icon.png';
 import yotiLogo from './yoti-logo.png';
 
@@ -79,6 +80,7 @@ export const EthereumLogo = ethereum;
 export const DocumentIcon = documentIcon;
 export const AstarLogo = astar;
 export const BaseLogo = baseMainnet;
+export const SoniumLogo = soniumLogo;
 export const LoadingDefaultFavicon = loadingFavicon;
 
 export const DiscordIcon = ({ color, primaryColor }) => {

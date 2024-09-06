@@ -4,7 +4,13 @@ import { Hex } from 'viem';
 
 import { TChainData } from './utils.types';
 
-import { AstarLogo, BaseLogo, EthereumLogo, MaticLogo } from '../images';
+import {
+  AstarLogo,
+  BaseLogo,
+  EthereumLogo,
+  MaticLogo,
+  SoniumLogo
+} from '../images';
 
 const chainData: TChainData = {
   // '0x38': {
@@ -111,7 +117,7 @@ const chainData: TChainData = {
   '0x79a': {
     // Sonium Minato Testnet
     testnet: true,
-    image: BaseLogo,
+    image: SoniumLogo,
     name: 'Minato',
     chainId: '0x79a',
     viem: undefined,
