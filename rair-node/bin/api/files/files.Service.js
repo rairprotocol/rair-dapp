@@ -33,7 +33,7 @@ module.exports = {
       const {
         pageNum = '1',
         itemsPerPage = '20',
-        blockchain = '',
+        blockchain = [],
         category = [],
         userAddress = '',
         contractAddress = '',
@@ -49,7 +49,7 @@ module.exports = {
       const blockchainFilter = {
         display: { $ne: false },
       };
-      if (blockchain?.length >= 1) {
+      if (blockchain.length) {
         blockchainFilter.hash = { $in: [...blockchain] };
       }
       const foundBlockchain = await Blockchain.find(blockchainFilter);
