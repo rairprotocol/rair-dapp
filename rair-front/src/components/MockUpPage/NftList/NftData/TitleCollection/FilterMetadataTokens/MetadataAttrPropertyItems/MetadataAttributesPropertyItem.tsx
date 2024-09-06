@@ -46,11 +46,11 @@ const MetadataAttributesPropertyItem = ({
       {item.value.length > 7 && !isMobileDesign ? (
         <>
           <TooltipBox title={item.value}>
-            {`${item.value.slice(0, 4)}...(${quantity})`}
+            {`${item.value.slice(0, 4)}... (${quantity})`}
           </TooltipBox>
         </>
       ) : (
-        `${item.value}(${quantity})`
+        `${item.value} (${quantity})`
       )}
     </div>
   );
