@@ -680,21 +680,17 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
               </div>
               <div
                 style={{
-                  width: '100%'
+                  width: '100%',
+                  textAlign: 'left'
                 }}>
-                <input
-                  value={titleSearchAttributes}
-                  onChange={(e) => setTitleSearchAttributes(e.target.value)}
-                  style={{
-                    border: '1px solid #666666',
-                    width: '100%',
-                    borderRadius: '12px',
-                    padding: '5px 10px',
-                    background: 'none',
-                    outline: 'none',
-                    color: 'white'
+                <InputField
+                  label="Search"
+                  getter={titleSearchAttributes}
+                  setter={setTitleSearchAttributes}
+                  customClass="rounded-rair form-control"
+                  customCSS={{
+                    backgroundColor: 'inherit'
                   }}
-                  placeholder="Search..."
                 />
               </div>
               <MetadataAttributesProperties

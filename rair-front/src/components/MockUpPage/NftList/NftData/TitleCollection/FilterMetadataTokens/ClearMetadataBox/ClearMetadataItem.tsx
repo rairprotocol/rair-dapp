@@ -1,17 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useAppSelector } from '../../../../../../../hooks/useReduxHooks';
 
-const ClearMetadataItem = ({ clickProperty, meta, val, getResetTokens }) => {
+const ClearMetadataItem = ({ clickProperty, meta, val }) => {
   const [, /*clearActive*/ setClearActive] = useState(false);
 
   const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
     (store) => store.colors
   );
-
-  useEffect(() => {
-    getResetTokens();
-  }, [getResetTokens, val]);
 
   return (
     <button
