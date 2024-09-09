@@ -66,11 +66,18 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   const [metadataURI, setMetadataURI] = useState<string>('');
 
   const getNFTData = useCallback(async () => {
-    if (!address) {
+    if (!address || !contractData?.product?.offers) {
       return;
     }
+    const fromToken = contractData.product.offers[0].range[0];
+    const totalTokens = contractData.product.offers.reduce(
+      (result, current) => {
+        return result + (BigInt(current.range[1]) - BigInt(current.range[0]));
+      },
+      BigInt(0)
+    );
     const { success, tokens, totalCount } = await rFetch(
-      `/api/nft/network/${contractData?.blockchain}/${address.toLowerCase()}/${collectionIndex}`
+      `/api/nft/network/${contractData?.blockchain}/${address.toLowerCase()}/${collectionIndex}?fromToken=${fromToken}&toToken=${totalTokens.toString()}`
     );
     if (success) {
       const mapping = {};
@@ -80,7 +87,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
       setNFTMapping(mapping);
       setNFTCount(totalCount);
     }
-  }, [address, collectionIndex, contractData?.blockchain]);
+  }, [address, collectionIndex, contractData]);
 
   const addRow = () => {
     const aux = [...propertiesArray];
