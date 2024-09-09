@@ -104,6 +104,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
       if (result.success) {
         setRealDataNotification(result.notifications);
       }
+    } else {
+      setRealDataNotification([]);
     }
   }, [currentUserAddress, isLoggedIn]);
 
