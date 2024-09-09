@@ -42,6 +42,8 @@ const PopUpNotification = ({
         if (result.success && result.totalCount > 0) {
           setTotalPageForPagination(result.totalCount);
         }
+      } else {
+        setTotalPageForPagination(0);
       }
     }, [currentUserAddress, isLoggedIn]);
 

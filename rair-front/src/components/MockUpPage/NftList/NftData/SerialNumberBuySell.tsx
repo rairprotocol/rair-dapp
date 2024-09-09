@@ -293,8 +293,6 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       return <></>;
     }
 
-    console.info(selectedToken);
-
     if (!currentUserAddress) {
       if (
         selectedToken &&
