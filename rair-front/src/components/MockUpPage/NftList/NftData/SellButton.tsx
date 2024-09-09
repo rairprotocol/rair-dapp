@@ -28,7 +28,9 @@ const SellButton: FC<ISellButton> = ({
 }) => {
   const { contractCreator, diamondMarketplaceInstance } = useContracts();
   const { currentUserAddress } = useAppSelector((store) => store.web3);
-  const { currentCollection } = useAppSelector((store) => store.tokens);
+  const { currentCollection, currentCollectionMetadata } = useAppSelector(
+    (store) => store.tokens
+  );
 
   let { blockchain, contract, tokenId } = useParams();
 
@@ -53,8 +55,10 @@ const SellButton: FC<ISellButton> = ({
       web3Switch(blockchain as Hex);
       return;
     }
-    const tokenInformation =
-      item || (selectedToken && currentCollection?.[selectedToken]);
+    const tokenInformation = item || {
+      ...(selectedToken && currentCollection?.[selectedToken]),
+      contract: currentCollectionMetadata
+    };
     if (
       !contractCreator ||
       !sellingPrice ||
@@ -93,7 +97,7 @@ const SellButton: FC<ISellButton> = ({
           'setApprovalForAll',
           [await diamondMarketplaceInstance.getAddress(), true],
           {
-            intendedBlockchain: item.contract.blockchain,
+            intendedBlockchain: tokenInformation.contract.blockchain,
             sponsored: tokenInformation.range.sponsored
           }
         ))
@@ -140,8 +144,8 @@ const SellButton: FC<ISellButton> = ({
           nodeAddress // Node address
         ],
         {
-          intendedBlockchain: item.contract.blockchain,
-          sponsored: tokenInformation.range.sponsored
+          intendedBlockchain: tokenInformation.contract.blockchain,
+          sponsored: tokenInformation.offer.sponsored
         }
       )
     ) {
@@ -173,7 +177,8 @@ const SellButton: FC<ISellButton> = ({
     selectedToken,
     nodeAddress,
     getBlockchainData,
-    databaseResales
+    databaseResales,
+    currentCollectionMetadata
   ]);
 
   const openInputField = useCallback(() => {

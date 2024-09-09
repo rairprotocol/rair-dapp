@@ -89,7 +89,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
       const result = await web3TxHandler(
         diamondMarketplaceInstance,
         'getRoyalties',
-        [currentCollectionMetadata?.blockchain]
+        [currentCollectionMetadata?.contractAddress]
       );
 
       const calculationNodeFee = formatUnits(nodeFee.nodeFee, nodeFee.decimals);
@@ -339,7 +339,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
             ) : (
               <SellButton
                 currentUser={currentUserAddress}
-                item={item}
+                item={{ ...item, contract: currentCollectionMetadata }}
                 sellingPrice={inputSellValue}
                 isInputPriceExist={isInputPriceExist}
                 setIsInputPriceExist={setIsInputPriceExist}
