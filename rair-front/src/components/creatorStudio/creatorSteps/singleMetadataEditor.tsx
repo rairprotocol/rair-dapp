@@ -69,16 +69,16 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     if (!address) {
       return;
     }
-    const { success, result } = await rFetch(
+    const { success, tokens, totalCount } = await rFetch(
       `/api/nft/network/${contractData?.blockchain}/${address.toLowerCase()}/${collectionIndex}`
     );
     if (success) {
       const mapping = {};
-      result.tokens.forEach((token: TTokenData) => {
+      tokens.forEach((token: TTokenData) => {
         mapping[token.uniqueIndexInContract] = token;
       });
       setNFTMapping(mapping);
-      setNFTCount(result.totalCount);
+      setNFTCount(totalCount);
     }
   }, [address, collectionIndex, contractData?.blockchain]);
 
