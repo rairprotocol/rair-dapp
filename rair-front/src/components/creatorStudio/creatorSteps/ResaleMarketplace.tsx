@@ -187,16 +187,15 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           <br />
           Total:{' '}
           {(
-            total +
-            nodeFee +
-            treasuryFee / BigInt(10) ** minterDecimals
+            (total + nodeFee + treasuryFee) /
+            BigInt(10) ** minterDecimals
           ).toString()}
           %
           <br />
           Percentage left for the seller:{' '}
           {(
-            BigInt(100) * precisionFactor -
-            (total + nodeFee + treasuryFee) / BigInt(10) ** minterDecimals
+            (BigInt(100) * precisionFactor - (total + nodeFee + treasuryFee)) /
+            BigInt(10) ** minterDecimals
           ).toString()}
           %
           <br />
