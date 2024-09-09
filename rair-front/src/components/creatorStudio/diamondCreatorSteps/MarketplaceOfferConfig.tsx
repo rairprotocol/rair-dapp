@@ -286,7 +286,8 @@ const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
                 </div>
                 <button
                   disabled={
-                    BigInt(total) >= Math.pow(10, minterDecimals || 3) * 100
+                    BigInt(total) >=
+                    BigInt(10) ** BigInt(minterDecimals || 3) * BigInt(100)
                   }
                   onClick={addPayment}
                   style={{
