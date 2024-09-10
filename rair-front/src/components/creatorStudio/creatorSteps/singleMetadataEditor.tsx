@@ -115,11 +115,11 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
 
   useEffect(() => {
     const tokenData = nftMapping[nftID];
-    if (tokenData && tokenData.metadata.attributes) {
+    if (tokenData?.metadata) {
       setNFTImage(tokenData?.metadata?.image);
       setNFTTitle(tokenData?.metadata?.name);
       setNFTDescription(tokenData?.metadata?.description);
-      setPropertiesArray(tokenData?.metadata?.attributes);
+      setPropertiesArray(tokenData?.metadata?.attributes || []);
     } else {
       setNFTImage('');
       setNFTTitle('');
