@@ -139,6 +139,8 @@ const MainHeader: FC<IMainHeader> = ({
           });
           setRealDataNotification(sortedNotifications);
         }
+      } else {
+        setRealDataNotification([]);
       }
     },
     [currentUserAddress, isLoggedIn]
@@ -150,6 +152,8 @@ const MainHeader: FC<IMainHeader> = ({
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
+    } else {
+      setNotificationCount(0);
     }
   }, [currentUserAddress, isLoggedIn]);
 

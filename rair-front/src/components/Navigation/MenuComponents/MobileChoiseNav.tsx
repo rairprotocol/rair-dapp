@@ -23,12 +23,12 @@ interface IMobileChoiseNav {
 const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   click,
   messageAlert,
-  currentUserAddress,
   handleMessageAlert
 }) => {
   const { primaryColor, headerLogoMobile } = useAppSelector(
     (store) => store.colors
   );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
   const dispatch = useAppDispatch();
   const { nickName, isLoggedIn, avatar } = useAppSelector(
     (state) => state.user
@@ -41,8 +41,10 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
+    } else {
+      setNotificationCount(0);
     }
-  }, [currentUserAddress, messageAlert, isLoggedIn]);
+  }, [currentUserAddress, isLoggedIn]);
 
   useEffect(() => {
     getNotificationsCount();

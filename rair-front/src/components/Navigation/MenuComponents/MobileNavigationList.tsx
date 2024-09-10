@@ -104,6 +104,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           });
           setNotificationArray(sortedNotifications);
         }
+      } else {
+        setNotificationArray([]);
       }
     },
     [messageAlert, currentUserAddress]
@@ -118,6 +120,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       }
 
       setFlagLoading(false);
+    } else {
+      setNotificationCount(0);
     }
   }, [currentUserAddress]);
 

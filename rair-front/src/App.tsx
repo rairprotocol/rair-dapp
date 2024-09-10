@@ -178,6 +178,8 @@ function App() {
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
+    } else {
+      setNotificationCount(0);
     }
   }, [isLoggedIn, currentUserAddress]);
 
