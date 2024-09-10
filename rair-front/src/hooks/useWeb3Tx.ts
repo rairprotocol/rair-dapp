@@ -197,11 +197,14 @@ const useWeb3Tx = () => {
       args: any[],
       options: web3Options
     ) => {
-      if (!currentUserAddress || !programmaticProvider) {
+      if (!currentUserAddress || !contract) {
         return;
       }
       const methodFound = contract.getFunction(method);
-      const fragment = methodFound.getFragment();
+      let fragment = methodFound.fragment;
+      if (!fragment) {
+        fragment = methodFound.getFragment();
+      }
       if (fragment.stateMutability === 'view') {
         // If the method is a view function, query the info directly through Ethers
         return await contract[method](...args);
@@ -219,9 +222,7 @@ const useWeb3Tx = () => {
       const elegibleForSponsorship =
         options.sponsored &&
         !transactionValue &&
-        (await (
-          programmaticProvider.account as any
-        ).checkGasSponsorshipEligibility({
+        (await (contract.runner as any).account.checkGasSponsorshipEligibility({
           uo: {
             target: await contract.getAddress(),
             data: uoCallData,
@@ -233,7 +234,7 @@ const useWeb3Tx = () => {
         paymasterAndData: '0x'
       };
 
-      const userOperation = await (programmaticProvider.account as any)
+      const userOperation = await (contract.runner as any).account
         .sendUserOperation({
           uo: {
             target: await contract.getAddress(),
@@ -251,7 +252,7 @@ const useWeb3Tx = () => {
       }
       return await verifyAAUserOperation(userOperation, options);
     },
-    [currentUserAddress, programmaticProvider, reactSwal, verifyAAUserOperation]
+    [currentUserAddress, reactSwal, verifyAAUserOperation]
   );
 
   const connectWeb3AuthProgrammaticProvider = useCallback(

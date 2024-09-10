@@ -128,11 +128,15 @@ const useContracts = () => {
 
   const contractCreator = useCallback(
     (address: Hex | undefined, abi: ContractABI) => {
+      if (isLoggedIn && !signer) {
+        refreshSigner();
+        return;
+      }
       if (address && isAddress(address) && signer) {
         return new Contract(address, abi, signer);
       }
     },
-    [signer]
+    [isLoggedIn, refreshSigner, signer]
   );
 
   useEffect(() => {
@@ -209,7 +213,8 @@ const useContracts = () => {
     mainTokenInstance,
     classicFactoryInstance,
     licenseExchangeInstance,
-    contractCreator
+    contractCreator,
+    refreshSigner
   };
 };
 

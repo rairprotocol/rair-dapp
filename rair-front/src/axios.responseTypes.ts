@@ -16,11 +16,6 @@ export type TUserResponse = {
   message: string;
 };
 
-export type TNftItemResult = {
-  totalCount: number;
-  tokens: TTokenData[];
-};
-
 export type TAttributes = {
   trait_type: string;
   value: string;
@@ -61,8 +56,8 @@ export type TTokenData = {
 
 export type TNftItemResponse = {
   success: boolean;
-  result: TNftItemResult;
-  tokens?: any;
+  totalCount: number;
+  tokens: TTokenData[];
 };
 
 export type TFavotiteTokenData = {
