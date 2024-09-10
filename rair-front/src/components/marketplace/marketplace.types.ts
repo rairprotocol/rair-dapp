@@ -1,4 +1,3 @@
-import { Contract } from 'ethers';
 import { Hex } from 'viem';
 
 export type TBatchRowPropsType = {
