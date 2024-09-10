@@ -66,21 +66,28 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   const [metadataURI, setMetadataURI] = useState<string>('');
 
   const getNFTData = useCallback(async () => {
-    if (!address) {
+    if (!address || !contractData?.product?.offers) {
       return;
     }
-    const { success, result } = await rFetch(
-      `/api/nft/network/${contractData?.blockchain}/${address.toLowerCase()}/${collectionIndex}`
+    const fromToken = contractData.product.offers[0].range[0];
+    const totalTokens = contractData.product.offers.reduce(
+      (result, current) => {
+        return result + (BigInt(current.range[1]) - BigInt(current.range[0]));
+      },
+      BigInt(0)
+    );
+    const { success, tokens, totalCount } = await rFetch(
+      `/api/nft/network/${contractData?.blockchain}/${address.toLowerCase()}/${collectionIndex}?fromToken=${fromToken}&toToken=${totalTokens.toString()}`
     );
     if (success) {
       const mapping = {};
-      result.tokens.forEach((token: TTokenData) => {
+      tokens.forEach((token: TTokenData) => {
         mapping[token.uniqueIndexInContract] = token;
       });
       setNFTMapping(mapping);
-      setNFTCount(result.totalCount);
+      setNFTCount(totalCount);
     }
-  }, [address, collectionIndex, contractData?.blockchain]);
+  }, [address, collectionIndex, contractData]);
 
   const addRow = () => {
     const aux = [...propertiesArray];
@@ -108,11 +115,11 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
 
   useEffect(() => {
     const tokenData = nftMapping[nftID];
-    if (tokenData && tokenData.metadata.attributes) {
+    if (tokenData?.metadata) {
       setNFTImage(tokenData?.metadata?.image);
       setNFTTitle(tokenData?.metadata?.name);
       setNFTDescription(tokenData?.metadata?.description);
-      setPropertiesArray(tokenData?.metadata?.attributes);
+      setPropertiesArray(tokenData?.metadata?.attributes || []);
     } else {
       setNFTImage('');
       setNFTTitle('');
@@ -203,6 +210,8 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     if (files?.name) {
       formData.append('image', files.name);
       formData.append('files', files);
+    } else if (nftImage !== nftMapping[nftID]?.metadata?.image) {
+      formData.append('image', nftImage);
     }
 
     const response = await rFetch(
