@@ -8,19 +8,11 @@ export type TNativeCurrency = {
   decimals: number;
 };
 
-export type TAddChainData = {
-  chainId: Hex;
-  chainName: string;
-  nativeCurrency?: TNativeCurrency;
-  rpcUrls: Array<string>;
-  blockExplorerUrls: Array<string>;
-};
 export type TChainItemData = {
   testnet?: boolean;
   image: string;
   name: string;
   chainId: Hex;
-  addChainData: TAddChainData;
   disabled?: boolean;
   viem?: chains.Chain;
   alchemy?: Network;

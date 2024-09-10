@@ -57,9 +57,9 @@ const useContracts = () => {
       chainConfig: {
         chainNamespace: 'eip155',
         chainId: chainData.chainId,
-        rpcTarget: chainData.addChainData.rpcUrls[0],
+        rpcTarget: chainData.rpcEndpoint,
         displayName: chainData.name,
-        blockExplorer: chainData.addChainData.blockExplorerUrls[0],
+        blockExplorer: chainData.blockExplorerGateway,
         ticker: chainData.symbol,
         tickerName: chainData.name
       },
