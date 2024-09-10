@@ -210,6 +210,8 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
     if (files?.name) {
       formData.append('image', files.name);
       formData.append('files', files);
+    } else if (nftImage !== nftMapping[nftID]?.metadata?.image) {
+      formData.append('image', nftImage);
     }
 
     const response = await rFetch(
