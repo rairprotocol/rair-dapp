@@ -98,7 +98,7 @@ const SellButton: FC<ISellButton> = ({
           [await diamondMarketplaceInstance.getAddress(), true],
           {
             intendedBlockchain: tokenInformation.contract.blockchain,
-            sponsored: tokenInformation.range.sponsored
+            sponsored: tokenInformation.offer.sponsored
           }
         ))
       ) {
