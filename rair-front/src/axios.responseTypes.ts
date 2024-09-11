@@ -1,7 +1,6 @@
-import { Hex } from 'viem';
-
 import { TOfferType } from './components/marketplace/marketplace.types';
 import { MediaListResponseType } from './components/video/video.types';
+import { CatalogItem } from './redux/tokenSlice';
 import { CatalogVideoItem } from './types/commonTypes';
 import { User } from './types/databaseTypes';
 
@@ -108,27 +107,9 @@ export type TMediaList = {
 };
 
 export type TGetFullContracts = {
-  contracts: TContract[];
+  contracts: CatalogItem[];
   success: boolean;
   totalNumber: number;
-};
-
-export type TContract = {
-  blockchain: Hex;
-  contractAddress: string;
-  creationDate: string;
-  diamond: boolean;
-  external: boolean;
-  lastSyncedBlock: string;
-  metadataURI: string;
-  offerPool?: TOfferPool;
-  products: TProducts;
-  singleMetadata: boolean;
-  title: string;
-  transactionHash?: string;
-  user: string;
-  userData: User;
-  _id: string;
 };
 
 export type TProducts = {
@@ -198,7 +179,7 @@ export type TUploadSocket = {
 };
 
 export type TNftDataExternalLinkResultType = {
-  contract: TContract;
+  contract: CatalogItem;
   tokens: TTokenData[];
   totalCount: number;
 };

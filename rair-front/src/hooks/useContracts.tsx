@@ -124,7 +124,7 @@ const useContracts = () => {
 
   useEffect(() => {
     refreshSigner();
-  }, [refreshSigner]);
+  }, [refreshSigner, connectedChain]);
 
   const contractCreator = useCallback(
     (address: Hex | undefined, abi: ContractABI) => {
@@ -209,7 +209,8 @@ const useContracts = () => {
     mainTokenInstance,
     classicFactoryInstance,
     licenseExchangeInstance,
-    contractCreator
+    contractCreator,
+    refreshSigner
   };
 };
 
