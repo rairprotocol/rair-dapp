@@ -76,18 +76,18 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   }, [metadata, setHeaders, gotoNextStep]);
 
   const fetchData = useCallback(async () => {
-    const { success, result } = await rFetch(
+    const { success, tokens, totalCount } = await rFetch(
       `/api/nft/network/${contractData.blockchain}/${address}/${collectionIndex}`
     );
 
     const newArray: any[] = [];
 
-    if (success && result.totalCount > 0) {
+    if (success && totalCount > 0) {
       //fetch data form set Metadata info for show table
-      for (let i = 0; i < result.tokens.length; i++) {
-        const mtd = result.tokens[i].metadata;
-        const nftId = result.tokens[i].token;
-        const info = result.tokens[i];
+      for (let i = 0; i < tokens.length; i++) {
+        const mtd = tokens[i].metadata;
+        const nftId = tokens[i].token;
+        const info = tokens[i];
 
         const injectData = {
           Artist: mtd.artist,
@@ -105,9 +105,8 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
       }
       setMetadata(newArray);
       setMetadataExists(
-        result.tokens.filter(
-          (item: TTokenData) => item.metadata.name !== 'none'
-        ).length > 0
+        tokens.filter((item: TTokenData) => item.metadata.name !== 'none')
+          .length > 0
       );
     }
   }, [address, collectionIndex, contractData.blockchain]);
@@ -119,7 +118,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         return;
       }
       formData.append('product', collectionIndex);
-      formData.append('contract', contractData._id);
+      formData.append('contract', contractData._id!);
       formData.append('csv', csvFile as Blob, 'metadata.csv');
       if (forceOverwrite) {
         formData.append('forceOverwrite', 'true');
