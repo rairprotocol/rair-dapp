@@ -32,16 +32,15 @@ const SellButton: FC<ISellButton> = ({
     (store) => store.tokens
   );
 
-  let { blockchain, contract, tokenId } = useParams();
-
   const xMIN = Number(0.0001);
   const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
 
-  if (!blockchain && !contract && !tokenId) {
-    blockchain = item.contract.blockchain;
-    contract = item.contract.contractAddress;
-    tokenId = item.uniqueIndexInContract;
-  }
+  const blockchain =
+    item?.contract?.blockchain || currentCollectionMetadata?.blockchain;
+  const contract =
+    item?.contract?.contractAddress ||
+    currentCollectionMetadata?.contractAddress;
+  const tokenId = item?.uniqueIndexInContract;
 
   const reactSwal = useSwal();
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
