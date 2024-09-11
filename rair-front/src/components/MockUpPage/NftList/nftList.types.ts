@@ -8,7 +8,6 @@ import { TOfferType } from '../../marketplace/marketplace.types';
 import { TEmbeddedParams } from '../mockupPage.types';
 
 import {
-  TContract,
   TMetadataType,
   TProducts,
   TTokenData
@@ -231,7 +230,7 @@ export type TGettingPriceReturnType = {
 };
 
 export type TNftExternalLinkType = {
-  contract: TContract;
+  contract: CatalogItem;
   tokens: TTokenData[];
   totalCount: number;
 };
