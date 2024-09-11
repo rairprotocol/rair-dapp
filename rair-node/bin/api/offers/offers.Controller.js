@@ -2,6 +2,7 @@ const express = require('express');
 const {
   getAllOffers,
   updateOfferData,
+  getAvailableTokensInOffer,
 } = require('./offers.Service');
 const { validation, requireUserSession } = require('../../middleware');
 
@@ -11,6 +12,12 @@ router.get(
   '/',
   validation(['pagination', 'dbOffers'], 'query'),
   getAllOffers,
+);
+router.get(
+  '/:id/available',
+  requireUserSession,
+  validation(['dbId'], 'params'),
+  getAvailableTokensInOffer,
 );
 router.put(
   '/:id',
