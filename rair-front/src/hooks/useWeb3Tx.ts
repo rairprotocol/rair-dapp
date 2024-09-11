@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from './useReduxHooks';
 import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
 
-import { connectChainWeb3Auth } from '../redux/web3Slice';
+import { connectChainWeb3Auth, setConnectedChain } from '../redux/web3Slice';
 import { CombinedBlockchainData } from '../types/commonTypes';
 import { rFetch } from '../utils/rFetch';
 
@@ -270,6 +270,7 @@ const useWeb3Tx = () => {
       if (!chainData) {
         return;
       }
+      dispatch(setConnectedChain());
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
@@ -296,14 +297,16 @@ const useWeb3Tx = () => {
               ]
             });
           } catch (addError) {
+            dispatch(setConnectedChain(connectedChain));
             console.error(addError);
           }
         } else {
+          dispatch(setConnectedChain(connectedChain));
           console.error(switchError);
         }
       }
     },
-    [getBlockchainData]
+    [getBlockchainData, connectedChain, dispatch]
   );
 
   const web3TxSignMessage = useCallback(
