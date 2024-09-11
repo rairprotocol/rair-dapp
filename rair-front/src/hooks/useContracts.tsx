@@ -209,7 +209,8 @@ const useContracts = () => {
     mainTokenInstance,
     classicFactoryInstance,
     licenseExchangeInstance,
-    contractCreator
+    contractCreator,
+    refreshSigner
   };
 };
 
