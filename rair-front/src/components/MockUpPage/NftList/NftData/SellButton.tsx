@@ -151,7 +151,7 @@ const SellButton: FC<ISellButton> = ({
     ) {
       response = { success: true };
     }
-    if (response.success) {
+    if (response?.success) {
       reactSwal.fire({
         title: 'Success',
         html: `Users will be able to purchase your NFT on the marketplace`,

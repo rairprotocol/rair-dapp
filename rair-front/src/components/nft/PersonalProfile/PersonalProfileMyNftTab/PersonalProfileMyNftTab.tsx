@@ -120,9 +120,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
                     return (
                       <NftItemForCollectionView
                         id={`collection-view-${index}`}
-                        key={`${
-                          item._id + '-' + item.uniqueIndexInContract + index
-                        }`}
+                        key={index}
                         metadataFilter={metadataFilter}
                         pict={item.metadata.image}
                         metadata={item.metadata}

@@ -64,10 +64,12 @@ interface CollectionQuery {
   attributes?: { [name: string]: string };
 }
 
-export interface CollectionTokens extends Omit<MintedToken, 'offer'> {
+export interface CollectionTokens
+  extends Omit<MintedToken, 'offer' | 'contract'> {
   ownerData?: User;
   offer: Offer;
   resaleData?: ResaleData;
+  contract: Contract;
 }
 
 export interface TokensState {
