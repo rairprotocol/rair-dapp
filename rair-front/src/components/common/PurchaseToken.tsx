@@ -44,7 +44,8 @@ const queryRangeDataFromDatabase = async (
               end: offer.range[1],
               product: offer.product,
               price: offer.price.toString(),
-              sponsored: offer.sponsored
+              sponsored: offer.sponsored,
+              _id: offer._id
             };
           }
         }
@@ -76,8 +77,39 @@ const findNextToken = async (
   start: string,
   end: string,
   product: string,
-  amountOfTokensToPurchase = '1'
+  amountOfTokensToPurchase = '1',
+  offerId?: string
 ) => {
+  if (offerId) {
+    const { success, availableTokens } = await rFetch(
+      `/api/offers/${offerId}/available`
+    );
+    if (success) {
+      if (BigInt(amountOfTokensToPurchase) > BigInt(availableTokens.length)) {
+        return;
+      } else if (
+        BigInt(amountOfTokensToPurchase) === BigInt(availableTokens.length)
+      ) {
+        return availableTokens.map((item) => item.token);
+      }
+      const selectedTokens: Array<bigint> = Array(
+        Number(amountOfTokensToPurchase)
+      ).fill(BigInt(0));
+
+      selectedTokens.forEach((_, index) => {
+        let randomNumber: bigint;
+        do {
+          randomNumber = BigInt(
+            availableTokens[Math.floor(Math.random() * availableTokens.length)]
+              .token
+          );
+        } while (selectedTokens.includes(randomNumber));
+        selectedTokens[index] = randomNumber;
+      });
+      return selectedTokens;
+    }
+  }
+  // Fallback to sequential minting if there's no offer ID or the api call fails
   if (BigInt(1) === BigInt(amountOfTokensToPurchase)) {
     return await contractInstance?.getNextSequentialIndex(product, start, end);
   } else {
@@ -352,14 +384,15 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               return;
             }
 
-            const { start, end, product, price, sponsored } = rangeData;
+            const { start, end, product, price, sponsored, _id } = rangeData;
 
             const nextToken = await findNextToken(
               contractInstance,
               start,
               end,
               product,
-              amountOfTokensToPurchase
+              amountOfTokensToPurchase,
+              _id
             );
 
             if (!nextToken) {
