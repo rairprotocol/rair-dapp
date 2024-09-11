@@ -210,7 +210,7 @@ const useWeb3Tx = () => {
         return await contract[method](...args);
       }
       let transactionValue: bigint = BigInt(0);
-      if (args.at(-1).value) {
+      if (args.at(-1).value !== undefined) {
         transactionValue = BigInt(args.pop().value);
       }
       const uoCallData = encodeFunctionData({
