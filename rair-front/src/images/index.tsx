@@ -38,7 +38,7 @@ import rarible from './rarible-logo.webp';
 import soniumLogo from './sonium_logo.svg';
 import verifiedIcon from './verify-icon.png';
 import yotiLogo from './yoti-logo.png';
-import coreIdLogo from './coreIdlogo.avif';
+import coreIdLogo from './coreNewIcon.png';
 
 import { useAppSelector } from '../hooks/useReduxHooks';
 
