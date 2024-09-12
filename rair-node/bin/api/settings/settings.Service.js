@@ -63,7 +63,7 @@ exports.getFeaturedCollection = async (req, res, next) => {
             product: collectionData.collectionIndexInContract,
             collectionName: collectionData.name,
             collectionBanner: collectionData.bannerImage,
-            user: userData,
+            user: userData || contractData.user,
           };
         }
       }
