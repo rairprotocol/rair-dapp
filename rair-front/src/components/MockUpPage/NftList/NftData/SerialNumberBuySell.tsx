@@ -140,7 +140,12 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   }, [offerData]);
 
   const getResaleData = useCallback(async () => {
-    if (!diamondMarketplaceInstance || !selectedToken || currentCollection) {
+    if (
+      !diamondMarketplaceInstance ||
+      !selectedToken ||
+      (currentCollection &&
+        !currentCollection[selectedToken]?.uniqueIndexInContract)
+    ) {
       return;
     }
     const contractResponse = await rFetch(
@@ -157,7 +162,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     const resaleResponse = await rFetch(
       `/api/resales/open?contract=${params.contract}&blockchain=${
         params.blockchain
-      }&index=${currentCollection && Object.values(currentCollection)[selectedToken].uniqueIndexInContract}`
+      }&index=${currentCollection && currentCollection[selectedToken].uniqueIndexInContract}`
     );
     if (!resaleResponse.success) {
       return;
@@ -298,7 +303,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       if (
         selectedToken &&
         currentCollection &&
-        Object.values(currentCollection)[selectedToken]?.isMinted === true
+        currentCollection[selectedToken]?.isMinted === true
       ) {
         const tokenData = currentCollection[selectedToken];
         return (
