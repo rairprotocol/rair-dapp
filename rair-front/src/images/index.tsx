@@ -38,6 +38,7 @@ import rarible from './rarible-logo.webp';
 import soniumLogo from './sonium_logo.svg';
 import verifiedIcon from './verify-icon.png';
 import yotiLogo from './yoti-logo.png';
+import coreIdLogo from './coreNewIcon.png';
 
 import { useAppSelector } from '../hooks/useReduxHooks';
 
@@ -82,6 +83,7 @@ export const AstarLogo = astar;
 export const BaseLogo = baseMainnet;
 export const SoniumLogo = soniumLogo;
 export const LoadingDefaultFavicon = loadingFavicon;
+export const CoreIdLogo = coreIdLogo;
 
 export const DiscordIcon = ({ color, primaryColor }) => {
   return (

@@ -8,6 +8,7 @@ import {
   AstarLogo,
   BaseLogo,
   EthereumLogo,
+  CoreIdLogo,
   MaticLogo,
   SoniumLogo
 } from '../images';
@@ -119,8 +120,20 @@ const chainData: TChainData = {
     coingecko: undefined,
     alchemyAppKey: undefined,
     alchemyGasPolicy: undefined
+  },
+  '0x45c': {
+    // Core Blockchain Mainnet
+    testnet: false,
+    image: CoreIdLogo,
+    name: 'Core Chain MainNet',
+    chainId: '0x45c',
+    viem: undefined,
+    alchemy: undefined,
+    coingecko: undefined,
+    alchemyAppKey: undefined,
+    alchemyGasPolicy: undefined
   }
-};
+}
 
 export default chainData;
 
