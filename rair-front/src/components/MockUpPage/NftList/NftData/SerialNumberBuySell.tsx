@@ -143,7 +143,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       !diamondMarketplaceInstance ||
       !selectedToken ||
       (currentCollection &&
-        !Object.values(currentCollection)[0].uniqueIndexInContract)
+        !Object.values(currentCollection)[0]?.uniqueIndexInContract)
     ) {
       return;
     }
