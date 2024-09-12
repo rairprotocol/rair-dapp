@@ -5,7 +5,6 @@ import { Hex } from 'viem';
 
 import {
   TAttributes,
-  TNftItemResult,
   TOfferPool,
   TProducts,
   TTokenData
@@ -81,7 +80,7 @@ export interface ITokenURIRow {
 export interface IIBlockchainURIManager {
   contractData: TContractData;
   collectionIndex: string;
-  refreshNFTMetadata: () => Promise<TNftItemResult | undefined>;
+  refreshNFTMetadata: () => Promise<TTokenData[] | undefined>;
   changeFile: boolean;
 }
 export type TParamsBatchMetadata = {
@@ -327,7 +326,7 @@ export interface IBatchMetadataParser {
   gotoNextStep: () => void;
   goBack: () => void;
   simpleMode: boolean;
-  refreshNFTMetadata: () => Promise<TNftItemResult | undefined>;
+  refreshNFTMetadata: () => Promise<TTokenData[] | undefined>;
 }
 
 export interface ICustomizeFees {

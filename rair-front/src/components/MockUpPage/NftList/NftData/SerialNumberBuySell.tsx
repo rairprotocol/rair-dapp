@@ -162,7 +162,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     const resaleResponse = await rFetch(
       `/api/resales/open?contract=${params.contract}&blockchain=${
         params.blockchain
-      }&index=${currentCollection && currentCollection[selectedToken].uniqueIndexInContract}`
+      }&index=${currentCollection[selectedToken].uniqueIndexInContract}`
     );
     if (!resaleResponse.success) {
       return;
@@ -244,7 +244,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           [
             params.contract, // address erc721,
             currentUserAddress, // address buyer,
-            currentCollection?.[selectedToken]?.ownerAddress, // address seller,
+            currentCollection[selectedToken]?.ownerAddress, // address seller,
             resaleData.tokenIndex, // uint token,
             resaleData.price, // uint tokenPrice,
             import.meta.env.VITE_NODE_ADDRESS, // address nodeAddress,
