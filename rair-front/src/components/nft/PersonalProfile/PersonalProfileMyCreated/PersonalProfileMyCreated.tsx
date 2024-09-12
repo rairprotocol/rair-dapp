@@ -3,8 +3,8 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
+import useServerSettings from '../../../../hooks/useServerSettings';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
-import useServerSettings from '../../../adminViews/useServerSettings';
 
 const PersonalProfileMyCreatedComponent = ({
   openModal,
@@ -30,7 +30,7 @@ const PersonalProfileMyCreatedComponent = ({
       setLoad(false);
       setMyContracts(response.data.contracts);
     } else {
-      console.info(response?.message);
+      console.error(response?.message);
     }
   }, []);
 

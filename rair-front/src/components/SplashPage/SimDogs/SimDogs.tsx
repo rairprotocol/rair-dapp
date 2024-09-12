@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { teamSimDogsArray } from './AboutUsTeam';
 import { BackStorySimDogs } from './InformationText';
 
-import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
-import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { TNftFilesResponse } from '../../../axios.responseTypes';
 import useConnectUser from '../../../hooks/useConnectUser';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
+import { CatalogVideoItem, SplashPageProps } from '../../../types/commonTypes';
 import {
   donationGridData,
   splashData
@@ -21,7 +19,7 @@ import {
 import MetaTags from '../../SeoTags/MetaTags';
 import { SimDogs0 } from '../images/simDogs/simDogs';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import { ICustomButtonBlock, ISplashPageProps } from '../splashPage.types';
+import { ICustomButtonBlock } from '../splashPage.types';
 import SplashCardButton from '../SplashPageConfig/CardBlock/CardButton/SplashCardButton';
 import CardParagraphText from '../SplashPageConfig/CardParagraphText/CardParagraphText';
 import { handleReactSwal } from '../SplashPageConfig/utils/reactSwalModal';
@@ -48,41 +46,22 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+const SimDogsSplashPage: React.FC<SplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const reactSwal = useSwal();
   /* UTILITIES FOR NFT PURCHASE */
   /* UTILITIES FOR VIDEO PLAYER VIEW */
-  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [productsFromOffer, setProductsFromOffer] = useState<
+    CatalogVideoItem[]
+  >([]);
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
   const [openVideoplayer, setOpenVideoPlayer, handlePlayerClick] =
     useOpenVideoPlayer();
 
   const mainChain = '0x1';
 
   const { connectUserData } = useConnectUser();
-
-  useEffect(() => {
-    dispatch(
-      setInfoSEO({
-        title: 'Sim Dogs',
-        ogTitle: 'Sim Dogs',
-        twitterTitle: 'Sim Dogs',
-        contentName: 'author',
-        content: '',
-        description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-        ogDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-        twitterDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-        image: SimDogs0,
-        favicon: RairFavicon,
-        faviconMobile: RairFavicon
-      })
-    );
-    //eslint-disable-next-line
-  }, []);
-
-  //an option for custom button arrangment
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
@@ -110,9 +89,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 
   const customButtonBlock = <CustomButtonBlock splashData={splashData} />;
 
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   /* UTILITIES FOR NFT PURCHASE */
   const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
@@ -124,7 +101,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'Sim Dogs',
         ogTitle: 'Sim Dogs',
         twitterTitle: 'Sim Dogs',
@@ -149,9 +126,8 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   }, [setIsSplashPage]);
 
   useEffect(() => {
-    dispatch(setRealChain(mainChain));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(setRequestedChain(mainChain));
+  }, [dispatch]);
 
   return (
     <div className="wrapper-splash-page simdogs">
@@ -173,30 +149,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
             customButtonBlock
           }}
         />
-        <div className="btn-submit-with-form need-help">
-          {/* <button
-            className="genesis-font"
-            onClick={() =>
-              reactSwal.fire({
-                title:
-                  'Watch out for sign requests that look like this. There are now gasless attack vectors that can set permissions to drain your wallet',
-                html: (
-                  <WarningModal
-                    className="simdogs"
-                    bad="bad-simdogs"
-                    good="good-simdogs"
-                  />
-                ),
-                customClass: {
-                  popup: `bg-${primaryColor} genesis-radius simdog-resp `,
-                  title: 'text-simdogs'
-                },
-                showConfirmButton: false
-              })
-            }>
-            Need Help
-          </button> */}
-        </div>
         <DonationGrid donationGridArray={donationGridData} />
         {productsFromOffer && productsFromOffer.length > 0 && (
           <SplashVideoWrapper>
@@ -218,7 +170,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
               openVideoplayer={openVideoplayer}
               setOpenVideoPlayer={setOpenVideoPlayer}
               handlePlayerClick={handlePlayerClick}
-              primaryColor={primaryColor}
             />
           </SplashVideoWrapper>
         )}
@@ -235,7 +186,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           arraySplash={'sim-dogs'}
           teamArray={teamSimDogsArray}
         />
-        <NotCommercialTemplate primaryColor={primaryColor} NFTName={'NFT'} />
+        <NotCommercialTemplate NFTName={'NFT'} />
       </div>
     </div>
   );

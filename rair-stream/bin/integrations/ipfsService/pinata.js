@@ -7,7 +7,7 @@ const config = require('../../config');
 
 const { gateway, key, secret } = config.pinata;
 
-const pinata = pinataSDK(key, secret);
+const pinata = new pinataSDK(key, secret);
 const retrieveMediaInfo = (CID) => axios.get(`${gateway}/${CID}/rair.json`);
 
 const addPin = async (CID, name) => {

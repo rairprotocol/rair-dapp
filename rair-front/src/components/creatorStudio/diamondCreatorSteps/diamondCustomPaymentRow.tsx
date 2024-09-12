@@ -1,12 +1,10 @@
 //unused-component
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
+import { formatEther } from 'ethers';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import InputField from '../../common/InputField';
 import { ICustomFeeRow } from '../creatorStudio.types';
 
@@ -30,21 +28,20 @@ const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
     recipient
   );
   const [percentageReceived, setPercentageReceived] =
-    useState<BigNumber>(percentage);
-  const { secondaryColor, primaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+    useState<bigint>(percentage);
+  const { secondaryColor, primaryColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   useEffect(() => {
     setRecipientAddress(recipient);
   }, [recipient]);
 
   useEffect(() => {
-    setPercentageReceived(BigNumber.from(percentage));
+    setPercentageReceived(BigInt(percentage));
   }, [percentage]);
 
-  const updatePercentage = (value: BigNumber) => {
+  const updatePercentage = (value: bigint) => {
     setPercentageReceived(value);
     array[index].percentage = value;
     rerender();
@@ -62,18 +59,18 @@ const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
     }
   };
 
-  const calculatedFee = BigNumber.from(100)
-    .mul(percentageReceived)
-    .div(BigNumber.from(10).pow(minterDecimals));
-  const calculatedPrice = BigNumber.from(price);
-  const calculatedRemainder = calculatedFee.eq(0)
-    ? BigNumber.from(1)
-    : calculatedPrice.mod(calculatedFee);
+  const calculatedFee =
+    (BigInt(100) * percentageReceived) / BigInt(10) ** minterDecimals;
+  const calculatedPrice = BigInt(price || 0);
+  const calculatedRemainder =
+    calculatedFee === BigInt(0)
+      ? BigInt(1)
+      : calculatedPrice % BigInt(calculatedFee);
 
   return (
     <tr
       className={`${!editable && 'text-secondary'} ${
-        !calculatedRemainder.eq(0) && 'text-danger'
+        !(calculatedRemainder === BigInt(0)) && 'text-danger'
       }`}>
       <th className="px-2">
         <div className="w-100 border-stimorol rounded-rair">
@@ -110,13 +107,10 @@ const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
             }}
           />
         </div>
-        {!calculatedFee.eq(0) && (
+        {calculatedFee !== BigInt(0) && (
           <small>
-            {percentageReceived.div(minterDecimals.pow(10)).toString()}% (
-            {utils.formatEther(
-              BigNumber.from(calculatedPrice).div(calculatedFee)
-            )}{' '}
-            {symbol})
+            {(percentageReceived / minterDecimals ** BigInt(10)).toString()}% (
+            {formatEther(BigInt(calculatedPrice) / calculatedFee)} {symbol})
           </small>
         )}
       </th>

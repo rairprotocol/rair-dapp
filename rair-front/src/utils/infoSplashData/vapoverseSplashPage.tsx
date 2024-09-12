@@ -31,7 +31,7 @@ export const splashData: TSplashDataType = {
     buttonLink: 'https://twitter.com/rairtech'
   },
   videoDataDemo: {
-    video: null,
+    video: undefined,
     // 'https://storage.googleapis.com/rair-videos/tx2cV7kzqFXF9lTC5iy1VCYoXBwonyG-HcjunEI5j1rqfX/2596768157',
     videoTitle: '',
     videoModuleDescription: null,
@@ -41,7 +41,7 @@ export const splashData: TSplashDataType = {
     // demo: true
   },
   videoData: {
-    video: null,
+    video: undefined,
     videoTitle: '',
     videoModuleDescription: null,
     videoModuleTitle: 'loading...',

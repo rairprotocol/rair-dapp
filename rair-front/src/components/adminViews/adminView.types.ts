@@ -1,3 +1,5 @@
+import { Hex } from 'viem';
+
 import { TTokenData } from '../../axios.responseTypes';
 
 export type NativeCurrencyType = {
@@ -7,7 +9,7 @@ export type NativeCurrencyType = {
 };
 
 export type ChainDataType = {
-  chainId?: BlockchainType;
+  chainId?: Hex;
   chainName: string;
   nativeCurrency?: NativeCurrencyType;
   rpcUrls?: string[];
@@ -38,8 +40,8 @@ export type ContractType = {
   diamond: boolean;
   _id: string;
   title: string;
-  blockchain: BlockchainType;
-  contractAddress: string;
+  blockchain: Hex;
+  contractAddress: Hex;
   external?: boolean;
 };
 
@@ -54,7 +56,7 @@ export type NFTSelectedNumberResponseType = {
 };
 
 export type TContractSchema = {
-  blockchain: BlockchainType;
+  blockchain: Hex;
   contractAddress: string;
   diamond: boolean;
   title: string;
@@ -78,27 +80,4 @@ export type Settings = {
   superAdminsOnVault?: Boolean;
   favicon?: string;
   databaseResales?: Boolean;
-};
-
-export type BlockchainSetting = {
-  hash?: BlockchainType;
-  display?: Boolean;
-  sync?: Boolean;
-  name?: string;
-
-  diamondFactoryAddress?: string;
-  classicFactoryAddress?: string;
-  diamondMarketplaceAddress?: string;
-  licenseExchangeAddress?: string;
-  mainTokenAddress?: string;
-  rpcEndpoint?: string;
-  blockExplorerGateway?: string;
-  numericalId?: number;
-  testnet?: Boolean;
-  symbol?: string;
-
-  _id?: string;
-  isNew?: boolean;
-
-  image?: string;
 };

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,13 +7,12 @@ import axios from 'axios';
 
 import { TTokenData } from '../../../axios.responseTypes';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import imageIcon from '../../../images/imageIcon.svg';
 import csvParser from '../../../utils/csvParser';
 import { rFetch } from '../../../utils/rFetch';
-import useServerSettings from '../../adminViews/useServerSettings';
 import BlockchainURIManager from '../common/blockchainURIManager';
 import {
   IBatchMetadataParser,
@@ -78,18 +76,18 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   }, [metadata, setHeaders, gotoNextStep]);
 
   const fetchData = useCallback(async () => {
-    const { success, result } = await rFetch(
+    const { success, tokens, totalCount } = await rFetch(
       `/api/nft/network/${contractData.blockchain}/${address}/${collectionIndex}`
     );
 
     const newArray: any[] = [];
 
-    if (success && result.totalCount > 0) {
+    if (success && totalCount > 0) {
       //fetch data form set Metadata info for show table
-      for (let i = 0; i < result.tokens.length; i++) {
-        const mtd = result.tokens[i].metadata;
-        const nftId = result.tokens[i].token;
-        const info = result.tokens[i];
+      for (let i = 0; i < tokens.length; i++) {
+        const mtd = tokens[i].metadata;
+        const nftId = tokens[i].token;
+        const info = tokens[i];
 
         const injectData = {
           Artist: mtd.artist,
@@ -107,9 +105,8 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
       }
       setMetadata(newArray);
       setMetadataExists(
-        result.tokens.filter(
-          (item: TTokenData) => item.metadata.name !== 'none'
-        ).length > 0
+        tokens.filter((item: TTokenData) => item.metadata.name !== 'none')
+          .length > 0
       );
     }
   }, [address, collectionIndex, contractData.blockchain]);
@@ -121,7 +118,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         return;
       }
       formData.append('product', collectionIndex);
-      formData.append('contract', contractData._id);
+      formData.append('contract', contractData._id!);
       formData.append('csv', csvFile as Blob, 'metadata.csv');
       if (forceOverwrite) {
         formData.append('forceOverwrite', 'true');
@@ -190,10 +187,9 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
     fetchData();
   }, [fetchData]);
 
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   useEffect(() => {
     setStepNumber(stepNumber);

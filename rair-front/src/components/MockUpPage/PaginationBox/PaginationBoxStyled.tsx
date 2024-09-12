@@ -1,36 +1,31 @@
+import isValidProp from '@emotion/is-prop-valid';
 import { Pagination } from '@mui/material';
 import styled from 'styled-components';
 
 interface IPaginationBoxStyled {
-  primarycolor: string;
-  primaryButtonColor?: any;
+  primaryButtonColor?: string;
+  isDarkMode?: boolean;
 }
 
-export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
+export const PaginationBoxStyled = styled(Pagination).withConfig({
+  shouldForwardProp: (prop) => isValidProp(prop)
+})<IPaginationBoxStyled>`
   ul {
     li {
       button {
         -webkit-transition: all 0.2s ease;
         transition: all 0.2s ease;
-        color: ${(props) =>
-          props.primarycolor === '#dedede' ? '#2d2d2d' : '#fff'};
+        color: ${({ isDarkMode }) => (!isDarkMode ? '#2d2d2d' : '#fff')};
         border-radius: 9.5px;
         border: 1px solid
-          ${(props) => (props.primarycolor === '#dedede' ? '#2d2d2d' : '#fff')};
+          ${({ isDarkMode }) => (!isDarkMode ? '#2d2d2d' : '#fff')};
 
         &.Mui-selected {
-          background: ${(props) =>
+          background: ${({ primaryButtonColor }) =>
             `${
-              props.primarycolor === '#dedede'
-                ? import.meta.env.VITE_TESTNET === 'true'
-                  ? 'var(--hot-drops)'
-                  : 'linear-gradient(to right, #e882d5, #725bdb)'
-                : import.meta.env.VITE_TESTNET === 'true'
-                  ? props.primaryButtonColor ===
-                    'linear-gradient(to right, #e882d5, #725bdb)'
-                    ? 'var(--hot-drops)'
-                    : props.primaryButtonColor
-                  : props.primaryButtonColor
+              import.meta.env.VITE_TESTNET
+                ? 'var(--hot-drops)'
+                : primaryButtonColor
             }`};
           color: #fff;
           border: none;
@@ -39,25 +34,17 @@ export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
           box-shadow: 0px 0px 7px 0.4px #b278a7;
         }
         &:hover {
-          background: ${(props) =>
+          background: ${({ primaryButtonColor }) =>
             `${
-              props.primarycolor === '#dedede'
-                ? import.meta.env.VITE_TESTNET === 'true'
-                  ? 'var(--hot-drops)'
-                  : 'linear-gradient(to right, #e882d5, #725bdb)'
-                : import.meta.env.VITE_TESTNET === 'true'
-                  ? props.primaryButtonColor ===
-                    'linear-gradient(to right, #e882d5, #725bdb)'
-                    ? 'var(--hot-drops)'
-                    : props.primaryButtonColor
-                  : props.primaryButtonColor
+              import.meta.env.VITE_TESTNET === 'true'
+                ? 'var(--hot-drops)'
+                : primaryButtonColor
             }`};
           color: #fff;
         }
       }
       div {
-        color: ${(props) =>
-          props.primarycolor === '#dedede' ? '#2d2d2d' : '#fff'};
+        color: ${({ isDarkMode }) => (!isDarkMode ? '#2d2d2d' : '#fff')};
       }
     }
   }

@@ -1,15 +1,10 @@
-//@ts-nocheck
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import axios, { AxiosError } from 'axios';
-import Swal from 'sweetalert2';
+import axios from 'axios';
 
 import { TUserResponse } from '../../../axios.responseTypes';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
+import useSwal from '../../../hooks/useSwal';
 import {
   MobileEditFields,
   MobileProfileBtnWrapper,
@@ -24,24 +19,20 @@ const MobileEditProfile: React.FC = () => {
     formState: { errors },
     getValues
   } = useForm();
-  const { userRd } = useSelector<RootState, TUsersInitialState>(
-    (state) => state.userStore
-  );
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { isLoggedIn, nickName, email } = useAppSelector((state) => state.user);
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const onChangeEditMode = () => {
     setEditMode((prev) => !prev);
   };
+
+  const rSwal = useSwal();
 
   // const {
   //   register,
@@ -75,15 +66,15 @@ const MobileEditProfile: React.FC = () => {
   const updateProfile = useCallback(
     async (data) => {
       if (
-        userRd?.nickName.replace(/@/g, '') !== getValues('username') ||
-        userRd?.email !== getValues('useremail')
+        nickName?.replace(/@/g, '') !== getValues('username') ||
+        email !== getValues('useremail')
       ) {
         const formData = new FormData();
         formData.append('nickName', data.username);
         formData.append('email', data.useremail);
-        // if (file) {
-        //   formData.append('file', file);
-        // }
+        if (!currentUserAddress) {
+          return;
+        }
         try {
           const profileEditResponse = await axios.patch<TUserResponse>(
             `/api/users/${currentUserAddress.toLowerCase()}`,
@@ -107,7 +98,7 @@ const MobileEditProfile: React.FC = () => {
             });
           }
         } catch (err) {
-          const error = err as AxiosError;
+          const error = err as any;
 
           if (
             error.response?.data.message ===
@@ -115,7 +106,7 @@ const MobileEditProfile: React.FC = () => {
               'username'
             )}" }`
           ) {
-            Swal.fire(
+            rSwal.fire(
               'Info',
               `The name ${getValues('username')} already exists`,
               'question'
@@ -125,9 +116,9 @@ const MobileEditProfile: React.FC = () => {
             // eslint-disable-next-line no-useless-escape, prettier/prettier
             '"email" must be a valid email'
           ) {
-            Swal.fire('Info', `Wrong email format`, 'question');
+            rSwal.fire('Info', `Wrong email format`, 'question');
           } else {
-            Swal.fire(
+            rSwal.fire(
               'Info',
               `The ${error.response?.data.message} `,
               'question'
@@ -135,10 +126,10 @@ const MobileEditProfile: React.FC = () => {
           }
         }
       } else {
-        Swal.fire('Info', `You need to change something`, 'question');
+        rSwal.fire('Info', `You need to change something`, 'question');
       }
     },
-    [currentUserAddress, getValues, dispatch, userRd]
+    [nickName, getValues, email, currentUserAddress, dispatch, rSwal]
   );
 
   const onSubmit = (data) => {
@@ -149,7 +140,7 @@ const MobileEditProfile: React.FC = () => {
 
   return (
     <MobileEditFields>
-      {userRd && (
+      {isLoggedIn && (
         <>
           {editMode ? (
             <form id="form1" onSubmit={handleSubmit(onSubmit)}>
@@ -158,7 +149,7 @@ const MobileEditProfile: React.FC = () => {
                 errors={errors.username}>
                 <label htmlFor="">Name</label>
                 <input
-                  defaultValue={userRd.nickName.replace(/@/g, '')}
+                  defaultValue={nickName?.replace(/@/g, '')}
                   {...register('username', { required: true })}
                   type="text"
                   placeholder="Enter your name"
@@ -169,7 +160,7 @@ const MobileEditProfile: React.FC = () => {
                 errors={errors.useremail}>
                 <label htmlFor="">E-mail</label>
                 <input
-                  defaultValue={userRd.email}
+                  defaultValue={email}
                   {...register('useremail', { required: true })}
                   type="text"
                   placeholder="Enter your e-mail"
@@ -188,18 +179,20 @@ const MobileEditProfile: React.FC = () => {
             <MobileStandartFields>
               <MobileProfileField>
                 <p>Name</p>
-                <div className="block-simulated-input">
-                  {userRd.nickName.length > 13
-                    ? userRd.nickName.slice(0, 5) +
-                      '....' +
-                      userRd.nickName.slice(userRd.nickName.length - 4)
-                    : userRd.nickName}
-                </div>
+                {nickName && (
+                  <div className="block-simulated-input">
+                    {nickName.length > 13
+                      ? nickName.slice(0, 5) +
+                        '....' +
+                        nickName.slice(nickName.length - 4)
+                      : nickName}
+                  </div>
+                )}
               </MobileProfileField>
               <MobileProfileField>
                 <p>E-mail</p>
                 <div className="block-simulated-input">
-                  {userRd.email ? userRd.email : 'email@example.com'}
+                  {email ? email : 'email@example.com'}
                 </div>
               </MobileProfileField>
               <MobileProfileField>

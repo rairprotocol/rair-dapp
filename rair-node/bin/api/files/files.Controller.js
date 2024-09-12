@@ -8,7 +8,6 @@ const {
     removeFileAndOffer,
     updateFile,
     isFileOwner,
-    listCategories,
     updateMedia,
     deleteMedia,
     listMedia,
@@ -71,7 +70,6 @@ router.get(
     validation(['dbId'], 'params'),
     getFilesForToken,
 );
-router.get('/categories', listCategories);
 router.get('/:id/unlocks', getFileAndOffer);
 router.post(
     '/:id/unlocks',

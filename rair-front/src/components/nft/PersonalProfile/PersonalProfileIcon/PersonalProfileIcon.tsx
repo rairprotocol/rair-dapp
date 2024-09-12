@@ -1,51 +1,53 @@
 import { memo, useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { faCheck, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddIcon from '@mui/icons-material/Add';
 import axios, { AxiosError } from 'axios';
-import Swal from 'sweetalert2';
 
 import {
   BackendResponse,
   TUserResponse
 } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { getUserStart, setUserData } from '../../../../ducks/users/actions';
-import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../hooks/useReduxHooks';
+import useSwal from '../../../../hooks/useSwal';
 import { defaultAvatar, VerifiedIcon } from '../../../../images';
-import { rFetch } from '../../../../utils/rFetch';
+import { loadCurrentUser } from '../../../../redux/userSlice';
 import { TooltipBox } from '../../../common/Tooltip/TooltipBox';
 
 import cl from './PersonalProfileIcon.module.css';
 
 interface IPersonalProfileIconComponent {
-  userData: any;
   isPage?: boolean;
   setEditModeUpper?: (arg: boolean) => void;
 }
 
 const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
-  userData,
   isPage,
   setEditModeUpper
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [editMode, setEditMode] = useState(false);
-  const { userRd } = useSelector<RootState, TUsersInitialState>(
-    (state) => state.userStore
-  );
+  const { ageVerified, nickName, email, avatar, isLoggedIn, publicAddress } =
+    useAppSelector((state) => state.user);
   const { userAddress } = useParams();
+  const rSwal = useSwal();
+
+  useEffect(() => {
+    if (publicAddress) {
+      setUserName(publicAddress);
+    }
+  }, [publicAddress]);
 
   const [copyState, setCopyState] = useState(false);
 
-  const [userName, setUserName] = useState(userData.publicAddress);
+  const [userName, setUserName] = useState<string>('');
   const [userNameNew, setUserNameNew] = useState(userName);
 
-  const [emailUser, setEmailUser] = useState(userData.email);
+  const [emailUser, setEmailUser] = useState(email);
   const [emailUserNew, setEmailUserNew] = useState(emailUser);
 
   const [isPhotoUpdate, setIsPhotoUpdate] = useState(false);
@@ -54,51 +56,36 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
     useState<any>(defaultAvatar);
   const [newPhotoValue, setNewPhotoValue] = useState(originalPhotoValue);
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
-  const { textColor } = useSelector<RootState, ColorStoreType>(
-    (state) => state.colorStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
+  const { textColor } = useAppSelector((state) => state.colors);
 
-  const resetAllStatesOnCancel = useCallback(
-    (userData) => {
-      setEditMode(false);
-      if (setEditModeUpper) {
-        setEditModeUpper(false);
-      }
-      setIsPhotoUpdate(false);
+  const resetAllStatesOnCancel = useCallback(() => {
+    setEditMode(false);
+    if (setEditModeUpper) {
+      setEditModeUpper(false);
+    }
+    setIsPhotoUpdate(false);
 
-      setEmailUserNew(userData.email);
-      setEmailUser(userData.email);
+    setEmailUserNew(email);
+    setEmailUser(email);
 
-      setUserName(
-        userData.nickName
-          ? userData.nickName.replace(/@/g, '')
-          : userData.publicAddress
-      );
-      setUserNameNew(
-        userData.nickName
-          ? userData.nickName.replace(/@/g, '')
-          : userData.publicAddress
-      );
+    setUserName(nickName ? nickName.replace(/@/g, '') : publicAddress || '');
+    setUserNameNew(nickName ? nickName.replace(/@/g, '') : publicAddress || '');
 
-      if (userData && userData.avatar) {
-        setOriginalPhotoValue(userData.avatar);
-      } else {
-        setOriginalPhotoValue(defaultAvatar);
-      }
-    },
-    [setEditModeUpper]
-  );
+    if (avatar) {
+      setOriginalPhotoValue(avatar);
+    } else {
+      setOriginalPhotoValue(defaultAvatar);
+    }
+  }, [email, nickName, publicAddress, avatar, setEditModeUpper]);
 
   const checkInputForSame = (
-    userName: string,
-    userNameNew: string,
-    emailUser: string,
-    emailUserNew: string,
-    filePhoto: string | object,
-    userAvatar: string
+    userName: string | undefined,
+    userNameNew: string | undefined,
+    emailUser: string | undefined,
+    emailUserNew: string | undefined,
+    filePhoto: string | object | undefined,
+    userAvatar: string | undefined
   ) => {
     if (
       userName &&
@@ -148,7 +135,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
       if (userName !== userNameNew) {
         formData.append('nickName', userName);
       }
-      if (emailUser !== emailUserNew) {
+      if (emailUser && emailUser !== emailUserNew) {
         formData.append('email', emailUser);
       }
       if (originalPhotoValue && originalPhotoValue !== newPhotoValue) {
@@ -166,33 +153,9 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
             }
           }
         );
-        const { user } = profileUpdateResponse.data;
-        if (user && user.nickName) {
-          if (userName !== userNameNew) {
-            setUserName(user.nickName.replace(/@/g, ''));
-            setUserNameNew(user.nickName.replace(/@/g, ''));
-          }
-          setEmailUser(user.email);
-          setEmailUserNew(user.email);
-
-          setOriginalPhotoValue(user.avatar);
-          setNewPhotoValue(user.avatar);
-
-          const { success, user: userInfoData } = await rFetch(
-            '/api/auth/me/',
-            undefined,
-            undefined,
-            false
-          );
-
-          if (success) {
-            dispatch(setUserData(userInfoData));
-          }
-
-          dispatch({
-            type: 'GET_USER_START',
-            publicAddress: currentUserAddress
-          });
+        const { success } = profileUpdateResponse.data;
+        if (success) {
+          dispatch(loadCurrentUser());
         }
         onChangeEditMode();
       } catch (err) {
@@ -204,9 +167,9 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
           errorData.message ===
           `Plan executor error during findAndModify :: caused by :: E11000 duplicate key error collection: rair-db.User index: nickName_1 dup key: { nickName: "@${userName}" }`
         ) {
-          Swal.fire('Info', `The name ${userName} already exists`, 'question');
+          rSwal.fire('Info', `The name ${userName} already exists`, 'question');
         } else {
-          Swal.fire('Info', `The ${errorData.message} `, 'question');
+          rSwal.fire('Info', `The ${errorData.message} `, 'question');
         }
       }
     },
@@ -219,29 +182,31 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
       originalPhotoValue,
       userName,
       userNameNew,
-      dispatch
+      dispatch,
+      rSwal
     ]
   );
 
   useEffect(() => {
     if (currentUserAddress) {
-      dispatch(getUserStart(currentUserAddress));
+      dispatch(loadCurrentUser());
     }
   }, [currentUserAddress, dispatch]);
 
   useEffect(() => {
-    if (userRd) {
-      setUserName(
-        userRd && userRd.nickName && userRd.nickName.replace(/@/g, '')
-      );
-      setEmailUser(userRd && userRd.email && userRd.email);
-      if (userRd.avatar) {
-        setOriginalPhotoValue(userRd.avatar);
-        setNewPhotoValue(userRd.avatar);
+    if (isLoggedIn) {
+      setUserName((nickName && nickName.replace(/@/g, '')) || '');
+      setEmailUser(email && email);
+      if (avatar) {
+        setOriginalPhotoValue(avatar);
+        setNewPhotoValue(avatar);
       }
     }
   }, [
-    userRd,
+    isLoggedIn,
+    nickName,
+    email,
+    avatar,
     setOriginalPhotoValue,
     setUserName,
     setNewPhotoValue,
@@ -267,8 +232,8 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
   ]);
 
   useEffect(() => {
-    resetAllStatesOnCancel(userData);
-  }, [resetAllStatesOnCancel, userData]);
+    resetAllStatesOnCancel();
+  }, [resetAllStatesOnCancel]);
 
   return (
     <div className={`${cl.root} ${editMode ? cl.editMode : ''}`}>
@@ -284,7 +249,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
               alt="User Avatar"
               src={originalPhotoValue}
             />
-            {userData && userData.ageVerified && (
+            {isLoggedIn && ageVerified && (
               <img className={cl.verifiedIcon} src={VerifiedIcon} />
             )}
           </div>
@@ -383,7 +348,7 @@ const PersonalProfileIconComponent: React.FC<IPersonalProfileIconComponent> = ({
                 </button>
                 <button
                   className={`${cl.editModeOff} ${textColor && cl[textColor]}`}
-                  onClick={() => resetAllStatesOnCancel(userRd)}>
+                  onClick={() => resetAllStatesOnCancel()}>
                   <FontAwesomeIcon icon={faTimes} />
                 </button>
               </div>

@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { TVideoItemContractData } from './video.types';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import { rFetch } from '../../utils/rFetch';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
 
@@ -13,9 +11,7 @@ const OfferBuyButton = ({ offerName, contract, product }) => {
   const [contractData, setContractData] = useState<TVideoItemContractData>();
 
   const navigate = useNavigate();
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const fetchContractData = useCallback(async () => {
     const data = await rFetch(`/api/contracts/${contract}`);

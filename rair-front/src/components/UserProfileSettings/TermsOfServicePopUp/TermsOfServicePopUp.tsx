@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios, { AxiosError } from 'axios';
-import Swal from 'sweetalert2';
+import axios from 'axios';
 
 import { TUserResponse } from '../../../axios.responseTypes';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { getUserStart } from '../../../ducks/users/actions';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { loadCurrentUser } from '../../../redux/userSlice';
 import { getRandomValues } from '../../../utils/getRandomValues';
 
 const TermsOfServicePopUp = () => {
@@ -20,22 +17,16 @@ export const AgreementsPopUp = ({
   userName,
   emailUser,
   filePhoto,
-  currentUserAddress,
-  setUserName,
-  setMainEmail,
-  setMainName,
-  setUserAvatar,
-  setImagePreviewUrl,
-  onChangeEditMode
+  currentUserAddress
 }) => {
   const [privacyPolicy, setPrivacyPolicy] = useState<boolean>(false);
   const [termsOfUse, setTermsOfUse] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
+  const rSwal = useSwal();
 
   const onChangeUserInfo = async () => {
     const formData = new FormData();
@@ -56,34 +47,19 @@ export const AgreementsPopUp = ({
           }
         }
       );
-      const { user, success } = profileUpdateResponse.data;
+      const { success } = profileUpdateResponse.data;
 
-      if (user) {
-        if (user.nickName) {
-          setUserName(user.nickName.replace(/@/g, ''));
-          dispatch(getUserStart(currentUserAddress));
-        }
-        if (success) {
-          setMainName(user.nickName);
-          setMainEmail(user.email);
-
-          dispatch(getUserStart(currentUserAddress));
-        }
-        if (user?.avatar) {
-          setUserAvatar(user.avatar);
-          setImagePreviewUrl(user.avatar);
-        }
-        onChangeEditMode();
-        Swal.fire(
+      if (success) {
+        rSwal.fire(
           'Success',
           `You have just changed your email address successfully!`,
           'success'
         );
       }
+
+      dispatch(loadCurrentUser());
     } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const error = err as AxiosError;
-      Swal.fire('Info', `The name ${userName} already exists`, 'question');
+      rSwal.fire('Info', `The name ${userName} already exists`, 'question');
     }
   };
 
@@ -164,9 +140,7 @@ export const AgreementsPopUp = ({
 };
 
 const ConfirmAgreements = () => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   const reactSwal = useSwal();
   const openModal = () => {

@@ -116,7 +116,7 @@ export const splashData: TSplashDataType = {
   //   },
   // ],
   videoData: {
-    video: null
+    video: undefined
     // videoTitle: "Watch the Transformation",
     // videoModuleDescription: "NFT owners can learn more about the project by signing with metamask to unlock an encrypted document",
     // videoModuleTitle: "Only NFT owners can see these slides",

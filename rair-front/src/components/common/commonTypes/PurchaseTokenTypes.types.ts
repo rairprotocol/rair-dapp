@@ -1,10 +1,12 @@
 // import { CSSProperties } from 'react';
 
+import { Hex } from 'viem';
+
 export interface IAgreementsPropsType {
   amountOfTokensToPurchase: string;
   presaleMessage: string | React.ReactNode;
-  contractAddress?: string;
-  requiredBlockchain?: BlockchainType | undefined;
+  contractAddress?: Hex;
+  requiredBlockchain?: Hex | undefined;
   offerIndex: string[] | undefined;
   connectUserData?: () => void;
   diamond: boolean;
@@ -26,8 +28,8 @@ export interface IPurchaseTokenButtonProps {
   customButtonTextClassName?: string;
   customWrapperClassName?: string;
   img?: string;
-  contractAddress?: string;
-  requiredBlockchain?: BlockchainType | undefined;
+  contractAddress?: Hex;
+  requiredBlockchain?: Hex | undefined;
   offerIndex?: string[] | undefined;
   buttonLabel?: string;
   presaleMessage?: string | React.ReactNode;
@@ -41,6 +43,7 @@ export interface IPurchaseTokenButtonProps {
 }
 
 export interface IRangeDataType {
+  _id?: string;
   start: string;
   end: string;
   product: string;

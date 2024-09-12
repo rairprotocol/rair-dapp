@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 
-import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
+import { TNftFilesResponse } from '../../../axios.responseTypes';
+import { CatalogVideoItem } from '../../../types/commonTypes';
 import { TUseGetProductsReturn } from '../../SplashPage/splashPage.types';
 import { TUseGetProductsGeneralArguments } from '../types/mainpage.types';
 
 export const useGetProductsGeneral = (
   input: TUseGetProductsGeneralArguments
 ): TUseGetProductsReturn => {
-  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [productsFromOffer, setProductsFromOffer] = useState<
+    CatalogVideoItem[]
+  >([]);
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
 
   const getProductsFromOffer = useCallback(async () => {
     if (input.currentUserAddress) {

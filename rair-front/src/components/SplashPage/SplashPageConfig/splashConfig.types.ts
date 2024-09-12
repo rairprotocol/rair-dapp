@@ -161,7 +161,7 @@ export type TSplashVideoWrapper = {
 export type TUnlockableVideosWrapper = TUnlockableVideosSingleTokenPage;
 
 export type TStyledUnlockableVideosWrapper = {
-  primaryColor: string;
+  isDarkMode: boolean;
 };
 
 export type TSplashVideoText = {

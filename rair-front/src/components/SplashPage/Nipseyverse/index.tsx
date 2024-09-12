@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
   faFacebookF,
@@ -14,19 +13,13 @@ import axios from 'axios';
 import { teamNipseyverseArray } from './AboutUsTeam';
 
 import { TProductResponseType } from '../../../axios.responseTypes';
-import { erc721Abi } from '../../../contracts/index';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { InitialState } from '../../../ducks/seo/reducers';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import useSwal from '../../../hooks/useSwal';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 /* importing images*/
 import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
-import { rFetch } from '../../../utils/rFetch';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
+import { CustomModalStyle, SplashPageProps } from '../../../types/commonTypes';
 import MetaTags from '../../SeoTags/MetaTags';
 import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
 import { LogoAuthor } from '../images/commingSoon/commingSoonImages';
@@ -48,7 +41,7 @@ import {
 } from '../images/splashPageImages/splashPage';
 import NipseyRelease from '../NipseyRelease/NipseyRelease';
 import RoadMap from '../Roadmap/RoadMap';
-import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
+import { TSplashPageIsActive } from '../splashPage.types';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import { Countdown } from '../Timer/CountDown';
 /* importing Components*/
@@ -57,7 +50,7 @@ import UnlockVideos from '../UnlockVideos/UnlockVideos';
 
 import './../SplashPage.css';
 
-const customStyles = {
+const customStyles: CustomModalStyle = {
   overlay: {
     zIndex: '1'
   },
@@ -79,23 +72,22 @@ const customStyles = {
   }
 };
 
-const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
-  const dispatch = useDispatch();
+const SplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [dataNipsey, setDataNipsey] = useState<number>();
   const [copies, setCopies] = useState<number>();
   const [timerLeft, setTimerLeft] = useState<number>();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  const seo = useAppSelector((store) => store.seo);
   useEffect(() => {
-    dispatch(setInfoSEO(InitialState));
+    dispatch(setSEOInfo());
     //eslint-disable-next-line
   }, []);
 
-  const reactSwal = useSwal();
-  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+  const { correctBlockchain, web3Switch } = useWeb3Tx();
 
   useEffect(() => {
-    dispatch(setRealChain('0x1'));
+    dispatch(setRequestedChain('0x1'));
     //eslint-disable-next-line
   }, []);
 
@@ -106,55 +98,8 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   // let params = `scrollbars=no,resizable=no,status=no,location=no,
   //               toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;
 
-  const { minterInstance, contractCreator } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
-
   const targetBlockchain = '0x5';
-  const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
-
-  const buyNipsey = async () => {
-    const { /*success*/ products } = await rFetch(
-      `/api/contracts/${nipseyAddress}/products/offers`
-    );
-    const instance = contractCreator?.(nipseyAddress, erc721Abi);
-    const nextToken = await instance?.getNextSequentialIndex(0, 50, 250);
-    reactSwal.fire({
-      title: 'Please wait...',
-      html: `Buying token #${nextToken.toString()}`,
-      icon: 'info',
-      showConfirmButton: false
-    });
-    const [firstPressingOffer] = products[0].offers.filter(
-      (item) => item.offerName === '1st Pressing'
-    );
-    if (!firstPressingOffer || !minterInstance) {
-      reactSwal.fire('Error', 'An error has ocurred', 'error');
-      return;
-    }
-    if (
-      await web3TxHandler(
-        minterInstance,
-        'buyToken',
-        [
-          products[0].offerPool.marketplaceCatalogIndex,
-          firstPressingOffer.offerIndex,
-          nextToken,
-          {
-            value: firstPressingOffer.price
-          }
-        ],
-        {
-          intendedBlockchain: targetBlockchain,
-          failureMessage:
-            'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
-        }
-      )
-    ) {
-      reactSwal.fire('Success', `Bought token #${nextToken}!`, 'success');
-    }
-  };
+  // const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
 
   let subtitle: Modal;
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
@@ -168,7 +113,9 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
   }, []);
 
   function afterOpenModal() {
-    subtitle.style.color = '#9013FE';
+    if (subtitle?.props.style?.content?.color) {
+      subtitle.props.style.content.color = '#9013FE';
+    }
   }
 
   function closeModal() {
@@ -180,10 +127,9 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     }));
   }
 
-  const { primaryColor, headerLogoMobile } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, headerLogoMobile } = useAppSelector(
+    (store) => store.colors
+  );
 
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await axios.get<TProductResponseType>(
@@ -262,8 +208,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
                       fontWeight: 'bold',
                       paddingTop: '3rem',
                       cursor: 'default'
-                    }}
-                    ref={(_subtitle) => (subtitle = _subtitle)}>
+                    }}>
                     Terms of Service
                   </h2>
                   <div className="modal-content-wrapper">
@@ -326,7 +271,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
                         <button
                           onClick={
                             correctBlockchain(targetBlockchain)
-                              ? buyNipsey
+                              ? () => {}
                               : () => web3Switch(targetBlockchain)
                           }
                           disabled={!Object.values(active).every((el) => el)}
@@ -353,7 +298,6 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
         <TokenLeft
           soldCopies={dataNipsey}
           copies={copies}
-          primaryColor={primaryColor}
           DiscordIcon={discrodIconNoBorder}
         />
         <div className="special-offer">
@@ -393,10 +337,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
             </div>
           </div>
         </div>
-        <UnlockVideos
-          primaryColor={primaryColor}
-          unlockableVideo={UnlockableVideo}
-        />
+        <UnlockVideos unlockableVideo={UnlockableVideo} />
         <ExclusiveNft
           Nft_1={Nft_1}
           Nft_2={Nft_2}

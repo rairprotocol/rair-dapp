@@ -1,15 +1,18 @@
 export type TOption = {
-  name?: string;
+  optionId: string;
+  display?: boolean;
+  dropDownImg?: string;
+  name: string;
+
   chainId?: string;
   clicked?: boolean;
-  dropDownImg?: boolean;
-  optionId?: number;
-  display?: boolean;
+  categoryId?: string;
 };
+
 export type TDropdownProps = {
   options: Array<TOption>;
-  onDropdownChange: (ev: React.SyntheticEvent<HTMLInputElement>) => void;
+  onDropdownChange: (value: string) => void;
   dropdownIMG?: React.ReactNode;
-  selectedOptions: Array<TOption | undefined>;
+  selectedOptions: Array<string>;
   isMobileDesign?: boolean;
 };

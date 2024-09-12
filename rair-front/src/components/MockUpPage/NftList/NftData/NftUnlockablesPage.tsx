@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import NftSingleUnlockables from './NftSingleUnlockables';
 
-import { TFileType } from '../../../../axios.responseTypes';
-import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../hooks/useReduxHooks';
+import { CatalogVideoItem } from '../../../../types/commonTypes';
+import { MediaFile } from '../../../../types/databaseTypes';
 import setDocumentTitle from '../../../../utils/setTitle';
 import LoadingComponent from '../../../common/LoadingComponent';
 import CustomButton from '../../utils/button/CustomButton';
@@ -17,23 +20,22 @@ import VideoPlayerView from './UnlockablesPage/VideoPlayerView';
 const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   embeddedParams,
   productsFromOffer,
-  primaryColor,
   selectedToken,
-  tokenData,
   someUsersData,
   collectionName,
   setTokenDataFiltered
 }) => {
-  const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const [selectVideo, setSelectVideo] = useState<CatalogVideoItem>();
   const [isDiamond, setIsDiamond] = useState<undefined | boolean>(undefined);
 
   const myRef = useRef<HTMLDivElement>(null);
 
-  const dispatch = useDispatch();
+  const { currentCollection } = useAppSelector((store) => store.tokens);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setDocumentTitle('Unlockables');
-    dispatch(setShowSidebarTrue());
   }, [dispatch]);
 
   useEffect(() => {
@@ -46,10 +48,10 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   }, []);
 
   useEffect(() => {
-    if (tokenData && Object.keys(tokenData).length > 0) {
-      setIsDiamond(tokenData[0].offer.diamond);
+    if (currentCollection && Object.keys(currentCollection).length > 0) {
+      setIsDiamond(currentCollection[0].offer.diamond);
     }
-  }, [tokenData]);
+  }, [currentCollection]);
 
   useEffect(() => {
     if (productsFromOffer) {
@@ -64,18 +66,16 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   return (
     <div ref={myRef} className="wrapper-unlockables-page">
       <BreadcrumbsView embeddedParams={embeddedParams} />
-      {tokenData && selectedToken && (
+      {currentCollection && selectedToken && (
         <TitleCollection
-          selectedData={tokenData && tokenData[selectedToken]?.metadata}
           title={collectionName}
           someUsersData={someUsersData}
-          userName={tokenData[selectedToken]?.ownerAddress}
+          userName={currentCollection[selectedToken]?.ownerAddress}
         />
       )}
       <div style={{ marginBottom: 108 }}>
         <VideoPlayerView
           productsFromOffer={productsFromOffer}
-          primaryColor={primaryColor}
           selectVideo={selectVideo}
           setSelectVideo={setSelectVideo}
           unlockables={true}
@@ -86,7 +86,6 @@ const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
             productsFromOffer={productsFromOffer}
             setSelectVideo={setSelectVideo}
             setTokenDataFiltered={setTokenDataFiltered}
-            primaryColor={primaryColor}
             isDiamond={isDiamond}
           />
         </div>

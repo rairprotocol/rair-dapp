@@ -1,17 +1,13 @@
-import { useSelector } from 'react-redux';
-
 import { IFixedBottomNavigation } from './creatorStudio.types';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 
 const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
   forwardFunctions
 }) => {
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   if (!forwardFunctions) {
     return <></>;

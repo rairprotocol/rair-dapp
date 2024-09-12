@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
-import { RootState } from '../../../../../ducks';
-import { ColorStoreType } from '../../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
+import useServerSettings from '../../../../../hooks/useServerSettings';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { rFetch } from '../../../../../utils/rFetch';
 import { ContractType } from '../../../../adminViews/adminView.types';
-import useServerSettings from '../../../../adminViews/useServerSettings';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
 import defaultImage from '../../../../UserProfileSettings/images/defaultUserPictures.png';
 import EtherScanCollectionLogo from '../../../assets/EtherScanCollectionLogo.svg?react';
@@ -30,16 +28,12 @@ const TitleCollection: React.FC<ITitleCollection> = ({
   title,
   userName,
   someUsersData,
-  selectedData,
   offerDataCol
-  // collectionAttributes,
-  // toggleMetadataFilter
 }) => {
   const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
-  const { primaryColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const [mintPopUp, setMintPopUp] = useState<boolean>(false);
   const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
@@ -264,7 +258,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               href={`${
                 blockchain &&
                 getBlockchainData(blockchain)?.blockExplorerGateway
-              }address/${contract}`}
+              }/address/${contract}`}
               target="_blank"
               rel="noreferrer">
               <div
@@ -274,7 +268,9 @@ const TitleCollection: React.FC<ITitleCollection> = ({
                     : ''
                 }`}>
                 <TooltipBox title="Link to Contract Review">
-                  <EtherScanCollectionLogo className="etherscan-collection-icon" />
+                  <div>
+                    <EtherScanCollectionLogo className="etherscan-collection-icon" />
+                  </div>
                 </TooltipBox>
               </div>
             </a>
@@ -283,15 +279,12 @@ const TitleCollection: React.FC<ITitleCollection> = ({
             <CustomShareButton
               title="Share"
               handleClick={handleClickOpen}
-              primaryColor={primaryColor}
               isCollectionPathExist={isCollectionPathExist}
             />
             <SharePopUp
-              primaryColor={primaryColor}
               selectedValue={selectedValue}
               open={open}
               onClose={handleClose}
-              selectedData={selectedData}
             />
           </div>
         </div>

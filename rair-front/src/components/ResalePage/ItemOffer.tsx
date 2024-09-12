@@ -1,5 +1,4 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useStateIfMounted } from 'use-state-if-mounted';
@@ -8,15 +7,15 @@ import { INftItemComponent } from './listOffers.types';
 
 import { TTokenData } from '../../axios.responseTypes';
 import { diamondFactoryAbi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { UserType } from '../../ducks/users/users.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { User } from '../../types/databaseTypes';
 import { rFetch } from '../../utils/rFetch';
 import { ContractType } from '../adminViews/adminView.types';
-import useServerSettings from '../adminViews/useServerSettings';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { gettingPrice } from '../MockUpPage/NftList/utils/gettingPrice';
 import defaultAvatar from '../UserProfileSettings/images/defaultUserPictures.png';
@@ -31,9 +30,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
   const [tokenMetadata, setTokenMetadata] = useStateIfMounted<
     TTokenData | undefined
   >(undefined);
-  const [accountData, setAccountData] = useStateIfMounted<UserType | null>(
-    null
-  );
+  const [accountData, setAccountData] = useStateIfMounted<User | null>(null);
   const { getBlockchainData } = useServerSettings();
   const [playing, setPlaying] = useState<boolean>(false);
   const [isFileUrl, setIsFileUrl] = useState<string>();
@@ -44,13 +41,9 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
-  const {
-    diamondMarketplaceInstance,
-    currentUserAddress,
-    currentChain,
-    contractCreator
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
+  const { diamondMarketplaceInstance, contractCreator } = useContracts();
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (store) => store.web3
   );
 
   const getTokenMetadata = useCallback(async () => {
@@ -133,7 +126,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
             TRADERHash &&
             (await web3TxHandler(instance, 'hasRole', [
               TRADERHash,
-              diamondMarketplaceInstance.address
+              await diamondMarketplaceInstance.getAddress()
             ]));
           if (!can) {
             reactSwal.fire(
@@ -277,7 +270,7 @@ const ItemOfferComponent: React.FC<INftItemComponent> = ({
                 onClick={purchaseToken}
                 disabled={operatorIsUser}
                 className="btn btn-rhyno mt-5">
-                {currentChain !== contractData?.blockchain
+                {connectedChain !== contractData?.blockchain
                   ? 'Switch network'
                   : operatorIsUser
                     ? 'Cannot purchase your own offer'

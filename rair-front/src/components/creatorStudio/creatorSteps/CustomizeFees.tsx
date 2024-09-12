@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Swal from 'sweetalert2';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
+import useSwal from '../../../hooks/useSwal';
 import InputField from '../../common/InputField';
 import {
   ICustomizeFees,
@@ -26,10 +24,9 @@ const CustomPayRateRow: React.FC<ICustomPayRateRow> = ({
   const [receiverAddress, setReceiverAddress] = useState<string>(receiver);
   const [percentageReceived, setPercentageReceived] =
     useState<number>(percentage);
-  const { secondaryColor, primaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { secondaryColor, primaryColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   useEffect(() => {
     setReceiverAddress(receiver);
@@ -104,9 +101,9 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
   stepNumber,
   gotoNextStep
 }) => {
-  const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { textColor, primaryColor } = useAppSelector((store) => store.colors);
+
+  const rSwal = useSwal();
 
   const [customPayments, setCustomPayments] = useState<
     TCustomizeFeesArrayItem[]
@@ -148,10 +145,10 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
 
-  const setCustomFees = async () => {
+  const setCustomFees = useCallback(async () => {
     setSendingData(true);
     try {
-      Swal.fire({
+      rSwal.fire({
         title: 'Setting custom fees',
         html: 'Please wait...',
         icon: 'info',
@@ -165,7 +162,7 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
           customPayments.map((i) => i.percentage * Math.pow(10, minterDecimals))
         )
       )?.wait();
-      Swal.fire({
+      rSwal.fire({
         title: 'Success',
         html: 'Custom fees set',
         icon: 'success',
@@ -174,10 +171,17 @@ const CustomizeFees: React.FC<ICustomizeFees> = ({
       gotoNextStep();
     } catch (e) {
       console.error(e);
-      Swal.fire('Error', '', 'error');
+      rSwal.fire('Error', '', 'error');
     }
     setSendingData(false);
-  };
+  }, [
+    contractData?.product.offers,
+    correctMinterInstance,
+    customPayments,
+    gotoNextStep,
+    minterDecimals,
+    rSwal
+  ]);
 
   const total = customPayments.reduce((prev, current) => {
     return prev + current.percentage;

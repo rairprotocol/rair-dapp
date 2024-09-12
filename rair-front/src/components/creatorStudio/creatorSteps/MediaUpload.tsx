@@ -1,36 +1,30 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import videoIcon from '../../../images/videoIcon.svg';
+import { UploadMediaFile } from '../../../types/commonTypes';
 import { rFetch } from '../../../utils/rFetch';
 import LoadingComponent from '../../common/LoadingComponent';
 import MediaListBox from '../../DemoMediaUpload/MediaListBox/MediaListBox';
 import UploadedListBox from '../../DemoMediaUpload/UploadedListBox/UploadedListBox';
-import { IMediaUpload, TMediaType } from '../creatorStudio.types';
+import { IMediaUpload } from '../creatorStudio.types';
 
 const MediaUpload: React.FC<IMediaUpload> = ({
   setStepNumber,
   contractData,
   stepNumber
 }) => {
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   const { address, collectionIndex } = useParams();
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
   const [loading, setLoading] = useState<boolean>(false);
 
   const [mediaUploadedList, setMediaUploadedList] = useState<any>([]);
-  const [mediaList, setMediaList] = useState<TMediaType[]>([]);
+  const [mediaList, setMediaList] = useState<UploadMediaFile[]>([]);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
 
   const selectCommonInfo = {
@@ -45,7 +39,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   };
 
   const onMediaDrop = (media) => {
-    let aux: TMediaType[] = [...mediaList];
+    let aux = [...mediaList];
     aux = aux.concat(
       media.map((item: File) => {
         return {
@@ -74,15 +68,12 @@ const MediaUpload: React.FC<IMediaUpload> = ({
     [mediaList]
   );
 
-  const getMediaList = async () => {
-    if (
-      currentUserAddress !== undefined &&
-      contractData?.nfts?.tokens?.at(0)?._id
-    ) {
+  const getMediaList = useCallback(async () => {
+    if (currentUserAddress !== undefined && contractData?.nfts?.at(0)?._id) {
       setLoading(true);
       try {
         const { success, data } = await rFetch(
-          `/api/files/forToken/${contractData?.nfts?.tokens[0]._id}`
+          `/api/files/forToken/${contractData.nfts.at(0)?._id}`
         );
         if (success && contractData) {
           setMediaUploadedList(data.map((unlock) => unlock.file));
@@ -92,17 +83,15 @@ const MediaUpload: React.FC<IMediaUpload> = ({
       }
       setLoading(false);
     }
-  };
+  }, [contractData, currentUserAddress]);
 
   useEffect(() => {
-    setStepNumber(stepNumber);
+    setStepNumber?.(stepNumber);
   }, [setStepNumber, stepNumber]);
 
   useEffect(() => {
-    if (!currentUserAddress) return;
     getMediaList();
-    // eslint-disable-next-line
-  }, [currentUserAddress]);
+  }, [getMediaList]);
 
   return (
     <div className="col-12 mb-5">

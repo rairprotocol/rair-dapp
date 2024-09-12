@@ -1,10 +1,11 @@
-import { TMediaType } from '../../creatorStudio/creatorStudio.types';
+import { UploadMediaFile } from '../../../types/commonTypes';
+import { MediaFile } from '../../../types/databaseTypes';
 
 export interface IMediaItemChange {
-  item: TMediaType;
-  setMediaList: (arg: TMediaType[]) => void;
+  item: MediaFile;
+  setMediaList: (arg: UploadMediaFile[]) => void;
   index: number;
-  mediaList: TMediaType[];
+  mediaList: UploadMediaFile[];
   uploadSuccess: null | boolean;
   textFlag?: boolean;
   mediaId?: string;
@@ -18,7 +19,7 @@ export interface IMediaItemChange {
 
 export interface IMediaListBox {
   index: number;
-  item: TMediaType;
+  item: UploadMediaFile;
   newUserStatus: boolean;
   selectCommonInfo: any;
   deleter: (index: number) => void;
@@ -28,8 +29,8 @@ export interface IMediaListBox {
 export interface IUploadedListBox {
   fileData: any;
   index: number;
-  setMediaList: (arg: TMediaType[]) => void;
-  mediaList: TMediaType[];
+  setMediaList: (arg: UploadMediaFile[]) => void;
+  mediaList: UploadMediaFile[];
   uploadSuccess: boolean | null;
   getMediaList: () => void;
   setUploadSuccess: (arg: boolean | null) => void;
@@ -39,8 +40,8 @@ export interface IUploadedListBox {
 }
 export interface IAnalyticsPopUp {
   index: number;
-  setMediaList: (arg: TMediaType[]) => void;
-  mediaList: TMediaType[];
+  setMediaList: (arg: UploadMediaFile[]) => void;
+  mediaList: UploadMediaFile[];
   setUploadSuccess: (arg: boolean | null) => void;
   titleOfContract?: any | undefined;
   selectCommonInfo?: any;
@@ -57,7 +58,7 @@ export interface IPopUpChangeVideo {
   item: any;
   setUploadSuccess: (arg: boolean | null) => void;
   beforeUpload: boolean | undefined;
-  setMediaList: (arg: TMediaType[]) => void;
-  mediaList: TMediaType[];
+  setMediaList: (arg: UploadMediaFile[]) => void;
+  mediaList: UploadMediaFile[];
   index: number;
 }

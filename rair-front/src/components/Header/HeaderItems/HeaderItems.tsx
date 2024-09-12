@@ -1,31 +1,27 @@
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface IHeaderContainerStyled {
-  primaryColor: string;
+  isDarkMode: boolean;
   showAlert?: boolean;
-  selectedChain?: string | null;
   isSplashPage?: boolean;
   hotdrops?: string;
   realChainId?: string | undefined;
   secondaryColor?: string;
 }
 
-export const HeaderContainer = styled.div<IHeaderContainerStyled>`
-  background: ${(props) =>
-    props.primaryColor === '#dedede'
-      ? '#fff'
-      : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
+export const HeaderContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IHeaderContainerStyled>`
+  background: ${({ isDarkMode, secondaryColor }) =>
+    !isDarkMode ? '#fff' : `color-mix(in srgb, ${secondaryColor}, #888888)`};
   margin-top: ${(props) =>
-    props.realChainId &&
-    props.showAlert &&
-    !props.selectedChain &&
-    !props.isSplashPage
-      ? '50px'
-      : ''};
+    props.realChainId && props.showAlert && !props.isSplashPage ? '50px' : ''};
 `;
 
-export const SocialHeaderBox = styled.div<IHeaderContainerStyled>`
-  border: 1px solid
-    ${(props) => (props.primaryColor === 'rhyno' ? '#9867D9' : '#fff')};
-  background: ${(props) => (props.primaryColor === 'rhyno' ? '#b2b2b2' : '')};
+export const SocialHeaderBox = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IHeaderContainerStyled>`
+  border: 1px solid ${({ isDarkMode }) => (!isDarkMode ? '#9867D9' : '#fff')};
+  background: ${({ isDarkMode }) => (!isDarkMode ? '#b2b2b2' : '')};
 `;

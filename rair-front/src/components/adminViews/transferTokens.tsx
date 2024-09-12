@@ -1,36 +1,28 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { constants, Contract, utils } from 'ethers';
+import { Contract, isAddress, ZeroAddress } from 'ethers';
+import { Hex } from 'viem';
 
-import {
-  BlockchainSetting,
-  ContractDataType,
-  ContractsResponseType
-} from './adminView.types';
-import useServerSettings from './useServerSettings';
+import { ContractDataType, ContractsResponseType } from './adminView.types';
 
 import { TTokenData } from '../../axios.responseTypes';
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { rFetch } from '../../utils/rFetch';
-import { TChainData } from '../../utils/utils.types';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 
 const TransferTokens = () => {
-  const { currentChain, currentUserAddress, contractCreator } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
-  const { primaryButtonColor, textColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { connectedChain, currentUserAddress } = useAppSelector(
+    (store) => store.web3
+  );
+  const { primaryButtonColor, textColor, secondaryButtonColor } =
+    useAppSelector((store) => store.colors);
+  const { getBlockchainData } = useServerSettings();
 
   const [traderRole, setTraderRole] = useState<boolean | undefined>();
   const [manualAddress, setManualAddress] = useState<boolean>(false);
@@ -50,14 +42,12 @@ const TransferTokens = () => {
   const [targetAddress, setTargetAddress] = useState<string>('');
   const [allTokensFilter, setAllTokensFilter] = useState<boolean>(true);
 
-  const [contractBlockchain, setContractBlockchain] = useState<
-    BlockchainSetting & TChainData
-  >();
+  const [contractBlockchain, setContractBlockchain] = useState<any>();
   const [contractInstance, setContractInstance] = useState<
     Contract | undefined
   >();
 
-  const { getBlockchainData } = useServerSettings();
+  const { contractCreator } = useContracts();
 
   const reactSwal = useSwal();
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
@@ -93,12 +83,13 @@ const TransferTokens = () => {
   }, [getUserContracts]);
 
   const connectAddressManual = async () => {
-    if (currentChain === undefined) return;
+    if (connectedChain === undefined) return;
     if (selectedContract === '') return;
+    if (!isAddress(selectedContract)) return;
     let instance;
     try {
       instance = contractCreator?.(
-        selectedContract,
+        selectedContract as Hex,
         manualDiamond ? diamondFactoryAbi : erc721Abi
       );
     } catch (err) {
@@ -109,7 +100,7 @@ const TransferTokens = () => {
       'name',
       [],
       {
-        intendedBlockchain: currentChain,
+        intendedBlockchain: connectedChain,
         failureMessage:
           'Unable to connect to the contract, please verify the address, blockchain and type of the contract'
       }
@@ -119,9 +110,9 @@ const TransferTokens = () => {
     if (name !== false && typeof name === 'string') {
       setContractData({
         title: name,
-        contractAddress: instance.address
+        contractAddress: await instance.getAddress()
       });
-      setContractBlockchain(getBlockchainData(currentChain));
+      setContractBlockchain(getBlockchainData(connectedChain));
       setContractInstance(instance);
     } else {
       return;
@@ -161,9 +152,12 @@ const TransferTokens = () => {
       setContractBlockchain(
         getBlockchainData(selectedBlockchain as `0x${string}`)
       );
-      if (correctBlockchain(selectedBlockchain as BlockchainType)) {
+      if (
+        correctBlockchain(selectedBlockchain as Hex) &&
+        isAddress(contractAddress)
+      ) {
         const instance = contractCreator?.(
-          contractAddress,
+          contractAddress as Hex,
           response1.contract.diamond ? diamondFactoryAbi : erc721Abi
         );
         setContractInstance(instance);
@@ -300,7 +294,7 @@ const TransferTokens = () => {
             <div className="col-12">
               <button
                 disabled={
-                  !utils.isAddress(selectedContract) ||
+                  !isAddress(selectedContract) ||
                   (contractData &&
                     contractData.contractAddress === selectedContract)
                 }
@@ -349,7 +343,7 @@ const TransferTokens = () => {
               {ownedTokens
                 .filter((item) =>
                   allTokensFilter
-                    ? item.ownerAddress !== constants.AddressZero
+                    ? item.ownerAddress !== ZeroAddress
                     : item.ownerAddress === currentUserAddress
                 )
                 .map((item, index) => {
@@ -375,7 +369,7 @@ const TransferTokens = () => {
               <div className="col-12">
                 {contractBlockchain && (
                   <button
-                    disabled={currentChain === contractBlockchain.hash}
+                    disabled={connectedChain === contractBlockchain.hash}
                     className="btn rair-button"
                     style={{
                       background: secondaryButtonColor,
@@ -383,7 +377,7 @@ const TransferTokens = () => {
                     }}
                     onClick={() => web3Switch(contractBlockchain.hash)}>
                     1.-{' '}
-                    {currentChain === contractBlockchain.hash
+                    {connectedChain === contractBlockchain.hash
                       ? 'Connected to'
                       : 'Switch to'}{' '}
                     {contractBlockchain.name}
@@ -403,7 +397,7 @@ const TransferTokens = () => {
                 {contractInstance && (
                   <button
                     disabled={
-                      currentChain !== contractBlockchain?.hash ||
+                      connectedChain !== contractBlockchain?.hash ||
                       traderRole !== false
                     }
                     className="btn rair-button"
@@ -444,9 +438,9 @@ const TransferTokens = () => {
                 {contractInstance && (
                   <button
                     disabled={
-                      currentChain !== contractBlockchain?.hash ||
+                      connectedChain !== contractBlockchain?.hash ||
                       !traderRole ||
-                      !utils.isAddress(targetAddress) ||
+                      !isAddress(targetAddress) ||
                       !contractInstance
                     }
                     className="btn rair-button"

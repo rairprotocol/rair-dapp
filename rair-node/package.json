@@ -53,7 +53,6 @@
     "foreman": "^3.0.1",
     "graceful-fs": "^4.2.11",
     "ipfs-car": "^1.0.0",
-    "ipfs-http-client": "^49.0.4",
     "joi": "^17.11.0",
     "jsdom": "^19.0.0",
     "jsonwebtoken": "^8.5.1",

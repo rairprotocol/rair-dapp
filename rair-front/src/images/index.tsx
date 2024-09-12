@@ -19,13 +19,13 @@ import HotdropsFaviconDefault from './Hotdrops-favicon.ico';
 import logoHotDropsLight from './HotdropsLogoLight.png';
 import kigGif from './kid.gif';
 import lennyGif from './lenny.gif';
+import loadingFavicon from './loading-favicon.svg';
 import logoHotDrops from './logo-hotdrops.png';
 import metamaskLogo from './metamask_logo.webp';
 import minTable from './mintable-logo.webp';
 import hotdropsLogoMobile from './mobile-logo-hotdrops.png';
 import oneOf from './oneOf-logo.webp';
 import openSea from './openSea-logo.webp';
-import loadingFavicon from "./loading-favicon.svg";
 // import Icons
 import polygonMatic from './polygon-matic.svg';
 import RairFaviconDefault from './rair_favicon.ico';
@@ -35,9 +35,12 @@ import rairTechLogoBlue from './rairLogo_blue.webp';
 import rairTechLogoBlack from './rairTechLogoBlack.webp';
 import rairTechLogoWhite from './rairTechLogoWhite.webp';
 import rarible from './rarible-logo.webp';
+import soniumLogo from './sonium_logo.svg';
 import verifiedIcon from './verify-icon.png';
 import yotiLogo from './yoti-logo.png';
 import coreIdLogo from './coreIdlogo.avif';
+
+import { useAppSelector } from '../hooks/useReduxHooks';
 
 // images
 export const bgLogoBlack = blackBg;
@@ -78,6 +81,7 @@ export const EthereumLogo = ethereum;
 export const DocumentIcon = documentIcon;
 export const AstarLogo = astar;
 export const BaseLogo = baseMainnet;
+export const SoniumLogo = soniumLogo;
 export const LoadingDefaultFavicon = loadingFavicon;
 export const CoreIdLogo = coreIdLogo;
 
@@ -155,7 +159,8 @@ export const InstagramIcon = ({ color, primaryColor }) => {
   );
 };
 
-export const SunIcon = ({ primaryColor }) => {
+export const SunIcon = () => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <svg
       width="20"
@@ -165,63 +170,63 @@ export const SunIcon = ({ primaryColor }) => {
       xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12 16.6895C14.5888 16.6895 16.6875 14.5908 16.6875 12.002C16.6875 9.41312 14.5888 7.31445 12 7.31445C9.41116 7.31445 7.3125 9.41312 7.3125 12.002C7.3125 14.5908 9.41116 16.6895 12 16.6895Z"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M12 1.6875V3.56382"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M12 20.4375V22.3138"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M4.70605 4.70703L6.03824 6.03922"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M17.9629 17.9629L19.2951 19.2951"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M1.6875 12H3.56382"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M20.4375 12H22.3138"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M4.70605 19.2951L6.03824 17.9629"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M17.9629 6.03922L19.2951 4.70703"
-        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        stroke={!isDarkMode ? '#E882D5' : '#7879F1'}
         strokeWidth="1.13838"
         strokeLinecap="round"
         strokeLinejoin="round"

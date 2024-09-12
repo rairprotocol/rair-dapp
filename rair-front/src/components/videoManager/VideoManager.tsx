@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { formatEther } from 'ethers/lib/utils';
 
 import OfferSelector from './OfferSelector';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import { rFetch } from '../../utils/rFetch';
-import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 import AnalyticsPopUp from '../DemoMediaUpload/UploadedListBox/AnalyticsPopUp/AnalyticsPopUp';
+import { formatEther } from 'ethers';
 
 const VideoManager = () => {
   const [uploads, setUploads] = useState<any[]>([]);
@@ -23,13 +21,9 @@ const VideoManager = () => {
 
   const [filter, setFilter] = useState('');
   const [selectedFile, setSelectedFile] = useState<any>({});
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
-  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
+  const { textColor, primaryButtonColor, secondaryButtonColor } =
+    useAppSelector((store) => store.colors);
 
   const { getBlockchainData } = useServerSettings();
 

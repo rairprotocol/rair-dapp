@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const AppError = require('../../utils/errors/AppError');
 const { Offer, Contract } = require('../../models');
 const eFactory = require('../../utils/entityFactory');
@@ -27,6 +28,64 @@ exports.getOfferIndexesByContractAndProduct = async (req, res, next) => {
     return next();
   } catch (e) {
     return next(e);
+  }
+};
+
+exports.getAvailableTokensInOffer = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const [result] = await Offer.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: 'MintedToken',
+          let: {
+            offerIndex: '$diamondRangeIndex',
+            contractId: '$contract',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$$offerIndex', '$offer'] },
+                    { $eq: ['$contract', '$$contractId'] },
+                    { $eq: ['$isMinted', false] },
+                  ],
+                },
+              },
+            },
+            {
+              $project: {
+                token: 1,
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+              },
+            },
+          ],
+          as: 'availableTokens',
+        },
+      },
+      {
+        $project: {
+          availableTokens: 1,
+        },
+      },
+    ]);
+
+    return res.json({
+      success: true,
+      availableTokens: result.availableTokens,
+    });
+  } catch (err) {
+    return next(err);
   }
 };
 

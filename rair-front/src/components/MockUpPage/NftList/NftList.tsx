@@ -1,30 +1,21 @@
-//@ts-nocheck
-import React, { memo, useContext, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, memo, useContext, useState } from 'react';
 
 import { NftItem } from './NftItem';
 import { INftListComponent } from './nftList.types';
 
-import { RootState } from '../../../ducks';
-import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
-import { defaultHotDrops } from '../../../images';
 import {
   GlobalModalContext,
   TGlobalModalContext
 } from '../../../providers/ModalProvider';
+import { dataStatuses } from '../../../redux/commonTypes';
 import LoadingComponent from '../../common/LoadingComponent';
 import HomePageFilterModal from '../../GlobalModal/FilterModal/FilterModal';
 import GlobalModal from '../../GlobalModal/GlobalModal';
 
-const NftListComponent: React.FC<INftListComponent> = ({
-  data,
-  titleSearch,
-  sortItem
-}) => {
-  const loading = useSelector<RootState, boolean>(
-    (store) => store.nftDataStore.loading
-  );
+const NftListComponent: FC<INftListComponent> = ({ titleSearch, sortItem }) => {
+  const { catalog, catalogStatus } = useAppSelector((store) => store.tokens);
   const { globalModalState } =
     useContext<TGlobalModalContext>(GlobalModalContext);
   const { width } = useWindowDimensions();
@@ -33,38 +24,20 @@ const NftListComponent: React.FC<INftListComponent> = ({
 
   const [playing, setPlaying] = useState<null | number>(null);
 
-  if (loading) {
+  if (catalogStatus === dataStatuses.Loading) {
     return <LoadingComponent />;
   }
 
-  const defaultImg =
-    import.meta.env.VITE_TESTNET === 'true'
-      ? defaultHotDrops
-      : `${
-          import.meta.env.VITE_IPFS_GATEWAY
-        }QmcV94NurwfWVGpXTST1we8uDbYiVQamKe87WEHK6DRzqa`;
+  const filteredData = catalog.filter((item) => {
+    return (
+      item.product.cover !== 'none' &&
+      item.product.name.toLowerCase().includes(titleSearch.toLowerCase())
+    );
+  });
 
-  const filteredData =
-    data &&
-    data
-      .filter((item: TNftDataItem) => {
-        return item.name.toLowerCase().includes(titleSearch.toLowerCase());
-      })
-      .sort((a, b) => {
-        if (sortItem === 'up') {
-          if (a.name < b.name) {
-            return 1;
-          }
-        }
-
-        if (sortItem === 'down') {
-          if (a.name > b.name) {
-            return -1;
-          }
-        }
-
-        return 0;
-      });
+  if (catalogStatus !== dataStatuses.Complete) {
+    return <LoadingComponent />;
+  }
 
   return (
     <div className={'nft-items-wrapper'}>
@@ -75,29 +48,24 @@ const NftListComponent: React.FC<INftListComponent> = ({
             : 'list-button-wrapper-grid-template'
         } ${globalModalState?.isOpen ? 'with-modal' : ''}`}>
         {filteredData && filteredData.length > 0 ? (
-          filteredData.map((contractData, index) => {
-            if (contractData.cover !== 'none') {
-              return (
-                <NftItem
-                  key={index}
-                  pict={contractData.cover ? contractData.cover : defaultImg}
-                  contractName={contractData.contract}
-                  price={contractData.offerData.map((p) => String(p.price))}
-                  blockchain={contractData.blockchain}
-                  collectionName={contractData.name}
-                  ownerCollectionUser={contractData.user}
-                  userData={contractData.userData}
-                  index={index}
-                  playing={playing}
-                  setPlaying={setPlaying}
-                  collectionIndexInContract={
-                    contractData.collectionIndexInContract
-                  }
-                />
-              );
-            } else {
-              return null;
-            }
+          filteredData.map((catalogItem, index) => {
+            return (
+              <NftItem
+                key={index}
+                item={catalogItem}
+                //pict={contractData.cover ? contractData.cover : defaultImg}
+                //contractName={contractData.contract}
+                //price={contractData.offerData.map((p) => String(p.price))}
+                //blockchain={contractData.blockchain}
+                //collectionName={contractData.name}
+                //ownerCollectionUser={contractData.user}
+                //userData={contractData.userData}
+                index={index}
+                playing={playing}
+                setPlaying={setPlaying}
+                //collectionIndexInContract={contractData.collectionIndexInContract}
+              />
+            );
           })
         ) : (
           <div className="list-wrapper-empty">

@@ -1,5 +1,4 @@
 const { createLogger, format, transports } = require('winston');
-const _ = require('lodash');
 
 const SentryTransport = require('./loggerTransports/sentryTransport');
 const config = require('../config');
@@ -11,14 +10,13 @@ module.exports = (module) => {
   const myFormat = printf(({ level, message, timestamp, stack }) => {
     let msg = `${timestamp} [${level}] : ${message} `;
 
-    if (stack && !_.isEmpty(stack)) {
+    if (stack?.length) {
       msg = `${msg} - ${stack}`;
     }
     return msg;
   });
 
-  // eslint-disable-next-line new-cap
-  const logger = new createLogger({
+  const logger = createLogger({
     level: config.logLevel,
     format: combine(
       errors({ stack: true }),

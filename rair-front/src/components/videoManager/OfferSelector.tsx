@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import { rFetch } from '../../utils/rFetch';
-import useServerSettings from '../adminViews/useServerSettings';
 import InputSelect from '../common/InputSelect';
 
 const OfferSelector = ({ fileId }) => {
@@ -18,10 +16,9 @@ const OfferSelector = ({ fileId }) => {
   const reactSwal = useSwal();
   const { getBlockchainData } = useServerSettings();
 
-  const { textColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, secondaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   useEffect(() => {
     (async () => {
@@ -34,8 +31,9 @@ const OfferSelector = ({ fileId }) => {
       setContractOptions(
         result
           .map((contract) => ({
-            label: `${contract.title} (${getBlockchainData(contract.blockchain)
-              ?.symbol})`,
+            label: `${contract.title} (${
+              getBlockchainData(contract.blockchain)?.symbol
+            })`,
             value: contract._id
           }))
           .sort((a, b) => {

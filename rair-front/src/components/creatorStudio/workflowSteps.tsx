@@ -1,5 +1,4 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   NavLink,
   Route,
@@ -20,10 +19,9 @@ import {
 } from './creatorStudio.types';
 
 import WorkflowContext from '../../contexts/CreatorWorkflowContext';
-import { diamond721Abi, erc721Abi, minterAbi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { diamond721Abi, erc721Abi } from '../../contracts';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { rFetch } from '../../utils/rFetch';
 
@@ -42,14 +40,9 @@ const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 const WorkflowSteps: FC = () => {
   const { address, collectionIndex, blockchain } = useParams<TWorkflowParams>();
 
-  const {
-    minterInstance,
-    contractCreator,
-    diamondMarketplaceInstance,
-    currentChain,
-    currentUserAddress
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
+  const { contractCreator, diamondMarketplaceInstance } = useContracts();
+  const { connectedChain, currentUserAddress } = useAppSelector(
+    (store) => store.web3
   );
 
   const { web3TxHandler, web3Switch, correctBlockchain } = useWeb3Tx();
@@ -65,20 +58,15 @@ const WorkflowSteps: FC = () => {
     TContractData | ethers.Contract
   >();
 
-  const [correctMinterInstance, setCorrectMinterInstance] = useState<
-    ethers.Contract | undefined
-  >();
-
   const [currentStep, setCurrentStep] = useState<number>(0);
 
   const [forceFetchData, setForceFetchData] = useState<boolean>(false);
 
   const [simpleMode, setSimpleMode] = useState<boolean>(true);
 
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const [steps, setSteps] = useState<TSteps[]>([]);
 
@@ -233,14 +221,14 @@ const WorkflowSteps: FC = () => {
   };
 
   const getNFTMetadata = async (blockchain, address, collectionIndex) => {
-    const { success, result } = await rFetch(
+    const { success, tokens } = await rFetch(
       `/api/nft/network/${blockchain}/${address.toLowerCase()}/${collectionIndex}`,
       undefined,
       undefined,
       false
     );
     if (success) {
-      return result;
+      return tokens;
     }
   };
 
@@ -294,7 +282,7 @@ const WorkflowSteps: FC = () => {
         contractDataResponse.contract.product.offers =
           offersAndLocksResponse.data.doc;
       }
-      if (contractDataResponse.contract.blockchain === currentChain) {
+      if (contractDataResponse.contract.blockchain === connectedChain) {
         contractDataResponse.contract.instance = contractCreator?.(
           address,
           contractDataResponse.contract.diamond ? diamond721Abi : erc721Abi
@@ -309,7 +297,7 @@ const WorkflowSteps: FC = () => {
           if (
             offer.offerIndex &&
             diamondMarketplaceInstance &&
-            currentChain === contractDataResponse.contract.blockchain
+            connectedChain === contractDataResponse.contract.blockchain
           ) {
             const aux = await diamondMarketplaceInstance.getOfferInfo(
               offer.offerIndex
@@ -349,7 +337,7 @@ const WorkflowSteps: FC = () => {
     }
     setContractData(contractDataResponse.contract);
   }, [
-    currentChain,
+    connectedChain,
     address,
     blockchain,
     collectionIndex,
@@ -362,8 +350,8 @@ const WorkflowSteps: FC = () => {
     if (
       !contractData?.instance ||
       contractData.external ||
-      !correctBlockchain(contractData.blockchain as BlockchainType) ||
-      !(contractData.diamond ? diamondMarketplaceInstance : minterInstance)
+      !correctBlockchain(contractData.blockchain) ||
+      !diamondMarketplaceInstance
     ) {
       return;
     }
@@ -373,9 +361,7 @@ const WorkflowSteps: FC = () => {
       setMintingRole(
         await web3TxHandler(contractData.instance, 'hasRole', [
           MINTER,
-          contractData.diamond
-            ? diamondMarketplaceInstance?.address
-            : minterInstance?.address
+          await diamondMarketplaceInstance?.getAddress()
         ])
       );
     }
@@ -384,9 +370,7 @@ const WorkflowSteps: FC = () => {
       setTraderRole(
         await web3TxHandler(contractData.instance, 'hasRole', [
           TRADER,
-          contractData.diamond
-            ? diamondMarketplaceInstance?.address
-            : minterInstance?.address
+          await diamondMarketplaceInstance?.getAddress()
         ])
       );
     }
@@ -394,30 +378,12 @@ const WorkflowSteps: FC = () => {
     contractData,
     correctBlockchain,
     diamondMarketplaceInstance,
-    minterInstance,
     web3TxHandler
   ]);
 
   useEffect(() => {
     checkMarketRoles();
   }, [checkMarketRoles]);
-
-  useEffect(() => {
-    // Fix this
-    if (contractData && correctBlockchain(contractData.blockchain)) {
-      const createdInstance = contractCreator?.(
-        minterInstance?.address,
-        minterAbi
-      );
-      setCorrectMinterInstance(createdInstance);
-    }
-  }, [
-    address,
-    correctBlockchain,
-    contractCreator,
-    minterInstance?.address,
-    contractData
-  ]);
 
   useEffect(() => {
     // Fix this
@@ -447,14 +413,12 @@ const WorkflowSteps: FC = () => {
     gotoNextStep: () => {
       navigate(steps[currentStep + 1].populatedPath);
     },
-    switchBlockchain: () =>
-      web3Switch(contractData?.blockchain as BlockchainType),
+    switchBlockchain: () => web3Switch(contractData?.blockchain),
     goBack,
     mintingRole,
     traderRole,
     checkMarketRoles,
-    onMyChain: correctBlockchain(contractData?.blockchain as BlockchainType),
-    correctMinterInstance,
+    onMyChain: correctBlockchain(contractData?.blockchain),
     tokenInstance,
     simpleMode,
     forceRefetch: () => {

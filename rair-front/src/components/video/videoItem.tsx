@@ -1,22 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { faLock, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import { constants, utils } from 'ethers';
+import { isAddress, ZeroAddress } from 'ethers';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import { IVideoItem, TVideoItemContractData } from './video.types';
 
 import { TUserResponse } from '../../axios.responseTypes';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { TUsersInitialState, UserType } from '../../ducks/users/users.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { CustomModalStyle } from '../../types/commonTypes';
+import { User } from '../../types/databaseTypes';
 import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
@@ -31,23 +30,12 @@ import YotiPage from '../YotiPage/YotiPage';
 
 Modal.setAppElement('#root');
 
-const VideoItem: React.FC<IVideoItem> = ({
-  mediaList,
-  item
-  // handleVideoIsUnlocked
-}) => {
-  // const [mintPopUp, setMintPopUp] = useState<boolean>(false);
-  // const [firstStepPopUp, setFirstStepPopUp] = useState<boolean>(false);
-  // const [purchaseStatus, setPurchaseStatus] = useState<boolean>(false);
+const VideoItem: React.FC<IVideoItem> = ({ item }) => {
   const [offersArray, setOffersArray] = useState<TOfferType[]>([]);
 
-  const { userData } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { ageVerified } = useAppSelector((store) => store.user);
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const navigate = useNavigate();
   // const [offerDataInfo,setOfferDataInfo] = useState<TOfferType[]>();
@@ -55,11 +43,10 @@ const VideoItem: React.FC<IVideoItem> = ({
     useStateIfMounted<TVideoItemContractData | null>(null);
   const { width } = useWindowDimensions();
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor, primaryButtonColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
 
-  const customStyles = {
+  const customStyles: CustomModalStyle = {
     overlay: {
       position: 'fixed',
       display: 'flex',
@@ -102,7 +89,7 @@ const VideoItem: React.FC<IVideoItem> = ({
   const [hovering, setHovering] = useState(false);
   const [owned /*setOwned*/] = useState(false);
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
-  const [dataUser, setDataUser] = useStateIfMounted<UserType | null>(null);
+  const [dataUser, setDataUser] = useStateIfMounted<User | null>(null);
   const reactSwal = useSwal();
 
   const store = useStore();
@@ -119,13 +106,13 @@ const VideoItem: React.FC<IVideoItem> = ({
   const ageVerificationPopUp = useCallback(() => {
     if (
       modalIsOpen &&
-      mediaList[item].ageRestricted === true &&
-      (userData?.ageVerified === false || !userData?.ageVerified)
+      item.ageRestricted === true &&
+      (ageVerified === false || !ageVerified)
     ) {
       reactSwal.fire({
         html: (
           <Provider store={store}>
-            <YotiPage setOpenVideoplayer={setOpenVideoplayer} />
+            <YotiPage setOpenVideoPlayer={setOpenVideoplayer} />
           </Provider>
         ),
         showConfirmButton: false,
@@ -137,7 +124,7 @@ const VideoItem: React.FC<IVideoItem> = ({
     } else {
       setOpenVideoplayer(true);
     }
-  }, [modalIsOpen, mediaList, item, userData?.ageVerified, reactSwal, store]);
+  }, [modalIsOpen, item, ageVerified, reactSwal, store]);
 
   const goToCollectionView = () => {
     if (offersArray.length > 0) {
@@ -149,10 +136,8 @@ const VideoItem: React.FC<IVideoItem> = ({
   };
 
   const getInfo = useCallback(async () => {
-    if (mediaList && item) {
-      const { data } = await rFetch(
-        `/api/files/${mediaList[item]._id}/unlocks`
-      );
+    if (item) {
+      const { data } = await rFetch(`/api/files/${item._id}/unlocks`);
 
       if (data?.offers && data.offers.length > 0) {
         const firstOffer = data.offers[0];
@@ -167,22 +152,21 @@ const VideoItem: React.FC<IVideoItem> = ({
         }
       }
     }
-  }, [mediaList, item, setContractData]);
+  }, [item, setContractData]);
 
   const getInfoUser = useCallback(async () => {
+    //# Optimize
     if (
-      mediaList &&
-      item &&
-      mediaList[item].uploader &&
-      utils.isAddress(mediaList[item].uploader) &&
-      mediaList[item].uploader !== constants.AddressZero
+      item.uploader &&
+      isAddress(item.uploader) &&
+      item.uploader !== ZeroAddress
     ) {
       const response = await axios.get<TUserResponse>(
-        `/api/users/${mediaList[item].uploader}`
+        `/api/users/${item.uploader}`
       );
       setDataUser(response.data.user);
     }
-  }, [mediaList, item, setDataUser]);
+  }, [item, setDataUser]);
 
   useEffect(() => {
     getInfoUser();
@@ -203,7 +187,7 @@ const VideoItem: React.FC<IVideoItem> = ({
         border: 'none',
         backgroundColor: 'transparent'
       }}
-      onMouseEnter={() => setHovering(mediaList[item].animatedThumbnail !== '')}
+      onMouseEnter={() => setHovering(item.animatedThumbnail !== '')}
       onMouseLeave={() => setHovering(false)}>
       <div
         onClick={() => openModal()}
@@ -216,7 +200,7 @@ const VideoItem: React.FC<IVideoItem> = ({
         }}>
         <img
           alt="Video thumbnail"
-          src={`${mediaList[item].staticThumbnail}`}
+          src={`${item.staticThumbnail}`}
           style={{
             position: 'absolute',
             bottom: 0,
@@ -227,7 +211,7 @@ const VideoItem: React.FC<IVideoItem> = ({
         />
         <img
           alt="Animated video thumbnail"
-          src={`${mediaList[item].animatedThumbnail}`}
+          src={`${item.animatedThumbnail}`}
           style={{
             position: 'absolute',
             display: hovering ? 'block' : 'none',
@@ -237,12 +221,12 @@ const VideoItem: React.FC<IVideoItem> = ({
           }}
           className="col-12  h-100 w-100"
         />
-        {mediaList[item]?.isUnlocked ? null : <SvgLock color={'white'} />}
+        {item?.isUnlocked ? null : <SvgLock color={'white'} />}
       </div>
       <div className="col description-wrapper-video">
         <span className="description-title">
-          {mediaList[item].title.slice(0, 25)}
-          {mediaList[item].title.length > 26 ? '...' : ''}
+          {item.title.slice(0, 25)}
+          {item.title.length > 26 ? '...' : ''}
         </span>
         <div className="info-wrapper video-size">
           <div className="user-info">
@@ -264,7 +248,7 @@ const VideoItem: React.FC<IVideoItem> = ({
             <div className="price-total">
               <span className="duration-for-video">
                 {' '}
-                {formatDuration(mediaList[item].duration)}
+                {formatDuration(item.duration)}
               </span>
             </div>
           </div>
@@ -278,7 +262,7 @@ const VideoItem: React.FC<IVideoItem> = ({
             contentLabel="Video Modal">
             <div className="modal-content-close-btn-wrapper">
               <ModalContentCloseBtn
-                primaryColor={primaryColor}
+                isDarkMode={isDarkMode}
                 onClick={closeModal}>
                 <FontAwesomeIcon
                   icon={faTimes}
@@ -304,10 +288,10 @@ const VideoItem: React.FC<IVideoItem> = ({
               className={`${
                 primaryColor !== 'rhyno' && 'text-white'
               } modal-content-wrapper-for-video ${
-                mediaList[item]?.isUnlocked && !owned ? 'unlocked' : 'locked'
+                item?.isUnlocked && !owned ? 'unlocked' : 'locked'
               }`}>
               <div className="modal-content-video">
-                {mediaList[item]?.isUnlocked === false && !owned ? (
+                {item?.isUnlocked === false && !owned ? (
                   <>
                     <TooltipBox
                       enterDelay={200}
@@ -320,7 +304,7 @@ const VideoItem: React.FC<IVideoItem> = ({
                     </TooltipBox>
                   </>
                 ) : openVideoplayer ? (
-                  <NftVideoplayer selectVideo={mediaList[item]} />
+                  <NftVideoplayer selectVideo={item} />
                 ) : (
                   <>
                     <div className="modal-content-play-image-container">
@@ -344,18 +328,13 @@ const VideoItem: React.FC<IVideoItem> = ({
                     </div>
                   </>
                 )}
-                {openVideoplayer ? null : mediaList[item]?.isUnlocked ===
-                    false && !owned ? (
+                {!openVideoplayer && !!item.staticThumbnail && (
                   <img
-                    alt="Modal content video thumbnail"
-                    src={`${mediaList[item].staticThumbnail}`}
-                    className="modal-content-video-thumbnail video-locked-modal"
-                  />
-                ) : (
-                  <img
-                    alt="Modal content video thumbnail"
-                    src={`${mediaList[item].staticThumbnail}`}
-                    className="modal-content-video-thumbnail"
+                    alt="Video thumbnail"
+                    src={`${item.staticThumbnail}`}
+                    className={`modal-content-video-thumbnail ${
+                      !item.isUnlocked && !owned ? 'video-locked-modal' : ''
+                    }`}
                   />
                 )}
               </div>
@@ -365,7 +344,7 @@ const VideoItem: React.FC<IVideoItem> = ({
                     primaryColor === 'rhyno' ? 'rhyno' : ''
                   }`}>
                   <div className="title-of-video">
-                    {mediaList[item] && <h3>{mediaList[item].title}</h3>}
+                    {item && <h3>{item.title}</h3>}
                   </div>
                   <div className="user-info">
                     <img
@@ -392,23 +371,17 @@ const VideoItem: React.FC<IVideoItem> = ({
                       width={'160px'}
                       height={'30px'}
                       margin={'5px'}
-                      textColor={primaryColor === 'rhyno' ? '#222021' : 'white'}
+                      textColor={textColor}
                       onClick={goToCollectionView}
                       custom={false}
-                      background={`var(--${
-                        primaryColor === 'charcoal'
-                          ? 'charcoal-80'
-                          : 'charcoal-40'
-                      })`}
+                      background={primaryButtonColor}
                     />
                   )}
                 </div>
               </div>
               <div className="video-description-wrapper">
-                <h4>About this collection:</h4>
-                {mediaList[item].description && (
-                  <p>{mediaList[item].description}</p>
-                )}
+                <b>Description</b>
+                {item.description && <p>{item.description}</p>}
               </div>
             </div>
           </Modal>

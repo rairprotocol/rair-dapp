@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useSelector } from 'react-redux';
 import {
   faCheck,
   faLock,
@@ -9,9 +8,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { CustomModalStyle } from '../../../types/commonTypes';
 import { copyEmbebed } from '../../../utils/copyEmbed';
 import { rFetch } from '../../../utils/rFetch';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
@@ -32,10 +31,8 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   getMediaList,
   setUploadSuccess
 }) => {
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
   const rSwal = useSwal();
 
   const [openVideoplayer, setOpenVideoplayer] = useState<boolean>(false);
@@ -44,7 +41,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
   const [editTitleVideo, setEditTitleVideo] = useState<boolean>(false);
   const [currentContract, setCurrentContract] = useState<any>(null);
 
-  const customStyles = {
+  const customStyles: CustomModalStyle = {
     overlay: {
       zIndex: '1'
     },
@@ -213,20 +210,20 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               ) : openVideoplayer ? (
                 <NftVideoplayer selectVideo={fileData} />
               ) : (
-                <>
+                fileData.staticThumbnail && (
                   <img
                     onClick={() => setOpenVideoplayer(true)}
                     className={'modal-content-play-image'}
                     src={playImagesColored}
                     alt="Button play video"
                   />
-                </>
+                )
               )}
-              {openVideoplayer ? (
+              {openVideoplayer || !fileData.staticThumbnail ? (
                 <></>
               ) : (
                 <img
-                  alt="Modal content video thumbnail"
+                  alt="Video thumbnail"
                   src={`${fileData?.staticThumbnail}`}
                   className="modal-content-video-thumbnail"
                 />
@@ -236,7 +233,7 @@ const UploadedListBox: React.FC<IUploadedListBox> = ({
               <div className="modal-content-close-btn-wrapper">
                 <ModalContentCloseBtn
                   onClick={closeModal}
-                  primaryColor={primaryColor}>
+                  isDarkMode={isDarkMode}>
                   <FontAwesomeIcon
                     icon={faTimes}
                     style={{ lineHeight: 'inherit' }}

@@ -1,82 +1,83 @@
-//@ts-nocheck
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
-import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBars,
+  faSignOutAlt,
+  faUpload,
+  faUser
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'ethers';
 
-import { RootState } from '../../ducks';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-// import { TUsersInitialState } from '../../ducks/users/users.types';
-// React Redux types
 import useConnectUser from '../../hooks/useConnectUser';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useServerSettings from '../../hooks/useServerSettings';
 import { RairFavicon, RairTokenLogo, VerifiedIcon } from '../../images';
-import useServerSettings from '../adminViews/useServerSettings';
 import LoadingComponent from '../common/LoadingComponent';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 
 import useWeb3Tx from './../../hooks/useWeb3Tx';
 import EditMode from './EditMode/EditMode';
 import defaultPictures from './images/defaultUserPictures.png';
-import {
-  SvgFactoryIcon,
-  SvgUpload,
-  SvgUserIcon
-} from './SettingsIcons/SettingsIcons';
+import { SvgFactoryIcon } from './SettingsIcons/SettingsIcons';
 
-const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
-  const settingBlockRef = useRef();
+const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
+  const settingBlockRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const [next, setNext] = useState(false);
-  const [, /*openModal*/ setOpenModal] = useState(false);
-  const [userName, setUserName] = useState();
-  const [userEmail, setUserEmail] = useState();
-  const [triggerState, setTriggerState] = useState();
+  const [userName, setUserName] = useState<string | undefined>();
+  const [userEmail, setUserEmail] = useState<string | undefined>();
+  const [triggerState, setTriggerState] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
   const [userBalance, setUserBalance] = useState<string>('');
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [userBalanceTrigger, setUserBalanceTrigger] = useState<boolean>(false);
-  const [userRairBalance, setUserRairBalance] = useState<
-    BigNumber | undefined
-  >();
+  const [userRairBalance, setUserRairBalance] = useState<bigint | undefined>();
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
   const { getBlockchainData } = useServerSettings();
 
-  const { primaryColor, textColor, iconColor } = useSelector(
-    (store) => store.colorStore
+  const { primaryColor, textColor, iconColor, isDarkMode } = useAppSelector(
+    (store) => store.colors
   );
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
-  const { adminRights, loggedIn } = useSelector<RootState, any>(
-    (store) => store.userStore
-  );
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | undefined>();
+  const { adminRights, isLoggedIn, nickName, avatar, email, ageVerified } =
+    useAppSelector((store) => store.user);
 
   const { logoutUser } = useConnectUser();
 
-  const { userData } = useSelector((store) => store.userStore);
-
-  const { currentUserAddress, mainTokenInstance, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { mainTokenInstance } = useContracts();
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (store) => store.web3
+  );
 
   const { web3TxHandler } = useWeb3Tx();
 
   const getUserRairBalance = useCallback(async () => {
-    if (!mainTokenInstance || userRairBalance) {
+    if (
+      !userBalanceTrigger ||
+      !currentUserAddress ||
+      !mainTokenInstance ||
+      userRairBalance
+    ) {
       return;
     }
     const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
       currentUserAddress
     ]);
-    if (result?._isBigNumber) {
+    if (result) {
       setUserRairBalance(result);
     }
-  }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
+  }, [
+    userBalanceTrigger,
+    currentUserAddress,
+    mainTokenInstance,
+    userRairBalance,
+    web3TxHandler
+  ]);
 
   useEffect(() => {
     getUserRairBalance();
@@ -87,31 +88,32 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   }, [setEditMode]);
 
   useEffect(() => {
-    if (userData) {
-      setUserName(userData.nickName);
-      setUserEmail(userData.email);
-      if (userData.avatar) {
-        setImagePreviewUrl(userData.avatar);
+    if (isLoggedIn) {
+      setUserName(nickName);
+      setUserEmail(email);
+      if (avatar) {
+        setImagePreviewUrl(avatar);
       }
     }
-  }, [userData]);
+  }, [avatar, email, isLoggedIn, nickName]);
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && mainTokenInstance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.runner?.provider) {
       setIsLoadingBalance(true);
       const balance =
-        await mainTokenInstance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance?.runner?.provider?.getBalance(
+          currentUserAddress
+        );
 
       if (balance) {
-        const result = utils.formatEther(balance);
+        const result = formatEther(balance.toString());
         const final = Number(result.toString())?.toFixed(2)?.toString();
 
         setUserBalance(final);
         setIsLoadingBalance(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, mainTokenInstance, userData]);
+  }, [currentUserAddress, mainTokenInstance]);
 
   useEffect(() => {
     getBalance();
@@ -131,10 +133,6 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
     }
   };
 
-  useEffect(() => {
-    setOpenModal();
-  }, [setOpenModal]);
-
   const pushToUploadVideo = (tab: number) => {
     setTabIndexItems(tab);
     navigate('/demo/upload');
@@ -151,7 +149,6 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
 
   const handlePopUp = () => {
     setNext((prev) => !prev);
-    setOpenModal((prev) => !prev);
   };
 
   const onCloseNext = useCallback(() => {
@@ -171,32 +168,26 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
   return (
     <>
       <button
-        className={`button profile-btn ${
-          primaryColor === '#dedede' ? 'rhyno' : ''
-        }`}
+        className={`button profile-btn ${!isDarkMode ? 'rhyno' : ''}`}
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'flex-start'
         }}>
         <div
-          className={`profile-buy-button ${
-            primaryColor === '#dedede' ? 'rhyno' : ''
-          }`}></div>
+          className={`profile-buy-button ${!isDarkMode ? 'rhyno' : ''}`}></div>
         <div
           onClick={() => setUserBalanceTrigger((prev) => !prev)}
-          className={`profile-user-balance ${
-            primaryColor === '#dedede' ? 'rhyno' : ''
-          }`}>
+          className={`profile-user-balance ${!isDarkMode ? 'rhyno' : ''}`}>
           <img
             style={{
               marginRight: '5px'
             }}
-            src={primaryColor === '#dedede' ? RairFavicon : RairTokenLogo}
+            src={!isDarkMode ? RairFavicon : RairTokenLogo}
             alt="logo"
           />
-          {getBlockchainData(currentChain) && (
-            <img src={getBlockchainData(currentChain)?.image} alt="logo" />
+          {getBlockchainData(connectedChain) && (
+            <img src={getBlockchainData(connectedChain)?.image} alt="logo" />
           )}
         </div>
         <div
@@ -229,10 +220,10 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
               alt="User Avatar"
             />
           ) : (
-            <SvgUserIcon />
+            <FontAwesomeIcon icon={faUser} />
           )}
         </div>
-        {userData && userData.ageVerified && (
+        {ageVerified && (
           <img
             style={{
               position: 'absolute',
@@ -297,7 +288,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             border: `${
               primaryColor === '#dedede' ? '1px solid #DEDEDE' : 'none'
             }`,
-            marginTop: `${selectedChain && showAlert ? '65px' : '12px'}`
+            marginTop: `${showAlert ? '65px' : '12px'}`
           }}>
           <div
             style={{
@@ -324,13 +315,13 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                   )}
                 </div>
                 <div>
-                  {getBlockchainData(currentChain) && (
+                  {getBlockchainData(connectedChain) && (
                     <img
                       style={{
                         height: '25px',
                         marginLeft: '15px'
                       }}
-                      src={getBlockchainData(currentChain)?.image}
+                      src={getBlockchainData(connectedChain)?.image}
                       alt="logo"
                     />
                   )}
@@ -431,7 +422,7 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             border: `${
               primaryColor === '#dedede' ? '1px solid #DEDEDE' : 'none'
             }`,
-            marginTop: `${selectedChain && showAlert ? '65px' : '12px'}`
+            marginTop: `${showAlert ? '65px' : '12px'}`
           }}>
           {!next ? (
             <div>
@@ -443,47 +434,25 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
                     color:
                       primaryColor === '#dedede' ? 'rgb(41, 41, 41)' : 'white'
                   }}>
-                  <SvgUserIcon
-                    primaryColor={primaryColor}
-                    customSecondaryButtonColor={iconColor}
-                  />{' '}
+                  <FontAwesomeIcon icon={faUser} style={{ color: iconColor }} />{' '}
                   Profile settings
                 </li>
                 {/* {hotdropsVar !== 'true' && ( */}
-                {hotdropsVar === 'true'
-                  ? loggedIn &&
-                    adminRights && (
-                      <li
-                        onClick={() => pushToUploadVideo(2)}
-                        style={{
-                          color:
-                            primaryColor === '#dedede'
-                              ? 'rgb(41, 41, 41)'
-                              : 'white'
-                        }}>
-                        <SvgUpload
-                          customSecondaryButtonColor={iconColor}
-                          primaryColor={primaryColor}
-                        />{' '}
-                        Upload video
-                      </li>
-                    )
-                  : loggedIn && (
-                      <li
-                        onClick={() => pushToUploadVideo(2)}
-                        style={{
-                          color:
-                            primaryColor === '#dedede'
-                              ? 'rgb(41, 41, 41)'
-                              : 'white'
-                        }}>
-                        <SvgUpload
-                          customSecondaryButtonColor={iconColor}
-                          primaryColor={primaryColor}
-                        />{' '}
-                        Upload video
-                      </li>
-                    )}
+                {(hotdropsVar === 'true'
+                  ? isLoggedIn && adminRights
+                  : isLoggedIn) && (
+                  <li
+                    onClick={() => pushToUploadVideo(2)}
+                    style={{
+                      color: textColor
+                    }}>
+                    <FontAwesomeIcon
+                      icon={faUpload}
+                      style={{ color: iconColor }}
+                    />{' '}
+                    Upload video
+                  </li>
+                )}
                 {/* )} */}
                 {/* <li
                   onClick={() => pushToMyItems(2)}
@@ -543,8 +512,6 @@ const PopUpSettings = ({ showAlert, selectedChain, setTabIndexItems }) => {
             <EditMode
               handlePopUp={handlePopUp}
               imagePreviewUrl={imagePreviewUrl}
-              defaultPictures={defaultPictures}
-              cutUserAddress={cutUserAddress}
               editMode={editMode}
               onChangeEditMode={onChangeEditMode}
               userEmail={userEmail}

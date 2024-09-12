@@ -1,10 +1,8 @@
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 // import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
 const NftListUnlockablesVideos = ({
@@ -21,9 +19,7 @@ const NftListUnlockablesVideos = ({
     ? productsFromOffer.slice(0, 2)
     : 0;
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   return (
     <div className="nftlist-unlockable-videos">

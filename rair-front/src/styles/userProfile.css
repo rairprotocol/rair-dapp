@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.breadcrumbs {
+    display: flex;
+    width: calc(302px * 4 + 10px);
+}
+
+.tabs-section {
+    display: flex;
+}
+
+@media screen and (max-width: 1280px) {
+    .breadcrumbs {
+        width: 85vw;
+        margin-top: 60px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .breadcrumbs {
+        margin-top: 0px;
+    }
+}
