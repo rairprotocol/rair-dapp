@@ -163,16 +163,19 @@ const useWeb3Tx = () => {
   );
 
   const verifyAAUserOperation = useCallback(
-    async (userOperation: SendUserOperationResult, options: web3Options) => {
-      if (!programmaticProvider) {
+    async (
+      contractProvider: any,
+      userOperation: SendUserOperationResult,
+      options: web3Options
+    ) => {
+      if (!contractProvider) {
         console.error('Provider not found');
         return;
       }
       try {
-        const txHash =
-          await programmaticProvider.waitForUserOperationTransaction({
-            hash: userOperation.hash
-          });
+        const txHash = await contractProvider.waitForUserOperationTransaction({
+          hash: userOperation.hash
+        });
         handleReceipt(txHash, options?.callback);
         return true;
       } catch (err: any) {
@@ -181,13 +184,17 @@ const useWeb3Tx = () => {
           stringified.includes('Failed to find transaction for User Operation')
         ) {
           reactSwal.fire('Please wait', 'Verifying user operation', 'info');
-          return await verifyAAUserOperation(userOperation, options);
+          return await verifyAAUserOperation(
+            contractProvider,
+            userOperation,
+            options
+          );
         }
         console.error(err);
         reactSwal.fire('Error', err.toString(), 'error');
       }
     },
-    [programmaticProvider, handleReceipt, reactSwal]
+    [handleReceipt, reactSwal]
   );
 
   const web3AuthCall = useCallback(
@@ -197,17 +204,20 @@ const useWeb3Tx = () => {
       args: any[],
       options: web3Options
     ) => {
-      if (!currentUserAddress || !programmaticProvider) {
+      if (!currentUserAddress || !contract) {
         return;
       }
       const methodFound = contract.getFunction(method);
-      const fragment = methodFound.getFragment();
+      let fragment = methodFound.fragment;
+      if (!fragment) {
+        fragment = methodFound.getFragment();
+      }
       if (fragment.stateMutability === 'view') {
         // If the method is a view function, query the info directly through Ethers
         return await contract[method](...args);
       }
       let transactionValue: bigint = BigInt(0);
-      if (args.at(-1).value) {
+      if (args.at(-1).value !== undefined) {
         transactionValue = BigInt(args.pop().value);
       }
       const uoCallData = encodeFunctionData({
@@ -219,9 +229,7 @@ const useWeb3Tx = () => {
       const elegibleForSponsorship =
         options.sponsored &&
         !transactionValue &&
-        (await (
-          programmaticProvider.account as any
-        ).checkGasSponsorshipEligibility({
+        (await (contract.runner as any).account.checkGasSponsorshipEligibility({
           uo: {
             target: await contract.getAddress(),
             data: uoCallData,
@@ -233,7 +241,7 @@ const useWeb3Tx = () => {
         paymasterAndData: '0x'
       };
 
-      const userOperation = await (programmaticProvider.account as any)
+      const userOperation = await (contract.runner as any).account
         .sendUserOperation({
           uo: {
             target: await contract.getAddress(),
@@ -243,15 +251,19 @@ const useWeb3Tx = () => {
           overrides: elegibleForSponsorship ? undefined : overrides
         })
         .catch((err) => {
-          // console.info(err);
+          console.error(err);
           reactSwal.fire('Error', err.details, 'error');
         });
       if (!userOperation?.hash) {
         return false;
       }
-      return await verifyAAUserOperation(userOperation, options);
+      return await verifyAAUserOperation(
+        contract.runner,
+        userOperation,
+        options
+      );
     },
-    [currentUserAddress, programmaticProvider, reactSwal, verifyAAUserOperation]
+    [currentUserAddress, reactSwal, verifyAAUserOperation]
   );
 
   const connectWeb3AuthProgrammaticProvider = useCallback(
