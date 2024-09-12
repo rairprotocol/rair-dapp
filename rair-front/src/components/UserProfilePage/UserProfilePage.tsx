@@ -15,11 +15,12 @@ import axios from 'axios';
 import { isAddress, ZeroAddress } from 'ethers';
 import { Hex } from 'viem';
 
-import { TContract, TUserResponse } from '../../axios.responseTypes';
+import { TUserResponse } from '../../axios.responseTypes';
 import { useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { VideoIcon } from '../../images';
+import { CatalogItem } from '../../redux/tokenSlice';
 import { User } from '../../types/databaseTypes';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
@@ -138,26 +139,7 @@ const UserProfilePage: React.FC = () => {
         (el) => el.user === userAddress
       );
 
-      const covers = contractsFiltered.map((item: TContract) => ({
-        id: item._id,
-        productId: item.products?._id,
-        blockchain: item.blockchain,
-        collectionIndexInContract: item.products.collectionIndexInContract,
-        contract: item.contractAddress,
-        cover: item.products.cover,
-        title: item.title,
-        name: item.products.name,
-        user: item.user,
-        copiesProduct: item.products.copies,
-        offerData: item.products.offers?.map((elem) => ({
-          price: elem.price,
-          offerName: elem.offerName,
-          offerIndex: elem.offerIndex,
-          productNumber: elem.product
-        }))
-      }));
-
-      setCreatedContracts(covers);
+      setCreatedContracts(contractsFiltered);
     }
   }, [userAddress]);
 

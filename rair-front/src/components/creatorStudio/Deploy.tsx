@@ -39,8 +39,12 @@ const Factory = () => {
   const { currentUserAddress, connectedChain } = useAppSelector(
     (store) => store.web3
   );
-  const { classicFactoryInstance, mainTokenInstance, diamondFactoryInstance } =
-    useContracts();
+  const {
+    classicFactoryInstance,
+    mainTokenInstance,
+    diamondFactoryInstance,
+    refreshSigner
+  } = useContracts();
   const { primaryColor, secondaryColor, primaryButtonColor, textColor } =
     useAppSelector((store) => store.colors);
   const { adminRights } = useAppSelector((store) => store.user);
@@ -146,13 +150,14 @@ const Factory = () => {
     async (chainId: Hex) => {
       if (chainId !== undefined) {
         await web3Switch(chainId);
+        refreshSigner();
         setDeploymentPrice(BigInt(0));
         setDeploymentPriceDiamond(BigInt(0));
         setTokenSymbol('');
         setUserBalance(BigInt(0));
       }
     },
-    [web3Switch]
+    [web3Switch, refreshSigner]
   );
 
   const deployClassic = useCallback(async () => {
