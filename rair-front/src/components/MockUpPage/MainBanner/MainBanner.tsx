@@ -43,17 +43,15 @@ const MainBanner = ({ mainBannerInfo }) => {
             </div>
             {mainBannerInfo && mainBannerInfo.user && (
               <div className="collection-info-user">
-                {mainBannerInfo &&
-                mainBannerInfo.user &&
-                mainBannerInfo.user.avatar ? (
+                {mainBannerInfo.user.avatar ? (
                   <img src={mainBannerInfo.user.avatar} alt="avatar" />
                 ) : (
                   <img src={defaultAvatar} alt="avatar" />
                 )}
                 <div>
-                  {mainBannerInfo && mainBannerInfo.user
+                  {typeof mainBannerInfo.user === 'object'
                     ? mainBannerInfo.user.nickName
-                    : '123'}
+                    : mainBannerInfo.user}
                 </div>
               </div>
             )}

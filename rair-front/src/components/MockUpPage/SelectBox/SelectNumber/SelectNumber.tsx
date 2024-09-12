@@ -272,7 +272,7 @@ const SelectNumber: React.FC<ISelectNumber> = ({
       }`}
       ref={rootRef}
       onClick={() => {
-        if (serialNumberData.length < 100) {
+        if (serialNumberData.length <= 100) {
           getPaginationData(ranges[0]);
         } else {
           setRangePickerOpen(!rangePickerOpen);

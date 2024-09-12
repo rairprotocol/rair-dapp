@@ -254,9 +254,9 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         tokenEnd = tokenStart + BigInt(showTokensRef.current);
         setTokenNumber(undefined);
       }
+      getAllProduct(tokenStart.toString(), tokenEnd.toString(), undefined);
     }
-    getAllProduct(tokenStart.toString(), tokenEnd.toString(), undefined);
-  }, []);
+  }, [tokenId]);
 
   useEffect(() => {
     getParticularOffer();
