@@ -17,6 +17,7 @@ import {
   CollectionTokens,
   reloadTokenData
 } from '../../../../../redux/tokenSlice';
+import { NftItemToken } from '../../../../../types/commonTypes';
 import { rFetch } from '../../../../../utils/rFetch';
 import InputField from '../../../../common/InputField';
 import { TooltipBox } from '../../../../common/Tooltip/TooltipBox';
@@ -27,7 +28,7 @@ import SellButton from '../../../../MockUpPage/NftList/NftData/SellButton';
 import './ResaleModal.css';
 
 interface IResaleModal {
-  item: CollectionTokens;
+  item: NftItemToken | CollectionTokens;
   singleTokenPage?: boolean;
   getMyNft?: (num: number, page: number) => void;
   totalNft?: any;
@@ -45,11 +46,14 @@ const ResaleModal: React.FC<IResaleModal> = ({
   );
 
   const [contractAddress] = useState<string | undefined>(
-    item?.contract?.contractAddress ||
-      currentCollectionMetadata?.contractAddress
+    typeof item?.contract === 'string'
+      ? currentCollectionMetadata?.contractAddress
+      : item?.contract?.contractAddress
   );
   const [blockchain] = useState<Hex | undefined>(
-    item?.contract?.blockchain || currentCollectionMetadata?.blockchain
+    typeof item?.contract === 'string'
+      ? currentCollectionMetadata?.blockchain
+      : item?.contract?.blockchain
   );
 
   const { diamondMarketplaceInstance } = useContracts();

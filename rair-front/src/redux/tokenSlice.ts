@@ -69,7 +69,7 @@ export interface CollectionTokens
   ownerData?: User;
   offer: Offer;
   resaleData?: ResaleData;
-  contract: Contract;
+  contract: string;
 }
 
 export interface TokensState {

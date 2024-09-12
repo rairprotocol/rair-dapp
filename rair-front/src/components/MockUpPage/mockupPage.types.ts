@@ -2,7 +2,11 @@ import { Hex } from 'viem';
 
 import { TMetadataType, TProducts } from '../../axios.responseTypes';
 import { CollectionTokens } from '../../redux/tokenSlice';
-import { CatalogVideoItem, tokenNumberData } from '../../types/commonTypes';
+import {
+  CatalogVideoItem,
+  NftItemToken,
+  tokenNumberData
+} from '../../types/commonTypes';
 import { TokenMetadata, User } from '../../types/databaseTypes';
 import { TOfferType } from '../marketplace/marketplace.types';
 
@@ -108,7 +112,7 @@ export interface ISerialNumberBuySell {
   selectedToken: string | undefined;
   setSelectedToken: (tokenId: string | undefined) => void;
   offerData: TOfferType | undefined;
-  tokenDataForResale?: CollectionTokens;
+  tokenDataForResale?: NftItemToken | CollectionTokens;
   serialNumberData: Array<tokenNumberData>;
 }
 export interface ISellButton {

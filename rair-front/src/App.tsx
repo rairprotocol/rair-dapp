@@ -27,7 +27,6 @@ import MockUpPage from './components/MockUpPage/MockUpPage';
 import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import MenuNavigation from './components/Navigation/Menu';
-import MyItems from './components/nft/myItems';
 import RairProduct from './components/nft/rairCollection';
 import Token from './components/nft/Token';
 import NotFound from './components/NotFound/NotFound';
@@ -596,19 +595,6 @@ function App() {
                         }}
                       />
                     )
-                  },
-                  {
-                    path: '/profile/my-items',
-                    content: (
-                      <MyItems
-                        {...{
-                          setIsSplashPage,
-                          setTabIndexItems,
-                          tabIndexItems
-                        }}
-                      />
-                    ),
-                    requirement: isLoggedIn
                   },
                   {
                     path: '/:userAddress',
