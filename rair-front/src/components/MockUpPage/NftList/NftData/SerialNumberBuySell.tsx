@@ -143,7 +143,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       !diamondMarketplaceInstance ||
       !selectedToken ||
       (currentCollection &&
-        !Object.values(currentCollection)[0]?.uniqueIndexInContract)
+        !currentCollection[selectedToken]?.uniqueIndexInContract)
     ) {
       return;
     }
@@ -161,7 +161,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     const resaleResponse = await rFetch(
       `/api/resales/open?contract=${params.contract}&blockchain=${
         params.blockchain
-      }&index=${currentCollection && Object.values(currentCollection)[0].uniqueIndexInContract}`
+      }&index=${currentCollection[selectedToken].uniqueIndexInContract}`
     );
     if (!resaleResponse.success) {
       return;
@@ -194,7 +194,12 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       web3Switch(blockchain);
       return;
     }
-    if (!diamondMarketplaceInstance || !currentCollection || !params?.tokenId) {
+    if (
+      !selectedToken ||
+      !diamondMarketplaceInstance ||
+      !currentCollection ||
+      !params?.tokenId
+    ) {
       return;
     }
     /*
@@ -211,7 +216,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     */
     const { isConfirmed } = await reactSwal.fire({
-      imageUrl: Object.values(currentCollection)[0].metadata.image,
+      imageUrl: currentCollection[selectedToken].metadata.image,
       imageHeight: '25vh',
       title: 'Purchase token',
       html: <>Currently owned by: {resaleData.seller}</>,
@@ -238,7 +243,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           [
             params.contract, // address erc721,
             currentUserAddress, // address buyer,
-            Object.values(currentCollection)[0]?.ownerAddress, // address seller,
+            currentCollection[selectedToken]?.ownerAddress, // address seller,
             resaleData.tokenIndex, // uint token,
             resaleData.price, // uint tokenPrice,
             import.meta.env.VITE_NODE_ADDRESS, // address nodeAddress,
@@ -297,9 +302,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       if (
         selectedToken &&
         currentCollection &&
-        Object.values(currentCollection)[0]?.isMinted === true
+        currentCollection[selectedToken]?.isMinted === true
       ) {
-        const ownerData = currentCollection[0]?.ownerData;
+        const ownerData = currentCollection[selectedToken]?.ownerData;
         return (
           <div className="container-sell-button-user">
             Owned by{' '}
@@ -310,7 +315,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               />
               {selectedToken && (
                 <NavLink
-                  to={`/${Object.values(currentCollection)[0]?.ownerAddress}`}>
+                  to={`/${currentCollection[selectedToken]?.ownerAddress}`}>
                   <h5>
                     {(ownerData &&
                     ownerData.nickName &&
@@ -319,15 +324,15 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
                         '...' +
                         ownerData.nickName.slice(length - 4)
                       : ownerData && ownerData.nickName) ||
-                      (Object.values(currentCollection)[0]?.ownerAddress &&
-                        Object.values(currentCollection)[0]?.ownerAddress.slice(
+                      (currentCollection[selectedToken]?.ownerAddress &&
+                        currentCollection[selectedToken]?.ownerAddress.slice(
                           0,
                           4
                         ) +
                           '...' +
-                          Object.values(
-                            currentCollection
-                          )[0]?.ownerAddress.slice(length - 4))}
+                          currentCollection[selectedToken]?.ownerAddress.slice(
+                            length - 4
+                          ))}
                   </h5>
                 </NavLink>
               )}
@@ -363,8 +368,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
 
     // Blockchain is correct and offer exists
     if (
+      selectedToken &&
       currentCollection &&
-      !Object.values(currentCollection)[0]?.isMinted &&
+      !currentCollection[selectedToken]?.isMinted &&
       offerData
     ) {
       const rawPrice = BigInt(offerData?.price ? offerData?.price : 0);
@@ -404,8 +410,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       );
       // Token is minted
     } else if (
+      selectedToken &&
       currentCollection &&
-      Object.values(currentCollection)[0]?.isMinted
+      currentCollection[selectedToken]?.isMinted
     ) {
       if (resaleData) {
         const price =
@@ -436,7 +443,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       }
       // Current user is owner of the token
       if (
-        Object.values(currentCollection)[0].ownerAddress ===
+        currentCollection[selectedToken].ownerAddress ===
         currentUserAddress?.toLowerCase()
       ) {
         return (
@@ -524,9 +531,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       {currentCollection &&
         selectedToken &&
         tokenDataForResale &&
-        Object.values(currentCollection)[0]?.isMinted &&
+        currentCollection[selectedToken]?.isMinted &&
         currentUserAddress ===
-          Object.values(currentCollection)[0].ownerAddress && (
+          currentCollection[selectedToken].ownerAddress && (
           <button
             onClick={() => {
               reactSwal.fire({
