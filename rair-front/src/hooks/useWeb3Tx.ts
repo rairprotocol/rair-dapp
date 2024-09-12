@@ -163,16 +163,19 @@ const useWeb3Tx = () => {
   );
 
   const verifyAAUserOperation = useCallback(
-    async (userOperation: SendUserOperationResult, options: web3Options) => {
-      if (!programmaticProvider) {
+    async (
+      contractProvider: any,
+      userOperation: SendUserOperationResult,
+      options: web3Options
+    ) => {
+      if (!contractProvider) {
         console.error('Provider not found');
         return;
       }
       try {
-        const txHash =
-          await programmaticProvider.waitForUserOperationTransaction({
-            hash: userOperation.hash
-          });
+        const txHash = await contractProvider.waitForUserOperationTransaction({
+          hash: userOperation.hash
+        });
         handleReceipt(txHash, options?.callback);
         return true;
       } catch (err: any) {
@@ -181,13 +184,17 @@ const useWeb3Tx = () => {
           stringified.includes('Failed to find transaction for User Operation')
         ) {
           reactSwal.fire('Please wait', 'Verifying user operation', 'info');
-          return await verifyAAUserOperation(userOperation, options);
+          return await verifyAAUserOperation(
+            contractProvider,
+            userOperation,
+            options
+          );
         }
         console.error(err);
         reactSwal.fire('Error', err.toString(), 'error');
       }
     },
-    [programmaticProvider, handleReceipt, reactSwal]
+    [handleReceipt, reactSwal]
   );
 
   const web3AuthCall = useCallback(
@@ -244,13 +251,17 @@ const useWeb3Tx = () => {
           overrides: elegibleForSponsorship ? undefined : overrides
         })
         .catch((err) => {
-          // console.info(err);
+          console.error(err);
           reactSwal.fire('Error', err.details, 'error');
         });
       if (!userOperation?.hash) {
         return false;
       }
-      return await verifyAAUserOperation(userOperation, options);
+      return await verifyAAUserOperation(
+        contract.runner,
+        userOperation,
+        options
+      );
     },
     [currentUserAddress, reactSwal, verifyAAUserOperation]
   );
