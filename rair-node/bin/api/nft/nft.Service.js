@@ -100,7 +100,7 @@ module.exports = {
             res.json({
               success: true,
               result: result.list,
-              totalCount: result.count?.[0].total || 0,
+              totalCount: result.count?.[0]?.total || 0,
             });
         } catch (e) {
             next(e);

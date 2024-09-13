@@ -126,7 +126,7 @@ export const web3Slice = createSlice({
       state.programmaticProvider = action.payload;
     },
     setUserAddress: (state, action: PayloadAction<Hex>) => {
-      state.currentUserAddress = action.payload;
+      state.currentUserAddress = action.payload.toLowerCase() as Hex;
     }
   },
   extraReducers: (builder) => {
@@ -140,7 +140,8 @@ export const web3Slice = createSlice({
           state.connectedChain = action.payload.connectedChain;
         }
         if (action.payload.currentUserAddress) {
-          state.currentUserAddress = action.payload.currentUserAddress;
+          state.currentUserAddress =
+            action.payload.currentUserAddress.toLowerCase() as Hex;
         }
       })
       .addCase(connectChainMetamask.rejected, (state) => {
@@ -155,7 +156,8 @@ export const web3Slice = createSlice({
           state.connectedChain = action.payload.connectedChain;
         }
         if (action.payload.currentUserAddress) {
-          state.currentUserAddress = action.payload.currentUserAddress;
+          state.currentUserAddress =
+            action.payload.currentUserAddress.toLowerCase() as Hex;
         }
       })
       .addCase(connectChainWeb3Auth.rejected, (state) => {

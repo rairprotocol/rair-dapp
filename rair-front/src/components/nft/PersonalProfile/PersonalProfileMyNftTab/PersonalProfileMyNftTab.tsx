@@ -147,9 +147,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
                   }
                 })
             ) : (
-              <p style={{ color: textColor }}>
-                There is no such item with that name
-              </p>
+              <h3 style={{ color: textColor }}>No items found</h3>
             )}
           </div>
         )}
@@ -208,7 +206,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
           />
         </div>
       )}
-      {!onResale && totalCount && showTokensRef.current <= totalCount && (
+      {!onResale && !!totalCount && showTokensRef.current <= totalCount && (
         <div ref={loader} className="ref"></div>
       )}
     </>

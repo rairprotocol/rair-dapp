@@ -1,5 +1,4 @@
 import { FC, memo, useCallback } from 'react';
-import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import { parseEther } from 'ethers';
 import { Hex } from 'viem';
