@@ -45,6 +45,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   const { currentUserAddress, connectedChain } = useAppSelector(
     (store) => store.web3
   );
+  const { isLoggedIn } = useAppSelector((store) => store.user);
   const { mainTokenInstance } = useContracts();
 
   const { getBlockchainData } = useServerSettings();
@@ -55,7 +56,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         await mainTokenInstance.runner.provider.getBalance(currentUserAddress);
 
       if (balance) {
-        const result = formatEther(balance);
+        const result = formatEther(balance.toString());
         const final = Number(result.toString())?.toFixed(2)?.toString();
 
         setUserBalance(final);
@@ -64,7 +65,12 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   }, [currentUserAddress, mainTokenInstance]);
 
   const getUserRairBalance = useCallback(async () => {
-    if (!mainTokenInstance || userRairBalance > BigInt(0)) {
+    if (
+      !isLoggedIn ||
+      !currentUserAddress ||
+      !mainTokenInstance ||
+      userRairBalance > BigInt(0)
+    ) {
       return;
     }
     const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
@@ -73,7 +79,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
     if (result) {
       setUserRairBalance(result);
     }
-  }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
+  }, [
+    isLoggedIn,
+    currentUserAddress,
+    mainTokenInstance,
+    userRairBalance,
+    web3TxHandler
+  ]);
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
   const [notificationArray, setNotificationArray] = useState<any>();

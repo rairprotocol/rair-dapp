@@ -336,7 +336,7 @@ const useWeb3Tx = () => {
         case 'web3auth':
           return programmaticProvider?.signMessage(message);
         default:
-          reactSwal.fire('Error', 'Please login', 'error');
+          reactSwal.fire('Error', 'Please login.', 'error');
       }
     },
     [programmaticProvider, currentUserAddress, loginType, reactSwal]

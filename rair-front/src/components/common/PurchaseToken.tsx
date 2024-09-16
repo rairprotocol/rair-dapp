@@ -470,11 +470,15 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               setButtonMessage(`Minting token #${nextToken.toString()}`);
             }
 
-            if (
-              contractInstance?.runner?.provider?.getBalance &&
-              (await contractInstance?.runner?.provider?.getBalance(
+            const userBalance =
+              await contractInstance?.runner?.provider?.getBalance(
                 currentUserAddress
-              )) <
+              );
+
+            if (
+              userBalance &&
+              contractInstance?.runner?.provider?.getBalance &&
+              BigInt(userBalance?.toString()) <
                 BigInt(price) * BigInt(amountOfTokensToPurchase)
             ) {
               if (setPurchaseStatus) {
