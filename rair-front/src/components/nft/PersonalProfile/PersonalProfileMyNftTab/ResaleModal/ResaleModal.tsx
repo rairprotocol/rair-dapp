@@ -58,9 +58,8 @@ const ResaleModal: React.FC<IResaleModal> = ({
 
   const { diamondMarketplaceInstance } = useContracts();
 
-  const { primaryColor, primaryButtonColor, textColor } = useAppSelector(
-    (store) => store.colors
-  );
+  const { primaryColor, primaryButtonColor, textColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
 
   const { getBlockchainData } = useServerSettings();
   const dispatch = useAppDispatch();
@@ -129,21 +128,15 @@ const ResaleModal: React.FC<IResaleModal> = ({
     if (!contractAddress || !blockchain || !token) {
       return;
     }
-    const resaleResponse = await rFetch(
+    const { success, data } = await rFetch(
       `/api/resales/open?contract=${contractAddress}&blockchain=${blockchain}&index=${token}`
     );
-    if (!resaleResponse.success) {
+    if (!success) {
       return;
     }
-    const [resaleData] = resaleResponse.data;
+    const [resaleData] = data;
     if (!resaleData) {
       return;
-    }
-    const userResponse = await rFetch(
-      `/api/users/${resaleData.seller.toLowerCase()}`
-    );
-    if (userResponse.success) {
-      resaleData.seller = userResponse.user.nickName;
     }
     setResaleOffer(resaleData);
   }, [item, contractAddress, blockchain]);
@@ -233,9 +226,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
     <div
       className="container-resale-modal"
       style={{
-        backgroundColor: `${
-          primaryColor === '#dedede' ? 'rgb(222, 222, 222)' : `${primaryColor}`
-        }`
+        backgroundColor: `${!isDarkMode ? 'rgb(222, 222, 222)' : primaryColor}`
       }}>
       <div className="resale-modal-image">
         {item && item.metadata && (
@@ -282,7 +273,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                 />
               </div>
             </div>
-            {resaleOffer && resaleOffer.length > 0 ? (
+            {resaleOffer ? (
               <>
                 <button
                   style={{
@@ -309,7 +300,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   }`}
                   onClick={() => {
                     if (inputSellValue) {
-                      updateResaleOffer(inputSellValue, resaleOffer[0]._id);
+                      updateResaleOffer(inputSellValue, resaleOffer._id);
                     }
                   }}
                   disabled={
@@ -321,7 +312,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
                 </button>{' '}
                 <TooltipBox title="Remove offer resale">
                   <button
-                    onClick={() => removeVideoAlert(resaleOffer[0]._id)}
+                    onClick={() => removeVideoAlert(resaleOffer._id)}
                     className="btn-remove-resale">
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
