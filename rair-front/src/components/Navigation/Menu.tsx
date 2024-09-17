@@ -173,7 +173,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
         );
 
       if (balance) {
-        const result = formatEther(balance);
+        const result = formatEther(balance.toString());
         const final = Number(result.toString())?.toFixed(2)?.toString();
 
         setUserBalance(final);

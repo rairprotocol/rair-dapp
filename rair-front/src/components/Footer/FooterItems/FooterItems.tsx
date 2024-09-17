@@ -203,8 +203,7 @@ export const NavFooterBox = styled.ul.withConfig({
   }
 
   &.footer-nav-item-hotdrop h3 {
-    color: ${(props) =>
-      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
+    color: ${(isDarkMode) => (!isDarkMode ? '#7A797A' : '#fff')};
     text-transform: uppercase;
     margin-bottom: 20px;
   }
@@ -213,14 +212,12 @@ export const NavFooterBox = styled.ul.withConfig({
     font-size: 16px;
     line-height: 20px;
     margin-bottom: 14px;
-    color: ${(props) =>
-      props.primaryColor === '#dedede' ? '#725BDB' : '#AA9DE9'};
+    color: ${(isDarkMode) => (!isDarkMode ? '#725BDB' : '#AA9DE9')};
   }
 
   li {
     font-size: 14px;
-    color: ${(props) =>
-      props.primaryColor === '#dedede' ? '#7A797A' : '#fff'};
+    color: ${(isDarkMode) => (!isDarkMode ? '#7A797A' : '#fff')};
     justify-content: center;
     display: flex;
   }
