@@ -36,9 +36,8 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 }) => {
   const [userBalance, setUserBalance] = useState<string>('');
   const [userRairBalance, setUserRairBalance] = useState<bigint>(BigInt(0));
-  const { primaryColor, primaryButtonColor, textColor } = useAppSelector(
-    (store) => store.colors
-  );
+  const { primaryColor, primaryButtonColor, textColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
 
   const { web3TxHandler } = useWeb3Tx();
 
@@ -99,7 +98,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 
   const getNotifications = useCallback(
     async (pageNum?: number) => {
-      if (messageAlert && currentUserAddress) {
+      if (isLoggedIn && messageAlert && currentUserAddress) {
         setFlagLoading(true);
         const result = await rFetch(
           `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
@@ -120,22 +119,21 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         setNotificationArray([]);
       }
     },
-    [messageAlert, currentUserAddress]
+    [messageAlert, currentUserAddress, isLoggedIn]
   );
 
   const getNotificationsCount = useCallback(async () => {
-    if (currentUserAddress) {
+    if (isLoggedIn && currentUserAddress) {
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications`);
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
-
       setFlagLoading(false);
     } else {
       setNotificationCount(0);
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, isLoggedIn]);
 
   const changePageForVideo = (currentPage: number) => {
     setCurrentPageNotification(currentPage);
@@ -191,9 +189,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   return (
     <NavFooter>
       {messageAlert && messageAlert === 'notification' ? (
-        <NavFooterBox
-          className="nav-header-box-mobile"
-          primaryColor={primaryColor}>
+        <NavFooterBox className="nav-header-box-mobile" isDarkMode={isDarkMode}>
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </BackBtnMobileNav>
@@ -261,9 +257,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           )}
         </NavFooterBox>
       ) : messageAlert === 'profile' ? (
-        <NavFooterBox
-          className="nav-header-box-mobile"
-          primaryColor={primaryColor}>
+        <NavFooterBox className="nav-header-box-mobile" isDarkMode={isDarkMode}>
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </BackBtnMobileNav>
@@ -286,7 +280,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       ) : messageAlert === 'profileEdit' ? (
         <NavFooterBox
           className="nav-header-box-mobile"
-          primaryColor={primaryColor}
+          isDarkMode={isDarkMode}
           messageAlert={messageAlert}>
           <div>
             <div
@@ -406,9 +400,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           )}
         </NavFooterBox>
       ) : (
-        <NavFooterBox
-          className="nav-header-box-mobile"
-          primaryColor={primaryColor}>
+        <NavFooterBox className="nav-header-box-mobile" isDarkMode={isDarkMode}>
           {currentUserAddress && (
             <li className="logout" onClick={logoutUser}>
               <FontAwesomeIcon icon={faSignOutAlt} />
