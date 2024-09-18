@@ -16,6 +16,8 @@ const withdrawCredits = require('./witdrawCredits');
 const updateMintingOffer = require('./updateMintingOffer');
 const sellResaleOffer = require('./sellResaleOffer');
 const createResaleOffer = require('./createResaleOffer');
+const updateResaleOffer = require('./updateResaleOffer');
+const deleteResaleOffer = require('./deleteResaleOffer');
 const transferredToken = require('./transferredToken');
 
 module.exports = {
@@ -38,4 +40,6 @@ module.exports = {
   sellResaleOffer,
   createResaleOffer,
   transferredToken,
+  updateResaleOffer,
+  deleteResaleOffer,
 };

@@ -33,6 +33,8 @@ const {
   updateMintingOffer,
   sellResaleOffer,
   createResaleOffer,
+  updateResaleOffer,
+  deleteResaleOffer,
   transferredToken,
 } = require('./eventCatcherUtils');
 
@@ -56,6 +58,8 @@ const insertionMapping = {
   UpdatedMintingOffer: updateMintingOffer,
   TokenSold: sellResaleOffer,
   TokenOfferCreated: createResaleOffer,
+  TokenOfferUpdated: updateResaleOffer,
+  TokenOfferDeleted: deleteResaleOffer,
 
   // Classic Factory
   NewContractDeployed: insertContract,

@@ -154,9 +154,75 @@ const ResaleModal: React.FC<IResaleModal> = ({
     }
   };
 
-  const updateResaleOfferBlockchain = async (price, id) => {
-    console.error('Unsupported');
-  };
+  const removeResaleOfferBlockchain = useCallback(
+    async (id) => {
+      if (!id || !diamondMarketplaceInstance) {
+        return;
+      }
+      if (
+        await web3TxHandler(diamondMarketplaceInstance, 'deleteGasTokenOffer', [
+          id
+        ])
+      ) {
+        reactSwal.fire({
+          title: 'Deleted',
+          html: 'Your resale offer has been deleted.',
+          icon: 'success'
+        });
+        if (!singleTokenPage && totalNft) {
+          getMyNft && getMyNft(Number(totalNft), 1);
+          if (!singleTokenPage && totalNft) {
+            getMyNft && getMyNft(Number(totalNft), 1);
+          }
+        }
+      }
+    },
+    [
+      diamondMarketplaceInstance,
+      getMyNft,
+      reactSwal,
+      singleTokenPage,
+      totalNft,
+      web3TxHandler
+    ]
+  );
+
+  const updateResaleOfferBlockchain = useCallback(
+    async (price, id) => {
+      if (!diamondMarketplaceInstance || !price || !id) {
+        return;
+      }
+      if (
+        await web3TxHandler(diamondMarketplaceInstance, 'updateGasTokenOffer', [
+          id,
+          price
+        ])
+      ) {
+        reactSwal.fire({
+          title: 'Updated!',
+          html: "The offer's price has been updated.",
+          icon: 'success'
+        });
+        getResaleData();
+        dispatch(reloadTokenData({ tokenId: item._id }));
+
+        if (!singleTokenPage && totalNft) {
+          getMyNft && getMyNft(Number(totalNft), 1);
+        }
+      }
+    },
+    [
+      diamondMarketplaceInstance,
+      dispatch,
+      getMyNft,
+      getResaleData,
+      item._id,
+      reactSwal,
+      singleTokenPage,
+      totalNft,
+      web3TxHandler
+    ]
+  );
 
   const updateResaleOfferDatabase = async (price, id) => {
     const response = await rFetch(`/api/resales/update`, {
@@ -186,7 +252,7 @@ const ResaleModal: React.FC<IResaleModal> = ({
     }
   };
 
-  const removeVideoAlert = (tokenId) => {
+  const confirmDatabaseResaleDeletion = (tokenId) => {
     reactSwal
       .fire({
         title: 'Are you sure?',
@@ -325,7 +391,15 @@ const ResaleModal: React.FC<IResaleModal> = ({
                 </button>{' '}
                 <TooltipBox title="Remove offer resale">
                   <button
-                    onClick={() => removeVideoAlert(resaleOffer._id)}
+                    onClick={() => {
+                      if (resaleOffer.blockchainOfferId) {
+                        removeResaleOfferBlockchain(
+                          resaleOffer.blockchainOfferId
+                        );
+                      } else {
+                        confirmDatabaseResaleDeletion(resaleOffer._id);
+                      }
+                    }}
                     className="btn-remove-resale">
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
