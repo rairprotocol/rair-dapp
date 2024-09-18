@@ -84,20 +84,24 @@ module.exports = {
                 });
             }
 
-            const result = await MintedToken.aggregate([
+            const [result] = await MintedToken.aggregate([
                 ...pipeline,
-                { $skip: skip },
-                { $limit: pageSize },
+                { $facet: {
+                  list: [
+                    { $skip: skip },
+                    { $limit: pageSize },
+                  ],
+                  count: [
+                    { $count: 'total' },
+                  ],
+                } },
             ]);
 
-            const count = await MintedToken.aggregate([
-                ...pipeline,
-                {
-                    $count: 'totalCount',
-                },
-            ]);
-
-            res.json({ success: true, result, totalCount: count[0]?.totalCount });
+            res.json({
+              success: true,
+              result: result.list,
+              totalCount: result.count?.[0]?.total || 0,
+            });
         } catch (e) {
             next(e);
         }

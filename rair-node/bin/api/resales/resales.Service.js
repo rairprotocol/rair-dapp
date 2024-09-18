@@ -8,24 +8,59 @@ const { getInstance, getContractRunner } = require('../../integrations/ethers/co
 exports.openResales = async (req, res, next) => {
     try {
         const { contract, blockchain, index } = req.query;
-        const filter = { buyer: undefined };
-        if (blockchain) {
-            const contractFilter = { blockchain };
-            if (contract) {
-                contractFilter.contractAddress = contract;
-            }
-            const foundContract = (await Contract.find(contractFilter))
-                                    .map((ctr) => ctr._id);
-            if (foundContract?.length) {
-                filter.tokenContract = {
-                    $in: foundContract,
-                };
-            }
-        }
+        const pipeline = [
+            {
+                $match: {
+                    buyer: { $exists: false },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'User',
+                    as: 'sellerData',
+                    localField: 'seller',
+                    foreignField: 'publicAddress',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$sellerData',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+        ];
         if (index) {
-            filter.tokenIndex = index;
+            pipeline.push({
+                $match: {
+                    tokenIndex: index,
+                },
+            });
         }
-        const offers = await ResaleTokenOffer.find(filter);
+        pipeline.push({
+            $lookup: {
+                from: 'Contract',
+                as: 'contractData',
+                localField: 'tokenContract',
+                foreignField: '_id',
+            },
+        }, {
+            $unwind: {
+                path: '$contractData',
+                preserveNullAndEmptyArrays: true,
+            },
+        });
+        if (blockchain) {
+            const contractQuery = {
+                'contractData.blockchain': blockchain,
+            };
+            if (contract) {
+                contractQuery['contractData.contractAddress'] = contract;
+            }
+            pipeline.push({
+                $match: contractQuery,
+            });
+        }
+        const offers = await ResaleTokenOffer.aggregate(pipeline);
         return res.json({ success: true, data: offers });
     } catch (e) {
         return next(new AppError(e));

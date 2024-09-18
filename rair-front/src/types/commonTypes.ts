@@ -1,4 +1,11 @@
-import { Blockchain, MediaFile, Offer } from './databaseTypes';
+import {
+  Blockchain,
+  Contract,
+  MediaFile,
+  MintedToken,
+  Offer,
+  ResaleData
+} from './databaseTypes';
 
 import { TChainItemData } from '../utils/utils.types';
 
@@ -51,3 +58,8 @@ export interface tokenNumberData {
 }
 
 export interface CombinedBlockchainData extends Blockchain, TChainItemData {}
+
+export interface NftItemToken extends Omit<MintedToken, 'contract'> {
+  resaleData?: ResaleData;
+  contract: Contract;
+}

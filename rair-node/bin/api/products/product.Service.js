@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const AppError = require('../../utils/errors/AppError');
 const APIFeatures = require('../../utils/apiFeatures');
 const { Product: ProductModel, Contract } = require('../../models');

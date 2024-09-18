@@ -181,9 +181,16 @@ const useWeb3Tx = () => {
       } catch (err: any) {
         const stringified = err.toString();
         if (
-          stringified.includes('Failed to find transaction for User Operation')
+          stringified
+            .toLowerCase()
+            .includes('failed to find transaction for user operation')
         ) {
-          reactSwal.fire('Please wait', 'Verifying user operation', 'info');
+          reactSwal.fire({
+            title: 'Please wait',
+            html: 'Verifying user operation',
+            icon: 'info',
+            showConfirmButton: false
+          });
           return await verifyAAUserOperation(
             contractProvider,
             userOperation,
@@ -217,7 +224,7 @@ const useWeb3Tx = () => {
         return await contract[method](...args);
       }
       let transactionValue: bigint = BigInt(0);
-      if (args.at(-1).value !== undefined) {
+      if (args?.at(-1)?.value !== undefined) {
         transactionValue = BigInt(args.pop().value);
       }
       const uoCallData = encodeFunctionData({
@@ -378,7 +385,7 @@ const useWeb3Tx = () => {
   const web3Switch = useCallback(
     async (chainId: Hex | undefined) => {
       if (!chainId) {
-        reactSwal.fire('Unsupported blockchain');
+        reactSwal.fire('Error', 'Blockchain not supported', 'error');
         return;
       }
       if (!currentUserAddress) {

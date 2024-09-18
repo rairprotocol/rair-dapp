@@ -59,9 +59,12 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const dispatch = useAppDispatch();
   const { currentUserAddress } = useAppSelector((store) => store.web3);
-  const { currentCollection, currentCollectionStatus } = useAppSelector(
-    (state) => state.tokens
-  );
+  const {
+    currentCollection,
+    currentCollectionMetadata,
+    currentCollectionStatus,
+    currentCollectionMetadataStatus
+  } = useAppSelector((state) => state.tokens);
 
   const navigate = useNavigate();
   const params = useParams<TParamsNftDataCommonLink>();
@@ -77,13 +80,21 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const getAllProduct = useCallback(
     async (fromToken: string, toToken: string, attributes: any) => {
-      if (!product || currentCollectionStatus === dataStatuses.Loading) {
+      if (
+        !product ||
+        currentCollectionStatus === dataStatuses.Loading ||
+        currentCollectionMetadataStatus === dataStatuses.Loading
+      ) {
         return;
       }
 
       const tokensFlag = window.location.href.includes('/tokens') && tokenId;
 
-      if (tokensFlag && currentCollection[tokenId]) {
+      if (
+        tokensFlag &&
+        contract === currentCollectionMetadata?.contractAddress &&
+        currentCollection[tokenId]
+      ) {
         return;
       }
 
@@ -107,7 +118,9 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       dispatch,
       blockchain,
       contract,
-      currentCollectionStatus
+      currentCollectionStatus,
+      currentCollectionMetadata,
+      currentCollectionMetadataStatus
     ]
   );
 
@@ -256,7 +269,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       }
       getAllProduct(tokenStart.toString(), tokenEnd.toString(), undefined);
     }
-  }, [tokenId]);
+  }, [setTokenNumber, tokenId, tokenNumber]);
 
   useEffect(() => {
     getParticularOffer();
