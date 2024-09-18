@@ -188,14 +188,14 @@ const ResaleModal: React.FC<IResaleModal> = ({
   );
 
   const updateResaleOfferBlockchain = useCallback(
-    async (price, id) => {
+    async (price: string, id: string) => {
       if (!diamondMarketplaceInstance || !price || !id) {
         return;
       }
       if (
         await web3TxHandler(diamondMarketplaceInstance, 'updateGasTokenOffer', [
           id,
-          price
+          parseEther(price)
         ])
       ) {
         reactSwal.fire({
