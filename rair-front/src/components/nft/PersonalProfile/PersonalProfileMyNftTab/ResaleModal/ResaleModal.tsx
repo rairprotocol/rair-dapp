@@ -154,7 +154,11 @@ const ResaleModal: React.FC<IResaleModal> = ({
     }
   };
 
-  const updateResaleOffer = async (price, id) => {
+  const updateResaleOfferBlockchain = async (price, id) => {
+    console.error('Unsupported');
+  };
+
+  const updateResaleOfferDatabase = async (price, id) => {
     const response = await rFetch(`/api/resales/update`, {
       method: 'PUT',
       body: JSON.stringify({
@@ -300,7 +304,16 @@ const ResaleModal: React.FC<IResaleModal> = ({
                   }`}
                   onClick={() => {
                     if (inputSellValue) {
-                      updateResaleOffer(inputSellValue, resaleOffer._id);
+                      if (resaleOffer.blockchainOfferId) {
+                        return updateResaleOfferBlockchain(
+                          inputSellValue,
+                          resaleOffer.blockchainOfferId
+                        );
+                      }
+                      updateResaleOfferDatabase(
+                        inputSellValue,
+                        resaleOffer._id
+                      );
                     }
                   }}
                   disabled={
