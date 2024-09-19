@@ -25,7 +25,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   messageAlert,
   handleMessageAlert
 }) => {
-  const { primaryColor, headerLogoMobile } = useAppSelector(
+  const { primaryColor, headerLogoMobile, isDarkMode } = useAppSelector(
     (store) => store.colors
   );
   const { currentUserAddress } = useAppSelector((store) => store.web3);
@@ -115,11 +115,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                 width={'40px'}
                 height={'40px'}
                 onClick={() => {
-                  dispatch(
-                    setColorScheme(
-                      primaryColor === '#dedede' ? 'charcoal' : 'rhyno'
-                    )
-                  );
+                  dispatch(setColorScheme(isDarkMode ? 'light' : 'dark'));
                 }}>
                 <SunIcon />
               </SocialBox>
