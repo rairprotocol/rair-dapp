@@ -581,6 +581,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
                       playing={playing}
                       diamond={token.offer.diamond}
                       resalePrice={token?.resaleData?.price}
+                      resaleFlag={!!token?.resaleData}
                     />
                   );
                 } else {
@@ -619,6 +620,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
                         playing={playing}
                         diamond={item.offer.diamond}
                         resalePrice={item?.resaleData?.price}
+                        resaleFlag={!!item?.resaleData}
                       />
                     );
                   } else {

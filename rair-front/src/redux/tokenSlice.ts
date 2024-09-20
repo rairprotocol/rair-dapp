@@ -9,7 +9,7 @@ import {
   SingleContractResponse,
   SingleTokenResponse
 } from '../types/apiResponseTypes';
-import { PaginatedApiCall } from '../types/commonTypes';
+import { ApiCallResponse, PaginatedApiCall } from '../types/commonTypes';
 import {
   Contract,
   MintedToken,
@@ -43,10 +43,13 @@ interface GetCatalogResponse {
   itemsPerPage: number;
 }
 
-interface GetCollectionResponse {
+interface GetCollectionResponse extends ApiCallResponse {
   tokens: Array<CollectionTokens>;
-  success: boolean;
   totalCount: number;
+}
+
+interface GetResaleResponse extends ApiCallResponse {
+  data: Array<ResaleData>;
 }
 
 interface CatalogQuery extends PaginatedApiCall {
@@ -210,21 +213,26 @@ export const loadCollection = createAsyncThunk(
         contractId: response.data.tokens.at(0)?.contract
       })
     );
+    dispatch(
+      loadResaleDataForCollection({
+        contract,
+        blockchain
+      })
+    );
 
     return response.data;
+  }
+);
 
-    /*
-            const resaleData = await rFetch(
-        `/api/resales/open?contract=${contract}&blockchain=${blockchain}`
-      );
-      const resaleMapping = {};
-      if (resaleData.success) {
-        resaleData.data.forEach((resale) => {
-          resale.price = formatEther(resale.price);
-          resaleMapping[resale.tokenIndex] = resale;
-        });
-      }
-    */
+export const loadResaleDataForCollection = createAsyncThunk(
+  'tokens/loadResaleDataForCollection',
+  async ({ contract, blockchain }: { contract: Hex; blockchain: Hex }) => {
+    const resaleData = await axios.get<GetResaleResponse>(
+      `/api/resales/open?contract=${contract}&blockchain=${blockchain}`
+    );
+    if (resaleData.data.success) {
+      return resaleData.data.data;
+    }
   }
 );
 
@@ -300,6 +308,7 @@ export const tokenSlice = createSlice({
       .addCase(loadFrontPageCatalog.rejected, (state) => {
         state.catalogStatus = dataStatuses.Failed;
       })
+
       // Collection tokens
       .addCase(loadCollection.pending, (state) => {
         state.currentCollectionStatus = dataStatuses.Loading;
@@ -316,6 +325,11 @@ export const tokenSlice = createSlice({
           state.currentCollection = tokenMapping;
         }
       )
+      .addCase(loadCollection.rejected, (state) => {
+        state.currentCollectionStatus = dataStatuses.Failed;
+      })
+
+      // Reuse collection data for next page
       .addCase(
         loadNextCollectionPage.fulfilled,
         (state, action: PayloadAction<GetCollectionResponse | undefined>) => {
@@ -327,9 +341,8 @@ export const tokenSlice = createSlice({
           }
         }
       )
-      .addCase(loadCollection.rejected, (state) => {
-        state.currentCollectionStatus = dataStatuses.Failed;
-      })
+
+      // Load metadata for collection
       .addCase(loadCollectionMetadata.pending, (state) => {
         state.currentCollectionMetadataStatus = dataStatuses.Loading;
       })
@@ -345,6 +358,8 @@ export const tokenSlice = createSlice({
       .addCase(loadCollectionMetadata.rejected, (state) => {
         state.currentCollectionMetadataStatus = dataStatuses.Failed;
       })
+
+      // Reload data for single token
       .addCase(
         reloadTokenData.fulfilled,
         (state, action: PayloadAction<CollectionTokens | undefined>) => {
@@ -357,6 +372,17 @@ export const tokenSlice = createSlice({
             state.currentCollection[action.payload.uniqueIndexInContract] =
               action.payload;
           }
+        }
+      )
+
+      // Load resale data for collection
+      .addCase(
+        loadResaleDataForCollection.fulfilled,
+        (state, action: PayloadAction<Array<ResaleData> | undefined>) => {
+          action.payload?.forEach((resale) => {
+            console.info(resale);
+            state.currentCollection[resale.tokenIndex].resaleData = resale;
+          });
         }
       );
   }
