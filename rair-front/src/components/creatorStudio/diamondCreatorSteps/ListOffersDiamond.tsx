@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import DiamondOfferRow from './diamondOfferRow';
@@ -170,12 +170,7 @@ const ListOffers: React.FC<TListOffers> = ({
               className={`btn rair-button rounded-rair px-4`}>
               Add new{' '}
               <FontAwesomeIcon
-                icon={faPlus}
-                style={{
-                  border: `solid 1px ${textColor}`,
-                  borderRadius: '50%',
-                  padding: '5px'
-                }}
+                icon={faPlusCircle}
               />
             </button>
           </div>

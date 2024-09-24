@@ -20,6 +20,18 @@ import {
   User
 } from '../types/databaseTypes';
 
+interface FactoryResponseProduct extends ApiCallResponse {
+  result: number;
+  data?: {
+    doc?: Array<Product>;
+  };
+}
+
+interface MetadataForCollection {
+  contract?: Contract;
+  product?: Product;
+}
+
 interface ProductAndOffers extends Product {
   offers: Array<Offer>;
 }
@@ -82,7 +94,7 @@ export interface TokensState {
   currentCollectionStatus: dataStatuses;
   currentCollectionTotal: number;
   currentCollection: { [index: string]: CollectionTokens };
-  currentCollectionMetadata?: Contract;
+  currentCollectionMetadata: MetadataForCollection;
   currentCollectionMetadataStatus: dataStatuses;
   itemsPerPage: number;
   currentPage: number;
@@ -101,7 +113,7 @@ const initialState: TokensState = {
   currentCollectionParams: undefined,
   // Collection contract data
   currentCollectionMetadataStatus: dataStatuses.Uninitialized,
-  currentCollectionMetadata: undefined,
+  currentCollectionMetadata: {},
   // Catalog search params
   itemsPerPage: 20,
   currentPage: 1
@@ -150,14 +162,30 @@ export const loadFrontPageCatalog = createAsyncThunk(
 
 export const loadCollectionMetadata = createAsyncThunk(
   'tokens/loadCollectionMetadata',
-  async ({ contractId }: { contractId?: string }) => {
+  async ({
+    contractId,
+    productId
+  }: {
+    contractId?: string;
+    productId: string;
+  }) => {
     if (!contractId) {
       return;
     }
     const contractData = await axios.get<SingleContractResponse>(
       `/api/contracts/${contractId}`
     );
-    return contractData.data.contract;
+    const queryParams = new URLSearchParams({
+      contract: contractId,
+      collectionIndexInContract: productId
+    });
+    const productData = await axios.get<FactoryResponseProduct>(
+      `/api/products?${queryParams.toString()}`
+    );
+    return {
+      contract: contractData.data.contract,
+      product: productData.data.data?.doc?.[0]
+    };
   }
 );
 
@@ -210,7 +238,8 @@ export const loadCollection = createAsyncThunk(
     );
     dispatch(
       loadCollectionMetadata({
-        contractId: response.data.tokens.at(0)?.contract
+        contractId: response.data.tokens.at(0)?.contract,
+        productId: product
       })
     );
     dispatch(
@@ -285,7 +314,7 @@ export const tokenSlice = createSlice({
       state.currentCollectionTotal = 0;
       state.currentCollection = {};
       state.currentCollectionMetadataStatus = dataStatuses.Uninitialized;
-      state.currentCollectionMetadata = undefined;
+      state.currentCollectionMetadata = {};
       state.currentCollectionParams = undefined;
     }
   },
@@ -348,10 +377,12 @@ export const tokenSlice = createSlice({
       })
       .addCase(
         loadCollectionMetadata.fulfilled,
-        (state, action: PayloadAction<Contract | undefined>) => {
+        (state, action: PayloadAction<MetadataForCollection | undefined>) => {
           state.currentCollectionMetadataStatus = dataStatuses.Complete;
           if (action.payload) {
             state.currentCollectionMetadata = action.payload;
+          } else {
+            state.currentCollectionMetadata = {};
           }
         }
       )
@@ -380,8 +411,9 @@ export const tokenSlice = createSlice({
         loadResaleDataForCollection.fulfilled,
         (state, action: PayloadAction<Array<ResaleData> | undefined>) => {
           action.payload?.forEach((resale) => {
-            console.info(resale);
-            state.currentCollection[resale.tokenIndex].resaleData = resale;
+            if (state.currentCollection[resale.tokenIndex]) {
+              state.currentCollection[resale.tokenIndex].resaleData = resale;
+            }
           });
         }
       );

@@ -92,7 +92,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
       if (
         tokensFlag &&
-        contract === currentCollectionMetadata?.contractAddress &&
+        contract === currentCollectionMetadata?.contract?.contractAddress &&
         currentCollection[tokenId]
       ) {
         return;
@@ -125,10 +125,17 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   );
 
   useEffect(() => {
-    if (tokenId && currentCollection[tokenId]?.metadata) {
-      setSelectedData(currentCollection[tokenId]?.metadata);
+    if (!tokenId || !currentCollectionMetadata.product) {
+      return;
     }
-  }, [tokenId, currentCollection]);
+    const realNumber = (
+      BigInt(tokenId) +
+      BigInt(currentCollectionMetadata.product?.firstTokenIndex)
+    ).toString();
+    if (realNumber && currentCollection[realNumber]?.metadata) {
+      setSelectedData(currentCollection[realNumber]?.metadata);
+    }
+  }, [tokenId, currentCollection, currentCollectionMetadata]);
 
   const getProductsFromOffer = useCallback(async () => {
     setIsLoading(true);
@@ -150,17 +157,19 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   }, [blockchain, contract, product, currentUserAddress]);
 
   const initialTokenData = useCallback(() => {
-    if (currentCollection && tokenId) {
-      if (currentCollection[tokenId]?.offer?.diamond) {
+    if (currentCollection && selectedToken) {
+      if (currentCollection[selectedToken]?.offer?.diamond) {
         setSelectedOfferIndex(
           currentCollection &&
-            currentCollection[tokenId]?.offer?.diamondRangeIndex
+            currentCollection[selectedToken]?.offer?.diamondRangeIndex
         );
       } else if (currentCollection) {
-        setSelectedOfferIndex(currentCollection[tokenId]?.offer?.offerIndex);
+        setSelectedOfferIndex(
+          currentCollection[selectedToken]?.offer?.offerIndex
+        );
       }
     }
-  }, [currentCollection, tokenId]);
+  }, [currentCollection, selectedToken]);
 
   const getParticularOffer = useCallback(async () => {
     try {
@@ -248,16 +257,23 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   }, [blockchain, dispatch]);
 
   useEffect(() => {
-    if (tokenId) {
-      setSelectedToken(tokenId);
+    if (!tokenId || !currentCollectionMetadata.product) {
+      return;
     }
-  }, [tokenId]);
+    const realNumber = (
+      BigInt(tokenId) +
+      BigInt(currentCollectionMetadata.product?.firstTokenIndex)
+    ).toString();
+    if (realNumber) {
+      setSelectedToken(realNumber);
+    }
+  }, [currentCollectionMetadata, tokenId]);
 
   useEffect(() => {
     let tokenStart = BigInt(0);
     let tokenEnd = BigInt(15);
-    if (tokenId) {
-      tokenStart = BigInt(tokenId) - BigInt(10);
+    if (selectedToken) {
+      tokenStart = BigInt(selectedToken) - BigInt(10);
       if (tokenStart < BigInt(0)) {
         tokenStart = BigInt(0);
       }
@@ -269,7 +285,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       }
       getAllProduct(tokenStart.toString(), tokenEnd.toString(), undefined);
     }
-  }, [setTokenNumber, tokenId, tokenNumber]);
+  }, [setTokenNumber, selectedToken, tokenNumber]);
 
   useEffect(() => {
     getParticularOffer();

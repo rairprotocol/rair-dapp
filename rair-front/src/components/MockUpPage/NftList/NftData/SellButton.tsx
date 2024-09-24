@@ -35,10 +35,11 @@ const SellButton: FC<ISellButton> = ({
   const yMAX = item?.contract?.blockchain === '0x1' ? 10 : 10000.0;
 
   const blockchain =
-    item?.contract?.blockchain || currentCollectionMetadata?.blockchain;
+    item?.contract?.blockchain ||
+    currentCollectionMetadata?.contract?.blockchain;
   const contract =
     item?.contract?.contractAddress ||
-    currentCollectionMetadata?.contractAddress;
+    currentCollectionMetadata?.contract?.contractAddress;
   const tokenId = item?.uniqueIndexInContract;
 
   const reactSwal = useSwal();

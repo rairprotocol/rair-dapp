@@ -47,12 +47,12 @@ const ResaleModal: React.FC<IResaleModal> = ({
 
   const [contractAddress] = useState<string | undefined>(
     typeof item?.contract === 'string'
-      ? currentCollectionMetadata?.contractAddress
+      ? currentCollectionMetadata?.contract?.contractAddress
       : item?.contract?.contractAddress
   );
   const [blockchain] = useState<Hex | undefined>(
     typeof item?.contract === 'string'
-      ? currentCollectionMetadata?.blockchain
+      ? currentCollectionMetadata?.contract?.blockchain
       : item?.contract?.blockchain
   );
 
