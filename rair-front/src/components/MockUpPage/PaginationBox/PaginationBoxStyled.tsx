@@ -23,9 +23,7 @@ export const PaginationBoxStyled = styled(Pagination).withConfig({
         &.Mui-selected {
           background: ${({ primaryButtonColor }) =>
             `${
-              import.meta.env.VITE_TESTNET
-                ? 'var(--hot-drops)'
-                : primaryButtonColor
+              primaryButtonColor
             }`};
           color: #fff;
           border: none;
@@ -36,9 +34,7 @@ export const PaginationBoxStyled = styled(Pagination).withConfig({
         &:hover {
           background: ${({ primaryButtonColor }) =>
             `${
-              import.meta.env.VITE_TESTNET === 'true'
-                ? 'var(--hot-drops)'
-                : primaryButtonColor
+              primaryButtonColor
             }`};
           color: #fff;
         }

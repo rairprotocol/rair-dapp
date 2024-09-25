@@ -39,7 +39,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   const { searchResults } = useAppSelector((store) => store.searchbar);
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { iconColor, primaryColor, secondaryColor } = useAppSelector(
+  const { iconColor, primaryColor, secondaryColor, isDarkMode } = useAppSelector(
     (store) => store.colors
   );
 
@@ -142,7 +142,9 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
       secondaryColor={secondaryColor}
       hotdrops={hotdropsVar}
       primaryColor={primaryColor}
-      click={click}>
+      click={click}
+      isDarkMode={isDarkMode}
+      >
       <div>
         {activeSearch && (
           <>
