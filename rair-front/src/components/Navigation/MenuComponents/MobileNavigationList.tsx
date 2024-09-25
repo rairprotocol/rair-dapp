@@ -114,8 +114,10 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
             return dateB - dateA;
           });
           setNotificationArray(sortedNotifications);
+          setFlagLoading(false);
         }
       } else {
+        setFlagLoading(false);
         setNotificationArray([]);
       }
     },

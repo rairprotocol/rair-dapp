@@ -3,6 +3,7 @@ import { Provider, useStore } from 'react-redux';
 
 import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
+import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { CloseIconMobile } from '../../../../images';
 import { SocialMenuMobile } from '../../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { rFetch } from '../../../../utils/rFetch';
@@ -16,10 +17,12 @@ const NotificationBox = ({
   getNotifications,
   getNotificationsCount
 }) => {
-  const { headerLogoMobile, primaryColor } = useAppSelector(
+  const { headerLogoMobile, primaryColor, isDarkMode } = useAppSelector(
     (store) => store.colors
   );
   const { currentUserAddress } = useAppSelector((store) => store.web3);
+
+  const { width } = useWindowDimensions();
 
   const reactSwal = useSwal();
   const store = useStore();
@@ -83,7 +86,9 @@ const NotificationBox = ({
 
   return (
     <div className="notification-from-factory">
-      <div className="box-notification">
+      <div className="box-notification"  style={{
+        border: width < 1024 ? `1px solid ${isDarkMode ? "#fff" : "#000"}` : 'none'
+      }}>
         <div className="box-dot-img">
           {!el.read && <div className="dot-notification" />}
           <div className="notification-img">

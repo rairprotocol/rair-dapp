@@ -85,7 +85,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
     textColor,
     iconColor,
     secondaryColor,
-    primaryColor
+    primaryColor,
+    isDarkMode
   } = useAppSelector((store) => store.colors);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
@@ -367,7 +368,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                       className="mobileAikonWidget"
                       style={{
                         backgroundColor:
-                          primaryColor === 'rhyno'
+                          !isDarkMode
                             ? 'var(--rhyno-20)'
                             : 'var(--charcoal-80)'
                       }}>
