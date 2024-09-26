@@ -53,7 +53,7 @@ module.exports = async () => {
           name: 'Base',
           display: true,
           sync: true,
-          alchemySupport: true,
+          alchemySupport: false,
           blockExplorerGateway: 'https://basescan.org',
           diamondFactoryAddress: '0x1F89Cc515dDc53dA2fac5B0Ca3b322066A71E6BA',
           diamondMarketplaceAddress: '0x58795f50b50d492C4252B9BBF78485EF4043FF3E',
