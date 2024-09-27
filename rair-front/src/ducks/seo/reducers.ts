@@ -1,30 +1,26 @@
 import { TInfoSeo, TSeoActionTypes } from './seo.types';
 import * as types from './types';
 
-import HotDropsFavicon from '../../components/MockUpPage/assets/Hotdrops-favicon.ico';
-import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
 import { LoadingDefaultFavicon } from '../../images';
-
-const hotDropsVar = import.meta.env.VITE_TESTNET;
 
 export let InitialState: TInfoSeo;
 
-if (hotDropsVar === 'true') {
-  InitialState = {
-    title: 'HotDrops Technologies',
-    ogTitle: 'HotDrops Technologies',
-    twitterTitle: 'HotDrops Technologies',
-    contentName: 'author',
-    content: 'Digital Ownership Encryption',
-    description:
-      'HotDrops is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
-    ogDescription: 'Encrypted, Streaming NFTs',
-    twitterDescription: 'Encrypted, Streaming NFTs',
-    image: 'https://hotdrops.live/static/media/hotdrops-default.e7c4e7eb.png',
-    favicon: LoadingDefaultFavicon,
-    faviconMobile: LoadingDefaultFavicon
-  };
-} else {
+// if (hotDropsVar === 'true') {
+//   InitialState = {
+//     title: 'HotDrops Technologies',
+//     ogTitle: 'HotDrops Technologies',
+//     twitterTitle: 'HotDrops Technologies',
+//     contentName: 'author',
+//     content: 'Digital Ownership Encryption',
+//     description:
+//       'HotDrops is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
+//     ogDescription: 'Encrypted, Streaming NFTs',
+//     twitterDescription: 'Encrypted, Streaming NFTs',
+//     image: 'https://hotdrops.live/static/media/hotdrops-default.e7c4e7eb.png',
+//     favicon: LoadingDefaultFavicon,
+//     faviconMobile: LoadingDefaultFavicon
+//   };
+// } else {
   InitialState = {
     title: 'RAIR Technologies',
     ogTitle: 'RAIR Technologies',
@@ -41,7 +37,7 @@ if (hotDropsVar === 'true') {
     favicon: LoadingDefaultFavicon,
     faviconMobile: LoadingDefaultFavicon
   };
-}
+// }
 
 export default function seoStore(
   state: TInfoSeo = InitialState,
