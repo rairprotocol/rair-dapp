@@ -39,9 +39,7 @@ const useServerSettings = () => {
     link.rel = 'icon';
     link.href = favicon
       ? favicon
-      : import.meta.env.VITE_TESTNET === 'true'
-        ? HotdropsFavicon
-        : RairFavicon;
+      : RairFavicon;
     document.getElementsByTagName('head')[0].appendChild(link);
 
     return () => {
