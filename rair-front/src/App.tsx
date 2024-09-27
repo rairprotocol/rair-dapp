@@ -304,9 +304,7 @@ function App() {
         link.type = 'image/x-icon';
         link.rel = 'icon';
         link.href =
-          import.meta.env.VITE_TESTNET === 'true'
-            ? HotdropsFavicon
-            : RairFavicon; // Set the href to your favicon
+            RairFavicon; // Set the href to your favicon
         document.getElementsByTagName('head')[0].appendChild(link);
       };
 
