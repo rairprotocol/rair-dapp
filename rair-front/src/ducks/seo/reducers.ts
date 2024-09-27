@@ -22,15 +22,13 @@ export let InitialState: TInfoSeo;
 //   };
 // } else {
   InitialState = {
-    title: 'RAIR Technologies',
-    ogTitle: 'RAIR Technologies',
-    twitterTitle: 'RAIR Technologies',
+    title: import.meta.env.VITE_HTML_META_TITLE,
+    ogTitle: import.meta.env.VITE_HTML_META_TITLE,
+    twitterTitle: import.meta.env.VITE_HTML_META_TITLE,
     contentName: 'author',
-    content: 'Digital Ownership Encryption',
-    description:
-      'RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
-    ogDescription: 'Encrypted, Streaming NFTs',
-    twitterDescription: 'Encrypted, Streaming NFTs',
+    content: import.meta.env.VITE_HTML_META_AUTHOR,
+    description: import.meta.env.VITE_HTML_META_DESCRIPTION,
+    twitterDescription: import.meta.env.VITE_HTML_META_DESCRIPTION,
     image: `${
       import.meta.env.VITE_IPFS_GATEWAY
     }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
