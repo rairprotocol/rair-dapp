@@ -271,21 +271,18 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   useEffect(() => {
     let tokenStart = BigInt(0);
-    let tokenEnd = BigInt(15);
-    if (selectedToken) {
-      tokenStart = BigInt(selectedToken) - BigInt(10);
-      if (tokenStart < BigInt(0)) {
-        tokenStart = BigInt(0);
-      }
-      if (tokenNumber && tokenNumber > 20) {
-        tokenEnd = BigInt(tokenNumber);
-      } else {
-        tokenEnd = tokenStart + BigInt(showTokensRef.current);
-        setTokenNumber(undefined);
-      }
-      getAllProduct(tokenStart.toString(), tokenEnd.toString(), undefined);
+    let tokenEnd = tokenStart + BigInt(15);
+    if (tokenStart < BigInt(0)) {
+      tokenStart = BigInt(0);
     }
-  }, [setTokenNumber, selectedToken, tokenNumber]);
+    if (tokenNumber && tokenNumber > 20) {
+      tokenEnd = BigInt(tokenNumber);
+    } else {
+      tokenEnd = tokenStart + BigInt(showTokensRef.current);
+      setTokenNumber(undefined);
+    }
+    getAllProduct(tokenStart.toString(), tokenEnd.toString(), undefined);
+  }, [setTokenNumber, tokenNumber]);
 
   useEffect(() => {
     getParticularOffer();
