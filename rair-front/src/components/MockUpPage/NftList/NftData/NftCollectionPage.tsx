@@ -326,10 +326,6 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     }
   }, [metadataFilter, setSelectedAttributeValues]);
 
-  if (currentCollection === undefined || !currentCollection) {
-    return <LoadingComponent />;
-  }
-
   const selectedAttributeValuesFunction = (selectedAttributeValues) => {
     if (selectedAttributeValues) {
       const condition: any = [];

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Contract, isAddress } from 'ethers';
 import { Hex } from 'viem';
@@ -45,7 +45,7 @@ const ListOffers: React.FC<IListOffers> = ({
 
   const { contractCreator } = useContracts();
   const { programmaticProvider } = useAppSelector((store) => store.web3);
-  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const { address } = useParams<TParamsListOffers>();
 
   useEffect(() => {
@@ -184,15 +184,7 @@ const ListOffers: React.FC<IListOffers> = ({
                 onClick={addOffer}
                 disabled={offerList.length >= 12}
                 className={`btn btn-${primaryColor} rounded-rair px-4`}>
-                Add new{' '}
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  style={{
-                    border: `solid 1px ${textColor}`,
-                    borderRadius: '50%',
-                    padding: '5px'
-                  }}
-                />
+                Add new <FontAwesomeIcon icon={faPlusCircle} />
               </button>
             </div>
           </div>
