@@ -16,7 +16,7 @@ import useConnectUser from '../../hooks/useConnectUser';
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
 import { dataStatuses } from '../../redux/commonTypes';
 import { clearResults, startSearch } from '../../redux/searchbarSlice';
-import { rFetch } from '../../utils/rFetch';
+import { fetchNotifications } from '../../redux/notificationsSlice';
 import InputField from '../common/InputField';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
 import MainLogo from '../GroupLogos/MainLogo';
@@ -63,11 +63,11 @@ const MainHeader: FC<IMainHeader> = ({
     (store) => store.user
   );
 
+  const { totalCount: notificationCount, notifications } = useAppSelector(store => store.notifications);
+
   const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const hotdropsVar = import.meta.env.VITE_TESTNET;
-  const [realDataNotification, setRealDataNotification] = useState([]);
-  const [notificationCount, setNotificationCount] = useState<number>(0);
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
@@ -120,50 +120,11 @@ const MainHeader: FC<IMainHeader> = ({
     setTextSearch('');
   };
 
-  const getNotifications = useCallback(
-    async (pageNum?: number) => {
-      if (currentUserAddress && isLoggedIn) {
-        const result = await rFetch(
-          `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
-        );
-
-        if (result.success) {
-          const sortedNotifications = result.notifications.sort((a, b) => {
-            if (!a.read && b.read) return -1;
-            if (a.read && !b.read) return 1;
-
-            const dateA = new Date(a.createdAt).getTime();
-            const dateB = new Date(b.createdAt).getTime();
-
-            return dateB - dateA;
-          });
-          setRealDataNotification(sortedNotifications);
-        }
-      } else {
-        setRealDataNotification([]);
-      }
-    },
-    [currentUserAddress, isLoggedIn]
-  );
-
-  const getNotificationsCount = useCallback(async () => {
-    if (currentUserAddress && isLoggedIn) {
-      const result = await rFetch(`/api/notifications?onlyUnread=true`);
-      if (result.success && result.totalCount >= 0) {
-        setNotificationCount(result.totalCount);
-      }
-    } else {
-      setNotificationCount(0);
+  useEffect(() => {
+    if(currentUserAddress && isLoggedIn) {
+      dispatch(fetchNotifications(0));
     }
   }, [currentUserAddress, isLoggedIn]);
-
-  useEffect(() => {
-    getNotificationsCount();
-  }, [getNotificationsCount]);
-
-  useEffect(() => {
-    getNotifications(0);
-  }, [getNotifications]);
 
   const Highlight = (props) => {
     const { filter, str } = props;
@@ -202,6 +163,10 @@ const MainHeader: FC<IMainHeader> = ({
       dispatch(startSearch({ searchTerm: textSearch }));
     }
   }, [dispatch, textSearch]);
+
+  useEffect(() => {
+    dispatch(fetchNotifications());
+  }, [])
 
   return (
     <HeaderContainer
@@ -421,9 +386,7 @@ const MainHeader: FC<IMainHeader> = ({
             {currentUserAddress && (
               <PopUpNotification
                 notificationCount={notificationCount}
-                getNotificationsCount={getNotificationsCount}
-                getNotifications={getNotifications}
-                realDataNotification={realDataNotification}
+                realDataNotification={notifications}
               />
             )}
 

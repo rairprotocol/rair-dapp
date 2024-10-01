@@ -8,7 +8,7 @@ import { formatEther, isAddress, ZeroAddress } from 'ethers';
 import { TUserResponse } from '../../axios.responseTypes';
 import useConnectUser from '../../hooks/useConnectUser';
 import useContracts from '../../hooks/useContracts';
-import { useAppSelector } from '../../hooks/useReduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import {
   BellIcon,
@@ -39,6 +39,7 @@ import {
 } from './NavigationItems/NavigationItems';
 
 import './Menu.css';
+import { fetchNotifications } from '../../redux/notificationsSlice';
 
 interface IMenuNavigation {
   renderBtnConnect: boolean;
@@ -48,8 +49,6 @@ interface IMenuNavigation {
   isSplashPage: boolean;
   isAboutPage: boolean;
   realChainId: string | undefined;
-  notificationCount?: number;
-  getNotificationsCount?: any;
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
@@ -58,8 +57,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   isSplashPage,
   isAboutPage,
   realChainId,
-  notificationCount,
-  getNotificationsCount
 }) => {
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<User | null>(null);
@@ -70,15 +67,16 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const [userBalance, setUserBalance] = useState<string>('');
   const [activeSearch, setActiveSearch] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
   const [messageAlert, setMessageAlert] = useState<string | null>(null);
   const { isLoggedIn, loginStatus, ageVerified } = useAppSelector(
     (store) => store.user
   );
-  const [realDataNotification, setRealDataNotification] = useState([]);
   const { mainTokenInstance } = useContracts();
   const { currentUserAddress, connectedChain } = useAppSelector(
     (state) => state.web3
   );
+  const {totalUnreadCount} = useAppSelector(store => store.notifications);
 
   const {
     primaryButtonColor,
@@ -98,25 +96,6 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const handleActiveSearch = () => {
     setActiveSearch((prev) => !prev);
   };
-
-  const getNotifications = useCallback(async () => {
-    if (currentUserAddress && isLoggedIn) {
-      const result = await rFetch(`/api/notifications`);
-      if (result.success) {
-        setRealDataNotification(result.notifications);
-      }
-    } else {
-      setRealDataNotification([]);
-    }
-  }, [currentUserAddress, isLoggedIn]);
-
-  useEffect(() => {
-    getNotificationsCount();
-  }, [click]);
-
-  useEffect(() => {
-    getNotifications();
-  }, []);
 
   const toggleMenu = (otherPage?: string | undefined) => {
     if (otherPage === 'nav') {
@@ -201,6 +180,12 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   useEffect(() => {
     getBalance();
   }, [getBalance]);
+
+  useEffect(() => {
+    if(currentUserAddress && isLoggedIn) {
+      dispatch(fetchNotifications());
+    }
+  }, [currentUserAddress, isLoggedIn]);
 
   return (
     <MenuMobileWrapper
@@ -341,7 +326,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                           height="40px"
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
-                          {notificationCount && notificationCount > 0 ? (
+                          {totalUnreadCount && totalUnreadCount > 0 ? (
                             <div
                               className="red-circle-notifications"
                               style={{
@@ -352,7 +337,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                                 fontWeight: 'bold',
                                 color: '#fff'
                               }}>
-                              {notificationCount > 9 ? '9+' : notificationCount}
+                              {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
                             </div>
                           ) : (
                             ''

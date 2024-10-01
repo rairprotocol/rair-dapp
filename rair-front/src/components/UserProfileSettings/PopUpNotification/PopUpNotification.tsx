@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Popup } from 'reactjs-popup';
 
-import { useAppSelector } from '../../../hooks/useReduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { BellIcon } from '../../../images';
+import { fetchNotifications } from '../../../redux/notificationsSlice';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { rFetch } from '../../../utils/rFetch';
 import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
@@ -11,41 +12,42 @@ import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
 import NotificationBox from './NotificationBox/NotificationBox';
 
 const PopUpNotification = ({
-  getNotifications,
   realDataNotification,
   notificationCount,
-  getNotificationsCount
 }) =>
-  // props was - isNotification
   {
     const [openModal, setOpenModal] = useState(false);
+    const dispatch = useAppDispatch();
     const reactSwal = useSwal();
     const { currentUserAddress } = useAppSelector((state) => state.web3);
+    const { isLoggedIn } = useAppSelector(
+      (store) => store.user
+    );
+    const { totalUnreadCount } = useAppSelector(
+      (store) => store.notifications
+    );
     const [totalPageForPagination, setTotalPageForPagination] = useState(0);
     const [currentPageForNotification, setCurrentPageNotification] =
       useState<number>(1);
     const { primaryColor, primaryButtonColor, textColor } = useAppSelector(
       (store) => store.colors
     );
-    const { email, isLoggedIn } = useAppSelector((store) => store.user);
+    const { email } = useAppSelector((store) => store.user);
 
-    const changePageForVideo = (currentPage: number) => {
+    const changePageForNotification = (currentPage: number) => {
       setCurrentPageNotification(currentPage);
       const currentPageNumber =
         currentPage === 0 ? currentPage : currentPage - 1;
-      getNotifications(Number(currentPageNumber));
+      dispatch(fetchNotifications(Number(currentPageNumber)));
     };
 
     const getNotificationsCountPagitation = useCallback(async () => {
       if (currentUserAddress && isLoggedIn) {
-        const result = await rFetch(`/api/notifications`);
-        if (result.success && result.totalCount > 0) {
-          setTotalPageForPagination(result.totalCount);
-        }
+          setTotalPageForPagination(notificationCount);
       } else {
         setTotalPageForPagination(0);
       }
-    }, [currentUserAddress, isLoggedIn]);
+    }, [currentUserAddress, isLoggedIn, notificationCount]);
 
     const deleteAllNotificaiton = useCallback(async () => {
       if (currentUserAddress) {
@@ -55,8 +57,6 @@ const PopUpNotification = ({
         });
 
         if (result.success) {
-          getNotifications();
-          getNotificationsCount();
           reactSwal.fire({
             title: 'Success',
             icon: 'success'
@@ -65,25 +65,18 @@ const PopUpNotification = ({
       }
     }, [
       currentUserAddress,
-      getNotifications,
-      getNotificationsCount,
       reactSwal
     ]);
 
     useEffect(() => {
       if (openModal) {
-        getNotifications(0);
-        getNotificationsCount();
+        dispatch(fetchNotifications(0));
       }
-    }, [getNotifications, getNotificationsCount, openModal]);
-
-    useEffect(() => {
-      getNotificationsCount();
-    }, [getNotificationsCount]);
+    }, [dispatch, openModal]);
 
     useEffect(() => {
       getNotificationsCountPagitation();
-    }, [getNotificationsCountPagitation]);
+    }, [getNotificationsCountPagitation])
 
     const onCloseNext = useCallback(() => {
       if (!openModal) {
@@ -115,7 +108,7 @@ const PopUpNotification = ({
                 color: '#fff'
               }}
               className="red-circle-notifications">
-              {notificationCount > 9 ? '9+' : notificationCount}
+              {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
             </div>
           )}
         </SocialBox>
@@ -172,8 +165,6 @@ const PopUpNotification = ({
                   realDataNotification.map((el) => {
                     return (
                       <NotificationBox
-                        getNotificationsCount={getNotificationsCount}
-                        getNotifications={getNotifications}
                         el={el}
                         key={el._id}
                         title={el.message}
@@ -192,7 +183,7 @@ const PopUpNotification = ({
                   {notificationCount > 0 && totalPageForPagination && (
                     <PaginationBox
                       totalPageForPagination={totalPageForPagination}
-                      changePage={changePageForVideo}
+                      changePage={changePageForNotification}
                       currentPage={currentPageForNotification}
                       itemsPerPageNotifications={10}
                       whatPage={'notifications'}
