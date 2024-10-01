@@ -56,7 +56,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   setTabIndexItems,
   isSplashPage,
   isAboutPage,
-  realChainId,
+  realChainId
 }) => {
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<User | null>(null);
@@ -76,7 +76,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   const { currentUserAddress, connectedChain } = useAppSelector(
     (state) => state.web3
   );
-  const {totalUnreadCount} = useAppSelector(store => store.notifications);
+  const { totalUnreadCount } = useAppSelector((store) => store.notifications);
 
   const {
     primaryButtonColor,
@@ -182,7 +182,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   }, [getBalance]);
 
   useEffect(() => {
-    if(currentUserAddress && isLoggedIn) {
+    if (currentUserAddress && isLoggedIn) {
       dispatch(fetchNotifications());
     }
   }, [currentUserAddress, isLoggedIn]);
@@ -326,7 +326,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                           height="40px"
                           marginLeft={'17px'}>
                           <BellIcon primaryColor={primaryColor} />
-                          {totalUnreadCount && totalUnreadCount > 0 ? (
+                          {totalUnreadCount > 0 ? (
                             <div
                               className="red-circle-notifications"
                               style={{
@@ -352,10 +352,9 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
                       }}
                       className="mobileAikonWidget"
                       style={{
-                        backgroundColor:
-                          !isDarkMode
-                            ? 'var(--rhyno-20)'
-                            : 'var(--charcoal-80)'
+                        backgroundColor: !isDarkMode
+                          ? 'var(--rhyno-20)'
+                          : 'var(--charcoal-80)'
                       }}>
                       <div
                         className={`profile-user-balance ${
