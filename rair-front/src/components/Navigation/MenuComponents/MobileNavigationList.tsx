@@ -54,7 +54,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       const balance =
         await mainTokenInstance.runner.provider.getBalance(currentUserAddress);
 
-      if (balance) {
+      if (balance !== undefined) {
         const result = formatEther(balance.toString());
         const final = Number(result.toString())?.toFixed(2)?.toString();
 

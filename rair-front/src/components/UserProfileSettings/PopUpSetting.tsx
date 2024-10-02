@@ -105,7 +105,7 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
           currentUserAddress
         );
 
-      if (balance) {
+      if (balance !== undefined) {
         const result = formatEther(balance.toString());
         const final = Number(result.toString())?.toFixed(2)?.toString();
 

@@ -477,7 +477,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 
             const tokenPrice = BigInt(price) + BigInt(amountOfTokensToPurchase);
 
-            if (!userBalance) {
+            if (userBalance === undefined) {
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
