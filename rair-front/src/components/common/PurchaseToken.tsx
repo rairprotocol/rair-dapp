@@ -475,12 +475,17 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
                 currentUserAddress
               );
 
-            if (
-              userBalance &&
-              contractInstance?.runner?.provider?.getBalance &&
-              BigInt(userBalance?.toString()) <
-                BigInt(price) * BigInt(amountOfTokensToPurchase)
-            ) {
+            const tokenPrice = BigInt(price) + BigInt(amountOfTokensToPurchase);
+
+            if (!userBalance) {
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
+              reactSwal.fire('Error', "Couldn't load user balance", 'error');
+              return;
+            }
+
+            if (BigInt(userBalance.toString()) < tokenPrice) {
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
