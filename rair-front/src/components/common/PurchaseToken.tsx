@@ -485,7 +485,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               return;
             }
 
-            if (BigInt(userBalance.toString()) < tokenPrice) {
+            if (BigInt(userBalance.toString()) < tokenPrice && !sponsored) {
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
