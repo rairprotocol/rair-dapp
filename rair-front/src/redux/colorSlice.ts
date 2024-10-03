@@ -80,7 +80,7 @@ import { ServerSettings } from '../types/databaseTypes';
 
 const buttons: ButtonInfo = {
   primaryButtonColor: `linear-gradient(to right, ${royalPurple}, ${bubblegum})`,
-  secondaryButtonColor: `linear-gradient(to right, ${arcticBlue}, ${royalPurple})`
+  secondaryButtonColor: `linear-gradient(to right, ${bubblegum}, ${royalPurple})`
 };
 
 const colorThemes: ColorLibrary = {

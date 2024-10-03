@@ -59,47 +59,6 @@ const ColorSettings = () => {
   } = useAppSelector((store) => store.settings);
 
   useEffect(() => {
-    // Special case when server is first deployed
-    if (
-      !darkModePrimary &&
-      !darkModeSecondary &&
-      !darkModeText &&
-      !buttonPrimaryColor &&
-      !buttonSecondaryColor &&
-      !buttonFadeColor &&
-      !iconColor &&
-      !darkModeBannerLogo &&
-      !darkModeMobileLogo &&
-      !lightModeBannerLogo &&
-      !lightModeMobileLogo &&
-      !favicon
-    ) {
-      updateServerSetting({
-        darkModePrimary: charcoal,
-        darkModeSecondary: rhyno,
-        darkModeText: '#FFF',
-        buttonPrimaryColor: royalPurple,
-        buttonFadeColor: bubblegum,
-        buttonSecondaryColor: arcticBlue
-      });
-    }
-  }, [
-    darkModePrimary,
-    darkModeSecondary,
-    darkModeText,
-    buttonPrimaryColor,
-    buttonSecondaryColor,
-    buttonFadeColor,
-    iconColor,
-    darkModeBannerLogo,
-    darkModeMobileLogo,
-    lightModeBannerLogo,
-    lightModeMobileLogo,
-    favicon,
-    updateServerSetting
-  ]);
-
-  useEffect(() => {
     if (darkModePrimary) {
       setCustomPrimaryColor(darkModePrimary);
     }
