@@ -1,4 +1,3 @@
-import isValidProp from '@emotion/is-prop-valid';
 import { Pagination } from '@mui/material';
 import styled from 'styled-components';
 
@@ -8,7 +7,7 @@ interface IPaginationBoxStyled {
 }
 
 export const PaginationBoxStyled = styled(Pagination).withConfig({
-  shouldForwardProp: (prop) => isValidProp(prop)
+  shouldForwardProp: () => true
 })<IPaginationBoxStyled>`
   ul {
     li {
