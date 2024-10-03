@@ -66,8 +66,12 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
 }) => {
   const { isLoggedIn, publicAddress } = useAppSelector((store) => store.user);
 
-  const { currentCollection, currentCollectionTotal, currentCollectionStatus } =
-    useAppSelector((store) => store.tokens);
+  const {
+    currentCollection,
+    currentCollectionTotal,
+    currentCollectionStatus,
+    currentCollectionMetadata
+  } = useAppSelector((store) => store.tokens);
 
   const { width } = useWindowDimensions();
   const rSwal = useSwal();
@@ -150,7 +154,6 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
       if (target.isIntersecting) {
         showTokensRef.current = showTokensRef.current + 20;
         dispatch(loadNextCollectionPage());
-        //getAllProduct('0', showTokensRef.current.toString(), undefined);
       }
     },
     [dispatch, showTokensRef]
@@ -266,6 +269,21 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
         }, {})
     );
   }, [getAllProduct, selectedAttributeValues, showTokensRef]);
+
+  useEffect(() => {
+    if (
+      currentCollectionStatus !== dataStatuses.Loading &&
+      currentCollectionMetadata?.product?.firstTokenIndex &&
+      !currentCollection[currentCollectionMetadata?.product?.firstTokenIndex]
+    ) {
+      getResetTokens();
+    }
+  }, [
+    currentCollectionMetadata,
+    currentCollection,
+    getResetTokens,
+    currentCollectionStatus
+  ]);
 
   useEffect(() => {
     if (!embeddedParams) {
