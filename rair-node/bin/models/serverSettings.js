@@ -16,9 +16,9 @@ const ServerSetting = new Schema({
   superAdminsOnVault: { type: Boolean, default: false },
   databaseResales: { type: Boolean, default: false },
   // Dark mode colors
-  darkModePrimary: { type: String, required: false },
-  darkModeSecondary: { type: String, required: false },
-  darkModeText: { type: String, required: false },
+  darkModePrimary: { type: String, required: true, default: '#222021' },
+  darkModeSecondary: { type: String, required: true, default: '#dedede' },
+  darkModeText: { type: String, required: true, default: 'white' },
   // Logo images
   darkModeBannerLogo: { type: String, required: false },
   darkModeMobileLogo: { type: String, required: false },
@@ -26,11 +26,11 @@ const ServerSetting = new Schema({
   lightModeBannerLogo: { type: String, required: false },
   lightModeMobileLogo: { type: String, required: false },
   // Button
-  buttonPrimaryColor: { type: String, required: false },
-  buttonFadeColor: { type: String, required: false },
-  buttonSecondaryColor: { type: String, required: false },
+  buttonPrimaryColor: { type: String, required: true, default: '#725bdb' },
+  buttonFadeColor: { type: String, required: true, default: '#e882d5' },
+  buttonSecondaryColor: { type: String, required: true, default: '#19a7f6' },
   // Icon color
-  iconColor: { type: String, required: false },
+  iconColor: { type: String, required: true, default: '#e882d5' },
   // Custom footer
   footerLinks: {
     type: [{

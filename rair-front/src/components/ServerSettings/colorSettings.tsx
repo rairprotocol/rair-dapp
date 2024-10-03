@@ -247,7 +247,8 @@ const ColorSettings = () => {
                 darkModeText: '#FFF',
                 buttonPrimaryColor: royalPurple,
                 buttonFadeColor: bubblegum,
-                buttonSecondaryColor: arcticBlue
+                buttonSecondaryColor: arcticBlue,
+                iconColor: bubblegum
               });
             }}>
             Reset colors
