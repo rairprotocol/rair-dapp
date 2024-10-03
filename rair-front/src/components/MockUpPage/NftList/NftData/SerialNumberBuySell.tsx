@@ -43,7 +43,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   );
   const { primaryColor } = useAppSelector((store) => store.colors);
   const { databaseResales } = useAppSelector((store) => store.settings);
-  const { currentCollection } = useAppSelector((store) => store.tokens);
+  const { currentCollection, currentCollectionMetadata } = useAppSelector(
+    (store) => store.tokens
+  );
 
   const dispatch = useAppDispatch();
 
@@ -62,15 +64,20 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       !offerData ||
       !contractData.diamond ||
       !diamondMarketplaceInstance ||
-      !selectedToken
+      !selectedToken ||
+      !currentCollectionMetadata.product
     ) {
       return;
     }
+    const realNumber = (
+      BigInt(selectedToken) -
+      BigInt(currentCollectionMetadata.product?.firstTokenIndex)
+    ).toString();
     const marketplaceContract = diamondMarketplaceInstance;
     const marketplaceMethod = 'buyMintingOffer';
     const marketplaceArguments: any[] = [
       offerData.offerIndex, // Offer Index
-      selectedToken // Token Index
+      realNumber // Token Index
     ];
     marketplaceArguments.push({
       value: offerData.price
@@ -123,7 +130,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     web3TxHandler,
     blockchain,
     dispatch,
-    currentCollection
+    currentCollection,
+    currentCollectionMetadata
   ]);
 
   const { getBlockchainData } = useServerSettings();
