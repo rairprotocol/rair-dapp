@@ -289,7 +289,7 @@ const SelectNumber: React.FC<ISelectNumber> = ({
           setRangePickerOpen(!rangePickerOpen);
         }
       }}>
-      Selected now: {!!realNumber && currentCollection[realNumber].token}
+      Selected now: {!!realNumber && currentCollection[realNumber]?.token}
     </div>
   );
 };
