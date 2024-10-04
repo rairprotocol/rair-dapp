@@ -84,20 +84,24 @@ module.exports = {
                 });
             }
 
-            const result = await MintedToken.aggregate([
+            const [result] = await MintedToken.aggregate([
                 ...pipeline,
-                { $skip: skip },
-                { $limit: pageSize },
+                { $facet: {
+                  list: [
+                    { $skip: skip },
+                    { $limit: pageSize },
+                  ],
+                  count: [
+                    { $count: 'total' },
+                  ],
+                } },
             ]);
 
-            const count = await MintedToken.aggregate([
-                ...pipeline,
-                {
-                    $count: 'totalCount',
-                },
-            ]);
-
-            res.json({ success: true, result, totalCount: count[0]?.totalCount });
+            res.json({
+              success: true,
+              result: result.list,
+              totalCount: result.count?.[0]?.total || 0,
+            });
         } catch (e) {
             next(e);
         }
@@ -664,23 +668,39 @@ module.exports = {
                 }
             }
 
-            const totalCount = _.chain(
-                await MintedToken.aggregate(aggregateOptions)
-                .count('tokens')
-                .collation({ locale: 'en_US', numericOrdering: true }),
-            )
-                .head()
-                .get('tokens', 0)
-                .value();
+            const sorting = {};
+            if (sortByPrice) {
+              sorting['offer.price'] = Number(sortByPrice);
+            }
+            if (sortByToken) {
+              sorting.token = Number(sortByToken);
+            }
 
-            const tokensSorted = await MintedToken.aggregate(aggregateOptions)
-                .sort(_.assign({}, sortByPrice ? { 'offer.price': Number(sortByPrice) } : {}, sortByToken ? { token: Number(sortByToken) } : {}))
-                .collation({ locale: 'en_US', numericOrdering: true })
-                .limit(tokenLimit);
+            const [result] = await MintedToken.aggregate(
+              [
+                ...aggregateOptions,
+                {
+                  $facet: {
+                    tokens: [
+                      { $sort: sorting },
+                      { $limit: tokenLimit },
+                    ],
+                    count: [
+                      { $count: 'total' },
+                    ],
+                  },
+                },
+              ],
+              {
+                collation: {
+                  locale: 'en_US', numericOrdering: true,
+                },
+              },
+            );
 
-            const tokens = attributesCounter(tokensSorted);
+            const tokens = attributesCounter(result.tokens);
 
-            return res.json({ success: true, result: { totalCount, tokens } });
+            return res.json({ success: true, totalCount: result?.count?.[0]?.total || 0, tokens });
         } catch (err) {
             return next(err);
         }

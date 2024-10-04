@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export type TUseOpenVideoPlayer = [
   boolean,
-  (value: boolean) => void,
+  React.Dispatch<React.SetStateAction<boolean>>,
   () => void
 ];
 

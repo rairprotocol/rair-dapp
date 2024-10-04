@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { IPersonalProfileFavoritesTab } from './myFavorites.types';
 
 import { TDocData } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import LoadingComponent from '../../../common/LoadingComponent';
 
 import MyfavoriteItem from './MyfavoriteItem/MyfavoriteItem';
@@ -17,9 +15,7 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
   const [myFavoriteItems, setMyFavoriteItems] = useState<TDocData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   const getFavotiteData = useCallback(async () => {
     setLoading(true);

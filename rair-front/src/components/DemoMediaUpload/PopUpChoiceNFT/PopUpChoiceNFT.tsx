@@ -1,14 +1,11 @@
-//@ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
+import useServerSettings from '../../../hooks/useServerSettings';
+import useSwal from '../../../hooks/useSwal';
+import { CustomModalStyle } from '../../../types/commonTypes';
 import { rFetch } from '../../../utils/rFetch';
-import useServerSettings from '../../adminViews/useServerSettings';
 import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 import InputSelect from '../../common/InputSelect';
 import { TChoiceAllOptions } from '../../creatorStudio/creatorStudio.types';
@@ -35,16 +32,16 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
   const [offer, setOffer] = useState('null');
   const [isDemo, setIsDemo] = useState(false);
   const { primaryColor, textColor, primaryButtonColor, secondaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+    useAppSelector((store) => store.colors);
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
+
+  const rSwal = useSwal();
 
   const { getBlockchainData } = useServerSettings();
 
   const [contractData, setContractData] = useState({});
   const [contractOptions, setContractOptions] = useState<OptionsType[]>([]);
-  const [productOptions, setProductOptions] = useState();
+  const [productOptions, setProductOptions] = useState<Array<OptionsType>>([]);
   const [offersOptions, setOffersOptions] = useState<OptionsType[]>();
   const [choiceAllOptions, setChoiceAllOptions] =
     useState<TChoiceAllOptions | null>(null);
@@ -65,7 +62,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
     }
   };
 
-  const customStyles = {
+  const customStyles: CustomModalStyle = {
     overlay: {
       zIndex: '1'
     },
@@ -108,12 +105,14 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
 
   const handleChoiceOffer = useCallback(async () => {
     if (offer && contract !== 'None' && offersOptions) {
-      const filteredOffers = offersOptions.filter((el) => el.value === offer);
+      const filteredOffers = offersOptions.filter(
+        (el) => el.value && el.value === offer
+      );
       if (Array.isArray(mediaList)) {
         const newArray = mediaList;
         newArray[index].contractAddress = contract;
         newArray[index].productIndex = product;
-        newArray[index].offer = filteredOffers;
+        newArray[index].offer = filteredOffers[0].value!;
         newArray[index].demo = isDemo;
         setMediaList(newArray);
         rerender?.();
@@ -157,21 +156,23 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           false
         );
 
-        if (!request.success) {
-          setMediaUploadedList({});
+        if (!request.success && setMediaUploadedList) {
           setUploadSuccess(null);
           setModalIsOpen(false);
           if (
             request.message === 'Nothing to update' ||
             request.message === `"offer[0]" must be a string`
           ) {
-            Swal.fire('Error', 'Nothing to update', 'error');
+            rSwal.fire('Error', 'Nothing to update', 'error');
           } else {
-            Swal.fire('Error', request.message, 'error');
+            rSwal.fire('Error', request.message, 'error');
           }
         }
 
-        setMediaUploadedList({});
+        if (setMediaUploadedList) {
+          setMediaUploadedList({});
+        }
+
         setUploadSuccess(null);
         setModalIsOpen(false);
       }
@@ -179,9 +180,9 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
       const newArray = [...mediaList];
       newArray[index] = {
         ...newArray[index],
-        contractAddress: undefined,
-        productIndex: undefined,
-        offer: undefined
+        contractAddress: 'null',
+        productIndex: 'null',
+        offer: 'null'
       };
       setMediaList(newArray);
       setChoiceAllOptions(null);
@@ -244,7 +245,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
       });
 
       const mapping = {};
-      const options = [];
+      const options: any = [];
       if (contractsFiltered.length === 0) {
         contractsFiltered = contracts.filter(
           (el) =>
@@ -271,7 +272,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
           mapping[item._id] = item;
           options.push({
             label: `${item.title} (${
-              getBlockchainData(item.blockchain).symbol
+              getBlockchainData(item?.blockchain)?.symbol
             } ${
               item.external ? 'External' : item.diamond ? 'Diamond' : 'Classic'
             })`,
@@ -289,7 +290,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
         setContract(options[0].value);
       }
     }
-  }, [address, currentUserAddress]);
+  }, [address, currentUserAddress, getBlockchainData]);
 
   const getOffers = useCallback(async () => {
     const arrOfferOption =
@@ -313,7 +314,7 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
 
     if (address && collectionIndex && !Array.isArray(mediaList)) {
       if (fileData.demo) {
-        setOffer(-1);
+        setOffer('-1');
       } else {
         setOffer(fileData.offer[0]);
       }
@@ -419,7 +420,6 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
         {contractData && (
           <>
             <InputSelect
-              customClass="form-control input-select-custom-style"
               label="Contract"
               getter={contract}
               setter={(e) => {
@@ -433,7 +433,6 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
 
             {contract !== 'null' && contract !== 'None' && (
               <InputSelect
-                customClass="form-control input-select-custom-style nft-choice"
                 label="Product"
                 getter={product}
                 setter={(e) => {
@@ -448,7 +447,6 @@ const PopUpChoiceNFT: React.FC<IAnalyticsPopUp> = ({
             {product !== 'null' && product !== 'None' && (
               <>
                 <InputSelect
-                  customClass="form-control input-select-custom-style nft-choice"
                   label="Offer"
                   getter={offer}
                   setter={(e) => {

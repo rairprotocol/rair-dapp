@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { ITokenLeftGreyman } from '../splashPage.types';
 
-const TokenLeftGreyman: React.FC<ITokenLeftGreyman> = ({
-  primaryColor,
-  soldCopies,
-  copies
-}) => {
+const TokenLeftGreyman: FC<ITokenLeftGreyman> = ({ soldCopies, copies }) => {
   // in props was Metamask
   const [percentTokens, setPersentTokens] = useState<number>(0);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [fontSize, setFontSize] = useState<string>('');
+
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const wholeTokens = Number(copies);
   const leftTokensNumber = Number(soldCopies);

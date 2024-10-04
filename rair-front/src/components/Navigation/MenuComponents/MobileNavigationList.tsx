@@ -1,21 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { faChevronLeft, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, utils } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'ethers';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
 import useConnectUser from '../../../hooks/useConnectUser';
+import useContracts from '../../../hooks/useContracts';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { RairFavicon, RairTokenLogo } from '../../../images';
 import { rFetch } from '../../../utils/rFetch';
-import useServerSettings from '../../adminViews/useServerSettings';
 import LoadingComponent from '../../common/LoadingComponent';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import { NavFooter, NavFooterBox } from '../../Footer/FooterItems/FooterItems';
@@ -26,8 +22,6 @@ import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
 interface IMobileNavigationList {
   messageAlert: string | null;
   setMessageAlert: (arg: string | null) => void;
-  primaryColor?: string;
-  currentUserAddress: string | undefined;
   toggleMenu: (otherPage?: string) => void;
   setTabIndexItems: (arg: number) => void;
   isSplashPage: boolean;
@@ -38,57 +32,59 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   messageAlert,
   setMessageAlert,
   toggleMenu,
-  currentUserAddress,
   click
 }) => {
   const [userBalance, setUserBalance] = useState<string>('');
-  const [userRairBalance, setUserRairBalance] = useState<any>(
-    BigNumber.from(0)
-  );
-  const { userData } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
-
-  const { primaryColor, primaryButtonColor, textColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const [userRairBalance, setUserRairBalance] = useState<bigint>(BigInt(0));
+  const { primaryColor, primaryButtonColor, textColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
 
   const { web3TxHandler } = useWeb3Tx();
 
-  const { mainTokenInstance, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((store) => store.contractStore);
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (store) => store.web3
+  );
+  const { isLoggedIn } = useAppSelector((store) => store.user);
+  const { mainTokenInstance } = useContracts();
 
   const { getBlockchainData } = useServerSettings();
 
   const getBalance = useCallback(async () => {
-    if (currentUserAddress && mainTokenInstance?.provider) {
+    if (currentUserAddress && mainTokenInstance?.runner?.provider) {
       const balance =
-        await mainTokenInstance.provider.getBalance(currentUserAddress);
+        await mainTokenInstance.runner.provider.getBalance(currentUserAddress);
 
-      if (balance) {
-        const result = utils.formatEther(balance);
+      if (balance !== undefined) {
+        const result = formatEther(balance.toString());
         const final = Number(result.toString())?.toFixed(2)?.toString();
 
         setUserBalance(final);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserAddress, mainTokenInstance, userData]);
+  }, [currentUserAddress, mainTokenInstance]);
 
   const getUserRairBalance = useCallback(async () => {
-    if (!mainTokenInstance || userRairBalance?.gt(0)) {
+    if (
+      !isLoggedIn ||
+      !currentUserAddress ||
+      !mainTokenInstance ||
+      userRairBalance > BigInt(0)
+    ) {
       return;
     }
     const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
       currentUserAddress
     ]);
-    if (result?._isBigNumber) {
+    if (result) {
       setUserRairBalance(result);
     }
-  }, [mainTokenInstance, currentUserAddress, userRairBalance, web3TxHandler]);
+  }, [
+    isLoggedIn,
+    currentUserAddress,
+    mainTokenInstance,
+    userRairBalance,
+    web3TxHandler
+  ]);
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
   const [notificationArray, setNotificationArray] = useState<any>();
@@ -102,7 +98,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 
   const getNotifications = useCallback(
     async (pageNum?: number) => {
-      if (messageAlert && currentUserAddress) {
+      if (isLoggedIn && messageAlert && currentUserAddress) {
         setFlagLoading(true);
         const result = await rFetch(
           `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
@@ -119,22 +115,25 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           });
           setNotificationArray(sortedNotifications);
         }
+      } else {
+        setNotificationArray([]);
       }
     },
-    [messageAlert, currentUserAddress]
+    [messageAlert, currentUserAddress, isLoggedIn]
   );
 
   const getNotificationsCount = useCallback(async () => {
-    if (currentUserAddress) {
+    if (isLoggedIn && currentUserAddress) {
       setFlagLoading(true);
       const result = await rFetch(`/api/notifications`);
       if (result.success && result.totalCount >= 0) {
         setNotificationCount(result.totalCount);
       }
-
       setFlagLoading(false);
+    } else {
+      setNotificationCount(0);
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, isLoggedIn]);
 
   const changePageForVideo = (currentPage: number) => {
     setCurrentPageNotification(currentPage);
@@ -161,7 +160,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       }
       setFlagLoading(false);
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, getNotifications, getNotificationsCount, reactSwal]);
 
   useEffect(() => {
     getNotificationsCount();
@@ -190,9 +189,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   return (
     <NavFooter>
       {messageAlert && messageAlert === 'notification' ? (
-        <NavFooterBox
-          className="nav-header-box-mobile"
-          primaryColor={primaryColor}>
+        <NavFooterBox className="nav-header-box-mobile" isDarkMode={isDarkMode}>
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </BackBtnMobileNav>
@@ -233,11 +230,9 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                 return (
                   <NotificationBox
                     getNotifications={getNotifications}
-                    currentUserAddress={currentUserAddress}
                     el={el}
                     key={el._id}
                     title={el.message}
-                    primaryColor={primaryColor}
                     getNotificationsCount={getNotificationsCount}
                   />
                 );
@@ -262,9 +257,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           )}
         </NavFooterBox>
       ) : messageAlert === 'profile' ? (
-        <NavFooterBox
-          className="nav-header-box-mobile"
-          primaryColor={primaryColor}>
+        <NavFooterBox className="nav-header-box-mobile" isDarkMode={isDarkMode}>
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </BackBtnMobileNav>
@@ -287,7 +280,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       ) : messageAlert === 'profileEdit' ? (
         <NavFooterBox
           className="nav-header-box-mobile"
-          primaryColor={primaryColor}
+          isDarkMode={isDarkMode}
           messageAlert={messageAlert}>
           <div>
             <div
@@ -319,13 +312,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
                     {/* {isLoadingBalance ? <LoadingComponent size={18} /> : userBalance} */}
                   </div>
                   <div>
-                    {currentChain && getBlockchainData(currentChain) && (
+                    {connectedChain && getBlockchainData(connectedChain) && (
                       <img
                         style={{
                           height: '25px',
                           marginLeft: '15px'
                         }}
-                        src={getBlockchainData(currentChain)?.image}
+                        src={getBlockchainData(connectedChain)?.image}
                         alt="logo"
                       />
                     )}
@@ -407,9 +400,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           )}
         </NavFooterBox>
       ) : (
-        <NavFooterBox
-          className="nav-header-box-mobile"
-          primaryColor={primaryColor}>
+        <NavFooterBox className="nav-header-box-mobile" isDarkMode={isDarkMode}>
           {currentUserAddress && (
             <li className="logout" onClick={logoutUser}>
               <FontAwesomeIcon icon={faSignOutAlt} />

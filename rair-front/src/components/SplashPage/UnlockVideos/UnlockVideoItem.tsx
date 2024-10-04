@@ -1,21 +1,22 @@
-import React from 'react';
+import { FC } from 'react';
 
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { metaMaskIcon } from '../../../images';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import { IUnlockVideoItem } from '../splashPage.types';
 
-const UnlockVideoItem: React.FC<IUnlockVideoItem> = ({
+const UnlockVideoItem: FC<IUnlockVideoItem> = ({
   nameVideo,
   timeVideo,
-  unlockableVideo,
-  primaryColor
+  unlockableVideo
 }) => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <div className="box-video">
       <div
         className="video-locked"
         style={{
-          background: `${primaryColor === 'rhyno' ? '#fff' : '#4E4D4DCC'}`
+          background: `${!isDarkMode ? '#fff' : '#4E4D4DCC'}`
         }}>
         <div className="block-with-video" style={{ position: 'relative' }}>
           <div className="video-block-metamask-some">
@@ -31,7 +32,7 @@ const UnlockVideoItem: React.FC<IUnlockVideoItem> = ({
           <div className="video-title">
             <p
               style={{
-                color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
+                color: `${!isDarkMode ? '#000' : '#fff'}`
               }}>
               {nameVideo}
             </p>
@@ -39,7 +40,7 @@ const UnlockVideoItem: React.FC<IUnlockVideoItem> = ({
           <div className="video-timer">
             <p
               style={{
-                color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
+                color: `${!isDarkMode ? '#000' : '#A7A6A6'}`
               }}>
               {timeVideo}
             </p>

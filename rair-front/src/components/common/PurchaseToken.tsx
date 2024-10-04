@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
-import { Provider, useSelector, useStore } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Provider, useStore } from 'react-redux';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, Contract } from 'ethers';
+import { Contract } from 'ethers';
+import { Hex } from 'viem';
+
+import LoadingComponent from './LoadingComponent';
 
 import { diamondFactoryAbi, erc721Abi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import useConnectUser from '../../hooks/useConnectUser';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import { GrandpaWait } from '../../images';
 import { getRandomValues } from '../../utils/getRandomValues';
 import { rFetch } from '../../utils/rFetch';
-import useServerSettings from '../adminViews/useServerSettings';
 
 import {
   IAgreementsPropsType,
@@ -24,12 +26,15 @@ import {
 
 const queryRangeDataFromDatabase = async (
   contractInstance: Contract | undefined,
-  network: BlockchainType | undefined,
+  network: Hex | undefined,
   offerIndex: string[] | undefined,
   diamond = false
 ): Promise<undefined | IRangeDataType> => {
+  if (!contractInstance) {
+    return;
+  }
   const { success, products } = await rFetch(
-    `/api/contracts/network/${network}/${contractInstance?.address}/offers`,
+    `/api/contracts/network/${network}/${await contractInstance?.getAddress()}/offers`,
     undefined,
     undefined,
     false // disables error messages for this rFetch call, because if this fails, the blockchain query starts
@@ -44,7 +49,8 @@ const queryRangeDataFromDatabase = async (
               end: offer.range[1],
               product: offer.product,
               price: offer.price.toString(),
-              sponsored: offer.sponsored
+              sponsored: offer.sponsored,
+              _id: offer._id
             };
           }
         }
@@ -71,28 +77,6 @@ const queryRangeDataFromDatabase = async (
   }
 };
 
-const findNextToken = async (
-  contractInstance: Contract | undefined,
-  start: string,
-  end: string,
-  product: string,
-  amountOfTokensToPurchase = '1'
-) => {
-  if (BigNumber.from(1).eq(amountOfTokensToPurchase)) {
-    return await contractInstance?.getNextSequentialIndex(product, start, end);
-  } else {
-    const array: string[] = [];
-    for (let i = BigNumber.from(start); i.lt(end); i = i.add(1)) {
-      i = await contractInstance?.getNextSequentialIndex(product, i, end);
-      array.push(i.toString());
-      if (BigNumber.from(array.length).eq(amountOfTokensToPurchase)) {
-        return array;
-      }
-    }
-    return;
-  }
-};
-
 const Agreements: React.FC<IAgreementsPropsType> = ({
   amountOfTokensToPurchase,
   presaleMessage,
@@ -116,18 +100,85 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   const { web3Switch, correctBlockchain, web3TxHandler } = useWeb3Tx();
   const { getBlockchainData } = useServerSettings();
 
-  const {
-    currentUserAddress,
-    minterInstance,
-    diamondMarketplaceInstance,
-    contractCreator
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
+  const { diamondMarketplaceInstance, contractCreator, refreshSigner } =
+    useContracts();
+
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
+  const { textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
   );
-  const { textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+
+  useEffect(() => {
+    refreshSigner();
+  }, []);
+
+  const findNextToken = useCallback(
+    async (
+      contractInstance: Contract,
+      start: string,
+      end: string,
+      product: string,
+      amountOfTokensToPurchase = '1',
+      offerId
+    ) => {
+      if (offerId) {
+        const { success, availableTokens } = await rFetch(
+          `/api/offers/${offerId}/available`
+        );
+        if (success) {
+          if (
+            BigInt(amountOfTokensToPurchase) > BigInt(availableTokens.length)
+          ) {
+            return;
+          } else if (
+            BigInt(amountOfTokensToPurchase) === BigInt(availableTokens.length)
+          ) {
+            return availableTokens.map((item) => item.token);
+          }
+          const selectedTokens: Array<bigint> = Array(
+            Number(amountOfTokensToPurchase)
+          ).fill(BigInt(0));
+
+          selectedTokens.forEach((_, index) => {
+            let randomNumber: bigint;
+            do {
+              randomNumber = BigInt(
+                availableTokens[
+                  Math.floor(Math.random() * availableTokens.length)
+                ].token
+              );
+            } while (selectedTokens.includes(randomNumber));
+            selectedTokens[index] = randomNumber;
+          });
+          return selectedTokens;
+        }
+      }
+      // Fallback to sequential minting if there's no offer ID or the api call fails
+      if (BigInt(1) === BigInt(amountOfTokensToPurchase)) {
+        const singleNextToken = await web3TxHandler(
+          contractInstance,
+          'getNextSequentialIndex',
+          [product, start, end]
+        );
+        return singleNextToken;
+      } else {
+        const array: string[] = [];
+        for (let i = BigInt(start); i <= BigInt(end); i = i + BigInt(1)) {
+          i = await web3TxHandler(contractInstance, 'getNextSequentialIndex', [
+            product,
+            i,
+            end
+          ]);
+          array.push(i.toString());
+          if (BigInt(array.length) === BigInt(amountOfTokensToPurchase)) {
+            return array;
+          }
+        }
+        return;
+      }
+    },
+    [web3TxHandler]
+  );
 
   const queryRangeDataFromBlockchain = async (
     marketplaceInstance: Contract | undefined,
@@ -181,8 +232,8 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
   ) => {
     if (!minterInstance) {
       reactSwal.fire({
-        title: 'An error has ocurred',
-        html: 'Please try again later',
+        title: 'Error',
+        html: 'Could not connect to marketplace contract, please try again later',
         icon: 'info'
       });
       return;
@@ -197,7 +248,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
       args.push(nextToken);
       args.push(nextToken.map(() => currentUserAddress));
       args.push({
-        value: BigNumber.from(price).mul(nextToken.length)
+        value: BigInt(price) * BigInt(nextToken.length)
       });
       method = 'buyMintingOfferBatch';
     } else {
@@ -208,12 +259,16 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
     }
 
     return await web3TxHandler(minterInstance, method, args, {
-      intendedBlockchain: requiredBlockchain as BlockchainType,
+      intendedBlockchain: requiredBlockchain,
       failureMessage:
         'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
       sponsored
     });
   };
+
+  if (!diamondMarketplaceInstance) {
+    return <LoadingComponent />;
+  }
 
   return (
     <div className={`text-${textColor}`}>
@@ -311,7 +366,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               return;
             }
 
-            // If the currentChain is different from the contract's chain, switch
+            // If the connectedChain is different from the contract's chain, switch
             if (!correctBlockchain(requiredBlockchain)) {
               await web3Switch(requiredBlockchain);
               setBuyingToken(false);
@@ -322,11 +377,35 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             }
 
             setButtonMessage('Connecting to contract...');
+
+            if (!contractCreator) {
+              reactSwal.fire(
+                'Error',
+                'Cannot connect to contracts, please try again later',
+                'error'
+              );
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
+              return;
+            }
             // Create the instance of the function
-            const contractInstance = contractCreator?.(
+            const contractInstance = contractCreator(
               contractAddress,
               diamond ? erc721Abi : diamondFactoryAbi
             );
+
+            if (!contractInstance) {
+              reactSwal.fire(
+                'Error',
+                'Could not connect to token contract.',
+                'error'
+              );
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
+              return;
+            }
 
             setButtonMessage('Finding mintable NFT...');
 
@@ -344,31 +423,36 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             if (!rangeData && !databaseOnly) {
               // Get the range's data from the blockchain if the db has no data
               rangeData = await queryRangeDataFromBlockchain(
-                diamond ? diamondMarketplaceInstance : minterInstance,
+                diamondMarketplaceInstance,
                 offerIndex,
                 diamond
               );
             }
 
             if (!rangeData) {
-              reactSwal.fire('Error', 'An error has ocurred.', 'error');
+              reactSwal.fire(
+                'Error',
+                'Could not fetch range information.',
+                'error'
+              );
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
               return;
             }
 
-            const { start, end, product, price, sponsored } = rangeData;
+            const { start, end, product, price, sponsored, _id } = rangeData;
 
             const nextToken = await findNextToken(
               contractInstance,
               start,
               end,
               product,
-              amountOfTokensToPurchase
+              amountOfTokensToPurchase,
+              _id
             );
 
-            if (!nextToken) {
+            if (nextToken === undefined) {
               reactSwal.fire(
                 'Error',
                 "Couldn't find enough tokens to mint!",
@@ -386,11 +470,22 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
               setButtonMessage(`Minting token #${nextToken.toString()}`);
             }
 
-            if (
-              (
-                await contractInstance?.provider.getBalance(currentUserAddress)
-              )?.lt(BigNumber.from(price).mul(amountOfTokensToPurchase))
-            ) {
+            const userBalance =
+              await contractInstance?.runner?.provider?.getBalance(
+                currentUserAddress
+              );
+
+            const tokenPrice = BigInt(price) + BigInt(amountOfTokensToPurchase);
+
+            if (userBalance === undefined) {
+              if (setPurchaseStatus) {
+                setPurchaseStatus(false);
+              }
+              reactSwal.fire('Error', "Couldn't load user balance", 'error');
+              return;
+            }
+
+            if (BigInt(userBalance.toString()) < tokenPrice && !sponsored) {
               if (setPurchaseStatus) {
                 setPurchaseStatus(false);
               }
@@ -399,7 +494,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             }
 
             const purchaseResult = await purchaseFunction(
-              diamond ? diamondMarketplaceInstance : minterInstance,
+              diamondMarketplaceInstance,
               offerIndex,
               nextToken,
               price,
@@ -417,7 +512,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
           }}>
           <wbr />{' '}
           {currentUserAddress
-            ? !correctBlockchain(requiredBlockchain as BlockchainType)
+            ? !correctBlockchain(requiredBlockchain)
               ? `Switch to ${
                   requiredBlockchain &&
                   getBlockchainData(requiredBlockchain)?.name
@@ -459,10 +554,9 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
 }) => {
   const { connectUserData } = useConnectUser();
   const store = useStore();
-  const { primaryColor, textColor, primaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const { web3TxHandler } = useWeb3Tx();
   const reactSwal = useSwal();

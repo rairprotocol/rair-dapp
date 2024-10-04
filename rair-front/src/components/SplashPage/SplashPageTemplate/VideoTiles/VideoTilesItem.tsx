@@ -1,18 +1,18 @@
 import { useCallback, useState } from 'react';
 import Modal from 'react-modal';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
 import { metaMaskIcon } from '../../../../images';
+import { CustomModalStyle } from '../../../../types/commonTypes';
 import { ImageLazy } from '../../../MockUpPage/ImageLazy/ImageLazy';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
 
 import '../VideoPlayer/VideoPlayer.css';
 
-const customStylesForVideo = {
+const customStylesForVideo: CustomModalStyle = {
   overlay: {
     zIndex: '5'
   },
@@ -80,9 +80,7 @@ const VideoTilesItem = ({
     setVideoIsOpen(false);
   }
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   return (
     <>

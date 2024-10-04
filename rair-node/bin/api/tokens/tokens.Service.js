@@ -1,6 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 const csv = require('csv-parser');
+const { ObjectId } = require('mongodb');
 const AppError = require('../../utils/errors/AppError');
 const {
   OfferPool,
@@ -491,35 +492,84 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
 
 exports.getFullTokenInfo = async (req, res, next) => {
   const { id } = req.params;
-  const tokenData = await MintedToken.findById(id).lean();
-  if (!tokenData) {
-    return next(new AppError('No token information found'));
-  }
-  const contractData = await Contract.findById(tokenData.contract);
-  if (!contractData) {
-    return next(new AppError('No contract information found'));
-  }
-  tokenData.contract = contractData;
-  const rangeQuery = {
-    contract: tokenData.contract._id,
-  };
-  if (tokenData.contract.diamond) {
-    rangeQuery.diamondRangeIndex = tokenData.offer;
-  } else {
-    rangeQuery.offerIndex = tokenData.offer;
-  }
-  const rangeData = await Offer.findOne(rangeQuery);
-  if (rangeData) {
-    tokenData.range = rangeData;
-    const productData = await Product.findOne({
-      contract: tokenData.contract._id,
-      collectionIndexInContract: rangeData.product,
-    });
-    if (productData) {
-      tokenData.product = productData;
-    }
-  }
-  return res.json({ success: true, tokenData });
+
+  const tokenData = await MintedToken.aggregate([
+    {
+      $match: { _id: new ObjectId(id) },
+    },
+    {
+      $lookup: {
+        from: 'Contract',
+        as: 'contract',
+        localField: 'contract',
+        foreignField: '_id',
+      },
+    },
+    {
+      $unwind: '$contract',
+    },
+    {
+      $lookup: {
+        from: 'Offer',
+        as: 'offer',
+        let: { contractId: '$contract._id', offerIndex: '$offer' },
+        pipeline: [{
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: ['$$contractId', '$contract'],
+                },
+                {
+                  $eq: ['$diamondRangeIndex', '$$offerIndex'],
+                },
+              ],
+            },
+          },
+        }],
+      },
+    },
+    {
+      $unwind: '$offer',
+    },
+    {
+      $lookup: {
+        from: 'Product',
+        as: 'product',
+        let: { contractId: '$contract._id', productIndex: '$offer.product' },
+        pipeline: [{
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: ['$$contractId', '$contract'],
+                },
+                {
+                  $eq: ['$collectionIndexInContract', '$$productIndex'],
+                },
+              ],
+            },
+          },
+        }],
+      },
+    },
+    {
+      $unwind: '$product',
+    },
+    {
+      $lookup: {
+        from: 'User',
+        as: 'ownerData',
+        localField: 'ownerAddress',
+        foreignField: 'publicAddress',
+      },
+    },
+    {
+      $unwind: '$ownerData',
+    },
+  ]);
+
+  return res.json({ success: true, tokenData: tokenData[0] });
 };
 
 exports.createTokensViaCSV = async (req, res, next) => {

@@ -1,33 +1,24 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import * as ethers from 'ethers';
+import { JsonRpcProvider, Wallet } from 'ethers';
 
-import useServerSettings from './useServerSettings';
-
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import {
-  setChainId,
-  setProgrammaticProvider
-} from '../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
+import {
+  setConnectedChain,
+  setProgrammaticProvider
+} from '../../redux/web3Slice';
 import InputField from '../common/InputField';
 
 const BlockChainSwitcher = () => {
   const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
-  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
-  const { blockchainSettings } = useServerSettings();
+  const { textColor, primaryButtonColor, secondaryButtonColor } =
+    useAppSelector((store) => store.colors);
+  const { blockchainSettings } = useAppSelector((store) => store.settings);
   const { web3Switch } = useWeb3Tx();
 
-  const { currentChain } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
-  const dispatch = useDispatch();
+  const { connectedChain } = useAppSelector((state) => state.web3);
+  const dispatch = useAppDispatch();
   const reactSwal = useSwal();
 
   const connectProgrammatically = async ({
@@ -43,16 +34,10 @@ const BlockChainSwitcher = () => {
         name: chainName,
         timeout: 1000000
       };
-      const provider = new ethers.providers.JsonRpcProvider(
-        rpcEndpoint,
-        networkData
-      );
-      const currentWallet = await new ethers.Wallet(
-        UNSAFE_PrivateKey,
-        provider
-      );
-      await dispatch(setProgrammaticProvider(currentWallet));
-      dispatch(setChainId(chainId, blockchainSettings));
+      const provider = new JsonRpcProvider(rpcEndpoint, networkData);
+      const currentWallet = new Wallet(UNSAFE_PrivateKey, provider);
+      dispatch(setProgrammaticProvider(currentWallet));
+      dispatch(setConnectedChain(chainId));
     } catch (err) {
       const error = err as Error;
       console.error(error);
@@ -92,7 +77,7 @@ const BlockChainSwitcher = () => {
                       color: textColor
                     }}
                     disabled={
-                      currentChain === item.hash?.toLowerCase() ||
+                      connectedChain === item.hash?.toLowerCase() ||
                       UNSAFE_PrivateKey.length !== 64
                     }
                     onClick={async () => {
@@ -122,7 +107,7 @@ const BlockChainSwitcher = () => {
                 index % 2 === 0 ? secondaryButtonColor : primaryButtonColor,
               color: textColor
             }}
-            disabled={currentChain === item.hash?.toLowerCase()}
+            disabled={connectedChain === item.hash?.toLowerCase()}
             onClick={() => {
               if (item.hash) {
                 web3Switch(item.hash);

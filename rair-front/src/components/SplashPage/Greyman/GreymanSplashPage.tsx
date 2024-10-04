@@ -1,24 +1,23 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 //Google Analytics
 import ReactGA from 'react-ga';
 import Modal from 'react-modal';
-import { useDispatch, useSelector } from 'react-redux';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { teamGreymanArray } from './AboutUsTeam';
 
 import { diamondFactoryAbi } from '../../../contracts/index';
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
+import useConnectUser from '../../../hooks/useConnectUser';
+import useContracts from '../../../hooks/useContracts';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 /* importing images*/
 import { metaMaskIcon } from '../../../images';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
+import { CustomModalStyle, SplashPageProps } from '../../../types/commonTypes';
 import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
@@ -33,7 +32,7 @@ import {
 import NotCommercial from '../NotCommercial/NotCommercial';
 import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
-import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
+import { TSplashPageIsActive } from '../splashPage.types';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import { Timeline } from '../Timeline/Timeline';
@@ -50,7 +49,7 @@ import './../../AboutPage/AboutPageNew/AboutPageNew.css';
 const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 ReactGA.initialize(TRACKING_ID);
 
-const customStyles = {
+const customStyles: CustomModalStyle = {
   overlay: {
     zIndex: '3'
   },
@@ -71,7 +70,7 @@ const customStyles = {
     borderRadius: '16px'
   }
 };
-const customStylesForVideo = {
+const customStylesForVideo: CustomModalStyle = {
   overlay: {
     zIndex: '5'
   },
@@ -97,12 +96,9 @@ const customStylesForVideo = {
 };
 Modal.setAppElement('#root');
 
-const GreymanSplashPage: React.FC<ISplashPageProps> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+const GreymanSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const [timerLeft, setTimerLeft] = useState<number>();
   const [copies, setCopies] = useState<string>();
   const [soldCopies, setSoldCopies] = useState<string>();
@@ -116,22 +112,19 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
     policy: false,
     use: false
   });
+  const { connectUserData } = useConnectUser();
   const GraymanSplashPageTESTNET = '0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6';
   const GreymanChainId = '0x89';
   const offerIndexInMarketplace = '2';
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState<boolean>(false);
 
-  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { isLoggedIn } = useAppSelector((store) => store.user);
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: '#Cryptogreyman',
         ogTitle: '#Cryptogreyman',
         twitterTitle: '#Cryptogreyman',
@@ -147,16 +140,11 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
         faviconMobile: GreymanFavicon
       })
     );
-    //eslint-disable-next-line
   }, []);
 
-  const {
-    diamondMarketplaceInstance,
-    contractCreator,
-    currentUserAddress,
-    currentChain
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
+  const { contractCreator, diamondMarketplaceInstance } = useContracts();
+  const { currentUserAddress, connectedChain } = useAppSelector(
+    (store) => store.web3
   );
 
   const toggleCheckList = () => {
@@ -164,9 +152,8 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   };
 
   useEffect(() => {
-    dispatch(setRealChain(GreymanChainId));
-    //eslint-disable-next-line
-  }, []);
+    dispatch(setRequestedChain(GreymanChainId));
+  }, [dispatch]);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -286,7 +273,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   };
 
   const showVideoToLogginedUsers = () => {
-    if (loggedIn) {
+    if (isLoggedIn) {
       return (
         <>
           <ImageLazy
@@ -371,11 +358,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
 
   const getAllProduct = useCallback(async () => {
     try {
-      if (
-        diamondMarketplaceInstance &&
-        window.ethereum &&
-        currentChain === GreymanChainId
-      ) {
+      if (diamondMarketplaceInstance && connectedChain === GreymanChainId) {
         const responseAllProduct = await web3TxHandler(
           diamondMarketplaceInstance,
           'getOfferInfo',
@@ -398,7 +381,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
     } catch (err) {
       console.error(err);
     }
-  }, [diamondMarketplaceInstance, currentChain, web3TxHandler]);
+  }, [diamondMarketplaceInstance, connectedChain, web3TxHandler]);
 
   useEffect(() => {
     if (!diamondMarketplaceInstance) {
@@ -628,11 +611,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
           </div>
         </AuthorBlock>
         {timerLeft === 0 && (
-          <TokenLeftGreyman
-            primaryColor={primaryColor}
-            soldCopies={soldCopies}
-            copies={copies}
-          />
+          <TokenLeftGreyman soldCopies={soldCopies} copies={copies} />
         )}
         <div className="about-metadata-wrapper">
           {timerLeft === 0 && (
@@ -914,7 +893,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
               classNameHeadSpan={'text-gradient'}
               teamArray={teamGreymanArray}
             />
-            <NotCommercial primaryColor={primaryColor} />
+            <NotCommercial />
           </>
         )}
       </div>

@@ -14,6 +14,7 @@ module.exports = {
         buttonPrimaryColor: Joi.string(),
         buttonFadeColor: Joi.string(),
         buttonSecondaryColor: Joi.string(),
+        iconColor: Joi.string(),
         superAdminsOnVault: Joi.boolean(),
         databaseResales: Joi.boolean(),
         footerLinks: Joi.array().items(Joi.object({

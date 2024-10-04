@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import {
@@ -13,16 +12,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Stack } from '@mui/material';
 import { Breadcrumbs, Typography } from '@mui/material';
 import axios from 'axios';
-import { constants, utils } from 'ethers';
-import Swal from 'sweetalert2';
+import { isAddress, ZeroAddress } from 'ethers';
+import { Hex } from 'viem';
 
-import { TContract, TUserResponse } from '../../axios.responseTypes';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { UserType } from '../../ducks/users/users.types';
+import { TUserResponse } from '../../axios.responseTypes';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { VideoIcon } from '../../images';
+import { NftItemToken } from '../../types/commonTypes';
+import { User } from '../../types/databaseTypes';
 import { rFetch } from '../../utils/rFetch';
 import InputField from '../common/InputField';
 import LoadingComponent from '../common/LoadingComponent';
@@ -31,7 +30,6 @@ import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
 import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
 import CustomShareButton from '../MockUpPage/NftList/NftData/CustomShareButton';
 import SharePopUp from '../MockUpPage/NftList/NftData/TitleCollection/SharePopUp/SharePopUp';
-import { TDiamondTokensType } from '../nft/nft.types';
 import { PersonalProfileMyNftTab } from '../nft/PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab';
 import { PersonalProfileMyVideoTab } from '../nft/PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';
 import { TSortChoice } from '../ResalePage/listOffers.types';
@@ -45,19 +43,14 @@ import './UserProfilePage.css';
 
 const UserProfilePage: React.FC = () => {
   const { primaryColor, textColor, headerLogo, iconColor, primaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+    useAppSelector((store) => store.colors);
   const { userAddress } = useParams();
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
   const [copyState, setCopyState] = useState(false);
-  const [userData, setUserData] = useState<UserType | null | undefined>(
-    undefined
-  );
-  const [, /*tokens*/ setTokens] = useState<TDiamondTokensType[]>([]);
+  const [userData, setUserData] = useState<User | undefined>(undefined);
   const [collectedTokens, setCollectedTokens] = useState<
-    TDiamondTokensType[] | null
-  >(null);
+    NftItemToken[] | undefined
+  >(undefined);
   const [createdContracts, setCreatedContracts] = useState([]);
   const [fileUpload, setFileUpload] = useState<File | null>(null);
   const [loadingBg, setLoadingBg] = useState(false);
@@ -76,6 +69,7 @@ const UserProfilePage: React.FC = () => {
   );
   const [metadataFilter, setMetadataFilter] = useState<boolean>(false);
 
+  const rSwal = useSwal();
   const { width } = useWindowDimensions();
 
   const handleClose = (value: number) => {
@@ -89,34 +83,15 @@ const UserProfilePage: React.FC = () => {
 
   const getMyNft = useCallback(
     async (number, page) => {
-      if (userAddress && utils.isAddress(userAddress)) {
+      if (userAddress && isAddress(userAddress)) {
         setIsLoading(true);
 
         const response = await rFetch(
           `/api/nft/${userAddress}?itemsPerPage=${number}&pageNum=${page}&onResale=${onResale}`
         );
         if (response.success) {
-          const tokenData: TDiamondTokensType[] = [];
           setTotalCount(response.totalCount);
-          for await (const token of response.result) {
-            if (!token.contract._id) {
-              return;
-            }
-            const contractData = await rFetch(
-              `/api/contracts/${token.contract._id}`
-            );
-            tokenData.push({
-              ...token,
-              ...contractData.contract._id
-            });
-          }
-
-          const newCollectedTokens = tokenData.filter(
-            (el) => el.isMinted === true
-          );
-
-          setTokens(tokenData);
-          setCollectedTokens(newCollectedTokens);
+          setCollectedTokens(response.result.filter((token) => token.isMinted));
           setIsLoading(false);
           setIsResaleLoding(false);
         }
@@ -143,35 +118,12 @@ const UserProfilePage: React.FC = () => {
         (el) => el.user === userAddress
       );
 
-      const covers = contractsFiltered.map((item: TContract) => ({
-        id: item._id,
-        productId: item.products?._id,
-        blockchain: item.blockchain,
-        collectionIndexInContract: item.products.collectionIndexInContract,
-        contract: item.contractAddress,
-        cover: item.products.cover,
-        title: item.title,
-        name: item.products.name,
-        user: item.user,
-        copiesProduct: item.products.copies,
-        offerData: item.products.offers?.map((elem) => ({
-          price: elem.price,
-          offerName: elem.offerName,
-          offerIndex: elem.offerIndex,
-          productNumber: elem.product
-        }))
-      }));
-
-      setCreatedContracts(covers);
+      setCreatedContracts(contractsFiltered);
     }
   }, [userAddress]);
 
   const getUserData = useCallback(async () => {
-    if (
-      userAddress &&
-      utils.isAddress(userAddress) &&
-      userAddress !== constants.AddressZero
-    ) {
+    if (userAddress && isAddress(userAddress) && userAddress !== ZeroAddress) {
       const userAddressChanged = userAddress.toLowerCase();
       setTabIndexItems(0);
       setUserData(undefined);
@@ -181,22 +133,23 @@ const UserProfilePage: React.FC = () => {
         if (response.user) {
           setUserData(response.user);
         } else {
-          const defaultUser = {
-            avatar: null,
-            background: null,
+          const defaultUser: User = {
+            avatar: '',
+            background: '',
             creationDate: '2023-04-25T14:54:58.190Z',
             email: '',
-            firstName: null,
-            lastName: null,
+            firstName: '',
+            lastName: '',
             nickName: `@${userAddress}`,
             ageVerified: false,
-            publicAddress: `${userAddress}`,
-            _id: 'none'
+            publicAddress: userAddress as Hex,
+            _id: 'none',
+            blocked: false
           };
           setUserData(defaultUser);
         }
       } else {
-        setUserData(null);
+        setUserData(undefined);
       }
     }
   }, [userAddress]);
@@ -253,21 +206,28 @@ const UserProfilePage: React.FC = () => {
     </Typography>
   ];
 
-  const photoUpload = useCallback((e) => {
-    e.preventDefault();
-    const reader = new FileReader();
-    const fileF = e.target.files[0];
-    reader.onloadend = () => {
-      if (fileF.type !== 'video/mp4') {
-        setFileUpload(fileF);
-      } else {
-        Swal.fire('Info', `You cannot upload video to background!`, 'warning');
+  const photoUpload = useCallback(
+    (e) => {
+      e.preventDefault();
+      const reader = new FileReader();
+      const fileF = e.target.files[0];
+      reader.onloadend = () => {
+        if (fileF.type !== 'video/mp4') {
+          setFileUpload(fileF);
+        } else {
+          rSwal.fire(
+            'Info',
+            `You cannot upload video to background!`,
+            'warning'
+          );
+        }
+      };
+      if (fileF) {
+        reader.readAsDataURL(fileF);
       }
-    };
-    if (fileF) {
-      reader.readAsDataURL(fileF);
-    }
-  }, []);
+    },
+    [rSwal]
+  );
 
   useEffect(() => {
     editBackground();
@@ -299,7 +259,6 @@ const UserProfilePage: React.FC = () => {
     <div className={`${width > 1025 ? 'container' : 'wrapper-user-page'}`}>
       <div>
         <SharePopUp
-          primaryColor={primaryColor}
           selectedValue={selectedValue}
           open={open}
           onClose={handleClose}
@@ -369,10 +328,7 @@ const UserProfilePage: React.FC = () => {
             }`}>
             {currentUserAddress === userAddress ? (
               <>
-                <PersonalProfileIcon
-                  userData={userData}
-                  setEditModeUpper={setEditMode}
-                />
+                <PersonalProfileIcon setEditModeUpper={setEditMode} />
               </>
             ) : (
               <div className="personal-profile-box">
@@ -424,11 +380,7 @@ const UserProfilePage: React.FC = () => {
               </div>
             )}
             {!editMode && (
-              <CustomShareButton
-                title="Share"
-                handleClick={handleClickOpen}
-                primaryColor={primaryColor}
-              />
+              <CustomShareButton title="Share" handleClick={handleClickOpen} />
             )}
           </div>
           <div className="tabs-section">
@@ -559,7 +511,7 @@ const UserProfilePage: React.FC = () => {
               <div className="user-page-main-tab-block">
                 <TabPanel>
                   <PersonalProfileMyNftTab
-                    filteredData={collectedTokens && collectedTokens}
+                    filteredData={collectedTokens}
                     defaultImg={`${process.env.REACT_APP_IPFS_GATEWAY}/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`}
                     textColor={textColor}
                     getMyNft={getMyNft}

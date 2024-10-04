@@ -1,3 +1,5 @@
+import { Hex } from 'viem';
+
 import { TDiamondTokensType } from '../../nft/nft.types';
 
 export interface IFilteringBlock {
@@ -6,21 +8,19 @@ export interface IFilteringBlock {
   sortItem: TSortChoice | undefined;
   setSortItem: (item: TSortChoice) => void;
   isFilterShow: boolean;
-  setBlockchain?: (blockchain: BlockchainType | undefined) => void;
-  setCategory?: (category: TOnClickCategories | null) => void;
+  setBlockchain?: (blockchain: Hex | undefined) => void;
+  setCategory?: (category: string | null) => void;
   setIsShow?: (value: boolean) => void;
   setIsShowCategories?: (value: boolean) => void;
   setFilterText?: (name: TBlockchainNames) => void;
-  setFilterCategoriesText?: (name: TOnClickCategories) => void;
-  categoryClick?: TOnClickCategories | null;
-  setCategoryClick?: (value: TOnClickCategories | null) => void;
+  setFilterCategoriesText?: (name: string) => void;
+  categoryClick?: string | null;
+  setCategoryClick?: (value: string | null) => void;
   blockchainClick?: TBlockchainNames | null;
   setBlockchainClick?: (value: TBlockchainNames | null) => void;
 }
 
 export type TSortChoice = 'down' | 'up';
-
-export type TOnClickCategories = 'Science' | 'Music' | 'Conference' | 'Art';
 
 export type TFilterItemCategories = 'Price' | 'Metadata';
 
@@ -29,7 +29,7 @@ export interface IArrowUp {
 }
 
 export type TSelectFiltersItemStyled = {
-  primaryColor: string;
+  primaryColor?: string;
   filterPopUp: boolean;
   textColor?: string;
   secondaryColor?: string;
@@ -38,31 +38,33 @@ export type TSelectFiltersItemStyled = {
 export type TFiltersTitleIconStyled = {
   filterPopUp: boolean;
   className?: string;
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
   customSecondaryButtonColor?: string;
 };
 
 export type TSelectFiltersPopUpStyled = {
-  primaryColor: string;
+  primaryColor?: string;
 };
 
 export type TSelectSortItemStyled = {
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
   sortPopUp: boolean;
-  secondaryColor: string;
+  secondaryColor?: string;
+  isDarkMode?: boolean;
 };
 
 export type TSortArrowUpIconStyled = {
   sortItem?: TSortChoice;
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
   customSecondaryButtonColor?: any;
 };
 
 export type TSelectSortPopUpStyled = {
-  primaryColor: string;
+  isDarkMode?: boolean;
+  primaryColor?: string;
   textColor?: string;
 };
 
@@ -74,24 +76,24 @@ export type TModalContentPictureStyled = {
 
 export type TStyledShevronIconStyled = {
   rotate?: string;
-  primaryColor: string;
+  primaryColor?: string;
   textColor?: string;
   customSecondaryButtonColor?: string;
 };
 
 export type TModalCategoriesItem = {
-  name: TOnClickCategories;
+  name: string;
   clicked: boolean;
 };
 
 export interface IModalCategories {
-  setFilterCategoriesText?: (name: TOnClickCategories) => void;
+  setFilterCategoriesText?: (name: string) => void;
   setIsOpenCategories: (value: boolean) => void;
   isOpenCategories: boolean;
-  setCategory?: (category: TOnClickCategories | null) => void;
+  setCategory?: (category: string | null) => void;
   setIsShowCategories?: (value: boolean) => void;
-  click?: TOnClickCategories | null;
-  setClick?: (clickItem: TOnClickCategories | null) => void;
+  click?: string | null;
+  setClick?: (clickItem: string | null) => void;
 }
 
 export type TBlockchainNames =
@@ -105,12 +107,12 @@ export type TBlockchainNames =
 
 export type TBlockchainCategory = {
   name: TBlockchainNames;
-  chainId: BlockchainType;
+  chainId: Hex;
   clicked: boolean;
 };
 
 export interface IModalBlockchain {
-  setBlockchain?: (blockchain: BlockchainType | undefined) => void;
+  setBlockchain?: (blockchain: Hex | undefined) => void;
   isOpenBlockchain: boolean;
   setIsOpenBlockchain: (value: boolean) => void;
   setIsShow?: (value: boolean) => void;
@@ -138,7 +140,6 @@ export interface IModalItem {
   setIsCreatedTab: (value: boolean) => void;
   selectedData: TDiamondTokensType | undefined;
   defaultImg: string;
-  primaryColor: string;
   isCreatedTab: boolean;
 }
 

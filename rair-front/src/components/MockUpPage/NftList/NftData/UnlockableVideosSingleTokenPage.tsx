@@ -1,11 +1,9 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 
-import { TFileType } from '../../../../axios.responseTypes';
-import { RootState } from '../../../../ducks';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
+import { MediaFile } from '../../../../types/databaseTypes';
 import { playImagesColored } from '../../../SplashPage/images/greyMan/grayMan';
 import YotiPage from '../../../YotiPage/YotiPage';
 import { TUnlockableVideosSingleTokenPage } from '../../mockupPage.types';
@@ -20,24 +18,21 @@ const UnlockableVideosSingleTokenPage: React.FC<
   setSelectVideo,
   openVideoplayer,
   setOpenVideoPlayer,
-  handlePlayerClick,
-  primaryColor
+  handlePlayerClick
 }) => {
   const videosListBlock = useRef<HTMLDivElement>(null);
   const [selectedItem, setSelectedItem] = useState<
-    TFileType | null | undefined
+    MediaFile | null | undefined
   >(undefined);
 
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
   const store = useStore();
 
-  const { userData } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { ageVerified } = useAppSelector((store) => store.user);
 
   const [formatedVideoObj, setFormatedVideoObj] = useState(undefined);
+
+  const { isDarkMode, primaryColor } = useAppSelector((store) => store.colors);
   const reactSwal = useSwal();
 
   function renameKeys(obj, newKeys) {
@@ -49,15 +44,11 @@ const UnlockableVideosSingleTokenPage: React.FC<
   }
 
   const ageVerificationPopUp = useCallback(() => {
-    if (
-      selectVideo &&
-      selectVideo?.ageRestricted === true &&
-      (userData?.ageVerified === false || !userData?.ageVerified)
-    ) {
+    if (selectVideo && selectVideo?.ageRestricted === true && !ageVerified) {
       reactSwal.fire({
         html: (
           <Provider store={store}>
-            <YotiPage setOpenVideoplayer={setOpenVideoPlayer} />
+            <YotiPage setOpenVideoPlayer={setOpenVideoPlayer} />
           </Provider>
         ),
         showConfirmButton: false,
@@ -79,7 +70,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
     }
   }, [
     selectVideo,
-    userData?.ageVerified,
+    ageVerified,
     reactSwal,
     store,
     setOpenVideoPlayer,
@@ -110,14 +101,14 @@ const UnlockableVideosSingleTokenPage: React.FC<
     }
   }, [productsFromOffer, setSelectVideo]);
 
-  const handleSelectedItem = (itemSelected: TFileType) => {
+  const handleSelectedItem = (itemSelected: MediaFile) => {
     setSelectedItem(itemSelected);
   };
   return (
     <div className="unlockable-videos-wrapper" ref={videosListBlock}>
       {productsFromOffer && productsFromOffer.length && openVideoplayer ? (
         <div className={'video-player-style'}>
-          {selectVideo && formatedVideoObj && (
+          {selectVideo && formatedVideoObj && selectVideo?._id && (
             <NftVideoplayer
               selectVideo={formatedVideoObj[selectVideo._id]}
               setSelectVideo={setSelectVideo}
@@ -149,7 +140,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
       )}
       <div className={'unlockables-videos-list'}>
         {productsFromOffer?.length &&
-          productsFromOffer.map((data: TFileType, index) => {
+          productsFromOffer.map((data, index) => {
             return (
               <div
                 className={
@@ -206,28 +197,23 @@ const UnlockableVideosSingleTokenPage: React.FC<
                   <div
                     className={'single-list-video-info'}
                     style={{
-                      backgroundColor:
-                        primaryColor === 'rhyno'
-                          ? '#f8f8f8'
-                          : `color-mix(in srgb, ${primaryColor}, #888888)`
+                      backgroundColor: !isDarkMode
+                        ? '#f8f8f8'
+                        : `color-mix(in srgb, ${primaryColor}, #888888)`
                     }}>
                     <div
                       className="single-list-video-info-title"
                       style={{
-                        color:
-                          primaryColor === 'rhyno'
-                            ? 'var(--charcoal)'
-                            : '#FFFFFF'
+                        color: !isDarkMode ? 'var(--charcoal)' : '#FFFFFF'
                       }}>
                       {data.title}
                     </div>
                     <div
                       className="single-list-video-info-duration"
                       style={{
-                        color:
-                          primaryColor === 'rhyno'
-                            ? 'var(--charcoal-60)'
-                            : 'var(--charcoal-40)'
+                        color: !isDarkMode
+                          ? 'var(--charcoal-60)'
+                          : 'var(--charcoal-40)'
                       }}>
                       {data.duration}
                     </div>

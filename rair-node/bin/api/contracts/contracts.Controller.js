@@ -11,6 +11,7 @@ const {
   productsByNetworkAndAddress,
   offersByNetworkAndAddress,
   contractListForFactory,
+  getProductList,
 } = require('./contracts.Service');
 const {
   isAdmin,
@@ -79,6 +80,13 @@ router.get(
   validation(['dbId'], 'params'),
   getContractById,
 );
+
+router.get(
+  '/:id/products',
+  validation(['dbId'], 'params'),
+  getProductList,
+);
+
 router.patch(
   '/:id',
   requireUserSession,

@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { RootState } from '../../../ducks';
-import { TUsersInitialState } from '../../../ducks/users/users.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { ITokenLeftTemplate } from '../splashPage.types';
 
 import './TokenLeftTemplate.css';
 
 const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
-  primaryColor,
   soldCopies,
   counterData,
   ipftButton,
@@ -29,15 +26,15 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
     nftCount
   } = counterData || {};
 
+  const { isDarkMode } = useAppSelector((store) => store.colors);
+
   const [percentTokens, setPersentTokens] = useState<number>(0);
   const [fontSize, setFontSize] = useState<string>('');
 
   const wholeTokens = nftCount;
   const leftTokensNumber = soldCopies;
 
-  const { loggedIn } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { isLoggedIn } = useAppSelector((store) => store.user);
 
   useEffect(() => {
     if (wholeTokens && leftTokensNumber <= wholeTokens) {
@@ -70,7 +67,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
 
   return (
     <div className="left-tokens left-tokens-response">
-      {(counterOverride || (soldCopies !== undefined && loggedIn)) && (
+      {(counterOverride || (soldCopies !== undefined && isLoggedIn)) && (
         <div className="block-left-content-greyman">
           <div
             className="block-left-tokens"
@@ -79,7 +76,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
               className="progress-tokens"
               style={{
                 background: `${
-                  primaryColor === 'rhyno'
+                  !isDarkMode
                     ? 'rgba(34, 32, 33, 0.4)'
                     : 'rgba(34, 32, 33, 0.6)'
                 }`
@@ -147,7 +144,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
                           className="property"
                           style={{
                             background: `${
-                              primaryColor === 'rhyno' ? '#cccccc' : 'none'
+                              !isDarkMode ? '#cccccc' : 'none'
                             }`
                           }}>
                           <span
@@ -221,7 +218,7 @@ const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
                 <p
                   key={index}
                   style={{
-                    color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
+                    color: `${!isDarkMode ? '#000' : '#fff'}`
                   }}>
                   {item}
                 </p>

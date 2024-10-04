@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, ethers, utils } from 'ethers';
+import { formatEther } from 'ethers';
 
 import BatchRow from './BatchRow';
 import {
@@ -10,10 +9,8 @@ import {
   TBuyTokenModalContentType
 } from './marketplace.types';
 
-import { minterAbi } from '../../contracts';
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import csvParser from '../../utils/csvParser';
@@ -27,7 +24,6 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
   offerIndex,
   rangeIndex,
   offerName,
-  minterAddress,
   diamonds,
   buyTokenFunction,
   buyTokenBatchFunction
@@ -36,44 +32,31 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
   const [rows, setRows] = useState<TBatchMintDataType>([]);
 
   const [batchMode, setBatchMode] = useState<boolean>(false);
-  const [minterInstance, setMinterInstance] = useState<
-    ethers.Contract | undefined
-  >();
   const [batchPage, setBatchPage] = useState<number>(0);
 
-  const { contractCreator } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
-  const { textColor, primaryButtonColor, secondaryButtonColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { textColor, primaryButtonColor, secondaryButtonColor } =
+    useAppSelector((store) => store.colors);
+  const { diamondMarketplaceInstance } = useContracts();
 
   const reactSwal = useSwal();
   const { web3TxHandler } = useWeb3Tx();
 
   const rowsLimit = 100;
 
-  useEffect(() => {
-    if (minterAddress) {
-      setMinterInstance(contractCreator?.(minterAddress, minterAbi));
-    }
-  }, [minterAddress, contractCreator]);
-
   const batchMint = async (data: TBatchMintDataType) => {
-    if (!minterInstance) {
+    if (!diamondMarketplaceInstance) {
       return;
     }
     const addresses = data.map((i) => i['Public Address']);
     const tokens = data.map((i) => i['NFTID']);
     if (
-      await web3TxHandler(minterInstance, 'buyTokenBatch', [
+      await web3TxHandler(diamondMarketplaceInstance, 'buyTokenBatch', [
         offerIndex,
         rangeIndex,
         tokens,
         addresses,
         {
-          value: BigNumber.from(price).mul(tokens.length).toString()
+          value: (BigInt(price) * BigInt(tokens.length)).toString()
         }
       ])
     ) {
@@ -155,25 +138,24 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
             />
             <div className="col-2" />
             <button
-              disabled={!minterInstance}
+              disabled={!diamondMarketplaceInstance}
               onClick={async () => {
                 let result;
                 if (diamonds) {
                   result = await buyTokenFunction?.(
                     offerIndex,
                     tokenIndex,
-                    price
+                    BigInt(price)
                   );
                 } else {
-                  if (!minterInstance) {
+                  if (!diamondMarketplaceInstance) {
                     return;
                   }
-                  result = await web3TxHandler(minterInstance, 'buyToken', [
-                    offerIndex,
-                    rangeIndex,
-                    tokenIndex,
-                    { value: price }
-                  ]);
+                  result = await web3TxHandler(
+                    diamondMarketplaceInstance,
+                    'buyToken',
+                    [offerIndex, rangeIndex, tokenIndex, { value: price }]
+                  );
                 }
                 if (result === true) {
                   reactSwal.close();
@@ -184,7 +166,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                 color: textColor
               }}
               className="btn rair-button col-8">
-              Buy token #{tokenIndex} for {utils.formatEther(price)}
+              Buy token #{tokenIndex} for {formatEther(price)}
             </button>
             <div className="col-2" />
           </>
@@ -204,10 +186,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
               Add <FontAwesomeIcon icon={faPlus} />
             </button>
             <div className="col">
-              Total:{' '}
-              {utils.formatEther(
-                diamonds ? price.mul(rows.length) : price.mul(rows.length)
-              )}
+              Total: {formatEther(BigInt(price) * BigInt(rows.length))}
             </div>
             <div
               className="col-12"
@@ -268,13 +247,13 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                     offerIndex,
                     paginatedRows.map((item) => item['NFTID']),
                     paginatedRows.map((item) => item['Public Address']),
-                    price
+                    BigInt(price)
                   );
                 } else {
                   batchMint(paginatedRows);
                 }
               }}
-              disabled={!minterInstance || !paginatedRows.length}
+              disabled={!diamondMarketplaceInstance || !paginatedRows.length}
               style={{
                 background: primaryButtonColor,
                 color: textColor

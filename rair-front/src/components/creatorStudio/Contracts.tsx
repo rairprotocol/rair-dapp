@@ -1,59 +1,49 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { faArrowRight, faGem, faVial } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRight,
+  faEyeSlash,
+  faGem,
+  faLinkSlash,
+  faVial
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Hex } from 'viem';
 
-import { TContractsArray } from './creatorStudio.types';
 import NavigatorFactory from './NavigatorFactory';
 
-import { RootState } from '../../ducks';
-import { getTokenError } from '../../ducks/auth/actions';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import useServerSettings from '../../hooks/useServerSettings';
+import { Contract } from '../../types/databaseTypes';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
-import { ContractType } from '../adminViews/adminView.types';
-import useServerSettings from '../adminViews/useServerSettings';
 import InputField from '../common/InputField';
 
 const Contracts = () => {
-  const dispatch = useDispatch();
   const [titleSearch, setTitleSearch] = useState<string>('');
-  const [contractArray, setContractArray] = useState<TContractsArray[]>();
+  const [contractArray, setContractArray] = useState<Array<Contract>>([]);
   const [diamondFilter, setDiamondFilter] = useState<Boolean>(false);
-  const [chainFilter, setChainFilter] = useState<BlockchainType[]>([]);
-  const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const [chainFilter, setChainFilter] = useState<Hex[]>([]);
+  const { programmaticProvider } = useAppSelector((store) => store.web3);
   const {
     primaryColor,
     secondaryColor,
     textColor,
     primaryButtonColor,
     iconColor
-  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+  } = useAppSelector((store) => store.colors);
 
-  const { blockchainSettings, getBlockchainData } = useServerSettings();
+  const { blockchainSettings } = useAppSelector((store) => store.settings);
+  const { getBlockchainData } = useServerSettings();
 
   const fetchContracts = useCallback(async () => {
     const response = await rFetch('/api/contracts/factoryList', undefined, {
       provider: programmaticProvider
     });
     if (response.success) {
-      setContractArray(
-        response.contracts.map((item: ContractType) => ({
-          address: item.contractAddress,
-          name: item.title,
-          blockchain: item.blockchain,
-          diamond: item.diamond
-        }))
-      );
+      setContractArray(response.contracts);
     }
-    if (response.error && response.message) {
-      dispatch(getTokenError(response.error));
-    }
-  }, [programmaticProvider, dispatch]);
+  }, [programmaticProvider]);
 
   useEffect(() => {
     fetchContracts();
@@ -89,8 +79,9 @@ const Contracts = () => {
               <FontAwesomeIcon icon={faGem} /> Only Diamonds
             </button>
             {blockchainSettings
-              .filter((chain) => chain.display !== true && chain.hash)
+              .filter((chain) => chain.display === true && chain.hash)
               .map((chain, index) => {
+                const chainData = getBlockchainData(chain.hash);
                 return (
                   <button
                     key={index}
@@ -110,7 +101,7 @@ const Contracts = () => {
                     }`}>
                     <img
                       alt={chain?.name}
-                      src={chain?.image}
+                      src={chainData?.image}
                       style={{ maxHeight: '1.5rem', maxWidth: '1.5rem' }}
                       className="me-2"
                     />
@@ -127,8 +118,8 @@ const Contracts = () => {
             .filter((item) => {
               if (
                 titleSearch !== '' &&
-                item.name &&
-                !item.name.toLowerCase().includes(titleSearch.toLowerCase())
+                item.title &&
+                !item.title.toLowerCase().includes(titleSearch.toLowerCase())
               ) {
                 return false;
               }
@@ -150,7 +141,7 @@ const Contracts = () => {
               );
               return (
                 <NavLink
-                  to={`/creator/contract/${item.blockchain}/${item.address}/createCollection`}
+                  to={`/creator/contract/${item.blockchain}/${item.contractAddress}/createCollection`}
                   key={index}
                   style={{
                     position: 'relative',
@@ -177,7 +168,17 @@ const Contracts = () => {
                       <FontAwesomeIcon icon={faVial} className="me-2" />
                     </abbr>
                   )}
-                  {item.name}
+                  {item.blockView && (
+                    <abbr title={'Hidden'}>
+                      <FontAwesomeIcon icon={faEyeSlash} className="me-2" />
+                    </abbr>
+                  )}
+                  {item.blockSync && (
+                    <abbr title={'Will not sync'}>
+                      <FontAwesomeIcon icon={faLinkSlash} className="me-2" />
+                    </abbr>
+                  )}
+                  {item.title}
                   <FontAwesomeIcon
                     icon={faArrowRight}
                     style={{

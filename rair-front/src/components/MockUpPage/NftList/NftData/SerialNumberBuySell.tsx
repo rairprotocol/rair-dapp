@@ -1,118 +1,84 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
-import { BigNumber, constants, utils } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'ethers';
+import { Hex } from 'viem';
 
 import { BuySellButton } from './BuySellButton';
 import SellInputButton from './SellInputButton';
 
-import { TUserResponse } from '../../../../axios.responseTypes';
-import store, { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import { UserType } from '../../../../ducks/users/users.types';
+import useContracts from '../../../../hooks/useContracts';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../hooks/useReduxHooks';
+import useServerSettings from '../../../../hooks/useServerSettings';
 import useSwal from '../../../../hooks/useSwal';
 import useWeb3Tx from '../../../../hooks/useWeb3Tx';
 import { BillTransferIcon, GrandpaWait } from '../../../../images';
+import { store } from '../../../../redux/store';
+import { reloadTokenData } from '../../../../redux/tokenSlice';
 import { rFetch } from '../../../../utils/rFetch';
 import { ContractType } from '../../../adminViews/adminView.types';
-import useServerSettings from '../../../adminViews/useServerSettings';
+import LoadingComponent from '../../../common/LoadingComponent';
 import ResaleModal from '../../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../../ImageLazy/ImageLazy';
 import { ISerialNumberBuySell } from '../../mockupPage.types';
 import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
-import { currentTokenData } from '../utils/currentTokenData';
 
 const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
-  tokenData,
   handleClickToken,
   blockchain,
-  product,
-  contract,
-  totalCount,
   selectedToken,
   setSelectedToken,
   offerData,
-  handleTokenBoughtButton,
-  tokenDataForResale
+  tokenDataForResale,
+  serialNumberData
 }) => {
-  const {
-    minterInstance,
-    diamondMarketplaceInstance,
-    currentUserAddress,
-    coingeckoRates
-  } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
+  const { diamondMarketplaceInstance } = useContracts();
+  const { currentUserAddress, exchangeRates } = useAppSelector(
+    (state) => state.web3
+  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
+  const { databaseResales } = useAppSelector((store) => store.settings);
+  const { currentCollection, currentCollectionMetadata } = useAppSelector(
+    (store) => store.tokens
   );
 
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const dispatch = useAppDispatch();
 
   const reactSwal = useSwal();
   const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
 
-  const numberTooBigThreshold = BigNumber.from(10000000000);
+  const numberTooBigThreshold = BigInt(10000000000);
 
-  const [accountData, setAccountData] = useState<UserType | null>(null);
   const [contractData, setContractData] = useState<ContractType>();
   const [resaleData, setResaleData] = useState<any>();
   const params = useParams();
 
-  const getInfoFromUser = useCallback(async () => {
-    // find user
-    if (
-      params.tokenId && tokenData &&
-      Object.values(tokenData)[0]?.ownerAddress &&
-      utils.isAddress(Object.values(tokenData)[0]?.ownerAddress) &&
-      Object.values(tokenData)[0]?.ownerAddress !== constants.AddressZero
-    ) {
-      try {
-        const result = await axios
-          .get<TUserResponse>(
-            `/api/users/${Object.values(tokenData)[0]?.ownerAddress}`
-          )
-          .then((res) => res.data);
-        if (result.success) {
-          setAccountData(result.user);
-        }
-      } catch (e) {
-        setAccountData(null);
-      }
-    }
-  }, [params.tokenId, setAccountData, tokenData]);
-
   const buyContract = useCallback(async () => {
-    if (!contractData || !offerData) {
+    if (
+      !contractData ||
+      !offerData ||
+      !contractData.diamond ||
+      !diamondMarketplaceInstance ||
+      !selectedToken ||
+      !currentCollectionMetadata.product
+    ) {
       return;
     }
-    let marketplaceContract, marketplaceMethod, marketplaceArguments;
-    if (contractData.diamond) {
-      if (!diamondMarketplaceInstance) {
-        return;
-      }
-      marketplaceContract = diamondMarketplaceInstance;
-      marketplaceMethod = 'buyMintingOffer';
-      marketplaceArguments = [
-        offerData.offerIndex, // Offer Index
-        selectedToken // Token Index
-      ];
-    } else {
-      if (!minterInstance) {
-        return;
-      }
-      marketplaceContract = minterInstance;
-      marketplaceMethod = 'buyToken';
-      marketplaceArguments = [
-        offerData?.offerPool, // Catalog Index
-        offerData?.offerIndex, // Range Index
-        selectedToken // Internal Token Index
-      ];
-    }
+    const realNumber = (
+      BigInt(selectedToken) -
+      BigInt(currentCollectionMetadata.product?.firstTokenIndex)
+    ).toString();
+    const marketplaceContract = diamondMarketplaceInstance;
+    const marketplaceMethod = 'buyMintingOffer';
+    const marketplaceArguments: any[] = [
+      offerData.offerIndex, // Offer Index
+      realNumber // Token Index
+    ];
     marketplaceArguments.push({
       value: offerData.price
     });
@@ -135,10 +101,16 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         marketplaceMethod,
         marketplaceArguments,
         {
-          intendedBlockchain: blockchain as BlockchainType,
+          intendedBlockchain: blockchain as Hex,
           failureMessage:
             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!',
-          callback: handleTokenBoughtButton,
+          callback: () => {
+            dispatch(
+              reloadTokenData({
+                tokenId: currentCollection?.[selectedToken]?._id
+              })
+            );
+          },
           sponsored: offerData.sponsored
         }
       )
@@ -148,21 +120,21 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         'Now, you are the owner of this token',
         'success'
       );
-      handleTokenBoughtButton();
     }
   }, [
     contractData,
     offerData,
+    diamondMarketplaceInstance,
+    selectedToken,
     reactSwal,
     web3TxHandler,
     blockchain,
-    handleTokenBoughtButton,
-    diamondMarketplaceInstance,
-    selectedToken,
-    minterInstance
+    dispatch,
+    currentCollection,
+    currentCollectionMetadata
   ]);
 
-  const { settings, getBlockchainData } = useServerSettings();
+  const { getBlockchainData } = useServerSettings();
 
   useEffect(() => {
     if (offerData) {
@@ -179,7 +151,8 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (
       !diamondMarketplaceInstance ||
       !selectedToken ||
-      tokenData && !Object.values(tokenData)[0].uniqueIndexInContract
+      (currentCollection &&
+        !currentCollection[selectedToken]?.uniqueIndexInContract)
     ) {
       return;
     }
@@ -195,7 +168,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     setResaleData(undefined);
     const resaleResponse = await rFetch(
-      `/api/resales/open?contract=${params.contract}&blockchain=${params.blockchain}&index=${tokenData && Object.values(tokenData)[0].uniqueIndexInContract}`
+      `/api/resales/open?contract=${params.contract}&blockchain=${
+        params.blockchain
+      }&index=${currentCollection[selectedToken].uniqueIndexInContract}`
     );
     if (!resaleResponse.success) {
       return;
@@ -215,25 +190,25 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     diamondMarketplaceInstance,
     params.contract,
     params.blockchain,
-    tokenData,
-    selectedToken,
-    params.tokenId
+    currentCollection,
+    selectedToken
   ]);
 
   useEffect(() => {
     getResaleData();
   }, [getResaleData]);
 
-  useEffect(() => {
-    getInfoFromUser();
-  }, [getInfoFromUser]);
-
   const resalePurchase = useCallback(async () => {
-    if (!correctBlockchain(blockchain as BlockchainType)) {
-      web3Switch(blockchain as BlockchainType);
+    if (!correctBlockchain(blockchain)) {
+      web3Switch(blockchain);
       return;
     }
-    if (!diamondMarketplaceInstance || !tokenData || !params?.tokenId) {
+    if (
+      !selectedToken ||
+      !diamondMarketplaceInstance ||
+      !currentCollection ||
+      !params?.tokenId
+    ) {
       return;
     }
     /*
@@ -250,7 +225,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
     */
     const { isConfirmed } = await reactSwal.fire({
-      imageUrl: Object.values(tokenData)[0].metadata.image,
+      imageUrl: currentCollection[selectedToken].metadata.image,
       imageHeight: '25vh',
       title: 'Purchase token',
       html: <>Currently owned by: {resaleData.seller}</>,
@@ -265,7 +240,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       icon: 'info',
       showConfirmButton: false
     });
-    if (settings.databaseResales) {
+    if (databaseResales) {
       const { success, hash } = await rFetch(
         `/api/resales/purchase/${resaleData._id}`
       );
@@ -277,7 +252,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           [
             params.contract, // address erc721,
             currentUserAddress, // address buyer,
-            Object.values(tokenData)[0]?.ownerAddress, // address seller,
+            currentCollection[selectedToken]?.ownerAddress, // address seller,
             resaleData.tokenIndex, // uint token,
             resaleData.price, // uint tokenPrice,
             import.meta.env.VITE_NODE_ADDRESS, // address nodeAddress,
@@ -287,9 +262,13 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           {
             callback: () => {
               getResaleData();
-              handleTokenBoughtButton();
+              dispatch(
+                reloadTokenData({
+                  tokenId: currentCollection?.[selectedToken]?._id
+                })
+              );
             },
-            intendedBlockchain: blockchain as BlockchainType
+            intendedBlockchain: blockchain
           }
         ))
       ) {
@@ -306,20 +285,21 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       reactSwal.fire('Success', 'Token purchased', 'success');
     }
   }, [
-    web3Switch,
+    correctBlockchain,
+    blockchain,
     diamondMarketplaceInstance,
+    currentCollection,
+    params?.tokenId,
+    params.contract,
     reactSwal,
     resaleData,
-    web3TxHandler,
-    handleTokenBoughtButton,
-    blockchain,
-    params,
-    currentUserAddress,
     selectedToken,
-    tokenData,
+    databaseResales,
+    web3TxHandler,
+    web3Switch,
+    currentUserAddress,
     getResaleData,
-    correctBlockchain,
-    settings.databaseResales
+    dispatch
   ]);
 
   const checkAllSteps = useCallback(() => {
@@ -330,33 +310,36 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (!currentUserAddress) {
       if (
         selectedToken &&
-        tokenData &&
-        Object.values(tokenData)[0]?.isMinted === true
+        currentCollection &&
+        currentCollection[selectedToken]?.isMinted === true
       ) {
+        const tokenData = currentCollection[selectedToken];
         return (
           <div className="container-sell-button-user">
             Owned by{' '}
             <div className="block-user-creator">
               <ImageLazy
-                src={accountData?.avatar ? accountData.avatar : defaultImage}
+                src={
+                  tokenData.ownerData?.avatar
+                    ? tokenData.ownerData.avatar
+                    : defaultImage
+                }
                 alt="User Avatar"
               />
               {selectedToken && (
-                <NavLink to={`/${Object.values(tokenData)[0]?.ownerAddress}`}>
+                <NavLink to={`/${tokenData?.ownerAddress}`}>
                   <h5>
-                    {(accountData &&
-                    accountData.nickName &&
-                    accountData.nickName.length > 20
-                      ? accountData.nickName.slice(0, 5) +
-                        '....' +
-                        accountData.nickName.slice(length - 4)
-                      : accountData && accountData.nickName) ||
-                      (Object.values(tokenData)[0]?.ownerAddress &&
-                      Object.values(tokenData)[0]?.ownerAddress.slice(0, 4) +
-                          '....' +
-                          Object.values(tokenData)[0]?.ownerAddress.slice(
-                            length - 4
-                          ))}
+                    {(tokenData.ownerData &&
+                    tokenData.ownerData.nickName &&
+                    tokenData.ownerData.nickName.length > 20
+                      ? tokenData.ownerData.nickName.slice(0, 5) +
+                        '...' +
+                        tokenData.ownerData.nickName.slice(length - 4)
+                      : tokenData.ownerData && tokenData.ownerData.nickName) ||
+                      (tokenData?.ownerAddress &&
+                        tokenData?.ownerAddress.slice(0, 4) +
+                          '...' +
+                          tokenData?.ownerAddress.slice(length - 4))}
                   </h5>
                 </NavLink>
               )}
@@ -381,7 +364,9 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (currentUserAddress && !correctBlockchain(blockchain)) {
       return (
         <BuySellButton
-          handleClick={() => web3Switch(blockchain)}
+          handleClick={() => {
+            web3Switch(blockchain);
+          }}
           isColorPurple={true}
           title={`Switch network`}
         />
@@ -389,11 +374,14 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     }
 
     // Blockchain is correct and offer exists
-    if (tokenData && !Object.values(tokenData)[0]?.isMinted && offerData) {
-      const rawPrice = BigNumber.from(offerData?.price ? offerData?.price : 0);
-      const price = numberTooBigThreshold.gte(rawPrice)
-        ? '0.000+'
-        : formatEther(rawPrice);
+    if (
+      selectedToken &&
+      !currentCollection?.[selectedToken]?.isMinted &&
+      offerData
+    ) {
+      const rawPrice = BigInt(offerData?.price ? offerData?.price : 0);
+      const price =
+        numberTooBigThreshold >= rawPrice ? '0.000+' : formatEther(rawPrice);
 
       const priceForUSD = formatEther(rawPrice);
 
@@ -416,22 +404,23 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               blockchain && getBlockchainData(blockchain)?.symbol
             }`}
           />
-          {coingeckoRates && (
+          {exchangeRates && (
             <div className="text-sell-button-usd-price">
               $
               {(
-                Number(priceForUSD) * Number(coingeckoRates[blockchain])
+                Number(priceForUSD) * Number(exchangeRates[blockchain])
               ).toFixed(2)}
             </div>
           )}
         </>
       );
       // Token is minted
-    } else if (tokenData && Object.values(tokenData)[0]?.isMinted) {
+    } else if (selectedToken && currentCollection?.[selectedToken]?.isMinted) {
       if (resaleData) {
-        const price = numberTooBigThreshold.gte(resaleData.price)
-          ? '0.000+'
-          : formatEther(resaleData.price);
+        const price =
+          numberTooBigThreshold >= resaleData.price
+            ? '0.000+'
+            : formatEther(resaleData.price);
         const priceForUSD = formatEther(resaleData.price);
 
         return (
@@ -443,55 +432,61 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
               title={`Buy ${price} ${getBlockchainData(blockchain)?.symbol}`}
             />
             <small>Resale offer</small>
-            {coingeckoRates && (
+            {exchangeRates && (
               <div className="text-sell-button-usd-price">
                 $
                 {(
-                  Number(priceForUSD) * Number(coingeckoRates[blockchain])
+                  Number(priceForUSD) * Number(exchangeRates[blockchain])
                 ).toFixed(2)}
               </div>
             )}
           </>
         );
       }
+
+      if (!selectedToken) {
+        return;
+      }
       // Current user is owner of the token
       if (
-        Object.values(tokenData)[0].ownerAddress ===
+        currentCollection[selectedToken].ownerAddress ===
         currentUserAddress?.toLowerCase()
       ) {
         return (
           <SellInputButton
-            tokenData={tokenData}
             selectedToken={selectedToken}
             refreshResaleData={getResaleData}
           />
         );
         // User is not owner and resale data exists
       } else {
+        const tokenData = currentCollection[selectedToken];
         return (
           <div className="container-sell-button-user">
             Owned by{' '}
             <div className="block-user-creator">
               <ImageLazy
-                src={accountData?.avatar ? accountData.avatar : defaultImage}
+                src={
+                  tokenData.ownerData?.avatar
+                    ? tokenData.ownerData.avatar
+                    : defaultImage
+                }
                 alt="User Avatar"
               />
-              {Object.values(tokenData)[0] && (
-                <NavLink to={`/${Object.values(tokenData)[0]?.ownerAddress}`}>
+              {tokenData && (
+                <NavLink to={`/${tokenData?.ownerAddress}`}>
                   <h5>
-                    {(accountData &&
-                    accountData.nickName &&
-                    accountData.nickName.length > 20
-                      ? accountData.nickName.slice(0, 5) +
+                    {(tokenData.ownerData &&
+                    tokenData.ownerData.nickName &&
+                    tokenData.ownerData.nickName.length > 20
+                      ? tokenData.ownerData.nickName.slice(0, 5) +
                         '....' +
-                        accountData.nickName.slice(length - 4)
-                      : accountData && accountData.nickName) ||
-                      (Object.values(tokenData)[0]?.ownerAddress &&
-                      Object.values(tokenData)[0]?.ownerAddress.slice(0, 4) +
+                        tokenData.ownerData.nickName.slice(length - 4)
+                      : tokenData.ownerData && tokenData.ownerData.nickName) ||
+                      (tokenData.ownerAddress &&
+                        tokenData.ownerAddress.slice(0, 4) +
                           '....' +
-                          Object.values(tokenData)[0]?.ownerAddress.slice(
-                            length - 4
-                          ))}
+                          tokenData.ownerAddress.slice(length - 4))}
                   </h5>
                 </NavLink>
               )}
@@ -500,23 +495,27 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         );
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     blockchain,
+    currentUserAddress,
     correctBlockchain,
-    selectedToken,
-    tokenData,
+    currentCollection,
     offerData,
+    selectedToken,
     web3Switch,
     numberTooBigThreshold,
     contractData,
     buyContract,
-    currentUserAddress,
+    getBlockchainData,
+    exchangeRates,
     resaleData,
     resalePurchase,
-    accountData,
     getResaleData
   ]);
+
+  if (!selectedToken) {
+    return <LoadingComponent />;
+  }
 
   return (
     <div className="main-tab">
@@ -529,37 +528,31 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           Serial number
         </div>
         <div>
-          {tokenData && Object.keys(tokenData)?.length ? (
+          {currentCollection && Object.keys(currentCollection)?.length ? (
             <SelectNumber
-              blockchain={blockchain}
-              product={product}
-              contract={contract}
-              totalCount={totalCount}
+              serialNumberData={serialNumberData}
               handleClickToken={handleClickToken}
-              selectedToken={selectedToken}
               setSelectedToken={setSelectedToken}
-              items={currentTokenData(tokenData)}
             />
           ) : (
             <></>
           )}
         </div>
       </div>
-      {tokenData &&
+      {currentCollection &&
         selectedToken &&
         tokenDataForResale &&
-        Object.values(tokenData)[0]?.isMinted &&
-        currentUserAddress === Object.values(tokenData)[0].ownerAddress && (
+        currentCollection[selectedToken]?.isMinted &&
+        currentUserAddress ===
+          currentCollection[selectedToken].ownerAddress && (
           <button
             onClick={() => {
               reactSwal.fire({
                 html: (
                   <Provider store={store}>
                     <ResaleModal
-                      textColor={textColor}
                       singleTokenPage={true}
                       item={tokenDataForResale}
-                      reloadFunction={handleTokenBoughtButton}
                     />
                   </Provider>
                 ),

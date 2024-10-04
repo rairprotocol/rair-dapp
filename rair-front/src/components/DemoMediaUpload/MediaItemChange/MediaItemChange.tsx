@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   faCheck,
   faPencilAlt,
@@ -9,8 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { MediaItemContainer } from './MediaItem.styled';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { rFetch } from '../../../utils/rFetch';
 import { TooltipBox } from '../../common/Tooltip/TooltipBox';
 import PopUpChangeVideo from '../PopUpChangeVideo/PopUpChangeVideo';
@@ -33,9 +31,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
   setUploadSuccess,
   beforeUpload
 }) => {
-  const { primaryColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor } = useAppSelector((store) => store.colors);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   const openModal = useCallback(() => {

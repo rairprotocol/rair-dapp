@@ -1,17 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import DiamondOfferRow from './diamondOfferRow';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
-import useServerSettings from '../../adminViews/useServerSettings';
 import {
   TAddDiamondOffer,
   TListOffers,
@@ -41,7 +39,7 @@ const ListOffers: React.FC<TListOffers> = ({
   const { getBlockchainData } = useServerSettings();
 
   const { primaryColor, textColor, primaryButtonColor, secondaryColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
+    useAppSelector((store) => store.colors);
   const { collectionIndex } = useParams<TParamsDiamondListOffers>();
 
   useEffect(() => {
@@ -172,12 +170,7 @@ const ListOffers: React.FC<TListOffers> = ({
               className={`btn rair-button rounded-rair px-4`}>
               Add new{' '}
               <FontAwesomeIcon
-                icon={faPlus}
-                style={{
-                  border: `solid 1px ${textColor}`,
-                  borderRadius: '50%',
-                  padding: '5px'
-                }}
+                icon={faPlusCircle}
               />
             </button>
           </div>
@@ -208,8 +201,9 @@ const ListOffers: React.FC<TListOffers> = ({
                       : createOffers
                     : createOffers,
                 label: !correctBlockchain(contractData.blockchain)
-                  ? `Switch to ${getBlockchainData(contractData?.blockchain)
-                      ?.name}`
+                  ? `Switch to ${
+                      getBlockchainData(contractData?.blockchain)?.name
+                    }`
                   : offerList[0]?._id
                     ? offerList.filter((item) => !item._id).length === 0
                       ? 'Continue'

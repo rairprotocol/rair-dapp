@@ -274,7 +274,7 @@ const processPaginationQuery = (queryFields) => {
   const skip = (parseInt(pageNum, 10) - 1) * limit;
 
   return { skip, limit, query };
-}
+};
 
 module.exports = {
   attributesCounter,

@@ -1,4 +1,5 @@
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
+import { Hex } from 'viem';
 
 export interface IBatchRow {
   index: number;
@@ -59,13 +60,13 @@ export type TRangeInfo = {
 };
 
 export type TOffersArrayItem = {
-  contractAddress: string;
+  contractAddress: Hex;
   endingToken: string;
   lockedTokens: string;
   mintableTokens: string;
   name: string;
   offerIndex: string;
-  price: BigNumber;
+  price: bigint;
   productIndex: string;
   rangeIndex: string;
   startingToken: string;

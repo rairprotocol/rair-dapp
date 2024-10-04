@@ -82,7 +82,7 @@ async function main() {
     },
   });
 
-  await seedDB(context);
+  await seedDB();
 
   app.use(morgan('dev'));
   app.use(bodyParser.raw());

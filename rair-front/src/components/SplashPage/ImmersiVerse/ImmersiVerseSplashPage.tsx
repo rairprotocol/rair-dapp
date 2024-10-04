@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { teamImmersiverseArray } from './AboutUsTeam';
 
-import { RootState } from '../../../ducks';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { DocumentIcon, metaMaskIcon } from '../../../images';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { CustomModalStyle, SplashPageProps } from '../../../types/commonTypes';
 import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
 import AuthorBlock from '../AuthorBlock/AuthorBlock';
 import { SXSW1, SXSW2, SXSW3 } from '../images/SxSw/sxSw';
 import NotCommercialGeneric from '../NotCommercial/NotCommercialGeneric';
-import { ISplashPageProps, TSplashPageIsActive } from '../splashPage.types';
+import { TSplashPageIsActive } from '../splashPage.types';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 
 import favion_Immersil from './../images/favicons/ImmersiverseATX.ico';
@@ -24,7 +23,7 @@ import './../SplashPage.css';
 import './../Greyman/./GreymanSplashPageMobile.css';
 import './../../AboutPage/AboutPageNew/AboutPageNew.css';
 
-const customStyles = {
+const customStyles: CustomModalStyle = {
   overlay: {
     zIndex: '1'
   },
@@ -48,26 +47,19 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
-const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
-  setIsSplashPage
-}) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+const ImmersiVerseSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const [, /*active*/ setActive] = useState<TSplashPageIsActive>({
     policy: false,
     use: false
   });
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-  const currentUserAddress = useSelector<RootState, string | undefined>(
-    (store) => store.contractStore.currentUserAddress
-  );
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: '#ImmersiverseATX',
         ogTitle: '#ImmersiverseATX',
         twitterTitle: '#ImmersiverseATX',
@@ -93,8 +85,12 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
+  let subtitle: Modal;
+
   function afterOpenModal() {
-    return (subtitle.style.color = '#9013FE');
+    if (subtitle?.props?.style?.content) {
+      return (subtitle.props.style.content.color = '#9013FE');
+    }
   }
 
   function closeModal() {
@@ -105,8 +101,6 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
       use: false
     }));
   }
-
-  let subtitle: Modal;
 
   const formHyperlink = () => {
     window.open(
@@ -168,8 +162,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
                       fontWeight: 'bold',
                       paddingTop: '3rem',
                       cursor: 'default'
-                    }}
-                    ref={(_subtitle) => (subtitle = _subtitle)}>
+                    }}>
                     Terms of Service
                   </h2>
                   <div className="modal-content-wrapper">
@@ -304,7 +297,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
           arraySplash={'immersiverse'}
           titleHeadFirst={'About'}
         />
-        <NotCommercialGeneric primaryColor={primaryColor} />
+        <NotCommercialGeneric />
       </div>
     </div>
   );

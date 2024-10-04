@@ -1,25 +1,22 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios, { AxiosError } from 'axios';
-import { BigNumber } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'ethers';
 
 import { IOffersResponseType } from '../../../axios.responseTypes';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import useIPFSImageLink from '../../../hooks/useIPFSImageLink';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { BillTransferIcon, defaultHotDrops } from '../../../images';
 import { checkIPFSanimation } from '../../../utils/checkIPFSanimation';
 import { getRGBValue } from '../../../utils/determineColorRange';
 import { rFetch } from '../../../utils/rFetch';
-import useServerSettings from '../../adminViews/useServerSettings';
 import ResaleModal from '../../nft/PersonalProfile/PersonalProfileMyNftTab/ResaleModal/ResaleModal';
 import defaultImage from '../../UserProfileSettings/images/defaultUserPictures.png';
 import { ImageLazy } from '../ImageLazy/ImageLazy';
@@ -71,13 +68,10 @@ const NftItemForCollectionViewComponent: React.FC<
   const { width } = useWindowDimensions();
   const isMobileDesign = width < 600;
 
-  const { currentUserAddress, coingeckoRates } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
+  const { currentUserAddress, exchangeRates } = useAppSelector(
+    (state) => state.web3
   );
+  const { primaryColor } = useAppSelector((store) => store.colors);
 
   const { userAddress, contract, product } = useParams();
 
@@ -128,13 +122,12 @@ const NftItemForCollectionViewComponent: React.FC<
   const fullPrice = () => {
     if (offerPrice) {
       if (resalePrice) {
-        return resalePrice;
+        return formatEther(resalePrice);
       }
       if (offerPrice.length > 0 && offerItemData) {
-        const rawPrice = BigNumber.from(
-          offerItemData.price ? offerItemData.price : 0
-        );
-        const price = rawPrice.lte(100000) ? '0.000+' : formatEther(rawPrice);
+        const rawPrice = BigInt(offerItemData.price ? offerItemData.price : 0);
+        const price =
+          rawPrice < BigInt(100000) ? '0.000+' : formatEther(rawPrice);
 
         return price;
       }
@@ -142,19 +135,17 @@ const NftItemForCollectionViewComponent: React.FC<
       if (offerPriceUser && offerPriceUser.length > 0) {
         if (offerDataUser) {
           if (offerDataUser.price && offerDataUser.price.length) {
-            const rawPrice = BigNumber.from(offerDataUser.price || 0);
-            const price = rawPrice.lte(100000)
-              ? '0.000+'
-              : formatEther(rawPrice);
+            const rawPrice = BigInt(offerDataUser.price || 0);
+            const price =
+              rawPrice < BigInt(100000) ? '0.000+' : formatEther(rawPrice);
 
             return price;
           } else {
-            const rawPrice = BigNumber.from(
+            const rawPrice = BigInt(
               offerDataUser.price ? offerDataUser.price : 0
             );
-            const price = rawPrice.lte(100000)
-              ? '0.000+'
-              : formatEther(rawPrice);
+            const price =
+              rawPrice < BigInt(100000) ? '0.000+' : formatEther(rawPrice);
 
             return price;
           }
@@ -177,7 +168,7 @@ const NftItemForCollectionViewComponent: React.FC<
     }
   }, [item, contract]);
 
-  const redirectionUserPage = useCallback(() => {
+  const redirectionFromUserPage = useCallback(() => {
     const tokenContract =
       contract ||
       item?.contract?.contractAddress ||
@@ -207,64 +198,55 @@ const NftItemForCollectionViewComponent: React.FC<
   }, [item, resaleFlag]);
 
   const getParticularOffer = useCallback(async () => {
-    if (resaleFlag) {
-      const responseToken = await rFetch(
-        `/api/tokens/id/${item._id}`,
-        undefined,
-        undefined,
-        undefined
-      );
+    if (resaleFlag && !resalePrice && tokenInfo) {
+      try {
+        const response = await axios.get<IOffersResponseType>(
+          `/api/nft/network/${tokenInfo.contract.blockchain}/${tokenInfo.contract.contractAddress}/${tokenInfo.product.collectionIndexInContract}/offers`
+        );
+        const resaleResponse = await rFetch(
+          `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
+        );
 
-      if (responseToken.success) {
-        try {
-          const response = await axios.get<IOffersResponseType>(
-            `/api/nft/network/${responseToken.tokenData.contract.blockchain}/${responseToken.tokenData.contract.contractAddress}/${responseToken.tokenData.product.collectionIndexInContract}/offers`
-          );
-          const resaleResponse = await rFetch(
-            `/api/resales/open?contract=${item.contract.contractAddress}&blockchain=${item.contract.blockchain}&index=${item.uniqueIndexInContract}`
-          );
-
-          if (response.data.success) {
-            const offerInformation = response.data.product.offers?.find(
-              (neededOfferIndex) => {
-                const offerIndex = neededOfferIndex.diamond
-                  ? neededOfferIndex.diamondRangeIndex
-                  : neededOfferIndex.offerIndex;
-                return (
-                  selectedOfferIndexUser.toString() === offerIndex?.toString()
-                );
-              }
-            );
-            if (resaleResponse.data.length) {
-              setOfferDataUser({
-                ...offerInformation,
-                price: resaleResponse.data[0].price.toString()
-              });
-            } else {
-              setOfferDataUser(offerInformation);
-            }
-
-            if (resaleResponse.success && resaleResponse.data.length) {
-              setOfferPriceUser(
-                resaleResponse.data.map((p) => {
-                  return p.price.toString();
-                })
-              );
-            } else {
-              setOfferPriceUser(
-                response.data.product.offers?.map((p) => {
-                  return p.price.toString();
-                })
+        if (response.data.success) {
+          const offerInformation = response.data.product.offers?.find(
+            (neededOfferIndex) => {
+              const offerIndex = neededOfferIndex.diamond
+                ? neededOfferIndex.diamondRangeIndex
+                : neededOfferIndex.offerIndex;
+              return (
+                selectedOfferIndexUser.toString() === offerIndex?.toString()
               );
             }
+          );
+          if (resaleResponse.data.length) {
+            setOfferDataUser({
+              ...offerInformation,
+              price: resaleResponse.data[0].price.toString()
+            });
+          } else {
+            setOfferDataUser(offerInformation);
           }
-        } catch (err) {
-          const error = err as AxiosError;
-          console.error(error?.message);
+
+          if (resaleResponse.success && resaleResponse.data.length) {
+            setOfferPriceUser(
+              resaleResponse.data.map((p) => {
+                return p.price.toString();
+              })
+            );
+          } else {
+            setOfferPriceUser(
+              response.data.product.offers?.map((p) => {
+                return p.price.toString();
+              })
+            );
+          }
         }
+      } catch (err) {
+        const error = err as AxiosError;
+        console.error(error?.message);
       }
     }
-  }, [item, resaleFlag, selectedOfferIndexUser]);
+  }, [item, resaleFlag, selectedOfferIndexUser, tokenInfo, resalePrice]);
 
   useEffect(() => {
     initialTokenData();
@@ -322,7 +304,6 @@ const NftItemForCollectionViewComponent: React.FC<
                     html: (
                       <Provider store={store}>
                         <ResaleModal
-                          textColor={textColor}
                           item={item}
                           getMyNft={getMyNft}
                           totalNft={totalNft}
@@ -554,7 +535,7 @@ const NftItemForCollectionViewComponent: React.FC<
               <div
                 onClick={() => {
                   if (item) {
-                    redirectionUserPage();
+                    redirectionFromUserPage();
                   } else {
                     RedirectToMockUp();
                   }
@@ -572,32 +553,30 @@ const NftItemForCollectionViewComponent: React.FC<
                 <span className="description description-price description-price-unlockables-page">
                   {fullPrice()}
                 </span>
-                {coingeckoRates &&
-                  blockchain &&
-                  !!coingeckoRates[blockchain] && (
-                    <span className="description-usd-price-collection-page">
-                      {resaleFlag
-                        ? (
+                {exchangeRates && blockchain && !!exchangeRates[blockchain] && (
+                  <span className="description-usd-price-collection-page">
+                    {resaleFlag
+                      ? (
+                          Number(resalePrice) *
+                          Number(exchangeRates[blockchain])
+                        ).toFixed(2) !== 'NaN'
+                        ? `$${(
                             Number(resalePrice) *
-                            Number(coingeckoRates[blockchain])
+                            Number(exchangeRates[blockchain])
+                          ).toFixed(2)}`
+                        : 0.0
+                      : fullPrice() !== '0.000+' &&
+                          (
+                            Number(fullPrice()) *
+                            Number(exchangeRates[blockchain])
                           ).toFixed(2) !== 'NaN'
-                          ? `$${(
-                              Number(resalePrice) *
-                              Number(coingeckoRates[blockchain])
-                            ).toFixed(2)}`
-                          : 0.0
-                        : fullPrice() !== '0.000+' &&
-                            (
-                              Number(fullPrice()) *
-                              Number(coingeckoRates[blockchain])
-                            ).toFixed(2) !== 'NaN'
-                          ? `$${(
-                              Number(fullPrice()) *
-                              Number(coingeckoRates[blockchain])
-                            ).toFixed(2)}`
-                          : 0.0}
-                    </span>
-                  )}
+                        ? `$${(
+                            Number(fullPrice()) *
+                            Number(exchangeRates[blockchain])
+                          ).toFixed(2)}`
+                        : 0.0}
+                  </span>
+                )}
                 <span className="description-more">View item</span>
               </div>
             </div>

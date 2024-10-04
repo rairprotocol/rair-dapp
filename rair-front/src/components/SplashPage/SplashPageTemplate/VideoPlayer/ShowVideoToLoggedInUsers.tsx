@@ -1,13 +1,12 @@
-import React from 'react';
 import { useCallback, useState } from 'react';
 import Modal from 'react-modal';
-import { Provider, useSelector, useStore } from 'react-redux';
+import { Provider, useStore } from 'react-redux';
 
 import VideoPlayerBySignature from './VideoPlayerBySignature ';
 
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import useSwal from '../../../../hooks/useSwal';
+import { CustomModalStyle } from '../../../../types/commonTypes';
 import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import { playImagesColored } from '../../images/greyMan/grayMan';
@@ -15,7 +14,7 @@ import { IShowVideoToLoggedInUsers } from '../../splashPage.types';
 
 import './VideoPlayer.css';
 
-const customStylesForVideo = {
+const customStylesForVideo: CustomModalStyle = {
   overlay: {
     zIndex: '5'
   },
@@ -65,30 +64,13 @@ const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
 
   const store = useStore();
   const reactSwal = useSwal();
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
+  const { primaryColor, textColor } = useAppSelector((store) => store.colors);
 
   return (
     <>
       {demo ? (
         <>
           <div
-            // onClick={() => reactSwal.fire({
-            //   title: videoTitle,
-            //   html: <Provider store={store}>
-            //     <StandaloneVideoPlayer
-            //       {...{ baseURL, mediaId }}
-            //     />
-            //   </Provider>,
-            //   width: '90vw',
-            //   height: '90vh',
-            //   customClass: {
-            //     popup: `bg-${primaryColor}`,
-            //     title: `text-${textColor}`,
-            //   },
-            //   showConfirmButton: false
-            // })}
             className="video-module-background"
             style={{ backgroundImage: 'url(' + backgroundImage + ')' }}>
             <div className="video-module-play-button-wrapper">

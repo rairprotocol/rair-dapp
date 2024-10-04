@@ -1,34 +1,31 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import { FC } from 'react';
 
 import { IMainLogo } from './mainLogo.types';
 import { MainLogoContaier } from './MainLogoItems';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import useServerSettings from '../adminViews/useServerSettings';
+import { useAppSelector } from '../../hooks/useReduxHooks';
+import { dataStatuses } from '../../redux/commonTypes';
 
 import LoadingComponent from './../common/LoadingComponent';
 
-const MainLogo: React.FC<IMainLogo> = ({ goHome }) => {
-  const { headerLogo } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
-  const { isLoading } = useServerSettings();
+const MainLogo: FC<IMainLogo> = ({ goHome }) => {
+  const { headerLogo } = useAppSelector((store) => store.colors);
+  const { dataStatus } = useAppSelector((store) => store.settings);
   const hotdropsVar = import.meta.env.VITE_TESTNET;
+
+  if (dataStatus !== dataStatuses.Complete) {
+    return <LoadingComponent classes="logo-hotdrops-image" size={25} />;
+  }
+
   return (
     <>
       <MainLogoContaier>
-        {!isLoading ? (
-          <img
-            className={`${hotdropsVar === 'true' ? 'logo-hotdrops-image' : ''}`}
-            onClick={() => goHome()}
-            alt="Rair Tech"
-            src={headerLogo}
-          />
-        ) : (
-          <LoadingComponent size={25} classes={''} />
-        )}
+        <img
+          className={`${hotdropsVar === 'true' ? 'logo-hotdrops-image' : ''}`}
+          onClick={() => goHome()}
+          alt="Rair Tech"
+          src={headerLogo}
+        />
       </MainLogoContaier>
     </>
   );

@@ -4,13 +4,13 @@ import { ITitleSingleTokenView } from '../../mockupPage.types';
 
 export const TitleSingleTokenView: React.FC<ITitleSingleTokenView> = ({
   title,
-  primaryColor
+  isDarkMode
 }) => {
   return (
     <div
       className="main-tab-description"
       style={{
-        color: `${primaryColor === 'rhyno' ? 'var(--charcoal)' : '#FFFFFF'}`
+        color: `${!isDarkMode ? 'var(--charcoal)' : '#FFFFFF'}`
       }}>
       {title}
     </div>

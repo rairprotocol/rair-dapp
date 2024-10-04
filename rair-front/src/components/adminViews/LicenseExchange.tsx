@@ -1,11 +1,8 @@
 import { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { formatEther, parseUnits } from 'ethers/lib/utils';
+import { formatEther, parseUnits } from 'ethers';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { TUsersInitialState } from '../../ducks/users/users.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import InputField from '../common/InputField';
@@ -16,19 +13,13 @@ const LicenseExchange = () => {
   const [userAddress, setUserAddress] = useState('');
   const [signedHash, setSignedhash] = useState('');
 
-  const { licenseExchangeInstance, mainTokenInstance, currentUserAddress } =
-    useSelector<RootState, ContractsInitialType>(
-      (store) => store.contractStore
-    );
+  const { licenseExchangeInstance, mainTokenInstance } = useContracts();
+  const { currentUserAddress } = useAppSelector((store) => store.web3);
 
-  const { adminRights } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  const { adminRights } = useAppSelector((store) => store.user);
 
-  const { primaryButtonColor, secondaryButtonColor, textColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryButtonColor, secondaryButtonColor, textColor } =
+    useAppSelector((store) => store.colors);
 
   const { web3TxHandler, web3TxSignMessage } = useWeb3Tx();
   const rSwal = useSwal();
@@ -74,7 +65,7 @@ const LicenseExchange = () => {
     });
     const allowance = await web3TxHandler(mainTokenInstance, 'allowance', [
       currentUserAddress,
-      licenseExchangeInstance.address
+      await licenseExchangeInstance.getAddress()
     ]);
     if (allowance.lt(tokenPriceBigNumber)) {
       rSwal.fire({
@@ -85,7 +76,7 @@ const LicenseExchange = () => {
         showConfirmButton: false
       });
       await web3TxHandler(mainTokenInstance, 'approve', [
-        licenseExchangeInstance.address,
+        await licenseExchangeInstance.getAddress(),
         tokenPriceBigNumber
       ]);
     }
@@ -122,7 +113,7 @@ const LicenseExchange = () => {
     }
     await web3TxHandler(licenseExchangeInstance, 'setPurchasePeriod', [180]);
     await web3TxHandler(licenseExchangeInstance, 'updateERC20Address', [
-      mainTokenInstance.address
+      await mainTokenInstance.getAddress()
     ]);
   }, [licenseExchangeInstance, web3TxHandler, mainTokenInstance]);
 

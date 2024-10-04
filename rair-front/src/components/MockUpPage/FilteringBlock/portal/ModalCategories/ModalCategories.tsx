@@ -2,32 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { rFetch } from '../../../../../utils/rFetch';
+import { useAppSelector } from '../../../../../hooks/useReduxHooks';
 import {
   IModalCategories,
-  TModalCategoriesItem,
-  TOnClickCategories
+  TModalCategoriesItem
 } from '../../filteringBlock.types';
 import Modal from '../../modal';
-
-const categories: TModalCategoriesItem[] = [
-  {
-    name: 'Music',
-    clicked: false
-  },
-  {
-    name: 'Art',
-    clicked: false
-  },
-  {
-    name: 'Conference',
-    clicked: false
-  },
-  {
-    name: 'Science',
-    clicked: false
-  }
-];
 
 const ModalCategories: React.FC<IModalCategories> = ({
   setFilterCategoriesText,
@@ -38,11 +18,14 @@ const ModalCategories: React.FC<IModalCategories> = ({
   setIsShowCategories,
   click
 }) => {
-  const [arrCategories, setArrCategories] =
-    useState<TModalCategoriesItem[]>(categories);
+  const [arrCategories, setArrCategories] = useState<TModalCategoriesItem[]>(
+    []
+  );
   const [, /*clearAll*/ setClearAll] = useState<boolean>(false);
 
-  const onChangeClicked = (name: TOnClickCategories) => {
+  const { categories } = useAppSelector((store) => store.settings);
+
+  const onChangeClicked = (name: string) => {
     setClick?.(name);
     setClearAll(false);
     setIsShowCategories?.(true);
@@ -72,15 +55,14 @@ const ModalCategories: React.FC<IModalCategories> = ({
   };
 
   const getCategories = useCallback(async () => {
-    const data = await rFetch('/api/categories');
-    if (data.success) {
+    if (categories) {
       setArrCategories(
-        data.result.map((item) => {
+        categories.map((item) => {
           return { name: item.name, clicked: false };
         })
       );
     }
-  }, []);
+  }, [categories]);
 
   useEffect(() => {
     getCategories();

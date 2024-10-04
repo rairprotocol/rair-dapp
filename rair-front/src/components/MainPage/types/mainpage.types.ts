@@ -1,5 +1,7 @@
+import { Hex } from 'viem';
+
 export type TUseGetProductsGeneralArguments = {
-  blockchain: BlockchainType;
+  blockchain: Hex;
   contract: string;
   product: string;
   currentUserAddress: string | undefined;
@@ -7,7 +9,5 @@ export type TUseGetProductsGeneralArguments = {
 
 export interface IMainPage {
   setIsSplashPage: (arg: boolean) => void;
-  connectUserData: () => void;
-  seoInformation: Object;
   setIsAboutPage: (arg: boolean) => void;
 }

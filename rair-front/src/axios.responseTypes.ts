@@ -1,6 +1,8 @@
 import { TOfferType } from './components/marketplace/marketplace.types';
 import { MediaListResponseType } from './components/video/video.types';
-import { UserType } from './ducks/users/users.types';
+import { CatalogItem } from './redux/tokenSlice';
+import { CatalogVideoItem } from './types/commonTypes';
+import { User } from './types/databaseTypes';
 
 export type BackendResponse = {
   success: boolean;
@@ -9,13 +11,8 @@ export type BackendResponse = {
 
 export type TUserResponse = {
   success: boolean;
-  user: UserType | null;
+  user: User;
   message: string;
-};
-
-export type TNftItemResult = {
-  totalCount: number;
-  tokens: TTokenData[];
 };
 
 export type TAttributes = {
@@ -58,8 +55,8 @@ export type TTokenData = {
 
 export type TNftItemResponse = {
   success: boolean;
-  result: TNftItemResult;
-  tokens?: any;
+  totalCount: number;
+  tokens: TTokenData[];
 };
 
 export type TFavotiteTokenData = {
@@ -88,32 +85,9 @@ export type TFileKeyType = {
   };
 };
 
-export type TFileType = {
-  animatedThumbnail: string;
-  ageRestricted?: boolean;
-  author: string;
-  uploader: string;
-  category: string;
-  contract: string;
-  creationDate: string;
-  demo: boolean;
-  description: string;
-  duration: string;
-  encryptionType: string;
-  extension: string;
-  isUnlocked: boolean;
-  mainManifest: string;
-  offer: string[];
-  product: string;
-  staticThumbnail: string;
-  title: string;
-  type: string;
-  _id: string;
-};
-
 export type TNftFilesResponse = {
   success: boolean;
-  files: TFileType[];
+  files: CatalogVideoItem[];
 };
 
 export type IOffersResponseType = {
@@ -128,27 +102,9 @@ export type TMediaList = {
 };
 
 export type TGetFullContracts = {
-  contracts: TContract[];
+  contracts: CatalogItem[];
   success: boolean;
   totalNumber: number;
-};
-
-export type TContract = {
-  blockchain: BlockchainType;
-  contractAddress: string;
-  creationDate: string;
-  diamond: boolean;
-  external: boolean;
-  lastSyncedBlock: string;
-  metadataURI: string;
-  offerPool?: TOfferPool;
-  products: TProducts;
-  singleMetadata: boolean;
-  title: string;
-  transactionHash?: string;
-  user: string;
-  userData: UserType | null;
-  _id: string;
 };
 
 export type TProducts = {
@@ -218,7 +174,7 @@ export type TUploadSocket = {
 };
 
 export type TNftDataExternalLinkResultType = {
-  contract: TContract;
+  contract: CatalogItem;
   tokens: TTokenData[];
   totalCount: number;
 };

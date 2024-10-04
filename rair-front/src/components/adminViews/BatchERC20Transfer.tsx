@@ -1,13 +1,11 @@
 import { useCallback, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { useSelector } from 'react-redux';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { parseUnits } from 'ethers/lib/utils';
+import { parseUnits } from 'ethers';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import useContracts from '../../hooks/useContracts';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
 import csvParser from '../../utils/csvParser';
@@ -53,10 +51,8 @@ type RowData = {
 const BatchERC20Transfer = () => {
   const [data, setData] = useState<RowData[]>([]);
   const { textColor, primaryColor, primaryButtonColor, secondaryButtonColor } =
-    useSelector<RootState, ColorStoreType>((store) => store.colorStore);
-  const { mainTokenInstance } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+    useAppSelector((store) => store.colors);
+  const { mainTokenInstance } = useContracts();
   const { web3TxHandler } = useWeb3Tx();
   const reactSwal = useSwal();
   const updateRowData = useCallback(

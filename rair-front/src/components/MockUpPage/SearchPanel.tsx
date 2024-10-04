@@ -1,107 +1,90 @@
-//@ts-nocheck
-import React, {
+import {
+  FC,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState
 } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Hex } from 'viem';
 
 import { ISearchPanel } from './mockupPage.types';
 
-import { RootState } from '../../ducks';
-import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import {
-  getNftDataStart,
-  getNftDataStartWithParams
-} from '../../ducks/nftData/action';
-import { InitialNftDataStateType } from '../../ducks/nftData/nftData.types';
-import {
-  getCurrentPage,
-  getCurrentPageEnd,
-  getCurrentPageNull
-} from '../../ducks/pages/actions';
-import { TUsersInitialState } from '../../ducks/users/users.types';
-import { getListVideosStart } from '../../ducks/videos/actions';
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
 import {
   GlobalModalContext,
   TGlobalModalContext
 } from '../../providers/ModalProvider';
 import { GLOBAL_MODAL_ACTIONS } from '../../providers/ModalProvider/actions';
+import { loadFrontPageCatalog } from '../../redux/tokenSlice';
+import { loadVideoList } from '../../redux/videoSlice';
 import InputField from '../common/InputField';
-import { MediaListResponseType } from '../video/video.types';
 import VideoList from '../video/videoList';
 
 import FilteringBlock from './FilteringBlock/FilteringBlock';
 import {
   TBlockchainNames,
-  TOnClickCategories,
   TSortChoice
 } from './FilteringBlock/filteringBlock.types';
 import { NftList } from './NftList/NftList';
 import PaginationBox from './PaginationBox/PaginationBox';
 
-const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
-  const [videoUnlocked, setVideoUnlocked] = useState<boolean>(false);
+const SearchPanel: FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
+  const [, setVideoUnlocked] = useState<boolean>(false);
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [sortItem, setSortItem] = useState<TSortChoice | undefined>();
-  const [blockchain, setBlockchain] = useState<BlockchainType | undefined>();
-  const [category, setCategory] = useState<TOnClickCategories | null>();
+  const [blockchain, setBlockchain] = useState<Hex | undefined>();
+  const [category, setCategory] = useState<string>('');
   const [, /*isShow*/ setIsShow] = useState<boolean>(false);
   const [click, setClick] = useState(null);
   const [isShowCategories, setIsShowCategories] = useState<boolean>(false);
-  const [filterText, setFilterText] = useState<TBlockchainNames>([]);
-  const [filterCategoriesText, setFilterCategoriesText] =
-    useState<TOnClickCategories | null>();
-  const [categoryClick, setCategoryClick] = useState<TOnClickCategories | null>(
-    null
-  );
+  const [filterText, setFilterText] = useState<Array<TBlockchainNames>>([]);
+  const [filterCategoriesText, setFilterCategoriesText] = useState<
+    string | null
+  >();
+  const [categoryClick, setCategoryClick] = useState<string | null>(null);
   const [blockchainClick, setBlockchainClick] =
     useState<TBlockchainNames | null>(null);
   const [currentPageForVideo, setCurrentPageForVideo] = useState<number>(1);
-  const dispatch = useDispatch();
-  const currentPage = useSelector<RootState, number>(
-    (store) => store.getPageStore.currentPage
+  const dispatch = useAppDispatch();
+  const { catalogTotal, itemsPerPage, currentPage } = useAppSelector(
+    (store) => store.tokens
   );
-  const { nftListTotal, nftList, itemsPerPage } = useSelector<
-    RootState,
-    InitialNftDataStateType
-  >((store) => store.nftDataStore);
-  const totalNumberVideo = useSelector<RootState, number | undefined>(
-    (store) => store.videosStore.totalNumberVideo
-  );
+  const { totalVideos } = useAppSelector((store) => store.videos);
   const {
     primaryColor,
     textColor,
     secondaryColor,
     primaryButtonColor,
     iconColor
-  } = useSelector<RootState, ColorStoreType>((store) => store.colorStore);
-  const videos = useSelector<RootState, MediaListResponseType | null>(
-    (store) => store.videosStore.videos
-  );
-  const { userRd } = useSelector<RootState, TUsersInitialState>(
-    (store) => store.userStore
-  );
+  } = useAppSelector((store) => store.colors);
 
   const { globalModalState, globalModaldispatch } =
     useContext<TGlobalModalContext>(GlobalModalContext);
+
+  const catalogPage = useCallback(
+    (page: number) => {
+      const params = {
+        itemsPerPage,
+        pageNum: page,
+        blockchain,
+        category,
+        contractTitle: titleSearch.toLocaleLowerCase()
+      };
+
+      dispatch(loadFrontPageCatalog(params));
+      window.scrollTo(0, 0);
+    },
+    [itemsPerPage, blockchain, category, titleSearch, dispatch]
+  );
 
   const handleVideoIsUnlocked = useCallback(() => {
     setVideoUnlocked((prev) => !prev);
   }, [setVideoUnlocked]);
 
-  const clearPagesForVideo = () => {
-    dispatch(getCurrentPageNull());
-  };
-  const changePage = (currentPage: number) => {
-    dispatch(getCurrentPage(currentPage));
-    window.scrollTo(0, 0);
-  };
   const changePageForVideo = (currentPage: number) => {
     setCurrentPageForVideo(currentPage);
     window.scrollTo(0, 0);
@@ -109,12 +92,12 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
 
   const clearFilter = useCallback(() => {
     setBlockchain(undefined);
-    setCategory(undefined);
+    setCategory('null');
     setCategoryClick(null);
     setBlockchainClick(null);
     setIsShow(false);
     setClick(null);
-    dispatch(getCurrentPageEnd());
+    catalogPage(1);
     globalModaldispatch({
       type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
       payload: {
@@ -122,7 +105,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
         selectedCatItems: []
       }
     });
-  }, [dispatch, globalModaldispatch]);
+  }, [catalogPage, globalModaldispatch]);
 
   const clearSelected = (selectedItemText) => {
     if (globalModalState.selectedBchItems) {
@@ -142,11 +125,11 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   };
 
   const clearCategoriesFilter = () => {
-    setCategory(null);
+    setCategory('null');
     setCategoryClick(null);
     setBlockchainClick(null);
     setIsShowCategories(false);
-    dispatch(getCurrentPageEnd());
+    catalogPage(1);
     globalModaldispatch({
       type: GLOBAL_MODAL_ACTIONS.UPDATE_MODAL,
       payload: {
@@ -170,18 +153,11 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
     });
   }, [globalModaldispatch, setBlockchain, primaryColor, clearFilter]);
 
-  useEffect(() => {
-    if (blockchain || category) {
-      dispatch(getCurrentPageEnd());
-    }
-  }, [blockchain, category, dispatch]);
-
   const updateVideo = useCallback(
     (params) => {
-      dispatch(getListVideosStart(params));
+      dispatch(loadVideoList(params));
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dispatch, videoUnlocked, userRd]
+    [dispatch]
   );
 
   const globalParams = useMemo(
@@ -206,20 +182,20 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
   useEffect(() => {
     const params = {
       itemsPerPage,
-      currentPage,
+      pageNum: currentPage,
       blockchain,
       category,
       contractTitle: titleSearch.toLocaleLowerCase()
     };
 
-    dispatch(getNftDataStartWithParams(params));
+    dispatch(loadFrontPageCatalog(params));
   }, [itemsPerPage, currentPage, blockchain, category, titleSearch, dispatch]);
 
   useEffect(() => {
     return () => {
-      dispatch(getNftDataStart());
+      dispatch(loadFrontPageCatalog({ itemsPerPage, pageNum: 1 }));
     };
-  }, [dispatch]);
+  }, [dispatch, itemsPerPage]);
   return (
     <div className="input-search-wrapper list-button-wrapper">
       <Tabs
@@ -235,7 +211,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
           </Tab>
           <Tab
             onClick={() => {
-              clearPagesForVideo();
+              //clearPagesForVideo();
             }}
             selectedClassName={`search-tab-selected-${
               primaryColor === '#dedede' ? 'default' : 'dark'
@@ -298,10 +274,10 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
         </div>
         <TabPanel>
           <div className="clear-filter-wrapper">
-            {filterText.map((filterItemText) => {
+            {filterText.map((filterItemText, index: number) => {
               return (
                 <button
-                  key={Math.random() * 1_000_000}
+                  key={index}
                   style={{
                     background: `${
                       primaryColor === '#dedede'
@@ -348,15 +324,11 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
               <></>
             )}
           </div>
-          <NftList
-            sortItem={sortItem}
-            titleSearch={titleSearch}
-            data={nftList}
-          />
+          <NftList sortItem={sortItem} titleSearch={titleSearch} />
           <PaginationBox
-            totalPageForPagination={nftListTotal}
+            totalPageForPagination={catalogTotal}
             whatPage={'nft'}
-            changePage={changePage}
+            changePage={catalogPage}
             currentPage={currentPage}
           />
         </TabPanel>
@@ -389,14 +361,12 @@ const SearchPanel: React.FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
             })}
           </div>
           <VideoList
-            videos={videos}
             titleSearch={titleSearch}
             handleVideoIsUnlocked={handleVideoIsUnlocked}
           />
           <PaginationBox
-            totalPageForPagination={totalNumberVideo}
+            totalPageForPagination={totalVideos}
             whatPage={'video'}
-            primaryColor={primaryColor}
             changePage={changePageForVideo}
             currentPage={currentPageForVideo}
           />

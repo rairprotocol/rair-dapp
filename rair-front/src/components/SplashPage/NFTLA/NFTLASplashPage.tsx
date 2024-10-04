@@ -1,14 +1,12 @@
-//@ts-nocheck
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC, useEffect, useState } from 'react';
 
 import { teamNFTLAarray } from './AboutUsTeam';
-import { ISplashPageProps } from './splashPage.types';
 
-import { RootState } from '../../../ducks';
-import { setInfoSEO } from '../../../ducks/seo/actions';
 import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import { splashData } from '../../../utils/infoSplashData/nftla';
 import MetaTags from '../../SeoTags/MetaTags';
 /* importing images*/
@@ -38,13 +36,10 @@ import './../SplashPageTemplate/AuthorCard/AuthorCard.css';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+const NFTLASplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   // TODO: Until we have a contract it will be commented
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
   const reactSwal = useSwal();
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
@@ -56,7 +51,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'Official NFTLA Streaming NFTs',
         ogTitle: 'Official NFTLA Streaming NFTs',
         twitterTitle: 'Official NFTLA Streaming NFTs',
@@ -114,7 +109,6 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
             openVideoplayer={openVideoplayer}
             setOpenVideoPlayer={setOpenVideoPlayer}
             handlePlayerClick={handlePlayerClick}
-            primaryColor={primaryColor}
           />
         </SplashVideoWrapper>
         <TeamMeet
@@ -122,10 +116,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           titleHeadFirst={'About'}
           teamArray={teamNFTLAarray}
         />
-        <NotCommercialTemplate
-          primaryColor={primaryColor}
-          NFTName={splashData.NFTName}
-        />
+        <NotCommercialTemplate NFTName={splashData.NFTName} />
       </div>
     </div>
   );

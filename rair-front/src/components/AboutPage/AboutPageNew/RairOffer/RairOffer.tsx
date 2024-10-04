@@ -1,8 +1,9 @@
-import React from 'react';
+import { FC } from 'react';
 
-import { IRairOffer } from '../aboutPage.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 
-const RairOffer: React.FC<IRairOffer> = ({ primaryColor }) => {
+const RairOffer: FC = () => {
+  const { isDarkMode } = useAppSelector((store) => store.colors);
   return (
     <div className="about-rair-offer">
       <div className="rair-offer-title">
@@ -10,10 +11,7 @@ const RairOffer: React.FC<IRairOffer> = ({ primaryColor }) => {
       </div>
       <div className="about-offer-content">
         <div className="streaming-box">
-          <div
-            className={`streaming-offer ${
-              primaryColor === 'rhyno' ? 'rhyno' : ''
-            }`}>
+          <div className={`streaming-offer ${!isDarkMode ? 'rhyno' : ''}`}>
             <button className="streaming-btn">Streaming</button>
             <div className="container-progress">
               <div className="streaming-percent">
@@ -32,9 +30,7 @@ const RairOffer: React.FC<IRairOffer> = ({ primaryColor }) => {
           </div>
           <div className="streaming-offer non-streaming">
             <button
-              className={`non-streaming-btn ${
-                primaryColor === 'rhyno' ? 'rhyno' : ''
-              }`}>
+              className={`non-streaming-btn ${!isDarkMode ? 'rhyno' : ''}`}>
               Non-Streaming
             </button>
             <div className="container-progress">
@@ -55,7 +51,7 @@ const RairOffer: React.FC<IRairOffer> = ({ primaryColor }) => {
         </div>
         <div
           style={{
-            color: `${primaryColor === 'rhyno' ? '#fff' : '#fff'}`
+            color: `${!isDarkMode ? '#fff' : '#fff'}`
           }}
           className="progress-box">
           2

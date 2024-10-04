@@ -1,21 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber, ethers } from 'ethers';
+import { Contract, isAddress } from 'ethers';
+import { Hex } from 'viem';
 
 import OfferRow from './OfferRow';
 
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { erc721Abi } from '../../../contracts';
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
-import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import useSwal from '../../../hooks/useSwal';
+import useContracts from '../../../hooks/useContracts';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
+import useServerSettings from '../../../hooks/useServerSettings';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
 import { validateInteger } from '../../../utils/metamaskUtils';
-import useServerSettings from '../../adminViews/useServerSettings';
 import {
   IListOffers,
   TOfferListItem,
@@ -25,40 +23,30 @@ import FixedBottomNavigation from '../FixedBottomNavigation';
 
 const ListOffers: React.FC<IListOffers> = ({
   mintingRole,
-  checkMarketRoles,
+  // checkMarketRoles,
   contractData,
   setStepNumber,
   stepNumber,
-  gotoNextStep,
-  forceRefetch
+  gotoNextStep
+  // forceRefetch
 }) => {
-  const { web3TxHandler, correctBlockchain, web3Switch } = useWeb3Tx();
+  const { correctBlockchain, web3Switch } = useWeb3Tx();
 
   const [offerList, setOfferList] = useState<TOfferListItem[]>([]);
   const [forceRerender, setForceRerender] = useState<boolean>(false);
-  const [instance, setInstance] = useState<ethers.Contract | undefined>();
+  const [, setInstance] = useState<Contract | undefined>();
   const [onMyChain, setOnMyChain] = useState<boolean>(
-    correctBlockchain(contractData?.blockchain as BlockchainType)
+    correctBlockchain(contractData?.blockchain as Hex)
   );
   const [emptyNames, setEmptyNames] = useState<boolean>(true);
   const [validPrice, setValidPrice] = useState<boolean>(true);
 
   const { getBlockchainData } = useServerSettings();
 
-  const {
-    minterInstance,
-    contractCreator,
-    programmaticProvider,
-    currentChain
-  } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
-  );
-  const { address, collectionIndex } = useParams<TParamsListOffers>();
-
-  const reactSwal = useSwal();
+  const { contractCreator } = useContracts();
+  const { programmaticProvider } = useAppSelector((store) => store.web3);
+  const { primaryColor } = useAppSelector((store) => store.colors);
+  const { address } = useParams<TParamsListOffers>();
 
   useEffect(() => {
     setOfferList(
@@ -121,67 +109,15 @@ const ListOffers: React.FC<IListOffers> = ({
   };
 
   useEffect(() => {
-    if (onMyChain) {
-      const createdInstance = contractCreator?.(address, erc721Abi);
+    if (onMyChain && isAddress(address) && contractCreator) {
+      const createdInstance = contractCreator(address as Hex, erc721Abi);
       setInstance(createdInstance);
     }
   }, [address, onMyChain, contractCreator]);
 
-  const giveMinterRole = async () => {
-    if (!instance) {
-      return;
-    }
-    reactSwal.fire({
-      title: 'Granting Role...',
-      html: 'Please wait',
-      icon: 'info',
-      showConfirmButton: false
-    });
-    if (
-      await web3TxHandler(instance, 'grantRole', [
-        await web3TxHandler(instance, 'MINTER', []),
-        minterInstance?.address
-      ])
-    ) {
-      reactSwal.fire('Success!', 'You can create offers now!', 'success');
-      checkMarketRoles();
-    }
-  };
-
-  const createOffers = async () => {
-    if (!minterInstance || !instance) {
-      return;
-    }
-    reactSwal.fire({
-      title: 'Creating offer...',
-      html: 'Please wait...',
-      icon: 'info',
-      showConfirmButton: false
-    });
-    if (
-      await web3TxHandler(minterInstance, 'addOffer', [
-        instance.address,
-        collectionIndex,
-        offerList.map((item) => item.starts),
-        offerList.map((item) => item.ends),
-        offerList.map((item) => item.price),
-        offerList.map((item) => item.name),
-        import.meta.env.VITE_NODE_ADDRESS
-      ])
-    ) {
-      reactSwal.fire({
-        title: 'Success!',
-        html: 'The offer has been created!',
-        icon: 'success',
-        showConfirmButton: true
-      });
-      forceRefetch();
-    }
-  };
-
   const validateTokenIndexes = () => {
     if (contractData && offerList.length > 0) {
-      const copies = BigNumber.from(contractData.product.copies).sub(1);
+      const copies = BigInt(contractData.product.copies) - BigInt(1);
       let allOffersAreCorrect = true;
       for (const item of offerList) {
         if (!allOffersAreCorrect) {
@@ -191,56 +127,20 @@ const ListOffers: React.FC<IListOffers> = ({
           allOffersAreCorrect &&
           validateInteger(item.ends) &&
           validateInteger(item.starts) &&
-          BigNumber.from(item.ends).lte(copies) &&
-          BigNumber.from(item.starts).lte(copies) &&
-          BigNumber.from(item.starts).lte(item.ends);
+          BigInt(item.ends) < BigInt(copies) &&
+          BigInt(item.starts) < BigInt(copies) &&
+          BigInt(item.starts) < BigInt(item.ends);
       }
       return allOffersAreCorrect;
     }
     return false;
   };
 
-  const appendOffers = async () => {
-    if (!minterInstance) {
-      return;
-    }
-    reactSwal.fire({
-      title: 'Appending offers...',
-      html: 'Please wait...',
-      icon: 'info',
-      showConfirmButton: false
-    });
-    const filteredList = offerList.filter((item) => !item.fixed);
-    if (
-      await web3TxHandler(
-        minterInstance,
-        'appendOfferRangeBatch',
-        [
-          contractData?.product.offers?.[0].offerPool,
-          filteredList.map((item) => item.starts),
-          filteredList.map((item) => item.ends),
-          filteredList.map((item) => item.price),
-          filteredList.map((item) => item.name)
-        ],
-        undefined
-      )
-    ) {
-      reactSwal.fire({
-        title: 'Success!',
-        html: 'The offers have been appended!',
-        icon: 'success',
-        showConfirmButton: true
-      });
-      forceRefetch();
-    }
-  };
-
   useEffect(() => {
     setOnMyChain(
-      !!contractData &&
-        correctBlockchain(contractData.blockchain as BlockchainType)
+      !!contractData && correctBlockchain(contractData.blockchain as Hex)
     );
-  }, [contractData, programmaticProvider, currentChain, correctBlockchain]);
+  }, [contractData, programmaticProvider, correctBlockchain]);
 
   return (
     <div className="row px-0 mx-0">
@@ -284,15 +184,7 @@ const ListOffers: React.FC<IListOffers> = ({
                 onClick={addOffer}
                 disabled={offerList.length >= 12}
                 className={`btn btn-${primaryColor} rounded-rair px-4`}>
-                Add new{' '}
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  style={{
-                    border: `solid 1px ${textColor}`,
-                    borderRadius: '50%',
-                    padding: '5px'
-                  }}
-                />
+                Add new <FontAwesomeIcon icon={faPlusCircle} />
               </button>
             </div>
           </div>
@@ -312,15 +204,14 @@ const ListOffers: React.FC<IListOffers> = ({
             forwardFunctions={[
               !onMyChain
                 ? {
-                    action: () =>
-                      web3Switch(contractData?.blockchain as BlockchainType),
-                    label: `Switch to ${getBlockchainData(
-                      contractData?.blockchain
-                    )?.name}`
+                    action: () => web3Switch(contractData?.blockchain as Hex),
+                    label: `Switch to ${
+                      getBlockchainData(contractData?.blockchain)?.name
+                    }`
                   }
                 : mintingRole === true
                   ? {
-                      action: offerList[0]?.fixed ? appendOffers : createOffers,
+                      action: undefined,
                       label: offerList[0]?.fixed
                         ? 'Append to offer'
                         : 'Create new offers',
@@ -333,7 +224,7 @@ const ListOffers: React.FC<IListOffers> = ({
                         emptyNames
                     }
                   : {
-                      action: giveMinterRole,
+                      action: undefined,
                       label: 'Connect to Minter Marketplace'
                     },
               {

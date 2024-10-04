@@ -1,9 +1,11 @@
-import { UserType } from '../../ducks/users/users.types';
+import { Hex } from 'viem';
+
+import { User } from '../../types/databaseTypes';
 
 import { TMetadataType } from './../../axios.responseTypes';
 
 export type TNftDataItem = {
-  blockchain: BlockchainType | undefined;
+  blockchain?: Hex;
   contract: string;
   operator: string;
   status: string;
@@ -14,7 +16,7 @@ export type TNftDataItem = {
 };
 
 export interface INftItemComponent {
-  blockchain: BlockchainType | undefined;
+  blockchain?: Hex;
   contract: string;
   operator: string;
   status: string;
@@ -48,7 +50,7 @@ export type TEmbeddedParamsType = {
 
 export interface INftItemForCollectionView {
   embeddedParams: TEmbeddedParamsType;
-  blockchain: BlockchainType | undefined;
+  blockchain: Hex | undefined;
   pict: string;
   price: string;
   offerPrice: string[];
@@ -56,13 +58,13 @@ export interface INftItemForCollectionView {
   metadata: TMetadataType;
   offer: string;
   selectedData: TMetadataType;
-  someUsersData: UserType;
+  someUsersData: User;
   userName: string;
   tokenDataLength: number;
 }
 
 export type TParamsNftItemForCollectionView = {
-  blockchain: BlockchainType;
+  blockchain: Hex;
   contract: string;
   product: string;
   tokenId: string;

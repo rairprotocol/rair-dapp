@@ -1,38 +1,38 @@
-import { FieldErrors } from 'react-hook-form';
+import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
+import emotionIsPropValid from '@emotion/is-prop-valid';
 import styled from 'styled-components';
 
 interface IMenuMobileWrapper {
   showAlert?: boolean | undefined | null;
-  selectedChain?: any | null;
   primaryColor?: string;
   editMode?: boolean;
   click?: boolean;
-  errors?: FieldErrors | undefined;
+  errors?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   isSplashPage?: boolean;
   hotdrops?: string;
   realChainId?: string | undefined;
   secondaryColor?: string;
+  isDarkMode?: boolean;
 }
 
-export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
+export const MenuMobileWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMenuMobileWrapper>`
   z-index: 50;
   position: fixed;
   width: 100%;
   padding: 0;
   margin-top: ${(props) =>
-    props.realChainId &&
-    props.showAlert &&
-    !props.isSplashPage &&
-    !props.selectedChain
-      ? '50px'
-      : ''};
+    props.realChainId && props.showAlert && !props.isSplashPage ? '50px' : ''};
 `;
 
-export const Nav = styled.nav<IMenuMobileWrapper>`
-background: ${(props) =>
-  props.primaryColor === '#dedede'
-    ? '#fff'
-    : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
+export const Nav = styled.nav.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMenuMobileWrapper>`
+  background: ${(props) =>
+    props.primaryColor === '#dedede'
+      ? '#fff'
+      : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,15 +40,16 @@ background: ${(props) =>
   z-index: 12;
   width: 100%;
   position: ${(props) => (props.editMode ? 'fixed' : 'reletive')};
-  margin-top: ${(props) =>
-    props.showAlert && props.selectedChain ? '50px' : ''};
+  margin-top: ${(props) => (props.showAlert ? '50px' : '')};
 
   @media screen and (max-width: 400px) {
     padding: 22px 20px;
   }
 `;
 
-export const ListItem = styled.li<IMenuMobileWrapper>`
+export const ListItem = styled.li.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMenuMobileWrapper>`
   font-size: 18px;
   display: flex;
   align-items: center;
@@ -83,11 +84,11 @@ export const TitleEditProfile = styled.h4`
   }
 `;
 
-export const List = styled.ul<IMenuMobileWrapper>`
-background: ${(props) =>
-  props.primaryColor === '#dedede'
-    ? '#fff'
-    : `color-mix(in srgb, ${props.secondaryColor}, #888888)`};
+export const List = styled.ul.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMenuMobileWrapper>`
+  background: ${({ secondaryColor }) =>
+    `color-mix(in srgb, ${secondaryColor}, #888888)`};
   overflow: ${(props) => props.click && 'hidden'};
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;
@@ -140,7 +141,9 @@ export const ListProfileLoading = styled.div`
   }
 `;
 
-export const ListEditProfileMode = styled.div<IMenuMobileWrapper>`
+export const ListEditProfileMode = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMenuMobileWrapper>`
   padding: 20px;
   height: 100%;
   background: ${(props) =>
@@ -261,7 +264,9 @@ export const RightSideMenu = styled.div`
   }
 `;
 
-export const SearchInputMobile = styled.div<IMenuMobileWrapper>`
+export const SearchInputMobile = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMenuMobileWrapper>`
   position: relative;
   width: 100%;
   border-radius: 12px;
@@ -305,7 +310,9 @@ export const BackBtnMobileNav = styled.div`
 
 export const MobileEditFields = styled.div``;
 
-export const MobileProfileField = styled.div<IMenuMobileWrapper>`
+export const MobileProfileField = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMenuMobileWrapper>`
   display: flex;
   flex-direction: column;
   margin-bottom: 8px;
@@ -355,7 +362,9 @@ export const MobileProfileField = styled.div<IMenuMobileWrapper>`
   }
 `;
 
-export const MobileProfileBtnWrapper = styled.div<IMenuMobileWrapper>`
+export const MobileProfileBtnWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => emotionIsPropValid(prop)
+})<IMenuMobileWrapper>`
   display: flex;
   justify-content: space-between;
 

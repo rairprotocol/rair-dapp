@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC, useEffect, useState } from 'react';
 import { v1 } from 'uuid';
 
 import { teamVaporVerseArray } from './AboutUsTeam';
 
-import { RootState } from '../../../ducks';
-import { setRealChain } from '../../../ducks/contracts/actions';
-import { setInfoSEO } from '../../../ducks/seo/actions';
-import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import useConnectUser from '../../../hooks/useConnectUser';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
+import { setSEOInfo } from '../../../redux/seoSlice';
+import { setRequestedChain } from '../../../redux/web3Slice';
+import { SplashPageProps } from '../../../types/commonTypes';
 import { splashData } from '../../../utils/infoSplashData/vapoverseSplashPage';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -26,7 +26,7 @@ import {
 } from '../images/vaporverse/vaporverse';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
-import { IInfoBlock, IVaporverseSplashPage } from '../splashPage.types';
+import { IInfoBlock } from '../splashPage.types';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
@@ -56,16 +56,11 @@ const InfoBlock: React.FC<IInfoBlock> = ({
   );
 };
 
-const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
-  connectUserData,
-  setIsSplashPage
-}) => {
-  const dispatch = useDispatch();
-  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+const VaporverseSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useAppDispatch();
+  const seo = useAppSelector((store) => store.seo);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
-  const primaryColor = useSelector<RootState, string>(
-    (store) => store.colorStore.primaryColor
-  );
+  const { connectUserData } = useConnectUser();
   const carousel_match = window.matchMedia('(min-width: 630px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurchaseList] = useState(true);
@@ -77,7 +72,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
   useEffect(() => {
     dispatch(
-      setInfoSEO({
+      setSEOInfo({
         title: 'Vaporverse',
         ogTitle: 'Vaporverse',
         twitterTitle: 'Vaporverse',
@@ -111,21 +106,21 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
   // const getAllProduct = useCallback(async () => {
   //   if (loggedIn) {
-  //     if (currentChain === splashData.purchaseButton.requiredBlockchain) {
+  //     if (connectedChain === splashData.purchaseButton.requiredBlockchain) {
   //       setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
   //     } else {
   //       setSoldCopies();
   //     }
   //   }
 
-  // }, [setSoldCopies, loggedIn, currentChain, minterInstance]);
+  // }, [setSoldCopies, loggedIn, connectedChain, minterInstance]);
 
   // useEffect(() => {
   //   getAllProduct()
   // }, [getAllProduct])
 
   useEffect(() => {
-    dispatch(setRealChain(chainId));
+    dispatch(setRequestedChain(chainId));
   }, [dispatch]);
 
   useEffect(() => {
@@ -281,10 +276,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
           titleHeadFirst={'mak0r'}
           teamArray={teamVaporVerseArray}
         />
-        <NotCommercialTemplate
-          primaryColor={primaryColor}
-          NFTName={splashData.NFTName}
-        />
+        <NotCommercialTemplate NFTName={splashData.NFTName} />
       </div>
     </div>
   );

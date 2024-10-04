@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faKey, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { utils } from 'ethers';
+import { formatEther } from 'ethers';
 
-import { RootState } from '../../../ducks';
-import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../hooks/useReduxHooks';
 import { validateInteger } from '../../../utils/metamaskUtils';
 import colors from '../../../utils/offerLockColors';
 import InputField from '../../common/InputField';
@@ -24,10 +22,9 @@ const OfferRow: React.FC<IOfferRow> = ({
   maxCopies,
   blockchainSymbol
 }) => {
-  const { primaryColor, secondaryColor } = useSelector<
-    RootState,
-    ColorStoreType
-  >((store) => store.colorStore);
+  const { primaryColor, secondaryColor } = useAppSelector(
+    (store) => store.colors
+  );
 
   const [itemName, setItemName] = useState<string>(name);
   const [startingToken, setStartingToken] = useState<string>(starts);
@@ -184,14 +181,12 @@ const OfferRow: React.FC<IOfferRow> = ({
         <th />
         <th className="text-center pt-0">
           <small>
-            {utils
-              .formatEther(
-                individualPrice === '' ||
-                  !validateInteger(Number(individualPrice))
-                  ? 0
-                  : individualPrice
-              )
-              .toString()}{' '}
+            {formatEther(
+              individualPrice === '' ||
+                !validateInteger(Number(individualPrice))
+                ? 0
+                : individualPrice
+            ).toString()}{' '}
             {blockchainSymbol}
           </small>
         </th>

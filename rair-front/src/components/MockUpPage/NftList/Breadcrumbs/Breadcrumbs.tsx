@@ -1,5 +1,4 @@
-import React, { memo, MouseEvent, ReactElement } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, memo, MouseEvent, ReactElement } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -8,15 +7,14 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { RootState } from '../../../../ducks';
-import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { useAppSelector } from '../../../../hooks/useReduxHooks';
 import SingleTokenHome from '../../assets/singleTokenHome.svg?react';
 import { TParamsBreadcrumbsComponent } from '../../mockupPage.types';
 import { IBreadcrumbsComponent } from '../nftList.types';
 
 import './Breadcrumbs.css';
 
-const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
+const BreadcrumbsComponent: FC<IBreadcrumbsComponent> = ({
   embeddedParams
 }) => {
   const params = useParams<TParamsBreadcrumbsComponent>();
@@ -24,8 +22,8 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
     ? embeddedParams
     : params;
   const navigate = useNavigate();
-  const { primaryColor, textColor, iconColor } = useSelector<RootState, ColorStoreType>(
-    (store) => store.colorStore
+  const { primaryColor, textColor, iconColor } = useAppSelector(
+    (store) => store.colors
   );
 
   function handleClick(event: MouseEvent) {
@@ -67,11 +65,9 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
           <SingleTokenHome
             style={{
               fill:
-              import.meta.env.VITE_TESTNET === 'true'
-              ? 
-              `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-              : `${
-                iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                import.meta.env.VITE_TESTNET === 'true'
+                  ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                  : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
             }}
             width={24}
             height={24}
@@ -100,11 +96,9 @@ const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
             <SingleTokenHome
               style={{
                 fill:
-                import.meta.env.VITE_TESTNET === 'true'
-                ? 
-                `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                : `${
-                  iconColor === '#1486c5' ? '#E882D5' : iconColor}`
+                  import.meta.env.VITE_TESTNET === 'true'
+                    ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
+                    : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`
               }}
               width={24}
               height={24}

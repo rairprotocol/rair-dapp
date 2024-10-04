@@ -5,7 +5,7 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "ESNext",
     ],
     "noImplicitAny": false,
     "allowJs": true,
@@ -15,8 +15,8 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
