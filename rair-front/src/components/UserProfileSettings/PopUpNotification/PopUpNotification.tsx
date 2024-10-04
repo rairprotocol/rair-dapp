@@ -79,28 +79,30 @@ const PopUpNotification = ({ realDataNotification, notificationCount }) => {
 
   return (
     <>
-      <SocialBox
-        onClick={() => setOpenModal((prev) => !prev)}
-        className="social-bell-icon notifications"
-        marginRight={'17px'}
-        notification={true}>
-        {email && <span></span>}
-        <BellIcon primaryColor={primaryColor} />
-        {notificationCount > 0 && (
-          <div
-            style={{
-              fontSize: '10px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontWeight: 'bold',
-              color: '#fff'
-            }}
-            className="red-circle-notifications">
-            {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
-          </div>
-        )}
-      </SocialBox>
+      {currentUserAddress && isLoggedIn && (
+        <SocialBox
+          onClick={() => setOpenModal((prev) => !prev)}
+          className="social-bell-icon notifications"
+          marginRight={'17px'}
+          notification={true}>
+          {email && <span></span>}
+          <BellIcon primaryColor={primaryColor} />
+          {totalUnreadCount > 0 && (
+            <div
+              style={{
+                fontSize: '10px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontWeight: 'bold',
+                color: '#fff'
+              }}
+              className="red-circle-notifications">
+              {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+            </div>
+          )}
+        </SocialBox>
+      )}
       <Popup
         className={`popup-notification-block`}
         open={openModal}

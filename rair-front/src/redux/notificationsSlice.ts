@@ -22,12 +22,6 @@ interface NotificaitonItem {
   _id: string;
 }
 
-interface NotificationResponse {
-  totalCount: number;
-  success: boolean;
-  notifications: Array<NotificaitonItem>;
-}
-
 const initialState: NotificationState = {
   notifications: [],
   totalCount: 0,
@@ -66,26 +60,24 @@ export const notificationsSlice = createSlice({
       .addCase(fetchNotifications.pending, (state) => {
         state.notificationsStatus = dataStatuses.Loading;
       })
-      .addCase(
-        fetchNotifications.fulfilled,
-        (state, action: PayloadAction<NotificationResponse>) => {
-          state.notificationsStatus = dataStatuses.Complete;
-          const sortedNotifications =
-            action.payload.data.data.notifications.sort((a, b) => {
-              if (!a.read && b.read) return -1;
-              if (a.read && !b.read) return 1;
+      .addCase(fetchNotifications.fulfilled, (state, action: PayloadAction) => {
+        state.notificationsStatus = dataStatuses.Complete;
+        const sortedNotifications = action.payload.data.data.notifications.sort(
+          (a, b) => {
+            if (!a.read && b.read) return -1;
+            if (a.read && !b.read) return 1;
 
-              const dateA = new Date(a.createdAt).getTime();
-              const dateB = new Date(b.createdAt).getTime();
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
 
-              return dateB - dateA;
-            });
+            return dateB - dateA;
+          }
+        );
 
-          state.notifications = sortedNotifications;
-          state.totalCount = action.payload.data.data.totalCount;
-          state.totalUnreadCount = action.payload.unreadData.data.totalCount;
-        }
-      )
+        state.notifications = sortedNotifications;
+        state.totalCount = action.payload.data.data.totalCount;
+        state.totalUnreadCount = action.payload.unreadData.data.totalCount;
+      })
       .addCase(fetchNotifications.rejected, (state) => {
         state.notificationsStatus = dataStatuses.Failed;
       });

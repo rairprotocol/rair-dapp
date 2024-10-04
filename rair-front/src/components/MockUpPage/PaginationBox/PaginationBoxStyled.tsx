@@ -7,9 +7,7 @@ interface IPaginationBoxStyled {
   isDarkMode?: boolean;
 }
 
-export const PaginationBoxStyled = styled(Pagination).withConfig({
-  shouldForwardProp: (prop) => isValidProp(prop)
-})<IPaginationBoxStyled>`
+export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
   ul {
     li {
       button {
@@ -21,10 +19,7 @@ export const PaginationBoxStyled = styled(Pagination).withConfig({
           ${({ isDarkMode }) => (!isDarkMode ? '#2d2d2d' : '#fff')};
 
         &.Mui-selected {
-          background: ${({ primaryButtonColor }) =>
-            `${
-              primaryButtonColor
-            }`};
+          background: ${({ primaryButtonColor }) => `${primaryButtonColor}`};
           color: #fff;
           border: none;
           -webkit-box-shadow: 0px 0px 7px 0.4px #b278a7;
@@ -32,10 +27,7 @@ export const PaginationBoxStyled = styled(Pagination).withConfig({
           box-shadow: 0px 0px 7px 0.4px #b278a7;
         }
         &:hover {
-          background: ${({ primaryButtonColor }) =>
-            `${
-              primaryButtonColor
-            }`};
+          background: ${({ primaryButtonColor }) => `${primaryButtonColor}`};
           color: #fff;
         }
       }

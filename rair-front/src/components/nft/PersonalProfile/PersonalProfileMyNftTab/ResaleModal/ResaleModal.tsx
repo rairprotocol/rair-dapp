@@ -305,15 +305,18 @@ const ResaleModal: React.FC<IResaleModal> = ({
       </div>
       <div className="resale-modal-blockchain-container">
         <div>{item && item.metadata && item.metadata.name}</div>
-        <div className="resale-modal-blockchain-block" style={{
-          backgroundColor: `${
-          isDarkMode
-            ? 'var(--rhyno)'
-            : `color-mix(in srgb, ${primaryColor}, #2D2D2D)`}`
-        }}>
+        <div
+          className="resale-modal-blockchain-block"
+          style={{
+            backgroundColor: `${
+              isDarkMode
+                ? 'var(--rhyno)'
+                : `color-mix(in srgb, ${primaryColor}, #2D2D2D)`
+            }`
+          }}>
           {chainData && (
             <>
-              <div>{chainData.viem.nativeCurrency.symbol}</div>
+              <div>{chainData?.viem?.nativeCurrency?.symbol}</div>
               <img src={chainData.image} alt="blockchain" />
             </>
           )}
