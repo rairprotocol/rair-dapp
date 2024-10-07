@@ -135,10 +135,11 @@ const SelectNumber: React.FC<ISelectNumber> = ({
           <div className="select-box--arrow"></div>
           <div
             style={{
-              background: primaryColor
+              background: primaryColor,
+              top: '0px'
             }}
             id="rred"
-            className={'select-box--items list-of-tokens'}
+            className={'select-box--items list-of-tokens select-number-popup'}
             ref={listOfTokensRef}>
             {ranges.map((range, index) => {
               return (
