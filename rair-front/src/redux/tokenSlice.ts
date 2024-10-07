@@ -9,7 +9,7 @@ import {
   SingleContractResponse,
   SingleTokenResponse
 } from '../types/apiResponseTypes';
-import { PaginatedApiCall } from '../types/commonTypes';
+import { ApiCallResponse, PaginatedApiCall } from '../types/commonTypes';
 import {
   Contract,
   MintedToken,
@@ -19,6 +19,18 @@ import {
   TokenMetadata,
   User
 } from '../types/databaseTypes';
+
+interface FactoryResponseProduct extends ApiCallResponse {
+  result: number;
+  data?: {
+    doc?: Array<Product>;
+  };
+}
+
+interface MetadataForCollection {
+  contract?: Contract;
+  product?: Product;
+}
 
 interface ProductAndOffers extends Product {
   offers: Array<Offer>;
@@ -43,10 +55,13 @@ interface GetCatalogResponse {
   itemsPerPage: number;
 }
 
-interface GetCollectionResponse {
+interface GetCollectionResponse extends ApiCallResponse {
   tokens: Array<CollectionTokens>;
-  success: boolean;
   totalCount: number;
+}
+
+interface GetResaleResponse extends ApiCallResponse {
+  data: Array<ResaleData>;
 }
 
 interface CatalogQuery extends PaginatedApiCall {
@@ -79,7 +94,7 @@ export interface TokensState {
   currentCollectionStatus: dataStatuses;
   currentCollectionTotal: number;
   currentCollection: { [index: string]: CollectionTokens };
-  currentCollectionMetadata?: Contract;
+  currentCollectionMetadata: MetadataForCollection;
   currentCollectionMetadataStatus: dataStatuses;
   itemsPerPage: number;
   currentPage: number;
@@ -98,7 +113,7 @@ const initialState: TokensState = {
   currentCollectionParams: undefined,
   // Collection contract data
   currentCollectionMetadataStatus: dataStatuses.Uninitialized,
-  currentCollectionMetadata: undefined,
+  currentCollectionMetadata: {},
   // Catalog search params
   itemsPerPage: 20,
   currentPage: 1
@@ -147,14 +162,30 @@ export const loadFrontPageCatalog = createAsyncThunk(
 
 export const loadCollectionMetadata = createAsyncThunk(
   'tokens/loadCollectionMetadata',
-  async ({ contractId }: { contractId?: string }) => {
+  async ({
+    contractId,
+    productId
+  }: {
+    contractId?: string;
+    productId: string;
+  }) => {
     if (!contractId) {
       return;
     }
     const contractData = await axios.get<SingleContractResponse>(
       `/api/contracts/${contractId}`
     );
-    return contractData.data.contract;
+    const queryParams = new URLSearchParams({
+      contract: contractId,
+      collectionIndexInContract: productId
+    });
+    const productData = await axios.get<FactoryResponseProduct>(
+      `/api/products?${queryParams.toString()}`
+    );
+    return {
+      contract: contractData.data.contract,
+      product: productData.data.data?.doc?.[0]
+    };
   }
 );
 
@@ -207,24 +238,30 @@ export const loadCollection = createAsyncThunk(
     );
     dispatch(
       loadCollectionMetadata({
-        contractId: response.data.tokens.at(0)?.contract
+        contractId: response.data.tokens.at(0)?.contract,
+        productId: product
+      })
+    );
+    dispatch(
+      loadResaleDataForCollection({
+        contract,
+        blockchain
       })
     );
 
     return response.data;
+  }
+);
 
-    /*
-            const resaleData = await rFetch(
-        `/api/resales/open?contract=${contract}&blockchain=${blockchain}`
-      );
-      const resaleMapping = {};
-      if (resaleData.success) {
-        resaleData.data.forEach((resale) => {
-          resale.price = formatEther(resale.price);
-          resaleMapping[resale.tokenIndex] = resale;
-        });
-      }
-    */
+export const loadResaleDataForCollection = createAsyncThunk(
+  'tokens/loadResaleDataForCollection',
+  async ({ contract, blockchain }: { contract: Hex; blockchain: Hex }) => {
+    const resaleData = await axios.get<GetResaleResponse>(
+      `/api/resales/open?contract=${contract}&blockchain=${blockchain}`
+    );
+    if (resaleData.data.success) {
+      return resaleData.data.data;
+    }
   }
 );
 
@@ -277,7 +314,7 @@ export const tokenSlice = createSlice({
       state.currentCollectionTotal = 0;
       state.currentCollection = {};
       state.currentCollectionMetadataStatus = dataStatuses.Uninitialized;
-      state.currentCollectionMetadata = undefined;
+      state.currentCollectionMetadata = {};
       state.currentCollectionParams = undefined;
     }
   },
@@ -300,6 +337,7 @@ export const tokenSlice = createSlice({
       .addCase(loadFrontPageCatalog.rejected, (state) => {
         state.catalogStatus = dataStatuses.Failed;
       })
+
       // Collection tokens
       .addCase(loadCollection.pending, (state) => {
         state.currentCollectionStatus = dataStatuses.Loading;
@@ -316,6 +354,11 @@ export const tokenSlice = createSlice({
           state.currentCollection = tokenMapping;
         }
       )
+      .addCase(loadCollection.rejected, (state) => {
+        state.currentCollectionStatus = dataStatuses.Failed;
+      })
+
+      // Reuse collection data for next page
       .addCase(
         loadNextCollectionPage.fulfilled,
         (state, action: PayloadAction<GetCollectionResponse | undefined>) => {
@@ -327,24 +370,27 @@ export const tokenSlice = createSlice({
           }
         }
       )
-      .addCase(loadCollection.rejected, (state) => {
-        state.currentCollectionStatus = dataStatuses.Failed;
-      })
+
+      // Load metadata for collection
       .addCase(loadCollectionMetadata.pending, (state) => {
         state.currentCollectionMetadataStatus = dataStatuses.Loading;
       })
       .addCase(
         loadCollectionMetadata.fulfilled,
-        (state, action: PayloadAction<Contract | undefined>) => {
+        (state, action: PayloadAction<MetadataForCollection | undefined>) => {
           state.currentCollectionMetadataStatus = dataStatuses.Complete;
           if (action.payload) {
             state.currentCollectionMetadata = action.payload;
+          } else {
+            state.currentCollectionMetadata = {};
           }
         }
       )
       .addCase(loadCollectionMetadata.rejected, (state) => {
         state.currentCollectionMetadataStatus = dataStatuses.Failed;
       })
+
+      // Reload data for single token
       .addCase(
         reloadTokenData.fulfilled,
         (state, action: PayloadAction<CollectionTokens | undefined>) => {
@@ -357,6 +403,18 @@ export const tokenSlice = createSlice({
             state.currentCollection[action.payload.uniqueIndexInContract] =
               action.payload;
           }
+        }
+      )
+
+      // Load resale data for collection
+      .addCase(
+        loadResaleDataForCollection.fulfilled,
+        (state, action: PayloadAction<Array<ResaleData> | undefined>) => {
+          action.payload?.forEach((resale) => {
+            if (state.currentCollection[resale.tokenIndex]) {
+              state.currentCollection[resale.tokenIndex].resaleData = resale;
+            }
+          });
         }
       );
   }

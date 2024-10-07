@@ -36,7 +36,7 @@ exports.updateOne = (Model) =>
     });
 
     if (!doc) {
-      return next(new AppError(`No document found with ID ${id}`, 404))
+      return next(new AppError(`No document found with ID ${id}`, 404));
     }
 
     return res.status(200).json({

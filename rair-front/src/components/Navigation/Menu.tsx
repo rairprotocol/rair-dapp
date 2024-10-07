@@ -152,7 +152,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
           currentUserAddress
         );
 
-      if (balance) {
+      if (balance !== undefined) {
         const result = formatEther(balance.toString());
         const final = Number(result.toString())?.toFixed(2)?.toString();
 

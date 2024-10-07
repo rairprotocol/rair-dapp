@@ -1,6 +1,6 @@
 import { LoadingDefaultFavicon } from '../images';
 
-const hotdropsVar = import.meta.env.VITE_TESTNET;
+// const hotdropsVar = import.meta.env.VITE_TESTNET;
 
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
@@ -35,15 +35,15 @@ const initialStates: { [key: string]: SeoInformation } = {
     faviconMobile: LoadingDefaultFavicon
   },
   rair: {
-    title: 'RAIR Technologies',
-    ogTitle: 'RAIR Technologies',
-    twitterTitle: 'RAIR Technologies',
+    title: import.meta.env.VITE_HTML_META_TITLE,
+    ogTitle: import.meta.env.VITE_HTML_META_TITLE,
+    twitterTitle: import.meta.env.VITE_HTML_META_TITLE,
     contentName: 'author',
-    content: 'Digital Ownership Encryption',
+    content: import.meta.env.VITE_HTML_META_AUTHOR,
     description:
-      'RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content',
-    ogDescription: 'Encrypted, Streaming NFTs',
-    twitterDescription: 'Encrypted, Streaming NFTs',
+    import.meta.env.VITE_HTML_META_DESCRIPTION,
+    ogDescription: import.meta.env.VITE_HTML_META_DESCRIPTION,
+    twitterDescription: import.meta.env.VITE_HTML_META_DESCRIPTION,
     image: `${
       import.meta.env.VITE_IPFS_GATEWAY
     }/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW`,
@@ -53,7 +53,7 @@ const initialStates: { [key: string]: SeoInformation } = {
 };
 
 const initialState: SeoInformation = {
-  ...initialStates[hotdropsVar ? 'hotdrops' : 'rair']
+  ...initialStates['rair']
 };
 
 export const seoSlice = createSlice({
@@ -61,7 +61,7 @@ export const seoSlice = createSlice({
   initialState,
   reducers: {
     setSEOInfo: (state, action: PayloadAction<SeoInformation | undefined>) => {
-      return action.payload || initialStates[hotdropsVar ? 'hotdrops' : 'rair'];
+      return action.payload || initialStates['rair'];
     },
     resetSEOInfo: (state) => {
       Object.keys(state).forEach((key) => {

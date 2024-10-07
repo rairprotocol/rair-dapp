@@ -9,6 +9,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppSelector } from '../../../../hooks/useReduxHooks';
+import LoadingComponent from '../../../common/LoadingComponent';
 import { ISelectNumber } from '../selectBox.types';
 
 import './SelectNumber.css';
@@ -19,7 +20,9 @@ const SelectNumber: React.FC<ISelectNumber> = ({
   setSelectedToken,
   serialNumberData
 }) => {
-  const { currentCollection } = useAppSelector((store) => store.tokens);
+  const { currentCollection, currentCollectionMetadata } = useAppSelector(
+    (store) => store.tokens
+  );
   const {
     primaryColor,
     textColor,
@@ -265,6 +268,14 @@ const SelectNumber: React.FC<ISelectNumber> = ({
     );
   }
 
+  if (!tokenId || !currentCollectionMetadata.product) {
+    return <LoadingComponent />;
+  }
+
+  const realNumber = (
+    BigInt(tokenId) + BigInt(currentCollectionMetadata.product?.firstTokenIndex)
+  ).toString();
+
   return (
     <div
       className={`nft-single-price-range ${
@@ -278,7 +289,7 @@ const SelectNumber: React.FC<ISelectNumber> = ({
           setRangePickerOpen(!rangePickerOpen);
         }
       }}>
-      Selected now: {!!tokenId && currentCollection[tokenId].token}
+      Selected now: {!!realNumber && currentCollection[realNumber]?.token}
     </div>
   );
 };

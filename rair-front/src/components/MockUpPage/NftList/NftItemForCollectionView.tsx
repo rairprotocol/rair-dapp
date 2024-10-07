@@ -122,7 +122,7 @@ const NftItemForCollectionViewComponent: React.FC<
   const fullPrice = () => {
     if (offerPrice) {
       if (resalePrice) {
-        return resalePrice;
+        return formatEther(resalePrice);
       }
       if (offerPrice.length > 0 && offerItemData) {
         const rawPrice = BigInt(offerItemData.price ? offerItemData.price : 0);
@@ -198,7 +198,7 @@ const NftItemForCollectionViewComponent: React.FC<
   }, [item, resaleFlag]);
 
   const getParticularOffer = useCallback(async () => {
-    if (resaleFlag && tokenInfo) {
+    if (resaleFlag && !resalePrice && tokenInfo) {
       try {
         const response = await axios.get<IOffersResponseType>(
           `/api/nft/network/${tokenInfo.contract.blockchain}/${tokenInfo.contract.contractAddress}/${tokenInfo.product.collectionIndexInContract}/offers`
@@ -246,7 +246,7 @@ const NftItemForCollectionViewComponent: React.FC<
         console.error(error?.message);
       }
     }
-  }, [item, resaleFlag, selectedOfferIndexUser, tokenInfo]);
+  }, [item, resaleFlag, selectedOfferIndexUser, tokenInfo, resalePrice]);
 
   useEffect(() => {
     initialTokenData();

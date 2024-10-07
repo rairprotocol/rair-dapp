@@ -1,4 +1,3 @@
-import isValidProp from '@emotion/is-prop-valid';
 import { Pagination } from '@mui/material';
 import styled from 'styled-components';
 
