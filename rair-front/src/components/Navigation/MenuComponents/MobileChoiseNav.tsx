@@ -33,22 +33,8 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   const { nickName, isLoggedIn, avatar } = useAppSelector(
     (state) => state.user
   );
-  const [notificationCount, setNotificationCount] = useState<number>(0);
 
-  const getNotificationsCount = useCallback(async () => {
-    if (currentUserAddress && isLoggedIn) {
-      const result = await rFetch(`/api/notifications?onlyUnread=true`);
-      if (result.success && result.totalCount >= 0) {
-        setNotificationCount(result.totalCount);
-      }
-    } else {
-      setNotificationCount(0);
-    }
-  }, [currentUserAddress, isLoggedIn]);
-
-  useEffect(() => {
-    getNotificationsCount();
-  }, [getNotificationsCount]);
+  const {totalUnreadCount} = useAppSelector(store => store.notifications);
 
   return (
     <div className="burder-menu-logo">
@@ -88,7 +74,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                   height="40px"
                   marginLeft={'17px'}>
                   <BellIcon primaryColor={primaryColor} />
-                  {notificationCount > 0 && (
+                  {totalUnreadCount > 0 && (
                     <div
                       style={{
                         fontSize: '10px',
@@ -99,7 +85,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                         color: '#fff'
                       }}
                       className="red-circle-notifications">
-                      {notificationCount > 9 ? '9+' : notificationCount}
+                      {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
                     </div>
                   )}
                 </SocialBox>

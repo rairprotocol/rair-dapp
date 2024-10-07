@@ -6,7 +6,7 @@ import { formatEther } from 'ethers';
 
 import useConnectUser from '../../../hooks/useConnectUser';
 import useContracts from '../../../hooks/useContracts';
-import { useAppSelector } from '../../../hooks/useReduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useServerSettings from '../../../hooks/useServerSettings';
 import useSwal from '../../../hooks/useSwal';
 import useWeb3Tx from '../../../hooks/useWeb3Tx';
@@ -18,6 +18,7 @@ import { NavFooter, NavFooterBox } from '../../Footer/FooterItems/FooterItems';
 import PaginationBox from '../../MockUpPage/PaginationBox/PaginationBox';
 import NotificationBox from '../../UserProfileSettings/PopUpNotification/NotificationBox/NotificationBox';
 import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
+import { fetchNotifications } from '../../../redux/notificationsSlice';
 
 interface IMobileNavigationList {
   messageAlert: string | null;
@@ -34,6 +35,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   toggleMenu,
   click
 }) => {
+  const dispatch = useAppDispatch();
   const [userBalance, setUserBalance] = useState<string>('');
   const [userRairBalance, setUserRairBalance] = useState<bigint>(BigInt(0));
   const { primaryColor, primaryButtonColor, textColor, isDarkMode } =
@@ -87,58 +89,18 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   ]);
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
-  const [notificationArray, setNotificationArray] = useState<any>();
-  const [notificationCount, setNotificationCount] = useState<number>(0);
   const [flagLoading, setFlagLoading] = useState(false);
+  const {notifications, totalCount} = useAppSelector(store => store.notifications);
   const [currentPageNotification, setCurrentPageNotification] =
     useState<number>(1);
   const reactSwal = useSwal();
 
   const { logoutUser } = useConnectUser();
 
-  const getNotifications = useCallback(
-    async (pageNum?: number) => {
-      if (isLoggedIn && messageAlert && currentUserAddress) {
-        setFlagLoading(true);
-        const result = await rFetch(
-          `/api/notifications${pageNum ? `?pageNum=${Number(pageNum)}` : ''}`
-        );
-        if (result.success) {
-          const sortedNotifications = result.notifications.sort((a, b) => {
-            if (!a.read && b.read) return -1;
-            if (a.read && !b.read) return 1;
-
-            const dateA = new Date(a.createdAt).getTime();
-            const dateB = new Date(b.createdAt).getTime();
-
-            return dateB - dateA;
-          });
-          setNotificationArray(sortedNotifications);
-        }
-      } else {
-        setNotificationArray([]);
-      }
-    },
-    [messageAlert, currentUserAddress, isLoggedIn]
-  );
-
-  const getNotificationsCount = useCallback(async () => {
-    if (isLoggedIn && currentUserAddress) {
-      setFlagLoading(true);
-      const result = await rFetch(`/api/notifications`);
-      if (result.success && result.totalCount >= 0) {
-        setNotificationCount(result.totalCount);
-      }
-      setFlagLoading(false);
-    } else {
-      setNotificationCount(0);
-    }
-  }, [currentUserAddress, isLoggedIn]);
-
   const changePageForVideo = (currentPage: number) => {
     setCurrentPageNotification(currentPage);
     const currentPageNumber = currentPage === 0 ? currentPage : currentPage - 1;
-    getNotifications(Number(currentPageNumber));
+    dispatch(fetchNotifications(Number(currentPageNumber)));
   };
 
   const deleteAllNotificaiton = useCallback(async () => {
@@ -150,8 +112,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       });
 
       if (result.success) {
-        getNotifications();
-        getNotificationsCount();
+        dispatch(fetchNotifications());
         reactSwal.fire({
           title: 'Success',
           icon: 'success'
@@ -160,15 +121,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
       }
       setFlagLoading(false);
     }
-  }, [currentUserAddress, getNotifications, getNotificationsCount, reactSwal]);
+  }, [currentUserAddress, dispatch, reactSwal]);
 
   useEffect(() => {
-    getNotificationsCount();
-  }, [getNotificationsCount]);
-
-  useEffect(() => {
-    getNotifications(0);
-  }, [getNotifications]);
+    if(currentUserAddress && isLoggedIn) {
+      dispatch(fetchNotifications(0));
+    }
+  }, [currentUserAddress, isLoggedIn]);
 
   useEffect(() => {
     getBalance();
@@ -225,15 +184,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
             </div>
             {flagLoading ? (
               <LoadingComponent />
-            ) : notificationArray && notificationArray.length > 0 ? (
-              notificationArray.map((el) => {
+            ) : notifications && notifications.length > 0 ? (
+              notifications.map((el) => {
                 return (
                   <NotificationBox
-                    getNotifications={getNotifications}
                     el={el}
                     key={el._id}
                     title={el.message}
-                    getNotificationsCount={getNotificationsCount}
                   />
                 );
               })
@@ -246,9 +203,9 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               </div>
             )}
           </div>
-          {notificationCount > 0 && (
+          {totalCount > 0 && (
             <PaginationBox
-              totalPageForPagination={notificationCount}
+              totalPageForPagination={totalCount}
               changePage={changePageForVideo}
               currentPage={currentPageNotification}
               itemsPerPageNotifications={10}

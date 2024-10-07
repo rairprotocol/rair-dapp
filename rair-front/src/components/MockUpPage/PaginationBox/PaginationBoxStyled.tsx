@@ -6,9 +6,7 @@ interface IPaginationBoxStyled {
   isDarkMode?: boolean;
 }
 
-export const PaginationBoxStyled = styled(Pagination).withConfig({
-  shouldForwardProp: () => true
-})<IPaginationBoxStyled>`
+export const PaginationBoxStyled = styled(Pagination)<IPaginationBoxStyled>`
   ul {
     li {
       button {
@@ -20,12 +18,7 @@ export const PaginationBoxStyled = styled(Pagination).withConfig({
           ${({ isDarkMode }) => (!isDarkMode ? '#2d2d2d' : '#fff')};
 
         &.Mui-selected {
-          background: ${({ primaryButtonColor }) =>
-            `${
-              import.meta.env.VITE_TESTNET
-                ? 'var(--hot-drops)'
-                : primaryButtonColor
-            }`};
+          background: ${({ primaryButtonColor }) => `${primaryButtonColor}`};
           color: #fff;
           border: none;
           -webkit-box-shadow: 0px 0px 7px 0.4px #b278a7;
@@ -33,12 +26,7 @@ export const PaginationBoxStyled = styled(Pagination).withConfig({
           box-shadow: 0px 0px 7px 0.4px #b278a7;
         }
         &:hover {
-          background: ${({ primaryButtonColor }) =>
-            `${
-              import.meta.env.VITE_TESTNET === 'true'
-                ? 'var(--hot-drops)'
-                : primaryButtonColor
-            }`};
+          background: ${({ primaryButtonColor }) => `${primaryButtonColor}`};
           color: #fff;
         }
       }
