@@ -136,7 +136,8 @@ const SelectNumber: React.FC<ISelectNumber> = ({
           <div
             style={{
               background: primaryColor,
-              top: '0px'
+              top: '0',
+              alignContent: 'baseline'
             }}
             id="rred"
             className={'select-box--items list-of-tokens select-number-popup'}
