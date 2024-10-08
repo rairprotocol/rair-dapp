@@ -68,7 +68,7 @@ const MetadataItem = ({
           {item.name.length > 8 && !isMobileDesign ? (
             <>
               <TooltipBox title={item.name}>
-                {`${item.name.slice(0, 6)}...`}
+                <>{`${item.name.slice(0, 6)}...`}</>
               </TooltipBox>
             </>
           ) : (
