@@ -274,8 +274,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     if (
       !metadataFilter &&
       currentCollectionStatus !== dataStatuses.Loading &&
-      currentCollectionMetadata?.product?.firstTokenIndex &&
-      !currentCollection[currentCollectionMetadata?.product?.firstTokenIndex]
+      Object.keys(currentCollection).length === 1
     ) {
       getResetTokens();
     }
