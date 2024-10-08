@@ -272,6 +272,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
 
   useEffect(() => {
     if (
+      !metadataFilter &&
       currentCollectionStatus !== dataStatuses.Loading &&
       currentCollectionMetadata?.product?.firstTokenIndex &&
       !currentCollection[currentCollectionMetadata?.product?.firstTokenIndex]
@@ -282,7 +283,8 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     currentCollectionMetadata,
     currentCollection,
     getResetTokens,
-    currentCollectionStatus
+    currentCollectionStatus,
+    metadataFilter
   ]);
 
   useEffect(() => {
