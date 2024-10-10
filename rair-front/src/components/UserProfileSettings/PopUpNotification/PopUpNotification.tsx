@@ -17,7 +17,9 @@ const PopUpNotification = ({ realDataNotification, notificationCount }) => {
   const reactSwal = useSwal();
   const { currentUserAddress } = useAppSelector((state) => state.web3);
   const { isLoggedIn } = useAppSelector((store) => store.user);
-  const { totalUnreadCount } = useAppSelector((store) => store.notifications);
+  const { totalUnreadCount, totalCount } = useAppSelector(
+    (store) => store.notifications
+  );
   const [totalPageForPagination, setTotalPageForPagination] = useState(0);
   const [currentPageForNotification, setCurrentPageNotification] =
     useState<number>(1);
@@ -127,19 +129,22 @@ const PopUpNotification = ({ realDataNotification, notificationCount }) => {
               <div className="notification-title">Notifications</div>
               <button
                 onClick={() => deleteAllNotificaiton()}
+                disabled={totalCount === 0}
                 style={{
                   color: textColor,
                   background: `${
-                    primaryColor === '#dedede'
-                      ? import.meta.env.VITE_TESTNET === 'true'
-                        ? 'var(--hot-drops)'
-                        : 'linear-gradient(to right, #e882d5, #725bdb)'
-                      : import.meta.env.VITE_TESTNET === 'true'
-                        ? primaryButtonColor ===
-                          'linear-gradient(to right, #e882d5, #725bdb)'
+                    totalCount === 0
+                      ? '#ababab'
+                      : primaryColor === '#dedede'
+                        ? import.meta.env.VITE_TESTNET === 'true'
                           ? 'var(--hot-drops)'
+                          : 'linear-gradient(to right, #e882d5, #725bdb)'
+                        : import.meta.env.VITE_TESTNET === 'true'
+                          ? primaryButtonColor ===
+                            'linear-gradient(to right, #e882d5, #725bdb)'
+                            ? 'var(--hot-drops)'
+                            : primaryButtonColor
                           : primaryButtonColor
-                        : primaryButtonColor
                   }`
                 }}>
                 Clear all

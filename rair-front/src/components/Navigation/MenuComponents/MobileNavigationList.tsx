@@ -90,7 +90,9 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
 
   const [copyEth, setCopyEth] = useState<boolean>(false);
   const [flagLoading, setFlagLoading] = useState(false);
-  const {notifications, totalCount} = useAppSelector(store => store.notifications);
+  const { notifications, totalCount } = useAppSelector(
+    (store) => store.notifications
+  );
   const [currentPageNotification, setCurrentPageNotification] =
     useState<number>(1);
   const reactSwal = useSwal();
@@ -124,7 +126,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   }, [currentUserAddress, dispatch, reactSwal]);
 
   useEffect(() => {
-    if(currentUserAddress && isLoggedIn) {
+    if (currentUserAddress && isLoggedIn) {
       dispatch(fetchNotifications(0));
     }
   }, [currentUserAddress, isLoggedIn]);
@@ -164,19 +166,22 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               <button
                 className="btn-clear-nofitications"
                 onClick={() => deleteAllNotificaiton()}
+                disabled={totalCount === 0}
                 style={{
                   color: textColor,
                   background: `${
-                    primaryColor === '#dedede'
-                      ? import.meta.env.VITE_TESTNET === 'true'
-                        ? 'var(--hot-drops)'
-                        : 'linear-gradient(to right, #e882d5, #725bdb)'
-                      : import.meta.env.VITE_TESTNET === 'true'
-                        ? primaryButtonColor ===
-                          'linear-gradient(to right, #e882d5, #725bdb)'
+                    totalCount === 0
+                      ? '#ababab'
+                      : primaryColor === '#dedede'
+                        ? import.meta.env.VITE_TESTNET === 'true'
                           ? 'var(--hot-drops)'
+                          : 'linear-gradient(to right, #e882d5, #725bdb)'
+                        : import.meta.env.VITE_TESTNET === 'true'
+                          ? primaryButtonColor ===
+                            'linear-gradient(to right, #e882d5, #725bdb)'
+                            ? 'var(--hot-drops)'
+                            : primaryButtonColor
                           : primaryButtonColor
-                        : primaryButtonColor
                   }`
                 }}>
                 Clear all
@@ -187,11 +192,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
             ) : notifications && notifications.length > 0 ? (
               notifications.map((el) => {
                 return (
-                  <NotificationBox
-                    el={el}
-                    key={el._id}
-                    title={el.message}
-                  />
+                  <NotificationBox el={el} key={el._id} title={el.message} />
                 );
               })
             ) : (
