@@ -28,12 +28,28 @@ const NftListComponent: FC<INftListComponent> = ({ titleSearch, sortItem }) => {
     return <LoadingComponent />;
   }
 
-  const filteredData = catalog.filter((item) => {
-    return (
-      item.product.cover !== 'none' &&
-      item.product.name.toLowerCase().includes(titleSearch.toLowerCase())
-    );
-  });
+  const filteredData = catalog
+    .filter((item) => {
+      return (
+        item.product.cover !== 'none' &&
+        item.product.name.toLowerCase().includes(titleSearch.toLowerCase())
+      );
+    })
+    .sort((a, b) => {
+      if (sortItem === 'up') {
+        if (a.product.name < b.product.name) {
+          return 1;
+        }
+      }
+
+      if (sortItem === 'down') {
+        if (a.product.name > b.product.name) {
+          return -1;
+        }
+      }
+
+      return 0;
+    });
 
   if (catalogStatus !== dataStatuses.Complete) {
     return <LoadingComponent />;
