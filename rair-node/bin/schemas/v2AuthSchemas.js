@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { customValidator } = require('./helpers');
-const { blockchainNetworks, ethAddress } = require('./reusableCustomTypes');
+const { ethAddress } = require('./reusableCustomTypes');
 
 module.exports = {
     v2Unlock: () => ({

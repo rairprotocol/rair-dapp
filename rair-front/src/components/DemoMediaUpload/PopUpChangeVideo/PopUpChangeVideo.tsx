@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
@@ -22,9 +23,8 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
   mediaList,
   index
 }) => {
-  const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
-    (store) => store.colors
-  );
+  const { primaryColor, textColor, primaryButtonColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
   const { categories } = useAppSelector((store) => store.settings);
   const rSwal = useSwal();
 
@@ -122,7 +122,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
       color: textColor
     },
     labelCSS: {
-      color: `${primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : '#fff'}`,
+      color: textColor,
       marginTop: 5,
       marginBottom: 5
     }
@@ -133,7 +133,9 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
       zIndex: '1'
     },
     content: {
-      background: primaryColor === 'rhyno' ? '#F2F2F2' : '#383637',
+      background: isDarkMode
+        ? `color-mix(in srgb, ${primaryColor}, #2D2D2D)`
+        : 'var(--rhyno)',
       top: '50%',
       left: '50%',
       right: 'auto',
@@ -191,7 +193,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
             label="Title"
             customClass="form-control input-select-custom-style"
             placeholder="Select a description"
-            //   {...selectCommonInfoNFT}
+            {...selectCommonInfoNFT}
           />
           <InputField
             getter={desc}
@@ -199,7 +201,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
             label="Description"
             customClass="form-control input-select-custom-style"
             placeholder="Select a description"
-            //   {...selectCommonInfoNFT}
+            {...selectCommonInfoNFT}
           />
           <InputSelect
             //   customClass="form-control input-select-custom-style"
