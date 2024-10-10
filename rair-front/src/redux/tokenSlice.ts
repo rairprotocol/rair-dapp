@@ -272,9 +272,10 @@ export const loadNextCollectionPage = createAsyncThunk(
     if (!tokens.currentCollectionParams) {
       return;
     }
+    const lastTokenLoaded = Object.keys(tokens.currentCollection).at(-1);
     const { blockchain, contract, product, fromToken, toToken, attributes } =
       tokens.currentCollectionParams;
-    const startingToken = BigInt(toToken) + BigInt(1);
+    const startingToken = BigInt(lastTokenLoaded || toToken) + BigInt(1);
     const queryParams = new URLSearchParams({
       fromToken: startingToken.toString(),
       toToken: (startingToken + BigInt(20)).toString()
