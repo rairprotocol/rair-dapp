@@ -380,7 +380,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     return <LoadingComponent />;
   }
 
-  if (currentCollectionTotal === 0) {
+  if (currentCollectionTotal === 0 && !metadataFilter) {
     return (
       <div className="collection-no-products">
         {!!embeddedParams || (
@@ -490,53 +490,28 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
               aria-hidden="true"
             />
           </i>
-          {isMobileDesign ? (
-            <FilteringBlock
-              click={metadataFilter}
-              setIsClick={setMetadataFilter}
-              isFilterShow={true}
-              textColor={textColor}
-              primaryColor={primaryColor}
-              metadataFilter={metadataFilter}
-              setMetadataFilter={toggleMetadataFilter}
-              // categoryClick={categoryClick}
-              // setCategoryClick={setCategoryClick}
-              // blockchainClick={blockchainClick}
-              // setBlockchainClick={setBlockchainClick}
-              sortItem={sortItem}
-              // setBlockchain={setBlockchain}
-              // setCategory={setCategory}
-              setSortItem={setSortItem}
-              setIsShow={setMetadataFilter}
-              colletionPage={true}
-              // setIsShowCategories={setIsShowCategories}
-              // setFilterText={setFilterText}
-              // setFilterCategoriesText={setFilterCategoriesText}
-            />
-          ) : (
-            <FilteringBlock
-              click={metadataFilter}
-              setIsClick={setMetadataFilter}
-              isFilterShow={true}
-              textColor={textColor}
-              primaryColor={primaryColor}
-              metadataFilter={metadataFilter}
-              setMetadataFilter={toggleMetadataFilter}
-              colletionPage={true}
-              // categoryClick={categoryClick}
-              // setCategoryClick={setCategoryClick}
-              // blockchainClick={blockchainClick}
-              // setBlockchainClick={setBlockchainClick}
-              sortItem={sortItem}
-              // setBlockchain={setBlockchain}
-              // setCategory={setCategory}
-              setSortItem={setSortItem}
-              setIsShow={setMetadataFilter}
-              // setIsShowCategories={setIsShowCategories}
-              // setFilterText={setFilterText}
-              // setFilterCategoriesText={setFilterCategoriesText}
-            />
-          )}
+          <FilteringBlock
+            click={metadataFilter}
+            setIsClick={setMetadataFilter}
+            isFilterShow={true}
+            textColor={textColor}
+            primaryColor={primaryColor}
+            metadataFilter={metadataFilter}
+            setMetadataFilter={toggleMetadataFilter}
+            // categoryClick={categoryClick}
+            // setCategoryClick={setCategoryClick}
+            // blockchainClick={blockchainClick}
+            // setBlockchainClick={setBlockchainClick}
+            sortItem={sortItem}
+            // setBlockchain={setBlockchain}
+            // setCategory={setCategory}
+            setSortItem={setSortItem}
+            setIsShow={setMetadataFilter}
+            colletionPage={true}
+            // setIsShowCategories={setIsShowCategories}
+            // setFilterText={setFilterText}
+            // setFilterCategoriesText={setFilterCategoriesText}
+          />
         </div>
       </div>
       <ClearMetadataBox
@@ -567,94 +542,82 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
           className={`list-button-wrapper-grid-template ${
             metadataFilter && 'with-modal'
           }`}>
-          {tokenDataFiltered.length > 0
-            ? tokenDataFiltered.map((token, index) => {
-                if (
-                  token.metadata.image &&
-                  token.metadata.image !== 'undefined'
-                ) {
-                  return (
-                    <NftItemForCollectionView
-                      id={`collection-view-${index}`}
-                      key={index}
-                      pict={offerAllData?.cover}
-                      metadata={token.metadata}
-                      offerPrice={offerPrice}
-                      blockchain={blockchain}
-                      selectedData={selectedData}
-                      index={token.token}
-                      indexId={index.toString()}
-                      offerData={offerDataCol}
-                      item={token}
-                      offer={
-                        token.offer.diamond
-                          ? token.offer.diamondRangeIndex
-                          : token.offer.offerIndex
-                      }
-                      someUsersData={someUsersData}
-                      userName={offerAllData?.owner}
-                      setPlaying={setPlaying}
-                      playing={playing}
-                      diamond={token.offer.diamond}
-                      resalePrice={token?.resaleData?.price}
-                      resaleFlag={!!token?.resaleData}
-                    />
-                  );
-                } else {
-                  return null;
-                }
-              })
-            : filteredData && filteredData.length > 0
-              ? filteredData.map((item, index) => {
-                  if (
-                    item.metadata.image &&
-                    item.metadata.image !== 'undefined'
-                  ) {
-                    return (
-                      <NftItemForCollectionView
-                        id={`collection-view-${index}`}
-                        key={index}
-                        pict={offerAllData?.cover}
-                        metadata={item.metadata}
-                        offerPrice={offerPrice}
-                        blockchain={blockchain}
-                        selectedData={selectedData}
-                        index={String(index)}
-                        offerData={offerDataCol}
-                        item={item}
-                        indexId={index.toString()}
-                        offerItemData={item.offer}
-                        offer={
-                          item.offer.diamond
-                            ? item.offer.diamondRangeIndex
-                            : item.offer.offerIndex
-                        }
-                        someUsersData={someUsersData}
-                        userName={offerAllData?.owner}
-                        tokenDataLength={Object.keys(currentCollection).length}
-                        setPlaying={setPlaying}
-                        playing={playing}
-                        diamond={item.offer.diamond}
-                        resalePrice={item?.resaleData?.price}
-                        resaleFlag={!!item?.resaleData}
-                      />
-                    );
-                  } else {
-                    return null;
-                  }
-                })
-              : Array.from(new Array(10)).map((item, index) => {
-                  return (
-                    <Skeleton
-                      key={index}
-                      className={'skeloton-product'}
-                      variant="rectangular"
-                      width={283}
-                      height={280}
-                      style={{ borderRadius: 20 }}
-                    />
-                  );
-                })}
+          {tokenDataFiltered.length > 0 ? (
+            tokenDataFiltered.map((token, index) => {
+              if (
+                token.metadata.image &&
+                token.metadata.image !== 'undefined'
+              ) {
+                return (
+                  <NftItemForCollectionView
+                    id={`collection-view-${index}`}
+                    key={index}
+                    pict={offerAllData?.cover}
+                    metadata={token.metadata}
+                    offerPrice={offerPrice}
+                    blockchain={blockchain}
+                    selectedData={selectedData}
+                    index={token.token}
+                    indexId={index.toString()}
+                    offerData={offerDataCol}
+                    item={token}
+                    offer={
+                      token.offer.diamond
+                        ? token.offer.diamondRangeIndex
+                        : token.offer.offerIndex
+                    }
+                    someUsersData={someUsersData}
+                    userName={offerAllData?.owner}
+                    setPlaying={setPlaying}
+                    playing={playing}
+                    diamond={token.offer.diamond}
+                    resalePrice={token?.resaleData?.price}
+                    resaleFlag={!!token?.resaleData}
+                  />
+                );
+              } else {
+                return null;
+              }
+            })
+          ) : filteredData && filteredData.length > 0 ? (
+            filteredData.map((item, index) => {
+              if (item.metadata.image && item.metadata.image !== 'undefined') {
+                return (
+                  <NftItemForCollectionView
+                    id={`collection-view-${index}`}
+                    key={index}
+                    pict={offerAllData?.cover}
+                    metadata={item.metadata}
+                    offerPrice={offerPrice}
+                    blockchain={blockchain}
+                    selectedData={selectedData}
+                    index={String(index)}
+                    offerData={offerDataCol}
+                    item={item}
+                    indexId={index.toString()}
+                    offerItemData={item.offer}
+                    offer={
+                      item.offer.diamond
+                        ? item.offer.diamondRangeIndex
+                        : item.offer.offerIndex
+                    }
+                    someUsersData={someUsersData}
+                    userName={offerAllData?.owner}
+                    tokenDataLength={Object.keys(currentCollection).length}
+                    setPlaying={setPlaying}
+                    playing={playing}
+                    diamond={item.offer.diamond}
+                    resalePrice={item?.resaleData?.price}
+                    resaleFlag={!!item?.resaleData}
+                  />
+                );
+              } else {
+                return null;
+              }
+            })
+          ) : (
+            <h3>No tokens found</h3>
+          )}
         </div>
         {metadataFilter && (
           <div id="filter-modal-parent">
