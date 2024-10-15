@@ -350,7 +350,7 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
               </div>
             </div>
           </div>
-          {currentUserAddress && (
+          {currentUserAddress && isLoggedIn && (
             <li className="logout" onClick={logoutUser}>
               <FontAwesomeIcon icon={faSignOutAlt} />
               Logout
@@ -359,8 +359,13 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
         </NavFooterBox>
       ) : (
         <NavFooterBox className="nav-header-box-mobile" isDarkMode={isDarkMode}>
-          {currentUserAddress && (
-            <li className="logout" onClick={logoutUser}>
+          {currentUserAddress && isLoggedIn && (
+            <li
+              className="logout"
+              style={{
+                color: textColor
+              }}
+              onClick={logoutUser}>
               <FontAwesomeIcon icon={faSignOutAlt} />
               Logout
             </li>
