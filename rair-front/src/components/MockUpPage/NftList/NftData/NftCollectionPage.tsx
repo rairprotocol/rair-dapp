@@ -70,7 +70,8 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     currentCollection,
     currentCollectionTotal,
     currentCollectionStatus,
-    currentCollectionMetadata
+    currentCollectionMetadata,
+    currentCollectionNextPageStatus
   } = useAppSelector((store) => store.tokens);
 
   const { width } = useWindowDimensions();
@@ -781,7 +782,7 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
           </div>
         )}
       </div>
-      {isLoading && (
+      {currentCollectionNextPageStatus && (
         <div className="progress-token">
           <CircularProgress
             style={{
