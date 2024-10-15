@@ -9,6 +9,7 @@ const { Server } = require('socket.io');
 const morgan = require('morgan');
 const session = require('express-session');
 const RedisStorage = require('connect-redis')(session);
+const { rateLimit } = require('express-rate-limit');
 const seedDB = require('./seeds');
 const log = require('./utils/logger')(module);
 const StartHLS = require('./hls-starter');
@@ -53,6 +54,15 @@ async function main() {
   });
 
   const hls = await StartHLS();
+
+  const limiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    limit: 500,
+    standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  });
+
+  app.use(limiter);
 
   const context = {
     hls,
