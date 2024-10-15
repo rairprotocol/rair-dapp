@@ -23,6 +23,8 @@ services:
     expose:
       - port: 80
         as: 80
+        accept:
+          - "test.wallstreet80s.club"	
         to:
           - global: true
           - service: rair-node
@@ -30,8 +32,6 @@ services:
           - service: rair-sync
           - service: redis
           - service: mongo
-    accept:
-      - "wallstreet80s.club"
     env:
       - Environment=Variables
   rair-node:
