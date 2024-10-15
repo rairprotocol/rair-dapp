@@ -653,13 +653,13 @@ module.exports = {
                     metadataFilters = JSON.parse(metadataFilters);
                     aggregateOptions.push({
                         $match: {
-                        $or: Object.keys(metadataFilters).map((attr) => ({
-                            'metadata.attributes': {
-                                $elemMatch: {
-                                trait_type: attr,
-                                value: { $in: metadataFilters[attr] },
-                                },
-                            },
+                        $and: Object.keys(metadataFilters).map((attr) => ({
+                              'metadata.attributes': {
+                                  $elemMatch: {
+                                    trait_type: attr,
+                                    value: { $in: metadataFilters[attr] },
+                                  },
+                              },
                             })),
                         },
                     });
