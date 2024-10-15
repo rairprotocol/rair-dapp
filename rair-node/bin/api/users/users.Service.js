@@ -140,6 +140,7 @@ exports.createUser = async (req, res, next) => {
     next(e);
   }
 };
+
 exports.getUserByAddress = async (req, res, next) => {
   try {
     const publicAddress = req.params.publicAddress.toLowerCase();

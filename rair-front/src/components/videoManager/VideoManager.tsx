@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Provider, useStore } from 'react-redux';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { formatEther } from 'ethers';
 
 import OfferSelector from './OfferSelector';
 
@@ -9,25 +10,47 @@ import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import { rFetch } from '../../utils/rFetch';
+import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
+import InputSelect from '../common/InputSelect';
 import AnalyticsPopUp from '../DemoMediaUpload/UploadedListBox/AnalyticsPopUp/AnalyticsPopUp';
-import { formatEther } from 'ethers';
 
 const VideoManager = () => {
   const [uploads, setUploads] = useState<any[]>([]);
   const [unlockData, setUnlockData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [hiddenFlag, setHiddenFlag] = useState(false);
+  const [categoryOptions, setCategoryOptions] = useState<Array<OptionsType>>(
+    []
+  );
 
   const [filter, setFilter] = useState('');
   const [selectedFile, setSelectedFile] = useState<any>({});
   const { currentUserAddress } = useAppSelector((store) => store.web3);
-  const { textColor, primaryButtonColor, secondaryButtonColor } =
+  const { primaryColor, textColor, primaryButtonColor, secondaryButtonColor } =
     useAppSelector((store) => store.colors);
 
   const { getBlockchainData } = useServerSettings();
 
   const reactSwal = useSwal();
+
+  const loadCategories = useCallback(async () => {
+    const { success, result } = await rFetch('/api/categories');
+    if (success) {
+      setCategoryOptions(
+        result.map((item) => {
+          return {
+            label: item.name,
+            value: item._id
+          };
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   useEffect(() => {
     setUnlockData([]);
@@ -119,6 +142,15 @@ const VideoManager = () => {
         }
       });
   }, [selectedFile, refreshFileList, reactSwal]);
+
+  const updateCategory = useCallback(
+    async (categoryId) => {
+      await updateFile({
+        category: categoryId
+      });
+    },
+    [updateFile]
+  );
 
   const updateDemoStatus = useCallback(async () => {
     await updateFile({
@@ -219,53 +251,106 @@ const VideoManager = () => {
                     }
                   />
                 </div>
-                <div className="col-8 py-5">
-                  <small>{selectedFile.type}</small>
-                  <h3>{selectedFile.title}</h3>
-                  <h5>
-                    <AnalyticsPopUp videoId={selectedFile._id} />
-                  </h5>
-                  <span>{selectedFile?.category?.name}</span>
-                  <br />
-                  <button
-                    onClick={updateDemoStatus}
-                    style={{
-                      background: secondaryButtonColor,
-                      color: textColor
-                    }}
-                    className="btn rair-button">
-                    {selectedFile.demo ? 'Demo' : 'Unlockable'}
-                  </button>
-                  <button
-                    onClick={updateAgeRestriction}
-                    style={{
-                      background: primaryButtonColor,
-                      color: textColor
-                    }}
-                    className="btn rair-button">
-                    {selectedFile.ageRestricted
-                      ? 'Age Restricted'
-                      : 'NOT Age Restricted'}
-                  </button>
-                  <button
-                    onClick={updateHiddenStatus}
-                    style={{
-                      background: secondaryButtonColor,
-                      color: textColor
-                    }}
-                    className="btn rair-button">
-                    {selectedFile.hidden ? 'Hidden' : 'Visible'}
-                  </button>
-                  <br />
-                  <small>{selectedFile.duration}</small>
-                  <br />
-                  <span>{selectedFile.description}</span>
-                  <br />
-                  <br />
+                <div className="col-8 pb-5">
+                  <table
+                    style={{ backgroundColor: primaryColor }}
+                    className="table-responsive">
+                    <tbody>
+                      {[
+                        {
+                          label: 'Type',
+                          value: selectedFile.type
+                        },
+                        {
+                          label: 'Title',
+                          value: selectedFile.title
+                        },
+                        {
+                          label: 'Category',
+                          value: (
+                            <InputSelect
+                              options={categoryOptions}
+                              placeholder="Please select"
+                              getter={selectedFile.category?._id || 'null'}
+                              setter={updateCategory}
+                              customClass="form-control rounded-rair"
+                              customCSS={{
+                                backgroundColor: primaryColor,
+                                color: textColor
+                              }}
+                            />
+                          )
+                        },
+                        {
+                          label: 'Views',
+                          value: <AnalyticsPopUp videoId={selectedFile._id} />
+                        },
+                        {
+                          label: 'Unlockable',
+                          value: (
+                            <button
+                              onClick={updateDemoStatus}
+                              style={{
+                                background: secondaryButtonColor,
+                                color: textColor
+                              }}
+                              className="btn rair-button">
+                              {selectedFile.demo ? 'Demo' : 'Unlockable'}
+                            </button>
+                          )
+                        },
+                        {
+                          label: 'Age Restriction',
+                          value: (
+                            <button
+                              onClick={updateAgeRestriction}
+                              style={{
+                                background: primaryButtonColor,
+                                color: textColor
+                              }}
+                              className="btn rair-button">
+                              {selectedFile.ageRestricted
+                                ? 'Age Restricted'
+                                : 'NOT Age Restricted'}
+                            </button>
+                          )
+                        },
+                        {
+                          label: 'Visibility',
+                          value: (
+                            <button
+                              onClick={updateHiddenStatus}
+                              style={{
+                                background: secondaryButtonColor,
+                                color: textColor
+                              }}
+                              className="btn rair-button">
+                              {selectedFile.hidden ? 'Hidden' : 'Visible'}
+                            </button>
+                          )
+                        },
+                        {
+                          label: 'Duration',
+                          value: selectedFile.duration
+                        },
+                        {
+                          label: 'Description',
+                          value: selectedFile.description
+                        }
+                      ].map((item, index) => {
+                        return (
+                          <tr key={index}>
+                            <th>{item.label}</th>
+                            <th>{item.value}</th>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                   <button
                     onClick={deleteFile}
-                    className="btn btn-outline-danger">
-                    <FontAwesomeIcon icon={faTrash} /> Delete
+                    className="btn float-end btn-outline-danger">
+                    <FontAwesomeIcon icon={faTrash} /> Delete Media File
                   </button>
                 </div>
               </div>

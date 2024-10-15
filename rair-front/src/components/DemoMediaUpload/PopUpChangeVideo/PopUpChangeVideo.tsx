@@ -33,7 +33,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
   const [categoryList, setCategoryList] = useState<OptionsType[] | undefined>(
     undefined
   );
-  const [itemCategory, setItemCategory] = useState(item.category);
+  const [itemCategory, setItemCategory] = useState(item.category._id);
 
   const getCategory = useCallback(async () => {
     if (categories) {
@@ -42,7 +42,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
           return {
             id: item._id,
             label: item.name,
-            value: item.name,
+            value: item._id,
             disabled: false
           };
         })
@@ -69,16 +69,12 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
       setMediaList(newMediaList);
       closeModal();
     } else {
-      const choiceCategory: any =
-        categoryList &&
-        categoryList.find((item: any) => item.value === itemCategory);
-
       setUploadSuccess(true);
 
       const updatedVideo = {
         description: desc,
         title: title,
-        category: choiceCategory.id
+        category: itemCategory
       };
       try {
         const request = await rFetch(`/api/files/update/${item._id}`, {
@@ -99,14 +95,14 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
           closeModal();
           setDesc(item.description);
           setTitle(item.title);
-          setItemCategory(item.category);
+          setItemCategory(item.category._id);
           setUploadSuccess(null);
         }
       } catch (e) {
         closeModal();
         setDesc(item.description);
         setTitle(item.title);
-        setItemCategory(item.category);
+        setItemCategory(item.category._id);
         setUploadSuccess(null);
       }
     }
@@ -173,7 +169,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
         if (defaultCategory) {
           setItemCategory(defaultCategory.value);
         } else {
-          setItemCategory(item.category);
+          setItemCategory(item.category._id);
         }
       }
     }
@@ -213,7 +209,7 @@ const PopUpChangeVideo: React.FC<IPopUpChangeVideo> = ({
             {...selectCommonInfoNFT}
           />
           <button
-            onClick={() => updateVideoData()}
+            onClick={updateVideoData}
             disabled={title === '' || desc === '' || itemCategory === ''}
             style={{
               marginTop: 30,

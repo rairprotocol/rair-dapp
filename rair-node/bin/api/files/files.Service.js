@@ -115,6 +115,18 @@ module.exports = {
         },
         {
           $match: matchData,
+        }, {
+          $lookup: {
+            from: 'Category',
+            localField: 'category',
+            foreignField: '_id',
+            as: 'category',
+          },
+        }, {
+          $unwind: {
+            path: '$category',
+            preserveNullAndEmptyArrays: true,
+          },
         },
         {
           $project: {
