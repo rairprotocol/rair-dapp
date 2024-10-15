@@ -1,0 +1,219 @@
+---
+version: "2.0"
+services:
+  mongo:
+    image: mongo:latest
+    expose:
+      - port: 27017
+        as: 27017
+        proto: tcp
+        to:
+          - global: false
+          - service: rair-front
+          - service: rair-node
+          - service: rair-stream
+          - service: rair-sync
+          - service: redis
+    env:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=rair-db
+  rair-front:
+    image: rairprotocol/rair-front:2e364d8a26839505fe02413870b0ef8223b73207
+    expose:
+      - port: 80
+        as: 80
+        to:
+          - global: true
+          - service: rair-node
+          - service: rair-stream
+          - service: rair-sync
+          - service: redis
+          - service: mongo
+    accept:
+      - "wallstreet80s.club"
+    env:
+      - Environment=Variables
+  rair-node:
+    image: rairprotocol/rair-node:2e364d8a26839505fe02413870b0ef8223b73207
+    expose:
+      - port: 3000
+        as: 3000
+        proto: tcp
+        to:
+          - global: false
+          - service: rair-front
+          - service: rair-stream
+          - service: rair-sync
+          - service: redis
+          - service: mongo
+      - port: 5000
+        as: 5000
+        proto: tcp
+        to:
+          - global: false
+          - service: rair-front
+          - service: rair-stream
+          - service: rair-sync
+    env:
+      - MONGO_URI_LOCAL=mongodb://admin:admin@mongo:27017/rair-db?authSource=admin
+      - ADMIN_NETWORK=0x2105
+      - APP_NAME=Test_Deployment
+      - ADMIN_CONTRACT=0xfc3666266d129504dd6c713f9bce107747ae4aee
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SESSION_SECRET=testing
+      - BASE_BCN_URL=http://rair-sync:5001
+  rair-stream:
+    image: rairprotocol/rair-stream:2e364d8a26839505fe02413870b0ef8223b73207
+    expose:
+      - port: 5002
+        as: 5002
+        proto: tcp
+        to:
+          - global: false
+          - service: rair-front
+          - service: rair-node
+          - service: rair-sync
+          - service: redis
+          - service: mongo
+    env:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - BASE_RAIRNODE_URL=http://rair-node:5000
+  rair-sync:
+    image: rairprotocol/rair-sync:2e364d8a26839505fe02413870b0ef8223b73207
+    expose:
+      - port: 5001
+        as: 5001
+        proto: tcp
+        to:
+          - global: false
+          - service: rair-front
+          - service: rair-node
+          - service: rair-stream
+          - service: redis
+          - service: mongo
+    env:
+      - MONGO_URI_LOCAL=mongodb://admin:admin@mongo:27017/rair-db?authSource=admin
+      - DEFAULT_PRODUCT_COVER=https://rair.myfilebase.com/ipfs/QmcV94NurwfWVGpXTST1we8uDbYiVQamKe87WEHK6DRzqa
+      - BASE_RAIRNODE_URL=http://rair-node:5000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SYNC_CONTRACT_REPEAT_EVERY=30
+      - SYNC_CONTRACT_TASK_INTERVAL=5
+  redis:
+    image: redis:6.2.3-alpine
+    expose:
+      - port: 6379
+        as: 6379
+        proto: tcp
+        to:
+          - global: false
+          - service: rair-front
+          - service: rair-node
+          - service: rair-stream
+          - service: rair-sync
+          - service: mongo
+    command:
+      - redis-server
+    args:
+      - "--protected-mode no"
+    env:
+      - Environment=Variables
+profiles:
+  compute:
+    mongo:
+      resources:
+        cpu:
+          units: 1
+        memory:
+          size: 2Gi
+        storage:
+          - size: 5Gi
+    rair-front:
+      resources:
+        cpu:
+          units: 1
+        memory:
+          size: 2Gi
+        storage:
+          - size: 5Gi
+    rair-node:
+      resources:
+        cpu:
+          units: 1
+        memory:
+          size: 2Gi
+        storage:
+          - size: 5Gi
+    rair-stream:
+      resources:
+        cpu:
+          units: 1
+        memory:
+          size: 2Gi
+        storage:
+          - size: 5Gi
+    rair-sync:
+      resources:
+        cpu:
+          units: 1
+        memory:
+          size: 2Gi
+        storage:
+          - size: 5Gi
+    redis:
+      resources:
+        cpu:
+          units: 1
+        memory:
+          size: 2Gi
+        storage:
+          - size: 5Gi
+  placement:
+    dcloud:
+      pricing:
+        mongo:
+          denom: uakt
+          amount: 1000
+        rair-front:
+          denom: uakt
+          amount: 1000
+        rair-node:
+          denom: uakt
+          amount: 1000
+        rair-stream:
+          denom: uakt
+          amount: 1000
+        rair-sync:
+          denom: uakt
+          amount: 1000
+        redis:
+          denom: uakt
+          amount: 1000
+deployment:
+  mongo:
+    dcloud:
+      profile: mongo
+      count: 1
+  rair-front:
+    dcloud:
+      profile: rair-front
+      count: 1
+  rair-node:
+    dcloud:
+      profile: rair-node
+      count: 1
+  rair-stream:
+    dcloud:
+      profile: rair-stream
+      count: 1
+  rair-sync:
+    dcloud:
+      profile: rair-sync
+      count: 1
+  redis:
+    dcloud:
+      profile: redis
+      count: 1
