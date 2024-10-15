@@ -74,10 +74,14 @@ module.exports = {
           'unlockData.offers.contract': {
             $in: arrayOfContracts,
           },
-        }, {
-          demo: true,
         }],
       };
+
+      if (!blockchain.length) {
+        matchData.$or.push({
+          demo: true,
+        });
+      }
 
       if (hidden === 'true') {
         matchData.hidden = true;
