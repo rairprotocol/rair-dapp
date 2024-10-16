@@ -23,15 +23,11 @@ services:
     expose:
       - port: 80
         as: 80
-        accept:
-          - "test.wallstreet80s.club"	
         to:
           - global: true
-          - service: rair-node
-          - service: rair-stream
-          - service: rair-sync
-          - service: redis
-          - service: mongo
+       # uncomment below to have a custom URL for your web page
+       #accept:
+       #  - xxx.yourdomain.com	
     env:
       - Environment=Variables
   rair-node:
