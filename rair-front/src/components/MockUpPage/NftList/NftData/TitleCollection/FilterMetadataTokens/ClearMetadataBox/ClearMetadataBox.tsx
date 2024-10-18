@@ -1,5 +1,6 @@
 //@ts-nocheck
 import React from 'react';
+import useWindowDimensions from '../../../../../../../hooks/useWindowDimensions';
 
 import ClearMetadataItem from './ClearMetadataItem';
 
@@ -11,11 +12,15 @@ const ClearMetadataBox = ({
   getAllProduct,
   selectedAttributeValues
 }) => {
+  const { width } = useWindowDimensions();
+  const isMobileDesign = width < 820;
+
   return (
     <div
       className="clear-filter-wrapper"
       style={{
-        display: 'flex'
+        display: 'flex',
+        fontSize: isMobileDesign && '12px'
       }}>
       {filteredDataAttributes &&
         filteredDataAttributes.length > 0 &&
