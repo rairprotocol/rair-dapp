@@ -284,7 +284,8 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     currentCollection,
     getResetTokens,
     currentCollectionStatus,
-    metadataFilter
+    metadataFilter,
+    selectedAttributeValues
   ]);
 
   useEffect(() => {
@@ -340,11 +341,11 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!metadataFilter) {
-      setSelectedAttributeValues(undefined);
-    }
-  }, [metadataFilter, setSelectedAttributeValues]);
+  // useEffect(() => {
+  //   if (!metadataFilter) {
+  //     setSelectedAttributeValues(undefined);
+  //   }
+  // }, [metadataFilter, setSelectedAttributeValues]);
 
   const selectedAttributeValuesFunction = (selectedAttributeValues) => {
     if (selectedAttributeValues) {
@@ -517,7 +518,10 @@ const NftCollectionPageComponent: FC<INftCollectionPageComponent> = ({
       <ClearMetadataBox
         filteredDataAttributes={filteredDataAttributes}
         setSelectedAttributeValues={setSelectedAttributeValues}
+        getAllProduct={getAllProduct}
         getResetTokens={getResetTokens}
+        showTokenRef={showTokensRef}
+        selectedAttributeValues={selectedAttributeValues}
       />
       {tokenDataFiltered.length > 0 ? (
         <div className="filter__btn__wrapper">
