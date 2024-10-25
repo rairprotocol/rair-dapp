@@ -19,7 +19,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=admin
       - MONGO_INITDB_DATABASE=rair-db
   rair-front:
-    image: rairprotocol/rair-front:2e364d8a26839505fe02413870b0ef8223b73207
+    image: rairprotocol/rair-front:b51c7a7053dd639b204f6ca7f3784246be7031dd
     expose:
       - port: 80
         as: 80
@@ -31,7 +31,7 @@ services:
     env:
       - Environment=Variables
   rair-node:
-    image: rairprotocol/rair-node:2e364d8a26839505fe02413870b0ef8223b73207
+    image: rairprotocol/rair-node:b51c7a7053dd639b204f6ca7f3784246be7031dd
     expose:
       - port: 3000
         as: 3000
@@ -61,7 +61,7 @@ services:
       - SESSION_SECRET=testing
       - BASE_BCN_URL=http://rair-sync:5001
   rair-stream:
-    image: rairprotocol/rair-stream:2e364d8a26839505fe02413870b0ef8223b73207
+    image: rairprotocol/rair-stream:b51c7a7053dd639b204f6ca7f3784246be7031dd
     expose:
       - port: 5002
         as: 5002
@@ -78,7 +78,7 @@ services:
       - REDIS_PORT=6379
       - BASE_RAIRNODE_URL=http://rair-node:5000
   rair-sync:
-    image: rairprotocol/rair-sync:2e364d8a26839505fe02413870b0ef8223b73207
+    image: rairprotocol/rair-sync:b51c7a7053dd639b204f6ca7f3784246be7031dd
     expose:
       - port: 5001
         as: 5001
