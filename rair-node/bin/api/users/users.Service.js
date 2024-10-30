@@ -77,7 +77,7 @@ exports.listUsers = async (req, res, next) => {
   try {
     const {
       fields = 'email,nickName,publicAddress,creationDate,blocked',
-      pageNum = 1,
+      pageNum = 0,
       itemsPerPage = 10,
     } = req.query;
     const queriedFields = {
