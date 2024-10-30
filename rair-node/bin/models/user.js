@@ -21,6 +21,16 @@ const User = new Schema(
     nonce: { type: String, default: () => nanoid(), select: false },
     creationDate: { type: Date, default: Date.now },
     blocked: { type: Boolean, default: false },
+    // Github integration
+    gitHandle: { type: String, required: false },
+    userLevel: { type: Number, required: false },
+    available: { type: Boolean, required: false, default: false },
+    languages: [{
+      type: {
+        name: { type: String },
+        percentage: { type: Number },
+      },
+      required: false }],
   },
   { versionKey: false },
 );

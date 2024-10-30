@@ -253,7 +253,7 @@ const useConnectUser = () => {
     dispatchStack.push(setExchangeRates(await getCoingeckoRates()));
     dispatchStack.push(setConnectedChain(loginData.blockchain));
 
-    let firstTimeLogin = false;
+    let willUpdateUserData = false;
 
     try {
       // Check if user exists in DB
@@ -263,10 +263,14 @@ const useConnectUser = () => {
       let user = userDataResponse.data.user;
       if (!userDataResponse.data.success || !user) {
         // If the user doesn't exist, send a request to register him using a TEMP adminNFT
-        firstTimeLogin = true;
+        willUpdateUserData = true;
+        const relevantUserData = { publicAddress: loginData.userAddress };
+        if (loginData.userDetails.email) {
+          relevantUserData['email'] = loginData.userDetails.email;
+        }
         const userCreation = await axios.post<TUserResponse>(
           '/api/users',
-          JSON.stringify({ publicAddress: loginData.userAddress }),
+          JSON.stringify(relevantUserData),
           {
             headers: {
               Accept: 'application/json',
@@ -275,6 +279,11 @@ const useConnectUser = () => {
           }
         );
         user = userCreation.data.user;
+      } else if (
+        !userDataResponse.data.user.email &&
+        loginData.userDetails.email
+      ) {
+        willUpdateUserData = true;
       }
 
       // Authorize user
@@ -298,11 +307,13 @@ const useConnectUser = () => {
               loginData.userAddress
             );
             reactSwal.close();
-            if (firstTimeLogin) {
+            if (willUpdateUserData) {
               const userData = await loginData.userDetails;
               const availableData: Partial<User> = {};
-              if (userData.email) {
+              if (userData.email && !loginResponse.user.email) {
                 availableData.email = userData.email;
+              }
+              if (userData.email && !loginResponse.user.nickName) {
                 availableData.nickName = userData.email?.split('@')?.[0];
               }
               if (userData.name && !userData.name.includes('@')) {

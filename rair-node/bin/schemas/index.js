@@ -2,7 +2,7 @@ const admin = require('./admin');
 const addMedia = require('./addMedia');
 const authentication = require('./authentication');
 const createContract = require('./createContract');
-const createUser = require('./createUser');
+const { createUser, updateUser, customUserFields } = require('./userRoutes');
 const getChallenge = require('./getChallenge');
 const getChallengeV2 = require('./getChallengeV2');
 const filterAndSort = require('./filterAndSort');
@@ -13,7 +13,6 @@ const stream = require('./stream');
 const uploadVideo = require('./uploadVideo');
 const uploadVideoFile = require('./uploadVideoFile');
 const updateContract = require('./updateContract');
-const updateUser = require('./updateUser');
 const singleContract = require('./singleContract');
 const getFilesByNFT = require('./getFilesByNFT');
 const nftContract = require('./nftContract');
@@ -98,6 +97,7 @@ module.exports = {
   // user
   createUser,
   updateUser,
+  customUserFields,
 
   // token
   updateTokenMetadata,

@@ -3,6 +3,7 @@ const fs = require('fs');
 const { randomUUID } = require('crypto');
 const path = require('path');
 const { RequestBuilder, Payload } = require('yoti');
+const fetch = require('node-fetch');
 const config = require('../../config');
 const gcp = require('../../integrations/gcp')(config);
 const log = require('../../utils/logger')(module);
@@ -62,15 +63,35 @@ exports.yotiVerify = async (req, res, next) => {
   }
 };
 
+const adminProtectedFields = [
+  'email',
+  'firstName',
+  'lastName',
+  'publicAddress',
+  'nonce',
+  'creationDate',
+  'blocked',
+  '_id',
+];
 exports.listUsers = async (req, res, next) => {
   try {
-    const list = await User.find({}, {
-      email: 1,
-      nickName: 1,
-      publicAddress: 1,
-      creationDate: 1,
-      blocked: 1,
+    const {
+      fields = 'email,nickName,publicAddress,creationDate,blocked',
+      pageNum = 1,
+      itemsPerPage = 10,
+    } = req.query;
+    const queriedFields = {
+      _id: 0,
+    };
+    fields?.split(',')?.forEach((field) => {
+      if (adminProtectedFields.includes(field.toLowerCase()) && !req.user?.adminRights) {
+        return;
+      }
+      queriedFields[field] = 1;
     });
+    const list = await User.find({}, queriedFields)
+      .skip(pageNum * itemsPerPage)
+      .limit(itemsPerPage);
     return res.json({
       success: true,
       data: list,
@@ -215,8 +236,22 @@ exports.updateUserByUserAddress = async (req, res, next) => {
       ...updatedUser,
     };
 
-    return res.json({ success: true, user: updatedUser });
+    res.json({ success: true, user: updatedUser });
+    return next();
   } catch (e) {
     return next(e);
   }
+};
+
+exports.queryGithubData = async (req, res, next) => {
+  const { email, publicAddress, gitHandle } = req.session.userData;
+  if (gitHandle) {
+    return;
+  }
+  const query = await (await fetch(`https://api.github.com/search/users?q=${email}`)).json();
+  if (query.total_count === 1) {
+    await User.findOneAndUpdate({ publicAddress }, { gitHandle: query.items[0].login });
+    return;
+  }
+  log.error("Couldn't fetch Github data, more than one account associated with the email");
 };
