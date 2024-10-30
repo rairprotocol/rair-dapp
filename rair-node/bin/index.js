@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const { nanoid } = require('nanoid');
 const fs = require('fs');
 const cors = require('cors');
+const lusca = require('lusca');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const morgan = require('morgan');
@@ -53,6 +54,8 @@ async function main() {
       origin,
     },
   });
+
+  app.use(lusca.csrf());
 
   const hls = await StartHLS();
 
