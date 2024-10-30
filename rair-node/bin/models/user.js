@@ -25,6 +25,7 @@ const User = new Schema(
     gitHandle: { type: String, required: false },
     userLevel: { type: Number, required: false },
     available: { type: Boolean, required: false, default: false },
+    gitBio: { type: String, required: false },
     languages: [{
       type: {
         name: { type: String },

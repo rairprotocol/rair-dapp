@@ -250,7 +250,12 @@ exports.queryGithubData = async (req, res, next) => {
   }
   const query = await (await fetch(`https://api.github.com/search/users?q=${email}`)).json();
   if (query.total_count === 1) {
-    await User.findOneAndUpdate({ publicAddress }, { gitHandle: query.items[0].login });
+    await User.findOneAndUpdate({ publicAddress }, {
+      gitHandle: query.items[0].login,
+      gitBio: query.items[0].bio,
+      // available: query.items[0].hireable,
+      avatar: query.items[0].avatar_url,
+    });
     return;
   }
   log.error("Couldn't fetch Github data, more than one account associated with the email");
