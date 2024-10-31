@@ -55,7 +55,6 @@ async function main() {
     },
   });
 
-  app.use(lusca.csrf());
 
   const hls = await StartHLS();
 
@@ -105,6 +104,7 @@ async function main() {
   app.set('trust proxy', 1);
 
   app.use(sessionMiddleware);
+  app.use(lusca.csrf());
 
   app.use('/stream', streamRoute(context));
 
