@@ -104,7 +104,7 @@ async function main() {
   app.set('trust proxy', 1);
 
   app.use(sessionMiddleware);
-  app.use(lusca.csrf());
+  // app.use(lusca.csrf());
 
   app.use('/stream', streamRoute(context));
 
