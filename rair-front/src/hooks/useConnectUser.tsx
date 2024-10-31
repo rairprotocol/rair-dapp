@@ -310,10 +310,10 @@ const useConnectUser = () => {
             if (willUpdateUserData) {
               const userData = await loginData.userDetails;
               const availableData: Partial<User> = {};
-              if (userData.email && !loginResponse.user.email) {
+              if (userData?.email && !loginResponse.user.email) {
                 availableData.email = userData.email;
               }
-              if (userData.email && !loginResponse.user.nickName) {
+              if (userData?.email && !loginResponse.user.nickName) {
                 availableData.nickName = userData.email?.split('@')?.[0];
               }
               if (userData.name && !userData.name.includes('@')) {
