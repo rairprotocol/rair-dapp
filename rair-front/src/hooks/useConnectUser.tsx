@@ -265,7 +265,7 @@ const useConnectUser = () => {
         // If the user doesn't exist, send a request to register him using a TEMP adminNFT
         willUpdateUserData = true;
         const relevantUserData = { publicAddress: loginData.userAddress };
-        if (loginData.userDetails.email) {
+        if (loginData?.userDetails?.email) {
           relevantUserData['email'] = loginData.userDetails.email;
         }
         const userCreation = await axios.post<TUserResponse>(
@@ -280,8 +280,8 @@ const useConnectUser = () => {
         );
         user = userCreation.data.user;
       } else if (
-        !userDataResponse.data.user.email &&
-        loginData.userDetails.email
+        !userDataResponse?.data?.user?.email &&
+        loginData?.userDetails?.email
       ) {
         willUpdateUserData = true;
       }
