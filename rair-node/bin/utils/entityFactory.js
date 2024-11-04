@@ -22,7 +22,6 @@ exports.deleteOne = (Model) =>
 
     return res.status(204).json({
       success: true,
-      data: null,
     });
   });
 

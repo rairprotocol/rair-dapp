@@ -2,8 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { nanoid } = require('nanoid');
 const fs = require('fs');
 const cors = require('cors');
+const lusca = require('lusca');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const morgan = require('morgan');
@@ -53,6 +55,7 @@ async function main() {
     },
   });
 
+
   const hls = await StartHLS();
 
   const limiter = rateLimit({
@@ -97,10 +100,11 @@ async function main() {
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
   app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(cookieParser());
+  app.use(cookieParser(nanoid()));
   app.set('trust proxy', 1);
 
   app.use(sessionMiddleware);
+  // app.use(lusca.csrf());
 
   app.use('/stream', streamRoute(context));
 

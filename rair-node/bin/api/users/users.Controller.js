@@ -1,5 +1,5 @@
 const express = require('express');
-const { validation, requireUserSession, isAdmin } = require('../../middleware');
+const { validation, requireUserSession, isAdmin, loadUserSession } = require('../../middleware');
 const {
   createUser,
   getUserByAddress,
@@ -7,6 +7,7 @@ const {
   listUsers,
   exportUsers,
   yotiVerify,
+  queryGithubData,
 } = require('./users.Service');
 const upload = require('../../Multer/Config');
 
@@ -14,8 +15,8 @@ const router = express.Router();
 
 router.get(
   '/list',
-  requireUserSession,
-  isAdmin,
+  validation(['customUserFields', 'pagination'], 'query'),
+  loadUserSession,
   listUsers,
 );
 router.get(
@@ -47,6 +48,7 @@ router
     upload.array('files', 2),
     validation(['updateUser']),
     updateUserByUserAddress,
+    queryGithubData,
   );
 
 module.exports = router;
