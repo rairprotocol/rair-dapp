@@ -55,8 +55,7 @@ export const connectChainWeb3Auth = createAsyncThunk(
         ? 'sapphire_devnet'
         : 'sapphire_mainnet',
       uiConfig: {
-        loginMethodsOrder: ['github'],
-        appName: 'RAIR'
+        loginMethodsOrder: ['github']
       }
     });
     await web3AuthSigner.authenticate({
