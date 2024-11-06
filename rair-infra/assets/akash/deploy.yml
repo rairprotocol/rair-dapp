@@ -27,7 +27,16 @@ services:
           - global: true
        # uncomment below to have a custom URL for your web page
        #accept:
-       #  - xxx.yourdomain.com	
+       #  - xxx.yourdomain.com
+        http_options:
+          max_body_size: 4294967295
+          read_timeout: 60000
+          send_timeout: 60000
+          next_cases:
+            - error
+            - timeout
+          next_tries: 3
+          next_timeout: 60000
     env:
       - Environment=Variables
   rair-node:
