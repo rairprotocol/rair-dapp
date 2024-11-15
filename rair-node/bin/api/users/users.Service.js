@@ -89,12 +89,26 @@ exports.listUsers = async (req, res, next) => {
       }
       queriedFields[field] = 1;
     });
-    const list = await User.find({}, queriedFields)
-      .skip(pageNum * itemsPerPage)
-      .limit(itemsPerPage);
+    const [result] = await User.aggregate([
+      {
+        $project: queriedFields,
+      },
+      {
+        $facet: {
+          list: [
+            { $skip: pageNum * itemsPerPage },
+            { $limit: itemsPerPage },
+          ],
+          count: [
+            { $count: 'total' },
+          ],
+        },
+      },
+    ]);
     return res.json({
       success: true,
-      data: list,
+      data: result.list,
+      totalCount: result?.count?.[0]?.total || 0,
     });
   } catch (err) {
     return next(err);

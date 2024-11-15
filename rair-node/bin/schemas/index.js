@@ -1,4 +1,5 @@
 const admin = require('./admin');
+const databaseSchemas = require('./databaseSchemas');
 const addMedia = require('./addMedia');
 const authentication = require('./authentication');
 const createContract = require('./createContract');
@@ -7,8 +8,7 @@ const getChallenge = require('./getChallenge');
 const getChallengeV2 = require('./getChallengeV2');
 const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
-const removeMedia = require('./removeMedia');
-const updateMedia = require('./updateMedia');
+const { updateMedia, offerArray, singleOffer } = require('./files');
 const stream = require('./stream');
 const uploadVideo = require('./uploadVideo');
 const uploadVideoFile = require('./uploadVideoFile');
@@ -70,7 +70,6 @@ module.exports = {
   getChallenge,
   filterAndSort,
   getToken,
-  removeMedia,
   stream,
   uploadVideo,
   uploadVideoFile,
@@ -85,6 +84,8 @@ module.exports = {
 
   // Media files
   updateMedia,
+  offerArray,
+  singleOffer,
   analyticsParams,
   analyticsQuery,
 
@@ -115,9 +116,8 @@ module.exports = {
   // favorites
   createFavoriteToken,
 
-  // V2 Validation
   // Database schemas (using the Entity helper)
-  ...require('./databaseSchemas'),
+  ...databaseSchemas,
   // Media schemas
   validateMediaData,
   addFileFromMediaService,
