@@ -218,7 +218,7 @@ module.exports = {
   },
   updateMedia: async (req, res, next) => {
     try {
-      const { mediaId } = req.params;
+      const { id } = req.params;
 
       // eslint-disable-next-line no-unused-vars
       const { _id, ...cleanBody } = req.body;
@@ -229,7 +229,7 @@ module.exports = {
         req.body = bodyForNonAdmins;
       }
 
-      const updateRes = await File.updateOne({ _id: mediaId }, cleanBody);
+      const updateRes = await File.updateOne({ _id: id }, cleanBody);
 
       if (!updateRes.acknowledged) {
         return res.json({ success: false, message: 'An error has ocurred' });
@@ -237,7 +237,7 @@ module.exports = {
       if (updateRes.matchedCount === 1 && updateRes.modifiedCount === 0) {
         return res.json({ success: false, message: 'Nothing to update' });
       }
-      log.info(`File with ID: ${mediaId}, was updated on DB.`);
+      log.info(`File with ID: ${id}, was updated on DB.`);
       return res.json({ success: true });
     } catch (err) {
       return next(err);
