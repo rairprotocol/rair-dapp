@@ -86,7 +86,7 @@ router.post(
 router.delete(
     '/:id/unlocks',
     validation(['fileId'], 'params'),
-    validation(['offerArray'], 'body'),
+    validation(['singleOffer'], 'body'),
     requireUserSession,
     isFileOwner,
     removeFileAndOffer,

@@ -8,7 +8,7 @@ const getChallenge = require('./getChallenge');
 const getChallengeV2 = require('./getChallengeV2');
 const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
-const { updateMedia, offerArray } = require('./files');
+const { updateMedia, offerArray, singleOffer } = require('./files');
 const stream = require('./stream');
 const uploadVideo = require('./uploadVideo');
 const uploadVideoFile = require('./uploadVideoFile');
@@ -85,6 +85,7 @@ module.exports = {
   // Media files
   updateMedia,
   offerArray,
+  singleOffer,
   analyticsParams,
   analyticsQuery,
 
