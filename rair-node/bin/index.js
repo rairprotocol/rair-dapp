@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const { nanoid } = require('nanoid');
 const fs = require('fs');
 const cors = require('cors');
-const lusca = require('lusca');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const morgan = require('morgan');
@@ -59,7 +58,7 @@ async function main() {
 
   const limiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    limit: 500,
+    limit: process.env.RATE_LIMIT_MINUTE || 500,
     standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
   });
