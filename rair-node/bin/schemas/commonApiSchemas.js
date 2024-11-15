@@ -13,7 +13,7 @@ module.exports = {
         ids: Joi.array().items(mongoId),
     }),
     fileId: () => ({
-        id: Joi.string().required(),
+        id: Joi.string().alphanum().required(),
     }),
     productId: () => ({
         productId: mongoId,
