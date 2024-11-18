@@ -97,7 +97,7 @@ exports.listUsers = async (req, res, next) => {
         $facet: {
           list: [
             { $skip: pageNum * itemsPerPage },
-            { $limit: itemsPerPage },
+            { $limit: Number(itemsPerPage) },
           ],
           count: [
             { $count: 'total' },
