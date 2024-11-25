@@ -82,15 +82,14 @@ export const SelectSortPopUp = styled.div.withConfig({
 })<TSelectSortPopUpStyled>`
   background-color: ${({ isDarkMode, primaryColor }) =>
     isDarkMode
-      ? 'var(--rhyno)'
-      : `color-mix(in srgb, ${primaryColor}, #2d2d2d)`};
+      ? `color-mix(in srgb, ${primaryColor}, #2d2d2d)` : 'var(--rhyno)'};
   color: ${({ textColor }) => textColor};
   &:after {
     content: '';
     width: 20px;
     height: 20px;
     background-color: ${({ primaryColor, isDarkMode }) =>
-      isDarkMode
+      !isDarkMode
         ? 'var(--rhyno)'
         : `color-mix(in srgb, ${primaryColor}, #2d2d2d)`};
     position: absolute;

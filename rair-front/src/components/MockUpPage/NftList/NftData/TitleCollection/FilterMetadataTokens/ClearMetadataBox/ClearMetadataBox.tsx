@@ -1,18 +1,26 @@
 //@ts-nocheck
 import React from 'react';
+import useWindowDimensions from '../../../../../../../hooks/useWindowDimensions';
 
 import ClearMetadataItem from './ClearMetadataItem';
 
 const ClearMetadataBox = ({
   filteredDataAttributes,
   setSelectedAttributeValues,
-  getResetTokens
+  getResetTokens,
+  showTokenRef,
+  getAllProduct,
+  selectedAttributeValues
 }) => {
+  const { width } = useWindowDimensions();
+  const isMobileDesign = width < 820;
+
   return (
     <div
       className="clear-filter-wrapper"
       style={{
-        display: 'flex'
+        display: 'flex',
+        fontSize: isMobileDesign && '12px'
       }}>
       {filteredDataAttributes &&
         filteredDataAttributes.length > 0 &&
@@ -36,6 +44,20 @@ const ClearMetadataBox = ({
                     return newItem;
                   });
                   setSelectedAttributeValues(result);
+
+                  getAllProduct(
+                    '0',
+                    showTokenRef.current.toString(),
+                    selectedAttributeValues &&
+                      selectedAttributeValues.length &&
+                      selectedAttributeValues?.reduce((acc, item) => {
+                        const { name, values } = item;
+                        const newValue = values.filter((el) => el.active);
+
+                        acc[name] = newValue.map((el) => el.value);
+                        return acc;
+                      }, {})
+                  );
                 };
 
                 if (val.active) {

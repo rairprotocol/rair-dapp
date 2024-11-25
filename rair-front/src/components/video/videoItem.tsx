@@ -15,11 +15,10 @@ import { useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { CustomModalStyle } from '../../types/commonTypes';
-import { User } from '../../types/databaseTypes';
+import { Offer, User } from '../../types/databaseTypes';
 import formatDuration from '../../utils/durationUtils';
 import { rFetch } from '../../utils/rFetch';
 import { TooltipBox } from '../common/Tooltip/TooltipBox';
-import { TOfferType } from '../marketplace/marketplace.types';
 import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
@@ -31,7 +30,7 @@ import YotiPage from '../YotiPage/YotiPage';
 Modal.setAppElement('#root');
 
 const VideoItem: React.FC<IVideoItem> = ({ item }) => {
-  const [offersArray, setOffersArray] = useState<TOfferType[]>([]);
+  const [offersArray, setOffersArray] = useState<Offer[]>([]);
 
   const { ageVerified } = useAppSelector((store) => store.user);
 
@@ -136,20 +135,14 @@ const VideoItem: React.FC<IVideoItem> = ({ item }) => {
   };
 
   const getInfo = useCallback(async () => {
-    if (item) {
-      const { data } = await rFetch(`/api/files/${item._id}/unlocks`);
-
-      if (data?.offers && data.offers.length > 0) {
-        const firstOffer = data.offers[0];
-
-        if (firstOffer.contract?._id) {
-          const { contract } = await rFetch(
-            `/api/contracts/${firstOffer.contract._id}`
-          );
-          setOffersArray(data.offers);
-
-          setContractData(contract);
-        }
+    if (item.unlockData?.offers && item.unlockData?.offers.length > 0) {
+      const firstOffer = item.unlockData.offers[0];
+      setOffersArray(item.unlockData.offers);
+      if (firstOffer.contract) {
+        const { contract } = await rFetch(
+          `/api/contracts/${firstOffer.contract}`
+        );
+        setContractData(contract);
       }
     }
   }, [item, setContractData]);

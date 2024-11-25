@@ -34,9 +34,9 @@ RAIR deploys each its services in a self-contained Docker image:
 
 It's the moment of truth. From the repository root, run:
 
-    docker-compose -f {dockerfile.yml} up
+    docker-compose -f docker-compose.local-new.yml up -d
 
-`{dockerfile.yml}` will be the file configured for your specific deployment. Wait for the app to build. Keep an eye on the terminal for any errors. 
+Wait for the app to build. Keep an eye on the terminal for any errors. 
 
 ## Launch the App
 

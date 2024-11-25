@@ -70,7 +70,6 @@ import {
 import { detectBlockchain } from './utils/blockchainData';
 // import getInformationGoogleAnalytics from './utils/googleAnalytics';
 import gtag from './utils/gtag';
-import { rFetch } from './utils/rFetch';
 // views
 import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 
@@ -105,7 +104,6 @@ function App() {
   const [tabIndexItems, setTabIndexItems] = useState(0);
   const [tokenNumber, setTokenNumber] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
-  const [notificationCount, setNotificationCount] = useState<number>(0);
 
   // Redux
   const {
@@ -170,21 +168,6 @@ function App() {
       };
     }
   }, [dispatch, logoutUser, blockchainSettings]);
-
-  const getNotificationsCount = useCallback(async () => {
-    if (isLoggedIn && currentUserAddress) {
-      const result = await rFetch(`/api/notifications?onlyUnread=true`);
-      if (result.success && result.totalCount >= 0) {
-        setNotificationCount(result.totalCount);
-      }
-    } else {
-      setNotificationCount(0);
-    }
-  }, [isLoggedIn, currentUserAddress]);
-
-  useEffect(() => {
-    getNotificationsCount();
-  }, [getNotificationsCount]);
 
   // gtag
 
@@ -306,8 +289,6 @@ function App() {
                 showAlert={showAlert}
                 setTabIndexItems={setTabIndexItems}
                 isAboutPage={isAboutPage}
-                notificationCount={notificationCount}
-                getNotificationsCount={getNotificationsCount}
               />
             )
           )}

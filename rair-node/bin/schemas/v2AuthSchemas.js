@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { customValidator } = require('./helpers');
-const { blockchainNetworks, ethAddress } = require('./reusableCustomTypes');
+const { ethAddress } = require('./reusableCustomTypes');
 
 module.exports = {
     v2Unlock: () => ({
@@ -12,9 +12,6 @@ module.exports = {
             .required(),
         MetaSignature: Joi.custom(customValidator({ min: 132, max: 770 }))
             .required(),
-        ownerAddress: ethAddress,
         userAddress: ethAddress,
-        mediaId: Joi.string(),
-        zoomId: Joi.string(),
     }),
 };

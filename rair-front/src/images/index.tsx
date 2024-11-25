@@ -321,7 +321,6 @@ export const MenuIcon = ({ primaryColor }) => {
 };
 
 export const CloseIconMobile = ({ primaryColor }) => {
-  console.info(primaryColor, 'primaryColor')
   return (
     <svg
       width="26"
