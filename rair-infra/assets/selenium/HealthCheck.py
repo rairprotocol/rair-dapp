@@ -272,7 +272,7 @@ def driver_init(request):
 
     web_driver.quit()
 
-def metamask_user_login(self, seed, pwd):
+def metamask_user_login(self, xxxx, pwd):
     driver = self.driver
     sleep(5)
     driver.find_element("xpath", '//*[@id="onboarding__terms-checkbox"]').click()
@@ -289,7 +289,7 @@ def metamask_user_login(self, seed, pwd):
     # After this you will need to enter you wallet details
     inputs = driver.find_elements("xpath",'//input')
 
-    SECRET_RECOVERY_PHRASE = seed
+    SECRET_RECOVERY_PHRASE = xxxx
     NEW_PASSWORD = pwd
 
     SEED_PHRASE = list(SECRET_RECOVERY_PHRASE.split(" "))
