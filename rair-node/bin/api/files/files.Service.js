@@ -180,6 +180,10 @@ module.exports = {
 
       const fileData = await File.findOne({ _id: id });
 
+      if (!fileData) {
+        return new AppError('No file found');
+      }
+
       let deleteResponse;
       if (!fileData.storage) {
         log.error(`Can't tell where media ID ${id} is stored, will not unpin/delete from storage, just from DB`);
@@ -202,18 +206,17 @@ module.exports = {
         await File.deleteOne({ _id: id });
         await Unlock.deleteMany({ file: id });
         log.info(`File with ID: ${id}, was removed from DB.`);
-        res.json({
+        return res.json({
           success: true,
         });
-        return;
       }
 
-      res.json({
+      return res.json({
         success: false,
         message: deleteResponse.response,
       });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   },
   updateMedia: async (req, res, next) => {
