@@ -28,6 +28,7 @@ import {
   signWeb3MessageWeb3Auth
 } from '../utils/rFetch';
 import sockets from '../utils/sockets';
+import { useLocation } from 'react-router-dom';
 
 const getCoingeckoRates = async () => {
   try {
@@ -74,6 +75,7 @@ const useConnectUser = () => {
 
   const reactSwal = useSwal();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const checkMetamask = useCallback(() => {
     setMetamaskInstalled(window?.ethereum && window?.ethereum?.isMetaMask);
@@ -363,7 +365,17 @@ const useConnectUser = () => {
       sockets.nodeSocket.disconnect();
       dispatch(setProgrammaticProvider(undefined));
       dispatch(setConnectedChain(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
-      navigate('/');
+      if (
+        location.pathname.includes('creator') ||
+        location.pathname.includes('demo') ||
+        location.pathname.includes('settings') ||
+        location.pathname.includes('admin') ||
+        location.pathname.includes('on-sale') ||
+        location.pathname.includes('user/videos') ||
+        location.pathname.includes('license')
+      ) {
+        navigate('/', { replace: true });
+      }
     }
   }, [dispatch, navigate, currentUserAddress]);
 
