@@ -2,6 +2,7 @@ import type { Action, ThunkAction } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 
 import colorSlice from './colorSlice';
+import notificationsSlice from './notificationsSlice';
 import searchbarSlice from './searchbarSlice';
 import seoSlice from './seoSlice';
 import settingsSlice from './settingsSlice';
@@ -19,7 +20,8 @@ export const store = configureStore({
     seo: seoSlice,
     user: userSlice,
     videos: videoSlice,
-    searchbar: searchbarSlice
+    searchbar: searchbarSlice,
+    notifications: notificationsSlice
   }
 });
 

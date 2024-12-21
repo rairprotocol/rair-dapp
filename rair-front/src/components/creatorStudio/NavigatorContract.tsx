@@ -1,15 +1,16 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+//@ts-nocheck
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-import { INavigatorContract } from './creatorStudio.types';
+import { INavigatorContract } from "./creatorStudio.types";
 
-import { useAppSelector } from '../../hooks/useReduxHooks';
+import { useAppSelector } from "../../hooks/useReduxHooks";
 
 const NavigatorContract: React.FC<INavigatorContract> = ({
   children,
   contractAddress,
   contractName,
-  contractBlockchain
+  contractBlockchain,
 }) => {
   const { primaryColor, textColor, primaryButtonColor } = useAppSelector(
     (store) => store.colors
@@ -19,11 +20,12 @@ const NavigatorContract: React.FC<INavigatorContract> = ({
       <div className="col-xl-3 col-lg-1 col-md-1 d-none d-md-inline-block" />
       <div
         className={`col ${
-          primaryColor === 'rhyno' ? 'bg' : `bg-${primaryColor}`
+          primaryColor === "rhyno" ? "bg" : `bg-${primaryColor}`
         } rounded-lg py-5`}
         style={{
-          color: `var(--charcoal${primaryColor === 'rhyno' ? '' : '-40'})`
-        }}>
+          color: `var(--charcoal${primaryColor === "rhyno" ? "" : "-40"})`,
+        }}
+      >
         <h5 style={{ color: textColor }}>
           <b>{contractName}</b>
         </h5>
@@ -34,10 +36,11 @@ const NavigatorContract: React.FC<INavigatorContract> = ({
               style={({ isActive }) => ({
                 color: textColor,
                 background: isActive ? primaryButtonColor : primaryColor,
-                border: `solid 1px ${textColor}`
+                border: `solid 1px ${textColor}`,
               })}
               className="btn rair-button w-100 rounded-rair"
-              to={`/creator/contract/${contractBlockchain}/${contractAddress}/createCollection`}>
+              to={`/creator/contract/${contractBlockchain}/${contractAddress}/createCollection`}
+            >
               Create New Collection
             </NavLink>
           </div>
@@ -46,10 +49,11 @@ const NavigatorContract: React.FC<INavigatorContract> = ({
               style={({ isActive }) => ({
                 color: textColor,
                 background: isActive ? primaryButtonColor : primaryColor,
-                border: `solid 1px ${textColor}`
+                border: `solid 1px ${textColor}`,
               })}
               className="btn rair-button w-100 rounded-rair"
-              to={`/creator/contract/${contractBlockchain}/${contractAddress}/listCollections`}>
+              to={`/creator/contract/${contractBlockchain}/${contractAddress}/listCollections`}
+            >
               Existing Collections
             </NavLink>
           </div>

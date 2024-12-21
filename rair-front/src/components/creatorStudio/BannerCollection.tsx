@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//@ts-nocheck
+import { useCallback, useEffect, useState } from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { useAppSelector } from '../../hooks/useReduxHooks';
-import useSwal from '../../hooks/useSwal';
-import { rFetch } from '../../utils/rFetch';
-import { changeIPFSLink } from '../MockUpPage/NftList/utils/changeIPFSLink';
+import { useAppSelector } from "../../hooks/useReduxHooks";
+import useSwal from "../../hooks/useSwal";
+import { rFetch } from "../../utils/rFetch";
+import { changeIPFSLink } from "../MockUpPage/NftList/utils/changeIPFSLink";
 
 export const BannerCollection = ({ item, getContractData }) => {
   const { primaryColor } = useAppSelector((store) => store.colors);
@@ -20,13 +21,13 @@ export const BannerCollection = ({ item, getContractData }) => {
       const reader = new FileReader();
       const fileF = e.target.files[0];
       reader.onloadend = () => {
-        if (fileF.type !== 'video/mp4') {
+        if (fileF.type !== "video/mp4") {
           setFileUpload(fileF);
         } else {
           rSwal.fire(
-            'Info',
+            "Info",
             `You cannot upload video to background!`,
-            'warning'
+            "warning"
           );
         }
       };
@@ -41,11 +42,11 @@ export const BannerCollection = ({ item, getContractData }) => {
     const formData = new FormData();
     if (fileUpload) {
       setLoadingBg(true);
-      formData.append('banner', fileUpload);
+      formData.append("banner", fileUpload);
 
       const response = await rFetch(`/api/products/${item._id}`, {
-        method: 'POST',
-        body: formData
+        method: "POST",
+        body: formData,
       });
 
       if (response.success) {
@@ -66,7 +67,8 @@ export const BannerCollection = ({ item, getContractData }) => {
     <>
       {loadingBg ? (
         <div
-          className={`col-1 btn btn-${primaryColor} text-start rounded-rair my-1 m-1 banner-collection`}>
+          className={`col-1 btn btn-${primaryColor} text-start rounded-rair my-1 m-1 banner-collection`}
+        >
           <div className={`loadingProfile`}>
             <div className="loader-wrapper">
               <div className="load" />
@@ -79,19 +81,20 @@ export const BannerCollection = ({ item, getContractData }) => {
             backgroundImage: `url(${
               item && item?.bannerImage
                 ? changeIPFSLink(item.bannerImage)
-                : 'https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg'
+                : "https://storage.googleapis.com/rair_images/1683038949498-1548817833.jpeg"
             })`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center center',
-            backgroundSize: 'cover',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            color: '#fff'
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center center",
+            backgroundSize: "cover",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "#fff",
           }}
-          className={`col-1 btn btn-${primaryColor} text-start rounded-rair my-1 m-1 banner-collection`}>
+          className={`col-1 btn btn-${primaryColor} text-start rounded-rair my-1 m-1 banner-collection`}
+        >
           <FontAwesomeIcon icon={faPlus} />
-          <label className={'inputFile'}>
+          <label className={"inputFile"}>
             <input
               className="col-1"
               disabled={loadingBg ? true : false}

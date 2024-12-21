@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//@ts-nocheck
+import React, { useState } from "react";
+import { faKey } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { playImagesColored } from '../../../../SplashPage/images/greyMan/grayMan';
+import { playImagesColored } from "../../../../SplashPage/images/greyMan/grayMan";
 import {
   IVideoPlayerView,
-  TVideoPlayerViewSpecialVideoType
-} from '../../nftList.types';
-import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
+  TVideoPlayerViewSpecialVideoType,
+} from "../../nftList.types";
+import NftVideoplayer from "../NftVideoplayer/NftVideoplayer";
 
-import cl from './VideoPlayerView.module.css';
+import cl from "./VideoPlayerView.module.css";
 
 const VideoPlayerView: React.FC<IVideoPlayerView> = ({
   productsFromOffer,
@@ -18,7 +19,7 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
   setSelectVideo,
   whatSplashPage,
   someAdditionalData,
-  unlockables
+  unlockables,
 }) => {
   const [openVideoplayer, setOpenVideoplayer] = useState<boolean>(false);
   const [selectedBg, setSelectedBg] = useState<string>();
@@ -31,8 +32,9 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
           : cl.VideoPlayerViewWrapper
       }
       style={{
-        background: `${primaryColor === 'rhyno' ? '#F2F2F2' : '#383637'}`
-      }}>
+        background: `${primaryColor === "rhyno" ? "#F2F2F2" : "#383637"}`,
+      }}
+    >
       <div className={cl.ListOfVideosWrapper}>
         {whatSplashPage &&
           someAdditionalData &&
@@ -47,9 +49,10 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                     setSelectedBg(data.VideoBg);
                   }}
                   style={{
-                    backgroundImage: `url(${data.VideoBg})`
+                    backgroundImage: `url(${data.VideoBg})`,
                   }}
-                  className={cl.ListOfVideosOneVideo}>
+                  className={cl.ListOfVideosOneVideo}
+                >
                   <div className={cl.previewWrapper}>
                     <span className={cl.preview}>Preview</span>
                     <FontAwesomeIcon
@@ -60,8 +63,9 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                   </div>
                   <div className={cl.play}>
                     <button
-                      style={{ border: 'none', background: 'none' }}
-                      className="">
+                      style={{ border: "none", background: "none" }}
+                      className=""
+                    >
                       <img
                         className={cl.playImagesColoredOnListVideos}
                         src={playImagesColored}
@@ -87,17 +91,19 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                   setOpenVideoplayer(false);
                 }}
                 style={{
-                  backgroundImage: `url(${data?.staticThumbnail})`
+                  backgroundImage: `url(${data?.staticThumbnail})`,
                 }}
-                className={cl.ListOfVideosOneVideo}>
+                className={cl.ListOfVideosOneVideo}
+              >
                 <div className={cl.previewWrapper}>
                   <span className={cl.preview}>Preview</span>
                   <FontAwesomeIcon icon={faKey} className={cl.iconKey} />
                 </div>
                 <div className={cl.play}>
                   <button
-                    style={{ border: 'none', background: 'none' }}
-                    className="">
+                    style={{ border: "none", background: "none" }}
+                    className=""
+                  >
                     <img
                       className={cl.playImagesOnListVideos}
                       src={playImagesColored}
@@ -123,11 +129,12 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
               style={{
                 backgroundImage: `url(${
                   selectVideo?.staticThumbnail || selectedBg
-                })`
+                })`,
               }}
               className={
                 whatSplashPage ? cl.forSplashPageStyleOneVideo : cl.SingleVideo
-              }>
+              }
+            >
               <img
                 className={cl.playImagesOnSingleVideo}
                 src={playImagesColored}
@@ -148,13 +155,14 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                   style={{
                     backgroundImage: `url(${
                       selectedBg || someAdditionalData[0].VideoBg
-                    })`
+                    })`,
                   }}
                   className={
                     whatSplashPage
                       ? cl.forSplashPageStyleOneVideo
                       : cl.SingleVideo
-                  }>
+                  }
+                >
                   <img
                     className={cl.playImagesColoredOnSingleVideo}
                     src={playImagesColored}

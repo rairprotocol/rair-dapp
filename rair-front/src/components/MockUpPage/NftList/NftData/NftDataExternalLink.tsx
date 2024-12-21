@@ -1,27 +1,28 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
-import { isAddress, ZeroAddress } from 'ethers';
-import { Hex } from 'viem';
+//@ts-nocheck
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios, { AxiosError } from "axios";
+import { isAddress, ZeroAddress } from "ethers";
+import { Hex } from "viem";
 
-import NftDataPageMain from './NftDataPageMain';
+import NftDataPageMain from "./NftDataPageMain";
 
 import {
   TMetadataType,
   // TNFTDataExternalLinkContractProduct,
   TNftFilesResponse,
   // TTokenData,
-  TUserResponse
-} from '../../../../axios.responseTypes';
+  TUserResponse,
+} from "../../../../axios.responseTypes";
 import {
   useAppDispatch,
-  useAppSelector
-} from '../../../../hooks/useReduxHooks';
-import useSwal from '../../../../hooks/useSwal';
-import { loadCollection } from '../../../../redux/tokenSlice';
-import { CatalogVideoItem } from '../../../../types/commonTypes';
-import { User } from '../../../../types/databaseTypes';
-import { TOfferType } from '../../../marketplace/marketplace.types';
+  useAppSelector,
+} from "../../../../hooks/useReduxHooks";
+import useSwal from "../../../../hooks/useSwal";
+import { loadCollection } from "../../../../redux/tokenSlice";
+import { CatalogVideoItem } from "../../../../types/commonTypes";
+import { User } from "../../../../types/databaseTypes";
+import { TOfferType } from "../../../marketplace/marketplace.types";
 // import { TNftExternalLinkType } from '../nftList.types';
 
 const NftDataExternalLink = () => {
@@ -47,7 +48,7 @@ const NftDataExternalLink = () => {
   const [neededContract, setNeededContract] = useState();
   const [neededTokenOffer, setNeededTokenOffer] = useState();
   const [contractOfProduct, setContractOfProduct] = useState<Hex | undefined>();
-  const [neededProduct, setNeededProduct] = useState<string>('');
+  const [neededProduct, setNeededProduct] = useState<string>("");
   const [lastToken, setLastToken] = useState<number>(0);
   const [showToken, setShowToken] = useState<number>(15);
 
@@ -73,7 +74,7 @@ const NftDataExternalLink = () => {
         }
       } catch (err) {
         const error = err as AxiosError;
-        rSwal.fire('Error', `${error.message}`, 'error');
+        rSwal.fire("Error", `${error.message}`, "error");
       }
     } else return null;
   }, [contractId, product, token, rSwal]);
@@ -90,7 +91,7 @@ const NftDataExternalLink = () => {
         }
       } catch (err) {
         const error = err as AxiosError;
-        rSwal.fire('Error', `${error.message}`, 'error');
+        rSwal.fire("Error", `${error.message}`, "error");
       }
     } else return null;
   }, [neededContract, rSwal]);
@@ -123,14 +124,14 @@ const NftDataExternalLink = () => {
 
   const getAllTokensData = useCallback(
     async (fromToken: number, toToken: number) => {
-      if (neededBlockchain && contractOfProduct && neededProduct !== '') {
+      if (neededBlockchain && contractOfProduct && neededProduct !== "") {
         dispatch(
           loadCollection({
             blockchain: neededBlockchain,
             contract: contractOfProduct,
             product: neededProduct,
             fromToken: fromToken.toString(),
-            toToken: toToken.toString()
+            toToken: toToken.toString(),
           })
         );
       }
@@ -155,11 +156,11 @@ const NftDataExternalLink = () => {
           product: neededProduct,
           networkId: neededBlockchain,
           contractAddress: contractOfProduct,
-          contract: neededContract
+          contract: neededContract,
         },
         headers: {
-          Accept: 'application/json'
-        }
+          Accept: "application/json",
+        },
       });
       const { success, tokens } = response.data;
 
@@ -175,7 +176,7 @@ const NftDataExternalLink = () => {
     neededBlockchain,
     neededContract,
     neededProduct,
-    currentUserAddress
+    currentUserAddress,
   ]);
 
   const handleClickToken = async (token: string | undefined) => {

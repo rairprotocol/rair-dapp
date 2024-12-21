@@ -9,14 +9,13 @@ import {
 export const AppContainerFluid = styled.div.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<IAppContainerFluidStyled>`
-  ${(props) => props.backgroundImageEffect};
   background-size: 100vw 100vh;
   min-height: 100vh;
   position: relative;
   background-color: ${({ isDarkMode, backgroundImage, primaryColor }) =>
-    !isDarkMode ? '#fafafa' : backgroundImage === '' ? '#000' : primaryColor};
+    !isDarkMode ? '#000' : backgroundImage === '' ? '#000' : primaryColor};
   color: ${(props) => props.textColor};
-  background-image: url(${(props) => props.backgroundImage});
+  // background-image: url(${(props) => props.backgroundImage});
   background-position: center top;
   background-repeat: no-repeat;
   overflow: hidden;

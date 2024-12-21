@@ -1,0 +1,11 @@
+.footer-nav-item {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1em;
+}
+
+.footer-nav-item li {
+  line-height: 28px;
+  color: #fff;
+  margin-bottom: 0.5em;
+}

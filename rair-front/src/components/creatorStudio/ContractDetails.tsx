@@ -1,29 +1,30 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { isAddress } from 'ethers';
-import { Hex } from 'viem';
+//@ts-nocheck
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { isAddress } from "ethers";
+import { Hex } from "viem";
 
 import {
   TContractsNetworkContract,
   TContractsNetworkProductsResponse,
   TContractsNetworkResponseType,
   TParamsContractDetails,
-  TSetData
-} from './creatorStudio.types';
-import FixedBottomNavigation from './FixedBottomNavigation';
-import NavigatorContract from './NavigatorContract';
+  TSetData,
+} from "./creatorStudio.types";
+import FixedBottomNavigation from "./FixedBottomNavigation";
+import NavigatorContract from "./NavigatorContract";
 
-import { diamond721Abi, erc721Abi } from '../../contracts';
-import useContracts from '../../hooks/useContracts';
-import { useAppSelector } from '../../hooks/useReduxHooks';
-import useServerSettings from '../../hooks/useServerSettings';
-import useSwal from '../../hooks/useSwal';
-import useWeb3Tx from '../../hooks/useWeb3Tx';
-import { rFetch } from '../../utils/rFetch';
-import InputField from '../common/InputField';
+import { diamond721Abi, erc721Abi } from "../../contracts";
+import useContracts from "../../hooks/useContracts";
+import { useAppSelector } from "../../hooks/useReduxHooks";
+import useServerSettings from "../../hooks/useServerSettings";
+import useSwal from "../../hooks/useSwal";
+import useWeb3Tx from "../../hooks/useWeb3Tx";
+import { rFetch } from "../../utils/rFetch";
+import InputField from "../common/InputField";
 
 const ContractDetails = () => {
-  const [collectionName, setCollectionName] = useState<string>('');
+  const [collectionName, setCollectionName] = useState<string>("");
   const [isDiamond, setIsDiamond] = useState<boolean>(false);
   const [collectionLength, setCollectionLength] = useState<number>(0);
 
@@ -71,7 +72,7 @@ const ContractDetails = () => {
           title: await instance?.name(),
           contractAddress: address,
           blockchain: connectedChain,
-          products: Array(productCount)
+          products: Array(productCount),
         });
       }
     }
@@ -87,7 +88,8 @@ const ContractDetails = () => {
         <NavigatorContract
           contractName={data.title}
           contractAddress={data.contractAddress}
-          contractBlockchain={data.blockchain}>
+          contractBlockchain={data.blockchain}
+        >
           <div className="col-8 p-2">
             <InputField
               disabled={creatingCollection}
@@ -98,8 +100,8 @@ const ContractDetails = () => {
               customClass="rounded-rair form-control"
               customCSS={{
                 backgroundColor: primaryColor,
-                color: 'inherit',
-                borderColor: `var(--${secondaryColor}-40)`
+                color: "inherit",
+                borderColor: `var(--${secondaryColor}-40)`,
               }}
               labelClass="text-start w-100"
             />
@@ -116,8 +118,8 @@ const ContractDetails = () => {
               customClass="rounded-rair form-control"
               customCSS={{
                 backgroundColor: primaryColor,
-                color: 'inherit',
-                borderColor: `var(--${secondaryColor}-40)`
+                color: "inherit",
+                borderColor: `var(--${secondaryColor}-40)`,
               }}
               labelClass="text-start w-100"
             />
@@ -125,8 +127,9 @@ const ContractDetails = () => {
           <div
             className="col-12 p-3 mt-5 rounded-rair"
             style={{
-              border: `1.3px dashed color-mix(in srgb, ${primaryColor}, #888888)`
-            }}>
+              border: `1.3px dashed color-mix(in srgb, ${primaryColor}, #888888)`,
+            }}
+          >
             Contract Information: <br />
             <ul className="col-12 mt-3 px-4 text-start">
               <li className="row">
@@ -134,7 +137,7 @@ const ContractDetails = () => {
                   Total Supply: <b>0</b>
                 </span>
                 <span className="col-12 py-1 text-start">
-                  Collections Created:{' '}
+                  Collections Created:{" "}
                   <b>{data?.products?.length ? data?.products?.length : 0}</b>
                 </span>
                 <span className="col-12 py-1 text-start">
@@ -145,13 +148,13 @@ const ContractDetails = () => {
           </div>
         </NavigatorContract>
       ) : (
-        'Fetching data...'
+        "Fetching data..."
       )}
       <FixedBottomNavigation
         forwardFunctions={[
           {
             action:
-              collectionLength > 0 && collectionName !== ''
+              collectionLength > 0 && collectionName !== ""
                 ? async () => {
                     if (!data?.blockchain) {
                       return;
@@ -167,25 +170,25 @@ const ContractDetails = () => {
                         return;
                       }
                       reactSwal.fire({
-                        title: 'Creating collection!',
-                        html: 'Please wait...',
-                        icon: 'info',
-                        showConfirmButton: false
+                        title: "Creating collection!",
+                        html: "Please wait...",
+                        icon: "info",
+                        showConfirmButton: false,
                       });
                       setCreatingCollection(true);
                       const success = await web3TxHandler(
                         instance,
-                        'createProduct',
+                        "createProduct",
                         [collectionName, collectionLength]
                       );
                       if (success) {
                         reactSwal.fire({
-                          title: 'Success!',
-                          html: 'Collection created',
-                          icon: 'success',
-                          showConfirmButton: true
+                          title: "Success!",
+                          html: "Collection created",
+                          icon: "success",
+                          showConfirmButton: true,
                         });
-                        setCollectionName('');
+                        setCollectionName("");
                         setCollectionLength(0);
                       }
                       setCreatingCollection(false);
@@ -195,12 +198,12 @@ const ContractDetails = () => {
             label:
               data && data.blockchain && !correctBlockchain(data.blockchain)
                 ? `Switch to ${getBlockchainData(data.blockchain)?.name}`
-                : 'Create collection!',
+                : "Create collection!",
             disabled:
               creatingCollection ||
               collectionLength === 0 ||
-              collectionName === ''
-          }
+              collectionName === "",
+          },
         ]}
       />
     </div>

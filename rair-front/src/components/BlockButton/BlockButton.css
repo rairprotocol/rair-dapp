@@ -1,0 +1,11 @@
+.block-button {
+  border-radius: 12px;
+  width: 100%;
+  border-width: 7px;
+  border: 1px solid var(--primary-color);
+  background-color: #000;
+  font-weight: 400;
+  color: #ccc;
+  padding-inline: 2rem;
+  padding-block: 0.95rem 0.7rem;
+}

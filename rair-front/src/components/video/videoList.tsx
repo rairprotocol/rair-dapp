@@ -14,7 +14,7 @@ import LoadingComponent from '../common/LoadingComponent';
 import HomePageFilterModal from '../GlobalModal/FilterModal/FilterModal';
 import GlobalModal from '../GlobalModal/GlobalModal';
 
-const VideoList: React.FC<IVideoList> = ({ titleSearch }) => {
+const VideoList: React.FC<IVideoList> = ({ titleSearch, sortItem }) => {
   const { videoListStatus, totalVideos, videos } = useAppSelector(
     (state) => state.videos
   );
@@ -50,6 +50,21 @@ const VideoList: React.FC<IVideoList> = ({ titleSearch }) => {
             .filter((video) =>
               video.title.toLowerCase().includes(titleSearch.toLowerCase())
             )
+            .sort((a, b) => {
+              if (sortItem === 'up') {
+                if (a.title < b.title) {
+                  return 1;
+                }
+              }
+
+              if (sortItem === 'down') {
+                if (a.title > b.title) {
+                  return -1;
+                }
+              }
+
+              return 0;
+            })
             .map((video, index) => {
               return <VideoItem key={index} item={video} />;
             })

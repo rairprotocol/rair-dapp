@@ -1,50 +1,54 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+//@ts-nocheck
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { NavLink, useParams } from "react-router-dom";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import {
   faGreaterThan,
   faHeart,
   faHouse,
   faPlus,
-  faSearch
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Stack } from '@mui/material';
-import { Breadcrumbs, Typography } from '@mui/material';
-import axios from 'axios';
-import { isAddress, ZeroAddress } from 'ethers';
-import { Hex } from 'viem';
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Stack } from "@mui/material";
+import { Breadcrumbs, Typography } from "@mui/material";
+import axios from "axios";
+import { isAddress, ZeroAddress } from "ethers";
+import { Hex } from "viem";
 
-import { TUserResponse } from '../../axios.responseTypes';
-import { useAppSelector } from '../../hooks/useReduxHooks';
-import useSwal from '../../hooks/useSwal';
-import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { VideoIcon } from '../../images';
-import { NftItemToken } from '../../types/commonTypes';
-import { User } from '../../types/databaseTypes';
-import { rFetch } from '../../utils/rFetch';
-import InputField from '../common/InputField';
-import LoadingComponent from '../common/LoadingComponent';
-import { TooltipBox } from '../common/Tooltip/TooltipBox';
-import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
-import { ImageLazy } from '../MockUpPage/ImageLazy/ImageLazy';
-import CustomShareButton from '../MockUpPage/NftList/NftData/CustomShareButton';
-import SharePopUp from '../MockUpPage/NftList/NftData/TitleCollection/SharePopUp/SharePopUp';
-import { PersonalProfileMyNftTab } from '../nft/PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab';
-import { PersonalProfileMyVideoTab } from '../nft/PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';
-import { TSortChoice } from '../ResalePage/listOffers.types';
-import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
+import { TUserResponse } from "../../axios.responseTypes";
+import { useAppDispatch, useAppSelector } from "../../hooks/useReduxHooks";
+import useSwal from "../../hooks/useSwal";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
+import { VideoIcon } from "../../images";
+import { CatalogVideoItem, NftItemToken } from "../../types/commonTypes";
+import { User } from "../../types/databaseTypes";
+import { rFetch } from "../../utils/rFetch";
+import InputField from "../common/InputField";
+import LoadingComponent from "../common/LoadingComponent";
+import { TooltipBox } from "../common/Tooltip/TooltipBox";
+import FilteringBlock from "../MockUpPage/FilteringBlock/FilteringBlock";
+import { ImageLazy } from "../MockUpPage/ImageLazy/ImageLazy";
+import CustomShareButton from "../MockUpPage/NftList/NftData/CustomShareButton";
+import SharePopUp from "../MockUpPage/NftList/NftData/TitleCollection/SharePopUp/SharePopUp";
+import { PersonalProfileMyNftTab } from "../nft/PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab";
+import { PersonalProfileMyVideoTab } from "../nft/PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab";
+import { TSortChoice } from "../ResalePage/listOffers.types";
+import { SvgUserIcon } from "../UserProfileSettings/SettingsIcons/SettingsIcons";
 
-import { PersonalProfileIcon } from './../nft/PersonalProfile/PersonalProfileIcon/PersonalProfileIcon';
-import UserProfileCreated from './UserProfileCreated/UserProfileCreated';
-import UserProfileFavoritesTab from './UserProfileFavorites/UserProfileFavoritesTab';
+import { PersonalProfileIcon } from "./../nft/PersonalProfile/PersonalProfileIcon/PersonalProfileIcon";
+import UserProfileCreated from "./UserProfileCreated/UserProfileCreated";
+import UserProfileFavoritesTab from "./UserProfileFavorites/UserProfileFavoritesTab";
 
-import './UserProfilePage.css';
+import "./UserProfilePage.css";
+import { loadVideoList } from "../../redux/videoSlice";
 
 const UserProfilePage: React.FC = () => {
   const { primaryColor, textColor, headerLogo, iconColor, primaryButtonColor } =
     useAppSelector((store) => store.colors);
   const { userAddress } = useParams();
+  const dispatch = useAppDispatch();
+  const { videos, videoListStatus } = useAppSelector((store) => store.videos);
   const { currentUserAddress } = useAppSelector((store) => store.web3);
   const [copyState, setCopyState] = useState(false);
   const [userData, setUserData] = useState<User | undefined>(undefined);
@@ -55,7 +59,7 @@ const UserProfilePage: React.FC = () => {
   const [fileUpload, setFileUpload] = useState<File | null>(null);
   const [loadingBg, setLoadingBg] = useState(false);
   const [sortItem, setSortItem] = useState<TSortChoice>();
-  const [titleSearch, setTitleSearch] = useState('');
+  const [titleSearch, setTitleSearch] = useState("");
   const [tabIndexItems, setTabIndexItems] = useState(0);
   const showTokensRef = useRef<number>(20);
   const [selectedValue, setSelectedValue] = useState<number>(0);
@@ -67,6 +71,7 @@ const UserProfilePage: React.FC = () => {
   const [isResaleLoading, setIsResaleLoding] = useState<boolean | undefined>(
     undefined
   );
+
   const [metadataFilter, setMetadataFilter] = useState<boolean>(false);
 
   const rSwal = useSwal();
@@ -108,9 +113,9 @@ const UserProfilePage: React.FC = () => {
   );
 
   const handleNewUserStatus = useCallback(async () => {
-    const requestContract = await rFetch('/api/contracts/full?itemsPerPage=5');
+    const requestContract = await rFetch("/api/contracts/full?itemsPerPage=5");
     const { success, contracts } = await rFetch(
-      `/api/contracts/full?itemsPerPage=${requestContract.totalNumber || '5'}`
+      `/api/contracts/full?itemsPerPage=${requestContract.totalNumber || "5"}`
     );
 
     if (success) {
@@ -134,17 +139,17 @@ const UserProfilePage: React.FC = () => {
           setUserData(response.user);
         } else {
           const defaultUser: User = {
-            avatar: '',
-            background: '',
-            creationDate: '2023-04-25T14:54:58.190Z',
-            email: '',
-            firstName: '',
-            lastName: '',
+            avatar: "",
+            background: "",
+            creationDate: "2023-04-25T14:54:58.190Z",
+            email: "",
+            firstName: "",
+            lastName: "",
             nickName: `@${userAddress}`,
             ageVerified: false,
             publicAddress: userAddress as Hex,
-            _id: 'none',
-            blocked: false
+            _id: "none",
+            blocked: false,
           };
           setUserData(defaultUser);
         }
@@ -159,16 +164,16 @@ const UserProfilePage: React.FC = () => {
       const formData = new FormData();
       if (fileUpload) {
         setLoadingBg(true);
-        formData.append('files', fileUpload);
-        formData.append('background', fileUpload.name);
+        formData.append("files", fileUpload);
+        formData.append("background", fileUpload.name);
 
         const profileEditResponse = await axios.patch<TUserResponse>(
           `/api/users/${currentUserAddress.toLowerCase()}`,
           formData,
           {
             headers: {
-              Accept: 'multipart/form-data'
-            }
+              Accept: "multipart/form-data",
+            },
           }
         );
 
@@ -187,23 +192,23 @@ const UserProfilePage: React.FC = () => {
       <FontAwesomeIcon
         icon={faHouse}
         style={{
-          borderRadius: '5px',
-          padding: '5px',
+          borderRadius: "5px",
+          padding: "5px",
           color: textColor,
           background: primaryButtonColor,
-          fontSize: 'x-large'
+          fontSize: "x-large",
         }}
       />
     </NavLink>,
     <Typography key="3" color={textColor}>
       {(userData && userData.nickName && userData.nickName.length > 20
         ? userData.nickName.slice(0, 5) +
-          '....' +
+          "...." +
           userData.nickName.slice(length - 4)
         : userData?.nickName) ||
         (userAddress &&
-          userAddress.slice(0, 4) + '....' + userAddress.slice(length - 4))}
-    </Typography>
+          userAddress.slice(0, 4) + "...." + userAddress.slice(length - 4))}
+    </Typography>,
   ];
 
   const photoUpload = useCallback(
@@ -212,13 +217,13 @@ const UserProfilePage: React.FC = () => {
       const reader = new FileReader();
       const fileF = e.target.files[0];
       reader.onloadend = () => {
-        if (fileF.type !== 'video/mp4') {
+        if (fileF.type !== "video/mp4") {
           setFileUpload(fileF);
         } else {
           rSwal.fire(
-            'Info',
+            "Info",
             `You cannot upload video to background!`,
-            'warning'
+            "warning"
           );
         }
       };
@@ -228,6 +233,57 @@ const UserProfilePage: React.FC = () => {
     },
     [rSwal]
   );
+
+  useEffect(() => {
+    if (userAddress) {
+      dispatch(
+        loadVideoList({
+          userAddress,
+        })
+      );
+    }
+  }, [dispatch, userAddress]);
+
+  const tableData1 = [
+    {
+      id: 1,
+      firstRow: "RAIRprotocol Dapp",
+      secondRow: "1/2024",
+      thirdRow: "current",
+      fourthRow: "None",
+    },
+    {
+      id: 2,
+      firstRow: "Tailwind.js project",
+      secondRow: "2/2022",
+      thirdRow: "12/2023",
+      fourthRow: "None",
+    },
+    {
+      id: 3,
+      firstRow: "University project",
+      secondRow: "Common",
+      thirdRow: "1,620  /  10,000",
+      fourthRow: "None",
+    },
+  ];
+
+  const tableData2 = [
+    {
+      id: 1,
+      firstRow: "Suresh Arora",
+      secondRow: "RAIRprotocol",
+      thirdRow: "Coworker",
+      fourthRow: "None",
+    },
+    {
+      id: 2,
+      firstRow: "Eduardo Boss",
+      secondRow: "mor.io",
+      thirdRow: "co-worker (frontend)",
+      fourthRow: "None",
+    },
+  ];
 
   useEffect(() => {
     editBackground();
@@ -256,7 +312,7 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className={`${width > 1025 ? 'container' : 'wrapper-user-page'}`}>
+    <div className={`${width > 1025 ? "container" : "wrapper-user-page"}`}>
       <div>
         <SharePopUp
           selectedValue={selectedValue}
@@ -268,35 +324,38 @@ const UserProfilePage: React.FC = () => {
         <>
           <div className="breadcrumbs">
             <Stack
-              style={{ marginBottom: '2rem', paddingLeft: '0.5rem' }}
-              spacing={2}>
+              style={{ marginBottom: "2rem", paddingLeft: "0.5rem" }}
+              spacing={2}
+            >
               <Breadcrumbs
                 color="white"
                 separator={
                   <FontAwesomeIcon icon={faGreaterThan} fontSize="x-small" />
                 }
-                aria-label="breadcrumb">
+                aria-label="breadcrumb"
+              >
                 {breadcrumbs}
               </Breadcrumbs>
             </Stack>
           </div>
           <div
             className={`user-page-background ${
-              primaryColor === '#dedede' ? 'rhyno' : 'charcoal'
+              primaryColor === "#dedede" ? "rhyno" : "charcoal"
             } ${
-              hotdropsVar === 'true' && !userData.background
-                ? 'hotdrops-bg-default-banner'
-                : ''
+              hotdropsVar === "true" && !userData.background
+                ? "hotdrops-bg-default-banner"
+                : ""
             }`}
             style={{
               backgroundImage:
                 userData && userData?.background
                   ? `url(${userData?.background})`
-                  : ''
-            }}>
+                  : "",
+            }}
+          >
             {userData && !userData.background && (
               <>
-                {hotdropsVar !== 'true' && (
+                {hotdropsVar !== "true" && (
                   <img src={headerLogo} alt="background-logo-default" />
                 )}
               </>
@@ -305,13 +364,14 @@ const UserProfilePage: React.FC = () => {
               currentUserAddress &&
               currentUserAddress === userAddress && (
                 <div
-                  className={'blockAddBack'}
+                  className={"blockAddBack"}
                   style={{
-                    position: 'absolute',
-                    top: '0',
-                    right: '0'
-                  }}>
-                  <label className={'inputFile'}>
+                    position: "absolute",
+                    top: "0",
+                    right: "0",
+                  }}
+                >
+                  <label className={"inputFile"}>
                     <FontAwesomeIcon icon={faPlus} className="plus" />
                     <input
                       disabled={loadingBg ? true : false}
@@ -324,8 +384,9 @@ const UserProfilePage: React.FC = () => {
           </div>
           <div
             className={`my-items-header-wrapper user ${
-              currentUserAddress === userAddress && 'edit'
-            }`}>
+              currentUserAddress === userAddress && "edit"
+            }`}
+          >
             {currentUserAddress === userAddress ? (
               <>
                 <PersonalProfileIcon setEditModeUpper={setEditMode} />
@@ -337,7 +398,7 @@ const UserProfilePage: React.FC = () => {
                     <ImageLazy
                       className="profile-avatar-img"
                       alt="User Avatar"
-                      src={userData.avatar ? userData.avatar : ''}
+                      src={userData.avatar ? userData.avatar : ""}
                     />
                   ) : (
                     <div className="personal-default-avatar">
@@ -347,7 +408,7 @@ const UserProfilePage: React.FC = () => {
                 </div>
                 <div className="profile-name-box">
                   <>
-                    <TooltipBox title={'Click to copy this address'}>
+                    <TooltipBox title={"Click to copy this address"}>
                       <span
                         onClick={() => {
                           if (userAddress) {
@@ -359,20 +420,21 @@ const UserProfilePage: React.FC = () => {
                             }, 3000);
                           }
                         }}
-                        className={`profileName ${textColor}`}>
+                        className={`profileName ${textColor}`}
+                      >
                         {!copyState
                           ? (userData &&
                             userData.nickName &&
                             userData.nickName.length > 20
                               ? userData.nickName.slice(0, 5) +
-                                '....' +
+                                "...." +
                                 userData.nickName.slice(length - 4)
                               : userData.nickName) ||
                             (userAddress &&
                               userAddress.slice(0, 4) +
-                                '....' +
+                                "...." +
                                 userAddress.slice(length - 4))
-                          : 'Copied!'}
+                          : "Copied!"}
                       </span>
                     </TooltipBox>
                   </>
@@ -383,75 +445,81 @@ const UserProfilePage: React.FC = () => {
               <CustomShareButton title="Share" handleClick={handleClickOpen} />
             )}
           </div>
+
           <div className="tabs-section">
             <Tabs
               selectedIndex={tabIndexItems}
-              onSelect={(index) => setTabIndexItems(index)}>
+              onSelect={(index) => setTabIndexItems(index)}
+            >
               <TabList className="category-wrapper userpage">
                 <Tab
                   selectedClassName={`search-tab-selected-${
-                    primaryColor === '#dedede' ? 'default' : 'dark'
+                    primaryColor === "#dedede" ? "default" : "dark"
                   }`}
                   style={{
                     backgroundColor: `${
-                      primaryColor === '#dedede' ? '#fafafa' : '#222021'
+                      primaryColor === "#dedede" ? "#fafafa" : "#222021"
                     }`,
                     border: `1px solid ${
-                      primaryColor === '#dedede' ? 'var(--rhyno)' : '#4E4D4D'
-                    }`
+                      primaryColor === "#dedede" ? "var(--rhyno)" : "#4E4D4D"
+                    }`,
                   }}
-                  className="category-button-nft category-button">
+                  className="category-button-nft category-button"
+                >
                   Collected
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
-                    primaryColor === '#dedede' ? 'default' : 'dark'
+                    primaryColor === "#dedede" ? "default" : "dark"
                   }`}
                   style={{
                     backgroundColor: `${
-                      primaryColor === '#dedede' ? '#fafafa' : '#222021'
+                      primaryColor === "#dedede" ? "#fafafa" : "#222021"
                     }`,
                     border: `1px solid ${
-                      primaryColor === '#dedede' ? 'var(--rhyno)' : '#4E4D4D'
-                    }`
+                      primaryColor === "#dedede" ? "var(--rhyno)" : "#4E4D4D"
+                    }`,
                   }}
-                  className="category-button-videos category-button">
-                  {width > 676 ? 'Created' : 'Created'}
+                  className="category-button-videos category-button"
+                >
+                  {width > 676 ? "Created" : "Created"}
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
-                    primaryColor === '#dedede' ? 'default' : 'dark'
+                    primaryColor === "#dedede" ? "default" : "dark"
                   }`}
                   style={{
                     backgroundColor: `${
-                      primaryColor === '#dedede' ? '#fafafa' : '#222021'
+                      primaryColor === "#dedede" ? "#fafafa" : "#222021"
                     }`,
                     border: `1px solid ${
-                      primaryColor === '#dedede' ? 'var(--rhyno)' : '#4E4D4D'
-                    }`
+                      primaryColor === "#dedede" ? "var(--rhyno)" : "#4E4D4D"
+                    }`,
                   }}
-                  className="category-button-videos category-button">
+                  className="category-button-videos category-button"
+                >
                   {width > 676 ? (
-                    'Favorited'
+                    "Favorited"
                   ) : (
                     <FontAwesomeIcon icon={faHeart} />
                   )}
                 </Tab>
                 <Tab
                   selectedClassName={`search-tab-selected-${
-                    primaryColor === '#dedede' ? 'default' : 'dark'
+                    primaryColor === "#dedede" ? "default" : "dark"
                   }`}
                   style={{
                     backgroundColor: `${
-                      primaryColor === '#dedede' ? '#fafafa' : '#222021'
+                      primaryColor === "#dedede" ? "#fafafa" : "#222021"
                     }`,
                     border: `1px solid ${
-                      primaryColor === '#dedede' ? 'var(--rhyno)' : '#4E4D4D'
-                    }`
+                      primaryColor === "#dedede" ? "var(--rhyno)" : "#4E4D4D"
+                    }`,
                   }}
-                  className="category-button-videos category-button">
+                  className="category-button-videos category-button"
+                >
                   {width > 676 ? (
-                    'Videos'
+                    "Videos"
                   ) : (
                     <VideoIcon primaryColor={primaryColor} />
                   )}
@@ -461,21 +529,21 @@ const UserProfilePage: React.FC = () => {
                 <InputField
                   getter={titleSearch}
                   setter={setTitleSearch}
-                  placeholder={'Search...'}
+                  placeholder={"Search..."}
                   customCSS={{
                     backgroundColor: `${
-                      primaryColor === '#dedede'
+                      primaryColor === "#dedede"
                         ? `var(--rhyno)`
                         : `color-mix(in srgb, ${primaryColor} 50%, #aaaaaa)`
                     }`,
                     color: `var(--${textColor})`,
-                    borderTopLeftRadius: '0',
+                    borderTopLeftRadius: "0",
                     border: `${
-                      primaryColor === '#dedede'
-                        ? 'solid 1px var(--rhyno)'
+                      primaryColor === "#dedede"
+                        ? "solid 1px var(--rhyno)"
                         : `solid 1px color-mix(in srgb, ${primaryColor}, #888888)`
                     } `,
-                    paddingLeft: '2rem'
+                    paddingLeft: "2rem",
                   }}
                   customClass="form-control input-styled user-search"
                 />
@@ -487,13 +555,13 @@ const UserProfilePage: React.FC = () => {
                       size="lg"
                       style={{
                         color:
-                          import.meta.env.VITE_TESTNET === 'true'
+                          import.meta.env.VITE_TESTNET === "true"
                             ? `${
-                                iconColor === '#1486c5' ? '#F95631' : iconColor
+                                iconColor === "#1486c5" ? "#F95631" : iconColor
                               }`
                             : `${
-                                iconColor === '#1486c5' ? '#E882D5' : iconColor
-                              }`
+                                iconColor === "#1486c5" ? "#E882D5" : iconColor
+                              }`,
                       }}
                     />
                   </i>

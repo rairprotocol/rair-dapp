@@ -1,10 +1,11 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+//@ts-nocheck
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-import { INavigatorFactory } from './creatorStudio.types';
+import { INavigatorFactory } from "./creatorStudio.types";
 
-import { useAppSelector } from '../../hooks/useReduxHooks';
-import useServerSettings from '../../hooks/useServerSettings';
+import { useAppSelector } from "../../hooks/useReduxHooks";
+import useServerSettings from "../../hooks/useServerSettings";
 
 const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
   const { getBlockchainData } = useServerSettings();
@@ -18,8 +19,9 @@ const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
       <div
         className={`col rounded-lg py-5`}
         style={{
-          color: textColor
-        }}>
+          color: textColor,
+        }}
+      >
         <h5>Create with RAIR</h5>
         <span>{getBlockchainData(connectedChain)?.classicFactoryAddress}</span>
         <div className="row">
@@ -28,10 +30,11 @@ const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
               style={({ isActive }) => ({
                 color: textColor,
                 background: isActive ? primaryButtonColor : primaryColor,
-                border: `solid 1px ${textColor}`
+                border: `solid 1px ${textColor}`,
               })}
               className="btn rair-button w-100 rounded-rair"
-              to="/creator/deploy">
+              to="/creator/deploy"
+            >
               Deploy a Contract
             </NavLink>
           </div>
@@ -40,10 +43,11 @@ const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
               style={({ isActive }) => ({
                 color: textColor,
                 background: isActive ? primaryButtonColor : primaryColor,
-                border: `solid 1px ${textColor}`
+                border: `solid 1px ${textColor}`,
               })}
               className="btn rair-button w-100 rounded-rair"
-              to="/creator/contracts">
+              to="/creator/contracts"
+            >
               Deployed Contracts
             </NavLink>
           </div>

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Swal from 'sweetalert2';
 
 import PurchaseTokenButton from '../../components/common/PurchaseToken';

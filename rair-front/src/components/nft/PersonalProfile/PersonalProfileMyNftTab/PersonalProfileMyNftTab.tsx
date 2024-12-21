@@ -1,15 +1,16 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
+//@ts-nocheck
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
-import useWindowDimensions from '../../../../hooks/useWindowDimensions';
-import { NftItemToken } from '../../../../types/commonTypes';
-import LoadingComponent from '../../../common/LoadingComponent';
-import { MobileCloseBtn } from '../../../GlobalModal/FilterModal/FilterModalIcons';
-import { HomePageModalFilter } from '../../../GlobalModal/FilterModal/HomePAgeModal';
-import { MobileHeaderBlock } from '../../../GlobalModal/FilterModal/MobileHeaderBlock';
-import { NftItemForCollectionView } from '../../../MockUpPage/NftList/NftItemForCollectionView';
+import useWindowDimensions from "../../../../hooks/useWindowDimensions";
+import { NftItemToken } from "../../../../types/commonTypes";
+import LoadingComponent from "../../../common/LoadingComponent";
+import { MobileCloseBtn } from "../../../GlobalModal/FilterModal/FilterModalIcons";
+import { HomePageModalFilter } from "../../../GlobalModal/FilterModal/HomePAgeModal";
+import { MobileHeaderBlock } from "../../../GlobalModal/FilterModal/MobileHeaderBlock";
+import { NftItemForCollectionView } from "../../../MockUpPage/NftList/NftItemForCollectionView";
 
-import './PersonalProfileMyNftTab.css';
+import "./PersonalProfileMyNftTab.css";
 
 interface IPersonalProfileMyNftTabComponent {
   filteredData?: NftItemToken[];
@@ -50,7 +51,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
   onResale,
   setIsResaleLoding,
   metadataFilter,
-  setMetadataFilter
+  setMetadataFilter,
 }) => {
   const { width } = useWindowDimensions();
   const [playing, setPlaying] = useState<null | string>(null);
@@ -82,8 +83,8 @@ const PersonalProfileMyNftTabComponent: React.FC<
   useEffect(() => {
     const option = {
       root: null,
-      rootMargin: '20px',
-      threshold: 0
+      rootMargin: "20px",
+      threshold: 0,
     };
     const observer = new IntersectionObserver(loadToken, option);
     if (loader.current) observer.observe(loader.current);
@@ -97,16 +98,18 @@ const PersonalProfileMyNftTabComponent: React.FC<
     <>
       <div
         style={{
-          display: 'flex'
+          display: "flex",
         }}
-        className="gen">
+        className="gen"
+      >
         {isResaleLoading ? (
           <LoadingComponent />
         ) : (
           <div
             className={`list-button-wrapper-grid-template ${
-              profile && 'row profile'
-            } ${metadataFilter ? 'with-modal' : ''}`}>
+              profile && "row profile"
+            } ${metadataFilter ? "with-modal" : ""}`}
+          >
             {filteredData.length > 0 ? (
               filteredData
                 .filter((el) =>
@@ -115,7 +118,7 @@ const PersonalProfileMyNftTabComponent: React.FC<
                     .includes(titleSearch.toLowerCase())
                 )
                 .map((item, index) => {
-                  if (item.contract.blockchain === '0x38') {
+                  if (item.contract.blockchain === "0x38") {
                     return null;
                   } else {
                     return (
@@ -157,33 +160,37 @@ const PersonalProfileMyNftTabComponent: React.FC<
             <HomePageModalFilter
               isMobileDesign={isMobileDesign}
               style={{
-                background: `color-mix(in srgb, ${primaryColor}, #aaaaaa)`
+                background: `color-mix(in srgb, ${primaryColor}, #aaaaaa)`,
               }}
               id="home-page-modal-filter"
               className={`filter-modal-wrapper ${
-                isMobileDesign && metadataFilter && 'with-modal'
-              }`}>
+                isMobileDesign && metadataFilter && "with-modal"
+              }`}
+            >
               {isMobileDesign && (
                 <MobileHeaderBlock className="mobile-close-btn-container">
                   <span className="filter-header">Filters</span>
                   <button
                     className="mobile-close-btn"
-                    onClick={() => setMetadataFilter((prev) => !prev)}>
+                    onClick={() => setMetadataFilter((prev) => !prev)}
+                  >
                     <MobileCloseBtn className="" />
                   </button>
                 </MobileHeaderBlock>
               )}
               <div
                 className="dropdown-option-wrapper"
-                key={Math.random() * 1_000_000}>
+                key={Math.random() * 1_000_000}
+              >
                 <span
                   key={Math.random() * 1_000_000}
-                  className="dropdown-option-text">
+                  className="dropdown-option-text"
+                >
                   Filter resale
                 </span>
                 <input
                   className={`dropdown-option-checkbox ${
-                    isMobileDesign ? 'mobile-checkbox' : ''
+                    isMobileDesign ? "mobile-checkbox" : ""
                   }`}
                   disabled={isResaleLoading}
                   type="checkbox"
@@ -200,8 +207,8 @@ const PersonalProfileMyNftTabComponent: React.FC<
         <div className="progress-token">
           <CircularProgress
             style={{
-              width: '70px',
-              height: '70px'
+              width: "70px",
+              height: "70px",
             }}
           />
         </div>

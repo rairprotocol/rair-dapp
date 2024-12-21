@@ -13,13 +13,13 @@ type TFooterMainStyled = {
 export const FooterMain = styled.footer.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<TFooterMainStyled>`
-  background: ${({ isDarkMode, secondaryColor }) =>
-    !isDarkMode ? '#fff' : `color-mix(in srgb, ${secondaryColor}, #888888)`};
+  background: ${({ secondaryColor}) => secondaryColor}; 
   padding: 40px 120px 25px 120px;
+  max-width: 1200px;
+  margin: 0 auto;
   color: ${(props) => props.textColor};
 
-  border-top: 1px solid
-    ${({ isDarkMode }) => (!isDarkMode ? '#E5E5E5' : '#595959')};
+  padding-top: 102px;
 
   a {
     color: ${({ textColor }) => textColor};
@@ -38,20 +38,12 @@ export const FooterWrapper = styled.div.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<TFooterMainStyled>`
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
+  gap: 4rem;
   align-items: flex-start;
   padding-bottom: 52px;
   border-bottom: 1px solid
     ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
-
-  &.footer-wrapper-hotdrops {
-    padding-top: 52px;
-    border-top: ${(props) =>
-      props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959'};
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
 
   .footer-box-join {
     display: flex;

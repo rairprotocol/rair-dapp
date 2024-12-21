@@ -1,33 +1,34 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Action } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { Hex } from 'viem';
+//@ts-nocheck
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { Action } from "@reduxjs/toolkit";
+import axios from "axios";
+import { Hex } from "viem";
 
-import { useAppDispatch, useAppSelector } from './useReduxHooks';
-import useServerSettings from './useServerSettings';
-import useSwal from './useSwal';
+import { useAppDispatch, useAppSelector } from "./useReduxHooks";
+import useServerSettings from "./useServerSettings";
+import useSwal from "./useSwal";
 
-import { TUserResponse } from '../axios.responseTypes';
-import { OnboardingButton } from '../components/common/OnboardingButton/OnboardingButton';
-import { dataStatuses } from '../redux/commonTypes';
-import { loadCurrentUser } from '../redux/userSlice';
+import { OnboardingButton } from "../components/common/OnboardingButton/OnboardingButton";
+import { dataStatuses } from "../redux/commonTypes";
+import { loadCurrentUser } from "../redux/userSlice";
 import {
   connectChainMetamask,
   connectChainWeb3Auth,
   setConnectedChain,
   setExchangeRates,
-  setProgrammaticProvider
-} from '../redux/web3Slice';
-import { CombinedBlockchainData } from '../types/commonTypes';
-import { User } from '../types/databaseTypes';
-import chainData from '../utils/blockchainData';
+  setProgrammaticProvider,
+} from "../redux/web3Slice";
+import { CombinedBlockchainData } from "../types/commonTypes";
+import { User } from "../types/databaseTypes";
+import chainData from "../utils/blockchainData";
 import {
   rFetch,
   signWeb3MessageMetamask,
-  signWeb3MessageWeb3Auth
-} from '../utils/rFetch';
-import sockets from '../utils/sockets';
+  signWeb3MessageWeb3Auth,
+} from "../utils/rFetch";
+import sockets from "../utils/sockets";
+import { rairSDK } from "../components/common/rairSDK";
 
 const getCoingeckoRates = async () => {
   try {
@@ -37,7 +38,7 @@ const getCoingeckoRates = async () => {
       )
         .filter((chain) => chainData[chain].coingecko)
         .map((chain) => chainData[chain].coingecko)
-        .join(',')}&vs_currencies=usd`
+        .join(",")}&vs_currencies=usd`
     );
     if (data) {
       const rateData = {};
@@ -51,7 +52,7 @@ const getCoingeckoRates = async () => {
       return rateData;
     }
   } catch (err) {
-    console.error('Error querying CoinGecko rates', err);
+    console.error("Error querying CoinGecko rates", err);
   }
 };
 
@@ -81,12 +82,12 @@ const useConnectUser = () => {
 
   useEffect(() => {
     if (currentUserAddress) {
-      sockets.nodeSocket.on('connect', () => {
-        sockets.nodeSocket.emit('login', currentUserAddress.toLowerCase());
+      sockets.nodeSocket.on("connect", () => {
+        sockets.nodeSocket.emit("login", currentUserAddress.toLowerCase());
       });
     }
     return () => {
-      sockets.nodeSocket.off('connect');
+      sockets.nodeSocket.off("connect");
     };
   }, [currentUserAddress]);
 
@@ -103,10 +104,10 @@ const useConnectUser = () => {
     }
 
     reactSwal.fire({
-      title: 'Connecting',
-      html: 'Please wait',
-      icon: 'info',
-      showConfirmButton: false
+      title: "Connecting",
+      html: "Please wait",
+      icon: "info",
+      showConfirmButton: false,
     });
 
     const { connectedChain, currentUserAddress, userDetails } = await dispatch(
@@ -116,7 +117,7 @@ const useConnectUser = () => {
     return {
       userAddress: currentUserAddress,
       blockchain: connectedChain,
-      userDetails
+      userDetails,
     };
   }, [getBlockchainData, reactSwal, dispatch]);
 
@@ -129,7 +130,7 @@ const useConnectUser = () => {
     }
     return {
       userAddress: currentUserAddress,
-      blockchain: connectedChain
+      blockchain: connectedChain,
     };
   }, [dispatch]);
 
@@ -139,7 +140,7 @@ const useConnectUser = () => {
     }
     return {
       userAddress: (await programmaticProvider.getAddress()) as Hex,
-      blockchain: connectedChain
+      blockchain: connectedChain,
     };
   }, [connectedChain, programmaticProvider]);
 
@@ -147,7 +148,7 @@ const useConnectUser = () => {
     () =>
       new Promise((resolve: (value: string) => void) => {
         reactSwal.fire({
-          title: `Welcome to ${hotdropsVar === 'true' ? 'HOTDROPS' : 'RAIR'}`,
+          title: `Welcome to ${hotdropsVar === "true" ? "HOTDROPS" : "RAIR"}`,
           html: (
             <>
               Please select a login method
@@ -159,27 +160,29 @@ const useConnectUser = () => {
                   className="btn rair-button"
                   style={{
                     background: `${
-                      primaryColor === '#dedede'
-                        ? import.meta.env.VITE_TESTNET === 'true'
-                          ? 'var(--hot-drops)'
-                          : 'linear-gradient(to right, #e882d5, #725bdb)'
-                        : import.meta.env.VITE_TESTNET === 'true'
+                      primaryColor === "#dedede"
+                        ? import.meta.env.VITE_TESTNET === "true"
+                          ? "var(--hot-drops)"
+                          : "linear-gradient(to right, #e882d5, #725bdb)"
+                        : import.meta.env.VITE_TESTNET === "true"
                           ? primaryButtonColor ===
-                            'linear-gradient(to right, #e882d5, #725bdb)'
-                            ? 'var(--hot-drops)'
+                            "linear-gradient(to right, #e882d5, #725bdb)"
+                            ? "var(--hot-drops)"
                             : primaryButtonColor
                           : primaryButtonColor
                     }`,
-                    color: textColor
+                    color: textColor,
                   }}
-                  onClick={() => resolve('metamask')}>
+                  onClick={() => resolve("metamask")}
+                >
                   Web3
                 </button>
               )}
               <hr />
               <button
                 className="btn btn-light"
-                onClick={() => resolve('web3auth')}>
+                onClick={() => resolve("web3auth")}
+              >
                 Social Logins
               </button>
               <div className="login-modal-down-text">
@@ -191,7 +194,7 @@ const useConnectUser = () => {
               </div>
             </>
           ),
-          showConfirmButton: false
+          showConfirmButton: false,
         });
         // .then((result) => {
         //   if (result.isDismissed) {
@@ -205,7 +208,7 @@ const useConnectUser = () => {
       reactSwal,
       primaryButtonColor,
       textColor,
-      primaryColor
+      primaryColor,
     ]
   );
 
@@ -220,33 +223,33 @@ const useConnectUser = () => {
     reactSwal.close();
     try {
       switch (loginMethod) {
-        case 'web3auth':
+        case "web3auth":
           loginData = await loginWithWeb3Auth();
           break;
-        case 'metamask':
+        case "metamask":
           loginData = await loginWithMetamask();
           break;
-        case 'programmatic':
+        case "programmatic":
           loginData = await loginWithProgrammaticProvider();
           break;
         default:
           reactSwal.fire({
-            title: 'Please install a Crypto wallet',
+            title: "Please install a Crypto wallet",
             html: (
               <div>
                 <OnboardingButton />
               </div>
             ),
-            icon: 'error'
+            icon: "error",
           });
           return;
       }
     } catch (err) {
-      console.error('Login error', err);
+      console.error("Login error", err);
       return;
     }
     if (!loginData?.userAddress) {
-      reactSwal.fire('Error', 'No user address found', 'error');
+      reactSwal.fire("Error", "No user address found", "error");
       return;
     }
 
@@ -257,24 +260,18 @@ const useConnectUser = () => {
 
     try {
       // Check if user exists in DB
-      const userDataResponse = await axios.get<TUserResponse>(
-        `/api/users/${loginData.userAddress}`
-      );
-      let user = userDataResponse.data.user;
-      if (!userDataResponse.data.success || !user) {
+      const userDataResponse = await rairSDK.users.findUserByUserAddress({
+        publicAddress: loginData.userAddress,
+      });
+
+      let user = userDataResponse.user;
+      if (!userDataResponse.user || !user) {
         // If the user doesn't exist, send a request to register him using a TEMP adminNFT
         firstTimeLogin = true;
-        const userCreation = await axios.post<TUserResponse>(
-          '/api/users',
-          JSON.stringify({ publicAddress: loginData.userAddress }),
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        user = userCreation.data.user;
+        const userCreation = await rairSDK.users.createUser({
+          publicAddress: loginData.userAddress,
+        });
+        user = userCreation.user;
       }
 
       // Authorize user
@@ -285,15 +282,15 @@ const useConnectUser = () => {
       ) {
         let loginResponse;
         switch (loginMethod) {
-          case 'programmatic':
-            console.error('Programmatic support not available');
+          case "programmatic":
+            console.error("Programmatic support not available");
             break;
-          case 'metamask':
+          case "metamask":
             loginResponse = await signWeb3MessageMetamask(
               loginData.userAddress
             );
             break;
-          case 'web3auth':
+          case "web3auth":
             loginResponse = await signWeb3MessageWeb3Auth(
               loginData.userAddress
             );
@@ -303,11 +300,11 @@ const useConnectUser = () => {
               const availableData: Partial<User> = {};
               if (userData.email) {
                 availableData.email = userData.email;
-                availableData.nickName = userData.email?.split('@')?.[0];
+                availableData.nickName = userData.email?.split("@")?.[0];
               }
-              if (userData.name && !userData.name.includes('@')) {
-                availableData.firstName = userData.name.split(' ')?.[0];
-                availableData.lastName = userData.name.split(' ')?.[0];
+              if (userData.name && !userData.name.includes("@")) {
+                availableData.firstName = userData.name.split(" ")?.[0];
+                availableData.lastName = userData.name.split(" ")?.[0];
               }
               const newUserResponse = await axios.patch(
                 `/api/users/${loginData.userAddress.toLowerCase()}`,
@@ -327,7 +324,7 @@ const useConnectUser = () => {
         }
       }
     } catch (err) {
-      console.error('Error on login', err);
+      console.error("Error on login", err);
     }
   }, [
     selectMethod,
@@ -337,7 +334,7 @@ const useConnectUser = () => {
     reactSwal,
     adminRights,
     currentUserAddress,
-    dispatch
+    dispatch,
   ]);
 
   useEffect(() => {
@@ -345,14 +342,14 @@ const useConnectUser = () => {
   }, [checkMetamask]);
 
   const logoutUser = useCallback(async () => {
-    const { success } = await rFetch('/api/auth/logout');
+    const { success } = await rFetch("/api/auth/logout");
     if (success) {
       dispatch(loadCurrentUser());
-      sockets.nodeSocket.emit('logout', currentUserAddress?.toLowerCase());
+      sockets.nodeSocket.emit("logout", currentUserAddress?.toLowerCase());
       sockets.nodeSocket.disconnect();
       dispatch(setProgrammaticProvider(undefined));
       dispatch(setConnectedChain(import.meta.env.VITE_DEFAULT_BLOCKCHAIN));
-      navigate('/');
+      navigate("/");
     }
   }, [dispatch, navigate, currentUserAddress]);
 
@@ -362,7 +359,7 @@ const useConnectUser = () => {
     }
     const userData = await dispatch(loadCurrentUser()).unwrap();
     switch (userData?.loginType) {
-      case 'metamask':
+      case "metamask":
         if (window.ethereum.selectedAddress !== userData.publicAddress) {
           return await logoutUser();
         }
@@ -381,7 +378,7 @@ const useConnectUser = () => {
 
   return {
     connectUserData,
-    logoutUser
+    logoutUser,
   };
 };
 

@@ -1,0 +1,66 @@
+.hero {
+}
+
+.hero h1 {
+    font-size: 5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: left;
+    -webkit-text-stroke: 1px white;
+    margin-bottom: 3rem;
+}
+
+.hero .border-only {
+    -webkit-text-stroke: 1.8px white;
+    position: relative;
+}
+
+.hero .border-only .over {
+    position: absolute;
+    top: 1;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    color: black;
+    -webkit-text-stroke: initial;
+}
+      
+
+.description .description-header {
+    display: flex;
+    flex-direction: row;
+    line-height: 1.4;
+    justify-content: space-between;
+    margin-bottom: 5rem;
+}
+
+.description {
+    margin-top: 12rem;
+}
+
+.description .description-header h2 {
+    width: 400px;
+    line-height: 1.3;
+}
+
+.description-header *:last-child {
+    width: 550px;
+}
+
+.description-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 3rem;
+    gap: 2.0rem;
+}
+
+.description-features p {
+    line-height: 1.4;
+}
+
+.description-features h4 {
+    color: white;
+    font-size: 1.0rem;
+    font-weight: 400;
+}
+

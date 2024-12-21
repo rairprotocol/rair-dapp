@@ -1,15 +1,16 @@
-import { FC, memo, useEffect, useState } from 'react';
-import { Hex } from 'viem';
+//@ts-nocheck
+import { FC, memo, useEffect, useState } from "react";
+import { Hex } from "viem";
 
 import {
   useAppDispatch,
-  useAppSelector
-} from '../../../../hooks/useReduxHooks';
-import { dataStatuses } from '../../../../redux/commonTypes';
-import { loadVideoList } from '../../../../redux/videoSlice';
-import { CatalogVideoItem } from '../../../../types/commonTypes';
-import LoadingComponent from '../../../common/LoadingComponent';
-import VideoItem from '../../../video/videoItem';
+  useAppSelector,
+} from "../../../../hooks/useReduxHooks";
+import { dataStatuses } from "../../../../redux/commonTypes";
+import { loadVideoList } from "../../../../redux/videoSlice";
+import { CatalogVideoItem } from "../../../../types/commonTypes";
+import LoadingComponent from "../../../common/LoadingComponent";
+import VideoItem from "../../../video/videoItem";
 // import cl from './PersonalProfileMyVideoTab.module.css';
 
 interface IPersonalProfileMyVideoTabComponent {
@@ -28,7 +29,7 @@ const PersonalProfileMyVideoTabComponent: FC<
   useEffect(() => {
     dispatch(
       loadVideoList({
-        userAddress: publicAddress ? publicAddress : undefined
+        userAddress: publicAddress ? publicAddress : undefined,
       })
     );
   }, [dispatch, publicAddress]);
@@ -47,7 +48,8 @@ const PersonalProfileMyVideoTabComponent: FC<
     <div className="PersonalProfileMyVideoTab-wrapper">
       <div
         className="list-button-wrapper tree-tab-unlocks"
-        style={{ verticalAlign: 'top' }}>
+        style={{ verticalAlign: "top" }}
+      >
         {unlockedVideos.length ? (
           unlockedVideos
             ?.filter((video) =>

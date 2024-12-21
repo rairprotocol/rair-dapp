@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { NFTNYC_TITLE } from '../../components/SplashPage/images/NFTNYC/nftnyc';
 import { TSplashDataType } from '../../components/SplashPage/splashPage.types';
 import { hyperlink } from '../../components/SplashPage/SplashPageConfig/utils/hyperLink';

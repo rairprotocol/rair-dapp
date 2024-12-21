@@ -1,43 +1,44 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
-import { isAddress, ZeroAddress } from 'ethers';
-import { Hex } from 'viem';
+//@ts-nocheck
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios, { AxiosError } from "axios";
+import { isAddress, ZeroAddress } from "ethers";
+import { Hex } from "viem";
 
-import { NftCollectionPage } from './NftCollectionPage';
-import NftDataPageMain from './NftDataPageMain';
-import NftUnlockablesPage from './NftUnlockablesPage';
+import { NftCollectionPage } from "./NftCollectionPage";
+import NftDataPageMain from "./NftDataPageMain";
+import NftUnlockablesPage from "./NftUnlockablesPage";
 
 import {
   IOffersResponseType,
   TNftFilesResponse,
   TProducts,
   TTokenData,
-  TUserResponse
-} from '../../../../axios.responseTypes';
+  TUserResponse,
+} from "../../../../axios.responseTypes";
 import {
   useAppDispatch,
-  useAppSelector
-} from '../../../../hooks/useReduxHooks';
-import { dataStatuses } from '../../../../redux/commonTypes';
-import { loadCollection } from '../../../../redux/tokenSlice';
-import { setRequestedChain } from '../../../../redux/web3Slice';
-import { CatalogVideoItem } from '../../../../types/commonTypes';
+  useAppSelector,
+} from "../../../../hooks/useReduxHooks";
+import { dataStatuses } from "../../../../redux/commonTypes";
+import { loadCollection } from "../../../../redux/tokenSlice";
+import { setRequestedChain } from "../../../../redux/web3Slice";
+import { CatalogVideoItem } from "../../../../types/commonTypes";
 import {
   MediaFile,
   TokenMetadata,
-  User
-} from '../../../../types/databaseTypes';
-import { TOfferType } from '../../../marketplace/marketplace.types';
+  User,
+} from "../../../../types/databaseTypes";
+import { TOfferType } from "../../../marketplace/marketplace.types";
 import {
   INftDataCommonLinkComponent,
-  TParamsNftDataCommonLink
-} from '../nftList.types';
+  TParamsNftDataCommonLink,
+} from "../nftList.types";
 
 const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
   embeddedParams,
   tokenNumber,
-  setTokenNumber
+  setTokenNumber,
 }) => {
   const [collectionName, setCollectionName] = useState<string>();
   const [tokenDataFiltered, setTokenDataFiltered] = useState<TTokenData[]>([]);
@@ -63,7 +64,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     currentCollection,
     currentCollectionMetadata,
     currentCollectionStatus,
-    currentCollectionMetadataStatus
+    currentCollectionMetadataStatus,
   } = useAppSelector((state) => state.tokens);
 
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
 
   const mode = embeddedParams
     ? embeddedParams.mode
-    : pathname?.split('/')?.at(1);
+    : pathname?.split("/")?.at(1);
 
   const { contract, product, tokenId, blockchain } = embeddedParams
     ? embeddedParams
@@ -88,7 +89,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         return;
       }
 
-      const tokensFlag = window.location.href.includes('/tokens') && tokenId;
+      const tokensFlag = window.location.href.includes("/tokens") && tokenId;
 
       if (
         tokensFlag &&
@@ -105,7 +106,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
           product,
           fromToken: tokensFlag ? tokenId : fromToken,
           toToken: tokensFlag ? tokenId : toToken,
-          attributes
+          attributes,
         })
       );
 
@@ -120,7 +121,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
       contract,
       currentCollectionStatus,
       currentCollectionMetadata,
-      currentCollectionMetadataStatus
+      currentCollectionMetadataStatus,
     ]
   );
 
@@ -314,7 +315,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (mode === 'collection') {
+  if (mode === "collection") {
     return (
       <NftCollectionPage
         embeddedParams={embeddedParams}
@@ -335,7 +336,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         tokenNumber={tokenNumber}
       />
     );
-  } else if (mode === 'unlockables') {
+  } else if (mode === "unlockables") {
     return (
       <NftUnlockablesPage
         embeddedParams={embeddedParams}
@@ -346,7 +347,7 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
         collectionName={collectionName}
       />
     );
-  } else if (mode === 'tokens') {
+  } else if (mode === "tokens") {
     return (
       <NftDataPageMain
         embeddedParams={embeddedParams}

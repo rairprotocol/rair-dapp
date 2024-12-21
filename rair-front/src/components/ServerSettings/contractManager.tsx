@@ -1,20 +1,20 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 import {
   faEye,
   faEyeSlash,
   faGem,
   faLink,
-  faLinkSlash
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
+  faLinkSlash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 
-import { useAppSelector } from '../../hooks/useReduxHooks';
-import useServerSettings from '../../hooks/useServerSettings';
-import InputField from '../common/InputField';
+import { useAppSelector } from "../../hooks/useReduxHooks";
+import useServerSettings from "../../hooks/useServerSettings";
+import InputField from "../common/InputField";
 
 const ContractManager = ({ contractList, getContractList }) => {
-  const [textFilter, setTextFilter] = useState<string>('');
+  const [textFilter, setTextFilter] = useState<string>("");
 
   const { getBlockchainData } = useServerSettings();
   const { primaryButtonColor, textColor, secondaryButtonColor, primaryColor } =
@@ -25,12 +25,12 @@ const ContractManager = ({ contractList, getContractList }) => {
       await axios.patch(
         `/api/contracts/${id}`,
         {
-          [setting]: value
+          [setting]: value,
         },
         {
           headers: {
-            Accept: 'application/json'
-          }
+            Accept: "application/json",
+          },
         }
       );
       getContractList();
@@ -50,15 +50,17 @@ const ContractManager = ({ contractList, getContractList }) => {
       </div>
       <div
         style={{
-          overflowY: 'scroll',
-          maxHeight: '60vh'
-        }}>
+          overflowY: "scroll",
+          maxHeight: "60vh",
+        }}
+      >
         <table
           className="table-hover col-12 table-striped table-responsive"
           style={{
             color: textColor,
-            backgroundColor: primaryColor
-          }}>
+            backgroundColor: primaryColor,
+          }}
+        >
           <thead>
             <tr>
               <th>Contract</th>
@@ -69,7 +71,7 @@ const ContractManager = ({ contractList, getContractList }) => {
             {contractList
               .filter(
                 ({ title, contractAddress }) =>
-                  title.includes(textFilter) ||
+                  title?.includes(textFilter) ||
                   contractAddress.includes(textFilter)
               )
               .map(
@@ -81,7 +83,7 @@ const ContractManager = ({ contractList, getContractList }) => {
                     _id,
                     blockchain,
                     blockView,
-                    blockSync
+                    blockSync,
                   },
                   index
                 ) => {
@@ -89,40 +91,42 @@ const ContractManager = ({ contractList, getContractList }) => {
                   return (
                     <tr key={index}>
                       <th>
-                        {diamond && <FontAwesomeIcon icon={faGem} />}{' '}
+                        {diamond && <FontAwesomeIcon icon={faGem} />}{" "}
                         <abbr title={contractAddress}>{title}</abbr> (
                         {chainData?.symbol})
                       </th>
                       <th>
                         <button
                           onClick={() =>
-                            updateContractData(_id, 'blockView', !blockView)
+                            updateContractData(_id, "blockView", !blockView)
                           }
                           className="rair-button btn col-12 col-md-6"
                           style={{
                             color: textColor,
-                            background: secondaryButtonColor
-                          }}>
-                          {' '}
+                            background: secondaryButtonColor,
+                          }}
+                        >
+                          {" "}
                           <FontAwesomeIcon
                             icon={blockView ? faEyeSlash : faEye}
                           />
-                          {blockView ? 'Hidden' : 'Visible'}{' '}
+                          {blockView ? "Hidden" : "Visible"}{" "}
                         </button>
                         <button
                           onClick={() =>
-                            updateContractData(_id, 'blockSync', !blockSync)
+                            updateContractData(_id, "blockSync", !blockSync)
                           }
                           className="rair-button btn col-12 col-md-6"
                           style={{
                             color: textColor,
-                            background: primaryButtonColor
-                          }}>
-                          {' '}
+                            background: primaryButtonColor,
+                          }}
+                        >
+                          {" "}
                           <FontAwesomeIcon
                             icon={blockSync ? faLinkSlash : faLink}
                           />
-                          {blockSync ? "Won't" : 'Will'} sync{' '}
+                          {blockSync ? "Won't" : "Will"} sync{" "}
                         </button>
                       </th>
                     </tr>

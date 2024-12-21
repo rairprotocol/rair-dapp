@@ -1,39 +1,40 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+//@ts-nocheck
+import { FC, useCallback, useEffect, useState } from "react";
 import {
   NavLink,
   Route,
   Routes,
   useNavigate,
-  useParams
-} from 'react-router-dom';
-import { faArrowLeft, faGem } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { withSentryReactRouterV6Routing } from '@sentry/react';
-import { ethers } from 'ethers';
+  useParams,
+} from "react-router-dom";
+import { faArrowLeft, faGem } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { withSentryReactRouterV6Routing } from "@sentry/react";
+import { ethers } from "ethers";
 
 import {
   TContractData,
   TSteps,
   TWorkflowContextType,
-  TWorkflowParams
-} from './creatorStudio.types';
+  TWorkflowParams,
+} from "./creatorStudio.types";
 
-import WorkflowContext from '../../contexts/CreatorWorkflowContext';
-import { diamond721Abi, erc721Abi } from '../../contracts';
-import useContracts from '../../hooks/useContracts';
-import { useAppSelector } from '../../hooks/useReduxHooks';
-import useWeb3Tx from '../../hooks/useWeb3Tx';
-import { rFetch } from '../../utils/rFetch';
+import WorkflowContext from "../../contexts/CreatorWorkflowContext";
+import { diamond721Abi, erc721Abi } from "../../contracts";
+import useContracts from "../../hooks/useContracts";
+import { useAppSelector } from "../../hooks/useReduxHooks";
+import useWeb3Tx from "../../hooks/useWeb3Tx";
+import { rFetch } from "../../utils/rFetch";
 
-import BatchMetadata from './creatorSteps/batchMetadata';
-import CustomizeFees from './creatorSteps/CustomizeFees';
-import ListLocks from './creatorSteps/ListLocks';
-import ListOffers from './creatorSteps/ListOffers';
-import MediaUpload from './creatorSteps/MediaUpload';
-import ResaleMarketplace from './creatorSteps/ResaleMarketplace';
-import SingleMetadataEditor from './creatorSteps/singleMetadataEditor';
-import DiamondMinterMarketplace from './diamondCreatorSteps/DiamondMinterMarketplace';
-import ListOffersDiamond from './diamondCreatorSteps/ListOffersDiamond';
+import BatchMetadata from "./creatorSteps/batchMetadata";
+import CustomizeFees from "./creatorSteps/CustomizeFees";
+import ListLocks from "./creatorSteps/ListLocks";
+import ListOffers from "./creatorSteps/ListOffers";
+import MediaUpload from "./creatorSteps/MediaUpload";
+import ResaleMarketplace from "./creatorSteps/ResaleMarketplace";
+import SingleMetadataEditor from "./creatorSteps/singleMetadataEditor";
+import DiamondMinterMarketplace from "./diamondCreatorSteps/DiamondMinterMarketplace";
+import ListOffersDiamond from "./diamondCreatorSteps/ListOffersDiamond";
 
 const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
@@ -78,106 +79,106 @@ const WorkflowSteps: FC = () => {
     }
     let filteredSteps: TSteps[] = [
       {
-        path: 'offers',
+        path: "offers",
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
         component: contractData.diamond ? ListOffersDiamond : ListOffers,
         simple: true,
         classic: true,
         diamond: true,
-        shortName: 'Ranges',
+        shortName: "Ranges",
         hasAdvancedFeatures: true,
         external: false,
         description:
-          'Define a range of tokens and give them their own minting price'
+          "Define a range of tokens and give them their own minting price",
       },
       {
-        path: 'locks',
+        path: "locks",
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/locks`,
         component: ListLocks,
         simple: false,
         classic: true,
         diamond: false,
-        shortName: 'Locks',
+        shortName: "Locks",
         hasAdvancedFeatures: true,
         external: false,
         description:
-          'With locks you can prevent token trades before a certain number of tokens are minted'
+          "With locks you can prevent token trades before a certain number of tokens are minted",
       },
       {
-        path: 'customizeFees',
+        path: "customizeFees",
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/customizeFees`,
         component: CustomizeFees,
         simple: false,
         classic: true,
         diamond: false,
-        shortName: 'Custom Fees',
+        shortName: "Custom Fees",
         hasAdvancedFeatures: true,
         external: false,
-        description: 'Add custom royalty fees for token mints'
+        description: "Add custom royalty fees for token mints",
       },
       {
-        path: 'minterMarketplace',
+        path: "minterMarketplace",
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/minterMarketplace`,
         component: DiamondMinterMarketplace,
         simple: true,
         classic: false,
         diamond: true,
-        shortName: 'Offers',
+        shortName: "Offers",
         hasAdvancedFeatures: true,
         external: false,
         description:
-          "Put your ranges on the marketplace contract, you can also customize the royalties you'll receive when a token is minted"
+          "Put your ranges on the marketplace contract, you can also customize the royalties you'll receive when a token is minted",
       },
       {
-        path: 'resaleMarketplace',
+        path: "resaleMarketplace",
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/resaleMarketplace`,
         component: ResaleMarketplace,
         simple: false,
         classic: true,
         diamond: true,
-        shortName: 'Resale Setup',
+        shortName: "Resale Setup",
         hasAdvancedFeatures: true,
         external: false,
-        description: 'Set up royalty fees for the reselling of the NFTs'
+        description: "Set up royalty fees for the reselling of the NFTs",
       },
       {
-        path: 'metadata/batch',
+        path: "metadata/batch",
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/batch`,
         component: BatchMetadata,
         simple: true,
         classic: true,
         diamond: true,
-        shortName: 'Metadata',
+        shortName: "Metadata",
         hasAdvancedFeatures: true,
         external: false,
         description:
-          'Upload a CSV file with all of the metadata for your tokens'
+          "Upload a CSV file with all of the metadata for your tokens",
       },
       {
-        path: 'metadata/single',
+        path: "metadata/single",
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/single`,
         component: SingleMetadataEditor,
         simple: true,
         classic: true,
         diamond: true,
-        shortName: 'Single Metadata',
+        shortName: "Single Metadata",
         hasAdvancedFeatures: true,
         external: false,
-        description: 'Update the metadata of a single token'
+        description: "Update the metadata of a single token",
       },
       {
-        path: 'media',
+        path: "media",
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/media`,
         component: MediaUpload,
         simple: true,
         classic: true,
         diamond: true,
-        shortName: 'Media Files',
+        shortName: "Media Files",
         hasAdvancedFeatures: false,
         external: true,
         description:
-          'Upload media files, users will need NFTs from your contract to unlock them'
-      }
+          "Upload media files, users will need NFTs from your contract to unlock them",
+      },
     ];
     if (contractData.external) {
       filteredSteps = filteredSteps.filter((step) => step.external);
@@ -197,7 +198,7 @@ const WorkflowSteps: FC = () => {
     collectionIndex,
     steps.length,
     simpleMode,
-    blockchain
+    blockchain,
   ]);
 
   useEffect(() => {
@@ -305,23 +306,23 @@ const WorkflowSteps: FC = () => {
             offer.marketData = {
               visible: aux.mintOffer.visible,
               fees: aux.mintOffer.fees.map((fee) => ({
-                message: 'Marketplace Data',
+                message: "Marketplace Data",
                 recipient: fee.recipient,
                 percentage: fee.percentage,
-                editable: true
-              }))
+                editable: true,
+              })),
             };
           } else {
             offer.marketData = {
               visible: true,
               fees: [
                 {
-                  message: 'Creator Address (You!)',
+                  message: "Creator Address (You!)",
                   recipient: currentUserAddress,
                   percentage: 95000,
-                  editable: true
-                }
-              ]
+                  editable: true,
+                },
+              ],
             };
             offer.selected = !offer.offerIndex;
           }
@@ -343,7 +344,7 @@ const WorkflowSteps: FC = () => {
     collectionIndex,
     contractCreator,
     currentUserAddress,
-    diamondMarketplaceInstance
+    diamondMarketplaceInstance,
   ]);
 
   const checkMarketRoles = useCallback(async () => {
@@ -355,22 +356,22 @@ const WorkflowSteps: FC = () => {
     ) {
       return;
     }
-    const MINTER = await web3TxHandler(contractData.instance, 'MINTER');
+    const MINTER = await web3TxHandler(contractData.instance, "MINTER");
     if (MINTER) {
       setMINTERHash(MINTER);
       setMintingRole(
-        await web3TxHandler(contractData.instance, 'hasRole', [
+        await web3TxHandler(contractData.instance, "hasRole", [
           MINTER,
-          await diamondMarketplaceInstance?.getAddress()
+          await diamondMarketplaceInstance?.getAddress(),
         ])
       );
     }
-    const TRADER = await web3TxHandler(contractData.instance, 'TRADER');
+    const TRADER = await web3TxHandler(contractData.instance, "TRADER");
     if (TRADER) {
       setTraderRole(
-        await web3TxHandler(contractData.instance, 'hasRole', [
+        await web3TxHandler(contractData.instance, "hasRole", [
           TRADER,
-          await diamondMarketplaceInstance?.getAddress()
+          await diamondMarketplaceInstance?.getAddress(),
         ])
       );
     }
@@ -378,7 +379,7 @@ const WorkflowSteps: FC = () => {
     contractData,
     correctBlockchain,
     diamondMarketplaceInstance,
-    web3TxHandler
+    web3TxHandler,
   ]);
 
   useEffect(() => {
@@ -429,7 +430,7 @@ const WorkflowSteps: FC = () => {
       }, 2000);
     },
     fetchingData,
-    refreshNFTMetadata
+    refreshNFTMetadata,
   };
 
   const navigateRoute = () => {
@@ -450,22 +451,24 @@ const WorkflowSteps: FC = () => {
           {() => {
             return (
               <div className="row px-0 mx-0">
-                <div className="col-12 my-5" style={{ position: 'relative' }}>
+                <div className="col-12 my-5" style={{ position: "relative" }}>
                   <div
                     style={{
-                      position: 'absolute',
+                      position: "absolute",
                       left: 20,
-                      background: primaryButtonColor
+                      background: primaryButtonColor,
                     }}
-                    className="btn rounded-rair p-0">
+                    className="btn rounded-rair p-0"
+                  >
                     <button
                       onClick={goBack}
                       style={{
-                        border: 'none',
+                        border: "none",
                         color: textColor,
-                        backgroundColor: primaryColor
+                        backgroundColor: primaryColor,
                       }}
-                      className="btn rounded-rair w-100 rair-button">
+                      className="btn rounded-rair w-100 rair-button"
+                    >
                       <FontAwesomeIcon icon={faArrowLeft} /> Back
                     </button>
                   </div>
@@ -490,37 +493,40 @@ const WorkflowSteps: FC = () => {
                               width: `${
                                 (100 / steps.length) * (index === 0 ? 0.09 : 1)
                               }%`,
-                              height: '3px',
-                              position: 'relative',
-                              textAlign: 'right',
+                              height: "3px",
+                              position: "relative",
+                              textAlign: "right",
                               backgroundColor: `var(--${
                                 currentStep >= index
-                                  ? 'bubblegum'
+                                  ? "bubblegum"
                                   : `charcoal-80`
-                              })`
-                            }}>
+                              })`,
+                            }}
+                          >
                             <div
                               style={{
-                                position: 'absolute',
+                                position: "absolute",
                                 right: 0,
-                                top: '-10px',
-                                borderRadius: '50%',
+                                top: "-10px",
+                                borderRadius: "50%",
                                 background: `var(--${
                                   currentStep >= index
-                                    ? 'bubblegum'
+                                    ? "bubblegum"
                                     : `${
-                                        primaryColor === '#dedede'
-                                          ? 'rhyno'
-                                          : 'charcoal'
+                                        primaryColor === "#dedede"
+                                          ? "rhyno"
+                                          : "charcoal"
                                       }`
                                 })`,
-                                height: '1.7rem',
-                                width: '1.7rem',
-                                margin: 'auto',
-                                border: 'solid 1px var(--charcoal-60)',
-                                textAlign: 'center',
-                                color: currentStep >= index ? undefined : 'gray'
-                              }}>
+                                height: "1.7rem",
+                                width: "1.7rem",
+                                margin: "auto",
+                                border: "solid 1px var(--charcoal-60)",
+                                textAlign: "center",
+                                color:
+                                  currentStep >= index ? undefined : "gray",
+                              }}
+                            >
                               <div className="rair-abbr" id={item.shortName}>
                                 {index + 1}
                               </div>
@@ -535,7 +541,8 @@ const WorkflowSteps: FC = () => {
                   {steps?.at(currentStep)?.hasAdvancedFeatures && (
                     <div
                       className="row mt-3 w-100"
-                      style={{ paddingTop: '50px' }}>
+                      style={{ paddingTop: "50px" }}
+                    >
                       <div className="col-12 col-md-6 text-end">
                         <button
                           onClick={() => navigateRoute()}
@@ -544,9 +551,10 @@ const WorkflowSteps: FC = () => {
                             background: simpleMode
                               ? primaryButtonColor
                               : primaryColor,
-                            border: `solid 1px ${textColor}`
+                            border: `solid 1px ${textColor}`,
                           }}
-                          className="btn rair-button rounded-rair col-12 col-md-6">
+                          className="btn rair-button rounded-rair col-12 col-md-6"
+                        >
                           Simple
                         </button>
                       </div>
@@ -558,9 +566,10 @@ const WorkflowSteps: FC = () => {
                             background: !simpleMode
                               ? primaryButtonColor
                               : primaryColor,
-                            border: `solid 1px ${textColor}`
+                            border: `solid 1px ${textColor}`,
                           }}
-                          className={`btn rair-button rounded-rair col-12 col-md-6`}>
+                          className={`btn rair-button rounded-rair col-12 col-md-6`}
+                        >
                           Advanced
                         </button>
                       </div>

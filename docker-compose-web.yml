@@ -189,7 +189,9 @@ services:
       - rair-local
   rair-front:
     container_name: rair-front
-    image: rairprotocol/rair-front:latest
+    build:
+      context: rair-front
+      dockerfile: Dockerfile.prod
     environment:
       VITE_SENTRY_ENABLED: ${sentry_enabled}
       VITE_SENTRY_IO_ENDPOINT: ${sentry_endpoint}

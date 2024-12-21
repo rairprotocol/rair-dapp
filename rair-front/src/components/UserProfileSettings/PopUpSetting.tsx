@@ -1,27 +1,27 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Popup } from 'reactjs-popup';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Popup } from "reactjs-popup";
 import {
   faBars,
   faSignOutAlt,
   faUpload,
-  faUser
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { formatEther } from 'ethers';
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { formatEther } from "ethers";
 
-import useConnectUser from '../../hooks/useConnectUser';
-import useContracts from '../../hooks/useContracts';
-import { useAppSelector } from '../../hooks/useReduxHooks';
-import useServerSettings from '../../hooks/useServerSettings';
-import { RairFavicon, RairTokenLogo, VerifiedIcon } from '../../images';
-import LoadingComponent from '../common/LoadingComponent';
-import { TooltipBox } from '../common/Tooltip/TooltipBox';
+import useConnectUser from "../../hooks/useConnectUser";
+import useContracts from "../../hooks/useContracts";
+import { useAppSelector } from "../../hooks/useReduxHooks";
+import useServerSettings from "../../hooks/useServerSettings";
+import { RairFavicon, RairTokenLogo, VerifiedIcon } from "../../images";
+import LoadingComponent from "../common/LoadingComponent";
+import { TooltipBox } from "../common/Tooltip/TooltipBox";
 
-import useWeb3Tx from './../../hooks/useWeb3Tx';
-import EditMode from './EditMode/EditMode';
-import defaultPictures from './images/defaultUserPictures.png';
-import { SvgFactoryIcon } from './SettingsIcons/SettingsIcons';
+import useWeb3Tx from "./../../hooks/useWeb3Tx";
+import EditMode from "./EditMode/EditMode";
+import defaultPictures from "./images/defaultUserPictures.png";
+import { SvgFactoryIcon } from "./SettingsIcons/SettingsIcons";
 
 const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
   const settingBlockRef = useRef<HTMLDivElement | null>(null);
@@ -31,7 +31,7 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
   const [userEmail, setUserEmail] = useState<string | undefined>();
   const [triggerState, setTriggerState] = useState<boolean>(false);
   const [editMode, setEditMode] = useState(false);
-  const [userBalance, setUserBalance] = useState<string>('');
+  const [userBalance, setUserBalance] = useState<string>("");
   const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [userBalanceTrigger, setUserBalanceTrigger] = useState<boolean>(false);
   const [userRairBalance, setUserRairBalance] = useState<bigint | undefined>();
@@ -65,8 +65,8 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
     ) {
       return;
     }
-    const result = await web3TxHandler(mainTokenInstance, 'balanceOf', [
-      currentUserAddress
+    const result = await web3TxHandler(mainTokenInstance, "balanceOf", [
+      currentUserAddress,
     ]);
     if (result) {
       setUserRairBalance(result);
@@ -76,7 +76,7 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
     currentUserAddress,
     mainTokenInstance,
     userRairBalance,
-    web3TxHandler
+    web3TxHandler,
   ]);
 
   useEffect(() => {
@@ -123,23 +123,23 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
     if (userName) {
       const length = userName.length;
       return length > 13
-        ? userName.slice(0, 5) + '....' + userName.slice(length - 4)
+        ? userName.slice(0, 5) + "...." + userName.slice(length - 4)
         : userName;
     }
     if (currentUserAddress) {
       return (
-        currentUserAddress.slice(0, 4) + '....' + currentUserAddress.slice(38)
+        currentUserAddress.slice(0, 4) + "...." + currentUserAddress.slice(38)
       );
     }
   };
 
   const pushToUploadVideo = (tab: number) => {
     setTabIndexItems(tab);
-    navigate('/demo/upload');
+    navigate("/demo/upload");
   };
 
   const pushToFactory = () => {
-    navigate('/creator/deploy');
+    navigate("/creator/deploy");
   };
 
   const pushToProfile = () => {
@@ -168,20 +168,23 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
   return (
     <>
       <button
-        className={`button profile-btn ${!isDarkMode ? 'rhyno' : ''}`}
+        className={`button profile-btn ${!isDarkMode ? "rhyno" : ""}`}
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start'
-        }}>
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
+      >
         <div
-          className={`profile-buy-button ${!isDarkMode ? 'rhyno' : ''}`}></div>
+          className={`profile-buy-button ${!isDarkMode ? "rhyno" : ""}`}
+        ></div>
         <div
           onClick={() => setUserBalanceTrigger((prev) => !prev)}
-          className={`profile-user-balance ${!isDarkMode ? 'rhyno' : ''}`}>
+          className={`profile-user-balance ${!isDarkMode ? "rhyno" : ""}`}
+        >
           <img
             style={{
-              marginRight: '5px'
+              marginRight: "5px",
             }}
             src={!isDarkMode ? RairFavicon : RairTokenLogo}
             alt="logo"
@@ -194,27 +197,28 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
           onClick={() => setTriggerState((prev) => !prev)}
           className="profile-btn-img"
           style={{
-            height: '100%',
-            width: '37px',
+            height: "100%",
+            width: "37px",
             borderTopRightRadius: 10,
             borderBottomRightRadius: 10,
-            overflow: 'hidden',
-            background: `${imagePreviewUrl === null ? 'var(--royal-ice)' : ''}`,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
+            overflow: "hidden",
+            background: `${imagePreviewUrl === null ? "var(--royal-ice)" : ""}`,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           {imagePreviewUrl ? (
             <img
               onClick={(event) =>
                 event.altKey && event.shiftKey
-                  ? alert('Front v0.06.12.22 iFrame+qualityVideo')
+                  ? alert("Front v0.06.12.22 iFrame+qualityVideo")
                   : null
               }
               style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover'
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
               }}
               src={imagePreviewUrl === null ? defaultPictures : imagePreviewUrl}
               alt="User Avatar"
@@ -226,11 +230,11 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
         {ageVerified && (
           <img
             style={{
-              position: 'absolute',
+              position: "absolute",
               width: 20,
               height: 20,
-              top: '-1px',
-              left: '45%'
+              top: "-1px",
+              left: "45%",
             }}
             src={VerifiedIcon}
             alt="verified icon"
@@ -239,18 +243,20 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
         <div
           onClick={() => setTriggerState((prev) => !prev)}
           style={{
-            display: 'flex',
-            width: '140px',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 5px'
-          }}>
+            display: "flex",
+            width: "140px",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 5px",
+          }}
+        >
           <span
             style={{
-              padding: '0 0px 0 2px',
+              padding: "0 0px 0 2px",
               color: textColor,
-              fontSize: '14px'
-            }}>
+              fontSize: "14px",
+            }}
+          >
             {cutUserAddress()}
           </span>
           <FontAwesomeIcon
@@ -258,10 +264,10 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
             className="icon-menu"
             style={{
               color:
-                import.meta.env.VITE_TESTNET === 'true'
-                  ? `${iconColor === '#1486c5' ? '#F95631' : iconColor}`
-                  : `${iconColor === '#1486c5' ? '#E882D5' : iconColor}`,
-              WebkitBackgroundClip: 'text'
+                import.meta.env.VITE_TESTNET === "true"
+                  ? `${iconColor === "#1486c5" ? "#F95631" : iconColor}`
+                  : `${iconColor === "#1486c5" ? "#E882D5" : iconColor}`,
+              WebkitBackgroundClip: "text",
             }}
           />
         </div>
@@ -273,40 +279,45 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
         closeOnDocumentClick
         onClose={() => {
           setUserBalanceTrigger(false);
-        }}>
+        }}
+      >
         <div
           ref={settingBlockRef}
-          className={`user-popup ${primaryColor === '#dedede' ? 'rhyno' : ''}`}
+          className={`user-popup ${primaryColor === "#dedede" ? "rhyno" : ""}`}
           style={{
             background: `${
-              primaryColor === '#dedede'
-                ? '#fff'
+              primaryColor === "#dedede"
+                ? "#fff"
                 : `color-mix(in srgb, ${primaryColor}, #888888)`
             }`,
             borderRadius: 16,
-            filter: 'drop-shadow(0.4px 0.5px 1px black)',
+            filter: "drop-shadow(0.4px 0.5px 1px black)",
             border: `${
-              primaryColor === '#dedede' ? '1px solid #DEDEDE' : 'none'
+              primaryColor === "#dedede" ? "1px solid #DEDEDE" : "none"
             }`,
-            marginTop: `${showAlert ? '65px' : '12px'}`
-          }}>
+            marginTop: `${showAlert ? "65px" : "12px"}`,
+          }}
+        >
           <div
             style={{
-              padding: '10px',
-              color: `${primaryColor === '#dedede' ? '#000' : '#fff'}`,
-              display: 'flex'
-            }}>
+              padding: "10px",
+              color: `${primaryColor === "#dedede" ? "#000" : "#fff"}`,
+              display: "flex",
+            }}
+          >
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-evenly'
-              }}>
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-evenly",
+              }}
+            >
               <div
                 style={{
-                  display: 'flex',
-                  marginBottom: '15px'
-                }}>
+                  display: "flex",
+                  marginBottom: "15px",
+                }}
+              >
                 <div>
                   {isLoadingBalance ? (
                     <LoadingComponent size={18} />
@@ -318,8 +329,8 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
                   {getBlockchainData(connectedChain) && (
                     <img
                       style={{
-                        height: '25px',
-                        marginLeft: '15px'
+                        height: "25px",
+                        marginLeft: "15px",
                       }}
                       src={getBlockchainData(connectedChain)?.image}
                       alt="logo"
@@ -329,8 +340,9 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
               </div>
               <div
                 style={{
-                  display: 'flex'
-                }}>
+                  display: "flex",
+                }}
+              >
                 <div>
                   {isLoadingBalance ? (
                     <LoadingComponent size={18} />
@@ -341,11 +353,11 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
                 <div>
                   <img
                     style={{
-                      height: '25px',
-                      marginLeft: '15px'
+                      height: "25px",
+                      marginLeft: "15px",
                     }}
                     src={
-                      primaryColor === '#dedede' ? RairFavicon : RairTokenLogo
+                      primaryColor === "#dedede" ? RairFavicon : RairTokenLogo
                     }
                     alt="logo"
                   />
@@ -354,43 +366,48 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
             </div>
             <div
               style={{
-                marginLeft: '25px',
-                display: 'flex',
-                flexDirection: 'column'
-              }}>
+                marginLeft: "25px",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
               <div
                 style={{
-                  marginBottom: '10px'
+                  marginBottom: "10px",
                 }}
-                className="user-new-balance-title-text">
+                className="user-new-balance-title-text"
+              >
                 <div
                   style={{
-                    fontWeight: 'bold',
-                    fontSize: '12px'
-                  }}>
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                  }}
+                >
                   Exchange rate
                 </div>
                 <div
                   style={{
-                    fontSize: '14px'
-                  }}>
+                    fontSize: "14px",
+                  }}
+                >
                   50K RAIR/bETH
                 </div>
               </div>
               <div>
-                <TooltipBox position={'bottom'} title="Coming soon!">
+                <TooltipBox position={"bottom"} title="Coming soon!">
                   <button
                     style={{
-                      background: '#7762D7',
-                      color: '#fff',
-                      border: '1px solid #000',
-                      borderRadius: '12px',
-                      width: '120px',
-                      height: '50px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
+                      background: "#7762D7",
+                      color: "#fff",
+                      border: "1px solid #000",
+                      borderRadius: "12px",
+                      width: "120px",
+                      height: "50px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
                     Top up
                   </button>
                 </TooltipBox>
@@ -407,23 +424,25 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
         onClose={() => {
           setTriggerState(false);
           setEditMode(false);
-        }}>
+        }}
+      >
         <div
           ref={settingBlockRef}
-          className={`user-popup ${primaryColor === '#dedede' ? 'rhyno' : ''}`}
+          className={`user-popup ${primaryColor === "#dedede" ? "rhyno" : ""}`}
           style={{
             background: `${
-              primaryColor === '#dedede'
-                ? '#fff'
+              primaryColor === "#dedede"
+                ? "#fff"
                 : `color-mix(in srgb, ${primaryColor}, #888888)`
             }`,
             borderRadius: 16,
-            filter: 'drop-shadow(0.4px 0.5px 1px black)',
+            filter: "drop-shadow(0.4px 0.5px 1px black)",
             border: `${
-              primaryColor === '#dedede' ? '1px solid #DEDEDE' : 'none'
+              primaryColor === "#dedede" ? "1px solid #DEDEDE" : "none"
             }`,
-            marginTop: `${showAlert ? '65px' : '12px'}`
-          }}>
+            marginTop: `${showAlert ? "65px" : "12px"}`,
+          }}
+        >
           {!next ? (
             <div>
               <ul className="list-popup">
@@ -432,13 +451,14 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
                   onClick={pushToProfile}
                   style={{
                     color:
-                      primaryColor === '#dedede' ? 'rgb(41, 41, 41)' : 'white'
-                  }}>
-                  <FontAwesomeIcon icon={faUser} style={{ color: iconColor }} />{' '}
+                      primaryColor === "#dedede" ? "rgb(41, 41, 41)" : "white",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faUser} style={{ color: iconColor }} />{" "}
                   Profile settings
                 </li>
                 {/* {hotdropsVar !== 'true' && ( */}
-                {(hotdropsVar === 'true'
+                {/* {(hotdropsVar === 'true'
                   ? isLoggedIn && adminRights
                   : isLoggedIn) && (
                   <li
@@ -452,7 +472,7 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
                     />{' '}
                     Upload video
                   </li>
-                )}
+                )} */}
                 {/* )} */}
                 {/* <li
                   onClick={() => pushToMyItems(2)}
@@ -470,7 +490,7 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
                   }}>
                   <SvgItemsIcon primaryColor={primaryColor} /> My Items
                 </li> */}
-                {import.meta.env.VITE_DISABLE_CREATOR_VIEWS !== 'true' &&
+                {/* {import.meta.env.VITE_DISABLE_CREATOR_VIEWS !== 'true' &&
                   adminRights && (
                     <li
                       onClick={pushToFactory}
@@ -486,22 +506,23 @@ const PopUpSettings = ({ showAlert, setTabIndexItems }) => {
                       />{' '}
                       Factory
                     </li>
-                  )}
+                  )} */}
                 <li
                   onClick={logoutUser}
                   style={{
                     color:
-                      primaryColor === '#dedede' ? 'rgb(41, 41, 41)' : 'white'
-                  }}>
+                      primaryColor === "#dedede" ? "rgb(41, 41, 41)" : "white",
+                  }}
+                >
                   <FontAwesomeIcon
                     icon={faSignOutAlt}
                     style={{
                       color:
-                        iconColor === '#1486c5'
-                          ? primaryColor === '#dedede'
-                            ? '#222021'
-                            : 'white'
-                          : iconColor
+                        iconColor === "#1486c5"
+                          ? primaryColor === "#dedede"
+                            ? "#222021"
+                            : "white"
+                          : iconColor,
                     }}
                   />
                   Logout

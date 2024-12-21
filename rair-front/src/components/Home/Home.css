@@ -1,0 +1,220 @@
+
+.home {
+    --custom-gradient: linear-gradient(90deg, #063CA9 0%, #0052FF 100%);
+    font-size: 14px;
+    background:
+    url(../../images/hero-bg-1.png),
+        url(../../images/hero-bg-2.png),
+        url(../../images/hero-bg-3.png),
+        url(../../images/hero-bg-3.png);
+    background-size:300px, 300px, 810px, 810px; 
+    background-position: -10% 500px, 105% 0%, -10% 315px, 128% 220px;
+    background-repeat: no-repeat;
+}
+
+.home h2 {
+    font-size: 2.8rem;
+    font-weight: 600;
+}
+
+.home h4 {
+    color: white;
+    font-size: 1.0rem;
+    font-weight: 400;
+}
+
+.home p {
+    font-size: 1em;
+}
+
+
+
+.home .wide-banner {
+    background-image: var(--custom-gradient);
+    margin-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    gap: 0.9rem;
+    /* background-color: var(--primary-color); */
+    padding-block: 3rem;
+    top: 0;
+    left: 0;
+}
+
+.wide-banner h2 {
+    font-weight: 400;
+}
+
+.home-section {
+    max-width: 1200px;
+    margin-inline: auto;
+}
+
+.subscription-plans {
+    margin-top: 160px;
+}
+
+.plans-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.subscription-plans .plans-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: auto;
+    margin-top: 2rem;
+    max-width: 920px;
+}
+
+.plan-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.subscription-plans .plan-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 3.5rem;
+    width: 100%;
+    min-height: 380px;
+    border-radius: 16px;
+    background-color: rgba(255,255,255, 0.1); 
+    border: 1px solid rgba(255,255,255, 0.25);
+}
+
+.plan-card-footer {
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.subscription-plans .plan-price {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.subscription-plans .plan-features {
+    list-style: circle;
+    list-style-type: circle;
+    font-size: 0.85rem;
+}
+
+.individual-therapy-section {
+    margin-top: 100px;
+}
+
+.individual-therapy-container {
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    grid-template-rows: auto auto; 
+    gap: 4rem;
+    padding: 10px;
+}
+
+.individual-therapy-container .individual-therapy-features {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.individual-therapy-container .individual-therapy-feature {
+display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.individual-therapy-container .individual-therapy-feature p {
+    flex-grow: 1;
+}
+
+.workshops-section {
+    margin-top: 100px;
+}
+
+
+.workshops-container {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    grid-template-rows: auto auto; 
+    gap: 4rem;
+    margin-top: 2rem;
+}
+
+.workshops-container .workshops-steps {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: right;
+}
+
+.workshops-container .step-item {
+    display: flex;
+    justify-content: end;
+    align-items: start;
+    gap: 1.2rem;
+}
+
+.workshops-container .step-item .step-number {
+    font-size: 2rem;
+}
+
+.workshops-container .step-item p {
+    max-width: 460px;
+}
+
+.q-a-section {
+    font-size: 1.3em;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.q-a-section .q-a-container {
+    width: 800px;
+    border-radius: 20px;
+    border-width: 7px;
+    border: 1px solid rgba(255,255,255, 0.35);
+    background-color: rgba(255, 255, 255, 0.1); 
+    padding-inline: 2rem;
+    padding-block: 1.5rem;
+    margin-top: 3.0rem;
+}
+
+.q-a-section .q-a-container details:first-child summary {
+    padding-top: 0.5em;
+}
+.q-a-section .q-a-container details {
+    /* color: white; */
+    border-bottom: 1px solid rgba(255,255,255, 0.35);
+}
+
+.q-a-section .q-a-container summary {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 0.5em;
+    padding-block: 1.5em;
+}
+
+.q-a-section .q-a-container details[open] summary {
+    content: '- ';
+    margin-bottom: 0.5em;
+}
+
+.q-a-section .q-a-container summary::after {
+    font-size: 1.2em;
+    content: '+';
+}
+
+.q-a-section .q-a-container details[open] summary::after {
+    content: '- ';
+}

@@ -2,10 +2,11 @@
   display: flex;
   filter: drop-shadow(1px 0.5px 3px black);
   padding: 20px 120px;
+  font-family: 'Poppins', 'Plus Jakarta Text', sans-serif !important;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  position: fixed;
+  position: absolute;
   z-index: 3;
 }
 
@@ -89,14 +90,18 @@
   display: flex;
 }
 
-.header-master button.btn-connect-wallet {
-  border-radius: 12px;
+.header-master .btn {
+  border-radius: 50px;
+  border-width: 1px;
+  border-color: var(--primary-color);
+  background-color: #000;
+  font-weight: 300;
+  color: white;
   width: 200px;
   height: 45px;
-  /* background: #bb73d7 !important; */
-  font-size: 18px;
-  font-weight: 700;
-  /* color: white; */
+}
+.header-master button.btn-connect-wallet {
+  background-color: #000;
 }
 
 .header-master button.btn-connect-wallet.hotdrops-bg {
@@ -163,6 +168,27 @@
 .header-master .social-media .box-social:first-child:hover {
   background: #1d9bf0 !important;
   border: 1px solid #1d9bf0 !important;
+}
+
+.header-master :where(.corner-left, .corner-right) {
+  display: flex;
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.nav-links {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 300;
+  height: 100%;
+}
+
+.nav-links a {
+  padding-inline: 1rem;
+  color: inherit !important;
 }
 
 .popup-content.popup-admin-panel-content {

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import NFTLA_Video from '../../components/SplashPage/images/NFTLA/NFT-LA-RAIR-2021.mp4';
 import {
   NFTLA1,

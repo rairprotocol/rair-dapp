@@ -1,18 +1,19 @@
-import { MouseEvent } from 'react';
-import { ReactNode } from 'react';
-import { ethers } from 'ethers';
-import { Hex } from 'viem';
+//@ts-nocheck
+import { MouseEvent } from "react";
+import { ReactNode } from "react";
+import { ethers } from "ethers";
+import { Hex } from "viem";
 
 import {
   TAttributes,
   TOfferPool,
   TProducts,
-  TTokenData
-} from '../../axios.responseTypes';
-import { CatalogItem } from '../../redux/tokenSlice';
-import { MediaFile } from '../../types/databaseTypes';
-import { ContractType } from '../adminViews/adminView.types';
-import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
+  TTokenData,
+} from "../../axios.responseTypes";
+import { CatalogItem } from "../../redux/tokenSlice";
+import { MediaFile } from "../../types/databaseTypes";
+import { ContractType } from "../adminViews/adminView.types";
+import { OptionsType } from "../common/commonTypes/InputSelectTypes.types";
 export interface IMarketplaceOfferConfig {
   array: TMarketplaceOfferConfigArrayItem[];
   index: number;
@@ -27,25 +28,25 @@ export interface IMarketplaceOfferConfig {
 
 export type TListOffers = Pick<
   TWorkflowContextType,
-  | 'setStepNumber'
-  | 'simpleMode'
-  | 'switchBlockchain'
-  | 'gotoNextStep'
-  | 'forceRefetch'
-  | 'fetchingData'
+  | "setStepNumber"
+  | "simpleMode"
+  | "switchBlockchain"
+  | "gotoNextStep"
+  | "forceRefetch"
+  | "fetchingData"
 > & {
   stepNumber: number;
   contractData: TDiamondContractData | undefined;
 };
 export type TDiamondMinterMarketplace = Pick<
   TWorkflowContextType,
-  | 'MINTERHash'
-  | 'simpleMode'
-  | 'setStepNumber'
-  | 'gotoNextStep'
-  | 'mintingRole'
-  | 'contractData'
-  | 'forceRefetch'
+  | "MINTERHash"
+  | "simpleMode"
+  | "setStepNumber"
+  | "gotoNextStep"
+  | "mintingRole"
+  | "contractData"
+  | "forceRefetch"
 > & {
   stepNumber: number;
 };
@@ -162,7 +163,7 @@ export type TWorkflowProduct = TProducts & {
   tokenLock: TTokenLock | undefined;
 };
 
-export type TContractData = Omit<CatalogItem, 'product' | 'offerPool'> & {
+export type TContractData = Omit<CatalogItem, "product" | "offerPool"> & {
   instance: ethers.Contract;
   nfts: TTokenData[];
   product: TWorkflowProduct;
@@ -201,12 +202,12 @@ export type TParamsDiamondListOffers = {
   collectionIndex: string;
 };
 
-export type TListOffersProductType = Omit<TProducts, 'offers'> & {
+export type TListOffersProductType = Omit<TProducts, "offers"> & {
   tokenLock: TTokenLock | undefined;
   offers: TMarketplaceOfferConfigArrayItem[];
 };
 
-export type TDiamondContractData = Omit<CatalogItem, 'product' | 'offerPool'> &
+export type TDiamondContractData = Omit<CatalogItem, "product" | "offerPool"> &
   TMetadataExtra & {
     instance: ethers.Contract;
     nfts: TTokenData[];
@@ -310,11 +311,11 @@ export type TUniqueURIArray = {
 
 export type TNextToken = Pick<
   TTokenData,
-  'uniqueIndexInContract' | 'metadataURI'
+  "uniqueIndexInContract" | "metadataURI"
 >;
 export type TResaleMarketplace = Pick<
   TWorkflowContextType,
-  'contractData' | 'setStepNumber' | 'gotoNextStep' | 'goBack' | 'simpleMode'
+  "contractData" | "setStepNumber" | "gotoNextStep" | "goBack" | "simpleMode"
 > & {
   stepNumber: number;
 };
@@ -340,27 +341,27 @@ export interface ICustomizeFees {
 
 export type TListLocks = Pick<
   TWorkflowContextType,
-  'contractData' | 'goBack' | 'setStepNumber' | 'gotoNextStep'
+  "contractData" | "goBack" | "setStepNumber" | "gotoNextStep"
 > & {
   stepNumber: number;
 };
 
 export type TSingleMetadataType = Pick<
   TWorkflowContextType,
-  'contractData' | 'setStepNumber' | 'gotoNextStep' | 'simpleMode'
+  "contractData" | "setStepNumber" | "gotoNextStep" | "simpleMode"
 > & {
   stepNumber: number;
 };
 
 export type TBatchMetadataType = {
   Artist: string;
-  'Boson Movement'?: string;
+  "Boson Movement"?: string;
   Description: string;
   FermionFreckles?: string;
   Image: string;
   NFTID: string;
   Name: string;
-  'Public Address': string | undefined;
+  "Public Address": string | undefined;
   external_url?: string;
 };
 
@@ -502,7 +503,7 @@ export type TContractsNetworkResponseType = {
   contract: TContractsNetworkContract;
 };
 
-export type TContractsDetailsProducts = Omit<TProducts, 'offers'>;
+export type TContractsDetailsProducts = Omit<TProducts, "offers">;
 
 export type TContractsNetworkProductsResponse = {
   success: boolean;

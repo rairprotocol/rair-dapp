@@ -38,13 +38,37 @@
   transition: 0.3s all ease;
 }
 
+.user-page-add-content {
+  width: 100%;
+  width: calc(302px * 4 + 10px);
+}
+
+.user-page-add-content .title-of-add-content {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 30px 0 10px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-page-add-content .title-of-add-content button {
+  background: none;
+  outline: none;
+  border: none;
+  color: #fff;
+}
+
+.user-page-add-content .title-of-add-content button:hover {
+  text-decoration: underline;
+}
+
 .user-page-background img {
   width: auto;
   height: 50px;
 }
 
 .user-page-background.hotdrops-bg-default-banner {
-  background: url('./../../images/hotDrops_defaultBanner.png');
+  background: url("./../../images/hotDrops_defaultBanner.png");
   background-size: cover;
   background-position: center center;
 }
@@ -114,7 +138,7 @@
   height: 2.5rem;
   word-break: break-all;
 
-  font-family: 'Plus Jakarta Sans' sans-serif;
+  font-family: "Plus Jakarta Sans" sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 2.188rem;
@@ -156,6 +180,7 @@
 .my-items-header-wrapper.user {
   display: flex;
   justify-content: space-between;
+  width: calc(302px * 4 + 10px);
 }
 
 .user-page-filter-btn-block-resale {
@@ -249,9 +274,27 @@
   background-color: var(--bubblegum);
 }
 
+.container-languages {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 20px;
+}
+
+.container-languages .languages-box {
+  /* width: 157px; */
+  height: 64px;
+  border: 1px solid grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+}
+
 @media screen and (max-width: 1280px) {
   .user-page-background.rhyno,
-  .user-page-background.charcoal {
+  .user-page-background.charcoal,
+  .my-items-header-wrapper.user,
+  .user-page-add-content {
     width: 86.6vw;
   }
 }
@@ -279,7 +322,8 @@
 
 @media screen and (max-width: 1025px) {
   .user-page-background.rhyno,
-  .user-page-background.charcoal {
+  .user-page-background.charcoal,
+  .user-page-add-content {
     width: 100%;
   }
 

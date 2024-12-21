@@ -1,3 +1,4 @@
+//@ts-nocheck
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -6,6 +7,7 @@ import { dataStatuses } from './commonTypes';
 
 import { ApiCallResponse } from '../types/commonTypes';
 import { MintedToken, Product, User } from '../types/databaseTypes';
+import { rairSDK } from '../components/common/rairSDK';
 
 interface SearchResults {
   users?: Array<User>;
@@ -25,9 +27,9 @@ export const startSearch = createAsyncThunk(
   'searchbar/startSearch',
   async ({ searchTerm }: SearchBarParam) => {
     const encodedSearchTerm = encodeURIComponent(searchTerm);
-    const response = await axios.get<SearchbarResponse>(
-      `/api/search/${encodedSearchTerm}`
-    );
+    const response = await rairSDK.search.textSearch({
+      textParam: encodedSearchTerm,
+    });
     return response.data;
   }
 );

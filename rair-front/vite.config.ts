@@ -9,7 +9,6 @@ export default defineConfig({
   server: {
     port: 3001,
     proxy: {
-      // with options: http://localhost:5173/api/bar-> http://jsonplaceholder.typicode.com/api/bar
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true

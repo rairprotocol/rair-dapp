@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
-import { faArrowRight, faGem } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { isAddress } from 'ethers';
-import { Hex } from 'viem';
+//@ts-nocheck
+import { useCallback, useEffect, useState } from "react";
+import { NavLink, useParams } from "react-router-dom";
+import { faArrowRight, faGem } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { isAddress } from "ethers";
+import { Hex } from "viem";
 
-import { BannerCollection } from './BannerCollection';
+import { BannerCollection } from "./BannerCollection";
 import {
   TContractsNetworkContract,
   TContractsNetworkOffersResponse,
@@ -14,15 +15,15 @@ import {
   TListCollectionsOffers,
   TParamsContractDetails,
   TProductDataLocal,
-  TSetDataUseState
-} from './creatorStudio.types';
-import NavigatorContract from './NavigatorContract';
+  TSetDataUseState,
+} from "./creatorStudio.types";
+import NavigatorContract from "./NavigatorContract";
 
-import { TProducts } from '../../axios.responseTypes';
-import { diamondFactoryAbi } from '../../contracts';
-import useContracts from '../../hooks/useContracts';
-import { useAppSelector } from '../../hooks/useReduxHooks';
-import { rFetch } from '../../utils/rFetch';
+import { TProducts } from "../../axios.responseTypes";
+import { diamondFactoryAbi } from "../../contracts";
+import useContracts from "../../hooks/useContracts";
+import { useAppSelector } from "../../hooks/useReduxHooks";
+import { rFetch } from "../../utils/rFetch";
 
 const ListCollections = () => {
   const { primaryColor, iconColor } = useAppSelector((store) => store.colors);
@@ -76,14 +77,14 @@ const ListCollections = () => {
         productData.push({
           collectionIndexInContract: i,
           name: (await instance.getProductInfo(i)).name,
-          diamond: true
+          diamond: true,
         });
       }
       setData({
         title: await instance?.name(),
         contractAddress: address,
         blockchain: connectedChain,
-        products: productData
+        products: productData,
       });
     }
   }, [address, blockchain, contractCreator, connectedChain]);
@@ -98,7 +99,8 @@ const ListCollections = () => {
         <NavigatorContract
           contractName={data.title}
           contractAddress={data.contractAddress}
-          contractBlockchain={blockchain}>
+          contractBlockchain={blockchain}
+        >
           {data.products.map(
             (item: TProducts | TProductDataLocal, index: number) => {
               return (
@@ -110,26 +112,27 @@ const ListCollections = () => {
                   <NavLink
                     to={`/creator/contract/${blockchain}/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`}
                     style={{
-                      position: 'relative',
-                      backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`
+                      position: "relative",
+                      backgroundColor: `color-mix(in srgb, ${primaryColor}, #888888)`,
                     }}
-                    className={`col-10 btn btn-${primaryColor} text-start rounded-rair my-1`}>
-                    {item.diamond && <FontAwesomeIcon icon={faGem} />}{' '}
+                    className={`col-10 btn btn-${primaryColor} text-start rounded-rair my-1`}
+                  >
+                    {item.diamond && <FontAwesomeIcon icon={faGem} />}{" "}
                     {item.name}
                     <FontAwesomeIcon
                       icon={faArrowRight}
                       style={{
-                        position: 'absolute',
-                        right: '10px',
-                        top: '10px',
+                        position: "absolute",
+                        right: "10px",
+                        top: "10px",
                         color:
-                          import.meta.env.VITE_TESTNET === 'true'
+                          import.meta.env.VITE_TESTNET === "true"
                             ? `${
-                                iconColor === '#1486c5' ? '#F95631' : iconColor
+                                iconColor === "#1486c5" ? "#F95631" : iconColor
                               }`
                             : `${
-                                iconColor === '#1486c5' ? '#E882D5' : iconColor
-                              }`
+                                iconColor === "#1486c5" ? "#E882D5" : iconColor
+                              }`,
                       }}
                     />
                   </NavLink>
@@ -139,7 +142,7 @@ const ListCollections = () => {
           )}
         </NavigatorContract>
       ) : (
-        'Fetching data...'
+        "Fetching data..."
       )}
     </div>
   );

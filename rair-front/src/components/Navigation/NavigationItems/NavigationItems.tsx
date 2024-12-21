@@ -87,8 +87,9 @@ export const TitleEditProfile = styled.h4`
 export const List = styled.ul.withConfig({
   shouldForwardProp: (prop) => emotionIsPropValid(prop)
 })<IMenuMobileWrapper>`
-  background: ${({ secondaryColor }) =>
-    `color-mix(in srgb, ${secondaryColor}, #888888)`};
+background: ${({ isDarkMode, secondaryColor }) =>
+!isDarkMode ? '#fff' : `color-mix(in srgb, ${secondaryColor}, #888888)`};
+  
   overflow: ${(props) => props.click && 'hidden'};
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;

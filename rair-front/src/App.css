@@ -4,6 +4,7 @@
 @import './styles/userProfile.css';
 
 :root {
+  --primary-color: #063CA9;
   --bubblegum: #e882d5;
   --bubblegum-hover: #bd6bae;
   --bubblegum-click: #925486;
@@ -91,7 +92,9 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Text' !important;
+  font-family: "Plus Jakarta Sans", serif !important;
+  font-optical-sizing: auto;
+  background-color: black !important;
 }
 
 body.hotdrops {
@@ -191,10 +194,6 @@ input.stimorol-radio[type='radio']:checked:after {
   background-size: 5rem 5rem;
   background-position: top right;
   background-blend-mode: overlay;
-}
-
-.App {
-  text-align: center;
 }
 
 body.no-scroll {
@@ -608,7 +607,7 @@ button:disabled.hotdrops-bg {
 /* style to videoItem */
 
 .video-wrapper {
-  font-family: 'Plus Jakarta Text', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .pictures-wrapper {
@@ -2366,67 +2365,6 @@ button.metamask-on-boarding:focus {
 } */
 
 /* width */
-
-body::-webkit-scrollbar {
-  width: 15px;
-  background: #cdcdcd;
-}
-
-/* Track */
-
-body::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px #8c63da;
-  border-radius: 12px;
-}
-
-body.hotdrops::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px var(--hot-drops);
-  border-radius: 12px;
-}
-
-/* Handle */
-
-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    96.34deg,
-    #725bdb 0%,
-    #805fda 10.31%,
-    #8c63da 20.63%,
-    #9867d9 30.94%,
-    #a46bd9 41.25%,
-    #af6fd8 51.56%,
-    #af6fd8 51.56%,
-    #bb73d7 61.25%,
-    #c776d7 70.94%,
-    #d27ad6 80.62%,
-    #dd7ed6 90.31%,
-    #e882d5 100%
-  );
-  border-radius: 12px;
-}
-
-body.hotdrops::-webkit-scrollbar-thumb {
-  background: var(--hot-drops);
-  border-radius: 12px;
-}
-
-/* Handle on hover */
-
-body::-webkit-scrollbar-thumb:hover {
-  background: #a46bd9;
-}
-
-body::-webkit-scrollbar-thumb:active {
-  background: #8c63da;
-}
-
-body.hotdrops::-webkit-scrollbar-thumb:hover {
-  background: var(--hot-drops-hover);
-}
-
-body.hotdrops::-webkit-scrollbar-thumb:active {
-  background: var(--hot-drops-click);
-}
 
 .video-btn-back {
   text-align: left;

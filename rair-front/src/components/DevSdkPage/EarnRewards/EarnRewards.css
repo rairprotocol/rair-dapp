@@ -1,0 +1,30 @@
+.video-wrapper-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+.video-grid-btn {
+  width: 288px;
+  height: 48px;
+  border-radius: 16px;
+  background: none;
+  outline: none;
+  border: 1px solid #d37ad6;
+  margin: 20px 0 40px 0;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.video-grid-btn:hover {
+  background: var(--stimorol-hover);
+  transition: all 0.3s ease;
+}
+
+@media screen and (max-width: 1020px) {
+  .video-wrapper-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

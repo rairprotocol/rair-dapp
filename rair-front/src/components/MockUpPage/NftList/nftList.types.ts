@@ -1,17 +1,18 @@
-import { Dispatch, SetStateAction } from 'react';
-import { Hex } from 'viem';
+//@ts-nocheck
+import { Dispatch, SetStateAction } from "react";
+import { Hex } from "viem";
 
-import { CatalogItem, CollectionTokens } from '../../../redux/tokenSlice';
-import { CatalogVideoItem } from '../../../types/commonTypes';
-import { TokenMetadata, User } from '../../../types/databaseTypes';
-import { TOfferType } from '../../marketplace/marketplace.types';
-import { TEmbeddedParams } from '../mockupPage.types';
+import { CatalogItem, CollectionTokens } from "../../../redux/tokenSlice";
+import { CatalogVideoItem } from "../../../types/commonTypes";
+import { TokenMetadata, User } from "../../../types/databaseTypes";
+import { TOfferType } from "../../marketplace/marketplace.types";
+import { TEmbeddedParams } from "../mockupPage.types";
 
 import {
   TMetadataType,
   TProducts,
-  TTokenData
-} from './../../../axios.responseTypes';
+  TTokenData,
+} from "./../../../axios.responseTypes";
 export interface IAuthenticityBlock {
   tokenData: { [index: string]: CollectionTokens };
   title: boolean;
@@ -28,7 +29,7 @@ export interface INftItemComponent {
   className?: string;
 }
 
-export type TSortChoice = 'down' | 'up';
+export type TSortChoice = "down" | "up";
 
 export interface INftListComponent {
   titleSearch: string;
@@ -111,11 +112,11 @@ export interface INftSingleUnlockables {
   isDiamond: undefined | boolean;
 }
 
-export type TRarity = 'Ultra Rair' | 'Rair' | 'Common';
+export type TRarity = "Ultra Rair" | "Rair" | "Common";
 export type TUnlockRarity =
-  | 'Unlock Ultra Rair'
-  | 'Unlock Rair'
-  | 'Unlock Common';
+  | "Unlock Ultra Rair"
+  | "Unlock Rair"
+  | "Unlock Common";
 
 export type TRarityType = TRarity[] | TUnlockRarity[];
 
