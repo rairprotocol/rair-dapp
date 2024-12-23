@@ -206,7 +206,7 @@ const MainHeader: FC<IMainHeader> = ({
               color: pathname === '/about-page' ? '#fff' : undefined,
             }}
           >
-            <Link to="/about-page">About</Link>
+            <Link to="/about">About</Link>
           </li>
           <li style={{
             color: pathname === '/user/videos' ? '#fff' : undefined,

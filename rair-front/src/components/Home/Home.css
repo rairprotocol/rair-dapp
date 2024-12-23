@@ -32,6 +32,8 @@
 .home .wide-banner {
     background-image: var(--custom-gradient);
     margin-top: 6rem;
+    padding-inline: 1rem;
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,6 +51,7 @@
 
 .home-section {
     max-width: 1200px;
+    padding-inline: 1rem;
     margin-inline: auto;
 }
 
@@ -57,14 +60,13 @@
 }
 
 .plans-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    text-align: center;
+    margin-bottom: 3.0rem;
 }
 
 .subscription-plans .plans-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 2rem;
     margin: auto;
     margin-top: 2rem;
@@ -112,22 +114,36 @@
 
 .individual-therapy-container {
     display: grid;
-    grid-template-columns: 6fr 5fr;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-template-rows: auto auto; 
     gap: 4rem;
     padding: 10px;
+}
+
+.individual-therapy-container > * {
+    margin: auto;
+
+}
+
+@media (min-width: 768px) {
+    .individual-therapy-container {
+        grid-template-columns: 6fr 5fr;
+    }
 }
 
 .individual-therapy-container .individual-therapy-features {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    min-height: 100%;
 }
 
 .individual-therapy-container .individual-therapy-feature {
-display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     align-items: center;
     gap: 2rem;
+    margin-block: 0.5rem;
 }
 
 .individual-therapy-container .individual-therapy-feature p {
@@ -140,11 +156,22 @@ display: flex;
 
 
 .workshops-container {
-    display: grid;
-    grid-template-columns: 5fr 6fr;
-    grid-template-rows: auto auto; 
+    display: flex;
+    flex-direction: column-reverse;
     gap: 4rem;
-    margin-top: 2rem;
+    margin-top: 4rem;
+}
+
+.workshops-container > * {
+    margin: auto;
+}
+
+@media (min-width: 1200px) {
+    .workshops-container {
+        grid-template-columns: 5fr 6fr;
+        display: grid;
+        margin-top: 2rem;
+    }
 }
 
 .workshops-container .workshops-steps {
@@ -156,9 +183,19 @@ display: flex;
 
 .workshops-container .step-item {
     display: flex;
-    justify-content: end;
+    flex-direction: row-reverse;
+    justify-content: space-between;
     align-items: start;
+    margin-bottom: 0.8rem;
     gap: 1.2rem;
+}
+
+@media (min-width: 1200px) {
+    .workshops-container .step-item {
+        flex-direction: row;
+        /* justify-content: end; */
+    }
+    
 }
 
 .workshops-container .step-item .step-number {
@@ -178,7 +215,7 @@ display: flex;
 }
 
 .q-a-section .q-a-container {
-    width: 800px;
+    max-width: 800px;
     border-radius: 20px;
     border-width: 7px;
     border: 1px solid rgba(255,255,255, 0.35);

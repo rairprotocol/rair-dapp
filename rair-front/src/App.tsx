@@ -198,7 +198,7 @@ function App() {
               },
             }}
           />
-          {carousel && !isIframePage ? (
+          {/* {carousel && !isIframePage ? ( */}
             <MainHeader
               goHome={goHome}
               renderBtnConnect={renderBtnConnect}
@@ -210,20 +210,6 @@ function App() {
               isAboutPage={isAboutPage}
               setTokenNumber={setTokenNumber}
             />
-          ) : (
-            !isIframePage && (
-              <MenuNavigation
-                realChainId={realNameChain && requestedChain}
-                isSplashPage={isSplashPage}
-                renderBtnConnect={renderBtnConnect}
-                currentUserAddress={currentUserAddress}
-                showAlert={showAlert}
-                setTabIndexItems={setTabIndexItems}
-                isAboutPage={isAboutPage}
-              />
-            )
-          )}
-
           {/*
 							Left sidebar, includes the RAIR logo and the admin sidebar
 						*/}

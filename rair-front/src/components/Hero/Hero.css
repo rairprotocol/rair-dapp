@@ -10,10 +10,12 @@
     margin-bottom: 3rem;
 }
 
+
 .hero .border-only {
     -webkit-text-stroke: 1.8px white;
     position: relative;
 }
+
 
 .hero .border-only .over {
     position: absolute;
@@ -23,15 +25,28 @@
     height: 100%;
     color: black;
     -webkit-text-stroke: initial;
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .hero .border-only .over {
+        display: initial;
+
+    }
 }
       
 
 .description .description-header {
-    display: flex;
-    flex-direction: row;
     line-height: 1.4;
-    justify-content: space-between;
     margin-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
+    .description .description-header {
+
+        display: flex;
+        justify-content: space-between;
+    }
 }
 
 .description {
@@ -49,7 +64,7 @@
 
 .description-features {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     margin-top: 3rem;
     gap: 2.0rem;
 }
