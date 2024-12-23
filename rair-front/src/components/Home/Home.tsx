@@ -7,6 +7,7 @@ import BlockButton from '../BlockButton/BlockButton';
 import Badge from '../Badge/Badge';
 import IndividualTherapyImage from '../../images/individualTherapyImage.png';
 import WorkshopsImage from '../../images/workshopImage.png';
+import ExternalLink from '../../images/ExternalLink';
 
 const Home = () => {
   const {
@@ -80,7 +81,11 @@ const Home = () => {
             </div>
             <div className='plan-card-footer'>
               <BlockButton onclick={() => alert('hello')} backgroundColor={secondaryColor} textColor={secondaryColor}>
-                Join now
+                <span style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>Join now <ExternalLink width={16} height={16} /></span>
               </BlockButton>
             </div>
           </article>
@@ -109,7 +114,11 @@ const Home = () => {
             </div>
             <div className='plan-card-footer'>
               <BlockButton onclick={() => alert('hello')} backgroundColor={secondaryColor} textColor={secondaryColor}>
-                Join now
+                <span style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>Join now <ExternalLink width={16} height={16} /></span>
               </BlockButton>
             </div>
           </article>
@@ -163,36 +172,44 @@ const Home = () => {
                   <h4>Expert Led Sessions</h4>
                   <p>Discover valuable insights and transformative strategies from top professionals and visionary thought leaders at the intersection of crypto and wellness.</p>
                 </div>
-                <Badge fullRounded>
-                  <strong className='step-number'>1</strong>
-                </Badge>
+                <div className= 'badge-container'>
+                  <Badge fullRounded>
+                    <strong className='step-number'>1</strong>
+                  </Badge>
+                </div>
               </div>
               <div className='step-item'>
                 <div>
                   <h4>Interactive Learning</h4>
                   <p>Participate in live, collaborative workshops designed to foster connection, resilience, and personal growth.</p>
                 </div>
-                <Badge fullRounded>
-                  <strong className='step-number'>2</strong>
-                </Badge>
+                <div className= 'badge-container'>
+                  <Badge fullRounded>
+                    <strong className='step-number'>2</strong>
+                  </Badge>
+                </div>
               </div>
               <div className='step-item'>
                 <div>
                   <h4>Onchain Integration</h4>
                   <p>Access workshops securely through decentralized platforms, ensuring privacy and streamlined participation.</p>
                 </div>
-                <Badge fullRounded>
-                  <strong className='step-number'>3</strong>
-                </Badge>
+                <div className= 'badge-container'>
+                  <Badge fullRounded>
+                    <strong className='step-number'>3</strong>
+                  </Badge>
+                </div>
               </div>
               <div className='step-item'>
                 <div>
                   <h4>Earn Through Participation</h4>
                   <p>Receive rewards for completing workshops and participating in our Wellness Ecosystem, celebrating your commitment to mental health and continuous learning.</p>
                 </div>
-                <Badge fullRounded>
-                  <strong className='step-number'>4</strong>
-                </Badge>
+                <div className= 'badge-container'>
+                  <Badge fullRounded>
+                    <strong className='step-number'>4</strong>
+                  </Badge>
+                </div>
               </div>
           </div>
         </div>

@@ -15,6 +15,9 @@ import {
   NavFooter,
   NavFooterBox
 } from './FooterItems/FooterItems';
+import MailIcon from '../../images/MailIcon';
+import LocationIcon from '../../images/LocationIcon';
+import PhoneIcon from '../../images/PhoneIcon';
 
 const Footer: FC<IFooter> = () => {
   const [emailChimp, setEmailChimp] = useState<string>('');
@@ -69,13 +72,13 @@ const Footer: FC<IFooter> = () => {
             className="footer-nav-item"
           >
             <li>
-              Development@EvergreenFund.life
+              <MailIcon width={20} height={20} />Development@EvergreenFund.life
             </li>
             <li>
-              14445 Mulholland Dr., Los Angeles, CA 90019
+              <LocationIcon width={20} height={20} />14445 Mulholland Dr., Los Angeles, CA 90019
             </li>
             <li>
-              818-530-6378
+              <PhoneIcon />818-530-6378
             </li>
           </ul>
         </NavFooter>

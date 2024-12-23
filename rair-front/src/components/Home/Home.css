@@ -190,6 +190,21 @@
     gap: 1.2rem;
 }
 
+.badge-container {
+    position: relative;
+}
+
+.workshops-container .badge-container::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-25%);
+    width: 40%;
+    height: 100%;
+    background: url('../../images/bottom-arrow.svg') no-repeat;
+    background-size: 15px;
+}
 @media (min-width: 1200px) {
     .workshops-container .step-item {
         flex-direction: row;

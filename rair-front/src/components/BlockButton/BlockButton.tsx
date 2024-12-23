@@ -6,7 +6,7 @@ interface IBlockButton {
     backgroundColor?: string;
     borderColor?: string;
     textColor?: string;
-    children: string;
+    children: React.ReactNode;
 }
 
 const BlockButton: FC<IBlockButton> = ({

@@ -22,6 +22,7 @@ import { TooltipBox } from "../common/Tooltip/TooltipBox";
 import MainLogo from "../GroupLogos/MainLogo";
 import ImageCustomForSearch from "../MockUpPage/utils/image/ImageCustomForSearch";
 import PopUpNotification from "../UserProfileSettings/PopUpNotification/PopUpNotification";
+import wallet from "../../images/wallet.svg";
 
 //imports components
 import UserProfileSettings from "./../UserProfileSettings/UserProfileSettings";
@@ -225,8 +226,9 @@ const MainHeader: FC<IMainHeader> = ({
                 onClick={() => connectUserData()}
               >
                 {loginStatus === dataStatuses.Loading
-                  ? "Please wait..."
-                  : "Connect Wallet"}
+                  ? "Please wait... "
+                  : "Connect Wallet "}
+                <img src={wallet} alt="" />
               </button>
             )}
           </div>

@@ -73,6 +73,10 @@
     line-height: 1.4;
 }
 
+.description-features svg {
+    margin-right: 0.5rem;
+}
+
 .description-features h4 {
     color: white;
     font-size: 1.0rem;
