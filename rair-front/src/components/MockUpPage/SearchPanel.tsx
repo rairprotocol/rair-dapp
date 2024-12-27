@@ -361,6 +361,7 @@ const SearchPanel: FC<ISearchPanel> = ({ tabIndex, setTabIndex }) => {
             })}
           </div>
           <VideoList
+            sortItem={sortItem}
             titleSearch={titleSearch}
             handleVideoIsUnlocked={handleVideoIsUnlocked}
           />

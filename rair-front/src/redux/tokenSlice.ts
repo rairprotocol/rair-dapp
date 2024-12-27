@@ -94,6 +94,7 @@ export interface TokensState {
   currentCollectionStatus: dataStatuses;
   currentCollectionTotal: number;
   currentCollection: { [index: string]: CollectionTokens };
+  currentCollectionNextPageStatus: boolean;
   currentCollectionMetadata: MetadataForCollection;
   currentCollectionMetadataStatus: dataStatuses;
   itemsPerPage: number;
@@ -110,6 +111,7 @@ const initialState: TokensState = {
   currentCollectionStatus: dataStatuses.Uninitialized,
   currentCollectionTotal: 0,
   currentCollection: {},
+  currentCollectionNextPageStatus: false,
   currentCollectionParams: undefined,
   // Collection contract data
   currentCollectionMetadataStatus: dataStatuses.Uninitialized,
@@ -272,9 +274,10 @@ export const loadNextCollectionPage = createAsyncThunk(
     if (!tokens.currentCollectionParams) {
       return;
     }
+    const lastTokenLoaded = Object.keys(tokens.currentCollection).at(-1);
     const { blockchain, contract, product, fromToken, toToken, attributes } =
       tokens.currentCollectionParams;
-    const startingToken = BigInt(toToken) + BigInt(1);
+    const startingToken = BigInt(lastTokenLoaded || toToken) + BigInt(1);
     const queryParams = new URLSearchParams({
       fromToken: startingToken.toString(),
       toToken: (startingToken + BigInt(20)).toString()
@@ -313,6 +316,7 @@ export const tokenSlice = createSlice({
       state.currentCollectionStatus = dataStatuses.Uninitialized;
       state.currentCollectionTotal = 0;
       state.currentCollection = {};
+      state.currentCollectionNextPageStatus = false;
       state.currentCollectionMetadataStatus = dataStatuses.Uninitialized;
       state.currentCollectionMetadata = {};
       state.currentCollectionParams = undefined;
@@ -359,6 +363,10 @@ export const tokenSlice = createSlice({
       })
 
       // Reuse collection data for next page
+      .addCase(loadNextCollectionPage.pending, (state) => {
+        state.currentCollectionNextPageStatus = true;
+      })
+
       .addCase(
         loadNextCollectionPage.fulfilled,
         (state, action: PayloadAction<GetCollectionResponse | undefined>) => {
@@ -367,9 +375,14 @@ export const tokenSlice = createSlice({
               state.currentCollection[token.uniqueIndexInContract.toString()] =
                 token;
             });
+            state.currentCollectionNextPageStatus = false;
           }
         }
       )
+
+      .addCase(loadNextCollectionPage.rejected, (state) => {
+        state.currentCollectionNextPageStatus = false;
+      })
 
       // Load metadata for collection
       .addCase(loadCollectionMetadata.pending, (state) => {

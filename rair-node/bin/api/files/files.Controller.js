@@ -23,18 +23,18 @@ const { File } = require('../../models');
 const router = express.Router();
 
 router.patch(
-    '/update/:mediaId',
+    '/update/:id',
     requireUserSession,
-    validation(['removeMedia'], 'params'),
+    validation(['fileId'], 'params'),
     validation(['updateMedia'], 'body'),
     isOwner(File),
     updateMedia,
 );
 
 router.delete(
-    '/remove/:mediaId',
+    '/remove/:id',
     requireUserSession,
-    validation(['removeMedia'], 'params'),
+    validation(['fileId'], 'params'),
     isOwner(File),
     deleteMedia,
 );
@@ -70,15 +70,23 @@ router.get(
     validation(['dbId'], 'params'),
     getFilesForToken,
 );
-router.get('/:id/unlocks', getFileAndOffer);
+router.get(
+    '/:id/unlocks',
+    validation(['fileId'], 'params'),
+    getFileAndOffer,
+);
 router.post(
     '/:id/unlocks',
+    validation(['fileId'], 'params'),
+    validation(['offerArray'], 'body'),
     requireUserSession,
     isFileOwner,
     connectFileAndOffer,
 );
 router.delete(
     '/:id/unlocks',
+    validation(['fileId'], 'params'),
+    validation(['singleOffer'], 'body'),
     requireUserSession,
     isFileOwner,
     removeFileAndOffer,

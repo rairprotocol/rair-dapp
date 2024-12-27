@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useCallback, useState } from 'react';
 import {
   faCheck,
@@ -40,7 +41,8 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
 
   const closeModal = useCallback(() => {
     setModalIsOpen(false);
-  }, [setModalIsOpen]);
+    getMediaList();
+  }, [setModalIsOpen, getMediaList]);
 
   const [titleValue, setTitleValue] = useState<string>(item.title);
   const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
@@ -103,25 +105,13 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
       className="media-item-title">
       {textFlag ? (
         <div>
-          <p className="col-12">
-            {item.title.length > 15
-              ? item.title.slice(0, 6) +
-                '...' +
-                item.title.slice(item.title.length - 10, 10)
-              : item.title}
-          </p>
+          <p className="col-12">{item.title}</p>
         </div>
       ) : (
         <div>
           {!editTitleVideo ? (
             <>
-              <p className="col-12">
-                {item.title.length > 15
-                  ? item.title.slice(0, 6) +
-                    '...' +
-                    item.title.slice(item.title.length - 10, 10)
-                  : item.title}
-              </p>
+              <p className="col-12">{item.title}</p>
               {newUserStatus ? (
                 <button
                   disabled={!newUserStatus}
@@ -142,7 +132,7 @@ const MediaItemChange: React.FC<IMediaItemChange> = ({
                       onClick={() => {
                         openModal();
                       }}>
-                      <FontAwesomeIcon icon={faPencilAlt} />
+                      <FontAwesomeIcon icon={faPencilAlt} /> Edit
                     </button>
                   </span>
                 </TooltipBox>

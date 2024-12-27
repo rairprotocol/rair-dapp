@@ -36,12 +36,12 @@ export const SocialBox = styled.div.withConfig({
   span {
     width: 7px;
     height: 7px;
-    background: red;
+    // background: red;
     position: absolute;
     top: 0px;
     right: 0;
     border-radius: 50%;
-    background: #f63419;
+    // background: #f63419;
   }
 
   &.social-sun-icon {

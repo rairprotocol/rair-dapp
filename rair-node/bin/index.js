@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { nanoid } = require('nanoid');
 const fs = require('fs');
 const cors = require('cors');
 const { createServer } = require('http');
@@ -9,6 +10,7 @@ const { Server } = require('socket.io');
 const morgan = require('morgan');
 const session = require('express-session');
 const RedisStorage = require('connect-redis')(session);
+const { rateLimit } = require('express-rate-limit');
 const seedDB = require('./seeds');
 const log = require('./utils/logger')(module);
 const StartHLS = require('./hls-starter');
@@ -54,6 +56,15 @@ async function main() {
 
   const hls = await StartHLS();
 
+  const limiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    limit: process.env.RATE_LIMIT_MINUTE || 500,
+    standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  });
+
+  app.use(limiter);
+
   const context = {
     hls,
     config,
@@ -87,10 +98,11 @@ async function main() {
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
   app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(cookieParser());
+  app.use(cookieParser(nanoid()));
   app.set('trust proxy', 1);
 
   app.use(sessionMiddleware);
+  // app.use(lusca.csrf());
 
   app.use('/stream', streamRoute(context));
 

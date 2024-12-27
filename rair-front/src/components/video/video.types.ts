@@ -1,5 +1,6 @@
 import { TTokenData } from '../../axios.responseTypes';
 import { CatalogVideoItem } from '../../types/commonTypes';
+import { TSortChoice } from '../ResalePage/listOffers.types';
 
 import { ContractType } from './../adminViews/adminView.types';
 export interface IVideoPlayer {
@@ -23,6 +24,7 @@ export interface IVideoList {
   responseLabel?: string;
   endpoint?: string;
   handleVideoIsUnlocked?: () => void;
+  sortItem: TSortChoice | undefined;
 }
 
 export type MediaListResponseType = {

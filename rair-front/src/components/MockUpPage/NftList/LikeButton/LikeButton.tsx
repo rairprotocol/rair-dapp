@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer } from 'react';
+import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CircularProgress } from '@mui/material';
@@ -122,10 +123,14 @@ const LikeButton: React.FC<ILikeButton> = ({
               onClick={() => {
                 if (liked) {
                   removeFavotite();
+                } else {
+                  addFavorite(tokenId);
                 }
-                addFavorite(tokenId);
               }}>
-              <FontAwesomeIcon icon={faHeart} className="like-button" />
+              <FontAwesomeIcon
+                icon={liked ? faHeart : farHeart}
+                className="like-button"
+              />
             </div>
           </TooltipBox>
         </>

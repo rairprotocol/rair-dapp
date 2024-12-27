@@ -7,20 +7,34 @@ import { IPaginationBox } from '../mockupPage.types';
 
 const PaginationBox: React.FC<IPaginationBox> = ({
   changePage,
+  currentPage,
   totalPageForPagination,
   whatPage,
   itemsPerPageNotifications
 }) => {
-  const { itemsPerPage, currentPage } = useAppSelector((store) => store.tokens);
-
+  const { itemsPerPage } = useAppSelector((store) => store.tokens);
   const { isDarkMode, primaryButtonColor } = useAppSelector(
     (store) => store.colors
   );
 
   const [page, setPage] = useState<number>(currentPage);
-  const [pagesArray, setPagesArray] = useState<Array<number>>([]);
+  const [totalPage, setTotalPages] = useState<number>();
+  const [totalPageVideo, setTotalPagesVideo] = useState<number>();
 
-  // const hotdropsVar = import.meta.env.VITE_TESTNET;
+  const pagesArray: number[] = [];
+  if (whatPage && whatPage === 'nft' && totalPage) {
+    for (let i = 0; i < totalPage; i++) {
+      pagesArray.push(i + 1);
+    }
+  } else if (whatPage && whatPage === 'video' && totalPageVideo) {
+    for (let i = 0; i < totalPageVideo; i++) {
+      pagesArray.push(i + 1);
+    }
+  } else if (whatPage && whatPage === 'notifications' && totalPage) {
+    for (let i = 0; i < totalPage; i++) {
+      pagesArray.push(i + 1);
+    }
+  }
 
   const getPagesCount = (totalCount: number, itemsPerPage: number) => {
     return Math.ceil(totalCount / itemsPerPage);
@@ -34,30 +48,21 @@ const PaginationBox: React.FC<IPaginationBox> = ({
   };
 
   useEffect(() => {
-    if (!totalPageForPagination) {
-      return;
+    if (totalPageForPagination && whatPage === 'nft') {
+      setTotalPages(getPagesCount(totalPageForPagination, itemsPerPage));
+    } else if (totalPageForPagination && whatPage === 'video') {
+      setTotalPagesVideo(getPagesCount(totalPageForPagination, itemsPerPage));
+    } else if (
+      totalPageForPagination &&
+      whatPage === 'notifications' &&
+      itemsPerPageNotifications
+    ) {
+      setTotalPages(
+        getPagesCount(totalPageForPagination, itemsPerPageNotifications)
+      );
     }
-    let totalPages = 0;
-    switch (whatPage) {
-      case 'nft':
-        totalPages = getPagesCount(totalPageForPagination, itemsPerPage);
-        break;
-      case 'video':
-        totalPages = getPagesCount(totalPageForPagination, itemsPerPage);
-        break;
-      case 'notifications':
-        totalPages = getPagesCount(
-          totalPageForPagination,
-          itemsPerPageNotifications || 0
-        );
-        break;
-    }
-    const pageArray: Array<number> = [];
-    for (let i = 0; i < totalPages; i++) {
-      pageArray.push(i + 1);
-    }
-    setPagesArray(pageArray);
   }, [
+    setTotalPages,
     totalPageForPagination,
     itemsPerPage,
     whatPage,
@@ -79,8 +84,9 @@ const PaginationBox: React.FC<IPaginationBox> = ({
             primaryButtonColor={primaryButtonColor}
             count={pagesArray.length}
             page={page}
-            showFirstButton={false}
             onChange={handlePage}
+            // hideNextButton={true}
+            // hidePrevButton={true}
             shape="rounded"
           />
         )}
