@@ -3,6 +3,7 @@ const fs = require('fs');
 const { randomUUID } = require('crypto');
 const path = require('path');
 const { RequestBuilder, Payload } = require('yoti');
+const fetch = require('node-fetch');
 const config = require('../../config');
 const gcp = require('../../integrations/gcp')(config);
 const log = require('../../utils/logger')(module);
@@ -62,18 +63,52 @@ exports.yotiVerify = async (req, res, next) => {
   }
 };
 
+const adminProtectedFields = [
+  'email',
+  'firstName',
+  'lastName',
+  'publicAddress',
+  'nonce',
+  'creationDate',
+  'blocked',
+  '_id',
+];
 exports.listUsers = async (req, res, next) => {
   try {
-    const list = await User.find({}, {
-      email: 1,
-      nickName: 1,
-      publicAddress: 1,
-      creationDate: 1,
-      blocked: 1,
+    const {
+      fields = 'email,nickName,publicAddress,creationDate,blocked',
+      pageNum = 0,
+      itemsPerPage = 10,
+    } = req.query;
+    const queriedFields = {
+      _id: 0,
+    };
+    fields?.split(',')?.forEach((field) => {
+      if (adminProtectedFields.includes(field.toLowerCase()) && !req.user?.adminRights) {
+        return;
+      }
+      queriedFields[field] = 1;
     });
+    const [result] = await User.aggregate([
+      {
+        $project: queriedFields,
+      },
+      {
+        $facet: {
+          list: [
+            { $skip: pageNum * itemsPerPage },
+            { $limit: Number(itemsPerPage) },
+          ],
+          count: [
+            { $count: 'total' },
+          ],
+        },
+      },
+    ]);
     return res.json({
       success: true,
-      data: list,
+      data: result.list,
+      totalCount: result?.count?.[0]?.total || 0,
     });
   } catch (err) {
     return next(err);
@@ -140,6 +175,7 @@ exports.createUser = async (req, res, next) => {
     next(e);
   }
 };
+
 exports.getUserByAddress = async (req, res, next) => {
   try {
     const publicAddress = req.params.publicAddress.toLowerCase();
@@ -214,8 +250,27 @@ exports.updateUserByUserAddress = async (req, res, next) => {
       ...updatedUser,
     };
 
-    return res.json({ success: true, user: updatedUser });
+    res.json({ success: true, user: updatedUser });
+    return next();
   } catch (e) {
     return next(e);
   }
+};
+
+exports.queryGithubData = async (req, res, next) => {
+  const { email, publicAddress, gitHandle } = req.session.userData;
+  if (gitHandle) {
+    return;
+  }
+  const query = await (await fetch(`https://api.github.com/search/users?q=${email}`)).json();
+  if (query.total_count === 1) {
+    await User.findOneAndUpdate({ publicAddress }, {
+      gitHandle: query.items[0].login,
+      gitBio: query.items[0].bio,
+      // available: query.items[0].hireable,
+      avatar: query.items[0].avatar_url,
+    });
+    return;
+  }
+  log.error("Couldn't fetch Github data, more than one account associated with the email");
 };

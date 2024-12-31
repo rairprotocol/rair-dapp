@@ -256,7 +256,7 @@ const useConnectUser = () => {
     dispatchStack.push(setExchangeRates(await getCoingeckoRates()));
     dispatchStack.push(setConnectedChain(loginData.blockchain));
 
-    let firstTimeLogin = false;
+    let willUpdateUserData = false;
 
     try {
       // Check if user exists in DB
@@ -295,10 +295,10 @@ const useConnectUser = () => {
               loginData.userAddress
             );
             reactSwal.close();
-            if (firstTimeLogin) {
+            if (willUpdateUserData) {
               const userData = await loginData.userDetails;
               const availableData: Partial<User> = {};
-              if (userData.email) {
+              if (userData?.email && !loginResponse.user.email) {
                 availableData.email = userData.email;
                 availableData.nickName = userData.email?.split("@")?.[0];
               }

@@ -104,6 +104,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
     useContracts();
 
   const { currentUserAddress } = useAppSelector((store) => store.web3);
+  const { isLoggedIn } = useAppSelector((store) => store.user);
   const { textColor, primaryButtonColor } = useAppSelector(
     (store) => store.colors
   );
@@ -265,6 +266,10 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
       sponsored
     });
   };
+
+  if (!isLoggedIn) {
+    reactSwal.fire('Please login', '', 'info');
+  }
 
   if (!diamondMarketplaceInstance) {
     return <LoadingComponent />;

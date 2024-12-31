@@ -26,6 +26,10 @@ const NotificationBox = ({ title, el }) => {
 
   const dispatch = useAppDispatch();
 
+  const { width } = useWindowDimensions();
+
+  const dispatch = useAppDispatch();
+
   const reactSwal = useSwal();
   const store = useStore();
 
