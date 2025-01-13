@@ -176,7 +176,7 @@ module.exports = {
       cache.del(userAddress.toLowerCase());
       cache.del(MetaMessage);
       cache.del(`${userAddress}secret`);
-      req.metaAuth = { recovered: recovered.toLowerCase() };
+      req.metaAuth = { recovered: userAddress.toLowerCase() };
       req.web3LoginMethod = 'web3auth';
     } else {
       req.metaAuth = undefined;
