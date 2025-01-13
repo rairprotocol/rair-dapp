@@ -7,6 +7,7 @@ const isAdmin = require('./isAdmin');
 const dataTransform = require('./dataTransform');
 const verifySuperAdmin = require('./verifySuperAdmin');
 const consumeTokenCredit = require('./consumeTokenCredit');
+const zoomTokenCheck = require('./zoomTokenCheck');
 
 module.exports = {
   validation,
@@ -19,4 +20,5 @@ module.exports = {
   dataTransform,
   verifySuperAdmin,
   consumeTokenCredit,
+  zoomTokenCheck,
 };

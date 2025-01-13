@@ -1,7 +1,9 @@
 services:
   rair-node:
     container_name: 'rair-node'
-    image: rairprotocol/rair-node:latest
+    build:
+      context: rair-node
+      dockerfile: Dockerfile
     volumes:
       - ./rair-node/db:/usr/src/rair-node/db
       - ./rair-node/bin/Videos:/usr/src/rair-node/bin/Videos
@@ -65,6 +67,9 @@ services:
       FILEBASE_BUCKET: ${filebase_bucket}
       YOTI_CLIENT_ID: ${yoti_client_id}
       RATE_LIMIT_MINUTE: ${rate_limit_minute}
+      ZOOM_ACCOUNT_ID: ${zoom_account_id}
+      ZOOM_CLIENT_ID: ${zoom_client_id}
+      ZOOM_CLIENT_SECRET: ${zoom_client_secret}
     ports:
       - 3000:3000
       - 5000:5000

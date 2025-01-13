@@ -18,6 +18,7 @@ const uploadController = require('../api/upload/upload.Controller');
 const favoritesController = require('../api/favorites/favorites.Controller');
 const notificationsController = require('../api/notifications/notifications.Controller');
 const categoriesController = require('../api/categories/categories.Controller');
+const meetingsController = require('../api/meetings/meetings.Controller');
 
 const router = Router();
 router.use('/analytics', analyticsController);
@@ -38,6 +39,7 @@ router.use('/tokens', tokensController);
 router.use('/upload', uploadController);
 router.use('/notifications', notificationsController);
 router.use('/categories', categoriesController);
+router.use('/meetings', meetingsController);
 
 // Custom temporary endpoint for the monaco2021
 router.use('/', require('./monaco2021'));
