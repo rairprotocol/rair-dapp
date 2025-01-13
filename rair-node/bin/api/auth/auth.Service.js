@@ -62,7 +62,9 @@ module.exports = {
   loginFromSignature: async (req, res, next) => {
     const ethAddress = req?.metaAuth?.recovered;
     if (ethAddress) {
-      const userData = await User.findOne({ publicAddress: ethAddress }, '-creationDate -nonce').lean();
+      const userData = await User.findOne({
+        publicAddress: ethAddress.toLowerCase(),
+      }, '-creationDate -nonce').lean();
       if (userData === null) {
         return next(new AppError('User not found.', 404));
       }
@@ -87,7 +89,8 @@ module.exports = {
         return next(new AppError('Authentication failed.', 403));
       }
 
-      userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
+      // Uncomment to enable NFT check on login
+      // userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
       const { superAdmins, superAdminsOnVault, signupMessage } = await ServerSetting.findOne({});
       const socket = req.app.get('socket');
       emitEvent(socket)(
@@ -101,6 +104,9 @@ module.exports = {
         : superAdmins.includes(userData.publicAddress);
       userData.oreId = req?.metaAuth?.oreId;
       req.session.userData = { ...userData, loginType: req.web3LoginMethod };
+
+      // Delete this line to restore NFT check on login
+      userData.adminRights = userData.superAdmin;
 
       // eslint-disable-next-line no-unused-vars
       const { _id, adminNFT, ...publicFacingUserData } = userData;
