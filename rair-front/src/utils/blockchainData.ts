@@ -1,4 +1,4 @@
-import { base, mainnet, polygon, sepolia } from '@alchemy/aa-core';
+import { base, mainnet, polygon, sepolia } from '@account-kit/infra';
 import { Network } from 'alchemy-sdk';
 import { Hex } from 'viem';
 
@@ -7,8 +7,8 @@ import { TChainData } from './utils.types';
 import {
   AstarLogo,
   BaseLogo,
-  EthereumLogo,
   CoreIdLogo,
+  EthereumLogo,
   MaticLogo,
   SoniumLogo
 } from '../images';
@@ -133,7 +133,7 @@ const chainData: TChainData = {
     alchemyAppKey: undefined,
     alchemyGasPolicy: undefined
   }
-}
+};
 
 export default chainData;
 

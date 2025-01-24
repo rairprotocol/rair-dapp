@@ -1,10 +1,16 @@
+import {
+  alchemy,
+  AlchemySmartAccountClient,
+  createAlchemySmartAccountClient
+} from '@account-kit/infra';
+import { AlchemyWebSigner } from '@account-kit/signer';
+import { createLightAccount } from '@account-kit/smart-contracts';
 import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
-import { SmartContractAccount } from '@alchemy/aa-core';
-import { AccountSigner } from '@alchemy/aa-ethers';
 import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import { Maybe } from '@metamask/providers/dist/utils';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { WALLET_ADAPTERS, WEB3AUTH_NETWORK } from '@web3auth/base';
 import { BrowserProvider } from 'ethers';
 import { Hex } from 'viem';
 
@@ -21,7 +27,7 @@ export interface ContractsState extends ChainData {
   web3Status: dataStatuses;
   connectedChain?: Hex;
   currentUserAddress?: Hex;
-  programmaticProvider?: AccountSigner<SmartContractAccount>;
+  programmaticProvider?: AlchemySmartAccountClient;
   requestedChain?: Hex;
   exchangeRates?: any;
 }
@@ -37,10 +43,69 @@ const initialState: ContractsState = {
   exchangeRates: undefined
 };
 
+export const connectChainAlchemyV4 = createAsyncThunk(
+  'web3/connectChainAlchemyV4',
+  async (chainData: CombinedBlockchainData) => {
+    if (!chainData.alchemyAppKey || !chainData.viem) {
+      return {};
+    }
+    const signer = new AlchemyWebSigner({
+      client: {
+        connection: {
+          // rpcUrl: chainData.viem.blockExplorers.alchemy.http[0],
+          apiKey: chainData.alchemyAppKey
+          // chain: chainInformation.viem,
+          // policyId: chainInformation.alchemyGasPolicy
+        },
+        iframeConfig: {
+          iframeContainerId: 'alchemy-signer-iframe-container'
+        }
+      }
+    });
+
+    if (!signer) {
+      return {};
+    }
+
+    const alchemyTransport = alchemy({
+      apiKey: chainData.alchemyAppKey
+    });
+
+    await signer.preparePopupOauth();
+
+    const data = await signer.authenticate({
+      type: 'oauth',
+      authProviderId: 'google',
+      mode: 'popup'
+    });
+
+    const client = createAlchemySmartAccountClient({
+      transport: alchemyTransport,
+      policyId: chainData.alchemyGasPolicy,
+      chain: chainData.viem,
+      account: await createLightAccount({
+        chain: chainData.viem,
+        transport: alchemyTransport,
+        signer
+      })
+    });
+
+    return {
+      connectedChain: chainData.hash,
+      currentUserAddress: data.address,
+      userDetails: signer,
+      client
+    };
+  }
+);
+
 export const connectChainWeb3Auth = createAsyncThunk(
   'web3/connectChainWeb3Auth',
   async (chainData: CombinedBlockchainData) => {
     const web3AuthSigner = new Web3AuthSigner({
+      uiConfig: {
+        loginMethodsOrder: ['github']
+      },
       clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
       chainConfig: {
         chainNamespace: 'eip155',
@@ -52,12 +117,29 @@ export const connectChainWeb3Auth = createAsyncThunk(
         tickerName: chainData.name
       },
       web3AuthNetwork: chainData.testnet
-        ? 'sapphire_devnet'
-        : 'sapphire_mainnet'
+        ? WEB3AUTH_NETWORK.SAPPHIRE_DEVNET
+        : WEB3AUTH_NETWORK.SAPPHIRE_MAINNET
     });
     await web3AuthSigner.authenticate({
       init: async () => {
-        await web3AuthSigner.inner.initModal();
+        await web3AuthSigner.inner.initModal({
+          modalConfig: {
+            [WALLET_ADAPTERS.AUTH]: {
+              label: 'auth',
+              loginMethods: {
+                // Disable facebook and reddit
+                facebook: {
+                  name: 'facebook',
+                  showOnModal: false
+                },
+                reddit: {
+                  name: 'reddit',
+                  showOnModal: false
+                }
+              }
+            }
+          }
+        });
       },
       connect: async () => {
         await web3AuthSigner.inner.connect();
@@ -161,6 +243,25 @@ export const web3Slice = createSlice({
         }
       })
       .addCase(connectChainWeb3Auth.rejected, (state) => {
+        state.web3Status = dataStatuses.Failed;
+      })
+      .addCase(connectChainAlchemyV4.pending, (state) => {
+        state.web3Status = dataStatuses.Loading;
+      })
+      .addCase(connectChainAlchemyV4.fulfilled, (state, action) => {
+        state.web3Status = dataStatuses.Complete;
+        if (action.payload.connectedChain) {
+          state.connectedChain = action.payload.connectedChain;
+        }
+        if (action.payload.currentUserAddress) {
+          state.currentUserAddress =
+            action.payload.currentUserAddress.toLowerCase() as Hex;
+        }
+        if (action.payload.userDetails) {
+          state.programmaticProvider = action.payload.client;
+        }
+      })
+      .addCase(connectChainAlchemyV4.rejected, (state) => {
         state.web3Status = dataStatuses.Failed;
       });
   }
