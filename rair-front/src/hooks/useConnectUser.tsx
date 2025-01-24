@@ -165,7 +165,7 @@ const useConnectUser = () => {
       return {};
     }
     return {
-      userAddress: (await programmaticProvider.getAddress()) as Hex,
+      userAddress: (await programmaticProvider.address) as Hex,
       blockchain: connectedChain
     };
   }, [connectedChain, programmaticProvider]);

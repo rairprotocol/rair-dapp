@@ -101,7 +101,7 @@ const SplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const targetBlockchain = '0x5';
   // const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
 
-  let subtitle: Modal;
+  const [subtitle] = useState<Modal>();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [active, setActive] = useState<TSplashPageIsActive>({
     policy: false,

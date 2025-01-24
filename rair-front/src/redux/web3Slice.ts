@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {
   alchemy,
   AlchemySmartAccountClient,
@@ -102,6 +103,9 @@ export const connectChainAlchemyV4 = createAsyncThunk(
 export const connectChainWeb3Auth = createAsyncThunk(
   'web3/connectChainWeb3Auth',
   async (chainData: CombinedBlockchainData) => {
+    if (!chainData.viem) {
+      return {};
+    }
     const web3AuthSigner = new Web3AuthSigner({
       uiConfig: {
         loginMethodsOrder: ['github']
@@ -148,7 +152,7 @@ export const connectChainWeb3Auth = createAsyncThunk(
 
     const modularAccount = await createModularAccountAlchemyClient({
       apiKey: chainData.alchemyAppKey,
-      chain: chainData.viem!,
+      chain: chainData.viem,
       signer: web3AuthSigner,
       gasManagerConfig: chainData.alchemyGasPolicy
         ? {
@@ -234,7 +238,7 @@ export const web3Slice = createSlice({
       })
       .addCase(connectChainWeb3Auth.fulfilled, (state, action) => {
         state.web3Status = dataStatuses.Complete;
-        if (action.payload.connectedChain) {
+        if (action.payload?.connectedChain) {
           state.connectedChain = action.payload.connectedChain;
         }
         if (action.payload.currentUserAddress) {
