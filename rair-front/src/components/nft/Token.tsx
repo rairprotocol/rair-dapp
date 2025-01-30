@@ -18,6 +18,7 @@ const erc721Abi = ERC721Token.default.abi;
 
 const Token = () => {
   const params = useParams();
+  const { provider } = useContext(Web3Context);
   const [metadata, setMetadata] = useState({ name: 'Loading...' });
   const [owner, setOwner] = useState('');
   const [name, setName] = useState('');
@@ -76,7 +77,7 @@ const Token = () => {
       return;
     }
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const provider = new ethers.providers.Web3Provider(provider);
       const signer = provider.getSigner(0);
       const instance = new ethers.Contract(params.contract, erc721Abi, signer);
       setName(await instance.name());

@@ -24,7 +24,7 @@ import {
 const useContracts = () => {
   const { getBlockchainData } = useServerSettings();
   const { loginType, isLoggedIn } = useAppSelector((store) => store.user);
-  const { connectedChain } = useAppSelector((store) => store.web3);
+  const { connectedChain, provider } = useAppSelector((store) => store.web3);
 
   const [signer, setSigner] = useState<
     JsonRpcSigner | AccountSigner<SmartContractAccount>
@@ -104,15 +104,16 @@ const useContracts = () => {
   }, [connectedChain, getBlockchainData]);
 
   const refreshSigner = useCallback(async () => {
+    const ethereum = provider
     if (!isLoggedIn) {
       return;
     }
     switch (loginType) {
       case 'metamask':
-        if (!window.ethereum.isConnected()) {
+        if (!ethereum.isConnected()) {
           return;
         }
-        const metamaskProvider = new BrowserProvider(window.ethereum);
+        const metamaskProvider = new BrowserProvider(ethereum);
         const signer = await metamaskProvider.getSigner(0);
         setSigner(signer);
         break;

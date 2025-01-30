@@ -22,6 +22,7 @@ import lennyGif from './lenny.gif';
 import loadingFavicon from './loading-favicon.svg';
 import logoHotDrops from './logo-hotdrops.png';
 import metamaskLogo from './metamask_logo.webp';
+import coinbaseLogo from './coinbase-wallet-logo.webp'
 import minTable from './mintable-logo.webp';
 import hotdropsLogoMobile from './mobile-logo-hotdrops.png';
 import oneOf from './oneOf-logo.webp';
@@ -54,6 +55,7 @@ export const headerLogoBlack = rairTechLogoBlack;
 export const headerLogoWhite = rairTechLogoWhite;
 export const RairLogoBlue = rairTechLogoBlue;
 export const metaMaskIcon = metamaskLogo;
+export const coinbaseIcon = coinbaseLogo
 export const defaultAvatar = avatar;
 export const OpenSea = openSea;
 export const Rarible = rarible;

@@ -121,6 +121,7 @@ const GreymanSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const [modalVideoIsOpen, setVideoIsOpen] = useState<boolean>(false);
 
   const { isLoggedIn } = useAppSelector((store) => store.user);
+  const { provider } = useAppSelector((store) => store.web3);
 
   useEffect(() => {
     dispatch(
@@ -596,7 +597,7 @@ const GreymanSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
                             src={metaMaskIcon}
                             alt="metamask-logo"
                           />{' '}
-                          {window.ethereum?.chainId !== GreymanChainId
+                          {provider?.chainId !== GreymanChainId
                             ? 'Switch network'
                             : currentUserAddress
                               ? 'PURCHASE'

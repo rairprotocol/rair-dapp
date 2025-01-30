@@ -3,16 +3,16 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { Maybe } from '@metamask/providers/dist/utils';
 
-import { metaMaskIcon } from '../../../images';
+import { coinbaseIcon } from '../../../images';
 
-import './OnboardingButton.css';
+import './OnboardingCoinbaseButton.css';
 import { useAppSelector } from '../../../hooks/useReduxHooks';
 
 const ONBOARD_TEXT = 'Click here to install MetaMask!';
 const CONNECT_TEXT = 'Connect Wallet';
 const CONNECTED_TEXT = 'Connected';
 
-export function OnboardingButton() {
+export function OnboardingCoinbaseButton() {
   const [buttonText, setButtonText] = useState<string>(ONBOARD_TEXT);
   const [isDisabled, setDisabled] = useState<boolean>(false);
   const [accounts, setAccounts] = useState<Maybe<unknown>>([]);
@@ -20,7 +20,7 @@ export function OnboardingButton() {
   const onboarding = useRef<MetaMaskOnboarding>();
 
   const dappUrl = window.location.host;
-  const metamaskAppDeepLink = 'https://metamask.app.link/dapp/' + dappUrl;
+  const CoinbaseAppDeepLink = 'https://www.coinbase.com/wallet/downloads';
   const hotDropsVar = import.meta.env.VITE_TESTNET;
 
   const isMobileDevice = useCallback(() => {
@@ -79,24 +79,15 @@ export function OnboardingButton() {
       onboarding?.current?.startOnboarding();
     }
   };
-  return showButtonPhone ? (
-    <a target={'_blank'} href={metamaskAppDeepLink} rel="noreferrer">
+  return (
+    <a target={'_blank'} href={CoinbaseAppDeepLink} rel="noreferrer">
       <button
         className={`metamask-on-boarding ${
           hotDropsVar === 'true' ? 'hotdrops-bg' : ''
         }`}>
-        Connect to Metamask
-        {hotDropsVar !== 'true' && <img src={metaMaskIcon}></img>}
+        Connect to Coinbase 
+        {hotDropsVar !== 'true' && <img width={showButtonPhone ? 48 : 24} src={coinbaseIcon}></img>}
       </button>
     </a>
-  ) : (
-    <button
-      className={`metamask-on-boarding ${
-        hotDropsVar === 'true' ? 'hotdrops-bg' : ''
-      }`}
-      disabled={isDisabled}
-      onClick={onClick}>
-      {buttonText}
-    </button>
-  );
+  )
 }

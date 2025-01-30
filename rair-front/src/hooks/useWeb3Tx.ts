@@ -31,6 +31,7 @@ const useWeb3Tx = () => {
   const { connectedChain, currentUserAddress, programmaticProvider } =
     useAppSelector((store) => store.web3);
   const { loginType } = useAppSelector((store) => store.user);
+  const { provider } = useAppSelector((store) => store.web3);
   const reactSwal = useSwal();
   const handleReceipt = useCallback(
     async (transactionHash: string, callback?: (() => void) | undefined) => {
@@ -285,13 +286,14 @@ const useWeb3Tx = () => {
 
   const metamaskSwitch = useCallback(
     async (chainId: Hex) => {
+      const ethereum = provider 
       const chainData = getBlockchainData(chainId);
       if (!chainData) {
         return;
       }
-      dispatch(setConnectedChain());
+      dispatch(setConnectedChain(chainData.hash));
       try {
-        await window.ethereum.request({
+        await ethereum?.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: chainData.hash }]
         });
@@ -299,7 +301,7 @@ const useWeb3Tx = () => {
         // This error code indicates that the chain has not been added to MetaMask.
         if (switchError.code === 4902) {
           try {
-            await window.ethereum.request({
+            await ethereum?.request({
               method: 'wallet_addEthereumChain',
               params: [
                 {
@@ -330,13 +332,14 @@ const useWeb3Tx = () => {
 
   const web3TxSignMessage = useCallback(
     async (message): Promise<any> => {
+      const ethereum = provider
       if (!currentUserAddress) {
         console.error('Login required to sign messages');
         return '';
       }
       switch (loginType) {
         case 'metamask':
-          return await window.ethereum.request({
+          return await ethereum?.request({
             method: 'personal_sign',
             params: [message, currentUserAddress]
           });

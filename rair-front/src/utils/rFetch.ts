@@ -3,7 +3,7 @@ import axios from 'axios';
 import { BrowserProvider, Provider } from 'ethers';
 import Swal from 'sweetalert2';
 import { Hex } from 'viem';
-
+import { getProviderInUse } from './ethereumProviders';
 import {
   TAuthGetChallengeResponse,
   TUserResponse
@@ -11,8 +11,9 @@ import {
 
 const signIn = async (provider: Provider) => {
   //let currentUser = await (provider as JsonRpcProvider).getSigner(0);
-  if (!provider && window.ethereum) {
-    provider = new BrowserProvider(window.ethereum);
+  const currentProvider = await getProviderInUse();
+  if (!provider && currentProvider) {
+    provider = new BrowserProvider(currentProvider);
   }
   const responseData = await axios.get<TUserResponse>(`/api/users/me`);
 
@@ -57,8 +58,9 @@ const respondChallenge = async (challenge, signedChallenge) => {
 };
 
 const signWeb3MessageMetamask = async (userAddress: Hex) => {
+  const currentProvider = await getProviderInUse();
   const challenge = await getChallenge(userAddress);
-  if (window.ethereum) {
+  if (currentProvider) {
     const ethRequest = {
       method: 'eth_signTypedData_v4',
       params: [userAddress, challenge],
@@ -121,6 +123,7 @@ const rFetch = async (
   retryOptions: any = undefined,
   showErrorMessages = true
 ) => {
+  const currentProvider = await getProviderInUse();
   const request = await fetch(route, {
     ...options,
     headers: {
@@ -137,7 +140,7 @@ const rFetch = async (
           'invalid signature',
           'Authentication failed, please login again'
         ].includes(parsing.message) &&
-        (window.ethereum || retryOptions?.provider)
+        (currentProvider || retryOptions?.provider)
       ) {
         localStorage.removeItem('token');
         const retry = await signIn(retryOptions?.provider);

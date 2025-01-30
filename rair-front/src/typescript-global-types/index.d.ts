@@ -1,4 +1,4 @@
-import { MetaMaskInpageProvider } from '@metamask/providers';
+import { MetaMaskInpageProvider, Provider } from '@metamask/providers';
 import { Maybe } from '@metamask/providers/dist/utils';
 
 declare module '@metamask/providers/dist/BaseProvider' {
@@ -9,7 +9,7 @@ declare module '@metamask/providers/dist/BaseProvider' {
 
 declare global {
   interface Window {
-    ethereum: MetaMaskInpageProvider;
+    ethereum: BaseProvider;
     dataLayer: Array<object>;
   }
 }

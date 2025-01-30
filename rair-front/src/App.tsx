@@ -92,7 +92,8 @@ function App() {
     connectedChain,
     requestedChain,
     currentUserAddress,
-    programmaticProvider
+    programmaticProvider,
+    provider,
   } = useAppSelector((store) => store.web3);
   const { diamondMarketplaceInstance } = useContracts();
   const [isAboutPage, setIsAboutPage] = useState<boolean>(false);
@@ -148,7 +149,7 @@ function App() {
   };
 
   const btnCheck = useCallback(() => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
+    if (provider && provider.isMetaMask) {
       setRenderBtnConnect(false);
     } else {
       setRenderBtnConnect(true);
@@ -156,15 +157,15 @@ function App() {
   }, [setRenderBtnConnect]);
 
   useEffect(() => {
-    if (window.ethereum) {
+    if (provider) {
       const foo = async (chainId) => {
         dispatch(setConnectedChain(chainId));
       };
-      window.ethereum.on('chainChanged', foo);
-      window.ethereum.on('accountsChanged', logoutUser);
+      provider.on('chainChanged', foo);
+      provider.on('accountsChanged', logoutUser);
       return () => {
-        window.ethereum.off('chainChanged', foo);
-        window.ethereum.off('accountsChanged', logoutUser);
+        provider.off('chainChanged', foo);
+        provider.off('accountsChanged', logoutUser);
       };
     }
   }, [dispatch, logoutUser, blockchainSettings]);

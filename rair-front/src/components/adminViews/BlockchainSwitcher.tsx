@@ -17,7 +17,7 @@ const BlockChainSwitcher = () => {
   const { blockchainSettings } = useAppSelector((store) => store.settings);
   const { web3Switch } = useWeb3Tx();
 
-  const { connectedChain } = useAppSelector((state) => state.web3);
+  const { connectedChain, provider } = useAppSelector((state) => state.web3);
   const dispatch = useAppDispatch();
   const reactSwal = useSwal();
 
@@ -47,7 +47,7 @@ const BlockChainSwitcher = () => {
 
   return (
     <div className="col-12">
-      {!window.ethereum && (
+      {!provider && (
         <div className="row w-100 px-0 mx-0">
           <div className="col-12 px-5">
             <InputField

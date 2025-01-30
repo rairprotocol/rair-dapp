@@ -1,0 +1,16 @@
+.metamask-on-boarding {
+  margin: auto;
+}
+
+@media screen and (max-width: 1025px) {
+  .metamask-on-boarding {
+    margin-right: 16px;
+    font-size: 0.5rem;
+    text-align: justify;
+  }
+
+  .metamask-on-boarding img {
+    height: 1.5rem;
+    margin: 3px;
+  }
+}

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Action } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Hex } from 'viem';
-
+import { coinbaseIcon, metaMaskIcon } from '../images';
 import { useAppDispatch, useAppSelector } from './useReduxHooks';
 import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
@@ -13,7 +13,7 @@ import { OnboardingButton } from '../components/common/OnboardingButton/Onboardi
 import { dataStatuses } from '../redux/commonTypes';
 import { loadCurrentUser } from '../redux/userSlice';
 import {
-  connectChainMetamask,
+  connectChainBrowserWallet,
   connectChainWeb3Auth,
   setConnectedChain,
   setExchangeRates,
@@ -29,6 +29,8 @@ import {
 } from '../utils/rFetch';
 import sockets from '../utils/sockets';
 import { useLocation } from 'react-router-dom';
+import { getWalletProvider, WalletType } from '../utils/ethereumProviders';
+import { OnboardingCoinbaseButton } from '../components/common/OnboardingCoinbaseButton/OnboardingCoinbaseButton';
 
 const getCoingeckoRates = async () => {
   try {
@@ -63,6 +65,7 @@ const useConnectUser = () => {
     (store) => store.user
   );
   const [metamaskInstalled, setMetamaskInstalled] = useState(false);
+  const [coinbaseInstalled, setCoinbaseInstalled] = useState(false);
 
   const { currentUserAddress, programmaticProvider, connectedChain } =
     useAppSelector((store) => store.web3);
@@ -71,14 +74,24 @@ const useConnectUser = () => {
     (store) => store.colors
   );
 
+  const { provider } = useAppSelector((store) => store.web3);
+
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
   const reactSwal = useSwal();
   const navigate = useNavigate();
   const location = useLocation();
 
+  const checkCoinbase = useCallback(() => {
+    const coinbaseProvider = getWalletProvider(WalletType.Coinbase);
+    setCoinbaseInstalled(
+      coinbaseProvider && coinbaseProvider?.isCoinbaseWallet
+    );
+  }, [setCoinbaseInstalled]);
+
   const checkMetamask = useCallback(() => {
-    setMetamaskInstalled(window?.ethereum && window?.ethereum?.isMetaMask);
+    const metamaskProvider = getWalletProvider(WalletType.Metamask);
+    setMetamaskInstalled(metamaskProvider && metamaskProvider?.isMetaMask);
   }, [setMetamaskInstalled]);
 
   useEffect(() => {
@@ -122,9 +135,9 @@ const useConnectUser = () => {
     };
   }, [getBlockchainData, reactSwal, dispatch]);
 
-  const loginWithMetamask = useCallback(async () => {
+  const loginWithBrowserWallet = useCallback(async (walletType: WalletType) => {
     const { connectedChain, currentUserAddress } = await dispatch(
-      connectChainMetamask()
+      connectChainBrowserWallet(walletType)
     ).unwrap();
     if (!currentUserAddress) {
       return {};
@@ -154,6 +167,7 @@ const useConnectUser = () => {
             <>
               Please select a login method
               <hr />
+              <div style={{display: 'flex', flexDirection: 'column', gap: '10px', justifyContent: 'space-around', alignItems: 'center'}}>
               {!metamaskInstalled ? (
                 <OnboardingButton />
               ) : (
@@ -175,9 +189,34 @@ const useConnectUser = () => {
                     color: textColor
                   }}
                   onClick={() => resolve('metamask')}>
-                  Web3
+                  Connect Metamask <img width={24} src={metaMaskIcon} alt="metamask" />
                 </button>
               )}
+             {!coinbaseInstalled ? (
+                <OnboardingCoinbaseButton />
+              ) : (
+                <button
+                  className="btn rair-button"
+                  style={{
+                    background: `${
+                      primaryColor === '#dedede'
+                        ? import.meta.env.VITE_TESTNET === 'true'
+                          ? 'var(--hot-drops)'
+                          : 'linear-gradient(to right, #e882d5, #725bdb)'
+                        : import.meta.env.VITE_TESTNET === 'true'
+                          ? primaryButtonColor ===
+                            'linear-gradient(to right, #e882d5, #725bdb)'
+                            ? 'var(--hot-drops)'
+                            : primaryButtonColor
+                          : primaryButtonColor
+                    }`,
+                    color: textColor
+                  }}
+                  onClick={() => resolve('coinbase')}>
+                  Connect Coinbase <img width={24} src={coinbaseIcon} alt="metamask" />
+                </button>
+              )}
+              </div>
               <hr />
               <button
                 className="btn btn-light"
@@ -204,6 +243,7 @@ const useConnectUser = () => {
     [
       hotdropsVar,
       metamaskInstalled,
+      coinbaseInstalled,
       reactSwal,
       primaryButtonColor,
       textColor,
@@ -226,7 +266,10 @@ const useConnectUser = () => {
           loginData = await loginWithWeb3Auth();
           break;
         case 'metamask':
-          loginData = await loginWithMetamask();
+          loginData = await loginWithBrowserWallet(WalletType.Metamask);
+          break;
+        case 'coinbase':
+          loginData = await loginWithBrowserWallet(WalletType.Coinbase);
           break;
         case 'programmatic':
           loginData = await loginWithProgrammaticProvider();
@@ -304,6 +347,11 @@ const useConnectUser = () => {
               loginData.userAddress
             );
             break;
+          case 'coinbase':
+            loginResponse = await signWeb3MessageMetamask(
+              loginData.userAddress
+            );
+            break;
           case 'web3auth':
             loginResponse = await signWeb3MessageWeb3Auth(
               loginData.userAddress
@@ -344,7 +392,7 @@ const useConnectUser = () => {
     }
   }, [
     selectMethod,
-    loginWithMetamask,
+    loginWithBrowserWallet,
     loginWithProgrammaticProvider,
     loginWithWeb3Auth,
     reactSwal,
@@ -355,7 +403,8 @@ const useConnectUser = () => {
 
   useEffect(() => {
     checkMetamask();
-  }, [checkMetamask]);
+    checkCoinbase();
+  }, [checkMetamask, checkCoinbase]);
 
   const logoutUser = useCallback(async () => {
     const { success } = await rFetch('/api/auth/logout');
@@ -386,11 +435,11 @@ const useConnectUser = () => {
     const userData = await dispatch(loadCurrentUser()).unwrap();
     switch (userData?.loginType) {
       case 'metamask':
-        if (window.ethereum.selectedAddress !== userData.publicAddress) {
+        if (provider?.selectedAddress !== userData.publicAddress) {
           return await logoutUser();
         }
         dispatch(setExchangeRates(await getCoingeckoRates()));
-        dispatch(connectChainMetamask());
+        dispatch(connectChainBrowserWallet(WalletType.Metamask));
         break;
       default:
         logoutUser();

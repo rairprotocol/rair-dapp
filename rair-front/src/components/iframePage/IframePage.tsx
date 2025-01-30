@@ -14,7 +14,8 @@ import '../../App.css';
 const IframePage = ({
   setIsIframePage,
   renderBtnConnect,
-  programmaticProvider
+  programmaticProvider,
+  provider
 }) => {
   useEffect(() => {
     setIsIframePage(true);
@@ -51,7 +52,7 @@ const IframePage = ({
         ) : (
           <button
             disabled={
-              !window.ethereum &&
+              !provider &&
               !programmaticProvider &&
               loginStatus === dataStatuses.Loading
             }

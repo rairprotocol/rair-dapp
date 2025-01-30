@@ -16,6 +16,7 @@ const MinterMarketplaceItem: FC<TMinterMarketplaceItemType> = ({
 }) => {
   const { primaryColor, secondaryColor, textColor, secondaryButtonColor } =
     useAppSelector((state) => state.colors);
+  const { provider } = useAppSelector((state) => state.web3);
   const store = useStore();
   const reactSwal = useSwal();
   const { correctBlockchain } = useWeb3Tx();
@@ -50,8 +51,8 @@ const MinterMarketplaceItem: FC<TMinterMarketplaceItemType> = ({
           id={`button_${index}`}
           onClick={async () => {
             if (!onMyChain) {
-              if (window.ethereum) {
-                await window.ethereum.request({
+              if (provider) {
+                await provider.request({
                   method: 'wallet_switchEthereumChain',
                   params: [
                     { chainId: getBlockchainData(item.blockchain)?.hash }

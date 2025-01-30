@@ -12,10 +12,13 @@ import { dataStatuses } from './commonTypes';
 
 import { CombinedBlockchainData } from '../types/commonTypes';
 import { metamaskEventListeners } from '../utils/metamaskUtils';
+import { MetaMaskInpageProvider } from '@metamask/providers';
+import { getWalletProvider, WalletType } from '../utils/ethereumProviders';
 
 interface ChainData {
   connectedChain?: Hex;
   currentUserAddress?: Hex;
+  provider?: MetaMaskInpageProvider;
 }
 export interface ContractsState extends ChainData {
   web3Status: dataStatuses;
@@ -82,29 +85,31 @@ export const connectChainWeb3Auth = createAsyncThunk(
   }
 );
 
-export const connectChainMetamask = createAsyncThunk(
-  'web3/connectChainMetamask',
-  async () => {
-    if (!window.ethereum) {
+export const connectChainBrowserWallet = createAsyncThunk(
+  'web3/connectChainBrowserWallet',
+  async (walletType: WalletType) => {
+    const ethereum = await getWalletProvider(walletType);
+    if (!ethereum) {
       return {
         signer: undefined,
         currentUserAddress: undefined,
         connectedChain: undefined
       };
     }
-    const provider = new BrowserProvider(window.ethereum);
+    const provider = new BrowserProvider(ethereum);
     metamaskEventListeners(provider);
-    const accounts: Maybe<Hex[]> = await window.ethereum.request({
+    const accounts: Maybe<Hex[]> = await ethereum.request({
       method: 'eth_requestAccounts'
     });
     const connectedChain: Maybe<Hex> =
-      (await window.ethereum.request({
+      (await ethereum.request({
         method: 'eth_chainId'
       })) || undefined;
     const currentUserAddress = accounts?.at(0);
     return {
       currentUserAddress,
-      connectedChain: connectedChain as Hex
+      connectedChain: connectedChain as Hex,
+      provider: ethereum
     };
   }
 );
@@ -131,10 +136,10 @@ export const web3Slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(connectChainMetamask.pending, (state) => {
+      .addCase(connectChainBrowserWallet.pending, (state) => {
         state.web3Status = dataStatuses.Loading;
       })
-      .addCase(connectChainMetamask.fulfilled, (state, action) => {
+      .addCase(connectChainBrowserWallet.fulfilled, (state, action) => {
         state.web3Status = dataStatuses.Complete;
         if (action.payload.connectedChain) {
           state.connectedChain = action.payload.connectedChain;
@@ -143,8 +148,11 @@ export const web3Slice = createSlice({
           state.currentUserAddress =
             action.payload.currentUserAddress.toLowerCase() as Hex;
         }
+        if (action.payload.provider) {
+          state.provider = action.payload.provider;
+        }
       })
-      .addCase(connectChainMetamask.rejected, (state) => {
+      .addCase(connectChainBrowserWallet.rejected, (state) => {
         state.web3Status = dataStatuses.Failed;
       })
       .addCase(connectChainWeb3Auth.pending, (state) => {
