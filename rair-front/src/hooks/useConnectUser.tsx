@@ -293,6 +293,7 @@ const useConnectUser = () => {
       dispatchStack.push(setConnectedChain(loginData.blockchain));
 
       let willUpdateUserData = false;
+      let email: string | undefined = undefined;
 
       try {
         // Check if user exists in DB
@@ -300,16 +301,23 @@ const useConnectUser = () => {
           `/api/users/${loginData.userAddress}`
         );
         let user = userDataResponse.data.user;
+        if (!user?.email) {
+          // Try getting the email from social login
+          switch (loginMethod) {
+            case 'alchemyV4':
+              email = (await loginData.userDetails.getAuthDetails()).email;
+              break;
+            case 'web3auth':
+              email = loginData.userDetails.email;
+              break;
+          }
+        }
         if (!userDataResponse.data.success || !user) {
           // If the user doesn't exist, send a request to register him using a TEMP adminNFT
           willUpdateUserData = true;
-          const relevantUserData = { publicAddress: loginData.userAddress };
-          if (loginData?.userDetails?.email) {
-            relevantUserData['email'] = loginData.userDetails.email;
-          }
           const userCreation = await axios.post<TUserResponse>(
             '/api/users',
-            JSON.stringify(relevantUserData),
+            JSON.stringify({ publicAddress: loginData.userAddress }),
             {
               headers: {
                 Accept: 'application/json',
@@ -318,10 +326,7 @@ const useConnectUser = () => {
             }
           );
           user = userCreation.data.user;
-        } else if (
-          !userDataResponse?.data?.user?.email &&
-          loginData?.userDetails?.email
-        ) {
+        } else if (!userDataResponse?.data?.user?.email && email) {
           willUpdateUserData = true;
         }
 
@@ -352,27 +357,29 @@ const useConnectUser = () => {
                 loginData.userAddress
               );
               reactSwal.close();
-              if (willUpdateUserData) {
-                const userData = await loginData.userDetails;
-                const availableData: Partial<User> = {};
-                if (userData?.email && !loginResponse.user.email) {
-                  availableData.email = userData.email;
-                }
-                if (userData?.email && !loginResponse.user.nickName) {
-                  availableData.nickName = userData.email?.split('@')?.[0];
-                }
-                if (userData.name && !userData.name.includes('@')) {
-                  availableData.firstName = userData.name.split(' ')?.[0];
-                  availableData.lastName = userData.name.split(' ')?.[0];
-                }
-                const newUserResponse = await axios.patch(
-                  `/api/users/${loginData.userAddress.toLowerCase()}`,
-                  availableData
-                );
-                user = newUserResponse.data.user;
-              }
-              //  provider.accountProvider.signTypedData
               break;
+          }
+          if (willUpdateUserData) {
+            const userData = await loginData.userDetails;
+            const availableData: Partial<User> = {};
+            if (email && !loginResponse.user.email) {
+              availableData.email = email;
+            }
+            if (email && !loginResponse.user.nickName) {
+              availableData.nickName = email?.split('@')?.[0];
+            }
+            if (userData.name && !userData.name.includes('@')) {
+              availableData.firstName = userData.name.split(' ')?.[0];
+              availableData.lastName = userData.name.split(' ')?.[0];
+            }
+            if (Object.keys(availableData).length !== 0) {
+              const newUserResponse = await axios.patch(
+                `/api/users/${loginData.userAddress.toLowerCase()}`,
+                availableData
+              );
+              console.info(2, newUserResponse);
+              user = newUserResponse.data.user;
+            }
           }
           dispatch(loadCurrentUser());
           if (loginResponse.success) {
@@ -406,6 +413,7 @@ const useConnectUser = () => {
   const logoutUser = useCallback(async () => {
     const { success } = await rFetch('/api/auth/logout');
     if (success) {
+      document.getElementById('rair-asif')?.replaceChildren();
       dispatch(loadCurrentUser());
       sockets.nodeSocket.emit('logout', currentUserAddress?.toLowerCase());
       sockets.nodeSocket.disconnect();

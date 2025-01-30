@@ -10,6 +10,7 @@ COPY yarn.lock ./
 RUN yarn install
 COPY . /usr/src/minting
 #RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
+RUN node --max-old-space-size=8192
 RUN yarn build
 
 

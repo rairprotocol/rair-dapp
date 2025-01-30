@@ -59,7 +59,7 @@ export const connectChainAlchemyV4 = createAsyncThunk(
           // policyId: chainInformation.alchemyGasPolicy
         },
         iframeConfig: {
-          iframeContainerId: 'alchemy-signer-iframe-container'
+          iframeContainerId: 'rair-asif' // Alchemy signer iFrame
         }
       }
     });
@@ -76,7 +76,8 @@ export const connectChainAlchemyV4 = createAsyncThunk(
 
     const data = await signer.authenticate({
       type: 'oauth',
-      authProviderId: 'google',
+      authProviderId: 'auth0',
+      auth0Connection: 'github',
       mode: 'popup'
     });
 
