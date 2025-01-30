@@ -213,7 +213,7 @@ const useConnectUser = () => {
               <button
                 className="btn btn-light"
                 onClick={() => resolve('alchemyV4')}>
-                Google
+                Github (Alchemy V4)
               </button>
               <div className="login-modal-down-text">
                 <div>Each social login creates a unique wallet address</div>
