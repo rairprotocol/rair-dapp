@@ -42,8 +42,5 @@ export default defineConfig({
     commonjsOptions: {
       transformMixedEsModules: false
     },
-    rollupOptions: {
-      external: ['zustand/middleware', 'zustand/vanilla']
-    }
   }
 });
