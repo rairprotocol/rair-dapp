@@ -8,16 +8,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@emotion/react', '@emotion/styled', '@mui/material/Tooltip']
   },
-  plugins: [
-    react({
-      jsxImportSource: '@emotion/react',
-      babel: {
-        plugins: ['@emotion/babel-plugin']
-      }
-    }),
-    nodePolyfills(),
-    svgr()
-  ],
+  plugins: [react(), nodePolyfills(), svgr()],
   server: {
     port: 3001,
     proxy: {
@@ -41,6 +32,6 @@ export default defineConfig({
   build: {
     commonjsOptions: {
       transformMixedEsModules: false
-    },
+    }
   }
 });
