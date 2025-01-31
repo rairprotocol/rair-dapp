@@ -43,7 +43,7 @@ export default defineConfig({
       transformMixedEsModules: false
     },
     rollupOptions: {
-      external: ['zustand/*']
+      external: ['zustand/middleware', 'zustand/vanilla']
     }
   }
 });
