@@ -41,6 +41,9 @@ export default defineConfig({
   build: {
     commonjsOptions: {
       transformMixedEsModules: false
+    },
+    rollupOptions: {
+      external: ['zustand/middleware']
     }
   }
 });

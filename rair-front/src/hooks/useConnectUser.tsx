@@ -377,7 +377,6 @@ const useConnectUser = () => {
                 `/api/users/${loginData.userAddress.toLowerCase()}`,
                 availableData
               );
-              console.info(2, newUserResponse);
               user = newUserResponse.data.user;
             }
           }
