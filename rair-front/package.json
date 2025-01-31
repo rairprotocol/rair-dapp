@@ -109,6 +109,6 @@
     "husky": "^9.1.7",
     "typescript": "^5.7.3",
     "vite": "^6.0.11",
-    "vite-plugin-node-polyfills": "^0.22.0"
+    "vite-plugin-node-polyfills": "^0.23.0"
   }
 }

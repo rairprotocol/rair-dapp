@@ -108,9 +108,6 @@ export const connectChainWeb3Auth = createAsyncThunk(
       return {};
     }
     const web3AuthSigner = new Web3AuthSigner({
-      uiConfig: {
-        loginMethodsOrder: ['github']
-      },
       clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
       chainConfig: {
         chainNamespace: 'eip155',
@@ -127,24 +124,7 @@ export const connectChainWeb3Auth = createAsyncThunk(
     });
     await web3AuthSigner.authenticate({
       init: async () => {
-        await web3AuthSigner.inner.initModal({
-          modalConfig: {
-            [WALLET_ADAPTERS.AUTH]: {
-              label: 'auth',
-              loginMethods: {
-                // Disable facebook and reddit
-                facebook: {
-                  name: 'facebook',
-                  showOnModal: false
-                },
-                reddit: {
-                  name: 'reddit',
-                  showOnModal: false
-                }
-              }
-            }
-          }
-        });
+        await web3AuthSigner.inner.initModal();
       },
       connect: async () => {
         await web3AuthSigner.inner.connect();

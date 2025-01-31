@@ -309,7 +309,7 @@ function App() {
 						*/}
           <MainBlockApp isSplashPage={isSplashPage} showAlert={showAlert}>
             <div className="col-12 blockchain-switcher" />
-            <div id="alchemy-signer-iframe-container" className="d-none" />
+            <div id="rair-asif" className="d-none" />
             <div className="col-12 mt-3">
               <SentryRoutes>
                 {/*
