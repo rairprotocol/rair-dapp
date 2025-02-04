@@ -63,7 +63,7 @@ export const connectChainAlchemyV4 = createAsyncThunk(
         }
       }
     });
-
+    console.info({ signer });
     if (!signer) {
       return {};
     }
@@ -71,6 +71,7 @@ export const connectChainAlchemyV4 = createAsyncThunk(
     const alchemyTransport = alchemy({
       apiKey: chainData.alchemyAppKey
     });
+    console.info({ alchemyTransport });
 
     await signer.preparePopupOauth();
 
@@ -80,6 +81,7 @@ export const connectChainAlchemyV4 = createAsyncThunk(
       auth0Connection: 'github',
       mode: 'popup'
     });
+    console.info({ data });
 
     const client = createAlchemySmartAccountClient({
       transport: alchemyTransport,
@@ -91,6 +93,7 @@ export const connectChainAlchemyV4 = createAsyncThunk(
         signer
       })
     });
+    console.info({ client });
 
     return {
       connectedChain: chainData.hash,
