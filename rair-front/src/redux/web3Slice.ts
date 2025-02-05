@@ -11,7 +11,7 @@ import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import { Maybe } from '@metamask/providers/dist/utils';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { WALLET_ADAPTERS, WEB3AUTH_NETWORK } from '@web3auth/base';
+import { WEB3AUTH_NETWORK } from '@web3auth/base';
 import { BrowserProvider } from 'ethers';
 import { Hex } from 'viem';
 
@@ -63,7 +63,6 @@ export const connectChainAlchemyV4 = createAsyncThunk(
         }
       }
     });
-    console.info({ signer });
     if (!signer) {
       return {};
     }
@@ -71,7 +70,6 @@ export const connectChainAlchemyV4 = createAsyncThunk(
     const alchemyTransport = alchemy({
       apiKey: chainData.alchemyAppKey
     });
-    console.info({ alchemyTransport });
 
     await signer.preparePopupOauth();
 
@@ -81,7 +79,6 @@ export const connectChainAlchemyV4 = createAsyncThunk(
       auth0Connection: 'github',
       mode: 'popup'
     });
-    console.info({ data });
 
     const client = createAlchemySmartAccountClient({
       transport: alchemyTransport,
