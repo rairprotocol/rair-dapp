@@ -41,7 +41,6 @@
     "@walletconnect/utils": "^2.14.0",
     "@web3auth/base": "^9.5.3",
     "@web3auth/modal": "^9.5.3",
-    "@web3auth/no-modal": "^9.5.3",
     "alchemy-sdk": "^3.4.1",
     "analytics": "^0.8.14",
     "axios": "^1.7.9",

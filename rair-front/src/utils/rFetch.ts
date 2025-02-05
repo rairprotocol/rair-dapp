@@ -1,11 +1,8 @@
-import { AlchemyWebSigner } from '@account-kit/signer';
 import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import axios from 'axios';
 import { BrowserProvider, Provider } from 'ethers';
 import Swal from 'sweetalert2';
 import { Hex } from 'viem';
-
-import chainData from './blockchainData';
 
 import {
   TAuthGetChallengeResponse,
