@@ -90,7 +90,6 @@ export const connectChainAlchemyV4 = createAsyncThunk(
         signer
       })
     });
-    console.info({ client });
 
     return {
       connectedChain: chainData.hash,

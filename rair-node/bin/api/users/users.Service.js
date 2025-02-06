@@ -250,7 +250,6 @@ exports.updateUserByUserAddress = async (req, res, next) => {
       ...updatedUser,
     };
 
-    res.json({ success: true, user: updatedUser });
     return next();
   } catch (e) {
     return next(e);
@@ -258,19 +257,26 @@ exports.updateUserByUserAddress = async (req, res, next) => {
 };
 
 exports.queryGithubData = async (req, res, next) => {
-  const { email, publicAddress, gitHandle } = req.session.userData;
-  if (gitHandle) {
-    return;
+  const { publicAddress, gitHandle } = req.session.userData;
+  const { gitId } = req.body;
+  if (gitHandle || !gitId) {
+    return res.json({ success: true, user: req.session.userData });
   }
-  const query = await (await fetch(`https://api.github.com/search/users?q=${email}`)).json();
-  if (query.total_count === 1) {
-    await User.findOneAndUpdate({ publicAddress }, {
-      gitHandle: query.items[0].login,
-      gitBio: query.items[0].bio,
+  const query = await (await fetch(`https://api.github.com/user/${gitId}`)).json();
+  if (query.login) {
+    const updatedUser = await User.findOneAndUpdate({ publicAddress }, {
+      gitHandle: query.login,
+      gitBio: query.bio,
       // available: query.items[0].hireable,
-      avatar: query.items[0].avatar_url,
-    });
-    return;
+      avatar: query.avatar_url,
+    }, { new: true, projection: { nonce: 0 } }).lean();
+
+    req.session.userData = {
+      ...req.session.userData,
+      ...updatedUser,
+    };
+    return res.json({ success: true, user: req.session.userData });
   }
-  log.error("Couldn't fetch Github data, more than one account associated with the email");
+  log.error("Couldn't fetch Github data");
+  return res.json({ success: true, user: req.session.userData });
 };

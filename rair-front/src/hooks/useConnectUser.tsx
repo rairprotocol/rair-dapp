@@ -292,29 +292,13 @@ const useConnectUser = () => {
       dispatchStack.push(setExchangeRates(await getCoingeckoRates()));
       dispatchStack.push(setConnectedChain(loginData.blockchain));
 
-      let willUpdateUserData = false;
-      let email: string | undefined = undefined;
-
       try {
         // Check if user exists in DB
         const userDataResponse = await axios.get<TUserResponse>(
           `/api/users/${loginData.userAddress}`
         );
         let user = userDataResponse.data.user;
-        if (!user?.email) {
-          // Try getting the email from social login
-          switch (loginMethod) {
-            case 'alchemyV4':
-              email = (await loginData.userDetails.getAuthDetails()).email;
-              break;
-            case 'web3auth':
-              email = loginData.userDetails.email;
-              break;
-          }
-        }
         if (!userDataResponse.data.success || !user) {
-          // If the user doesn't exist, send a request to register him using a TEMP adminNFT
-          willUpdateUserData = true;
           const userCreation = await axios.post<TUserResponse>(
             '/api/users',
             JSON.stringify({ publicAddress: loginData.userAddress }),
@@ -326,8 +310,6 @@ const useConnectUser = () => {
             }
           );
           user = userCreation.data.user;
-        } else if (!userDataResponse?.data?.user?.email && email) {
-          willUpdateUserData = true;
         }
 
         // Authorize user
@@ -359,26 +341,42 @@ const useConnectUser = () => {
               reactSwal.close();
               break;
           }
-          if (willUpdateUserData) {
-            const userData = await loginData.userDetails;
-            const availableData: Partial<User> = {};
-            if (email && !loginResponse.user.email) {
-              availableData.email = email;
+
+          const updateData = {};
+          if (!user?.gitHandle || !user?.email) {
+            // Try getting the git ID from social login
+            switch (loginMethod) {
+              case 'alchemyV4':
+                if (!user.email) {
+                  updateData['email'] = loginData.userDetails.email;
+                }
+                if (!user.gitHandle) {
+                  updateData['gitId'] = (
+                    await loginData.userDetails.getAuthDetails()
+                  ).claims.sub.split('|')[1];
+                }
+                break;
+              case 'web3auth':
+                if (!user.email) {
+                  updateData['email'] = loginData.userDetails.email;
+                }
+                if (!user.gitHandle) {
+                  updateData['gitId'] = '';
+                }
+                break;
             }
-            if (email && !loginResponse.user.nickName) {
-              availableData.nickName = email?.split('@')?.[0];
+            if (!user.nickName) {
+              updateData['nickName'] = updateData['email']?.split('@')?.[0];
             }
-            if (userData.name && !userData.name.includes('@')) {
-              availableData.firstName = userData.name.split(' ')?.[0];
-              availableData.lastName = userData.name.split(' ')?.[0];
-            }
-            if (Object.keys(availableData).length !== 0) {
-              const newUserResponse = await axios.patch(
-                `/api/users/${loginData.userAddress.toLowerCase()}`,
-                availableData
-              );
-              user = newUserResponse.data.user;
-            }
+          }
+
+          if (Object.keys(updateData).length) {
+            console.info(updateData);
+            const newUserResponse = await axios.patch(
+              `/api/users/${loginData.userAddress.toLowerCase()}`,
+              updateData
+            );
+            user = newUserResponse.data.user;
           }
           dispatch(loadCurrentUser());
           if (loginResponse.success) {
