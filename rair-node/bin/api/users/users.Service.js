@@ -259,7 +259,7 @@ exports.updateUserByUserAddress = async (req, res, next) => {
 exports.queryGithubData = async (req, res, next) => {
   const { publicAddress, gitHandle } = req.session.userData;
   const { gitId } = req.body;
-  if (gitHandle || !gitId) {
+  if (gitHandle || !gitId || !Number.isInteger(Number(gitId))) {
     return res.json({ success: true, user: req.session.userData });
   }
   const query = await (await fetch(`https://api.github.com/user/${gitId}`)).json();
