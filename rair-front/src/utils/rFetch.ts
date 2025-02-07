@@ -71,6 +71,21 @@ const signWeb3MessageMetamask = async (userAddress: Hex) => {
   }
 };
 
+const signWeb3MessageAlchemyV4 = async (userAddress: Hex, signer) => {
+  if (!signer) {
+    return;
+  }
+
+  const challenge = await getChallenge(userAddress);
+
+  const parsedResponse = JSON.parse(challenge);
+  const signedChallenge = await signer.signTypedData(parsedResponse);
+
+  if (signedChallenge) {
+    return await respondChallenge(challenge, signedChallenge);
+  }
+};
+
 const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
   const web3AuthSigner = new Web3AuthSigner({
     clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
@@ -100,7 +115,7 @@ const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
     body: JSON.stringify({
       MetaMessage: parsedResponse.message.challenge,
       MetaSignature: signedChallenge,
-      userAddress
+      userAddress: userAddress
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -156,4 +171,10 @@ const rFetch = async (
   return request;
 };
 
-export { rFetch, signIn, signWeb3MessageMetamask, signWeb3MessageWeb3Auth };
+export {
+  rFetch,
+  signIn,
+  signWeb3MessageAlchemyV4,
+  signWeb3MessageMetamask,
+  signWeb3MessageWeb3Auth
+};

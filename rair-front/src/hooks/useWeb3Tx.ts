@@ -342,6 +342,8 @@ const useWeb3Tx = () => {
           });
         case 'web3auth':
           return programmaticProvider?.signMessage(message);
+        case 'alchemyV4':
+          return programmaticProvider?.signMessage(message);
         default:
           reactSwal.fire('Error', 'Please login.', 'error');
       }
@@ -366,6 +368,8 @@ const useWeb3Tx = () => {
         case 'metamask':
           return metamaskCall(contract, method, args, options);
         case 'web3auth':
+          return web3AuthCall(contract, method, args, options);
+        case 'alchemyV4':
           return web3AuthCall(contract, method, args, options);
         default:
           reactSwal.fire('Error', 'Please login', 'error');

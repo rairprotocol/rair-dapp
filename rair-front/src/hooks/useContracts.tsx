@@ -24,7 +24,9 @@ import {
 const useContracts = () => {
   const { getBlockchainData } = useServerSettings();
   const { loginType, isLoggedIn } = useAppSelector((store) => store.user);
-  const { connectedChain } = useAppSelector((store) => store.web3);
+  const { connectedChain, programmaticProvider } = useAppSelector(
+    (store) => store.web3
+  );
 
   const [signer, setSigner] = useState<
     JsonRpcSigner | AccountSigner<SmartContractAccount>
@@ -44,6 +46,19 @@ const useContracts = () => {
   const [licenseExchangeInstance, setLicenseExchangeInstance] = useState<
     Contract | undefined
   >();
+
+  const createAlchemyV4Signer = useCallback(async () => {
+    const chainData = getBlockchainData(connectedChain);
+
+    if (!chainData) {
+      return;
+    }
+    if (!programmaticProvider) {
+      return {};
+    }
+
+    return await programmaticProvider.account.getSigner();
+  }, [connectedChain, getBlockchainData, programmaticProvider]);
 
   const createWeb3AuthSigner = useCallback(async () => {
     const chainData = getBlockchainData(connectedChain);
@@ -108,6 +123,9 @@ const useContracts = () => {
       return;
     }
     switch (loginType) {
+      case 'alchemyV4':
+        setSigner(await createAlchemyV4Signer());
+        break;
       case 'metamask':
         if (!window.ethereum.isConnected()) {
           return;
@@ -120,7 +138,7 @@ const useContracts = () => {
         setSigner(await createWeb3AuthSigner());
         break;
     }
-  }, [loginType, isLoggedIn, createWeb3AuthSigner]);
+  }, [isLoggedIn, loginType, createAlchemyV4Signer, createWeb3AuthSigner]);
 
   useEffect(() => {
     refreshSigner();

@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     const { adminRights, publicAddress } = req.user;
 
     if (!adminRights) {
-      return next(new AppError(`User ${publicAddress} don't have admin rights.`, 401));
+      return next(new AppError(`User ${publicAddress} does not have admin rights.`, 401));
     }
 
     return next();

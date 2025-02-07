@@ -19,5 +19,6 @@ module.exports = {
     firstName: Joi.string(),
     lastName: Joi.string(),
     blocked: Joi.boolean(),
+    gitId: Joi.number(),
   }),
 };

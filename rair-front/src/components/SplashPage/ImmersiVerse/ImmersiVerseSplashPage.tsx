@@ -85,7 +85,7 @@ const ImmersiVerseSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
-  let subtitle: Modal;
+  const [subtitle] = useState<Modal>();
 
   function afterOpenModal() {
     if (subtitle?.props?.style?.content) {
