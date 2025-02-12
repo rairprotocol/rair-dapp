@@ -347,7 +347,7 @@ const useConnectUser = () => {
             // Try getting the git ID from social login
             switch (loginMethod) {
               case 'alchemyV4':
-                if (!user.email) {
+                if (!user.email && loginData?.userDetails?.email) {
                   updateData['email'] = loginData.userDetails.email;
                 }
                 if (!user.gitHandle) {
@@ -357,11 +357,12 @@ const useConnectUser = () => {
                 }
                 break;
               case 'web3auth':
-                if (!user.email) {
+                if (!user.email && loginData?.userDetails?.email) {
                   updateData['email'] = loginData.userDetails.email;
                 }
-                if (!user.gitHandle) {
-                  updateData['gitId'] = '';
+                if (!user.gitHandle && loginData?.userDetails?.verifiedId) {
+                  updateData['gitId'] =
+                    loginData.userDetails.verifiedId.split('|')[1];
                 }
                 break;
             }
