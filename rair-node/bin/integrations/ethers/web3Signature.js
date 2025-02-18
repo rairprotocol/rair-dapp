@@ -168,11 +168,15 @@ module.exports = {
     }
     const recovered = await recoverUserFromSignature(MetaMessage, MetaSignature);
     const storedOwner = cache.get(`${userAddress}secret`);
-    if (recovered?.toLowerCase() === storedOwner?.toLowerCase()) {
+    if (
+      recovered !== undefined &&
+      storedOwner !== undefined &&
+      recovered.toLowerCase() === storedOwner.toLowerCase()
+    ) {
       cache.del(userAddress.toLowerCase());
       cache.del(MetaMessage);
       cache.del(`${userAddress}secret`);
-      req.metaAuth = { recovered: userAddress };
+      req.metaAuth = { recovered: userAddress.toLowerCase() };
       req.web3LoginMethod = 'web3auth';
     } else {
       req.metaAuth = undefined;

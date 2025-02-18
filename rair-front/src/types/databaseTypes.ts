@@ -106,6 +106,7 @@ export interface User extends MongoDocument {
   publicAddress?: Hex;
   creationDate?: string;
   blocked?: boolean;
+  gitHandle?: string;
 }
 
 export interface MetadataAttribute {

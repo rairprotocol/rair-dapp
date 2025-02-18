@@ -9,4 +9,5 @@ WORKDIR /usr/src/minting
 
 EXPOSE 3001
 
+CMD node --max-old-space-size=8192
 CMD npm start
