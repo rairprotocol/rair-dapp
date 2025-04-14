@@ -203,20 +203,20 @@ const useConnectUser = () => {
                   Web3
                 </button>
               )}
-              <hr />
-              <button
+              {/* <hr /> */}
+              {/* <button
                 className="btn btn-light"
                 onClick={() => resolve('web3auth')}>
                 Social Logins
-              </button>
-              <hr />
+              </button> */}
+              {/* <hr />
               <button
                 className="btn btn-light"
                 onClick={() => resolve('alchemyV4')}>
                 Github (Alchemy V4)
-              </button>
+              </button> */}
               <div className="login-modal-down-text">
-                <div>Each social login creates a unique wallet address</div>
+                {/* <div>Each social login creates a unique wallet address</div> */}
                 <div>
                   If you login with a different account, you won’t see purchases
                   in your other wallets
