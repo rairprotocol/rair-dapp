@@ -21,7 +21,7 @@ const MomentsGame: React.FC = () => {
   return (
     <GameContainer>
       <GameIframe
-        src="https://sougen.co/"
+        src="https://rairprotocol.info/tariff"
         title="Moments of Happiness"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
