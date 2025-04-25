@@ -1,4 +1,4 @@
-import useLongPress from "../hooks/useLongPress";
+import useLongPress from "../hooks/useLongPress.tsx";
 
 const PhysicalMovements = () => {
   const onKeyLongPress = (type, key, keyCode, code) => {

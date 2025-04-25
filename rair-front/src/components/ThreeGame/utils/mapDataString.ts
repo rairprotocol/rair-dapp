@@ -1,6 +1,6 @@
 export const mapDataString = (str) => {
     const lineBreak = "\n";
-    const data = [];
+    const data: string[][] = [];
     let line = -1;
     let string = str;
     // strip any break at the end

@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Stats, OrbitControls } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 
 import Plane from "../components/Plane";
 import Player from "../components/Player";
@@ -7,6 +8,7 @@ import Object from "../components/Object";
 import Coin from "../components/Coin";
 import { mapDataString } from "./../utils/mapDataString";
 import { chest, orb } from "./../utils/textureManager";
+import { calcDistance } from "../utils/calcDistance";
 
 const mapData = mapDataString(`
 # # # # # # # # # # # # # # # # #
@@ -18,17 +20,17 @@ const mapData = mapDataString(`
 # · · · · · C · · · C · · · · · #
 # · · · C · · · C · · · C · · · # # # # # # # # # # # # # # # #
 # · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · # 
-# · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · # # # # # # # # #
+# · · · C · C · · C C · · · · · · · · · · · · · · · · · · · · # # # # # # # # #
 # · · · · · · · · · · · · · · · # · · · · · · · · · · · · · · · · · · · · · · #
 # · · · · · · · · · · · · · · · # · · · · · · · · · · · · · · · · · · C C C · #
 # # # # # # # · · · # # # # # # # · · · · · · · · · · · · · · · · · · · · · · #
-· · · · · · · · · · · · · · · · # · · · · · · · · · · · · · · # # # # # # # # #
-· · · · · · · · · · · · · · · · # · · · · · · · · · · · · · · #
-· · · · · · · · · · · · · · · · # · · · · · · · · · · · · · · #
-· · · · · · · · · · · · · · · · # # # # # # # # # # # # # # # #
+# · · · · · · · · · · · · · · · # · · · · · · · · · · · · · · # # # # # # # # #
+# · · · · · · · · · · · · · · · # · · · · · · · · · · · · · · #
+# · · · · · · · · · · · · · · · # · · · · · · · · · · · · · · #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 `);
 
-const resolveMapTile = (type, x, y, mapData, setCurrentMap) => {
+const resolveMapTile = (type, x, y, mapData, setCurrentMap, onCoinCollect) => {
   const key = `${x}-${y}`;
 
   switch (type) {
@@ -47,7 +49,7 @@ const resolveMapTile = (type, x, y, mapData, setCurrentMap) => {
           key={key}
           position={[x, 0.5, y]}
           texture={chest}
-          name="Blocking"
+          name="Draggable"
         />
       );
     case "C":
@@ -58,6 +60,7 @@ const resolveMapTile = (type, x, y, mapData, setCurrentMap) => {
           mapData={mapData}
           setCurrentMap={setCurrentMap}
           type={type}
+          onCollect={onCoinCollect}
         />
       );
     default:
@@ -65,17 +68,35 @@ const resolveMapTile = (type, x, y, mapData, setCurrentMap) => {
   }
 };
 
-const SampleLevel = () => {
+const SampleLevel = ({ onLevelComplete, onCoinCollect }) => {
   const [colour, setColour] = useState("#7E370C");
-
   const [currentMap, setCurrentMap] = useState(mapData);
+  const { scene } = useThree();
 
-  // Remove this to see performance degradation
+  // Check for portal collision
+  useEffect(() => {
+    const checkPortalCollision = () => {
+      const player = scene.children.find(child => child.name === "Player");
+      const portal = scene.children.find(child => child.name === "Portal");
+      
+      if (player && portal) {
+        const distance = calcDistance(player.position, portal.position);
+        if (distance < 2) {
+          console.log("Portal reached!");
+          onLevelComplete();
+        }
+      }
+    };
+
+    const interval = setInterval(checkPortalCollision, 100);
+    return () => clearInterval(interval);
+  }, [scene, onLevelComplete]);
+
   const memoizedMapData = useMemo(() => {
     return currentMap.map((row, y) =>
-      row.map((type, x) => resolveMapTile(type, x, y, mapData, setCurrentMap))
+      row.map((type, x) => resolveMapTile(type, x, y, mapData, setCurrentMap, onCoinCollect))
     );
-  }, [currentMap]);
+  }, [currentMap, onCoinCollect]);
 
   console.log("World rendering...");
 
@@ -104,13 +125,13 @@ const SampleLevel = () => {
       <rectAreaLight
         position={[38.5, 1, 11]}
         intensity={5}
-        castShadow={true}
-        penumbra={1}
-        width={1}
-        rotation={[0, 20.4, 0]}
+        width={2}
+        height={2}
+        color="yellow"
+        name="Portal"
       />
       <spotLight
-        position={[10, 10, 10]}
+        position={[20, 20, 20]}
         angle={0.5}
         intensity={1}
         castShadow={true}

@@ -18,7 +18,7 @@ function actionByKey(key) {
     KeyS: "moveBackward",
     KeyA: "moveLeft",
     KeyD: "moveRight",
-    Space: "action",
+    KeyE: "action",
   };
   return keys[key];
 }

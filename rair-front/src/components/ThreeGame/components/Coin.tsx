@@ -2,11 +2,11 @@ import React, { useCallback, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import throttle from "lodash-es/throttle";
 
-import { coin } from "../utils/textureManager";
+import { coin } from "../utils/textureManager.ts";
 import coinSound from "../sounds/coin.wav";
 import { calcDistance } from "../utils/calcDistance";
 
-const Coin = ({ position }) => {
+const Coin = ({ position, onCollect }) => {
   const sound = new Audio(coinSound);
 
   const ref = useRef();
@@ -26,10 +26,13 @@ const Coin = ({ position }) => {
         if (collision) {
           sound.play();
           setHide(true);
+          if (onCollect) {
+            onCollect();
+          }
         }
       }
     }, 100),
-    [hide]
+    [hide, onCollect]
   );
 
   useFrame(coinControl);
@@ -45,7 +48,7 @@ const Coin = ({ position }) => {
       name="Coin"
       rotation={[-Math.PI / 2, 0, 0]}
     >
-      <planeBufferGeometry attach="geometry" />
+      <planeGeometry attach="geometry" />
       <meshStandardMaterial
         attach="material"
         transparent={true}

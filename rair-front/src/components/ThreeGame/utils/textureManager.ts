@@ -40,14 +40,14 @@ import {
     return image;
   }
   
-  const wood = imgLoader(wallImg);
+  const wood = imgLoader(wallImg, "png");
   const playerUpMovement = imgLoader(playerUp, "gif");
   const playerDownMovement = imgLoader(playerDown, "gif");
   const playerRightMovement = imgLoader(playerRight, "gif");
   const playerLeftMovement = imgLoader(playerLeft, "gif");
   const playerIdleMovement = imgLoader(playerIdle, "gif");
   const coin = imgLoader(coinImg, "gif");
-  const chest = imgLoader(chestImg);
+  const chest = imgLoader(chestImg, "png");
   const orb = imgLoader(orbImg, "gif");
   const bomb = imgLoader(bombImg, "gif");
   

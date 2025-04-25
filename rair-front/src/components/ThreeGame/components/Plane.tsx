@@ -9,7 +9,7 @@ const Plane = (props) => {
       ref={ref}
       name="plane"
     >
-      <planeBufferGeometry attach="geometry" args={[200, 200]} />
+      <planeGeometry attach="geometry" args={[200, 200]} />
       <meshStandardMaterial attach="material" color={props.colour} />
     </mesh>
   );

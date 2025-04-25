@@ -58,3 +58,17 @@
     top: calc(50% - 15px);
     background: #000;
 }
+
+.coin-counter {
+  position: fixed;
+  top: 140px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: gold;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  z-index: 1000;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
