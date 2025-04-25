@@ -127,6 +127,7 @@ const SampleLevel = ({ onLevelComplete, onCoinCollect }) => {
         intensity={5}
         width={2}
         height={2}
+        rotation={[0, 20.4, 0]}
         color="yellow"
         name="Portal"
       />
