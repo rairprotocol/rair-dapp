@@ -17,7 +17,7 @@ import useWeb3Tx from '../../../hooks/useWeb3Tx';
 /* importing images*/
 import { metaMaskIcon } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { CustomModalStyle, SplashPageProps } from '../../../types/commonTypes';
 import MobileCarouselNfts from '../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import PurchaseTokenButton from '../../common/PurchaseToken';
@@ -152,9 +152,9 @@ const GreymanSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
     setOpenCheckList((prev) => !prev);
   };
 
-  useEffect(() => {
-    dispatch(setRequestedChain(GreymanChainId));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain(GreymanChainId));
+  // }, [dispatch]);
 
   const openModal = useCallback(() => {
     setIsOpen(true);

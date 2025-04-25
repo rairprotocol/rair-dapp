@@ -10,7 +10,7 @@ import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { CatalogVideoItem, SplashPageProps } from '../../../types/commonTypes';
 import {
   donationGridData,
@@ -125,9 +125,9 @@ const SimDogsSplashPage: React.FC<SplashPageProps> = ({ setIsSplashPage }) => {
     setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
-  useEffect(() => {
-    dispatch(setRequestedChain(mainChain));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain(mainChain));
+  // }, [dispatch]);
 
   return (
     <div className="wrapper-splash-page simdogs">

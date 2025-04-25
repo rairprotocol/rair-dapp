@@ -6,7 +6,7 @@ import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { SplashPageProps } from '../../../types/commonTypes';
 import { splashData } from '../../../utils/infoSplashData/coicAgenda2021';
 import MetaTags from '../../SeoTags/MetaTags';
@@ -71,9 +71,9 @@ const CoinAgenda2021SplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
     setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
-  useEffect(() => {
-    dispatch(setRequestedChain(ukraineglitchChainId));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain(ukraineglitchChainId));
+  // }, [dispatch]);
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);

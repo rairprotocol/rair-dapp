@@ -6,7 +6,7 @@ import { teamVaporVerseArray } from './AboutUsTeam';
 import useConnectUser from '../../../hooks/useConnectUser';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { SplashPageProps } from '../../../types/commonTypes';
 import { splashData } from '../../../utils/infoSplashData/vapoverseSplashPage';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
@@ -119,9 +119,9 @@ const VaporverseSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   //   getAllProduct()
   // }, [getAllProduct])
 
-  useEffect(() => {
-    dispatch(setRequestedChain(chainId));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain(chainId));
+  // }, [dispatch]);
 
   useEffect(() => {
     setIsSplashPage(true);

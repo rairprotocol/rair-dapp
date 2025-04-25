@@ -21,7 +21,7 @@ import {
 } from '../../../../hooks/useReduxHooks';
 import { dataStatuses } from '../../../../redux/commonTypes';
 import { loadCollection } from '../../../../redux/tokenSlice';
-import { setRequestedChain } from '../../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../../redux/web3Slice';
 import { CatalogVideoItem } from '../../../../types/commonTypes';
 import {
   MediaFile,
@@ -250,11 +250,11 @@ const NftDataCommonLinkComponent: React.FC<INftDataCommonLinkComponent> = ({
     [blockchain, contract, currentCollection, embeddedParams, navigate, product]
   );
 
-  useEffect(() => {
-    if (blockchain) {
-      dispatch(setRequestedChain(blockchain));
-    }
-  }, [blockchain, dispatch]);
+  // useEffect(() => {
+  //   if (blockchain) {
+  //     dispatch(setRequestedChain(blockchain));
+  //   }
+  // }, [blockchain, dispatch]);
 
   useEffect(() => {
     if (!tokenId || !currentCollectionMetadata.product) {

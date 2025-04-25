@@ -1,18 +1,24 @@
 //@ts-nocheck
-import React from "react";
+import React, {useState} from "react";
 import "./GameMenu.css";
+import { useAppSelector } from "../../../hooks/useReduxHooks";
 
 interface GameMenuProps {
   onStartGame: () => void;
 }
 
 const GameMenu: React.FC<GameMenuProps> = ({ onStartGame }) => {
+    const { adminRights, superAdmin, isLoggedIn, loginStatus } = useAppSelector(
+        (store) => store.user
+      );
+    const [login, setLogin] = useState(false);
+    
   return (
     <div className="game-menu">
       <div className="menu-container">
         <h1 className="game-title">RAIR Game</h1>
-        <button className="play-button" onClick={onStartGame}>
-          Play
+        <button disabled={!isLoggedIn} className="play-button" onClick={onStartGame}>
+          {isLoggedIn ? 'Play' : 'Please login'}
         </button>
         <div className="game-instructions">
           <h2>How to Play</h2>

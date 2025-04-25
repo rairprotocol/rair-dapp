@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { metaMaskIcon } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { SplashPageProps } from '../../../types/commonTypes';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
@@ -47,10 +47,10 @@ const Nutcrackers: FC<SplashPageProps> = ({ setIsSplashPage }) => {
   const targetBlockchain: Hex = '0x89';
   const nutcrackerAddress: Hex = '0xF4ca90d4a796f57133c6de47c2261BF237cfF780';
 
-  useEffect(() => {
-    dispatch(setRequestedChain(targetBlockchain));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain(targetBlockchain));
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
     if (leftTokensNumber <= wholeTokens) {

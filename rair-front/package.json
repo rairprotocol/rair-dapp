@@ -13,14 +13,6 @@
     "prepare": "cd ../ && husky install ./minting-marketplace/.husky"
   },
   "dependencies": {
-    "@account-kit/core": "^4.11.0",
-    "@account-kit/infra": "^4.11.0",
-    "@account-kit/signer": "^4.11.0",
-    "@alchemy/aa-accounts": "^3.19.0",
-    "@alchemy/aa-alchemy": "^3.19.0",
-    "@alchemy/aa-core": "^3.19.0",
-    "@alchemy/aa-ethers": "^3.19.0",
-    "@alchemy/aa-signers": "^3.19.0",
     "@analytics/google-analytics": "^1.0.7",
     "@emotion/is-prop-valid": "^1.3.1",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -51,7 +43,7 @@
     "lodash-es": "^4.17.21",
     "moment-timezone": "^0.5.45",
     "prettier": "^3.4.2",
-    "react": "^18.3.1",
+   "react": "^18.3.1",
     "react-accessible-accordion": "^5.0.0",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.5",
