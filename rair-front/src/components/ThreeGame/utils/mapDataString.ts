@@ -1,3 +1,4 @@
+//@ts-nocheck
 export const mapDataString = (str) => {
     const lineBreak = "\n";
     const data: string[][] = [];

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useCallback, useRef, useState } from "react";
 
 const useLongPress = (

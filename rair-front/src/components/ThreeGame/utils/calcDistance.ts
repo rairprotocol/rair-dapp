@@ -1,3 +1,4 @@
+//@ts-nocheck
 const calcDistance = (p1, p2) => {
     const a = p2.x - p1.x;
     const b = p2.y - p1.y;

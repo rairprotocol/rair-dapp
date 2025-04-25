@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useCallback, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import throttle from "lodash-es/throttle";

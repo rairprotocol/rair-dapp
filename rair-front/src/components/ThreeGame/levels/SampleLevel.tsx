@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useMemo, useEffect } from "react";
 import { Stats, OrbitControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";

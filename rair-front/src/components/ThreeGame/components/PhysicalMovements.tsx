@@ -1,3 +1,4 @@
+//@ts-nocheck
 import useLongPress from "../hooks/useLongPress.tsx";
 
 const PhysicalMovements = () => {

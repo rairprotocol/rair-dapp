@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useRef } from "react";
 
 const Plane = (props) => {

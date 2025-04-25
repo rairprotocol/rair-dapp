@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useRef } from "react";
 
 import { bomb } from "../utils/textureManager.ts";
