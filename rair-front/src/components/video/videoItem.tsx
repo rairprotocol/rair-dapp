@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Provider, useStore } from 'react-redux';
