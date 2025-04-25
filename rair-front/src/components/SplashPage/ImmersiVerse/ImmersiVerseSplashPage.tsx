@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { FC, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 

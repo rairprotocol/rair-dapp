@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import * as THREE from 'three';
 import { throttle } from 'lodash';

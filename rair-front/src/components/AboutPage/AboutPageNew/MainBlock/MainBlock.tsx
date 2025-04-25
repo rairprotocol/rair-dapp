@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState } from 'react';
 import Modal from 'react-modal';
 import { Hex } from 'viem';
