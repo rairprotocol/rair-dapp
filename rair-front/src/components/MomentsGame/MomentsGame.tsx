@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import ThreeGame from '../ThreeGame/ThreeGame';
 
 const GameContainer = styled.div`
   width: 100%;
@@ -20,12 +21,7 @@ const GameIframe = styled.iframe`
 const MomentsGame: React.FC = () => {
   return (
     <GameContainer>
-      <GameIframe
-        src="https://rairprotocol.info/tariff"
-        title="Moments of Happiness"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-      />
+     <ThreeGame />
     </GameContainer>
   );
 };

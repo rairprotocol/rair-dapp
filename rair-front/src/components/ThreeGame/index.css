@@ -1,0 +1,60 @@
+.stats {
+    bottom: 0 !important;
+    left: 0 !important;
+    top: unset !important;
+}
+
+.d-pad {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 90px;
+    height: 90px;
+    z-index: 2;
+}
+
+.d-pad button {
+    position: absolute;
+    background: #404040;
+    border: none;
+    width: 30px;
+    height: 30px;
+}
+
+#up {
+    top: 0;
+    left: calc(50% - 15px);
+    border: solid black 2px;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+}
+
+#right {
+    right: 0;
+    top: calc(50% - 15px);
+    border: solid black 2px;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+}
+
+#down {
+    bottom: 0;
+    left: calc(50% - 15px);
+    border: solid black 2px;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+}
+
+#left {
+    left: 0;
+    top: calc(50% - 15px);
+    border: solid black 2px;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+}
+
+#center {
+    left: calc(50% - 15px);
+    top: calc(50% - 15px);
+    background: #000;
+}
