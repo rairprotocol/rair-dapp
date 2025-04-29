@@ -1,8 +1,7 @@
-import {
-  // alchemy,
-  // AlchemySmartAccountClient,
-  // createAlchemySmartAccountClient
-} from '@account-kit/infra';
+// import {} from // alchemy,
+// AlchemySmartAccountClient,
+// createAlchemySmartAccountClient
+// '@account-kit/infra';
 // import { AlchemyWebSigner } from '@account-kit/signer';
 // import { createLightAccount } from '@account-kit/smart-contracts';
 // import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
@@ -211,42 +210,42 @@ export const web3Slice = createSlice({
       })
       .addCase(connectChainMetamask.rejected, (state) => {
         state.web3Status = dataStatuses.Failed;
-      })
-      // .addCase(connectChainWeb3Auth.pending, (state) => {
-      //   state.web3Status = dataStatuses.Loading;
-      // })
-      // .addCase(connectChainWeb3Auth.fulfilled, (state, action) => {
-      //   state.web3Status = dataStatuses.Complete;
-      //   if (action.payload?.connectedChain) {
-      //     state.connectedChain = action.payload.connectedChain;
-      //   }
-      //   if (action.payload.currentUserAddress) {
-      //     state.currentUserAddress =
-      //       action.payload.currentUserAddress.toLowerCase() as Hex;
-      //   }
-      // })
-      // .addCase(connectChainWeb3Auth.rejected, (state) => {
-      //   state.web3Status = dataStatuses.Failed;
-      // })
-      // .addCase(connectChainAlchemyV4.pending, (state) => {
-      //   state.web3Status = dataStatuses.Loading;
-      // })
-      // .addCase(connectChainAlchemyV4.fulfilled, (state, action) => {
-      //   state.web3Status = dataStatuses.Complete;
-      //   if (action.payload.connectedChain) {
-      //     state.connectedChain = action.payload.connectedChain;
-      //   }
-      //   if (action.payload.currentUserAddress) {
-      //     state.currentUserAddress =
-      //       action.payload.currentUserAddress.toLowerCase() as Hex;
-      //   }
-      //   if (action.payload.userDetails) {
-      //     state.programmaticProvider = action.payload.client;
-      //   }
-      // })
-      // .addCase(connectChainAlchemyV4.rejected, (state) => {
-      //   state.web3Status = dataStatuses.Failed;
-      // });
+      });
+    // .addCase(connectChainWeb3Auth.pending, (state) => {
+    //   state.web3Status = dataStatuses.Loading;
+    // })
+    // .addCase(connectChainWeb3Auth.fulfilled, (state, action) => {
+    //   state.web3Status = dataStatuses.Complete;
+    //   if (action.payload?.connectedChain) {
+    //     state.connectedChain = action.payload.connectedChain;
+    //   }
+    //   if (action.payload.currentUserAddress) {
+    //     state.currentUserAddress =
+    //       action.payload.currentUserAddress.toLowerCase() as Hex;
+    //   }
+    // })
+    // .addCase(connectChainWeb3Auth.rejected, (state) => {
+    //   state.web3Status = dataStatuses.Failed;
+    // })
+    // .addCase(connectChainAlchemyV4.pending, (state) => {
+    //   state.web3Status = dataStatuses.Loading;
+    // })
+    // .addCase(connectChainAlchemyV4.fulfilled, (state, action) => {
+    //   state.web3Status = dataStatuses.Complete;
+    //   if (action.payload.connectedChain) {
+    //     state.connectedChain = action.payload.connectedChain;
+    //   }
+    //   if (action.payload.currentUserAddress) {
+    //     state.currentUserAddress =
+    //       action.payload.currentUserAddress.toLowerCase() as Hex;
+    //   }
+    //   if (action.payload.userDetails) {
+    //     state.programmaticProvider = action.payload.client;
+    //   }
+    // })
+    // .addCase(connectChainAlchemyV4.rejected, (state) => {
+    //   state.web3Status = dataStatuses.Failed;
+    // });
   }
 });
 

@@ -372,13 +372,7 @@ const useWeb3Tx = () => {
           return undefined;
       }
     },
-    [
-      connectedChain,
-      currentUserAddress,
-      loginType,
-      metamaskCall,
-      reactSwal
-    ]
+    [connectedChain, currentUserAddress, loginType, metamaskCall, reactSwal]
   );
 
   const web3Switch = useCallback(

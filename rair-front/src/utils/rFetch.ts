@@ -171,8 +171,4 @@ const rFetch = async (
   return request;
 };
 
-export {
-  rFetch,
-  signIn,
-  signWeb3MessageMetamask,
-};
+export { rFetch, signIn, signWeb3MessageMetamask };

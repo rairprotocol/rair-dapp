@@ -20,13 +20,10 @@ import {
   setExchangeRates,
   setProgrammaticProvider
 } from '../redux/web3Slice';
-import { CombinedBlockchainData } from '../types/commonTypes';
-import { User } from '../types/databaseTypes';
+// import { CombinedBlockchainData } from '../types/commonTypes';
+// import { User } from '../types/databaseTypes';
 import chainData from '../utils/blockchainData';
-import {
-  rFetch,
-  signWeb3MessageMetamask,
-} from '../utils/rFetch';
+import { rFetch, signWeb3MessageMetamask } from '../utils/rFetch';
 import sockets from '../utils/sockets';
 
 const getCoingeckoRates = async () => {
