@@ -41,7 +41,8 @@ const respondChallenge = async (challenge, signedChallenge) => {
     method: 'POST',
     body: JSON.stringify({
       MetaMessage: JSON.parse(challenge).message.challenge,
-      MetaSignature: signedChallenge
+      MetaSignature: signedChallenge,
+      method: 'metamask'
     }),
     headers: {
       'Content-Type': 'application/json'
