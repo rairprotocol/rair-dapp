@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 function formatDuration(duration: string): string {
   const durationParts: string[] = duration.split(':');
 

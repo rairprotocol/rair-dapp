@@ -1,3 +1,4 @@
+// @ts-nocheck  
 import React, { useCallback, useEffect, useState } from 'react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

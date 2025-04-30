@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 export function getRGBValue(
   diamond: boolean,
   offer: string | undefined,

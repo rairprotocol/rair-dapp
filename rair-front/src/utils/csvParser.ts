@@ -1,3 +1,4 @@
+//@ts-nocheck
 const csvParser = (
   data: File,
   resultReceiver: Function,

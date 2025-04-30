@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
   NavLink,

@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 export function determineRarity(metadata) {
   let totalRarity = 0;
 

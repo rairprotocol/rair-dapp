@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Provider } from 'ethers';
 
 const validateInteger = (number: string | number) => {

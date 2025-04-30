@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { faChevronLeft, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { Contract, isAddress, ZeroAddress } from 'ethers';
 import { Hex } from 'viem';

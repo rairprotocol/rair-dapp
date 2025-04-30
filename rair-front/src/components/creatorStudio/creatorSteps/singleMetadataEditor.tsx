@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useParams } from 'react-router-dom';

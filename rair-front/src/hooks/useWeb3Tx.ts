@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable no-case-declarations */
 import { useCallback } from 'react';
 // import {

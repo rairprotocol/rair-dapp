@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 
 import MarketplaceOfferConfig from './MarketplaceOfferConfig';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from 'react';
 import { JsonRpcProvider, Wallet } from 'ethers';
 

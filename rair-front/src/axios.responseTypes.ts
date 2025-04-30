@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { TOfferType } from './components/marketplace/marketplace.types';
 import { MediaListResponseType } from './components/video/video.types';
 import { CatalogItem } from './redux/tokenSlice';

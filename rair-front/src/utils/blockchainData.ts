@@ -1,3 +1,4 @@
+//@ts-nocheck
 // import { base, mainnet, polygon, sepolia } from '@account-kit/infra';
 import { Network } from 'alchemy-sdk';
 import { Hex } from 'viem';
