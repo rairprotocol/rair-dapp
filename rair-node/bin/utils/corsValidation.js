@@ -4,7 +4,7 @@ module.exports = {
     origin: (origin, callback) => {
         (async () => {
             const settings = await ServerSetting.findOne();
-            if (!settings?.allowedCORSOrigins) {
+            if (!settings?.allowedCORSOrigins || settings?.corsEnabled === false) {
                 callback(undefined, false);
             }
             callback(undefined, settings.allowedCORSOrigins);
