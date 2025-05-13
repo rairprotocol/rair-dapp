@@ -4,10 +4,15 @@ module.exports = {
     origin: (origin, callback) => {
         (async () => {
             const settings = await ServerSetting.findOne();
-            if (!settings?.allowedCORSOrigins || settings?.corsEnabled === false) {
-                callback(undefined, false);
+            if (
+                !settings?.allowedCORSOrigins ||
+                settings?.corsEnabled === false ||
+                origin === undefined ||
+                settings.allowedCORSOrigins.includes(origin)
+            ) {
+                return callback(undefined, true);
             }
-            callback(undefined, settings.allowedCORSOrigins);
+            return callback(new Error('Not allowed by CORS'));
         })();
     },
     corsOptionDelegate: async (req, callback) => {
