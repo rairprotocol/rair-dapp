@@ -8,6 +8,7 @@ const {
   updateUser,
   customUserFields,
   userValue,
+  userValueBody,
 } = require('./userRoutes');
 const getChallenge = require('./getChallenge');
 const getChallengeV2 = require('./getChallengeV2');
@@ -162,4 +163,5 @@ module.exports = {
 
   // User Values
   userValue,
+  userValueBody,
 };

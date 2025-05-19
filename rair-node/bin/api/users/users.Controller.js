@@ -61,6 +61,7 @@ router.get(
 router.post(
   '/:userAddress/:namespace/:label',
   validation(['userAddress', 'userValue'], 'params'),
+  validation(['userValueBody'], 'body'),
   requireUserSession,
   setUserValue,
 );

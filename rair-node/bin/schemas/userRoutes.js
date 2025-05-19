@@ -21,4 +21,12 @@ module.exports = {
     blocked: Joi.boolean(),
     gitId: Joi.number(),
   }),
+
+  userValue: () => ({
+    namespace: Joi.string().required(),
+    label: Joi.string().required(),
+  }),
+  userValueBody: () => ({
+    value: Joi.string().required(),
+  }),
 };
