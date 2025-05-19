@@ -35,12 +35,13 @@ const getChallenge = async (userAddress: Hex, ownerAddress?: Hex) => {
   return response;
 };
 
-const respondChallenge = async (challenge, signedChallenge) => {
+const respondChallenge = async (challenge, signedChallenge, method) => {
   const loginResponse = await rFetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({
       MetaMessage: JSON.parse(challenge).message.challenge,
-      MetaSignature: signedChallenge
+      MetaSignature: signedChallenge,
+      method
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -66,7 +67,7 @@ const signWeb3MessageMetamask = async (userAddress: Hex) => {
     };
     const signedChallenge = await window?.ethereum?.request(ethRequest);
     if (signedChallenge) {
-      return await respondChallenge(challenge, signedChallenge);
+      return await respondChallenge(challenge, signedChallenge, 'metamask');
     }
   }
 };
@@ -82,7 +83,7 @@ const signWeb3MessageAlchemyV4 = async (userAddress: Hex, signer) => {
   const signedChallenge = await signer.signTypedData(parsedResponse);
 
   if (signedChallenge) {
-    return await respondChallenge(challenge, signedChallenge);
+    return await respondChallenge(challenge, signedChallenge, 'alchemyV4');
   }
 };
 
@@ -110,12 +111,13 @@ const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
 
   const parsedResponse = JSON.parse(challenge);
   const signedChallenge = await web3AuthSigner.signTypedData(parsedResponse);
-  const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
+  const loginResponse = await rFetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({
       MetaMessage: parsedResponse.message.challenge,
       MetaSignature: signedChallenge,
-      userAddress: userAddress
+      userAddress: userAddress,
+      method: 'web3auth'
     }),
     headers: {
       'Content-Type': 'application/json'
