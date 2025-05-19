@@ -3,7 +3,12 @@ const databaseSchemas = require('./databaseSchemas');
 const addMedia = require('./addMedia');
 const authentication = require('./authentication');
 const createContract = require('./createContract');
-const { createUser, updateUser, customUserFields } = require('./userRoutes');
+const {
+  createUser,
+  updateUser,
+  customUserFields,
+  userValue,
+} = require('./userRoutes');
 const getChallenge = require('./getChallenge');
 const getChallengeV2 = require('./getChallengeV2');
 const filterAndSort = require('./filterAndSort');
@@ -154,4 +159,7 @@ module.exports = {
   resaleQuery,
   resaleUpdate,
   resaleCreate,
+
+  // User Values
+  userValue,
 };

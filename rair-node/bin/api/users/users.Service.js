@@ -8,7 +8,11 @@ const config = require('../../config');
 const gcp = require('../../integrations/gcp')(config);
 const log = require('../../utils/logger')(module);
 const { cleanStorage, textPurify } = require('../../utils/helpers');
-const { User, ServerSetting } = require('../../models');
+const {
+  User,
+  ServerSetting,
+  UserValues,
+} = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const eFactory = require('../../utils/entityFactory');
 
@@ -213,6 +217,7 @@ exports.updateUserByUserAddress = async (req, res, next) => {
         const target = Object.keys(req.body)
           .find((key) => req.body[key] === file.originalname);
         if (!target) {
+          // eslint-disable-next-line no-continue
           continue;
         }
         try {
@@ -279,4 +284,61 @@ exports.queryGithubData = async (req, res, next) => {
   }
   log.error("Couldn't fetch Github data");
   return res.json({ success: true, user: req.session.userData });
+};
+
+exports.getUserValue = async (req, res, next) => {
+  try {
+    const { userAddress, namespace, label } = req.params;
+    const data = await UserValues.aggregate([
+      {
+        $match: {
+          namespace,
+          label,
+        },
+      },
+      {
+        $lookup: {
+          from: 'User',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'userData',
+          pipeline: [{
+              $match: {
+                publicAddress: userAddress,
+              },
+          }],
+        },
+      },
+    ]);
+    return res.json({ success: true, data });
+  } catch (err) {
+    return next(new AppError(err));
+  }
+};
+exports.setUserValue = async (req, res, next) => {
+  try {
+    const { userAddress, namespace, label } = req.params;
+    const { publicAddress, adminRights, superAdmin } = req.user;
+    const { value } = req.body;
+
+    if (userAddress.toLowerCase() !== publicAddress && !adminRights && !superAdmin) {
+      return next(new AppError('Unauthorized'));
+    }
+
+    const user = await User.findOne({ publicAddress: userAddress });
+    const data = await UserValues.findOneAndUpdate({
+      user: user._id,
+      namespace,
+      label,
+    }, {
+      $set: {
+        value,
+      },
+    }, {
+      upsert: true,
+    });
+    return res.json({ success: true, data });
+  } catch (err) {
+    return next(new AppError(err));
+  }
 };
