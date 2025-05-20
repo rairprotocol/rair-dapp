@@ -311,7 +311,7 @@ exports.getUserValue = async (req, res, next) => {
       },
       {
         $project: {
-          userData: -1,
+          userData: 0,
         },
       },
     ]);
