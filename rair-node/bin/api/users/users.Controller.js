@@ -8,6 +8,8 @@ const {
   exportUsers,
   yotiVerify,
   queryGithubData,
+  getUserValue,
+  setUserValue,
 } = require('./users.Service');
 const upload = require('../../Multer/Config');
 
@@ -50,5 +52,18 @@ router
     updateUserByUserAddress,
     queryGithubData,
   );
+
+router.get(
+  '/:userAddress/:namespace/:label',
+  validation(['userAddress', 'userValue'], 'params'),
+  getUserValue,
+);
+router.post(
+  '/:userAddress/:namespace/:label',
+  validation(['userAddress', 'userValue'], 'params'),
+  validation(['userValueBody'], 'body'),
+  requireUserSession,
+  setUserValue,
+);
 
 module.exports = router;

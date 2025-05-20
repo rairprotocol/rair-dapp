@@ -23,6 +23,7 @@ const ServerSetting = require('./serverSettings');
 const Unlock = require('./unlock');
 const TokenMetadata = require('./tokenMetadata');
 const Notification = require('./notification');
+const UserValues = require('./userValues');
 
 module.exports = {
   Contract: mongoose.model('Contract', Contract, 'Contract'),
@@ -48,4 +49,5 @@ module.exports = {
   Unlock: mongoose.model('Unlock', Unlock, 'Unlock'),
   TokenMetadata: mongoose.model('TokenMetadata', TokenMetadata, 'TokenMetadata'),
   Notification: mongoose.model('Notification', Notification, 'Notification'),
+  UserValues: mongoose.model('UserValues', UserValues, 'UserValues'),
 };
