@@ -309,6 +309,11 @@ exports.getUserValue = async (req, res, next) => {
           }],
         },
       },
+      {
+        $project: {
+          userData: -1,
+        },
+      },
     ]);
     return res.json({ success: true, data });
   } catch (err) {
