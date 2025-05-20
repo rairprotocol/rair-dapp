@@ -9,7 +9,7 @@ env:
 
 jobs:
   build:
-   runs-on: [self-hosted, linux, x64, rair-dapp]
+   runs-on: ubuntu-latest
    steps:
       - name: checkout repository
         uses: actions/checkout@v4
