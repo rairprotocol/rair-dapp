@@ -11,6 +11,7 @@ const {
     updateMedia,
     deleteMedia,
     listMedia,
+    updateMediaThumbnails,
 } = require('./files.Service');
 const {
     validation,
@@ -19,6 +20,7 @@ const {
     loadUserSession,
 } = require('../../middleware');
 const { File } = require('../../models');
+const upload = require('../../Multer/Config');
 
 const router = express.Router();
 
@@ -29,6 +31,19 @@ router.patch(
     validation(['updateMedia'], 'body'),
     isOwner(File),
     updateMedia,
+);
+
+router.put(
+    '/thumbnails/:id',
+    requireUserSession,
+    validation(['fileId'], 'params'),
+    isOwner(File),
+    upload.fields([{
+        name: 'staticThumbnail', maxCount: 1,
+    }, {
+        name: 'animatedThumbnail', maxCount: 1,
+    }]),
+    updateMediaThumbnails,
 );
 
 router.delete(

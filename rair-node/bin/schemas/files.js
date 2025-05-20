@@ -10,6 +10,8 @@ module.exports = {
     offer: Joi.array().items(mongoId),
     category: Joi.string().min(1),
     demo: Joi.boolean(),
+    staticThumbnail: Joi.string(),
+    animatedThumbnail: Joi.string(),
   }),
   offerArray: () => ({
     offers: Joi.array().items(mongoId).required(),

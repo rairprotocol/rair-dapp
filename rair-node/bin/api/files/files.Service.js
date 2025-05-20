@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const fs = require('graceful-fs');
 const {
   File,
   MintedToken,
@@ -13,6 +14,7 @@ const AppError = require('../../utils/errors/AppError');
 const { removePin } = require('../../integrations/ipfsService')();
 const { checkFileAccess } = require('../../utils/helpers');
 const config = require('../../config');
+const { addFile } = require('../../integrations/ipfsService')();
 const gcp = require('../../integrations/gcp')(config);
 
 module.exports = {
@@ -168,6 +170,8 @@ module.exports = {
         success: true,
         list: unlockCheck,
         totalNumber: result?.count?.[0]?.total || 0,
+        pageNum,
+        pageSize,
       });
     } catch (e) {
       log.error(e);
@@ -376,5 +380,32 @@ module.exports = {
       success: true,
       data,
     });
+  },
+  updateMediaThumbnails: async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const updates = {};
+
+        // eslint-disable-next-line no-restricted-syntax
+        for await (const file of ['staticThumbnail', 'animatedThumbnail']) {
+          const fileData = req.files?.[file]?.[0];
+          if (!fileData) {
+            // eslint-disable-next-line no-continue
+            continue;
+          }
+          const ipfsHash = await addFile(fileData.destination, fileData.filename);
+          if (ipfsHash) {
+            updates[file] = `https://ipfs.io/ipfs/${ipfsHash}`;
+          }
+          fs.rmSync(fileData.path);
+        }
+        if (Object.keys(updates).length) {
+          await File.findByIdAndUpdate(id, { $set: updates });
+          return res.json({ success: true });
+        }
+        return res.json({ success: false });
+      } catch (error) {
+        return next(new AppError(error));
+      }
   },
 };
