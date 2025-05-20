@@ -336,6 +336,7 @@ exports.setUserValue = async (req, res, next) => {
       },
     }, {
       upsert: true,
+      new: true,
     });
     return res.json({ success: true, data });
   } catch (err) {
