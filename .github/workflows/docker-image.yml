@@ -14,7 +14,7 @@ env:
 jobs:
     if_merged:
       if: github.event.pull_request.merged == true
-      runs-on: ubuntu-latest
+      runs-on: [self-hosted, linux, x64, rair-dapp]
       steps:
         - name: checkout repository
           uses: actions/checkout@v4
