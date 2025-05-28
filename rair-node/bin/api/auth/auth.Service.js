@@ -119,14 +119,14 @@ module.exports = {
   unlockMediaWithSession: async (req, res, next) => {
     const { type, fileId } = req.body;
     const { userData } = req.session;
-    if (!userData) {
+    const media = await File.findOne({ _id: fileId });
+    if (!media.demo && !userData) {
       return res.json({
         success: false,
         message: 'Login required',
       });
     }
     if (type === 'file') {
-      const media = await File.findOne({ _id: fileId });
       if (media.ageRestricted && !userData?.ageVerified) {
         return next(new AppError('Age verification required', 403));
       }
@@ -173,9 +173,9 @@ module.exports = {
         if (media.demo) {
           ownsMediaNFT = true;
           log.info(`Media ${fileId} is flagged as demo, will not validate NFT ownership`);
-        } else if (media.uploader === userData.publicAddress) {
+        } else if (media.uploader === userData?.publicAddress) {
           ownsMediaNFT = true;
-          log.info(`Media ${fileId} unlocked by uploader ${userData.publicAddress}`);
+          log.info(`Media ${fileId} unlocked by uploader ${userData?.publicAddress}`);
         } else if (offerData) {
           const contractMapping = {};
           contractData.forEach((contract) => {
@@ -184,7 +184,7 @@ module.exports = {
           if (await checkAdminTokenOwns(userData.publicAddress)) {
             ownsMediaNFT = true;
             log.info(`User address ${
-              userData.publicAddress
+              userData?.publicAddress
             } unlocked media ${fileId} with admin privileges`);
           }
           if (!ownsMediaNFT) {
@@ -193,13 +193,13 @@ module.exports = {
               const contract = contractMapping[offer.contract];
               if (contract.external) {
                 ownsMediaNFT = await checkBalanceAny(
-                  userData.publicAddress,
+                  userData?.publicAddress,
                   contract.blockchain,
                   contract.contractAddress,
                 );
               } else {
                 ownsMediaNFT = await checkBalanceProduct(
-                  userData.publicAddress,
+                  userData?.publicAddress,
                   contract.blockchain,
                   contract.contractAddress,
                   offer.product,
@@ -209,7 +209,7 @@ module.exports = {
               }
               if (ownsMediaNFT) {
                 unlockingOffer = offer._id;
-                log.info(`User ${userData.publicAddress} unlocked ${fileId} with offer ${offer._id}: ${offer.offerName} in ${contract.blockchain}`);
+                log.info(`User ${userData?.publicAddress} unlocked ${fileId} with offer ${offer._id}: ${offer.offerName} in ${contract.blockchain}`);
                 break;
               }
             }
@@ -225,7 +225,7 @@ module.exports = {
       req.session.authorizedMediaStream = fileId;
       req.session.authorizedMediaType = type;
       const viewData = new MediaViewLog({
-        userAddress: userData.publicAddress,
+        userAddress: userData?.publicAddress || 'Unlogged user',
         file: fileId,
         decryptedFiles: 0,
         offer: unlockingOffer,
