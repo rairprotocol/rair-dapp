@@ -304,14 +304,7 @@ const VideoItem: React.FC<IVideoItem> = ({ item }) => {
                       <div>
                         <img
                           onClick={() => {
-                            if (currentUserAddress) {
-                              ageVerificationPopUp();
-                            } else {
-                              reactSwal.fire({
-                                title: 'Login required',
-                                icon: 'info'
-                              });
-                            }
+                            ageVerificationPopUp();
                           }}
                           className={'modal-content-play-image'}
                           src={playImagesColored}

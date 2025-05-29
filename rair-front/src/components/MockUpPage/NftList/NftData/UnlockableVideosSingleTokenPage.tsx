@@ -121,14 +121,7 @@ const UnlockableVideosSingleTokenPage: React.FC<
             src={playImagesColored}
             className="unlockables-video-player-circle"
             onClick={() => {
-              if (currentUserAddress) {
-                ageVerificationPopUp();
-              } else {
-                reactSwal.fire({
-                  title: 'Login required',
-                  icon: 'info'
-                });
-              }
+              ageVerificationPopUp();
             }}
           />
           <div
