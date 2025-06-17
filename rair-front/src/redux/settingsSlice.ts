@@ -55,7 +55,9 @@ const initialState: SettingsState = {
   customValues: undefined,
   blockchainSettings: [],
   categoriesStatus: dataStatuses.Uninitialized,
-  categories: []
+  categories: [],
+  corsEnabled: false,
+  allowedCORSOrigins: []
 };
 
 export const loadSettings = createAsyncThunk(

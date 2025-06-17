@@ -27,6 +27,8 @@ module.exports = {
             name: Joi.string(),
             value: Joi.string(),
         })),
+        corsEnabled: Joi.boolean(),
+        allowedCORSOrigins: Joi.array().items(Joi.string()),
     }),
     dbContracts: () => ({
         title: Joi.string(),

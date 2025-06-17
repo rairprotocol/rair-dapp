@@ -28,6 +28,7 @@ const { mongoConnectionManager } = require('./mongooseConnect');
 
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
 const { emitEvent } = require('./integrations/socket.io');
+const { origin } = require('./utils/corsValidation');
 
 async function main() {
   const mediaDirectories = ['./bin/banners'];
@@ -45,9 +46,8 @@ async function main() {
   const httpServer = createServer(app);
 
   /* CORS */
-  const origin = process.env.SERVICE_HOST;
-
   app.use(cors({ origin }));
+
   const socketIo = new Server(httpServer, {
     cors: {
       origin,

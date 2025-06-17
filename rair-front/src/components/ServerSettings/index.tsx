@@ -5,6 +5,7 @@ import BooleanSettings from './booleanSettings';
 import CategorySettings from './categorySettings';
 import ColorSettings from './colorSettings';
 import ContractManager from './contractManager';
+import CorsSettings from './corsSettings';
 import CustomValues from './customValues';
 import FeaturedBanner from './featuredBanner';
 import FooterSettings from './footerSettings';
@@ -61,6 +62,7 @@ const ServerSettings = () => {
       <FooterSettings />
       <CustomValues />
       <TextSettings />
+      <CorsSettings />
       <hr className="my-5" />
       <ContractManager {...{ contractList, getContractList }} />
     </div>
