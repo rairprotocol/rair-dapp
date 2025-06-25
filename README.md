@@ -45,8 +45,17 @@ Point the browser at the RAIRfrontend service (localhost:8088)
 ## Complete the MVP Test Plan
 
 We've compiled a list of post-installation checks [here](https://docs.rairprotocol.org/rairprotocol/installation-and-testing/getting-started/rairlite-localhost/mvp-test-plan)
+## Mock Server
+
+Need to explore or test the RAIR API without spinning up your backend? Use a hosted mock server generated from the OpenAPI spec. It helps developers visualize and simulate API behavior—including request and response payloads—making integration faster and smoother even before deployment is ready.
+
+Click below to launch the mock server instantly:
+
+<a href="https://beeceptor.com/openapi-mock-server/?utm_source=github&utm_campaign=rairprotocol-rairdapp&url=https://raw.githubusercontent.com/rairprotocol/rair-dapp/0afccca0bd38a23e8fc2518cd1fb48612675b607/rair-node/readme/openapi/rairapi_current.yaml" target="_blank"><img src="https://cdn.beeceptor.com/assets/images/buttons/mock-openapi-with-beeceptor.png" alt="Mock These APIs Instantly" style="height: 60px;"></a>
+
 
 # RAIR dApp - Comprehensive Integrations Master List
+
 
 ## 1. Blockchain Infrastructure
 *Essential blockchain connectivity and interaction technologies*
