@@ -52,9 +52,6 @@ const ServerSetting = new Schema({
     required: false,
     default: [],
   },
-  featuredDistributionPool: { type: Schema.ObjectId, ref: 'DistributionPool', default: undefined },
-  corsEnabled: { type: Boolean, required: false, default: false },
-  allowedCORSOrigins: [{ type: String, required: false }],
 }, { versionKey: false, timestamps: false });
 
 module.exports = ServerSetting;

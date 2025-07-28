@@ -10,6 +10,8 @@ const {
   queryGithubData,
   getUserValue,
   setUserValue,
+  getLinkedAccounts,
+  deleteLinkedAccount,
 } = require('./users.Service');
 const upload = require('../../Multer/Config');
 
@@ -38,6 +40,18 @@ router.post(
   '/',
   validation(['createUser']),
   createUser,
+);
+
+router.get(
+  '/linkedAccounts',
+  requireUserSession,
+  getLinkedAccounts,
+);
+router.delete(
+  '/linkedAccounts/:index',
+  requireUserSession,
+  validation(['deleteLinkedAccount'], 'params'),
+  deleteLinkedAccount,
 );
 
 // Common for the group of routes below validation

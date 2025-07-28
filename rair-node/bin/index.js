@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const session = require('express-session');
 const RedisStorage = require('connect-redis')(session);
 const { rateLimit } = require('express-rate-limit');
+const { expressjwt } = require('express-jwt');
 const seedDB = require('./seeds');
 const log = require('./utils/logger')(module);
 const StartHLS = require('./hls-starter');
@@ -45,9 +46,16 @@ async function main() {
   const app = express();
   const httpServer = createServer(app);
 
-  /* CORS */
-  app.use(cors({ origin }));
-
+  app.use(cors({ origin, credentials: true }));
+  app.use(expressjwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ['HS256'],
+    credentialsRequired: false,
+    onExpired: async (req, err) => {
+      if (new Date() - err.inner.expiredAt < 5000) { return; }
+      throw err;
+    },
+  }));
   const socketIo = new Server(httpServer, {
     cors: {
       origin,

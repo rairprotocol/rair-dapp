@@ -7,7 +7,7 @@ module.exports = {
             await redisPublisher.publish('transactions', JSON.stringify({
                 network,
                 hash,
-                userData: req.session.userData,
+                userData: req.user,
             }));
             res.json({
                 success: true,

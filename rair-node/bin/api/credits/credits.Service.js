@@ -14,7 +14,7 @@ exports.getUserCredits = async (req, res, next) => {
   try {
     const { blockchain, tokenAddress } = req.params;
     const foundCredit = await UserCredit.findOne({
-      userAddress: req.session.userData.publicAddress,
+      userAddress: req.user.publicAddress,
       blockchain,
       erc777Address: tokenAddress,
     });

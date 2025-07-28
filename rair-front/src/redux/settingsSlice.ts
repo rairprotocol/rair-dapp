@@ -56,6 +56,7 @@ const initialState: SettingsState = {
   blockchainSettings: [],
   categoriesStatus: dataStatuses.Uninitialized,
   categories: [],
+  featuredDistributionPool: undefined,
   corsEnabled: false,
   allowedCORSOrigins: []
 };

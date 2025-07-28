@@ -200,6 +200,7 @@ export interface ServerSettings extends MongoDocument {
   favicon?: string;
   signupMessage?: string;
   customValues?: Array<CustomValue>;
+  featuredDistributionPool?: string;
   corsEnabled: boolean;
   allowedCORSOrigins: Array<string>;
 }

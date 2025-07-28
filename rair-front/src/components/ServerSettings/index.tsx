@@ -16,6 +16,7 @@ import { useAppDispatch } from '../../hooks/useReduxHooks';
 import { loadSettings } from '../../redux/settingsSlice';
 import { Contract } from '../../types/databaseTypes';
 import { rFetch } from '../../utils/rFetch';
+import BackupServerSettings from '../adminViews/BackupServerSettings';
 
 const ServerSettings = () => {
   const [contractList, setContractList] = useState<
@@ -65,6 +66,7 @@ const ServerSettings = () => {
       <CorsSettings />
       <hr className="my-5" />
       <ContractManager {...{ contractList, getContractList }} />
+      <BackupServerSettings />
     </div>
   );
 };

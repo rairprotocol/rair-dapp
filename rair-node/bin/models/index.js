@@ -17,6 +17,7 @@ const CustomRoyaltiesSet = require('./customRoyaltiesSet');
 const ResaleTokenOffer = require('./resaleTokenOffer');
 const FavoriteTokens = require('./favoriteTokens');
 const MediaViewLog = require('./mediaViewLog');
+const Task = require('./task');
 const UserCredit = require('./userCredit');
 const UserCreditMovement = require('./userCreditMovement');
 const ServerSetting = require('./serverSettings');
@@ -24,6 +25,7 @@ const Unlock = require('./unlock');
 const TokenMetadata = require('./tokenMetadata');
 const Notification = require('./notification');
 const UserValues = require('./userValues');
+const UserLinkage = require('./userLinkage');
 
 module.exports = {
   Contract: mongoose.model('Contract', Contract, 'Contract'),
@@ -43,6 +45,7 @@ module.exports = {
   ResaleTokenOffer: mongoose.model('ResaleTokenOffer', ResaleTokenOffer, 'ResaleTokenOffer'),
   FavoriteTokens: mongoose.model('FavoriteTokens', FavoriteTokens, 'FavoriteTokens'),
   MediaViewLog: mongoose.model('MediaViewLog', MediaViewLog, 'MediaViewLog'),
+  Task: mongoose.model('Task', Task, 'Task'),
   UserCredit: mongoose.model('UserCredit', UserCredit, 'UserCredit'),
   UserCreditMovement: mongoose.model('UserCreditMovement', UserCreditMovement, 'UserCreditMovement'),
   ServerSetting: mongoose.model('ServerSetting', ServerSetting, 'ServerSetting'),
@@ -50,4 +53,5 @@ module.exports = {
   TokenMetadata: mongoose.model('TokenMetadata', TokenMetadata, 'TokenMetadata'),
   Notification: mongoose.model('Notification', Notification, 'Notification'),
   UserValues: mongoose.model('UserValues', UserValues, 'UserValues'),
+  UserLinkage: mongoose.model('UserLinkage', UserLinkage, 'UserLinkage'),
 };

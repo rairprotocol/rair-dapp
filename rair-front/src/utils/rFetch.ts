@@ -132,13 +132,28 @@ const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
 
 const rFetch = async (
   route: string,
-  options?: RequestInit,
+  options?: any,
   retryOptions: any = undefined,
   showErrorMessages = true
 ) => {
+  const defaultHeaders = {};
+  if (options?.body) {
+    defaultHeaders['Accept'] = 'application/json';
+    defaultHeaders['Content-Type'] = 'application/json';
+    const token = localStorage.getItem('rair-jwt');
+    if (token) {
+      defaultHeaders['Authorization'] = `Bearer ${token}`;
+    }
+  }
+  const processedOptions = {};
+  if (options?.body && typeof options?.body !== 'string') {
+    processedOptions['body'] = JSON.stringify(options.body);
+  }
   const request = await fetch(route, {
     ...options,
+    ...processedOptions,
     headers: {
+      ...defaultHeaders,
       ...options?.headers
     }
   });

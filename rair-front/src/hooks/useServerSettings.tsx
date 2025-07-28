@@ -37,9 +37,7 @@ const useServerSettings = () => {
       document.createElement('link');
     link.type = 'image/x-icon';
     link.rel = 'icon';
-    link.href = favicon
-      ? favicon
-      : RairFavicon;
+    link.href = favicon ? favicon : RairFavicon;
     document.getElementsByTagName('head')[0].appendChild(link);
 
     return () => {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Provider, useStore } from 'react-redux';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { formatEther } from 'ethers';
 
@@ -10,9 +10,7 @@ import { useAppSelector } from '../../hooks/useReduxHooks';
 import useServerSettings from '../../hooks/useServerSettings';
 import useSwal from '../../hooks/useSwal';
 import { rFetch } from '../../utils/rFetch';
-import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import InputField from '../common/InputField';
-import InputSelect from '../common/InputSelect';
 import AnalyticsPopUp from '../DemoMediaUpload/UploadedListBox/AnalyticsPopUp/AnalyticsPopUp';
 
 const VideoManager = () => {
@@ -20,37 +18,24 @@ const VideoManager = () => {
   const [unlockData, setUnlockData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [hiddenFlag, setHiddenFlag] = useState(false);
-  const [categoryOptions, setCategoryOptions] = useState<Array<OptionsType>>(
-    []
-  );
+  const [pages, setPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const [currentTitle, setCurrentTitle] = useState('');
 
   const [filter, setFilter] = useState('');
   const [selectedFile, setSelectedFile] = useState<any>({});
   const { currentUserAddress } = useAppSelector((store) => store.web3);
-  const { primaryColor, textColor, primaryButtonColor, secondaryButtonColor } =
+  const { textColor, primaryButtonColor, secondaryButtonColor } =
     useAppSelector((store) => store.colors);
 
   const { getBlockchainData } = useServerSettings();
 
   const reactSwal = useSwal();
 
-  const loadCategories = useCallback(async () => {
-    const { success, result } = await rFetch('/api/categories');
-    if (success) {
-      setCategoryOptions(
-        result.map((item) => {
-          return {
-            label: item.name,
-            value: item._id
-          };
-        })
-      );
-    }
-  }, []);
-
   useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
+    setCurrentTitle(selectedFile?.title || '');
+  }, [selectedFile]);
 
   useEffect(() => {
     setUnlockData([]);
@@ -67,14 +52,19 @@ const VideoManager = () => {
     })();
   }, [selectedFile, refresh]);
 
-  const refreshFileList = useCallback(async () => {
-    const { success, list } = await rFetch(
-      `/api/files/list?hidden=${hiddenFlag}`
-    );
-    if (success) {
-      setUploads(Object.keys(list).map((key) => list[key]));
-    }
-  }, [hiddenFlag]);
+  const refreshFileList = useCallback(
+    async (page = 1) => {
+      const { success, list, pageSize, pageNum, totalNumber } = await rFetch(
+        `/api/files/list?hidden=${hiddenFlag}&pageNum=${page}`
+      );
+      if (success) {
+        setCurrentPage(Number(pageNum));
+        setPages(Math.ceil(totalNumber / pageSize));
+        setUploads(Object.keys(list).map((key) => list[key]));
+      }
+    },
+    [hiddenFlag]
+  );
 
   useEffect(() => {
     if (!currentUserAddress) {
@@ -108,7 +98,7 @@ const VideoManager = () => {
   }, [selectedFile]);
 
   const updateFile = useCallback(
-    async (body) => {
+    async (body, refreshList = false) => {
       await rFetch(`/api/files/byId/${selectedFile._id}`, {
         method: 'PUT',
         body: JSON.stringify(body),
@@ -117,8 +107,12 @@ const VideoManager = () => {
         }
       });
       refreshFileData();
+      if (refreshList) {
+        reactSwal.fire('Success', 'Video updated', 'success');
+        refreshFileList(currentPage);
+      }
     },
-    [selectedFile, refreshFileData]
+    [selectedFile, refreshFileData, reactSwal, currentPage, refreshFileList]
   );
 
   const deleteFile = useCallback(async () => {
@@ -142,15 +136,6 @@ const VideoManager = () => {
         }
       });
   }, [selectedFile, refreshFileList, reactSwal]);
-
-  const updateCategory = useCallback(
-    async (categoryId) => {
-      await updateFile({
-        category: categoryId
-      });
-    },
-    [updateFile]
-  );
 
   const updateDemoStatus = useCallback(async () => {
     await updateFile({
@@ -235,6 +220,23 @@ const VideoManager = () => {
                 );
               })}
         </div>
+        {Array(pages)
+          .fill(1)
+          .map((_, index) => {
+            return (
+              <button
+                key={index}
+                className="btn rair-button"
+                disabled={index + 1 === currentPage}
+                onClick={() => refreshFileList(index + 1)}
+                style={{
+                  background: primaryButtonColor,
+                  color: textColor
+                }}>
+                {index + 1}
+              </button>
+            );
+          })}
       </div>
       <div className="col-8 p-5">
         {selectedFile.title && (
@@ -251,106 +253,67 @@ const VideoManager = () => {
                     }
                   />
                 </div>
-                <div className="col-8 pb-5">
-                  <table
-                    style={{ backgroundColor: primaryColor }}
-                    className="table-responsive">
-                    <tbody>
-                      {[
-                        {
-                          label: 'Type',
-                          value: selectedFile.type
-                        },
-                        {
-                          label: 'Title',
-                          value: selectedFile.title
-                        },
-                        {
-                          label: 'Category',
-                          value: (
-                            <InputSelect
-                              options={categoryOptions}
-                              placeholder="Please select"
-                              getter={selectedFile.category?._id || 'null'}
-                              setter={updateCategory}
-                              customClass="form-control rounded-rair"
-                              customCSS={{
-                                backgroundColor: primaryColor,
-                                color: textColor
-                              }}
-                            />
-                          )
-                        },
-                        {
-                          label: 'Views',
-                          value: <AnalyticsPopUp videoId={selectedFile._id} />
-                        },
-                        {
-                          label: 'Unlockable',
-                          value: (
-                            <button
-                              onClick={updateDemoStatus}
-                              style={{
-                                background: secondaryButtonColor,
-                                color: textColor
-                              }}
-                              className="btn rair-button">
-                              {selectedFile.demo ? 'Demo' : 'Unlockable'}
-                            </button>
-                          )
-                        },
-                        {
-                          label: 'Age Restriction',
-                          value: (
-                            <button
-                              onClick={updateAgeRestriction}
-                              style={{
-                                background: primaryButtonColor,
-                                color: textColor
-                              }}
-                              className="btn rair-button">
-                              {selectedFile.ageRestricted
-                                ? 'Age Restricted'
-                                : 'NOT Age Restricted'}
-                            </button>
-                          )
-                        },
-                        {
-                          label: 'Visibility',
-                          value: (
-                            <button
-                              onClick={updateHiddenStatus}
-                              style={{
-                                background: secondaryButtonColor,
-                                color: textColor
-                              }}
-                              className="btn rair-button">
-                              {selectedFile.hidden ? 'Hidden' : 'Visible'}
-                            </button>
-                          )
-                        },
-                        {
-                          label: 'Duration',
-                          value: selectedFile.duration
-                        },
-                        {
-                          label: 'Description',
-                          value: selectedFile.description
-                        }
-                      ].map((item, index) => {
-                        return (
-                          <tr key={index}>
-                            <th>{item.label}</th>
-                            <th>{item.value}</th>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                <div className="col-8 py-5">
+                  <small>{selectedFile.type}</small>
+                  <div className="w-100 row">
+                    <div className="col-12 col-md-11 px-0 mx-0">
+                      <InputField
+                        getter={currentTitle}
+                        setter={setCurrentTitle}
+                        customClass="form-control rounded-rair"
+                      />
+                    </div>
+                    <button
+                      className="col-12 col-md-1 btn btn-success"
+                      disabled={currentTitle === selectedFile.title}
+                      onClick={() => updateFile({ title: currentTitle }, true)}>
+                      <FontAwesomeIcon icon={faCheck} />
+                    </button>
+                  </div>
+                  <h5>
+                    <AnalyticsPopUp videoId={selectedFile._id} />
+                  </h5>
+                  <span>{selectedFile?.category?.name}</span>
+                  <br />
+                  <button
+                    onClick={updateDemoStatus}
+                    style={{
+                      background: secondaryButtonColor,
+                      color: textColor
+                    }}
+                    className="btn rair-button">
+                    {selectedFile.demo ? 'Demo' : 'Unlockable'}
+                  </button>
+                  <button
+                    onClick={updateAgeRestriction}
+                    style={{
+                      background: primaryButtonColor,
+                      color: textColor
+                    }}
+                    className="btn rair-button">
+                    {selectedFile.ageRestricted
+                      ? 'Age Restricted'
+                      : 'NOT Age Restricted'}
+                  </button>
+                  <button
+                    onClick={updateHiddenStatus}
+                    style={{
+                      background: secondaryButtonColor,
+                      color: textColor
+                    }}
+                    className="btn rair-button">
+                    {selectedFile.hidden ? 'Hidden' : 'Visible'}
+                  </button>
+                  <br />
+                  <small>{selectedFile.duration}</small>
+                  <br />
+                  <span>{selectedFile.description}</span>
+                  <br />
+                  <br />
                   <button
                     onClick={deleteFile}
-                    className="btn float-end btn-outline-danger">
-                    <FontAwesomeIcon icon={faTrash} /> Delete Media File
+                    className="btn btn-outline-danger">
+                    <FontAwesomeIcon icon={faTrash} /> Delete
                   </button>
                 </div>
               </div>

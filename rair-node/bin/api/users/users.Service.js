@@ -12,6 +12,7 @@ const {
   User,
   ServerSetting,
   UserValues,
+  UserLinkage,
 } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const eFactory = require('../../utils/entityFactory');
@@ -55,7 +56,7 @@ exports.yotiVerify = async (req, res, next) => {
       await User.findByIdAndUpdate(req.user._id, { $set: {
         ageVerified: true,
       } });
-      req.session.userData.ageVerified = true;
+      req.user.ageVerified = true;
     }
 
     return res.json({
@@ -251,7 +252,7 @@ exports.updateUserByUserAddress = async (req, res, next) => {
     ).lean();
 
     req.session.userData = {
-      ...req.session.userData,
+      ...req.user,
       ...updatedUser,
     };
 
@@ -262,10 +263,10 @@ exports.updateUserByUserAddress = async (req, res, next) => {
 };
 
 exports.queryGithubData = async (req, res, next) => {
-  const { publicAddress, gitHandle } = req.session.userData;
+  const { publicAddress, gitHandle } = req.user;
   const { gitId } = req.body;
   if (gitHandle || !gitId || !Number.isInteger(Number(gitId))) {
-    return res.json({ success: true, user: req.session.userData });
+    return res.json({ success: true, user: req.user });
   }
   const query = await (await fetch(`https://api.github.com/user/${gitId}`)).json();
   if (query.login) {
@@ -277,13 +278,14 @@ exports.queryGithubData = async (req, res, next) => {
     }, { new: true, projection: { nonce: 0 } }).lean();
 
     req.session.userData = {
-      ...req.session.userData,
+      ...req.user,
       ...updatedUser,
     };
-    return res.json({ success: true, user: req.session.userData });
+    res.json({ success: true, user: req.user });
+    return next();
   }
   log.error("Couldn't fetch Github data");
-  return res.json({ success: true, user: req.session.userData });
+  return res.json({ success: true, user: req.user });
 };
 
 exports.getUserValue = async (req, res, next) => {
@@ -344,6 +346,53 @@ exports.setUserValue = async (req, res, next) => {
       new: true,
     });
     return res.json({ success: true, data });
+  } catch (err) {
+    return next(new AppError(err));
+  }
+};
+exports.getLinkedAccounts = async (req, res, next) => {
+  try {
+    const linkage = await UserLinkage.findOne({
+        accounts: {
+          $in: [
+            req.user._id,
+          ],
+        },
+    }, { accounts: 1 }).populate({
+      path: 'accounts',
+      select: 'publicAddress loginType',
+    });
+    return res.json({
+      success: true,
+      accounts: linkage?.accounts?.map((e) => ({
+        publicAddress: e.publicAddress,
+        loginType: e?.loginType,
+      })),
+    });
+  } catch (err) {
+    return next(new AppError(err));
+  }
+};
+exports.deleteLinkedAccount = async (req, res, next) => {
+  try {
+    const linkage = await UserLinkage.findOne({
+        accounts: {
+          $in: [
+            req.user._id,
+          ],
+        },
+    });
+    if (!linkage) {
+      return next(new AppError('No accounts connected'));
+    }
+    if (linkage.accounts[Number(req.params.index)].toString() === req.user._id.toString()) {
+      return next(new AppError('Cannot delete current user'));
+    }
+    linkage.accounts.splice(req.params.index, 1);
+    await linkage.save();
+    return res.json({
+      success: true,
+    });
   } catch (err) {
     return next(new AppError(err));
   }

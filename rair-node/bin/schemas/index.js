@@ -9,6 +9,7 @@ const {
   customUserFields,
   userValue,
   userValueBody,
+  deleteLinkedAccount,
 } = require('./userRoutes');
 const getChallenge = require('./getChallenge');
 const getChallengeV2 = require('./getChallengeV2');
@@ -62,6 +63,7 @@ const {
   resaleFlag,
   metadataSearch,
   tokenLimits,
+  txHash,
 } = require('./commonApiSchemas');
 const {
   fullContracts,
@@ -105,6 +107,9 @@ module.exports = {
   createUser,
   updateUser,
   customUserFields,
+  userValue,
+  userValueBody,
+  deleteLinkedAccount,
 
   // token
   updateTokenMetadata,
@@ -147,6 +152,7 @@ module.exports = {
   resaleFlag,
   metadataSearch,
   tokenLimits,
+  txHash,
 
   // Contract schemas
   fullContracts,
@@ -160,8 +166,4 @@ module.exports = {
   resaleQuery,
   resaleUpdate,
   resaleCreate,
-
-  // User Values
-  userValue,
-  userValueBody,
 };

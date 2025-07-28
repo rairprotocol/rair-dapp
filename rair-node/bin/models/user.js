@@ -23,15 +23,10 @@ const User = new Schema(
     blocked: { type: Boolean, default: false },
     // Github integration
     gitHandle: { type: String, required: false },
-    userLevel: { type: Number, required: false },
     available: { type: Boolean, required: false, default: false },
     gitBio: { type: String, required: false },
-    languages: [{
-      type: {
-        name: { type: String },
-        percentage: { type: Number },
-      },
-      required: false }],
+    lastLogin: [{ type: String, required: false }],
+    loginType: String,
   },
   { versionKey: false },
 );
