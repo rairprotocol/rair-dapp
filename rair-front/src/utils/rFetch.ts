@@ -40,7 +40,8 @@ const respondChallenge = async (challenge, signedChallenge) => {
     method: 'POST',
     body: JSON.stringify({
       MetaMessage: JSON.parse(challenge).message.challenge,
-      MetaSignature: signedChallenge
+      MetaSignature: signedChallenge,
+      method: 'metamask'
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -110,12 +111,13 @@ const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
 
   const parsedResponse = JSON.parse(challenge);
   const signedChallenge = await web3AuthSigner.signTypedData(parsedResponse);
-  const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
+  const loginResponse = await rFetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({
       MetaMessage: parsedResponse.message.challenge,
       MetaSignature: signedChallenge,
-      userAddress: userAddress
+      userAddress: userAddress,
+      method: 'web3auth'
     }),
     headers: {
       'Content-Type': 'application/json'
