@@ -312,9 +312,11 @@ const NftItemForCollectionViewComponent: React.FC<
                     ),
                     showConfirmButton: false,
                     showCloseButton: true,
-                    customClass: `resale-pop-up-custom ${
-                      primaryColor === 'rhyno' ? 'rhyno' : ''
-                    }`
+                    customClass: {
+                      container: `resale-pop-up-custom ${
+                        primaryColor === 'rhyno' ? 'rhyno' : ''
+                      }`
+                    }
                   });
                 }}
                 className="nft-item-sell-buton">

@@ -1,7 +1,7 @@
 // import Swal from "sweetalert2";
 import { useCallback, useEffect, useRef, useState } from 'react';
 import MetaMaskOnboarding from '@metamask/onboarding';
-import { Maybe } from '@metamask/providers/dist/utils';
+import { Maybe } from '@web3auth/base';
 
 import { metaMaskIcon } from '../../../images';
 
