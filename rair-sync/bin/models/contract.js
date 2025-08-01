@@ -28,6 +28,7 @@ Contract.statics = {
     title: 1,
     blockchain: 1,
     diamond: 1,
+    external: 1,
   },
   lookupProduct: [
     {

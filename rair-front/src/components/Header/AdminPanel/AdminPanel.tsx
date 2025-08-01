@@ -45,20 +45,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                     {' '}
                     <div>
                       <FontAwesomeIcon
-                        style={{
-                          color:
-                            import.meta.env.VITE_TESTNET === 'true'
-                              ? `${
-                                  iconColor === '#1486c5'
-                                    ? '#F95631'
-                                    : iconColor
-                                }`
-                              : `${
-                                  iconColor === '#1486c5'
-                                    ? '#E882D5'
-                                    : iconColor
-                                }`
-                        }}
+                        style={{ color: iconColor }}
                         icon={faCog}
                       />
                     </div>
@@ -73,20 +60,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                     {' '}
                     <div>
                       <FontAwesomeIcon
-                        style={{
-                          color:
-                            import.meta.env.VITE_TESTNET === 'true'
-                              ? `${
-                                  iconColor === '#1486c5'
-                                    ? '#F95631'
-                                    : iconColor
-                                }`
-                              : `${
-                                  iconColor === '#1486c5'
-                                    ? '#E882D5'
-                                    : iconColor
-                                }`
-                        }}
+                        style={{ color: iconColor }}
                         icon={faIdCard}
                       />
                     </div>
@@ -102,20 +76,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                     title="Import / Export / Transfer">
                     <div>
                       <FontAwesomeIcon
-                        style={{
-                          color:
-                            import.meta.env.VITE_TESTNET === 'true'
-                              ? `${
-                                  iconColor === '#1486c5'
-                                    ? '#F95631'
-                                    : iconColor
-                                }`
-                              : `${
-                                  iconColor === '#1486c5'
-                                    ? '#E882D5'
-                                    : iconColor
-                                }`
-                        }}
+                        style={{ color: iconColor }}
                         icon={faCity}
                       />
                     </div>
@@ -129,20 +90,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   <TooltipBox position={'top'} title="Streaming">
                     <div style={{ width: '70px' }}>
                       <FontAwesomeIcon
-                        style={{
-                          color:
-                            import.meta.env.VITE_TESTNET === 'true'
-                              ? `${
-                                  iconColor === '#1486c5'
-                                    ? '#F95631'
-                                    : iconColor
-                                }`
-                              : `${
-                                  iconColor === '#1486c5'
-                                    ? '#E882D5'
-                                    : iconColor
-                                }`
-                        }}
+                        style={{ color: iconColor }}
                         icon={faFilm}
                       />
                     </div>
@@ -156,20 +104,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   <TooltipBox position={'top'} title="Old Market (diamond)">
                     <div style={{ width: '70px' }}>
                       <FontAwesomeIcon
-                        style={{
-                          color:
-                            import.meta.env.VITE_TESTNET === 'true'
-                              ? `${
-                                  iconColor === '#1486c5'
-                                    ? '#F95631'
-                                    : iconColor
-                                }`
-                              : `${
-                                  iconColor === '#1486c5'
-                                    ? '#E882D5'
-                                    : iconColor
-                                }`
-                        }}
+                        style={{ color: iconColor }}
                         icon={faGem}
                       />
                     </div>
@@ -183,20 +118,7 @@ const AdminPanel = ({ creatorViewsDisabled, adminPanel, setAdminPanel }) => {
                   <TooltipBox position={'top'} title="Old Market (classic)">
                     <div style={{ width: '70px' }}>
                       <FontAwesomeIcon
-                        style={{
-                          color:
-                            import.meta.env.VITE_TESTNET === 'true'
-                              ? `${
-                                  iconColor === '#1486c5'
-                                    ? '#F95631'
-                                    : iconColor
-                                }`
-                              : `${
-                                  iconColor === '#1486c5'
-                                    ? '#E882D5'
-                                    : iconColor
-                                }`
-                        }}
+                        style={{ color: iconColor }}
                         icon={faShoppingCart}
                       />
                     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 const NodeCache = require('node-cache');
 const { isAddress } = require('ethers');
 const { recoverTypedSignature } = require('@metamask/eth-sig-util');
@@ -184,8 +185,39 @@ module.exports = {
     return next();
   },
   validateChallengeV2: async (req, res, next) => {
-    req.metaAuth = await validateChallenge(req, 'body');
-    req.web3LoginMethod = 'metamask';
+    const { method } = req.body;
+    switch (method) {
+      case 'metamask':
+        req.metaAuth = await validateChallenge(req, 'body');
+        break;
+      case 'web3auth':
+        const { MetaSignature, MetaMessage, userAddress } = req.body;
+        if (!MetaSignature || !MetaMessage || !userAddress) {
+          return next(new AppError('Error in web3Auth login', 400));
+        }
+        const recovered = await recoverUserFromSignature(MetaMessage, MetaSignature);
+        const storedOwner = cache.get(`${userAddress}secret`);
+        if (
+          recovered !== undefined &&
+          storedOwner !== undefined &&
+          recovered.toLowerCase() === storedOwner.toLowerCase()
+        ) {
+          cache.del(userAddress.toLowerCase());
+          cache.del(MetaMessage);
+          cache.del(`${userAddress}secret`);
+          req.metaAuth = { recovered: userAddress.toLowerCase() };
+          req.web3LoginMethod = 'web3auth';
+        } else {
+          req.metaAuth = undefined;
+        }
+        break;
+      case 'alchemyV4':
+        req.metaAuth = await validateChallenge(req, 'body');
+        break;
+      default:
+        return next(new AppError('No login method'));
+    }
+    req.web3LoginMethod = method;
     return next();
   },
 };

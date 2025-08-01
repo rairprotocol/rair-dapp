@@ -30,29 +30,28 @@ module.exports = {
             const currentList = await Category.find().lean();
             const { list } = req.body;
             // eslint-disable-next-line no-restricted-syntax
+            for await (const category of list) {
+                const exists = currentList.find(
+                    (item) => item.name === category.name,
+                );
+                if (!exists) {
+                    await (new Category(
+                        { name: category.name },
+                    )).save();
+                }
+            }
+            // eslint-disable-next-line no-restricted-syntax
             for await (const category of currentList) {
-                const update = list.find((item) => item?._id === category._id.toString());
-                if (update) {
-                    await Category.findByIdAndUpdate(update._id, { $set: { name: update.name } });
-                } else {
+                const exists = list.find(
+                    (item) => item.name === category.name,
+                );
+                if (!exists) {
                     const usingCategory = await File.findOne({
                         category: category._id,
                     });
                     if (!usingCategory) {
                         await Category.findByIdAndDelete(category._id);
                     }
-                }
-            }
-            // eslint-disable-next-line no-restricted-syntax
-            for await (const category of list) {
-                if (category._id) {
-                    // eslint-disable-next-line no-continue
-                    continue;
-                } else {
-                    const newCat = new Category({
-                        name: category.name,
-                    });
-                    await newCat.save();
                 }
             }
             return next();

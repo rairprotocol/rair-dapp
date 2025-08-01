@@ -4,12 +4,12 @@ const AppError = require('../utils/errors/AppError');
 module.exports = {
   requireUserSession: async (req, res, next) => {
     try {
-      if (!req?.session?.userData) {
+      if (!req.auth) {
         return req.session.destroy(() => next(new AppError('Authentication failed, please login again'), 403));
       }
-      // Sanity check
-      if (await User.findById(req.session.userData._id)) {
-        req.user = req.session.userData;
+      const document = await User.findById(req.auth.id).lean();
+      if (document) {
+        req.user = { ...document, superAdmin: req.auth.superAdmin };
       } else {
         return next(new AppError('Authentication failed'), 403);
       }
@@ -20,10 +20,10 @@ module.exports = {
   },
   loadUserSession: async (req, res, next) => {
     try {
-      if (req?.session?.userData) {
-        // Sanity check
-        if (await User.findById(req.session.userData._id)) {
-          req.user = req.session.userData;
+      if (req.auth) {
+        const document = await User.findById(req.auth.id).lean();
+        if (document) {
+          req.user = { ...document, superAdmin: req.auth.superAdmin };
         } else {
           return next(new AppError('Authentication failed'), 403);
         }

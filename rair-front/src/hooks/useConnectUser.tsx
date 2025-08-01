@@ -371,8 +371,7 @@ const useConnectUser = () => {
             }
           }
 
-          if (Object.keys(updateData).length) {
-            console.info(updateData);
+          if (Object.keys(updateData).length && loginData.userAddress) {
             const newUserResponse = await axios.patch(
               `/api/users/${loginData.userAddress.toLowerCase()}`,
               updateData

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const Contract = require('./contract');
 const File = require('./file');
 const User = require('./user');
@@ -19,7 +20,10 @@ const MediaViewLog = require('./mediaViewLog');
 const Task = require('./task');
 const UserCredit = require('./userCredit');
 const UserCreditMovement = require('./userCreditMovement');
+const ServerSetting = require('./serverSettings');
 const Unlock = require('./unlock');
+const TokenMetadata = require('./tokenMetadata');
+const Notification = require('./notification');
 
 module.exports = {
   Contract: mongoose.model('Contract', Contract, 'Contract'),
@@ -42,5 +46,8 @@ module.exports = {
   Task: mongoose.model('Task', Task, 'Task'),
   UserCredit: mongoose.model('UserCredit', UserCredit, 'UserCredit'),
   UserCreditMovement: mongoose.model('UserCreditMovement', UserCreditMovement, 'UserCreditMovement'),
+  ServerSetting: mongoose.model('ServerSetting', ServerSetting, 'ServerSetting'),
   Unlock: mongoose.model('Unlock', Unlock, 'Unlock'),
+  TokenMetadata: mongoose.model('TokenMetadata', TokenMetadata, 'TokenMetadata'),
+  Notification: mongoose.model('Notification', Notification, 'Notification'),
 };

@@ -1,6 +1,7 @@
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 const log = require('../../utils/logger')(module);
-const { File, User, MediaViewLog, Unlock, ServerSetting } = require('../../models');
+const { File, User, MediaViewLog, Unlock, ServerSetting, UserLinkage } = require('../../models');
 const AppError = require('../../utils/errors/AppError');
 const { checkBalanceAny, checkBalanceProduct, checkAdminTokenOwns } = require('../../integrations/ethers/tokenValidation');
 const { superAdminInstance } = require('../../utils/vaultSuperAdmin');
@@ -11,9 +12,12 @@ module.exports = {
     const messages = {
       login: `Login to ${process.env.APP_NAME}. This sign request securely logs you in and will not trigger a blockchain transaction or cost any gas fees.`,
     };
+    if (req?.user?.publicAddress && req.body.intent === 'linkAccount') {
+      messages.linkAccount = `Complete this signature request to connect with user account ${req.user.publicAddress}`;
+    }
     if (req?.body?.mediaId) {
       const fileData = await File.findById(req.body.mediaId);
-      if (fileData.ageRestricted && !req.session.userData.ageVerified) {
+      if (fileData.ageRestricted && !req.user.ageVerified) {
         return next(new AppError('Age verification required', 400));
       }
       const authorData = await User.findOne({
@@ -37,21 +41,24 @@ module.exports = {
       }); */
       messages.decrypt = `Complete this signature request to unlock the meeting: ${zoomData.title} by ${zoomData.user}`;
     }
+    if (req?.body?.intent === 'login') {
+      req?.session?.destroy();
+    }
     req.metaAuth = {
       customDescription: messages[req.body.intent],
     };
     return next();
   },
   identifyCurrentLoggedUser: async (req, res, next) => {
-    if (req.session && req.session.userData) {
+    if (req.user) {
       // eslint-disable-next-line no-unused-vars
-      const { _id, adminNFT, ...publicFacingUserData } = req.session.userData;
+      const { _id, adminNFT, ...publicFacingUserData } = req.user;
       return res.json({ success: true, user: publicFacingUserData });
     }
     return res.json({ success: false });
   },
   logoutWithSession: async (req, res, next) => {
-    req.session.destroy((err) => {
+    req?.session?.destroy((err) => {
       if (err) {
         return next(err);
       }
@@ -60,60 +67,127 @@ module.exports = {
   },
   // Initializes the session information
   loginFromSignature: async (req, res, next) => {
-    const ethAddress = req?.metaAuth?.recovered;
-    if (ethAddress) {
-      const userData = await User.findOne({
-        publicAddress: ethAddress.toLowerCase(),
-      }, '-creationDate -nonce').lean();
-      if (userData === null) {
-        return next(new AppError('User not found.', 404));
-      }
-
-      try {
-        // Check OFAC blocklist
-        // Read the file content
-        const content = fs.readFileSync(
-          './bin/integrations/ofac/sanctioned_addresses_ETH.json',
-          'utf8',
-        );
-        const ofacBlocklist = JSON.parse(content).map((address) => address.toLowerCase());
-        if (ofacBlocklist.includes(ethAddress)) {
-          await User.findByIdAndUpdate(userData._id, { $set: { blocked: true } });
-          userData.blocked = true;
+    try {
+      const ethAddress = req?.metaAuth?.recovered;
+      if (ethAddress) {
+        const userData = await User.findOne({
+          publicAddress: ethAddress.toLowerCase(),
+        }, '-creationDate -nonce').lean();
+        if (userData === null) {
+          return next(new AppError('User not found.', 404));
         }
-      } catch (error) {
-        log.error('Cannot read OFAC list');
+
+        if (!userData.loginType) {
+          userData.loginType = req.web3LoginMethod;
+          await User.findByIdAndUpdate(userData._id, {
+            $set: { loginType: req.web3LoginMethod },
+          });
+        }
+
+        try {
+          // Check OFAC blocklist
+          // Read the file content
+          const content = fs.readFileSync(
+            './bin/integrations/ofac/sanctioned_addresses_ETH.json',
+            'utf8',
+          );
+          const ofacBlocklist = JSON.parse(content).map((address) => address.toLowerCase());
+          if (ofacBlocklist.includes(ethAddress)) {
+            await User.findByIdAndUpdate(userData._id, { $set: { blocked: true } });
+            userData.blocked = true;
+          }
+        } catch (error) {
+          log.error('Cannot read OFAC list');
+        }
+        if (userData.blocked) {
+          log.error(`Blocked user tried to login: ${ethAddress}`);
+          return next(new AppError('Authentication failed.', 403));
+        }
+
+        // Uncomment to enable NFT check on login
+        // userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
+        const { superAdmins, superAdminsOnVault } = await ServerSetting.findOne({});
+
+        const socket = req.app.get('socket');
+
+        if (
+          req?.user?._id &&
+          userData.publicAddress !== req.user._id
+        ) {
+          let linkage = await UserLinkage.findOne({
+            accounts: {
+              $in: [
+                userData._id,
+                req.user._id,
+              ],
+            },
+          });
+
+          if (!linkage) {
+            linkage = await UserLinkage.create({
+              accounts: [
+                userData._id,
+                req.user._id,
+              ],
+            });
+          }
+
+          emitEvent(socket)(
+            userData.publicAddress,
+            'message',
+            `Linked accounts: ${
+              userData.publicAddress ||
+              ''
+            } and ${req.user.publicAddress}`,
+            [],
+          );
+          return res.json({ success: true });
+        }
+        emitEvent(socket)(
+          userData.publicAddress,
+          'message',
+          `Welcome back ${
+            userData.nickName ||
+            ''
+          }${
+            userData.lastLogin
+              ? `, last login: ${userData.lastLogin}`
+              : ''}`,
+          [],
+        );
+        userData.superAdmin = superAdminsOnVault
+          ? await superAdminInstance.hasSuperAdminRights(userData.publicAddress)
+          : superAdmins.includes(userData.publicAddress);
+        userData.oreId = req?.metaAuth?.oreId;
+
+        // Delete this line to restore NFT check on login
+        userData.adminRights = userData.superAdmin;
+
+        req.session.userData = { ...userData, loginType: req.web3LoginMethod };
+        const token = jwt.sign({
+          address: userData.publicAddress,
+          id: userData._id,
+          gitHandle: userData.gitHandle,
+          superAdmin: userData.superAdmin,
+        }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+        // eslint-disable-next-line no-unused-vars
+        const { _id, adminNFT, ...publicFacingUserData } = userData;
+
+        await User.findByIdAndUpdate(
+          userData._id,
+          {
+            $set: {
+              lastLogin: new Date().toString(),
+            },
+          },
+        );
+        return res.json({ success: true, user: publicFacingUserData, token });
       }
-      if (userData.blocked) {
-        log.error(`Blocked user tried to login: ${ethAddress}`);
-        return next(new AppError('Authentication failed.', 403));
-      }
-
-      // Uncomment to enable NFT check on login
-      // userData.adminRights = await checkAdminTokenOwns(userData.publicAddress);
-      const { superAdmins, superAdminsOnVault, signupMessage } = await ServerSetting.findOne({});
-      const socket = req.app.get('socket');
-      emitEvent(socket)(
-        userData.publicAddress,
-        'message',
-        signupMessage,
-        [],
-      );
-      userData.superAdmin = superAdminsOnVault
-        ? await superAdminInstance.hasSuperAdminRights(userData.publicAddress)
-        : superAdmins.includes(userData.publicAddress);
-      userData.oreId = req?.metaAuth?.oreId;
-
-      // Delete this line to restore NFT check on login
-      userData.adminRights = userData.superAdmin;
-
-      req.session.userData = { ...userData, loginType: req.web3LoginMethod };
-
-      // eslint-disable-next-line no-unused-vars
-      const { _id, adminNFT, ...publicFacingUserData } = userData;
-      return res.json({ success: true, user: publicFacingUserData });
+      return next(new AppError('Authentication failed', 403));
+    } catch (err) {
+      return next(new AppError(err, 500));
     }
-    return next(new AppError('Authentication failed', 403));
   },
 
   unlockMediaWithSession: async (req, res, next) => {

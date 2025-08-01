@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { ethAddress, mongoId } = require('./reusableCustomTypes');
+const { ethAddress, mongoId, blockchainNetworks } = require('./reusableCustomTypes');
 
 module.exports = {
     pagination: () => ({
@@ -30,5 +30,8 @@ module.exports = {
     tokenLimits: () => ({
         fromToken: Joi.string(),
         toToken: Joi.string(),
+    }),
+    txHash: () => ({
+        txHash: blockchainNetworks.required(),
     }),
 };

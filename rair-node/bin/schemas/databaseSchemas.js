@@ -27,6 +27,7 @@ module.exports = {
             name: Joi.string(),
             value: Joi.string(),
         })),
+        featuredDistributionPool: mongoId,
         corsEnabled: Joi.boolean(),
         allowedCORSOrigins: Joi.array().items(Joi.string()),
     }),

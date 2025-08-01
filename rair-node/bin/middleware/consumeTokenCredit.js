@@ -4,7 +4,7 @@ const AppError = require('../utils/errors/AppError');
 
 module.exports = (blockchain, price) => async (req, res, next) => {
     const foundCredit = await UserCredit.findOne({
-        userAddress: req.session.userData.publicAddress,
+        userAddress: req.user.publicAddress,
         blockchain,
     });
     if (foundCredit) {

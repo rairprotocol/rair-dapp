@@ -39,9 +39,8 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
   const { searchResults } = useAppSelector((store) => store.searchbar);
   const hotdropsVar = import.meta.env.VITE_TESTNET;
 
-  const { iconColor, primaryColor, secondaryColor, isDarkMode } = useAppSelector(
-    (store) => store.colors
-  );
+  const { iconColor, primaryColor, secondaryColor, isDarkMode } =
+    useAppSelector((store) => store.colors);
 
   const [textSearch, setTextSearch] = useState<string>('');
 
@@ -143,8 +142,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
       hotdrops={hotdropsVar}
       primaryColor={primaryColor}
       click={click}
-      isDarkMode={isDarkMode}
-      >
+      isDarkMode={isDarkMode}>
       <div>
         {activeSearch && (
           <>
@@ -273,7 +271,7 @@ const MobileListMenu: React.FC<IMobileListMenu> = ({
                             {searchResults?.users.map(
                               (item: User, index: number) => (
                                 <div
-                                  key={Number(index) + Math.random()}
+                                  key={index}
                                   className="data-find"
                                   onClick={() => {
                                     toggleMenu();

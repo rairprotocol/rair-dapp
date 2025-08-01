@@ -67,6 +67,9 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
   }, [currentUserAddress]);
 
   const handleNewUserStatus = useCallback(async () => {
+    if (!mediaUploadedList.length) {
+      return;
+    }
     const requestContract = await rFetch('/api/contracts/full?itemsPerPage=5');
     const { success, contracts } = await rFetch(
       `/api/contracts/full?itemsPerPage=${requestContract.totalNumber || '5'}`
@@ -83,7 +86,7 @@ const MediaUpload: React.FC<IMediaUpload> = () => {
         setNewUserStatus(false);
       }
     }
-  }, [currentUserAddress]);
+  }, [currentUserAddress, mediaUploadedList]);
 
   const onMediaDrop = (media) => {
     let aux = [...mediaList];

@@ -1,7 +1,6 @@
 const express = require('express');
 const {
     validateChallengeV2,
-    validateWeb3AuthOwner,
     generateChallengeV2,
 } = require('../../integrations/ethers/web3Signature');
 const {
@@ -11,7 +10,7 @@ const {
     identifyCurrentLoggedUser,
     generateChallengeMessage,
 } = require('./auth.Service');
-const { validation } = require('../../middleware');
+const { validation, loadUserSession } = require('../../middleware');
 
 const router = express.Router();
 
@@ -30,14 +29,8 @@ router.post(
     validateChallengeV2,
     loginFromSignature,
 );
-router.post(
-    '/loginSmartAccount',
-    validation(['web3Validation'], 'body'),
-    validateWeb3AuthOwner,
-    loginFromSignature,
-);
 router.get('/logout/', logoutWithSession);
-router.get('/me/', identifyCurrentLoggedUser);
+router.get('/me/', loadUserSession, identifyCurrentLoggedUser);
 router.get('/stream/out', (req, res) => {
     if (req.session) {
         req.session.authorizedMediaStream = undefined;

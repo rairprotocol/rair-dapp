@@ -40,7 +40,8 @@ const respondChallenge = async (challenge, signedChallenge) => {
     method: 'POST',
     body: JSON.stringify({
       MetaMessage: JSON.parse(challenge).message.challenge,
-      MetaSignature: signedChallenge
+      MetaSignature: signedChallenge,
+      method: 'metamask'
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -110,12 +111,13 @@ const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
 
   const parsedResponse = JSON.parse(challenge);
   const signedChallenge = await web3AuthSigner.signTypedData(parsedResponse);
-  const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
+  const loginResponse = await rFetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({
       MetaMessage: parsedResponse.message.challenge,
       MetaSignature: signedChallenge,
-      userAddress: userAddress
+      userAddress: userAddress,
+      method: 'web3auth'
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -132,13 +134,28 @@ const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
 
 const rFetch = async (
   route: string,
-  options?: RequestInit,
+  options?: any,
   retryOptions: any = undefined,
   showErrorMessages = true
 ) => {
+  const defaultHeaders = {};
+  if (options?.body) {
+    defaultHeaders['Accept'] = 'application/json';
+    defaultHeaders['Content-Type'] = 'application/json';
+    const token = localStorage.getItem('rair-jwt');
+    if (token) {
+      defaultHeaders['Authorization'] = `Bearer ${token}`;
+    }
+  }
+  const processedOptions = {};
+  if (options?.body && typeof options?.body !== 'string') {
+    processedOptions['body'] = JSON.stringify(options.body);
+  }
   const request = await fetch(route, {
     ...options,
+    ...processedOptions,
     headers: {
+      ...defaultHeaders,
       ...options?.headers
     }
   });

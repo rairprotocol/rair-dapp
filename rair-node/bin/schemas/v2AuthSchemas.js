@@ -13,5 +13,6 @@ module.exports = {
         MetaSignature: Joi.custom(customValidator({ min: 132, max: 770 }))
             .required(),
         userAddress: ethAddress,
+        method: Joi.string().required(),
     }),
 };
