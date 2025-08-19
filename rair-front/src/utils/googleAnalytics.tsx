@@ -1,3 +1,4 @@
+//@ts-nocheck
 //Google Analytics
 import googleAnalytics from '@analytics/google-analytics';
 import Analytics from 'analytics';

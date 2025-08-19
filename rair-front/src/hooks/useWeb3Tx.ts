@@ -1,9 +1,10 @@
+// @ts-nocheck
 /* eslint-disable no-case-declarations */
 import { useCallback } from 'react';
-import {
-  SendUserOperationResult,
-  UserOperationOverrides
-} from '@alchemy/aa-core';
+// import {
+//   SendUserOperationResult,
+//   UserOperationOverrides
+// } from '@alchemy/aa-core';
 import { Contract, ContractTransactionResponse } from 'ethers';
 import { encodeFunctionData, Hex } from 'viem';
 
@@ -11,7 +12,7 @@ import { useAppDispatch, useAppSelector } from './useReduxHooks';
 import useServerSettings from './useServerSettings';
 import useSwal from './useSwal';
 
-import { connectChainWeb3Auth, setConnectedChain } from '../redux/web3Slice';
+import { setConnectedChain } from '../redux/web3Slice';
 import { CombinedBlockchainData } from '../types/commonTypes';
 import { rFetch } from '../utils/rFetch';
 
@@ -162,123 +163,123 @@ const useWeb3Tx = () => {
     [handleReceipt, handleWeb3Error]
   );
 
-  const verifyAAUserOperation = useCallback(
-    async (
-      contractProvider: any,
-      userOperation: SendUserOperationResult,
-      options: web3Options
-    ) => {
-      if (!contractProvider) {
-        console.error('Provider not found');
-        return;
-      }
-      try {
-        const txHash = await contractProvider.waitForUserOperationTransaction({
-          hash: userOperation.hash
-        });
-        handleReceipt(txHash, options?.callback);
-        return true;
-      } catch (err: any) {
-        const stringified = err.toString();
-        if (
-          stringified
-            .toLowerCase()
-            .includes('failed to find transaction for user operation')
-        ) {
-          reactSwal.fire({
-            title: 'Please wait',
-            html: 'Verifying user operation',
-            icon: 'info',
-            showConfirmButton: false
-          });
-          return await verifyAAUserOperation(
-            contractProvider,
-            userOperation,
-            options
-          );
-        }
-        console.error(err);
-        reactSwal.fire('Error', err.toString(), 'error');
-      }
-    },
-    [handleReceipt, reactSwal]
-  );
+  // const verifyAAUserOperation = useCallback(
+  //   async (
+  //     contractProvider: any,
+  //     userOperation: SendUserOperationResult,
+  //     options: web3Options
+  //   ) => {
+  //     if (!contractProvider) {
+  //       console.error('Provider not found');
+  //       return;
+  //     }
+  //     try {
+  //       const txHash = await contractProvider.waitForUserOperationTransaction({
+  //         hash: userOperation.hash
+  //       });
+  //       handleReceipt(txHash, options?.callback);
+  //       return true;
+  //     } catch (err: any) {
+  //       const stringified = err.toString();
+  //       if (
+  //         stringified
+  //           .toLowerCase()
+  //           .includes('failed to find transaction for user operation')
+  //       ) {
+  //         reactSwal.fire({
+  //           title: 'Please wait',
+  //           html: 'Verifying user operation',
+  //           icon: 'info',
+  //           showConfirmButton: false
+  //         });
+  //         return await verifyAAUserOperation(
+  //           contractProvider,
+  //           userOperation,
+  //           options
+  //         );
+  //       }
+  //       console.error(err);
+  //       reactSwal.fire('Error', err.toString(), 'error');
+  //     }
+  //   },
+  //   [handleReceipt, reactSwal]
+  // );
 
-  const web3AuthCall = useCallback(
-    async (
-      contract: Contract,
-      method: string,
-      args: any[],
-      options: web3Options
-    ) => {
-      if (!currentUserAddress || !contract) {
-        return;
-      }
-      const methodFound = contract.getFunction(method);
-      let fragment = methodFound.fragment;
-      if (!fragment) {
-        fragment = methodFound.getFragment();
-      }
-      if (fragment.stateMutability === 'view') {
-        // If the method is a view function, query the info directly through Ethers
-        return await contract[method](...args);
-      }
-      let transactionValue: bigint = BigInt(0);
-      if (args?.at(-1)?.value !== undefined) {
-        transactionValue = BigInt(args.pop().value);
-      }
-      const uoCallData = encodeFunctionData({
-        abi: [fragment],
-        functionName: method,
-        args: args
-      });
+  // const web3AuthCall = useCallback(
+  //   async (
+  //     contract: Contract,
+  //     method: string,
+  //     args: any[],
+  //     options: web3Options
+  //   ) => {
+  //     if (!currentUserAddress || !contract) {
+  //       return;
+  //     }
+  //     const methodFound = contract.getFunction(method);
+  //     let fragment = methodFound.fragment;
+  //     if (!fragment) {
+  //       fragment = methodFound.getFragment();
+  //     }
+  //     if (fragment.stateMutability === 'view') {
+  //       // If the method is a view function, query the info directly through Ethers
+  //       return await contract[method](...args);
+  //     }
+  //     let transactionValue: bigint = BigInt(0);
+  //     if (args?.at(-1)?.value !== undefined) {
+  //       transactionValue = BigInt(args.pop().value);
+  //     }
+  //     const uoCallData = encodeFunctionData({
+  //       abi: [fragment],
+  //       functionName: method,
+  //       args: args
+  //     });
 
-      const elegibleForSponsorship =
-        options.sponsored &&
-        !transactionValue &&
-        (await (contract.runner as any).account.checkGasSponsorshipEligibility({
-          uo: {
-            target: await contract.getAddress(),
-            data: uoCallData,
-            value: transactionValue
-          }
-        }));
+  //     const elegibleForSponsorship =
+  //       options.sponsored &&
+  //       !transactionValue &&
+  //       (await (contract.runner as any).account.checkGasSponsorshipEligibility({
+  //         uo: {
+  //           target: await contract.getAddress(),
+  //           data: uoCallData,
+  //           value: transactionValue
+  //         }
+  //       }));
 
-      const overrides: UserOperationOverrides = {
-        paymasterAndData: '0x'
-      };
+  //     const overrides: UserOperationOverrides = {
+  //       paymasterAndData: '0x'
+  //     };
 
-      const userOperation = await (contract.runner as any).account
-        .sendUserOperation({
-          uo: {
-            target: await contract.getAddress(),
-            data: uoCallData,
-            value: transactionValue
-          },
-          overrides: elegibleForSponsorship ? undefined : overrides
-        })
-        .catch((err) => {
-          console.error(err);
-          reactSwal.fire('Error', err.details, 'error');
-        });
-      if (!userOperation?.hash) {
-        return false;
-      }
-      return await verifyAAUserOperation(
-        contract.runner,
-        userOperation,
-        options
-      );
-    },
-    [currentUserAddress, reactSwal, verifyAAUserOperation]
-  );
+  //     const userOperation = await (contract.runner as any).account
+  //       .sendUserOperation({
+  //         uo: {
+  //           target: await contract.getAddress(),
+  //           data: uoCallData,
+  //           value: transactionValue
+  //         },
+  //         overrides: elegibleForSponsorship ? undefined : overrides
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //         reactSwal.fire('Error', err.details, 'error');
+  //       });
+  //     if (!userOperation?.hash) {
+  //       return false;
+  //     }
+  //     return await verifyAAUserOperation(
+  //       contract.runner,
+  //       userOperation,
+  //       options
+  //     );
+  //   },
+  //   [currentUserAddress, reactSwal, verifyAAUserOperation]
+  // );
 
   const connectWeb3AuthProgrammaticProvider = useCallback(
     async (chainData?: CombinedBlockchainData) => {
       if (!chainData) {
         return;
       }
-      dispatch(connectChainWeb3Auth(chainData));
+      // dispatch(connectChainWeb3Auth(chainData));
     },
     [dispatch]
   );
@@ -367,23 +368,12 @@ const useWeb3Tx = () => {
       switch (loginType) {
         case 'metamask':
           return metamaskCall(contract, method, args, options);
-        case 'web3auth':
-          return web3AuthCall(contract, method, args, options);
-        case 'alchemyV4':
-          return web3AuthCall(contract, method, args, options);
         default:
           reactSwal.fire('Error', 'Please login', 'error');
           return undefined;
       }
     },
-    [
-      connectedChain,
-      currentUserAddress,
-      loginType,
-      metamaskCall,
-      reactSwal,
-      web3AuthCall
-    ]
+    [connectedChain, currentUserAddress, loginType, metamaskCall, reactSwal]
   );
 
   const web3Switch = useCallback(

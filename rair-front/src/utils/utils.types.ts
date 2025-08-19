@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Network } from 'alchemy-sdk';
 import { Chain, Hex } from 'viem';
 

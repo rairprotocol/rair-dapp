@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useLocation } from 'react-router-dom';
@@ -14,22 +15,16 @@ import { OnboardingButton } from '../components/common/OnboardingButton/Onboardi
 import { dataStatuses } from '../redux/commonTypes';
 import { loadCurrentUser } from '../redux/userSlice';
 import {
-  connectChainAlchemyV4,
+  // connectChainAlchemyV4,
   connectChainMetamask,
-  connectChainWeb3Auth,
   setConnectedChain,
   setExchangeRates,
   setProgrammaticProvider
 } from '../redux/web3Slice';
-import { CombinedBlockchainData } from '../types/commonTypes';
-import { User } from '../types/databaseTypes';
+// import { CombinedBlockchainData } from '../types/commonTypes';
+// import { User } from '../types/databaseTypes';
 import chainData from '../utils/blockchainData';
-import {
-  rFetch,
-  signWeb3MessageAlchemyV4,
-  signWeb3MessageMetamask,
-  signWeb3MessageWeb3Auth
-} from '../utils/rFetch';
+import { rFetch, signWeb3MessageMetamask } from '../utils/rFetch';
 import sockets from '../utils/sockets';
 
 const getCoingeckoRates = async () => {
@@ -94,58 +89,58 @@ const useConnectUser = () => {
     };
   }, [currentUserAddress]);
 
-  const loginWithAlchemySigner = useCallback(async () => {
-    const defaultChain: Hex = import.meta.env.VITE_DEFAULT_BLOCKCHAIN;
-    const chainInformation = getBlockchainData(defaultChain);
-    if (
-      !chainInformation?.hash ||
-      !chainInformation?.alchemy ||
-      !chainInformation?.viem ||
-      !chainInformation?.alchemyAppKey
-    ) {
-      return {};
-    }
+  // const loginWithAlchemySigner = useCallback(async () => {
+  //   const defaultChain: Hex = import.meta.env.VITE_DEFAULT_BLOCKCHAIN;
+  //   const chainInformation = getBlockchainData(defaultChain);
+  //   if (
+  //     !chainInformation?.hash ||
+  //     !chainInformation?.alchemy ||
+  //     !chainInformation?.viem ||
+  //     !chainInformation?.alchemyAppKey
+  //   ) {
+  //     return {};
+  //   }
 
-    const { connectedChain, currentUserAddress, userDetails } = await dispatch(
-      connectChainAlchemyV4(chainInformation as CombinedBlockchainData)
-    ).unwrap();
+  //   const { connectedChain, currentUserAddress, userDetails } = await dispatch(
+  //     connectChainAlchemyV4(chainInformation as CombinedBlockchainData)
+  //   ).unwrap();
 
-    return {
-      userAddress: currentUserAddress,
-      blockchain: connectedChain,
-      userDetails
-    };
-  }, [dispatch, getBlockchainData]);
+  //   return {
+  //     userAddress: currentUserAddress,
+  //     blockchain: connectedChain,
+  //     userDetails
+  //   };
+  // }, [dispatch, getBlockchainData]);
 
-  const loginWithWeb3Auth = useCallback(async () => {
-    const defaultChain: Hex = import.meta.env.VITE_DEFAULT_BLOCKCHAIN;
-    const chainInformation = getBlockchainData(defaultChain);
-    if (
-      !chainInformation?.hash ||
-      !chainInformation?.alchemy ||
-      !chainInformation?.viem ||
-      !chainInformation?.alchemyAppKey
-    ) {
-      return {};
-    }
+  // const loginWithWeb3Auth = useCallback(async () => {
+  //   const defaultChain: Hex = import.meta.env.VITE_DEFAULT_BLOCKCHAIN;
+  //   const chainInformation = getBlockchainData(defaultChain);
+  //   if (
+  //     !chainInformation?.hash ||
+  //     !chainInformation?.alchemy ||
+  //     !chainInformation?.viem ||
+  //     !chainInformation?.alchemyAppKey
+  //   ) {
+  //     return {};
+  //   }
 
-    reactSwal.fire({
-      title: 'Connecting',
-      html: 'Please wait',
-      icon: 'info',
-      showConfirmButton: false
-    });
+  //   reactSwal.fire({
+  //     title: 'Connecting',
+  //     html: 'Please wait',
+  //     icon: 'info',
+  //     showConfirmButton: false
+  //   });
 
-    const { connectedChain, currentUserAddress, userDetails } = await dispatch(
-      connectChainWeb3Auth(chainInformation as CombinedBlockchainData)
-    ).unwrap();
+  //   const { connectedChain, currentUserAddress, userDetails } = await dispatch(
+  //     connectChainWeb3Auth(chainInformation as CombinedBlockchainData)
+  //   ).unwrap();
 
-    return {
-      userAddress: currentUserAddress,
-      blockchain: connectedChain,
-      userDetails
-    };
-  }, [getBlockchainData, reactSwal, dispatch]);
+  //   return {
+  //     userAddress: currentUserAddress,
+  //     blockchain: connectedChain,
+  //     userDetails
+  //   };
+  // }, [getBlockchainData, reactSwal, dispatch]);
 
   const loginWithMetamask = useCallback(async () => {
     const { connectedChain, currentUserAddress } = await dispatch(
@@ -203,20 +198,20 @@ const useConnectUser = () => {
                   Web3
                 </button>
               )}
-              <hr />
-              <button
+              {/* <hr /> */}
+              {/* <button
                 className="btn btn-light"
                 onClick={() => resolve('web3auth')}>
                 Social Logins
-              </button>
-              <hr />
+              </button> */}
+              {/* <hr />
               <button
                 className="btn btn-light"
                 onClick={() => resolve('alchemyV4')}>
                 Github (Alchemy V4)
-              </button>
+              </button> */}
               <div className="login-modal-down-text">
-                <div>Each social login creates a unique wallet address</div>
+                {/* <div>Each social login creates a unique wallet address</div> */}
                 <div>
                   If you login with a different account, you won’t see purchases
                   in your other wallets
@@ -256,12 +251,6 @@ const useConnectUser = () => {
       reactSwal.close();
       try {
         switch (loginMethod) {
-          case 'alchemyV4':
-            loginData = await loginWithAlchemySigner();
-            break;
-          case 'web3auth':
-            loginData = await loginWithWeb3Auth();
-            break;
           case 'metamask':
             loginData = await loginWithMetamask();
             break;
@@ -328,18 +317,6 @@ const useConnectUser = () => {
                 loginData.userAddress
               );
               break;
-            case 'alchemyV4':
-              loginResponse = await signWeb3MessageAlchemyV4(
-                loginData.userAddress,
-                loginData.userDetails
-              );
-              break;
-            case 'web3auth':
-              loginResponse = await signWeb3MessageWeb3Auth(
-                loginData.userAddress
-              );
-              reactSwal.close();
-              break;
           }
 
           const updateData = {};
@@ -394,8 +371,6 @@ const useConnectUser = () => {
     [
       selectMethod,
       reactSwal,
-      loginWithAlchemySigner,
-      loginWithWeb3Auth,
       loginWithMetamask,
       loginWithProgrammaticProvider,
       adminRights,

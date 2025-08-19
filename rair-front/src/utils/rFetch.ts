@@ -1,4 +1,5 @@
-import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
+
+// import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
 import axios from 'axios';
 import { BrowserProvider, Provider } from 'ethers';
 import Swal from 'sweetalert2';
@@ -40,7 +41,8 @@ const respondChallenge = async (challenge, signedChallenge) => {
     method: 'POST',
     body: JSON.stringify({
       MetaMessage: JSON.parse(challenge).message.challenge,
-      MetaSignature: signedChallenge
+      MetaSignature: signedChallenge,
+      method: 'metamask'
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -71,64 +73,64 @@ const signWeb3MessageMetamask = async (userAddress: Hex) => {
   }
 };
 
-const signWeb3MessageAlchemyV4 = async (userAddress: Hex, signer) => {
-  if (!signer) {
-    return;
-  }
+// const signWeb3MessageAlchemyV4 = async (userAddress: Hex, signer) => {
+//   if (!signer) {
+//     return;
+//   }
 
-  const challenge = await getChallenge(userAddress);
+//   const challenge = await getChallenge(userAddress);
 
-  const parsedResponse = JSON.parse(challenge);
-  const signedChallenge = await signer.signTypedData(parsedResponse);
+//   const parsedResponse = JSON.parse(challenge);
+//   const signedChallenge = await signer.signTypedData(parsedResponse);
 
-  if (signedChallenge) {
-    return await respondChallenge(challenge, signedChallenge);
-  }
-};
+//   if (signedChallenge) {
+//     return await respondChallenge(challenge, signedChallenge);
+//   }
+// };
 
-const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
-  const web3AuthSigner = new Web3AuthSigner({
-    clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
-    chainConfig: {
-      chainNamespace: 'eip155'
-    }
-  });
+// const signWeb3MessageWeb3Auth = async (userAddress: Hex) => {
+//   const web3AuthSigner = new Web3AuthSigner({
+//     clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+//     chainConfig: {
+//       chainNamespace: 'eip155'
+//     }
+//   });
 
-  await web3AuthSigner.authenticate({
-    init: async () => {
-      await web3AuthSigner.inner.initModal();
-    },
-    connect: async () => {
-      await web3AuthSigner.inner.connect();
-    }
-  });
+//   await web3AuthSigner.authenticate({
+//     init: async () => {
+//       await web3AuthSigner.inner.initModal();
+//     },
+//     connect: async () => {
+//       await web3AuthSigner.inner.connect();
+//     }
+//   });
 
-  const challenge = await getChallenge(
-    userAddress,
-    await web3AuthSigner.getAddress()
-  );
+//   const challenge = await getChallenge(
+//     userAddress,
+//     await web3AuthSigner.getAddress()
+//   );
 
-  const parsedResponse = JSON.parse(challenge);
-  const signedChallenge = await web3AuthSigner.signTypedData(parsedResponse);
-  const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
-    method: 'POST',
-    body: JSON.stringify({
-      MetaMessage: parsedResponse.message.challenge,
-      MetaSignature: signedChallenge,
-      userAddress: userAddress
-    }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  // eslint-disable-next-line no-case-declarations
-  const { success, user } = loginResponse;
-  if (!success) {
-    Swal.fire('Error', `Web3Login failed`, 'error');
-    return;
-  }
-  return { success, user };
-};
+//   const parsedResponse = JSON.parse(challenge);
+//   const signedChallenge = await web3AuthSigner.signTypedData(parsedResponse);
+//   const loginResponse = await rFetch('/api/auth/loginSmartAccount', {
+//     method: 'POST',
+//     body: JSON.stringify({
+//       MetaMessage: parsedResponse.message.challenge,
+//       MetaSignature: signedChallenge,
+//       userAddress: userAddress
+//     }),
+//     headers: {
+//       'Content-Type': 'application/json'
+//     }
+//   });
+//   // eslint-disable-next-line no-case-declarations
+//   const { success, user } = loginResponse;
+//   if (!success) {
+//     Swal.fire('Error', `Web3Login failed`, 'error');
+//     return;
+//   }
+//   return { success, user };
+// };
 
 const rFetch = async (
   route: string,
@@ -171,10 +173,4 @@ const rFetch = async (
   return request;
 };
 
-export {
-  rFetch,
-  signIn,
-  signWeb3MessageAlchemyV4,
-  signWeb3MessageMetamask,
-  signWeb3MessageWeb3Auth
-};
+export { rFetch, signIn, signWeb3MessageMetamask };

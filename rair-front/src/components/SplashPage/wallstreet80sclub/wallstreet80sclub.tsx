@@ -5,7 +5,7 @@ import { teamWallstreetArray } from './AboutUsTeam';
 import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { SplashPageProps } from '../../../types/commonTypes';
 import {
   blockchain,
@@ -92,10 +92,10 @@ const Wallstreet80sClubSplashPage: FC<SplashPageProps> = ({
       );
   }, [carousel_match.matches]);
 
-  useEffect(() => {
-    dispatch(setRequestedChain(blockchain));
-    //eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain(blockchain));
+  //   //eslint-disable-next-line
+  // }, []);
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);

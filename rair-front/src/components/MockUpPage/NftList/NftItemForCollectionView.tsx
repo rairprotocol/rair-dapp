@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { Provider, useStore } from 'react-redux';

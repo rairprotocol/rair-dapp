@@ -1,11 +1,11 @@
-//@ts-nocheck
+// @ts-nocheck
 /* eslint-disable no-case-declarations */
 import { useCallback, useEffect, useState } from 'react';
-import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
-import { SmartContractAccount } from '@alchemy/aa-core';
-import { AccountSigner, EthersProviderAdapter } from '@alchemy/aa-ethers';
-import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
-import { Alchemy } from 'alchemy-sdk';
+// import { createModularAccountAlchemyClient } from '@alchemy/aa-alchemy';
+// import { SmartContractAccount } from '@alchemy/aa-core';
+// import { AccountSigner, EthersProviderAdapter } from '@alchemy/aa-ethers';
+// import { Web3AuthSigner } from '@alchemy/aa-signers/web3auth';
+// import { Alchemy } from 'alchemy-sdk';
 import { BrowserProvider, Contract, isAddress, JsonRpcSigner } from 'ethers';
 import { Hex } from 'viem';
 
@@ -29,7 +29,7 @@ const useContracts = () => {
   );
 
   const [signer, setSigner] = useState<
-    JsonRpcSigner | AccountSigner<SmartContractAccount>
+    JsonRpcSigner
   >();
   const [diamondFactoryInstance, setDiamondFactoryInstance] = useState<
     Contract | undefined
@@ -47,98 +47,92 @@ const useContracts = () => {
     Contract | undefined
   >();
 
-  const createAlchemyV4Signer = useCallback(async () => {
-    const chainData = getBlockchainData(connectedChain);
+  // const createAlchemyV4Signer = useCallback(async () => {
+  //   const chainData = getBlockchainData(connectedChain);
 
-    if (!chainData) {
-      return;
-    }
-    if (!programmaticProvider) {
-      return {};
-    }
+  //   if (!chainData) {
+  //     return;
+  //   }
+  //   if (!programmaticProvider) {
+  //     return {};
+  //   }
 
-    return await programmaticProvider.account.getSigner();
-  }, [connectedChain, getBlockchainData, programmaticProvider]);
+  //   return await programmaticProvider.account.getSigner();
+  // }, [connectedChain, getBlockchainData, programmaticProvider]);
 
-  const createWeb3AuthSigner = useCallback(async () => {
-    const chainData = getBlockchainData(connectedChain);
+  // const createWeb3AuthSigner = useCallback(async () => {
+  //   const chainData = getBlockchainData(connectedChain);
 
-    if (!chainData) {
-      return;
-    }
+  //   if (!chainData) {
+  //     return;
+  //   }
 
-    const web3AuthSigner = new Web3AuthSigner({
-      clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
-      chainConfig: {
-        chainNamespace: 'eip155',
-        chainId: chainData.chainId,
-        rpcTarget: chainData.rpcEndpoint,
-        displayName: chainData.name,
-        blockExplorer: chainData.blockExplorerGateway,
-        ticker: chainData.symbol,
-        tickerName: chainData.name
-      },
-      web3AuthNetwork: chainData.testnet
-        ? 'sapphire_devnet'
-        : 'sapphire_mainnet'
-    });
+  //   const web3AuthSigner = new Web3AuthSigner({
+  //     clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+  //     chainConfig: {
+  //       chainNamespace: 'eip155',
+  //       chainId: chainData.chainId,
+  //       rpcTarget: chainData.rpcEndpoint,
+  //       displayName: chainData.name,
+  //       blockExplorer: chainData.blockExplorerGateway,
+  //       ticker: chainData.symbol,
+  //       tickerName: chainData.name
+  //     },
+  //     web3AuthNetwork: chainData.testnet
+  //       ? 'sapphire_devnet'
+  //       : 'sapphire_mainnet'
+  //   });
 
-    await web3AuthSigner.authenticate({
-      init: async () => {
-        await web3AuthSigner.inner.initModal();
-      },
-      connect: async () => {
-        await web3AuthSigner.inner.connect();
-      }
-    });
+  //   await web3AuthSigner.authenticate({
+  //     init: async () => {
+  //       await web3AuthSigner.inner.initModal();
+  //     },
+  //     connect: async () => {
+  //       await web3AuthSigner.inner.connect();
+  //     }
+  //   });
 
-    const modularAccount = await createModularAccountAlchemyClient({
-      apiKey: chainData.alchemyAppKey,
-      chain: chainData.viem!,
-      signer: web3AuthSigner,
-      gasManagerConfig: chainData.alchemyGasPolicy
-        ? {
-            policyId: chainData.alchemyGasPolicy
-          }
-        : undefined
-    });
+  //   const modularAccount = await createModularAccountAlchemyClient({
+  //     apiKey: chainData.alchemyAppKey,
+  //     chain: chainData.viem!,
+  //     signer: web3AuthSigner,
+  //     gasManagerConfig: chainData.alchemyGasPolicy
+  //       ? {
+  //           policyId: chainData.alchemyGasPolicy
+  //         }
+  //       : undefined
+  //   });
 
-    const alchemy = new Alchemy({
-      apiKey: chainData.alchemyAppKey,
-      network: chainData?.alchemy,
-      maxRetries: 10
-    });
+  //   const alchemy = new Alchemy({
+  //     apiKey: chainData.alchemyAppKey,
+  //     network: chainData?.alchemy,
+  //     maxRetries: 10
+  //   });
 
-    const ethersProvider = await alchemy.config.getProvider();
-    const provider =
-      EthersProviderAdapter.fromEthersProvider(ethersProvider).connectToAccount(
-        modularAccount
-      );
+  //   const ethersProvider = await alchemy.config.getProvider();
+  //   const provider =
+  //     EthersProviderAdapter.fromEthersProvider(ethersProvider).connectToAccount(
+  //       modularAccount
+  //     );
 
-    return provider;
-  }, [connectedChain, getBlockchainData]);
+  //   return provider;
+  // }, [connectedChain, getBlockchainData]);
 
   const refreshSigner = useCallback(async () => {
     if (!isLoggedIn) {
       return;
     }
     switch (loginType) {
-      case 'alchemyV4':
-        setSigner(await createAlchemyV4Signer());
-        break;
       case 'metamask':
         if (!window.ethereum.isConnected()) {
           return;
         }
         const metamaskProvider = new BrowserProvider(window.ethereum);
-        const signer = await metamaskProvider.getSigner(0);
-        setSigner(signer);
-        break;
-      case 'web3auth':
-        setSigner(await createWeb3AuthSigner());
+        // const signer = await metamaskProvider.getSigner(0);
+        // setSigner(signer);
         break;
     }
-  }, [isLoggedIn, loginType, createAlchemyV4Signer, createWeb3AuthSigner]);
+  }, [isLoggedIn, loginType]);
 
   useEffect(() => {
     refreshSigner();

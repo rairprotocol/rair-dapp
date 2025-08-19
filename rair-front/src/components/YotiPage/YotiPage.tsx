@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import FaceCapture from '@getyoti/react-face-capture';
+// import FaceCapture from '@getyoti/react-face-capture';
 
 import useSwal from '../../hooks/useSwal';
 import { YotiLogo } from '../../images';
@@ -54,15 +54,16 @@ const YotiPage: FC<YotiPage> = ({ setOpenVideoPlayer }) => {
   return (
     <div>
       {yotiVerify ? (
-        <FaceCapture
-          clientSdkId={'10b5c4aa-cc86-413e-a5b0-962fe95831ac'}
-          onSuccess={onSuccess}
-          onError={onError}
-          secure={false}
-          returnPreviewImage={true}
-          faceCaptureAssetsRootUrl={'/yoti-assets/'}
-          numStableFrames={4}
-        />
+        <div>123</div>
+        // <FaceCapture
+        //   clientSdkId={'10b5c4aa-cc86-413e-a5b0-962fe95831ac'}
+        //   onSuccess={onSuccess}
+        //   onError={onError}
+        //   secure={false}
+        //   returnPreviewImage={true}
+        //   faceCaptureAssetsRootUrl={'/yoti-assets/'}
+        //   numStableFrames={4}
+        // />
       ) : (
         <div className="yoti-container">
           <div>

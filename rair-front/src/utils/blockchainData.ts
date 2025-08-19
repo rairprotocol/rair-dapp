@@ -1,4 +1,5 @@
-import { base, mainnet, polygon, sepolia } from '@account-kit/infra';
+//@ts-nocheck
+// import { base, mainnet, polygon, sepolia } from '@account-kit/infra';
 import { Network } from 'alchemy-sdk';
 import { Hex } from 'viem';
 
@@ -50,7 +51,7 @@ const chainData: TChainData = {
     image: MaticLogo,
     name: 'Matic(Polygon) Mainnet',
     chainId: '0x89',
-    viem: polygon,
+    viem: undefined,
     alchemy: Network.MATIC_MAINNET,
     coingecko: 'matic-network',
     alchemyAppKey: import.meta.env.VITE_MATIC_MAINNET_ALCHEMY_KEY,
@@ -70,7 +71,7 @@ const chainData: TChainData = {
     image: EthereumLogo,
     name: 'Ethereum Mainnet',
     chainId: '0x1',
-    viem: mainnet,
+    viem: undefined,
     alchemy: Network.ETH_MAINNET,
     coingecko: 'ethereum',
     alchemyAppKey: import.meta.env.VITE_ETH_MAINNET_ALCHEMY_KEY,
@@ -81,7 +82,7 @@ const chainData: TChainData = {
     image: EthereumLogo,
     name: 'Ethereum Sepolia',
     chainId: '0xaa36a7',
-    viem: sepolia,
+    viem: undefined,
     alchemy: Network.ETH_SEPOLIA,
     coingecko: undefined,
     alchemyAppKey: import.meta.env.VITE_ETH_SEPOLIA_ALCHEMY_KEY,
@@ -103,7 +104,7 @@ const chainData: TChainData = {
     image: BaseLogo,
     name: 'Base Mainnet',
     chainId: '0x2105',
-    viem: base,
+    viem: undefined,
     alchemy: Network.BASE_MAINNET,
     coingecko: 'base',
     alchemyAppKey: import.meta.env.VITE_BASE_MAINNET_ALCHEMY_KEY,

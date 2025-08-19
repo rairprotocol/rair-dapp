@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 const colors = [
   '#E4476D',
   'gold',

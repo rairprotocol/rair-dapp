@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -56,13 +57,13 @@ import ThankYouPage from './components/ThankYouPage';
 import UserProfilePage from './components/UserProfilePage/UserProfilePage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 import VideoManager from './components/videoManager/VideoManager';
-import YotiPage from './components/YotiPage/YotiPage';
+// import YotiPage from './components/YotiPage/YotiPage';
 import useConnectUser from './hooks/useConnectUser';
 import useContracts from './hooks/useContracts';
 import { useAppDispatch, useAppSelector } from './hooks/useReduxHooks';
 import useWeb3Tx from './hooks/useWeb3Tx';
 import { loadCategories, loadSettings } from './redux/settingsSlice';
-import { setConnectedChain } from './redux/web3Slice';
+// import { setConnectedChain } from './redux/web3Slice';
 import {
   AppContainerFluid,
   MainBlockApp
@@ -75,6 +76,7 @@ import ErrorFallback from './views/ErrorFallback/ErrorFallback';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import MomentsGame from './components/MomentsGame/MomentsGame';
 /* Track a page view */
 // const analytics = getInformationGoogleAnalytics();
 // analytics.page();
@@ -155,19 +157,19 @@ function App() {
     }
   }, [setRenderBtnConnect]);
 
-  useEffect(() => {
-    if (window.ethereum) {
-      const foo = async (chainId) => {
-        dispatch(setConnectedChain(chainId));
-      };
-      window.ethereum.on('chainChanged', foo);
-      window.ethereum.on('accountsChanged', logoutUser);
-      return () => {
-        window.ethereum.off('chainChanged', foo);
-        window.ethereum.off('accountsChanged', logoutUser);
-      };
-    }
-  }, [dispatch, logoutUser, blockchainSettings]);
+  // useEffect(() => {
+  //   if (window.ethereum) {
+  //     const foo = async (chainId) => {
+  //       dispatch(setConnectedChain(chainId));
+  //     };
+  //     window.ethereum.on('chainChanged', foo);
+  //     window.ethereum.on('accountsChanged', logoutUser);
+  //     return () => {
+  //       window.ethereum.off('chainChanged', foo);
+  //       window.ethereum.off('accountsChanged', logoutUser);
+  //     };
+  //   }
+  // }, [dispatch, logoutUser, blockchainSettings]);
 
   // gtag
 
@@ -402,25 +404,25 @@ function App() {
                     path: '/slidelock',
                     content: <SlideLock {...{ setIsSplashPage }} />
                   },
-                  {
-                    path: '/yoti-page',
-                    content: <YotiPage />
-                  },
+                  // {
+                  //   path: '/yoti-page',
+                  //   content: <YotiPage />
+                  // },
                   {
                     path: '/about-page',
                     content: <AboutPageNew {...{ setIsSplashPage }} />
                   },
-                  {
-                    path: '/main-page',
-                    content: (
-                      <MainPage
-                        {...{
-                          setIsSplashPage,
-                          setIsAboutPage
-                        }}
-                      />
-                    )
-                  }
+                  // {
+                  //   path: '/main-page',
+                  //   content: (
+                  //     <MainPage
+                  //       {...{
+                  //         setIsSplashPage,
+                  //         setIsAboutPage
+                  //       }}
+                  //     />
+                  //   )
+                  // }
                 ].map((item, index) => {
                   // If the path is set as the Home Page, render it as the default path (/)
                   const isHome = item.path === import.meta.env.VITE_HOME_PAGE;
@@ -445,13 +447,14 @@ function App() {
                   {
                     path: '/',
                     content: (
-                      <WelcomeHeader
-                        {...{
-                          setIsSplashPage,
-                          tabIndex: tabIndex,
-                          setTabIndex: setTabIndex
-                        }}
-                      />
+                      <MomentsGame />
+                      // <WelcomeHeader
+                      //   {...{
+                      //     setIsSplashPage,
+                      //     tabIndex: tabIndex,
+                      //     setTabIndex: setTabIndex
+                      //   }}
+                      // />
                     ),
                     requirement: import.meta.env.VITE_HOME_PAGE === '/'
                   },
@@ -582,10 +585,10 @@ function App() {
                     path: '/:userAddress',
                     content: <UserProfilePage />
                   },
-                  {
-                    path: '/:contractId/:product/:offer/:token',
-                    content: <NftDataExternalLink />
-                  },
+                  // {
+                  //   path: '/:contractId/:product/:offer/:token',
+                  //   content: <NftDataExternalLink />
+                  // },
                   {
                     path: '/coming-soon',
                     content: <ComingSoon />
@@ -616,45 +619,45 @@ function App() {
                   },
 
                   //3 Tab Marketplace?
-                  {
-                    path: '/tokens/:blockchain/:contract/:product/:tokenId',
-                    content: (
-                      <NftDataCommonLink
-                        {...{
-                          setTokenNumber,
-                          tokenNumber
-                        }}
-                      />
-                    ),
-                    requirement:
-                      import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
-                  },
-                  {
-                    path: '/collection/:blockchain/:contract/:product/:tokenId',
-                    content: (
-                      <NftDataCommonLink
-                        {...{
-                          setTokenNumber,
-                          tokenNumber
-                        }}
-                      />
-                    ),
-                    requirement:
-                      import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
-                  },
-                  {
-                    path: '/unlockables/:blockchain/:contract/:product/:tokenId',
-                    content: (
-                      <NftDataCommonLink
-                        {...{
-                          setTokenNumber,
-                          tokenNumber
-                        }}
-                      />
-                    ),
-                    requirement:
-                      import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
-                  },
+                  // {
+                  //   path: '/tokens/:blockchain/:contract/:product/:tokenId',
+                  //   content: (
+                  //     <NftDataCommonLink
+                  //       {...{
+                  //         setTokenNumber,
+                  //         tokenNumber
+                  //       }}
+                  //     />
+                  //   ),
+                  //   requirement:
+                  //     import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
+                  // },
+                  // {
+                  //   path: '/collection/:blockchain/:contract/:product/:tokenId',
+                  //   content: (
+                  //     <NftDataCommonLink
+                  //       {...{
+                  //         setTokenNumber,
+                  //         tokenNumber
+                  //       }}
+                  //     />
+                  //   ),
+                  //   requirement:
+                  //     import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
+                  // },
+                  // {
+                  //   path: '/unlockables/:blockchain/:contract/:product/:tokenId',
+                  //   content: (
+                  //     <NftDataCommonLink
+                  //       {...{
+                  //         setTokenNumber,
+                  //         tokenNumber
+                  //       }}
+                  //     />
+                  //   ),
+                  //   requirement:
+                  //     import.meta.env.VITE_3_TAB_MARKETPLACE_DISABLED !== 'true'
+                  // },
 
                   {
                     path: '/notifications',

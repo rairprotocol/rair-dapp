@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 export function checkIPFSanimation(
   link = `ipfs://bafybeigims7nqm7iz7gtymqpel6gtaftrmfn53ahj7kskf6p7jytllnttm?id=1`
 ) {

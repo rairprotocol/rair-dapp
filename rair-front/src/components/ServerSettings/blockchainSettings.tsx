@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AlchemyChainMap } from '@alchemy/aa-core';
+// import { AlchemyChainMap } from '@alchemy/aa-core';
 import { Hex } from 'viem';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
@@ -167,21 +167,21 @@ const BlockchainSettings = () => {
                 type: 'text',
                 setting: 'hash',
                 effect: (chain) => {
-                  const alchemyData = AlchemyChainMap.get(Number(chain));
-                  updateBlockchainSetting(chain, {
-                    alchemySupport: !!alchemyData
-                  });
-                  if (alchemyData) {
-                    updateBlockchainSetting(chain, {
-                      testnet: !!alchemyData?.testnet,
-                      blockExplorerGateway:
-                        alchemyData.blockExplorers?.default?.url || '',
-                      rpcEndpoint: alchemyData.rpcUrls.default.http.at(0) || '',
-                      numericalId: alchemyData.id,
-                      name: alchemyData.name,
-                      symbol: alchemyData.nativeCurrency.symbol
-                    });
-                  }
+                  // const alchemyData = AlchemyChainMap.get(Number(chain));
+                  // updateBlockchainSetting(chain, {
+                  //   alchemySupport: !!alchemyData
+                  // });
+                  // if (alchemyData) {
+                  //   updateBlockchainSetting(chain, {
+                  //     testnet: !!alchemyData?.testnet,
+                  //     blockExplorerGateway:
+                  //       alchemyData.blockExplorers?.default?.url || '',
+                  //     rpcEndpoint: alchemyData.rpcUrls.default.http.at(0) || '',
+                  //     numericalId: alchemyData.id,
+                  //     name: alchemyData.name,
+                  //     symbol: alchemyData.nativeCurrency.symbol
+                  //   });
+                  // }
                 }
               },
               {

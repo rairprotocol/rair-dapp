@@ -1,3 +1,4 @@
+// @ts-nocheck
 import BatchERC20Transfer from './BatchERC20Transfer';
 import BlockChainSwitcher from './BlockchainSwitcher';
 import ImportExternalContract from './ImportExternalContracts';

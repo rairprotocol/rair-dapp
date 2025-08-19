@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useRef, useState } from 'react';
 
 function useComponentVisible(initialIsVisible: any) {

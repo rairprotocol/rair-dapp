@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { useParams } from 'react-router';

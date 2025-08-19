@@ -8,7 +8,7 @@ import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { SplashPageProps } from '../../../types/commonTypes';
 import {
   blockchain,
@@ -154,10 +154,10 @@ const MarkKohler: FC<SplashPageProps> = ({ setIsSplashPage }) => {
       );
   }, [carousel_match.matches]);
 
-  useEffect(() => {
-    dispatch(setRequestedChain('0x5'));
-    //eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain('0x5'));
+  //   //eslint-disable-next-line
+  // }, []);
 
   const toggleCheckList = () => {
     setOpenCheckList((prev) => !prev);

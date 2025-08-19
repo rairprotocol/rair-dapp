@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';

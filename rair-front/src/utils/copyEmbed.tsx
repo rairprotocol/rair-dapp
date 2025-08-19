@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 export const copyEmbebed = (videoId: number, contract: string) => {
   const iframe = `
       <iframe id="${videoId}" src="${

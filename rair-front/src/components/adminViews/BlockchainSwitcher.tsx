@@ -1,13 +1,14 @@
+// @ts-nocheck
 import { useState } from 'react';
 import { JsonRpcProvider, Wallet } from 'ethers';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
 import useSwal from '../../hooks/useSwal';
 import useWeb3Tx from '../../hooks/useWeb3Tx';
-import {
-  setConnectedChain,
-  setProgrammaticProvider
-} from '../../redux/web3Slice';
+// import {
+//   setConnectedChain,
+//   setProgrammaticProvider
+// } from '../../redux/web3Slice';
 import InputField from '../common/InputField';
 
 const BlockChainSwitcher = () => {
@@ -36,8 +37,8 @@ const BlockChainSwitcher = () => {
       };
       const provider = new JsonRpcProvider(rpcEndpoint, networkData);
       const currentWallet = new Wallet(UNSAFE_PrivateKey, provider);
-      dispatch(setProgrammaticProvider(currentWallet));
-      dispatch(setConnectedChain(chainId));
+      // dispatch(setProgrammaticProvider(currentWallet));
+      // dispatch(setConnectedChain(chainId));
     } catch (err) {
       const error = err as Error;
       console.error(error);

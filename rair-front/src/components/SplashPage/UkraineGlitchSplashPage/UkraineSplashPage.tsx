@@ -4,7 +4,7 @@ import { teamUkraineArray } from './AboutUsTeam';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { SplashPageProps } from '../../../types/commonTypes';
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 import { splashData } from '../../../utils/infoSplashData/ukraineSplashPage';
@@ -85,10 +85,10 @@ const UkraineSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
 
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
-  useEffect(() => {
-    dispatch(setRequestedChain(ukraineglitchChainId));
-    //eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain(ukraineglitchChainId));
+  //   //eslint-disable-next-line
+  // }, []);
 
   useEffect(() => {
     setIsSplashPage?.(true);

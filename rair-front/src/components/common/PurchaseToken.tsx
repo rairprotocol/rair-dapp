@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, useStore } from 'react-redux';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';

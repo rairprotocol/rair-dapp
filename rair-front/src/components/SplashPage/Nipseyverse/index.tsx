@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { FC, useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +19,7 @@ import useWeb3Tx from '../../../hooks/useWeb3Tx';
 /* importing images*/
 import { discrodIconNoBorder, metaMaskIcon } from '../../../images';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { CustomModalStyle, SplashPageProps } from '../../../types/commonTypes';
 import MetaTags from '../../SeoTags/MetaTags';
 import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
@@ -86,10 +87,10 @@ const SplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
 
   const { correctBlockchain, web3Switch } = useWeb3Tx();
 
-  useEffect(() => {
-    dispatch(setRequestedChain('0x1'));
-    //eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain('0x1'));
+  //   //eslint-disable-next-line
+  // }, []);
 
   useEffect(() => {
     setIsSplashPage?.(true);

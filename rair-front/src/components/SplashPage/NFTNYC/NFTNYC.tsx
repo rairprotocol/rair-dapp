@@ -7,7 +7,7 @@ import { useOpenVideoPlayer } from '../../../hooks/useOpenVideoPlayer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks';
 import useSwal from '../../../hooks/useSwal';
 import { setSEOInfo } from '../../../redux/seoSlice';
-import { setRequestedChain } from '../../../redux/web3Slice';
+// import { setRequestedChain } from '../../../redux/web3Slice';
 import { SplashPageProps } from '../../../types/commonTypes';
 import { useNFTNYC } from '../../../utils/infoSplashData/nftnyc';
 import { ImageLazy } from '../../MockUpPage/ImageLazy/ImageLazy';
@@ -77,10 +77,10 @@ const NFTNYCSplashPage: FC<SplashPageProps> = ({ setIsSplashPage }) => {
     setPurchaseList((prev) => !prev);
   };
 
-  useEffect(() => {
-    dispatch(setRequestedChain(ukraineglitchChainId));
-    //eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setRequestedChain(ukraineglitchChainId));
+  //   //eslint-disable-next-line
+  // }, []);
 
   useEffect(() => {
     setIsSplashPage?.(true);
